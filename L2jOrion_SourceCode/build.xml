@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Orion_GameServer" default="dist-local" basedir=".">
+	<description>
+	</description>
+
+	<!--property file="build.properties" /-->
+	<property name="src" location="src" />
+	<property name="src-lib" location="lib" />
+
+	<!--target name="prepare-test" description="Prepare the test folder property">
+
+		<property name="build" location="${test_destination_folder}" />
+
+	</target>
+
+	<target name="prepare-compiledRev" description="Prepare the compiledRev folder property">
+
+		<property name="build" location="${compiled_rev_destination_folder}" />
+
+	</target>
+
+	<target name="prepare-local" description="Prepare the local folder property">
+
+		<property name="build" location="build" />
+
+	</target-->
+
+	<target name="prepare-final" description="Prepare the final folders properties">
+
+		<property name="build.classes" location="${build}/classes" />
+		<property name="build.dist" location="${build}/dist" />
+		<property name="build.dist.login" location="${build.dist}/loginserver" />
+		<property name="build.dist.login.lib" location="${build.dist.login}/lib" />
+		<property name="build.dist.game" location="${build.dist}/gameserver" />
+		<property name="build.dist.game.lib" location="${build.dist.game}/lib" />
+		<!--property name="properties-file" location="${build.dist.game}/config/version/l2jorion-server.properties" /-->
+
+	</target>
+
+	<path id="classpath">
+		<fileset dir="${src-lib}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
+	<target name="init" description="Create the output directories.">
+
+		<mkdir dir="${build}" />
+		<mkdir dir="${build.classes}" />
+		<mkdir dir="${build.dist}" />
+		<mkdir dir="${build.dist.login}" />
+		<mkdir dir="${build.dist.login.lib}" />
+		<mkdir dir="${build.dist.game}" />
+		<mkdir dir="${build.dist.game.lib}" />
+		
+	</target>
+
+
+	<target name="compile" description="Compile the source.">
+
+		<javac destdir="${build.classes}" includeantruntime="false" optimize="on" debug="on" source="1.8" target="1.8" encoding="utf-8" nowarn="off">
+			<src path="${src}" />
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+
+	<target name="jar" depends="compile" description="Create the jar file">
+
+		<jar destfile="${build}/l2jorion-core.jar">
+			<fileset dir="${build.classes}" />
+		</jar>
+
+	</target>
+
+	<target name="export" depends="jar">
+
+		<!-- copy todir="${build.dist.login}">
+			<fileset dir="config/others">
+				<include name="log.cfg" />
+				<include name="servername.xml" />
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dist.game}">
+			<fileset dir="config/others">
+				<include name="log.cfg" />
+			</fileset>
+		</copy -->
+
+		<!--copy todir="${build.dist.game.lib}">
+			<fileset dir="${src-lib}">
+				<include name="**/*.jar" />
+				<include name="*.txt" />
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dist.login.lib}">
+			<fileset dir="${src-lib}">
+				<include name="*.jar" />
+				<include name="*.txt" />
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dist.login}">
+			<fileset dir="dist">
+				<include name="LoginServer_loop.sh" />
+				<include name="startLoginServer.*" />
+				<include name="anti_ddos.*" />
+				<include name="RegisterGameServer.*" />
+			</fileset>
+		</copy>
+		<copy todir="${build.dist.game}">
+			<fileset dir="dist">
+				<include name="GameServer_loop.sh" />
+				<include name="startGameServer.*" />
+				<include name="startBackup.*" />
+				<include name="restartGameServer.*" />
+			</fileset>
+		</copy>
+		<copy todir="${build.dist}">
+			<fileset dir="dist">
+				<include name="Start_GameServer_noScreen.sh" />
+				<include name="Start_LoginServer_noScreen.sh" />
+			</fileset>
+		</copy>
+
+		<fixcrlf srcdir="${build.dist.game}" eol="lf" eof="remove" includes="**/*.sh">
+		</fixcrlf>
+		<fixcrlf srcdir="${build.dist.login}" eol="lf" eof="remove" includes="**/*.sh">
+		</fixcrlf>
+
+		<fixcrlf srcdir="${build.dist.game}" eol="crlf" eof="remove" includes="**/*.bat">
+		</fixcrlf>
+		<fixcrlf srcdir="${build.dist.login}" eol="crlf" eof="remove" includes="**/*.bat">
+		</fixcrlf-->
+
+		<!--mkdir dir="${build.dist.game}/log" />
+		<mkdir dir="${build.dist.login}/log" />
+		
+		<mkdir dir="${build.dist.login}/config" />
+		<mkdir dir="${build.dist.login}/config/network" />
+		<mkdir dir="${build.dist.login}/config/protected" />
+		
+		<mkdir dir="${build.dist.game}/config/protected" />
+		<mkdir dir="${build.dist.game}/config/head" />
+		<mkdir dir="${build.dist.game}/config/functions" />
+		<mkdir dir="${build.dist.game}/config/powerpak" />
+		<mkdir dir="${build.dist.game}/config/powerpak/webservices" />
+		<mkdir dir="${build.dist.game}/config/network" />
+		<mkdir dir="${build.dist.game}/config/fun" />
+
+		<mkdir dir="${build.dist.game}/config/others" />
+
+		<game server>
+		<copy todir="${build.dist.game}/config">
+			<fileset dir="config">
+				<include name="*.properties" />
+				<include name="*.info" />
+				<include name="chatfilter.txt" />
+				<include name="questionwords.txt" />
+				<include name="key.cfg" />
+				<include name="banned_ip.cfg" />
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dist.game}/config/protected">
+			<fileset dir="config/protected">
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dist.game}/config/functions">
+			<fileset dir="config/functions">
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dist.game}/config/head">
+			<fileset dir="config/head">
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dist.game}/config/powerpak">
+			<fileset dir="config/powerpak">
+				<include name="*.*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dist.game}/config/frozen">
+			<fileset dir="config/frozen">
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dist.game}/config/fun">
+			<fileset dir="config/fun">
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+		<network gameserver>
+		<copy todir="${build.dist.game}/config/network">
+			<fileset dir="config/network">
+				<include name="gameserver.properties" />
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dist.game}/config/others">
+					<fileset dir="config/others">
+						<include name="*.*" />
+					</fileset>
+		</copy>
+		
+		<copy todir="${build.dist.game}/">
+			<fileset dir="config/others">
+				<include name="*.*" />
+			</fileset>
+		</copy>
+
+
+		<login server>
+		<copy todir="${build.dist.login}/config">
+			<fileset dir="config">
+				<include name="telnet.properties" />
+			</fileset>
+			<fileset dir="config/others">
+				<include name="banned_ip.cfg" />
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dist.login}/config/protected">
+			<fileset dir="config/protected">
+				<include name="mmocore.properties" />
+			</fileset>
+		</copy>
+
+		<copy todir="${build.dist.login}/config/network">
+			<fileset dir="config/network">
+				<include name="loginserver.properties" />
+			</fileset>
+		</copy>
+		
+		<copy todir="${build.dist.login}/config/others">
+							<fileset dir="config/others">
+								<include name="*.*" />
+							</fileset>
+				</copy-->
+
+
+		<delete dir="${build.classes}" />
+
+	</target>
+
+	<!--target name="version" depends="init" description="Create Version file">
+
+		<tstamp>
+			<format property="build.tstamp" pattern="dd-MM-yyyy hh:mm:ss aa" />
+		</tstamp>
+
+		<exec dir="." executable="./subversion/svnversion" outputproperty="l2jfrozen.revision" failifexecutionfails="false">
+			<arg line="-n ." />
+		</exec>
+
+		<concat destfile="${properties-file}">
+		      revision=${l2jfrozen.revision}
+		      builddate=${build.tstamp}
+	      	  repository=http://subversion.assembla.com/svn/L2jFrozenInterlude/trunk/gameserver
+		  </concat>
+	</target-->
+
+	<!--target name="dist-local" depends="prepare-local,prepare-final,export" description="Create distribution files and Zip one into 'build' folder">
+		<zip destfile="${build}/L2Jorion_GameServer.zip" basedir="${build.dist}" update="false" />
+	</target>
+
+	<target name="dist-test" depends="prepare-test,prepare-final,export" description="Create distribution files into 'local_test_folder' folder: change it into build.properties">
+	</target>
+
+	<target name="dist-compiledRev" depends="prepare-compiledRev,prepare-final,export" description="Create distribution files into 'compiledRev_folder' folder: change it into build.properties">
+	</target-->
+
+	<target name="dist-local" description="Generate core jar into 'build-core' folder">
+		<property name="build" location="build" />
+		<property name="build.classes" location="${build}/classes" />
+		<delete dir="${build.classes}" />
+		<delete file="${build}/l2jorion-core.jar" />
+		<mkdir dir="${build}" />
+		<mkdir dir="${build.classes}" />
+		
+		<javac destdir="${build.classes}" includeantruntime="false" optimize="on" debug="on" source="1.8" target="1.8" encoding="UTF-8" nowarn="off">
+			<src path="${src}" />
+			<classpath refid="classpath" />
+		</javac>
+		
+		<copy todir="${build.classes}/META-INF/services">
+						<fileset dir="${src}/META-INF/services" />
+					</copy>
+
+		<jar destfile="${build}/l2jorion-core.jar">
+			<fileset dir="${build.classes}" />
+		</jar>
+
+		<delete dir="${build.classes}" />
+	</target>
+
+</project>

@@ -1,0 +1,86 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+
+<list maintainEnchantment="true">
+
+  <!-- 6393 - glittering -->
+    <!-- 6392 - simple medalis -->
+	<!--BTB soes staff-->
+  <item id="1">
+    <ingredient id="6392" count="2500"/>
+	<ingredient id="6393" count="100"/>
+    <production id="4901" count="1"/>
+  </item>
+  <!--Focus soes staff-->
+  <item id="2">
+    <ingredient id="6392" count="2500"/>
+	<ingredient id="6393" count="100"/>
+    <production id="4900" count="1"/>
+  </item>
+    <!--mental shield hell knife [b]-->
+  <item id="3">
+    <ingredient id="6392" count="2500"/>
+	<ingredient id="6393" count="100"/>
+    <production id="7814" count="1"/>
+  </item>
+  <!--cursed dagger rsk haste [b]-->
+  <item id="4">
+    <ingredient id="6392" count="2500"/>
+	<ingredient id="6393" count="100"/>
+    <production id="4761" count="1"/>
+  </item>
+    <!--bless res-->
+    <item id="5">
+    <ingredient id="6392" count="150"/>
+	<ingredient id="6393" count="15"/>
+    <production id="3936" count="1"/>
+  </item>
+    <!--bless soe-->
+    <item id="7">
+    <ingredient id="6392" count="150"/>
+	<ingredient id="6393" count="15"/>
+    <production id="1538" count="1"/>
+  </item>
+   <!--formal -->
+    <item id="8">
+    <ingredient id="6392" count="3333"/>
+	<ingredient id="6393" count="111"/>
+    <production id="6408" count="1"/>
+  </item>
+  <!--wind fleita -->
+    <item id="9">
+    <ingredient id="6392" count="750"/>
+	<ingredient id="6393" count="100"/>
+    <production id="3500" count="1"/>
+  </item>
+  <!-- star fleita -->
+    <item id="10">
+    <ingredient id="6392" count="750"/>
+	<ingredient id="6393" count="100"/>
+    <production id="3501" count="1"/>
+  </item>
+  <!--twilight star fleita -->
+    <item id="11">
+    <ingredient id="6392" count="750"/>
+	<ingredient id="6393" count="100"/>
+    <production id="3502" count="1"/>
+  </item>
+  <!--blue 12 -->
+    <item id="12">
+    <ingredient id="6392" count="600"/>
+	<ingredient id="6393" count="80"/>
+    <production id="5582" count="1"/>
+  </item>
+   <!--red 12 -->
+    <item id="13">
+    <ingredient id="6392" count="600"/>
+	<ingredient id="6393" count="80"/>
+    <production id="5580" count="1"/>
+  </item>
+  <!--green 12 -->
+    <item id="14">
+    <ingredient id="6392" count="600"/>
+	<ingredient id="6393" count="80"/>
+    <production id="5581" count="1"/>
+  </item>
+</list>

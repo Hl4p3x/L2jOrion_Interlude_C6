@@ -1,0 +1,381 @@
+<?xml version='1.0' encoding='utf-8'?>
+<list npcId="shop">
+	<item id="1">
+		<ingredient id="57" count="45000000" />
+		<production id="5635" count="1" />
+	</item>
+
+	<!-- Talum blade Anger -->
+	<item id="2">
+		<ingredient id="57" count="45000000" />
+		<production id="5637" count="1" />
+	</item>
+
+	<!-- Talum blade Haste -->
+	<item id="3">
+		<ingredient id="57" count="45000000" />
+		<production id="5636" count="1" />
+	</item>
+
+	<!-- Dark Legion Edge Critical Damage -->
+	<item id="4">
+		<ingredient id="57" count="45000000" />
+		<production id="5647" count="1" />
+	</item>
+
+	<!-- Dark Legion Edge Health -->
+	<item id="5">
+		<ingredient id="57" count="45000000" />
+		<production id="5648" count="1" />
+	</item>
+
+
+	<!-- Dark Legion Edge Rsk Focus -->
+	<item id="6">
+		<ingredient id="57" count="45000000" />
+		<production id="5649" count="1" />
+	</item>
+
+	<!-- Sirra's Blade Haste -->
+	<item id="7">
+		<ingredient id="57" count="45000000" />
+		<production id="8788" count="1" />
+	</item>
+
+	<!-- Sirra's Blade Focus -->
+	<item id="8">
+		<ingredient id="57" count="45000000" />
+		<production id="8789" count="1" />
+	</item>
+
+	<!-- Sirra's Blade Critical Poison -->
+	<item id="9">
+		<ingredient id="57" count="45000000" />
+		<production id="8790" count="1" />
+	</item>
+
+	<!-- SOM Acumen -->
+	<item id="10">
+		<ingredient id="57" count="45000000" />
+		<production id="5643" count="1" />
+	</item>
+
+	<!-- SOM Magic Power -->
+	<item id="11">
+		<ingredient id="57" count="45000000" />
+		<production id="5641" count="1" />
+	</item>
+
+	<!-- SOM Magic Silense -->
+	<item id="12">
+		<ingredient id="57" count="45000000" />
+		<production id="5642" count="1" />
+	</item>
+
+	<!-- Dragon Slayer  Health -->
+	<item id="13">
+		<ingredient id="57" count="45000000" />
+		<production id="5644" count="1" />
+	</item>
+
+	<!-- Dragon Slayer Crt Drain -->
+	<item id="14">
+		<ingredient id="57" count="45000000" />
+		<production id="5646" count="1" />
+	</item>
+
+	<!-- Dragon Slayer Crt Bleed -->
+	<item id="15">
+		<ingredient id="57" count="45000000" />
+		<production id="5645" count="1" />
+	</item>
+
+	<!-- Sword of Ipos Focus -->
+	<item id="16">
+		<ingredient id="57" count="45000000" />
+		<production id="8791" count="1" />
+	</item>
+
+	<!-- Sword of Ipos Haste -->
+	<item id="17">
+		<ingredient id="57" count="45000000" />
+		<production id="8792" count="1" />
+	</item>
+
+	<!-- Sword of Ipos Health -->
+	<item id="18">
+		<ingredient id="57" count="45000000" />
+		<production id="8793" count="1" />
+	</item>
+
+	<!-- Kesh*Kesh -->
+	<item id="19">
+		<ingredient id="57" count="45000000" />
+		<production id="5233" count="1" />
+	</item>
+
+	<!-- Kesh*Kesh -->
+	<item id="20">
+		<ingredient id="57" count="45000000" />
+		<production id="5704" count="1" />
+	</item>
+
+	<!-- Dam*Dam -->
+	<item id="21">
+		<ingredient id="57" count="45000000" />
+		<production id="5706" count="1" />
+	</item>
+
+	<!-- Elysian Health -->
+	<item id="22">
+		<ingredient id="57" count="45000000" />
+		<production id="5602" count="1" />
+	</item>
+
+	<!-- Elysian Anger -->
+	<item id="23">
+		<ingredient id="57" count="45000000" />
+		<production id="5603" count="1" />
+	</item>
+
+	<!-- Elysian Critical Drain -->
+	<item id="24">
+		<ingredient id="57" count="45000000" />
+		<production id="5604" count="1" />
+	</item>
+
+	<!-- Meteor Showrer Focus -->
+	<item id="25">
+		<ingredient id="57" count="45000000" />
+		<production id="5599" count="1" />
+	</item>
+
+	<!-- Meteor Showrer Critical Bleed -->
+	<item id="26">
+		<ingredient id="57" count="45000000" />
+		<production id="5600" count="1" />
+	</item>
+
+	<!-- Meteor Showrer Rsk. Haste -->
+	<item id="27">
+		<ingredient id="57" count="45000000" />
+		<production id="5601" count="1" />
+	</item>
+
+	<!-- Barakiel's Axe Health -->
+	<item id="28">
+		<ingredient id="57" count="45000000" />
+		<production id="8794" count="1" />
+	</item>
+
+	<!-- Barakiel's Axe Haste -->
+	<item id="29">
+		<ingredient id="57" count="45000000" />
+		<production id="8795" count="1" />
+	</item>
+
+	<!-- Barakiel's Axe Focus -->
+	<item id="30">
+		<ingredient id="57" count="45000000" />
+		<production id="8796" count="1" />
+	</item>
+
+	<!-- Halberd Haste -->
+	<item id="31">
+		<ingredient id="57" count="45000000" />
+		<production id="5626" count="1" />
+	</item>
+
+	<!-- Halberd Wide Blow -->
+	<item id="32">
+		<ingredient id="57" count="45000000" />
+		<production id="5627" count="1" />
+	</item>
+
+	<!-- Halberd Critical Stun -->
+	<item id="33">
+		<ingredient id="57" count="45000000" />
+		<production id="5628" count="1" />
+	</item>
+
+	<!-- Talum Glaive Health -->
+	<item id="34">
+		<ingredient id="57" count="45000000" />
+		<production id="5633" count="1" />
+	</item>
+
+	<!-- Talum Glaive Wide Blow -->
+	<item id="35">
+		<ingredient id="57" count="45000000" />
+		<production id="5634" count="1" />
+	</item>
+
+	<!-- Talum Glaive Guidance -->
+	<item id="36">
+		<ingredient id="57" count="45000000" />
+		<production id="5632" count="1" />
+	</item>
+
+	<!-- Tiphon Spear Critical Stun -->
+	<item id="37">
+		<ingredient id="57" count="45000000" />
+		<production id="8803" count="1" />
+	</item>
+
+	<!-- Tiphon Spear Towering Blow -->
+	<item id="38">
+		<ingredient id="57" count="45000000" />
+		<production id="8804" count="1" />
+	</item>
+
+	<!-- Tiphon Spear Wide Blow -->
+	<item id="39">
+		<ingredient id="57" count="45000000" />
+		<production id="8805" count="1" />
+	</item>
+
+	<!-- Blood Tornado Anger -->
+	<item id="40">
+		<ingredient id="57" count="45000000" />
+		<production id="5622" count="1" />
+	</item>
+
+	<!-- Blood Tronado Haste -->
+	<item id="41">
+		<ingredient id="57" count="45000000" />
+		<production id="5620" count="1" />
+	</item>
+
+	<!-- Blood Tornado Focus -->
+	<item id="42">
+		<ingredient id="57" count="45000000" />
+		<production id="5621" count="1" />
+	</item>
+
+	<!-- Sobekk Hurricance Rsk. Haste -->
+	<item id="43">
+		<ingredient id="57" count="45000000" />
+		<production id="8809" count="1" />
+	</item>
+
+	<!-- Sobekk Hurricance Haste -->
+	<item id="44">
+		<ingredient id="57" count="45000000" />
+		<production id="8810" count="1" />
+	</item>
+
+	<!-- Sobekk Hurricance Critical Drain -->
+	<item id="45">
+		<ingredient id="57" count="45000000" />
+		<production id="8811" count="1" />
+	</item>
+
+	<!-- Bloody Orchid Focus -->
+	<item id="46">
+		<ingredient id="57" count="45000000" />
+		<production id="5614" count="1" />
+	</item>
+
+	<!-- Bloody Orchid Back Blow -->
+	<item id="47">
+		<ingredient id="57" count="45000000" />
+		<production id="5615" count="1" />
+	</item>
+
+	<!-- Bloody Orchid Critical Bleed -->
+	<item id="48">
+		<ingredient id="57" count="45000000" />
+		<production id="5616" count="1" />
+	</item>
+
+	<!-- Soul Separator Critical Damage -->
+	<item id="49">
+		<ingredient id="57" count="45000000" />
+		<production id="5618" count="1" />
+	</item>
+
+	<!-- Soul Seperator Rsk.Haste -->
+	<item id="50">
+		<ingredient id="57" count="45000000" />
+		<production id="5619" count="1" />
+	</item>
+
+	<!-- Soul Separator Guidance -->
+	<item id="51">
+		<ingredient id="57" count="45000000" />
+		<production id="5617" count="1" />
+	</item>
+
+	<!-- Naga Storm Focus -->
+	<item id="52">
+		<ingredient id="57" count="45000000" />
+		<production id="8800" count="1" />
+	</item>
+
+	<!-- Naga Storm Critical Damage -->
+	<item id="53">
+		<ingredient id="57" count="45000000" />
+		<production id="8801" count="1" />
+	</item>
+
+	<!-- Naga Storm Back Blow -->
+	<item id="54">
+		<ingredient id="57" count="45000000" />
+		<production id="8802" count="1" />
+	</item>
+
+	<!-- Soul Bow Cheap Shot -->
+	<item id="55">
+		<ingredient id="57" count="45000000" />
+		<production id="5611" count="1" />
+	</item>
+
+	<!-- Soul Bow Quick Recovery -->
+	<item id="56">
+		<ingredient id="57" count="45000000" />
+		<production id="5612" count="1" />
+	</item>
+
+	<!-- Soul Bow Critical Poison -->
+	<item id="57">
+		<ingredient id="57" count="45000000" />
+		<production id="5613" count="1" />
+	</item>
+
+	<!-- Carnage Bow Mana Up -->
+	<item id="58">
+		<ingredient id="57" count="45000000" />
+		<production id="5610" count="1" />
+	</item>
+
+	<!-- Carnage Bow Light -->
+	<item id="59">
+		<ingredient id="57" count="45000000" />
+		<production id="5608" count="1" />
+	</item>
+
+	<!-- Carnage Bow Critical Bleed -->
+	<item id="60">
+		<ingredient id="57" count="45000000" />
+		<production id="5609" count="1" />
+	</item>
+
+	<!-- Shyeed's Bow Quick Recovery -->
+	<item id="61">
+		<ingredient id="57" count="45000000" />
+		<production id="8808" count="1" />
+	</item>
+
+	<!-- Shyeed's Bow Focus -->
+	<item id="62">
+		<ingredient id="57" count="45000000" />
+		<production id="8807" count="1" />
+	</item>
+
+	<!-- Shyeed's Bow Cheap Shot -->
+	<item id="63">
+		<ingredient id="57" count="45000000" />
+		<production id="8806" count="1" />
+	</item>
+
+</list>

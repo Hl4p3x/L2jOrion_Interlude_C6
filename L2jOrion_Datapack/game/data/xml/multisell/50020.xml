@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Mineral Shop -->
+<list>
+ <item id="1"> 
+ <!-- Gemstone D -->
+	<ingredient id="57" count="50000"/>
+	<production id="2130" count="1"/>
+ </item>
+ <item id="2"> 
+ <!-- Gemstone C -->
+	<ingredient id="57" count="50000"/>
+	<production id="2131" count="1"/>
+ </item>
+ <item id="3"> 
+ <!-- Gemstone B -->
+	<ingredient id="57" count="50000"/>
+	<production id="2132" count="1"/>
+ </item>
+ </list>

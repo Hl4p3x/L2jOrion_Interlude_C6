@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='utf-8'?>
+<list npcId="shop">
+<!-- Sword of Revolution -->
+  <item id="1">
+    <ingredient id="57" count="1000000"/>
+    <production id="129" count="1"/>
+  </item>
+
+  <!-- Elven Long Sword -->
+  <item id="2">
+    <ingredient id="57" count="1000000"/>
+    <production id="2499" count="1"/>
+  </item>
+
+  <!-- Elven Sword -->
+  <item id="3">
+    <ingredient id="57" count="1000000"/>
+    <production id="130" count="1"/>
+  </item>
+
+  <!-- Glaive -->
+  <item id="4">
+    <ingredient id="57" count="1000000"/>
+    <production id="297" count="1"/>
+  </item>
+
+  <!-- War Pick -->
+  <item id="5">
+    <ingredient id="57" count="1000000"/>
+    <production id="294" count="1"/>
+  </item>
+
+  <!-- Dwarven Trident -->
+  <item id="6">
+    <ingredient id="57" count="1000000"/>
+    <production id="295" count="1"/>
+  </item>
+
+  <!-- Scallop Jamadhr -->
+  <item id="7">
+    <ingredient id="57" count="1000000"/>
+    <production id="262" count="1"/>
+  </item>
+
+  <!-- Traveler's Jamadhr -->
+  <item id="8">
+    <ingredient id="57" count="1000000"/>
+    <production id="7828" count="1"/>
+  </item>
+
+  <!-- Saber*Saber -->
+  <item id="9">
+    <ingredient id="57" count="1000000"/>
+    <production id="2516" count="1"/>
+  </item>
+
+  <!-- Spinebone Sword*Elven Sword -->
+  <item id="10">
+    <ingredient id="57" count="1000000"/>
+    <production id="2537" count="1"/>
+  </item>
+
+  <!-- Dagger of Mana -->
+  <item id="11">
+    <ingredient id="57" count="1000000"/>
+    <production id="238" count="1"/>
+  </item>
+
+  <!-- Shilen Knife -->
+  <item id="12">
+    <ingredient id="57" count="1000000"/>
+    <production id="241" count="1"/>
+  </item>
+
+  <!-- Mithril Dagger -->
+  <item id="13">
+    <ingredient id="57" count="1000000"/>
+    <production id="225" count="1"/>
+  </item>
+
+  <!-- Maingauche -->
+  <item id="14">
+    <ingredient id="57" count="1000000"/>
+    <production id="224" count="1"/>
+  </item>
+
+  <!-- Light Crossbow -->
+  <item id="15">
+    <ingredient id="57" count="1000000"/>
+    <production id="280" count="1"/>
+  </item>
+
+  <!-- Strengthened Long Bow -->
+  <item id="16">
+    <ingredient id="57" count="1000000"/>
+    <production id="279" count="1"/>
+  </item>
+
+  <!-- Staff of Life -->
+  <item id="17">
+    <ingredient id="57" count="1000000"/>
+    <production id="189" count="1"/>
+  </item>
+
+  <!-- Tarbar -->
+  <item id="18">
+    <ingredient id="57" count="1000000"/>
+    <production id="158" count="1"/>
+  </item>
+
+  <!-- Skull Breaker -->
+  <item id="19">
+    <ingredient id="57" count="1000000"/>
+    <production id="169" count="1"/>
+  </item>
+
+  <!-- Titan Sword -->
+  <item id="20">
+    <ingredient id="57" count="1000000"/>
+    <production id="7881" count="1"/>
+  </item>
+
+  <!-- Two-Handed Sword -->
+  <item id="21">
+    <ingredient id="57" count="1000000"/>
+    <production id="124" count="1"/>
+  </item>
+
+  <!-- Claymore -->
+  <item id="22">
+    <ingredient id="57" count="1000000"/>
+    <production id="70" count="1"/>
+  </item>
+
+  <!-- Atuba Mace -->
+  <item id="23">
+    <ingredient id="57" count="1000000"/>
+    <production id="190" count="1"/>
+  </item>
+
+  <!-- Atuba Hammer -->
+  <item id="24">
+    <ingredient id="57" count="1000000"/>
+    <production id="187" count="1"/>
+  </item>
+
+  <!-- Titan Hammer -->
+  <item id="25">
+    <ingredient id="57" count="1000000"/>
+    <production id="7896" count="1"/>
+  </item>
+</list>

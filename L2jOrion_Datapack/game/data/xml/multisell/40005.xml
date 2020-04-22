@@ -1,0 +1,209 @@
+<?xml version='1.0' encoding='utf-8'?>
+<list npcId="shop">
+	<!-- Forgotten Blade Haste -->
+	<item id="1">
+		<ingredient id="57" count="90000000" />
+		<production id="6581" count="1" />
+	</item>
+
+	<!-- Forgotten Blade Health -->
+	<item id="2">
+		<ingredient id="57" count="90000000" />
+		<production id="6582" count="1" />
+	</item>
+
+	<!-- Forgotten Blade Focus -->
+	<item id="3">
+		<ingredient id="57" count="90000000" />
+		<production id="6583" count="1" />
+	</item>
+
+	<!-- Heavens Diviver Health -->
+	<item id="4">
+		<ingredient id="57" count="90000000" />
+		<production id="6606" count="1" />
+	</item>
+
+	<!-- Heavens Diviver Focus -->
+	<item id="5">
+		<ingredient id="57" count="90000000" />
+		<production id="6607" count="1" />
+	</item>
+
+	<!-- Heavens Diviver Haste -->
+	<item id="6">
+		<ingredient id="57" count="90000000" />
+		<production id="6605" count="1" />
+	</item>
+
+	<!-- Basalt Battlehammer HP Regen -->
+	<item id="7">
+		<ingredient id="57" count="90000000" />
+		<production id="6586" count="1" />
+	</item>
+
+	<!-- Basalt Battlehammer Health -->
+	<item id="8">
+		<ingredient id="57" count="90000000" />
+		<production id="6585" count="1" />
+	</item>
+
+	<!-- Basalt Battlehammer HP Drain -->
+	<item id="9">
+		<ingredient id="57" count="90000000" />
+		<production id="6584" count="1" />
+	</item>
+
+	<!-- Saint Spear Health -->
+	<item id="10">
+		<ingredient id="57" count="90000000" />
+		<production id="6599" count="1" />
+	</item>
+
+	<!-- Saint Spear Haste -->
+	<item id="11">
+		<ingredient id="57" count="90000000" />
+		<production id="6601" count="1" />
+	</item>
+
+	<!-- Saint Spear Guidance -->
+	<item id="12">
+		<ingredient id="57" count="90000000" />
+		<production id="6600" count="1" />
+	</item>
+
+	<!-- Demon Sprinter Focus -->
+	<item id="13">
+		<ingredient id="57" count="90000000" />
+		<production id="6602" count="1" />
+	</item>
+
+	<!-- Demon Sprinter Health -->
+	<item id="14">
+		<ingredient id="57" count="90000000" />
+		<production id="6603" count="1" />
+	</item>
+
+	<!-- Demon Sprinter Crt Stun -->
+	<item id="15">
+		<ingredient id="57" count="90000000" />
+		<production id="6604" count="1" />
+	</item>
+
+	<!-- Angel Slayer Haste -->
+	<item id="16">
+		<ingredient id="57" count="90000000" />
+		<production id="6590" count="1" />
+	</item>
+
+	<!-- Angel Slayer HP Drain -->
+	<item id="17">
+		<ingredient id="57" count="90000000" />
+		<production id="6591" count="1" />
+	</item>
+
+	<!-- Angel Slayer Critical Damage -->
+	<item id="18">
+		<ingredient id="57" count="90000000" />
+		<production id="6592" count="1" />
+	</item>
+
+	<!-- Shining Bow Cheap Shot -->
+	<item id="19">
+		<ingredient id="57" count="90000000" />
+		<production id="6593" count="1" />
+	</item>
+
+	<!-- Shining Bow Focus -->
+	<item id="20">
+		<ingredient id="57" count="90000000" />
+		<production id="6594" count="1" />
+	</item>
+
+	<!-- Shining Bow Critical Slow -->
+	<item id="21">
+		<ingredient id="57" count="90000000" />
+		<production id="6595" count="1" />
+	</item>
+
+	<!-- Arcana Mace Acumen -->
+	<item id="22">
+		<ingredient id="57" count="90000000" />
+		<production id="6608" count="1" />
+	</item>
+
+	<!-- Arcana Mace Mp Regen -->
+	<item id="23">
+		<ingredient id="57" count="90000000" />
+		<production id="6609" count="1" />
+	</item>
+
+	<!-- Arcana Mace Mana Up -->
+	<item id="24">
+		<ingredient id="57" count="90000000" />
+		<production id="6610" count="1" />
+	</item>
+
+	<!-- Draconik Bow Cheap Shot -->
+	<item id="25">
+		<ingredient id="57" count="90000000" />
+		<production id="7576" count="1" />
+	</item>
+
+	<!-- Draconik Bow Focus -->
+	<item id="26">
+		<ingredient id="57" count="90000000" />
+		<production id="7577" count="1" />
+	</item>
+
+	<!-- Draconik Bow Critical Slow -->
+	<item id="27">
+		<ingredient id="57" count="90000000" />
+		<production id="7578" count="1" />
+	</item>
+
+	<!-- Imperial Staff Empower -->
+	<item id="28">
+		<ingredient id="57" count="90000000" />
+		<production id="6587" count="1" />
+	</item>
+
+	<!-- Imperial Staff MP Regeneration -->
+	<item id="29">
+		<ingredient id="57" count="90000000" />
+		<production id="6588" count="1" />
+	</item>
+
+	<!-- Imperial Staff	Magic Hold -->
+	<item id="30">
+		<ingredient id="57" count="90000000" />
+		<production id="6589" count="1" />
+	</item>
+
+
+	<!-- Talum Blade*Dark Legion Edge -->
+	<item id="31">
+		<ingredient id="57" count="90000000" />
+		<production id="6580" count="1" />
+	</item>
+	
+	<!-- Imperial Staff MP Regeneration -->
+	<item id="32">
+		<ingredient id="57" count="90000000" />
+		<production id="6596" count="1" />
+	</item>
+
+	<!-- Imperial Staff	Magic Hold -->
+	<item id="33">
+		<ingredient id="57" count="90000000" />
+		<production id="6597" count="1" />
+	</item>
+
+
+	<!-- Talum Blade*Dark Legion Edge -->
+	<item id="34">
+		<ingredient id="57" count="90000000" />
+		<production id="6598" count="1" />
+	</item>
+
+</list>

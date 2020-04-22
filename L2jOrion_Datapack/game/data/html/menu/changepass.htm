@@ -1,0 +1,53 @@
+<html>
+<title>L2jOrion - Change Password</title>
+<body>
+<center>
+<img src="L2UI_CH3.onscrmsg_pattern01_1" width=298 height=30>
+<table border="0" cellspacing="0">
+	<tr>
+		<td valign=top><img src=icon.etc_alphabet_p_i00 width=32 height=32 align=center></td>
+		<td valign=top><img src=icon.etc_alphabet_a_i00 width=32 height=32 align=center></td>
+		<td valign=top><img src=icon.etc_alphabet_s_i00 width=32 height=32 align=center></td>
+		<td valign=top><img src=icon.etc_alphabet_s_i00 width=32 height=32 align=center></td>
+		<td valign=top><img src=icon.etc_alphabet_w_i00 width=32 height=32 align=center></td>
+		<td valign=top><img src=icon.etc_alphabet_o_i00 width=32 height=32 align=center></td>
+		<td valign=top><img src=icon.etc_alphabet_r_i00 width=32 height=32 align=center></td>
+		<td valign=top><img src=icon.etc_alphabet_d_i00 width=32 height=32 align=center></td>
+		</tr>
+	<tr>
+	</tr>
+</table>
+<br>
+<img src="L2UI_CH3.onscrmsg_pattern01_2" width=298 height=30>
+
+  <img src="l2ui.SquareGray" width="298" height="1"><br1>
+  <table width="298" cellpadding="0" bgcolor="000000">
+  <tr><td align="center">
+Current Password:
+<edit valign="center" type="password" var="curpass" width=106><br>
+New Password:
+<edit type="password" var="newpass" width=106><br>
+Repeat New Password:
+<edit type="password" var="repeatnewpass" width=106><br>
+<table width="298" cellpadding="1">
+  <tr>    
+    <td align="center">
+       <button value="Change" action="bypass custom_menu_pass_change $curpass $newpass $repeatnewpass"  width=96 height=15 back="sek.cbui94" fore="sek.cbui94">
+    </td>     
+  </tr>    
+  </table>
+  <br>
+</td>
+</tr>
+</table>
+<img src="l2ui.SquareGray" width="298" height="1">
+<br>
+  <table width="298" cellpadding="1">
+  <tr>    
+    <td align="center">
+       <button value="Back" action="bypass custom_menu3"  width=96 height=15 back="sek.cbui94" fore="sek.cbui94">
+    </td>        
+  </tr>    
+  </table>
+</center>
+</body></html>

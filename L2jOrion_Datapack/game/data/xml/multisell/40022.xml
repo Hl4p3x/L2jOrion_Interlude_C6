@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8'?>
+<list npcId="shop">
+
+	<!-- Lunargent -->
+	<item id="1">
+		<ingredient id="57" count="70000000"/>
+		<production id="6029" count="1"/>
+	</item>
+
+	<!-- Hellfire oil -->
+	<item id="2">
+		<ingredient id="57" count="100000000"/>
+		<production id="6033" count="1"/>
+	</item>
+
+</list>

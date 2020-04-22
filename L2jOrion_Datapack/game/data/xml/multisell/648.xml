@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Exchange the equipment from hatchling to strider and vice versa -->
+<list maintainEnchantment="true">
+
+  <!-- CL -->
+  <item id="1">
+    <ingredient id="8077" count="23"/>
+    <production id="1894" count="1"/>
+  </item>
+  
+  <!-- CBP -->
+  <item id="2">
+    <ingredient id="8077" count="6"/>
+    <production id="1881" count="1"/>
+  </item>
+  
+  <!-- STEEL -->
+  <item id="3">
+    <ingredient id="8077" count="8"/>
+    <production id="1880" count="1"/>
+  </item>
+  
+  <!-- EWA -->
+  <item id="4">
+    <ingredient id="8078" count="1800"/>
+    <production id="729" count="1"/>
+  </item>
+  
+  <!-- EAA -->
+  <item id="5">
+    <ingredient id="8078" count="240"/>
+    <production id="730" count="1"/>
+  </item>
+  
+  <!-- EWB -->
+  <item id="6">
+    <ingredient id="8078" count="500"/>
+    <production id="947" count="1"/>
+  </item>
+  
+  <!-- EAB -->
+  <item id="7">
+    <ingredient id="8078" count="80"/>
+    <production id="948" count="1"/>
+  </item>
+
+</list>

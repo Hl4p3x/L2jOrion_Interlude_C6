@@ -1,0 +1,38 @@
+#Syntax:
+#  itemID;npcID;summonType
+#
+# summonType: 0 = static, 1 = pet, 2 = wyvern
+#
+
+#Static
+# Christmas Tree
+# 5560;13006;0
+# Special Cristmas Tree
+# 5561;13007;0
+
+#Pets
+# Wolf
+2375;12077;1
+# Hatchling of Wind
+3500;12311;1
+# Hatchling of Star
+3501;12312;1
+# Hatchling of Twilight
+3502;12313;1
+# Wind Strider
+4422;12526;1
+# Star Strider
+4423;12527;1
+# Twilight Strider
+4424;12528;1
+# Sin Eater
+4425;12564;1
+# Baby Bufallo
+6648;12780;1
+# Baby Cougar
+6649;12782;1
+# Baby Kookaburra
+6650;12781;1
+
+#Wyvern
+8663;12621;2

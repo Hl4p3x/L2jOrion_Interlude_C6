@@ -1,0 +1,96 @@
+<html><title>L2jOrion - Control</title>
+<body>
+<img src="l2ui.SquareGray" width="298" height="1">
+<table width=310 border=0 bgcolor=00161F>
+<tr>
+<td><center>P R E M I U M: %exptime%</center></td>
+</tr>
+</table>
+<img src="l2ui.SquareGray" width="298" height="1">
+
+<table align=center>
+	<tr>
+		<td align=center><button value="Control" width=95 height=32 back="L2UI_ch3.skill_tab1" fore="L2UI_ch3.skill_tab1"></td>
+		<td align=center><button value="Auto Potions" action="bypass custom_menu2" width=95 height=32 back="L2UI_ch3.skill_tab1" fore="L2UI_ch3.skill_tab2"></td>
+		<td align=center><button value="Menu" action="bypass custom_menu3" width=95 height=32 back="L2UI_ch3.skill_tab1" fore="L2UI_ch3.skill_tab2"></td>
+	</tr>
+</table>
+<table width=340 border=0>
+<tr>
+<td><center><font color=3399ff>Character:</font></center></td>
+</tr>
+</table>
+<table border=0 bgcolor=000000>
+<tr>
+<td width=200> Receive experience (EXP)</td>
+<td width=25 align=center>%gainexp%</td>
+<td><button width=70 height=16 back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton" action="bypass custom_menu_exp %nr%" value="%gainexp1%"></td>
+</tr>
+</table>
+<table border=0>
+<tr>
+<td width=200> Set up title - PvP: [%pvp%]  PK: [%pk%] <font color=ff0000>***</font></td>
+<td width=25 align=center>%titlestatus%</td>
+<td><button width=70 height=16 back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton" action="bypass custom_menu_title %nr1%" value="%titlestatus1%"></td>
+</tr>
+</table>
+<table border=0 bgcolor=000000>
+<tr>
+<td width=200> Block buffs (from other players)</td>
+<td width=25 align=center>%blockbuff%</td>
+<td><button width=70 height=16 back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton" action="bypass custom_menu_blockbuff %nr2%" value="%blockbuff1%"></td>
+</tr>
+</table>
+<table border=0>
+<tr>
+<td width=200> Auto-pick up drop</td>
+<td width=25 align=center>%autoloot%</td>
+<td><button width=70 height=16 back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton" action="bypass custom_menu_loot %nr3%" value="%autoloot1%"></td>
+</tr>
+</table>
+<table border=0 bgcolor=000000>
+<tr>
+<td width=200> Receive trade</td>
+<td width=25 align=center>%trade%</td>
+<td><button width=70 height=16 back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton" action="bypass custom_menu_trade %nr5%" value="%trade1%"></td>
+</tr>
+</table>
+<table border=0>
+<tr>
+<td width=200> Receive private messages</td>
+<td width=25 align=center>%pm%</td>
+<td><button width=70 height=16 back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton" action="bypass custom_menu_pm %nr6%" value="%pm1%"></td>
+</tr>
+</table>
+
+<table border=0 bgcolor=000000>
+<tr>
+<td width=200> Screen text (Critical, damage and etc.)</td>
+<td width=25 align=center>%screentxt%</td>
+<td><button width=70 height=16 back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton" action="bypass custom_menu_screentxt %nr8%" value="%screentxt1%"></td>
+</tr>
+</table>
+<table border=0>
+<tr>
+<td width=200> Falling to textures auto correction</td>
+<td width=25 align=center>%teleport%</td>
+<td><button width=70 height=16 back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton" action="bypass custom_menu_teleport %nr13%" value="%teleport1%"></td>
+</tr>
+</table>
+<br>
+<table width=340 border=0>
+<tr>
+<td><center><font color=3399ff>Account:</font></center></td>
+</tr>
+</table>
+<table border=0 bgcolor=000000>
+<tr>
+<td width=200> Bind IP for better account security</td>
+<td width=25 align=center>%ip%</td>
+<td><button width=70 height=16 back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton" action="bypass custom_menu_ip %nr7%" value="%ip1%"></td>
+</tr>
+</table>
+<br>
+<font color=ff0000>***</font> - Automatically upating.
+</center>
+</body></html>

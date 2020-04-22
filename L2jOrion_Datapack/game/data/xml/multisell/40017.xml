@@ -1,0 +1,292 @@
+<?xml version='1.0' encoding='utf-8'?>
+<list npcId="shop">
+	<config showall="true" notax="true" keepenchanted="true"/>
+	<!-- STR +1 CON -1 -->
+	<item id="1">
+		<ingredient id="57" count="1800000"/>
+		<production id="4553" count="10"/>
+	</item>
+
+	<!-- STR +1 DEX -1 -->
+	<item id="2">
+		<ingredient id="57" count="1800000"/>
+		<production id="4554" count="10"/>
+	</item>
+
+	<!-- CON +1 STR -1 -->
+	<item id="3">
+		<ingredient id="57" count="1800000"/>
+		<production id="4555" count="10"/>
+	</item>
+
+	<!-- CON +1 DEX -1 -->
+	<item id="4">
+		<ingredient id="57" count="1800000"/>
+		<production id="4556" count="10"/>
+	</item>
+
+	<!-- DEX +1 STR -1 -->
+	<item id="5">
+		<ingredient id="57" count="1800000"/>
+		<production id="4557" count="10"/>
+	</item>
+
+	<!-- DEX +1 CON -1 -->
+	<item id="6">
+		<ingredient id="57" count="1800000"/>
+		<production id="4558" count="10"/>
+	</item>
+
+	<!-- STR +2 CON -2 -->
+	<item id="7">
+		<ingredient id="57" count="2000000"/>
+		<production id="4589" count="10"/>
+	</item>
+
+	<!-- STR +2 DEX -2 -->
+	<item id="8">
+		<ingredient id="57" count="2000000"/>
+		<production id="4590" count="10"/>
+	</item>
+
+	<!-- CON +2 STR -2 -->
+	<item id="9">
+		<ingredient id="57" count="2000000"/>
+		<production id="4591" count="10"/>
+	</item>
+
+	<!-- CON +2 DEX -2 -->
+	<item id="10">
+		<ingredient id="57" count="2000000"/>
+		<production id="4592" count="10"/>
+	</item>
+
+	<!-- DEX +2 STR -2 -->
+	<item id="11">
+		<ingredient id="57" count="2000000"/>
+		<production id="4593" count="10"/>
+	</item>
+
+	<!-- DEX +2 CON -2 -->
+	<item id="12">
+		<ingredient id="57" count="2000000"/>
+		<production id="4594" count="10"/>
+	</item>
+
+	<!-- STR +3 CON -3 -->
+	<item id="13">
+		<ingredient id="57" count="3000000"/>
+		<production id="4601" count="10"/>
+	</item>
+
+	<!-- STR +3 DEX -3 -->
+	<item id="14">
+		<ingredient id="57" count="3000000"/>
+		<production id="4602" count="10"/>
+	</item>
+
+	<!-- CON +3 STR -3 -->
+	<item id="15">
+		<ingredient id="57" count="3000000"/>
+		<production id="4603" count="10"/>
+	</item>
+
+	<!-- CON +3 DEX -3 -->
+	<item id="16">
+		<ingredient id="57" count="3000000"/>
+		<production id="4604" count="10"/>
+	</item>
+
+	<!-- DEX +3 STR -3 -->
+	<item id="17">
+		<ingredient id="57" count="3000000"/>
+		<production id="4605" count="10"/>
+	</item>
+
+	<!-- DEX +3 CON -3 -->
+	<item id="18">
+		<ingredient id="57" count="3000000"/>
+		<production id="4606" count="10"/>
+	</item>
+
+	<!-- STR +4 CON -4 -->
+	<item id="19">
+		<ingredient id="57" count="4000000"/>
+		<production id="4613" count="10"/>
+	</item>
+
+	<!-- STR +4 DEX -4 -->
+	<item id="20">
+		<ingredient id="57" count="4000000"/>
+		<production id="4614" count="10"/>
+	</item>
+
+	<!-- CON +4 STR -4 -->
+	<item id="21">
+		<ingredient id="57" count="4000000"/>
+		<production id="4615" count="10"/>
+	</item>
+
+	<!-- CON +4 DEX -4 -->
+	<item id="22">
+		<ingredient id="57" count="4000000"/>
+		<production id="4616" count="10"/>
+	</item>
+
+	<!-- DEX +4 STR -4 -->
+	<item id="23">
+		<ingredient id="57" count="4000000"/>
+		<production id="4617" count="10"/>
+	</item>
+
+	<!-- DEX +4 CON -4 -->
+	<item id="24">
+		<ingredient id="57" count="4000000"/>
+		<production id="4618" count="10"/>
+	</item>
+
+	<!-- INT +1 MEN -1 -->
+	<item id="25">
+		<ingredient id="57" count="1800000"/>
+		<production id="4559" count="10"/>
+	</item>
+
+	<!-- INT +1 WIT -1 -->
+	<item id="26">
+		<ingredient id="57" count="1800000"/>
+		<production id="4560" count="10"/>
+	</item>
+
+	<!-- MEN +1 INT -1 -->
+	<item id="27">
+		<ingredient id="57" count="1800000"/>
+		<production id="4561" count="10"/>
+	</item>
+
+	<!-- MEN +1 WIT -1 -->
+	<item id="28">
+		<ingredient id="57" count="1800000"/>
+		<production id="4562" count="10"/>
+	</item>
+
+	<!--WIT +1 INT -1 -->
+	<item id="29">
+		<ingredient id="57" count="1800000"/>
+		<production id="4563" count="10"/>
+	</item>
+
+	<!-- WIT +1 MEN -1 -->
+	<item id="30">
+		<ingredient id="57" count="1800000"/>
+		<production id="4564" count="10"/>
+	</item>
+
+	<!-- INT +2 MEN -2 -->
+	<item id="31">
+		<ingredient id="57" count="2000000"/>
+		<production id="4595" count="10"/>
+	</item>
+
+	<!-- INT +2 WIT -2 -->
+	<item id="32">
+		<ingredient id="57" count="2000000"/>
+		<production id="4596" count="10"/>
+	</item>
+
+	<!-- MEN +2 INT -2 -->
+	<item id="33">
+		<ingredient id="57" count="2000000"/>
+		<production id="4597" count="10"/>
+	</item>
+
+	<!-- MEN +2 WIT -2 -->
+	<item id="34">
+		<ingredient id="57" count="2000000"/>
+		<production id="4598" count="10"/>
+	</item>
+
+	<!-- WIT +2 INT -2 -->
+	<item id="35">
+		<ingredient id="57" count="2000000"/>
+		<production id="4599" count="10"/>
+	</item>
+
+	<!-- WIT +2 MEN -2 -->
+	<item id="36">
+		<ingredient id="57" count="2000000"/>
+		<production id="4600" count="10"/>
+	</item>
+
+	<!-- INT +3 MEN -3 -->
+	<item id="37">
+		<ingredient id="57" count="3000000"/>
+		<production id="4607" count="10"/>
+	</item>
+
+	<!-- INT +3 WIT -3 -->
+	<item id="38">
+		<ingredient id="57" count="3000000"/>
+		<production id="4608" count="10"/>
+	</item>
+
+	<!-- MEN +3 INT -3 -->
+	<item id="39">
+		<ingredient id="57" count="3000000"/>
+		<production id="4609" count="10"/>
+	</item>
+
+	<!-- MEN +3 WIT -3 -->
+	<item id="40">
+		<ingredient id="57" count="3000000"/>
+		<production id="4610" count="10"/>
+	</item>
+
+	<!-- WIT +3 INT -3 -->
+	<item id="41">
+		<ingredient id="57" count="3000000"/>
+		<production id="4611" count="10"/>
+	</item>
+
+	<!-- WIT +3 MEN -3 -->
+	<item id="42">
+		<ingredient id="57" count="3000000"/>
+		<production id="4612" count="10"/>
+	</item>
+
+	<!-- INT +4 MEN -4 -->
+	<item id="43">
+		<ingredient id="57" count="4000000"/>
+		<production id="4619" count="10"/>
+	</item>
+
+	<!-- INT +4 WIT -4 -->
+	<item id="44">
+		<ingredient id="57" count="4000000"/>
+		<production id="4620" count="10"/>
+	</item>
+
+	<!-- MEN +4 INT -4 -->
+	<item id="45">
+		<ingredient id="57" count="4000000"/>
+		<production id="4621" count="10"/>
+	</item>
+
+	<!-- MEN +4 WIT -4 -->
+	<item id="46">
+		<ingredient id="57" count="4000000"/>
+		<production id="4622" count="10"/>
+	</item>
+
+	<!-- WIT +4 INT -4 -->
+	<item id="47">
+		<ingredient id="57" count="4000000"/>
+		<production id="4623" count="10"/>
+	</item>
+
+	<!-- WIT +4 MEN -4 -->
+	<item id="48">
+		<ingredient id="57" count="4000000"/>
+		<production id="4624" count="10"/>
+	</item>
+
+</list>

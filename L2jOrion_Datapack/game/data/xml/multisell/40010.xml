@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<list npcId="shop">
+	<!-- Draconic Leather armor -->
+	<item id="1">
+		<ingredient id="57" count="100000000"/>
+		<production id="6379" count="1"/>
+		<production id="6381" count="1"/>
+		<production id="6380" count="1"/>
+		<production id="6382" count="1"/>
+	</item>
+
+	<!-- Imperial Cursader Breastplate -->
+	<item id="2">
+		<ingredient id="57" count="120000000"/>
+		<production id="6373" count="1"/>
+		<production id="6374" count="1"/>
+		<production id="6376" count="1"/>
+		<production id="6375" count="1"/>
+		<production id="6378" count="1"/>
+		<production id="6377" count="1"/>
+	</item>
+
+	<!-- Major Arcana Robe -->
+	<item id="3">
+		<ingredient id="57" count="100000000"/>
+		<production id="6383" count="1"/>
+		<production id="6384" count="1"/>
+		<production id="6385" count="1"/>
+		<production id="6386" count="1"/>
+	</item>
+
+	<!-- Imperial Cursader Shield -->
+	<item id="4">
+		<ingredient id="57" count="20000000"/>
+		<production id="6377" count="1"/>
+	</item>
+
+</list>

@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Fortress shop custom -->
+<list>
+ <item id="1"> 
+ <!-- Potion of Alacrity -->
+	<ingredient id="57" count="4000"/>
+	<production id="735" count="1"/>
+ </item>
+ <item id="2"> 
+ <!-- Healing Potion,Effect 2. -->
+	<ingredient id="57" count="1500"/>
+	<production id="1061" count="1"/>
+ </item>
+ <item id="3"> 
+ <!-- Haste Potion -->
+	<ingredient id="57" count="2000"/>
+	<production id="734" count="1"/>
+ </item>
+ <item id="4"> 
+ <!-- Scroll of escape -->
+	<ingredient id="57" count="3000"/>
+	<production id="736" count="1"/>
+ </item>
+ <item id="5"> 
+ <!-- Scroll of Resurrection -->
+	<ingredient id="57" count="3000"/>
+	<production id="737" count="1"/>
+ </item>
+ <item id="6"> 
+ <!-- Scroll of Escape: Clan Hall -->
+	<ingredient id="57" count="3000"/>
+	<production id="1829" count="1"/>
+ </item>
+ <item id="7"> 
+ <!-- Scroll of Escape: Castle -->
+	<ingredient id="57" count="3000"/>
+	<production id="1830" count="1"/>
+ </item>
+ <item id="8"> 
+ <!-- Gemstone C -->
+	<ingredient id="57" count="3500"/>
+	<production id="2131" count="1"/>
+ </item>
+ <item id="9"> 
+ <!-- Magic Haste Potion -->
+	<ingredient id="57" count="3500"/>
+	<production id="6035" count="1"/>
+ </item>
+  <item id="10"> 
+ <!-- Wooden Arrow: NG Grade :) -->
+	<ingredient id="57" count="2"/>
+	<production id="17" count="1"/>
+ </item>
+ <item id="11"> 
+ <!-- Bone Arrow: D Grade -->
+	<ingredient id="57" count="3"/>
+	<production id="1341" count="1"/>
+ </item>
+ <item id="12"> 
+ <!-- Fine Steel Arrow: C Grade -->
+	<ingredient id="57" count="5"/>
+	<production id="1342" count="1"/>
+ </item>
+ <item id="13"> 
+ <!-- Enerty Stone -->
+	<ingredient id="57" count="150"/>
+	<production id="5589" count="1"/>
+ </item>-->
+ <item id="14"> 
+ <!-- Spirit Ore -->
+	<ingredient id="57" count="450"/>
+	<production id="3031" count="1"/>
+ </item>
+ <item id="15"> 
+ <!-- Soul Ore -->
+	<ingredient id="57" count="250"/>
+	<production id="1785" count="1"/>
+ </item>
+</list>

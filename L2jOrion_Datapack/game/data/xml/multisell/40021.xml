@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<list npcId="shop">
+
+	<!-- Tatto of Blood -->
+	<item id="1">
+		<ingredient id="6673" count="5"/>
+		<production id="490" count="1"/>
+	</item>
+
+	<!-- Tatto of Absolute -->
+	<item id="2">
+		<ingredient id="6673" count="5"/>
+		<production id="491" count="1"/>
+	</item>
+
+	<!-- Tatto of Pledge -->
+	<item id="3">
+		<ingredient id="6673" count="5"/>
+		<production id="495" count="1"/>
+	</item>
+
+</list>

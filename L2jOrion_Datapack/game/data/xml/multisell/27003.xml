@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<list> 
+<!-- Event Medal Shop'as - A Juve - LifeDrain.lt serveris 2012-07-03 09:43 - Julius -->
+   <!-- Sealed MJ Ring -->
+   <item id="1"> 
+   <ingredient id="6392" count="280"/> 
+   <ingredient id="6393" count="10"/>
+   <ingredient id="65436" count="8"/>
+   <production id="6328" count="1"/> 
+   </item> 
+   <!-- Sealed MJ Earring-->
+   <item id="2"> 
+   <ingredient id="6392" count="340"/> 
+   <ingredient id="6393" count="12"/>
+   <ingredient id="65436" count="10"/>
+   <production id="6327" count="1"/> 
+   </item>
+   <!-- Sealed MJ Necklace -->
+   <item id="3"> 
+   <ingredient id="6392" count="410"/> 
+   <ingredient id="6393" count="15"/>
+   <ingredient id="65436" count="13"/>
+   <production id="6326" count="1"/> 
+   </item>
+</list>

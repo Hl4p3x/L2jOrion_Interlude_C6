@@ -1,0 +1,338 @@
+<?xml version='1.0' encoding='utf-8'?>
+<list npcId="shop">
+<!-- Homunkulus's Sword - Acumen -->
+  <item id="1">
+    <ingredient id="57" count="6000000"/>
+    <production id="6313" count="1"/>
+  </item>
+
+  <!-- Homunkulus's Sword - Conversion -->
+  <item id="2">
+    <ingredient id="57" count="6000000"/>
+    <production id="6314" count="1"/>
+  </item>
+
+  <!-- Homunkulus's Sword - Magic Paralyze -->
+  <item id="3">
+    <ingredient id="57" count="6000000"/>
+    <production id="6315" count="1"/>
+  </item>
+
+  <!-- Raid Sword - Critical Drain -->
+  <item id="4">
+    <ingredient id="57" count="6000000"/>
+    <production id="4694" count="1"/>
+  </item>
+
+  <!-- Raid Sword - Critical Poison -->
+  <item id="5">
+    <ingredient id="57" count="6000000"/>
+    <production id="4695" count="1"/>
+  </item>
+
+  <!-- Raid Sword - Focus -->
+  <item id="6">
+    <ingredient id="57" count="6000000"/>
+    <production id="4693" count="1"/>
+  </item>
+
+  <!-- Samurai Longsword - Critical Damage -->
+  <item id="7">
+    <ingredient id="57" count="6000000"/>
+    <production id="4709" count="1"/>
+  </item>
+
+  <!-- Samurai Longsword - Focus -->
+  <item id="8">
+    <ingredient id="57" count="6000000"/>
+    <production id="4708" count="1"/>
+  </item>
+
+  <!-- Samurai Longsword - Haste -->
+  <item id="9">
+    <ingredient id="57" count="6000000"/>
+    <production id="4710" count="1"/>
+  </item>
+
+  <!-- Orcish Glaive - Anger -->
+  <item id="10">
+    <ingredient id="57" count="6000000"/>
+    <production id="4837" count="1"/>
+  </item>
+
+  <!-- Orcish Glaive - Critical Stun -->
+  <item id="11">
+    <ingredient id="57" count="6000000"/>
+    <production id="4838" count="1"/>
+  </item>
+
+  <!-- Orcish Glaive - Towering Blow -->
+  <item id="12">
+    <ingredient id="57" count="6000000"/>
+    <production id="4839" count="1"/>
+  </item>
+
+  <!-- Orcish Poleaxe - Wide Blow -->
+  <item id="13">
+    <ingredient id="57" count="6000000"/>
+    <production id="4854" count="1"/>
+  </item>
+
+  <!-- Orcish Poleaxe - Towering Blow -->
+  <item id="14">
+    <ingredient id="57" count="6000000"/>
+    <production id="4853" count="1"/>
+  </item>
+
+  <!-- Orcish Poleaxe - Critical Stun -->
+  <item id="15">
+    <ingredient id="57" count="6000000"/>
+    <production id="4852" count="1"/>
+  </item>
+
+  <!-- Great Pata - Rsk. Haste -->
+  <item id="16">
+    <ingredient id="57" count="6000000"/>
+    <production id="4797" count="1"/>
+  </item>
+
+  <!-- Great Pata - Critical Poison -->
+  <item id="17">
+    <ingredient id="57" count="6000000"/>
+    <production id="4796" count="1"/>
+  </item>
+
+  <!-- Great Pata - Critical Drain -->
+  <item id="18">
+    <ingredient id="57" count="6000000"/>
+    <production id="4795" count="1"/>
+  </item>
+
+  <!-- Fisted Blade - Rsk. Haste -->
+  <item id="19">
+    <ingredient id="57" count="6000000"/>
+    <production id="4793" count="1"/>
+  </item>
+
+  <!-- Fisted Blade - Rsk. Evasion -->
+  <item id="20">
+    <ingredient id="57" count="6000000"/>
+    <production id="4792" count="1"/>
+  </item>
+
+  <!-- Fisted Blade - Haste -->
+  <item id="21">
+    <ingredient id="57" count="6000000"/>
+    <production id="4794" count="1"/>
+  </item>
+
+  <!-- Spirit Sword*Spirit Sword -->
+  <item id="22">
+    <ingredient id="57" count="6000000"/>
+    <production id="2591" count="1"/>
+  </item>
+
+  <!-- Raid Sword*Raid Sword -->
+  <item id="23">
+    <ingredient id="57" count="6000000"/>
+    <production id="2599" count="1"/>
+  </item>
+
+  <!-- Katana*Katana -->
+  <item id="24">
+    <ingredient id="57" count="6000000"/>
+    <production id="2582" count="1"/>
+  </item>
+
+  <!-- Stormbringer*Stormbringer -->
+  <item id="25">
+    <ingredient id="57" count="6000000"/>
+    <production id="2561" count="1"/>
+  </item>
+
+  <!-- Crystal Dagger - Critical Bleed -->
+  <item id="26">
+    <ingredient id="57" count="6000000"/>
+    <production id="4774" count="1"/>
+  </item>
+
+  <!-- Crystal Dagger - Critical Damage -->
+  <item id="27">
+    <ingredient id="57" count="6000000"/>
+    <production id="6358" count="1"/>
+  </item>
+
+  <!-- Crystal Dagger - Critical Poison -->
+  <item id="28">
+    <ingredient id="57" count="6000000"/>
+    <production id="4775" count="1"/>
+  </item>
+
+  <!-- Crystal Dagger - Mortal Strike -->
+  <item id="29">
+    <ingredient id="57" count="6000000"/>
+    <production id="4776" count="1"/>
+  </item>
+
+  <!-- Dark Screamer - Focus -->
+  <item id="30">
+    <ingredient id="57" count="6000000"/>
+    <production id="4772" count="1"/>
+  </item>
+
+  <!-- Dark Screamer - Evasion -->
+  <item id="31">
+    <ingredient id="57" count="6000000"/>
+    <production id="4771" count="1"/>
+  </item>
+
+  <!-- Dark Screamer - Critical Bleed -->
+  <item id="32">
+    <ingredient id="57" count="6000000"/>
+    <production id="4773" count="1"/>
+  </item>
+
+  <!-- Eminence Bow - Miser -->
+  <item id="33">
+    <ingredient id="57" count="6000000"/>
+    <production id="4823" count="1"/>
+  </item>
+
+  <!-- Eminence Bow - Guidance -->
+  <item id="34">
+    <ingredient id="57" count="6000000"/>
+    <production id="4822" count="1"/>
+  </item>
+
+  <!-- Eminence Bow - Cheap Shot -->
+  <item id="35">
+    <ingredient id="57" count="6000000"/>
+    <production id="4824" count="1"/>
+  </item>
+
+  <!-- Elemental Bow - Guidance -->
+  <item id="36">
+    <ingredient id="57" count="6000000"/>
+    <production id="4813" count="1"/>
+  </item>
+
+  <!-- Elemental Bow - Quick Recovery -->
+  <item id="37">
+    <ingredient id="57" count="6000000"/>
+    <production id="4815" count="1"/>
+  </item>
+
+  <!-- Elemental Bow - Miser -->
+  <item id="38">
+    <ingredient id="57" count="6000000"/>
+    <production id="4814" count="1"/>
+  </item>
+
+  <!-- Yaksa Mace - Health -->
+  <item id="39">
+    <ingredient id="57" count="6000000"/>
+    <production id="4745" count="1"/>
+  </item>
+
+  <!-- Yaksa Mace - Rsk. Focus -->
+  <item id="40">
+    <ingredient id="57" count="6000000"/>
+    <production id="4746" count="1"/>
+  </item>
+
+  <!-- Yaksa Mace - Anger -->
+  <item id="41">
+    <ingredient id="57" count="6000000"/>
+    <production id="4744" count="1"/>
+  </item>
+
+  <!-- Ecliptic Axe - Conversion -->
+  <item id="42">
+    <ingredient id="57" count="6000000"/>
+    <production id="8138" count="1"/>
+  </item>
+
+  <!-- Ecliptic Axe - Magic Hold -->
+  <item id="43">
+    <ingredient id="57" count="6000000"/>
+    <production id="8140" count="1"/>
+  </item>
+
+  <!-- Ecliptic Axe - Magic Power -->
+  <item id="44">
+    <ingredient id="57" count="6000000"/>
+    <production id="8139" count="1"/>
+  </item>
+
+  <!-- Big Hammer - Health -->
+  <item id="45">
+    <ingredient id="57" count="6000000"/>
+    <production id="4726" count="1"/>
+  </item>
+
+  <!-- Big Hammer - Haste -->
+  <item id="46">
+    <ingredient id="57" count="6000000"/>
+    <production id="4728" count="1"/>
+  </item>
+
+  <!-- Big Hammer - Rsk.Focus -->
+  <item id="47">
+    <ingredient id="57" count="6000000"/>
+    <production id="4727" count="1"/>
+  </item>
+
+  <!-- Berserker Blade - Focus -->
+  <item id="48">
+    <ingredient id="57" count="6000000"/>
+    <production id="6347" count="1"/>
+  </item>
+
+  <!-- Berserker Blade - Haste -->
+  <item id="49">
+    <ingredient id="57" count="6000000"/>
+    <production id="6349" count="1"/>
+  </item>
+
+  <!-- Berserker Blade - Critical Damage -->
+  <item id="50">
+    <ingredient id="57" count="6000000"/>
+    <production id="6348" count="1"/>
+  </item>
+
+  <!-- Dwarven Hammer - Critical Bleed -->
+  <item id="51">
+    <ingredient id="57" count="6000000"/>
+    <production id="8122" count="1"/>
+  </item>
+
+  <!-- Dwarven Hammer - Health -->
+  <item id="52">
+    <ingredient id="57" count="6000000"/>
+    <production id="8120" count="1"/>
+  </item>
+
+  <!-- Dwarven Hammer - Anger -->
+  <item id="53">
+    <ingredient id="57" count="6000000"/>
+    <production id="8121" count="1"/>
+  </item>
+
+  <!-- Ghoul's Staff - Rsk. Evasion -->
+  <item id="54">
+    <ingredient id="57" count="6000000"/>
+    <production id="4891" count="1"/>
+  </item>
+
+  <!-- Ghoul's Staff - Mana Up -->
+  <item id="55">
+    <ingredient id="57" count="6000000"/>
+    <production id="4892" count="1"/>
+  </item>
+
+  <!-- Ghoul's Staff - Bodily Blessing -->
+  <item id="56">
+    <ingredient id="57" count="6000000"/>
+    <production id="4893" count="1"/>
+  </item>
+</list>

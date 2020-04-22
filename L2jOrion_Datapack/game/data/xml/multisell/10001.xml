@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+
+<list maintainEnchantment="true">
+
+  <!-- Ancient Adena-blue stone -->
+  <item id="1">
+    <ingredient id="6360" count="1000"/>
+    <production id="5575" count="3000"/>
+  </item>
+
+  <!-- Ancient Adena-green stone -->
+  <item id="2">
+    <ingredient id="6361" count="1000"/>
+    <production id="5575" count="5000"/>
+  </item>
+
+  <!-- Ancient Adena-red stone -->
+  <item id="3">
+    <ingredient id="6362" count="1000"/>
+    <production id="5575" count="10000"/>
+  </item>
+
+  <!-- Ancient Adena-all stone -->
+  <item id="4">
+    <ingredient id="6360" count="1000"/>
+    <ingredient id="6361" count="1000"/>
+    <ingredient id="6362" count="1000"/>
+    <production id="5575" count="18000"/>
+  </item>
+
+
+</list>

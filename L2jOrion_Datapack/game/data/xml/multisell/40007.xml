@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Created by Aniki for La2offline.ucoz.ru -->
+
+<!-- Armor Shop: Armor C Grade -->
+
+<list npcId="shop">
+<!-- Chain Mail Shirt -->
+  <item id="1">
+    <ingredient id="57" count="10000000"/>
+    <production id="354" count="1"/>
+    <production id="381" count="1"/>
+    <production id="2413" count="1"/>
+    <production id="2495" count="1"/>
+    <production id="2429" count="1"/>
+    <production id="2453" count="1"/>
+  </item>
+
+  <!-- Composite Armor -->
+  <item id="2">
+    <ingredient id="57" count="10000000"/>
+    <production id="60" count="1"/>
+    <production id="517" count="1"/>
+    <production id="107" count="1"/>
+    <production id="64" count="1"/>
+  </item>
+
+  <!-- Full Plate Armor -->
+  <item id="3">
+    <ingredient id="57" count="10000000"/>
+    <production id="356" count="1"/>
+    <production id="2414" count="1"/>
+    <production id="2497" count="1"/>
+    <production id="2438" count="1"/>
+    <production id="2462" count="1"/>
+  </item>
+
+  <!-- Mithril Shirt -->
+  <item id="4">
+    <ingredient id="57" count="10000000"/>
+    <production id="397" count="1"/>
+    <production id="2387" count="1"/>
+    <production id="62" count="1"/>
+  </item>
+
+  <!-- Plated Leather -->
+  <item id="5">
+    <ingredient id="57" count="10000000"/>
+    <production id="398" count="1"/>
+    <production id="418" count="1"/>
+    <production id="2431" count="1"/>
+    <production id="2455" count="1"/>
+  </item>
+
+  <!-- Theca Leather Armor -->
+  <item id="6">
+    <ingredient id="57" count="10000000"/>
+    <production id="400" count="1"/>
+    <production id="420" count="1"/>
+    <production id="2436" count="1"/>
+    <production id="2460" count="1"/>
+  </item>
+
+  <!-- Drake Leather Armor -->
+  <item id="7">
+    <ingredient id="57" count="10000000"/>
+    <production id="401" count="1"/>
+    <production id="2437" count="1"/>
+    <production id="2461" count="1"/>
+  </item>
+
+  <!-- Karmian Tunic -->
+  <item id="8">
+    <ingredient id="57" count="10000000"/>
+    <production id="439" count="1"/>
+    <production id="471" count="1"/>
+    <production id="2454" count="1"/>
+    <production id="2430" count="1"/>
+  </item>
+
+  <!-- Demon's Tunic -->
+  <item id="9">
+    <ingredient id="57" count="10000000"/>
+    <production id="441" count="1"/>
+    <production id="472" count="1"/>
+    <production id="2459" count="1"/>
+    <production id="2435" count="1"/>
+  </item>
+
+  <!-- Divine Tunic -->
+  <item id="10">
+    <ingredient id="57" count="10000000"/>
+    <production id="442" count="1"/>
+    <production id="473" count="1"/>
+    <production id="2463" count="1"/>
+  </item>
+</list>

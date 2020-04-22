@@ -1,0 +1,16 @@
+# You can active the anti bot on protection/other.ini
+# Words to use between 10 and 16 keys.
+L2jOrion
+Support
+Protection
+Notbot
+Server
+Lineage
+Skill
+Buffer
+Shop
+Class
+Administrator
+Gamemaster
+Player
+Moderator

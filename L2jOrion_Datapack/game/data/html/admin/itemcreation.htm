@@ -1,0 +1,53 @@
+<html><title>Items</title><body>
+<table width=260>
+<tr>
+<td width=40><button value="Main" action="bypass -h admin_admin" width=40 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td width=180><center>Item Creation Menu</center></td>
+<td width=40><button value="Back" action="bypass -h admin_admin" width=40 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr>
+</table><br><br>
+<table width=270>
+<tr><td>Fill the ID number in item-id to create the item that</td></tr>
+<tr><td>you want, use amount if you need more than one.</td></tr>
+<tr><td><br></td></tr>
+<tr><td>Caution: Max amount for stackable items is 20</td></tr>
+<tr><td><br></td></tr>
+<tr><td>Use //mass_create to spawn items in every online character</td></tr>
+<tr><td><br></td></tr>
+</table>
+<center>
+<table>
+<tr>
+<td>Item-ID: <edit var="itemid" width=50></td>
+<td>Amount: <edit var="itemnum" width=50></td>
+<td>&nbsp;<button value="Create Item" action="bypass -h admin_create_item $itemid $itemnum" width=70 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr>
+<tr>
+<td><edit var="massitemid" width=50></td>
+<td><edit var="massitemnum" width=50></td>
+<td><button value="Mass Create" action="bypass -h admin_mass_create $massitemid $massitemnum" width=70 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr></table></center><br><br>
+<table width=270>
+<tr><td>Use //clear_inventory to delete all unequiped items in your inventory.</td></tr>
+</table><br>
+<center>
+<table>
+<tr><td>
+<button value="Clear Inventory" action="bypass -h admin_clear_inventory" width=95 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr>
+<tr><td><br></td></tr>
+<tr><td><center>Assets: <edit var="asset" width=70 height=11></center></td></tr>
+</table><br>
+<table>
+<tr>
+<td>
+<button value="Adena" action="bypass -h admin_create_item 57 $asset" width=95 height=15 back="sek.cbui94" fore="sek.cbui92">
+<button value="Ancient Adena" action="bypass -h admin_create_item 5575 $asset" width=95 height=15 back="sek.cbui94" fore="sek.cbui92">
+<button value="Blue Seal Stones" action="bypass -h admin_create_item 6360 $asset" width=95 height=15 back="sek.cbui94" fore="sek.cbui92">
+<button value="Green Seal Stones" action="bypass -h admin_create_item 6361 $asset" width=95 height=15 back="sek.cbui94" fore="sek.cbui92">
+<button value="Red Seal Stones" action="bypass -h admin_create_item 6362 $asset" width=95 height=15 back="sek.cbui94" fore="sek.cbui92">
+</td>
+</tr>
+</table>
+</center>
+</body></html>

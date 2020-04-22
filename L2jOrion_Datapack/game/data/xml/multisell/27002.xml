@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8'?>
+<list>
+<!-- Event Medal Shop'as - Enchant scrollai - LifeDrain.lt serveris 2012-07-03 09:31 - Julius -->
+   <!-- Bsoe  -->
+   <item id="1"> 
+   <ingredient id="6392" count="250"/>
+   <ingredient id="6393" count="3"/>  
+   <ingredient id="65436" count="3"/>   
+   <production id="1538" count="1"/>
+   </item> 
+   <!-- Blessed Resurrection -->
+   <item id="2"> 
+   <ingredient id="6392" count="250"/>
+   <ingredient id="6393" count="3"/>
+   <ingredient id="65436" count="3"/>
+   <production id="3936" count="1"/> 
+   </item>
+   <!-- EAD -->
+   <item id="3"> 
+   <ingredient id="6392" count="25"/>
+   <ingredient id="65436" count="1"/>
+   <production id="956" count="1"/>
+   </item>
+   <!-- EWD -->
+   <item id="4"> 
+   <ingredient id="6392" count="50"/>
+   <ingredient id="65436" count="1"/>
+   <production id="955" count="1"/> 
+   </item>
+   <!-- EAC -->
+   <item id="5"> 
+   <ingredient id="6392" count="67"/>
+   <ingredient id="6393" count="2"/>
+   <ingredient id="65436" count="1"/>
+   <production id="952" count="1"/> 
+   </item>
+   <!-- EWC -->
+   <item id="6"> 
+   <ingredient id="6392" count="122"/> 
+   <ingredient id="6393" count="2"/>
+   <ingredient id="65436" count="2"/>
+   <production id="951" count="1"/> 
+   </item>
+    <!-- EAB -->
+   <item id="7"> 
+   <ingredient id="6392" count="169"/>
+   <ingredient id="6393" count="4"/>
+   <ingredient id="65436" count="3"/>
+   <production id="948" count="1"/> 
+   </item>
+    <!-- EWB -->
+   <item id="8"> 
+   <ingredient id="6392" count="278"/>
+   <ingredient id="6393" count="4"/>
+   <ingredient id="65436" count="5"/>
+   <production id="947" count="1"/> 
+   </item>
+    <!-- EAA -->
+   <item id="9"> 
+   <ingredient id="6392" count="300"/>
+   <ingredient id="6393" count="5"/>
+   <ingredient id="65436" count="7"/>
+   <production id="730" count="1"/> 
+   </item>
+    <!-- EWA -->
+   <item id="10"> 
+   <ingredient id="6392" count="420"/>
+   <ingredient id="6393" count="6"/>
+   <ingredient id="65436" count="10"/>
+   <production id="729" count="1"/> 
+   </item>
+</list>

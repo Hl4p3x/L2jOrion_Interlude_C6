@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema">
+	<element name="table">
+		<complexType>
+			<sequence minOccurs="1" maxOccurs="1">
+				<element name="experience" minOccurs="1" maxOccurs="80">
+					<complexType>
+						<attribute name="level" use="required">
+							<simpleType>
+								<restriction base="positiveInteger">
+									<minInclusive value="1" />
+									<maxInclusive value="80" />
+								</restriction>
+							</simpleType>
+						</attribute>
+						<attribute name="tolevel" type="nonNegativeInteger" use="required" />
+					</complexType>
+				</element>
+			</sequence>
+			<attribute name="maxLevel" use="required">
+				<simpleType>
+					<restriction base="positiveInteger">
+						<minInclusive value="1" />
+						<maxInclusive value="80" />
+					</restriction>
+				</simpleType>
+			</attribute>
+			<attribute name="maxPetLevel" use="required">
+				<simpleType>
+					<restriction base="positiveInteger">
+						<minInclusive value="1" />
+						<maxInclusive value="80" />
+					</restriction>
+				</simpleType>
+			</attribute>
+		</complexType>
+	</element>
+</schema>

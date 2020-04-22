@@ -1,0 +1,41 @@
+<html>
+<body>
+<img src="sek.cbui32" width="295" height="1" align=center>
+<table border="0" bgcolor="000000" width="305" align="center">
+<tr><td><center>Player command: <font color="3399ff">.market</font></center></td></tr>
+</table>
+<img src="sek.cbui32" width="295" height="1" align=center>
+<br>
+
+<center>
+
+Market items: %allItems% Sellers: %sellers% Your items: %playerItems%
+<table align="center">
+<tr>
+<td><button value="Add an item" action="bypass -h custom_market ListInv" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td><button value="My Items" action="bypass -h custom_market Private" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+</tr>
+</table>
+
+<br><br>
+
+<table width="247" align="center">
+<tr>
+<td>Item name:</td>
+<td><edit var="itemName" width="110" type="text" length="10"></td>
+<td><button value="Search" action="bypass -h custom_market Search $itemName 7" width=65 height=20 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+</tr>
+</table>
+
+<br>
+<br>
+
+<button value="Market items" action="bypass -h custom_market Link market/search.htm" width=134 height=21 back="L2UI_ch3.BigButton3_over" fore="L2UI_ch3.BigButton3">
+
+<br>
+Latest market items:
+%bottom%
+
+</center>
+</body>
+</html>

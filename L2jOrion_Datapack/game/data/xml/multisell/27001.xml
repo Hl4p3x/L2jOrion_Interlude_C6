@@ -1,0 +1,46 @@
+<?xml version='1.0' encoding='utf-8'?> 
+<list>
+<!-- Event Medal Shop'as - Crystalai - LifeDrain.lt serveris 2012-07-03 09:14 - Julius -->
+   <!-- Green 11 -->
+   <item id="1"> 
+   <ingredient id="6392" count="350"/>
+   <ingredient id="6393" count="10"/>
+   <ingredient id="65436" count="10"/>
+   <production id="5578" count="1"/>
+   </item> 
+   <!-- Green 12-->
+   <item id="2"> 
+   <ingredient id="6392" count="450"/>
+   <ingredient id="6393" count="15"/>
+   <ingredient id="65436" count="15"/>
+   <production id="5581" count="1"/> 
+   </item>
+   <!-- Red 11 -->
+   <item id="3"> 
+   <ingredient id="6392" count="350"/>
+   <ingredient id="6393" count="10"/>
+   <ingredient id="65436" count="10"/>
+   <production id="5577" count="1"/> 
+   </item>
+   <!-- Red 12-->
+   <item id="4"> 
+   <ingredient id="6392" count="450"/>
+   <ingredient id="6393" count="15"/>
+   <ingredient id="65436" count="15"/>
+   <production id="5580" count="1"/> 
+   </item>
+   <!-- Blue 11-->
+   <item id="5"> 
+   <ingredient id="6392" count="350"/>
+   <ingredient id="6393" count="10"/>
+   <ingredient id="65436" count="10"/>
+   <production id="5579" count="1"/> 
+   </item>
+   <!-- Blue 12-->
+   <item id="6"> 
+   <ingredient id="6392" count="450"/>
+   <ingredient id="6393" count="15"/> 
+   <ingredient id="65436" count="15"/>
+   <production id="5582" count="1"/> 
+   </item>
+</list>

@@ -1,0 +1,53 @@
+<html><title>Admin Panel - Mods Menu</title><body>
+<center>
+<table width=260>
+<tr>
+<td><button value="Main" action="bypass -h admin_admin" width=50 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Game" action="bypass -h admin_admin2" width=50 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Effects" action="bypass -h admin_admin3" width=50 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Server" action="bypass -h admin_admin4" width=50 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Mods" action="bypass -h admin_admin5" width=50 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr>
+</table><br>
+<table width=240>
+<tr>
+<td>QuickBox:</td>
+<td><edit var="menu_command" width=120 height=15></td>
+<td><button value="Help" action="bypass -h admin_help help/mods_menu.htm" width=45 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr></table><br>
+<font color="3399ff">Wedding:</font>
+<table width=240><tr>
+<td><button value="Enable" action="bypass -h admin_set_mod AllowWedding=true" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Teleport" action="bypass -h admin_set_mod WeddingTeleport=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="T.Price" action="bypass -h admin_set_mod WeddingTeleportPrice=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="T.Time" action="bypass -h admin_set_mod WeddingTeleportDuration=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr><tr>
+<td><button value="Disable" action="bypass -h admin_set_mod AllowWedding=false" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Wed Fee" action="bypass -h admin_set_mod WeddingPrice=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Div Fee" action="bypass -h admin_set_mod WeddingDivorceCosts=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Cheat.P" action="bypass -h admin_set_mod WeddingPunishInfidelity=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr><tr>
+<td><button value="FormalW" action="bypass -h admin_set_mod WeddingFormalWear=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="SameSex" action="bypass -h admin_set_mod WeddingAllowSameSex=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td>&nbsp;</td><td>&nbsp;</td>
+</tr>
+</table>
+<br><font color="3399ff">Champion Mobs</font>
+<table width=240><tr>
+<td><button value="Enable" action="bypass -h admin_set_mod ChampionEnable=true" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Freq." action="bypass -h admin_set_mod ChampionFrequency=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="MinLev" action="bypass -h admin_set_mod ChampionMinLevel=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="MaxLev" action="bypass -h admin_set_mod ChampionMaxLevel=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr><tr>
+<td><button value="Disable" action="bypass -h admin_set_mod ChampionEnable=false" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="xHP" action="bypass -h admin_set_mod ChampionHp=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="HPregen" action="bypass -h admin_set_mod ChampionHpRegen=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="xAtk" action="bypass -h admin_set_mod ChampionAtk=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr><tr>
+<td><button value="Reward" action="bypass -h admin_set_mod ChampionRewardItem=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="ItemId" action="bypass -h admin_set_mod ChampionRewardItemID=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="ItmQty" action="bypass -h admin_set_mod ChampionRewardQty=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="AtkSpd" action="bypass -h admin_set_mod ChampionSpdHp=$menu_command" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr></table><br>
+</center>
+</body></html>

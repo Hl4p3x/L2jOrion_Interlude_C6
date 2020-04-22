@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="Event">
+		<xs:complexType>
+			<xs:sequence maxOccurs="1" minOccurs="1">
+				<xs:element name="Droplist" maxOccurs="1" minOccurs="1">
+					<xs:complexType>
+						<xs:sequence maxOccurs="1" minOccurs="1">
+							<xs:element name="AllDrop" maxOccurs="unbounded" minOccurs="1">
+								<xs:complexType>
+									<xs:attribute name="Items" type="xs:token" use="required" />
+									<xs:attribute name="Count" type="xs:token" use="required" />
+									<xs:attribute name="Chance" type="xs:token" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="EventEnd" maxOccurs="1" minOccurs="1">
+					<xs:complexType>
+						<xs:sequence maxOccurs="1" minOccurs="1">
+							<xs:element name="Take" maxOccurs="1" minOccurs="1">
+								<xs:complexType>
+									<xs:sequence maxOccurs="1" minOccurs="1">
+										<xs:element name="Item" maxOccurs="1" minOccurs="1">
+											<xs:complexType>
+												<xs:attribute name="ItemID" type="xs:token" use="required" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="From" type="xs:token" use="required" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Message" maxOccurs="1" minOccurs="1">
+					<xs:complexType>
+						<xs:attribute name="Msg" type="xs:normalizedString" use="required" />
+						<xs:attribute name="Type" type="xs:token" use="required" />
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Npc" maxOccurs="1" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence maxOccurs="1" minOccurs="1">
+							<xs:element name="Condition" maxOccurs="1" minOccurs="1">
+								<xs:complexType>
+									<xs:sequence maxOccurs="1" minOccurs="1">
+										<xs:element name="Inventory" maxOccurs="1" minOccurs="1">
+											<xs:complexType>
+												<xs:attribute name="Items" type="xs:token" use="required" />
+												<xs:attribute name="Count" type="xs:positiveInteger" use="required" />
+												<xs:attribute name="Operation" type="xs:token" use="required" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Give" maxOccurs="1" minOccurs="1">
+								<xs:complexType>
+									<xs:sequence maxOccurs="1" minOccurs="1">
+										<xs:element name="Item" maxOccurs="unbounded" minOccurs="1">
+											<xs:complexType>
+												<xs:attribute name="ItemID" type="xs:positiveInteger" use="required" />
+												<xs:attribute name="Count" type="xs:positiveInteger" use="required" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="SystemMessage" maxOccurs="1" minOccurs="1">
+								<xs:complexType>
+									<xs:attribute name="Msg" type="xs:normalizedString" use="required" />
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Take" maxOccurs="1" minOccurs="1">
+								<xs:complexType>
+									<xs:sequence maxOccurs="1" minOccurs="1">
+										<xs:element name="Item" maxOccurs="1" minOccurs="1">
+											<xs:complexType>
+												<xs:attribute name="Items" type="xs:token" use="required" />
+												<xs:attribute name="Count" type="xs:positiveInteger" use="required" />
+												<xs:attribute name="Type" type="xs:token" use="required" />
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="ID" type="xs:positiveInteger" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="Active" type="xs:normalizedString" use="required" />
+			<xs:attribute name="ID" type="xs:normalizedString" use="required" />
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

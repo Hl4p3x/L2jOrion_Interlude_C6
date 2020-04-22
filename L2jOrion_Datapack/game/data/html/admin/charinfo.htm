@@ -1,0 +1,49 @@
+<html><body>
+<table width=280><tr>
+<td width=40><button value="Main" action="bypass -h admin_admin" width=40 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td width=180><center><font color="00ff00">%name%</font> Information</center></td>
+<td width=40><button value="Back" action="bypass -h admin_show_characters 0" width=40 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr></table><br><br>
+<center>
+<table width=240>
+<tr>
+<td><button value="Go to" action="bypass -h admin_goto_char_menu %name%" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Recall" action="bypass -h admin_recall_char_menu %name%" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Skills" action="bypass -h admin_show_skills" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Edit" action="bypass -h admin_edit_character" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr><tr>
+<td></td>
+<td><button value="Lv/Exp/Sp" action="bypass -h admin_add_exp_sp_to_character" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Class" action="bypass -h admin_setclass" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td></td>
+</tr>
+</table>
+<br>
+<table width=240>
+<tr>
+<td>Reason:</td><td>Time:</td>
+</tr>
+<tr>
+<td><multiedit var="reason" width=245 height=20></td><td><edit var="time" width=40 height=10></td>
+</tr></table>
+<table width=240>
+<tr>
+<td><button value="Jail" action="bypass -h admin_jail %name% $time $reason" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Ban Acc" action="bypass -h admin_ban_acc %name% 0 $reason" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Ban Chr" action="bypass -h admin_ban_char %name% -100 $reason" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Ban Chat" action="bypass -h admin_banchat %name% $time $reason" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Kick" action="bypass -h admin_kick %name%" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr>
+</table>
+<br>
+<table width=280>		
+<tr><td width=135>Account: <font color="LEVEL"><a action="bypass -h admin_find_account %name%">%account%</a></font></td><td width=135>IP: <font color="LEVEL"><a action="bypass -h admin_find_ip %ip%">%ip%</a></font></td></tr>	
+<tr><td width=135>Name: <font color="LEVEL">%name%</font></td><td width=135>Level: <font color="LEVEL">%level%</font></td></tr>	
+<tr><td width=135>Clan: <font color="LEVEL">%clan%</font></td><td width=135>Exp: <font color="LEVEL">%xp%</font></td></tr>
+<tr><td width=135>Class: <font color="LEVEL">%class%</font></td><td width=135>SP: <font color="LEVEL">%sp%</font></td></tr>      
+</table>
+<table width=280>
+<tr><td width=280>Coordinates: <font color="LEVEL">%x% %y% %z%</font> Heading: <font color="LEVEL">%heading%</font></td></tr>
+</table>
+</center>
+</body></html>

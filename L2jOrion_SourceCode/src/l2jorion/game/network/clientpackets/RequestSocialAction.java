@@ -1,0 +1,98 @@
+/*
+ * L2jOrion Project - www.l2jorion.com 
+ * 
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+ * 02111-1307, USA.
+ *
+ * http://www.gnu.org/copyleft/gpl.html
+ */
+package l2jorion.game.network.clientpackets;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import l2jorion.Config;
+import l2jorion.game.ai.CtrlIntention;
+import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.SystemMessageId;
+import l2jorion.game.network.serverpackets.ActionFailed;
+import l2jorion.game.network.serverpackets.SocialAction;
+import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.game.util.Util;
+
+public class RequestSocialAction extends L2GameClientPacket
+{
+	private static Logger LOG = LoggerFactory.getLogger(RequestSocialAction.class);
+	private int _actionId;
+	
+	@Override
+	protected void readImpl()
+	{
+		_actionId = readD();
+	}
+	
+	@Override
+	protected void runImpl()
+	{
+		final L2PcInstance activeChar = getClient().getActiveChar();
+		if (activeChar == null)
+			return;
+		if (activeChar.isSubmitingPin())
+		{
+			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
+			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
+			return;
+		}
+		// You cannot do anything else while fishing
+		if (activeChar.isFishing())
+		{
+			SystemMessage sm = new SystemMessage(SystemMessageId.CANNOT_DO_WHILE_FISHING_3);
+			activeChar.sendPacket(sm);
+			sm = null;
+			return;
+		}
+		
+		// check if its the actionId is allowed
+		if (_actionId < 2 || _actionId > 13)
+		{
+			Util.handleIllegalPlayerAction(activeChar, "Warning!! Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " requested an internal Social Action.", Config.DEFAULT_PUNISH);
+			return;
+		}
+		
+		if (activeChar.getPrivateStoreType() == 0 && activeChar.getActiveRequester() == null && !activeChar.isAlikeDead() && (!activeChar.isAllSkillsDisabled() || activeChar.isInDuel()) && activeChar.getAI().getIntention() == CtrlIntention.AI_INTENTION_IDLE)
+		{
+			if (Config.DEBUG)
+			{
+				LOG.debug("Social Action:" + _actionId);
+			}
+			
+			final SocialAction atk = new SocialAction(activeChar.getObjectId(), _actionId);
+			activeChar.broadcastPacket(atk);
+			/*
+			 * // Schedule a social task to wait for the animation to finish ThreadPoolManager.getInstance().scheduleGeneral(new SocialTask(this), 2600); activeChar.setIsParalyzed(true);
+			 */
+		}
+	}
+	
+	/*
+	 * class SocialTask implements Runnable { L2PcInstance _player; SocialTask(RequestSocialAction action) { _player = getClient().getActiveChar(); } public void run() { _player.setIsParalyzed(false); } }
+	 */
+	
+	@Override
+	public String getType()
+	{
+		return "[C] 1B RequestSocialAction";
+	}
+}

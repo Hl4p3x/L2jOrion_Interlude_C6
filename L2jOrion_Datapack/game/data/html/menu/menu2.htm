@@ -1,0 +1,36 @@
+<html><title>L2jOrion - Auto Potions</title>
+<body>
+<img src="l2ui.SquareGray" width="298" height="1">
+<table width=310 border=0 bgcolor=00161F>
+<tr>
+<td><center>P R E M I U M: %exptime%</center></td>
+</tr>
+</table>
+<img src="l2ui.SquareGray" width="298" height="1">
+
+<table align=center>
+	<tr>
+		<td align=center><button value="Control" action="bypass custom_menu_back 0" width=95 height=32 back="L2UI_ch3.skill_tab1" fore="L2UI_ch3.skill_tab2"></td>
+		<td align=center><button value="Auto Potions" width=95 height=32 back="L2UI_ch3.skill_tab1" fore="L2UI_ch3.skill_tab1"></td>
+		<td align=center><button value="Menu" action="bypass custom_menu3" width=95 height=32 back="L2UI_ch3.skill_tab1" fore="L2UI_ch3.skill_tab2"></td>
+	</tr>
+</table>
+<center><font color=LEVEL>Enter number from 1 to 99 or leave empty:</font><br1>
+</center>
+<table align="center" width=310 border=0>
+<tr>
+<td width="80" align="center"><font color=LEVEL>CP</font> %cp% <br1>
+<table><tr><td width="25">1-99</td><td width="32"><edit var="cp" width="30" height="10"></td><td width="20">%</td></tr></table><br>
+<button width=70 height=21 back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton" action="bypass custom_menu_cp2 %nr11% $cp" value="%cp1%"></td>
+<td width="80" align="center"><font color=ff2200>HP</font> %hp% <br1>
+<table><tr><td width="25">1-99</td><td width="32"><edit var="hp" width=30 height=10></td><td width="20">%</td></tr></table><br>
+<button width=70 height=21 back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton" action="bypass custom_menu_hp2 %nr10% $hp" value="%hp1%"></td>
+<td width="80" align="center"><font color=3399FF>MP</font> %mp% <br1>
+<table><tr><td width="25">1-99</td><td width="32"><edit var="mp" width=30 height=10></td><td width="20">%</td></tr></table><br>
+<button width=70 height=21 back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton" action="bypass custom_menu_mp2 %nr9% $mp" value="%mp1%"></td>
+</tr>
+</table>
+<br>
+<center><font color=ff0000>Attention!</font> The Number means your <font color=LEVEL>CP</font>/<font color=ff2200>HP</font>/<font color=3399FF>MP</font> in % and <br1>
+when it's gonna start use potion.</center>
+</body></html>

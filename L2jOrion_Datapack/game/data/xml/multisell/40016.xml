@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='utf-8'?>
+<list npcId="shop">
+
+	<!-- Lunargent -->
+	<item id="1">
+		<ingredient id="57" count="100000"/>
+		<production id="6029" count="1"/>
+	</item>
+
+	<!-- Hellfire oil -->
+	<item id="2">
+		<ingredient id="57" count="100000"/>
+		<production id="6033" count="1"/>
+	</item>
+
+	<!-- Caradiene's Letter -->
+	<item id="3">
+		<ingredient id="4037" count="10"/>
+		<production id="7679" count="1"/>
+	</item>
+
+	<!-- Blood Mark -->
+	<item id="4">
+		<ingredient id="57" count="100000"/>
+		<production id="1419" count="1"/>
+	</item>
+
+	<!-- Proof of Alliance -->
+	<item id="5">
+		<ingredient id="57" count="100000"/>
+		<production id="3874" count="1"/>
+	</item>
+
+	<!-- Proof of Aspiration -->
+	<item id="6">
+		<ingredient id="57" count="100000"/>
+		<production id="3870" count="1"/>
+	</item>
+
+	<!-- Vaculite Ore -->
+	<item id="7">
+		<ingredient id="57" count="100000"/>
+		<production id="7265" count="1"/>
+	</item>
+
+	<!-- Floating Stone -->
+	<item id="8">
+		<ingredient id="4037" count="5"/>
+		<production id="7267" count="10"/>
+	</item>
+
+</list>

@@ -1,0 +1,46 @@
+<html>
+<body>
+<center>
+
+<img src="sek.cbui32" width="295" height="1" align=center>
+
+<table border="0" bgcolor="000000" width="325">
+<tr><td align="center"><img src="%itemIcon%" width="32" height="32"></td></tr>
+<tr><td align="center"><table border="0" cellspacing="0" cellpadding="0"><tr><td align="center">%itemName%</td><td width="20" align="center">%grade%</td></tr></table></td></tr>
+<tr><td align="center">Count: <font color="LEVEL">%count%</font></td></tr>
+</table>
+
+<img src="sek.cbui32" width="295" height="1" align="center">
+
+<br><br>
+
+<table width="300">
+<tr>
+<td>
+Quantity:
+</td>
+<td>
+Price for quantity:
+</td>
+<td>
+Choose price item:
+</td>
+</tr>
+<tr>
+<td>
+<edit var="count" width="90" height="12" type="number" length="12">
+</td>
+<td>
+<edit var="price" width="90" height="12" type="number" length="12">
+</td>
+<td>
+<combobox width="90" var="priceList" list="Adena;Gold Bar;Orion Adena;">﻿
+</td>
+</tr>
+</table>
+<button value="Add" action="bypass -h custom_market ComfirmAdd %itemObjId% $count $price %augmentationId% %augmentationSkill% %augmentationSkillLevel% %augmentationBonus% $priceList" width=65 height=20 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"><br>
+<button value="Cancel" action="bypass -h custom_market Main" width=65 height=20 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2">
+
+</center>
+</body>
+</html>

@@ -1,0 +1,1 @@
+print "INFO  loading Group template AI"

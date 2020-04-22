@@ -1,0 +1,30 @@
+<html><body><br><br>
+	<table width=627>
+		<tr>
+			<td width=595 height=30><a action="bypass _bbshome">Home</a>&nbsp;>&nbsp;Clan Community</td>
+		</tr>
+	</table>
+	%homebar%
+	<br>
+	<table width=627 bgcolor=111111>
+		<tr>
+		<td width=5></td>
+		<td width=150 align=center>Clan Name</td>
+		<td width=150 align=center>Clan Lord</td>
+		<td width=100 align=center>Clan Level</td>
+		<td width=200 align=center>Number of Clan Members</td>
+		<td width=5></td>
+		</tr>
+	</table>
+	<br>
+	<center>
+	%clanlist%
+	<table>
+		<tr>
+			<td><combobox width=65 var=SearchTarget list="Name;Ruler"></td>
+			<td><edit var="Keyword" width=130 height=15 length="16"></td>
+			<td><button value="&$420;" action="Write Clan Search; 0 SearchTarget SearchTarget Keyword" width=65 height=20 back="l2ui_ch3.smallbutton2_down" fore="l2ui_ch3.smallbutton2"></td>
+		</tr>
+	</table>
+	</center>
+</body></html>
