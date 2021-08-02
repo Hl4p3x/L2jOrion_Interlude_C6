@@ -22,21 +22,13 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 
-/**
- * 16 d6 6d c0 4b player id who dropped it ee cc 11 43 object id 39 00 00 00 item id 8f 14 00 00 x b7 f1 00 00 y 60 f2 ff ff z 01 00 00 00 show item-count 1=yes 7a 00 00 00 count . format dddddddd rev 377 ddddddddd rev 417
- * @version $Revision: 1.3.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public class DropItem extends L2GameServerPacket
 {
 	private static final String _S__16_DROPITEM = "[S] 0c DropItem";
+	
 	private final L2ItemInstance _item;
 	private final int _charObjId;
 	
-	/**
-	 * Constructor of the DropItem server packet
-	 * @param item : L2ItemInstance designating the item
-	 * @param playerObjId : int designating the player ID who dropped the item
-	 */
 	public DropItem(final L2ItemInstance item, final int playerObjId)
 	{
 		_item = item;
@@ -68,10 +60,6 @@ public class DropItem extends L2GameServerPacket
 		writeD(1); // unknown
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

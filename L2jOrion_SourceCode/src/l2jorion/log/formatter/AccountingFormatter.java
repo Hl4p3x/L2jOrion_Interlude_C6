@@ -67,6 +67,7 @@ public class AccountingFormatter extends Formatter
 					
 					switch (client.getState())
 					{
+						case ENTERING:
 						case IN_GAME:
 							if (client.getActiveChar() != null)
 							{
@@ -83,6 +84,8 @@ public class AccountingFormatter extends Formatter
 							{
 								StringUtil.append(output, address);
 							}
+							break;
+						case DISCONNECTED:
 							break;
 						default:
 							throw new IllegalStateException("Missing state on switch");

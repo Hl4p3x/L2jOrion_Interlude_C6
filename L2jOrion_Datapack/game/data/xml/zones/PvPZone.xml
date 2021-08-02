@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
+<!-- Klein PvP Zone -->
+  <zone name="Klein PvP Zone" type="BossZone" shape="NPoly" minZ="-3380" maxZ="-3300">
+	<stat name="flying" val="false"/>
+	<stat name="teleportOut" val="false"/>
+	<stat name="pvp" val="true"/>
+	<node X="182263" Y="-117577"/>
+	<node X="183680" Y="-118291"/>
+	<node X="185221" Y="-117459"/>
+	<node X="185092" Y="-115257"/>
+	<node X="184095" Y="-114421"/>
+	<node X="181819" Y="-114443"/>
+	<node X="181297" Y="-115371"/>
+	<node X="181340" Y="-117009"/>
+  </zone>
+  <zone name="TOI PvP Zone" id="12021" type="BossZone" shape="Cuboid" minZ="8552" maxZ="16301">
+    <stat name="flying" val="false"/>
+	<stat name="teleportOut" val="false"/>
+	<stat name="pvp" val="true"/>
+  </zone>
+  <zone name="Heart PvP Zone" id="12022" type="BossZone" shape="Cuboid" minZ="-3900" maxZ="-3800">
+    <stat name="flying" val="false"/>
+	<stat name="access" val="true"/>
+	<stat name="teleportOut" val="false"/>
+	<stat name="pvp" val="true"/>
+  </zone>
+  <zone name="Frintezza PvP Zone" type="BossZone" shape="NPoly" minZ="-3000" maxZ="-1945">
+    <stat name="flying" val="false"/>
+	<stat name="teleportOut" val="false"/>
+	<stat name="pvp" val="true"/>
+	<node X="187437" Y="-74810"/>
+	<node X="185344" Y="-75312"/>
+	<node X="184981" Y="-75436"/>
+	<node X="184433" Y="-77032"/>
+	<node X="179165" Y="-75034"/>
+	<node X="179808" Y="-77952"/>
+	<node X="179808" Y="-79408"/>
+	<node X="181040" Y="-81072"/>
+	<node X="181755" Y="-81088"/>
+	<node X="185040" Y="-78864"/>
+	<node X="187456" Y="-76320"/>
+  </zone>
+  <zone name="Zaken PvP Zone" type="BossZone" shape="NPoly" minZ="-3632" maxZ="-3000">
+	<stat name="maxLevel" val="68"/>
+    <stat name="flying" val="false"/>
+	<stat name="teleportOut" val="false"/>
+	<stat name="pvp" val="true"/>
+	<node X="56447" Y="215561"/>
+	<node X="56448" Y="216896"/>
+	<node X="52441" Y="219274"/>
+	<node X="52034" Y="219264"/>
+	<node X="51616" Y="218304"/>
+	<node X="51584" Y="216224"/>
+	<node X="52080" Y="214960"/>
+  </zone>
+</list>

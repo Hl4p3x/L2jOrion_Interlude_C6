@@ -20,14 +20,13 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class RequestGiveNickName extends L2GameClientPacket
 {
@@ -48,7 +47,9 @@ public class RequestGiveNickName extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		// Noblesse can bestow a title to themselves
 		if (activeChar.isNoble() && _target.matches(activeChar.getName()))

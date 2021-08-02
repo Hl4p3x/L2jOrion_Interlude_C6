@@ -25,27 +25,15 @@ import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToPawn;
 import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
-import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.game.util.Broadcast;
 
-/**
- * This class ...
- * @version $Revision$ $Date$
- */
 public class L2SiegeNpcInstance extends L2FolkInstance
 {
-	// private static Logger LOG = LoggerFactory.getLogger(L2SiegeNpcInstance.class);
-	
 	public L2SiegeNpcInstance(final int objectID, final L2NpcTemplate template)
 	{
 		super(objectID, template);
 	}
 	
-	/**
-	 * this is called when a player interacts with this NPC
-	 * @param player
-	 */
 	@Override
 	public void onAction(final L2PcInstance player)
 	{
@@ -61,9 +49,6 @@ public class L2SiegeNpcInstance extends L2FolkInstance
 			// Send a Server->Client packet MyTargetSelected to the L2PcInstance player
 			MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
 			player.sendPacket(my);
-			my = null;
-			
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
@@ -76,9 +61,7 @@ public class L2SiegeNpcInstance extends L2FolkInstance
 			else
 			{
 				// Like L2OFF player must rotate to the Npc
-				MoveToPawn sp = new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE);
-				player.sendPacket(sp);
-				Broadcast.toKnownPlayers(player, sp);
+				player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
 				
 				showSiegeInfoWindow(player);
 			}
@@ -97,6 +80,10 @@ public class L2SiegeNpcInstance extends L2FolkInstance
 		if (validateCondition(player))
 		{
 			getCastle().getSiege().listRegisterClan(player);
+			/*if (getClanHall() != null)
+			{
+				((SiegableHall) getClanHall()).showSiegeInfo(player);
+			}*/
 		}
 		else
 		{
@@ -106,14 +93,15 @@ public class L2SiegeNpcInstance extends L2FolkInstance
 			html.replace("%objectId%", String.valueOf(getObjectId()));
 			player.sendPacket(html);
 			player.sendPacket(ActionFailed.STATIC_PACKET);
-			html = null;
 		}
 	}
 	
 	private boolean validateCondition(final L2PcInstance player)
 	{
 		if (getCastle().getSiege().getIsInProgress())
+		{
 			return false; // Busy because of siege
+		}
 			
 		return true;
 	}

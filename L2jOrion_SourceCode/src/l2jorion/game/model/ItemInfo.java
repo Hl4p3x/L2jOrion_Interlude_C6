@@ -22,55 +22,33 @@ package l2jorion.game.model;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.templates.L2Item;
 
-/**
- * Get all information from L2ItemInstance to generate ItemInfo.<BR>
- * <BR>
- */
 public class ItemInfo
 {
-	/** Identifier of the L2ItemInstance */
 	private int _objectId;
-	
-	/** The L2Item template of the L2ItemInstance */
 	private L2Item _item;
-	
-	/** The level of enchant on the L2ItemInstance */
 	private int _enchant;
-	
-	/** The augmentation of the item */
 	private int _augmentation;
-	
-	/** The quantity of L2ItemInstance */
 	private int _count;
-	
-	/** The price of the L2ItemInstance */
 	private int _price;
-	
-	/** The custom L2ItemInstance types (used loto, race tickets) */
 	private int _type1;
 	private int _type2;
-	
-	/** If True the L2ItemInstance is equipped */
 	private int _equipped;
-	
-	/** The action to do clientside (1=ADD, 2=MODIFY, 3=REMOVE) */
 	private int _change;
-	
-	/** The mana of this item */
 	private int _mana;
+	private int _ownerId;
 	
-	/**
-	 * Get all information from L2ItemInstance to generate ItemInfo.<BR>
-	 * <BR>
-	 * @param item
-	 */
 	public ItemInfo(final L2ItemInstance item)
 	{
 		if (item == null)
+		{
 			return;
+		}
 		
 		// Get the Identifier of the L2ItemInstance
 		_objectId = item.getObjectId();
+		
+		// Get the Identifier of the Owner
+		_ownerId = item.getOwnerId();
 		
 		// Get the L2Item of the L2ItemInstance
 		_item = item.getItem();
@@ -125,10 +103,15 @@ public class ItemInfo
 	public ItemInfo(final L2ItemInstance item, final int change)
 	{
 		if (item == null)
+		{
 			return;
+		}
 		
 		// Get the Identifier of the L2ItemInstance
 		_objectId = item.getObjectId();
+		
+		// Get the Identifier of the Owner
+		_ownerId = item.getOwnerId();
 		
 		// Get the L2Item of the L2ItemInstance
 		_item = item.getItem();
@@ -216,5 +199,10 @@ public class ItemInfo
 	public int getMana()
 	{
 		return _mana;
+	}
+	
+	public int getOwnerId()
+	{
+		return _ownerId;
 	}
 }

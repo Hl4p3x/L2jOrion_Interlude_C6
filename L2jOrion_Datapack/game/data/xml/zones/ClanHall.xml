@@ -1,0 +1,941 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
+	<!-- Clan Hall Zones -->
+	<zone name="partisan_agit001" type="SiegableHallZone" shape="NPoly" minZ="-2104" maxZ="-1104">
+		<stat name="clanHallId" val="21" />
+		<!-- residence_territory -->
+		<node X="43048" Y="108832" />
+		<node X="43692" Y="108204" />
+		<node X="44052" Y="108604" />
+		<node X="43976" Y="109180" />
+		<node X="43684" Y="109496" />
+		<!-- owner_restart_point_list -->
+		<spawn X="43370" Y="108839" Z="-1980" />
+		<!-- other_restart_village_list -->
+		<spawn X="51952" Y="111060" Z="-1970" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="51952" Y="111060" Z="-1970" type="banish" />
+	</zone>
+	<zone name="gludio_castle_agit_001" type="ClanHallZone" shape="NPoly" minZ="-3598" maxZ="-2098">
+		<stat name="clanHallId" val="22" />
+		<!-- residence_territory -->
+		<node X="-16342" Y="123496" />
+		<node X="-15748" Y="123315" />
+		<node X="-15645" Y="123655" />
+		<node X="-16234" Y="123831" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-16029" Y="123642" Z="-3101" />
+		<!-- other_restart_village_list -->
+		<spawn X="-15872" Y="123824" Z="-3116" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-15872" Y="123824" Z="-3116" type="banish" />
+	</zone>
+	<zone name="gludio_castle_agit_002" type="ClanHallZone" shape="NPoly" minZ="-3777" maxZ="-2277">
+		<stat name="clanHallId" val="23" />
+		<!-- residence_territory -->
+		<node X="-15098" Y="125352" />
+		<node X="-14789" Y="125352" />
+		<node X="-14789" Y="125816" />
+		<node X="-15098" Y="125816" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-14848" Y="125552" Z="-3128" />
+		<!-- other_restart_village_list -->
+		<spawn X="-14684" Y="125655" Z="-3142" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-14684" Y="125655" Z="-3142" type="banish" />
+	</zone>
+	<zone name="gludio_castle_agit_003" type="ClanHallZone" shape="NPoly" minZ="-3745" maxZ="-2245">
+		<stat name="clanHallId" val="24" />
+		<!-- residence_territory -->
+		<node X="-14028" Y="125062" />
+		<node X="-13695" Y="125070" />
+		<node X="-13695" Y="125693" />
+		<node X="-14108" Y="125693" />
+		<node X="-14108" Y="125588" />
+		<node X="-14028" Y="125588" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-13879" Y="125413" Z="-3128" />
+		<!-- other_restart_village_list -->
+		<spawn X="-14192" Y="125584" Z="-3139" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-14192" Y="125584" Z="-3139" type="banish" />
+	</zone>
+	<zone name="gludio_castle_agit_004" type="ClanHallZone" shape="NPoly" minZ="-3809" maxZ="-2309">
+		<stat name="clanHallId" val="25" />
+		<!-- residence_territory -->
+		<node X="-12942" Y="123872" />
+		<node X="-12327" Y="123872" />
+		<node X="-12327" Y="124231" />
+		<node X="-12942" Y="124231" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-12710" Y="124029" Z="-3096" />
+		<!-- other_restart_village_list -->
+		<spawn X="-12688" Y="123760" Z="-3115" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-12688" Y="123760" Z="-3115" type="banish" />
+	</zone>
+	<zone name="gludin_agit_001" type="ClanHallZone" shape="NPoly" minZ="-4076" maxZ="-2576">
+		<stat name="clanHallId" val="26" />
+		<!-- residence_territory -->
+		<node X="-84691" Y="151557" />
+		<node X="-84261" Y="151557" />
+		<node X="-84261" Y="151962" />
+		<node X="-84071" Y="151962" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-84416" Y="152192" Z="-3123" />
+		<!-- other_restart_village_list -->
+		<spawn X="-84080" Y="151744" Z="-3127" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-84080" Y="151744" Z="-3127" type="banish" />
+	</zone>
+	<zone name="gludin_agit_001" type="ClanHallZone" shape="NPoly" minZ="-4076" maxZ="-2576">
+		<stat name="clanHallId" val="26" />
+		<!-- residence_territory -->
+		<node X="-84071" Y="151850" />
+		<node X="-83945" Y="151850" />
+		<node X="-83945" Y="151962" />
+		<node X="-83819" Y="151962" />
+		<node X="-83819" Y="152328" />
+		<node X="-84691" Y="152328" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-84416" Y="152192" Z="-3123" />
+		<!-- other_restart_village_list -->
+		<spawn X="-84080" Y="151744" Z="-3127" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-84080" Y="151744" Z="-3127" type="banish" />
+	</zone>
+	<zone name="gludin_agit_002" type="ClanHallZone" shape="NPoly" minZ="-4012" maxZ="-2512">
+		<stat name="clanHallId" val="27" />
+		<!-- residence_territory -->
+		<node X="-84367" Y="153086" />
+		<node X="-83983" Y="153086" />
+		<node X="-83977" Y="154046" />
+		<node X="-84367" Y="154054" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-84171" Y="153385" Z="-3159" />
+		<!-- other_restart_village_list -->
+		<spawn X="-83860" Y="153744" Z="-3176" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-83860" Y="153744" Z="-3176" type="banish" />
+	</zone>
+	<zone name="gludin_agit_002" type="ClanHallZone" shape="NPoly" minZ="-4012" maxZ="-2512">
+		<stat name="clanHallId" val="27" />
+		<!-- residence_territory -->
+		<node X="-84160" Y="153086" />
+		<node X="-83586" Y="153085" />
+		<node X="-83585" Y="153564" />
+		<node X="-84160" Y="153561" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-84171" Y="153385" Z="-3159" />
+		<!-- other_restart_village_list -->
+		<spawn X="-83860" Y="153744" Z="-3176" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-83860" Y="153744" Z="-3176" type="banish" />
+	</zone>
+	<zone name="gludin_agit_003" type="ClanHallZone" shape="NPoly" minZ="-4044" maxZ="-2544">
+		<stat name="clanHallId" val="28" />
+		<!-- residence_territory -->
+		<node X="-84463" Y="154941" />
+		<node X="-83987" Y="154941" />
+		<node X="-83986" Y="155688" />
+		<node X="-84463" Y="155685" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-84236" Y="155520" Z="-3160" />
+		<!-- other_restart_village_list -->
+		<spawn X="-83824" Y="155216" Z="-3176" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-83824" Y="155216" Z="-3176" type="banish" />
+	</zone>
+	<zone name="gludin_agit_003" type="ClanHallZone" shape="NPoly" minZ="-4044" maxZ="-2544">
+		<stat name="clanHallId" val="28" />
+		<!-- residence_territory -->
+		<node X="-84098" Y="155318" />
+		<node X="-83523" Y="155317" />
+		<node X="-83523" Y="155686" />
+		<node X="-84098" Y="155684" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-84236" Y="155520" Z="-3160" />
+		<!-- other_restart_village_list -->
+		<spawn X="-83824" Y="155216" Z="-3176" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-83824" Y="155216" Z="-3176" type="banish" />
+	</zone>
+	<zone name="gludin_agit_004" type="ClanHallZone" shape="NPoly" minZ="-3948" maxZ="-2448">
+		<stat name="clanHallId" val="29" />
+		<!-- residence_territory -->
+		<node X="-79657" Y="149419" />
+		<node X="-79290" Y="149424" />
+		<node X="-79284" Y="150296" />
+		<node X="-79656" Y="150298" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-79544" Y="150181" Z="-3038" />
+		<!-- other_restart_village_list -->
+		<spawn X="-79856" Y="150144" Z="-3042" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-79856" Y="150144" Z="-3042" type="banish" />
+	</zone>
+	<zone name="gludin_agit_004" type="ClanHallZone" shape="NPoly" minZ="-3948" maxZ="-2448">
+		<stat name="clanHallId" val="29" />
+		<!-- residence_territory -->
+		<node X="-80066" Y="149420" />
+		<node X="-79491" Y="149419" />
+		<node X="-79491" Y="149859" />
+		<node X="-80066" Y="149857" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-79544" Y="150181" Z="-3038" />
+		<!-- other_restart_village_list -->
+		<spawn X="-79856" Y="150144" Z="-3042" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-79856" Y="150144" Z="-3042" type="banish" />
+	</zone>
+	<zone name="gludin_agit_005" type="ClanHallZone" shape="NPoly" minZ="-3980" maxZ="-2480">
+		<stat name="clanHallId" val="30" />
+		<!-- residence_territory -->
+		<node X="-79663" Y="151367" />
+		<node X="-79296" Y="151372" />
+		<node X="-79290" Y="152244" />
+		<node X="-79663" Y="152246" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-79513" Y="151506" Z="-3041" />
+		<!-- other_restart_village_list -->
+		<spawn X="-79854" Y="151602" Z="-3042" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-79854" Y="151602" Z="-3042" type="banish" />
+	</zone>
+	<zone name="gludin_agit_005" type="ClanHallZone" shape="NPoly" minZ="-3980" maxZ="-2480">
+		<stat name="clanHallId" val="30" />
+		<!-- residence_territory -->
+		<node X="-80067" Y="151809" />
+		<node X="-79493" Y="151808" />
+		<node X="-79493" Y="152247" />
+		<node X="-80067" Y="152245" />
+		<!-- owner_restart_point_list -->
+		<spawn X="-79513" Y="151506" Z="-3041" />
+		<!-- other_restart_village_list -->
+		<spawn X="-79854" Y="151602" Z="-3042" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="-79854" Y="151602" Z="-3042" type="banish" />
+	</zone>
+	<zone name="dion_castle_agit_001" type="ClanHallZone" shape="NPoly" minZ="-3365" maxZ="-1865">
+		<stat name="clanHallId" val="31" />
+		<!-- residence_territory -->
+		<node X="17597" Y="144823" />
+		<node X="17989" Y="145089" />
+		<node X="17828" Y="145333" />
+		<node X="17433" Y="145067" />
+		<!-- owner_restart_point_list -->
+		<spawn X="17760" Y="145200" Z="-3036" />
+		<!-- other_restart_village_list -->
+		<spawn X="17552" Y="145248" Z="-3050" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="17552" Y="145248" Z="-3050" type="banish" />
+	</zone>
+	<zone name="dion_castle_agit_002" type="ClanHallZone" shape="NPoly" minZ="-3333" maxZ="-1833">
+		<stat name="clanHallId" val="32" />
+		<!-- residence_territory -->
+		<node X="18849" Y="143099" />
+		<node X="18897" Y="143562" />
+		<node X="18615" Y="143588" />
+		<node X="18571" Y="143128" />
+		<!-- owner_restart_point_list -->
+		<spawn X="18800" Y="143248" Z="-3010" />
+		<!-- other_restart_village_list -->
+		<spawn X="18976" Y="143360" Z="-3033" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="18976" Y="143360" Z="-3033" type="banish" />
+	</zone>
+	<zone name="dion_castle_agit_003" type="ClanHallZone" shape="NPoly" minZ="-3397" maxZ="-1897">
+		<stat name="clanHallId" val="33" />
+		<!-- residence_territory -->
+		<node X="19942" Y="145996" />
+		<node X="20414" Y="145996" />
+		<node X="20414" Y="146292" />
+		<node X="19942" Y="146292" />
+		<!-- owner_restart_point_list -->
+		<spawn X="20096" Y="146064" Z="-3111" />
+		<!-- other_restart_village_list -->
+		<spawn X="20192" Y="145920" Z="-3125" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="20192" Y="145920" Z="-3125" type="banish" />
+	</zone>
+	<zone name="devastated_castle" type="SiegableHallZone" shape="NPoly" minZ="-2514" maxZ="486">
+		<stat name="clanHallId" val="34" />
+		<!-- residence_territory -->
+		<node X="176793" Y="-19176" />
+		<node X="179892" Y="-19176" />
+		<node X="179892" Y="-15276" />
+		<node X="179417" Y="-14511" />
+		<node X="177270" Y="-14511" />
+		<node X="176793" Y="-15276" />
+		<!-- owner_restart_point_list -->
+		<spawn X="177930" Y="-18629" Z="-2240" />
+		<!-- other_restart_village_list -->
+		<spawn X="146494" Y="30584" Z="-2420" type="other" />
+		<spawn X="146038" Y="30519" Z="-2420" type="other" />
+		<spawn X="148112" Y="30439" Z="-2420" type="other" />
+		<spawn X="148565" Y="30463" Z="-2420" type="other" />
+		<spawn X="150227" Y="29104" Z="-2420" type="other" />
+		<spawn X="144626" Y="29145" Z="-2420" type="other" />
+		<spawn X="144635" Y="26664" Z="-2220" type="other" />
+		<spawn X="144526" Y="24661" Z="-2100" type="other" />
+		<spawn X="144559" Y="22835" Z="-2100" type="other" />
+		<spawn X="145686" Y="21114" Z="-2100" type="other" />
+		<spawn X="148946" Y="21121" Z="-2070" type="other" />
+		<spawn X="148010" Y="27996" Z="-2256" type="other" />
+		<spawn X="147970" Y="27040" Z="-2191" type="other" />
+		<!-- chao_restart_point_list -->
+		<spawn X="136398" Y="28901" Z="-3582" type="chaotic" />
+		<spawn X="137292" Y="28485" Z="-3290" type="chaotic" />
+		<spawn X="155925" Y="28554" Z="-3164" type="chaotic" />
+		<spawn X="157608" Y="23866" Z="-3760" type="chaotic" />
+		<spawn X="157463" Y="28770" Z="-3371" type="chaotic" />
+		<spawn X="159348" Y="28561" Z="-3400" type="chaotic" />
+		<spawn X="160236" Y="14119" Z="-3892" type="chaotic" />
+		<spawn X="156764" Y="13774" Z="-3960" type="chaotic" />
+		<spawn X="161426" Y="23055" Z="-3670" type="chaotic" />
+		<spawn X="136380" Y="21899" Z="-3647" type="chaotic" />
+		<spawn X="137708" Y="15640" Z="-3800" type="chaotic" />
+		<!-- banish_point_list -->
+		<spawn X="178497" Y="-13129" Z="-2200" type="banish" />
+	</zone>
+	<zone name="bandits'_stronghold" type="SiegableHallZone" shape="NPoly" minZ="-2920" maxZ="80">
+		<stat name="clanHallId" val="35" />
+		<!-- residence_territory -->
+		<node X="79028" Y="-17588" />
+		<node X="84640" Y="-19528" />
+		<node X="86952" Y="-16888" />
+		<node X="83636" Y="-13448" />
+		<node X="79196" Y="-13584" />
+		<!-- owner_restart_point_list -->
+		<spawn X="80339" Y="-15442" Z="-1804" />
+		<!-- other_restart_village_list -->
+		<spawn X="80304" Y="56241" Z="-1500" type="other" />
+		<spawn X="80594" Y="55837" Z="-1500" type="other" />
+		<spawn X="79933" Y="55752" Z="-1500" type="other" />
+		<spawn X="80267" Y="55497" Z="-1500" type="other" />
+		<spawn X="80334" Y="54400" Z="-1500" type="other" />
+		<spawn X="82445" Y="56012" Z="-1480" type="other" />
+		<spawn X="82323" Y="55466" Z="-1480" type="other" />
+		<spawn X="82880" Y="55390" Z="-1480" type="other" />
+		<spawn X="82638" Y="53885" Z="-1440" type="other" />
+		<spawn X="82552" Y="53447" Z="-1440" type="other" />
+		<spawn X="82213" Y="53964" Z="-1440" type="other" />
+		<spawn X="80054" Y="53209" Z="-1500" type="other" />
+		<spawn X="79706" Y="52986" Z="-1500" type="other" />
+		<spawn X="82123" Y="53535" Z="-1440" type="other" />
+		<!-- chao_restart_point_list -->
+		<spawn X="76576" Y="50151" Z="-3200" type="chaotic" />
+		<spawn X="77310" Y="50317" Z="-3160" type="chaotic" />
+		<spawn X="77250" Y="51285" Z="-3160" type="chaotic" />
+		<spawn X="78811" Y="51106" Z="-3160" type="chaotic" />
+		<spawn X="75755" Y="51372" Z="-3250" type="chaotic" />
+		<spawn X="75613" Y="52504" Z="-3200" type="chaotic" />
+		<spawn X="74459" Y="52441" Z="-3260" type="chaotic" />
+		<spawn X="74467" Y="53354" Z="-3200" type="chaotic" />
+		<spawn X="73600" Y="53918" Z="-3170" type="chaotic" />
+		<spawn X="71102" Y="57875" Z="-3330" type="chaotic" />
+		<spawn X="70052" Y="59300" Z="-3580" type="chaotic" />
+		<spawn X="70420" Y="57480" Z="-3480" type="chaotic" />
+		<spawn X="75474" Y="60125" Z="-2730" type="chaotic" />
+		<spawn X="74880" Y="60818" Z="-2820" type="chaotic" />
+		<spawn X="88011" Y="56589" Z="-3560" type="chaotic" />
+		<spawn X="91239" Y="53120" Z="-3430" type="chaotic" />
+		<spawn X="81785" Y="46306" Z="-3160" type="chaotic" />
+		<spawn X="80708" Y="44609" Z="-3120" type="chaotic" />
+		<spawn X="70139" Y="55885" Z="-3550" type="chaotic" />
+		<spawn X="80236" Y="45675" Z="-3150" type="chaotic" />
+		<!-- banish_point_list -->
+		<spawn X="91826" Y="-12575" Z="-2408" type="banish" />
+		<spawn X="92188" Y="-12927" Z="-2404" type="banish" />
+		<spawn X="91737" Y="-12075" Z="-2450" type="banish" />
+		<spawn X="91288" Y="-12467" Z="-2409" type="banish" />
+		<spawn X="91456" Y="-13048" Z="-2378" type="banish" />
+		<spawn X="91359" Y="-12094" Z="-2436" type="banish" />
+		<!-- challenger_restart_point_list -->
+		<spawn X="83425" Y="-18137" Z="-1240" type="challenger" />
+		<spawn X="83591" Y="-14636" Z="-1240" type="challenger" />
+		<spawn X="81743" Y="-14383" Z="-1240" type="challenger" />
+		<spawn X="81357" Y="-17307" Z="-1240" type="challenger" />
+		<spawn X="85140" Y="-15541" Z="-1240" type="challenger" />
+	</zone>
+	<zone name="aden_castle_agit_001" type="ClanHallZone" shape="NPoly" minZ="-2160" maxZ="-1960">
+		<stat name="clanHallId" val="36" />
+		<!-- residence_territory -->
+		<node X="148844" Y="22709" />
+		<node X="149424" Y="22709" />
+		<node X="149424" Y="23569" />
+		<node X="148844" Y="23569" />
+		<!-- owner_restart_point_list -->
+		<spawn X="149134" Y="23140" Z="-2160" />
+		<!-- other_restart_village_list -->
+		<spawn X="149568" Y="23024" Z="-2128" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="149568" Y="23024" Z="-2128" type="banish" />
+	</zone>
+	<zone name="aden_castle_agit_002" type="ClanHallZone" shape="NPoly" minZ="-2150" maxZ="-1950">
+		<stat name="clanHallId" val="37" />
+		<!-- residence_territory -->
+		<node X="150343" Y="23193" />
+		<node X="150943" Y="23193" />
+		<node X="150943" Y="24113" />
+		<node X="150343" Y="24113" />
+		<node X="150343" Y="23693" />
+		<node X="150305" Y="23693" />
+		<node X="150305" Y="23618" />
+		<node X="150343" Y="23618" />
+		<!-- owner_restart_point_list -->
+		<spawn X="150644" Y="23653" Z="-2150" />
+		<!-- other_restart_village_list -->
+		<spawn X="150192" Y="23808" Z="-2128" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="150192" Y="23808" Z="-2128" type="banish" />
+	</zone>
+	<zone name="aden_castle_agit_003" type="ClanHallZone" shape="NPoly" minZ="-2150" maxZ="-1950">
+		<stat name="clanHallId" val="38" />
+		<!-- residence_territory -->
+		<node X="145362" Y="24890" />
+		<node X="145972" Y="24890" />
+		<node X="145972" Y="25820" />
+		<node X="145362" Y="25820" />
+		<!-- owner_restart_point_list -->
+		<spawn X="145667" Y="25356" Z="-2150" />
+		<!-- other_restart_village_list -->
+		<spawn X="150320" Y="26368" Z="-2256" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="150320" Y="26368" Z="-2256" type="banish" />
+	</zone>
+	<zone name="aden_castle_agit_004" type="ClanHallZone" shape="NPoly" minZ="-2280" maxZ="-2080">
+		<stat name="clanHallId" val="39" />
+		<!-- residence_territory -->
+		<node X="150460" Y="26108" />
+		<node X="151036" Y="26108" />
+		<node X="151036" Y="26972" />
+		<node X="150460" Y="26972" />
+		<node X="150460" Y="26585" />
+		<node X="150450" Y="26585" />
+		<node X="150450" Y="26505" />
+		<node X="150460" Y="26505" />
+		<!-- owner_restart_point_list -->
+		<spawn X="150748" Y="26540" Z="-2280" />
+		<!-- other_restart_village_list -->
+		<spawn X="145280" Y="25184" Z="-2128" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="145280" Y="25184" Z="-2128" type="banish" />
+	</zone>
+	<zone name="aden_castle_agit_005" type="ClanHallZone" shape="NPoly" minZ="-2290" maxZ="-2090">
+		<stat name="clanHallId" val="40" />
+		<!-- residence_territory -->
+		<node X="143701" Y="26661" />
+		<node X="144299" Y="26661" />
+		<node X="144299" Y="27521" />
+		<node X="143701" Y="27521" />
+		<!-- owner_restart_point_list -->
+		<spawn X="143992" Y="27092" Z="-2290" />
+		<!-- other_restart_village_list -->
+		<spawn X="144432" Y="26896" Z="-2256" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="144432" Y="26896" Z="-2256" type="banish" />
+	</zone>
+	<zone name="aden_castle_agit_006" type="ClanHallZone" shape="NPoly" minZ="-2280" maxZ="-2080">
+		<stat name="clanHallId" val="41" />
+		<!-- residence_territory -->
+		<node X="143704" Y="27734" />
+		<node X="144324" Y="27734" />
+		<node X="144324" Y="28155" />
+		<node X="144360" Y="28155" />
+		<node X="144360" Y="28245" />
+		<node X="144324" Y="28245" />
+		<node X="144324" Y="28670" />
+		<node X="143704" Y="28670" />
+		<!-- owner_restart_point_list -->
+		<spawn X="144014" Y="28202" Z="-2280" />
+		<!-- other_restart_village_list -->
+		<spawn X="144448" Y="28384" Z="-2256" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="144448" Y="28384" Z="-2256" type="banish" />
+	</zone>
+	<zone name="giran_castle_agit_001" type="ClanHallZone" shape="NPoly" minZ="-3647" maxZ="-3297">
+		<stat name="clanHallId" val="42" />
+		<!-- residence_territory -->
+		<node X="78059" Y="147906" />
+		<node X="79122" Y="147906" />
+		<node X="79122" Y="148296" />
+		<node X="78620" Y="148296" />
+		<node X="78620" Y="148316" />
+		<node X="78524" Y="148316" />
+		<node X="78524" Y="148296" />
+		<node X="78059" Y="148296" />
+		<!-- owner_restart_point_list -->
+		<spawn X="78592" Y="148080" Z="-3581" />
+		<!-- other_restart_village_list -->
+		<spawn X="83409" Y="148578" Z="-3300" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="83409" Y="148578" Z="-3300" type="banish" />
+	</zone>
+	<zone name="giran_castle_agit_002" type="ClanHallZone" shape="NPoly" minZ="-3647" maxZ="-3297">
+		<stat name="clanHallId" val="43" />
+		<!-- residence_territory -->
+		<node X="81859" Y="144802" />
+		<node X="82254" Y="144802" />
+		<node X="82254" Y="145870" />
+		<node X="81859" Y="145870" />
+		<node X="81859" Y="145355" />
+		<node X="81833" Y="145355" />
+		<node X="81833" Y="145274" />
+		<node X="81859" Y="145274" />
+		<!-- owner_restart_point_list -->
+		<spawn X="82032" Y="145328" Z="-3520" />
+		<!-- other_restart_village_list -->
+		<spawn X="83409" Y="148578" Z="-3300" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="83409" Y="148578" Z="-3300" type="banish" />
+	</zone>
+	<zone name="giran_castle_agit_003 " type="ClanHallZone" shape="NPoly" minZ="-3540" maxZ="-3190">
+		<stat name="clanHallId" val="44" />
+		<!-- residence_territory -->
+		<node X="83195" Y="144779" />
+		<node X="83591" Y="144779" />
+		<node X="83591" Y="145287" />
+		<node X="83615" Y="145287" />
+		<node X="83615" Y="145374" />
+		<node X="83594" Y="145374" />
+		<node X="83591" Y="145847" />
+		<node X="83195" Y="145847" />
+		<!-- owner_restart_point_list -->
+		<spawn X="83392" Y="145328" Z="-3389" />
+		<!-- other_restart_village_list -->
+		<spawn X="83409" Y="148578" Z="-3300" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="83409" Y="148578" Z="-3300" type="banish" />
+	</zone>
+	<zone name="giran_castle_agit_004" type="ClanHallZone" shape="NPoly" minZ="-3647" maxZ="-3297">
+		<stat name="clanHallId" val="45" />
+		<!-- residence_territory -->
+		<node X="80773" Y="151053" />
+		<node X="81169" Y="151053" />
+		<node X="81169" Y="151560" />
+		<node X="81185" Y="151560" />
+		<node X="81185" Y="151653" />
+		<node X="81169" Y="151653" />
+		<node X="81169" Y="152121" />
+		<node X="80773" Y="152121" />
+		<!-- owner_restart_point_list -->
+		<spawn X="80960" Y="151600" Z="-3517" />
+		<!-- other_restart_village_list -->
+		<spawn X="83409" Y="148578" Z="-3300" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="83409" Y="148578" Z="-3300" type="banish" />
+	</zone>
+	<zone name="giran_castle_agit_005" type="ClanHallZone" shape="NPoly" minZ="-3647" maxZ="-3297">
+		<stat name="clanHallId" val="46" />
+		<!-- residence_territory -->
+		<node X="81903" Y="151377" />
+		<node X="82299" Y="151377" />
+		<node X="82299" Y="152445" />
+		<node X="81903" Y="152445" />
+		<node X="81903" Y="151945" />
+		<node X="81883" Y="151945" />
+		<node X="81883" Y="151850" />
+		<node X="81903" Y="151850" />
+		<!-- owner_restart_point_list -->
+		<spawn X="82064" Y="151904" Z="-3520" />
+		<!-- other_restart_village_list -->
+		<spawn X="83409" Y="148578" Z="-3300" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="83409" Y="148578" Z="-3300" type="banish" />
+	</zone>
+	<zone name="godad_castle_agit_001" type="ClanHallZone" shape="NPoly" minZ="-2828" maxZ="-2528">
+		<stat name="clanHallId" val="47" />
+		<!-- residence_territory -->
+		<node X="145660" Y="-55829" />
+		<node X="146459" Y="-55730" />
+		<node X="146402" Y="-55280" />
+		<node X="145605" Y="-55378" />
+		<!-- owner_restart_point_list -->
+		<spawn X="146022" Y="-55560" Z="-2765" />
+		<!-- other_restart_village_list -->
+		<spawn X="147712" Y="-58432" Z="-2979" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="147712" Y="-58432" Z="-2979" type="banish" />
+	</zone>
+	<zone name="godad_castle_agit_002 " type="ClanHallZone" shape="NPoly" minZ="-2828" maxZ="-2528">
+		<stat name="clanHallId" val="48" />
+		<!-- residence_territory -->
+		<node X="146936" Y="-57320" />
+		<node X="147308" Y="-56607" />
+		<node X="146906" Y="-56397" />
+		<node X="146535" Y="-57111" />
+		<!-- owner_restart_point_list -->
+		<spawn X="146960" Y="-56768" Z="-2765" />
+		<!-- other_restart_village_list -->
+		<spawn X="147712" Y="-58432" Z="-2979" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="147712" Y="-58432" Z="-2979" type="banish" />
+	</zone>
+	<zone name="godad_castle_agit_003" type="ClanHallZone" shape="NPoly" minZ="-2828" maxZ="-2528">
+		<stat name="clanHallId" val="49" />
+		<!-- residence_territory -->
+		<node X="148487" Y="-57327" />
+		<node X="148887" Y="-57113" />
+		<node X="148508" Y="-56405" />
+		<node X="148108" Y="-56618" />
+		<!-- owner_restart_point_list -->
+		<spawn X="148480" Y="-56848" Z="-2765" />
+		<!-- other_restart_village_list -->
+		<spawn X="147712" Y="-58432" Z="-2979" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="147712" Y="-58432" Z="-2979" type="banish" />
+	</zone>
+	<zone name="godad_castle_agit_004 " type="ClanHallZone" shape="NPoly" minZ="-2828" maxZ="-2528">
+		<stat name="clanHallId" val="50" />
+		<!-- residence_territory -->
+		<node X="148962" Y="-55739" />
+		<node X="149759" Y="-55838" />
+		<node X="149815" Y="-55388" />
+		<node X="149018" Y="-55289" />
+		<!-- owner_restart_point_list -->
+		<spawn X="149376" Y="-55568" Z="-2765" />
+		<!-- other_restart_village_list -->
+		<spawn X="147712" Y="-58432" Z="-2979" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="147712" Y="-58432" Z="-2979" type="banish" />
+	</zone>
+	<zone name="rune_castle_agit_001" type="ClanHallZone" shape="NPoly" minZ="850" maxZ="1150">
+		<stat name="clanHallId" val="51" />
+		<!-- residence_territory -->
+		<node X="37433" Y="-51016" />
+		<node X="38034" Y="-51016" />
+		<node X="38034" Y="-50565" />
+		<node X="37765" Y="-50565" />
+		<node X="37765" Y="-50445" />
+		<node X="37680" Y="-50445" />
+		<node X="37680" Y="-50565" />
+		<node X="37433" Y="-50565" />
+		<!-- owner_restart_point_list -->
+		<spawn X="37736" Y="-50777" Z="910" />
+		<!-- other_restart_village_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="banish" />
+	</zone>
+	<zone name="rune_castle_agit_002" type="ClanHallZone" shape="NPoly" minZ="850" maxZ="1150">
+		<stat name="clanHallId" val="52" />
+		<!-- residence_territory -->
+		<node X="38569" Y="-50790" />
+		<node X="39107" Y="-50522" />
+		<node X="38908" Y="-50119" />
+		<node X="38674" Y="-50238" />
+		<node X="38612" Y="-50125" />
+		<node X="38538" Y="-50162" />
+		<node X="38592" Y="-50271" />
+		<node X="38369" Y="-50386" />
+		<!-- owner_restart_point_list -->
+		<spawn X="38737" Y="-50491" Z="910" />
+		<!-- other_restart_village_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="banish" />
+	</zone>
+	<zone name="rune_castle_agit_003" type="ClanHallZone" shape="NPoly" minZ="850" maxZ="1150">
+		<stat name="clanHallId" val="53" />
+		<!-- residence_territory -->
+		<node X="39123" Y="-49827" />
+		<node X="39513" Y="-50048" />
+		<node X="39808" Y="-49526" />
+		<node X="39414" Y="-49304" />
+		<node X="39286" Y="-49533" />
+		<node X="39172" Y="-49472" />
+		<node X="39136" Y="-49546" />
+		<node X="39246" Y="-49605" />
+		<!-- owner_restart_point_list -->
+		<spawn X="39403" Y="-49668" Z="910" />
+		<!-- other_restart_village_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="banish" />
+	</zone>
+	<zone name="rune_castle_agit_004" type="ClanHallZone" shape="NPoly" minZ="850" maxZ="1150">
+		<stat name="clanHallId" val="54" />
+		<!-- residence_territory -->
+		<node X="39394" Y="-48636" />
+		<node X="39846" Y="-48636" />
+		<node X="39845" Y="-47837" />
+		<node X="39394" Y="-47837" />
+		<node X="39394" Y="-48198" />
+		<node X="39347" Y="-48198" />
+		<node X="39348" Y="-48290" />
+		<node X="39394" Y="-48290" />
+		<!-- owner_restart_point_list -->
+		<spawn X="39599" Y="-48264" Z="910" />
+		<!-- other_restart_village_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="banish" />
+	</zone>
+	<zone name="rune_castle_agit_005" type="ClanHallZone" shape="NPoly" minZ="850" maxZ="1150">
+		<stat name="clanHallId" val="55" />
+		<!-- residence_territory -->
+		<node X="39123" Y="-46646" />
+		<node X="39254" Y="-46879" />
+		<node X="39146" Y="-46939" />
+		<node X="39187" Y="-47014" />
+		<node X="39296" Y="-46958" />
+		<node X="39414" Y="-47172" />
+		<node X="39808" Y="-46954" />
+		<node X="39517" Y="-46427" />
+		<!-- owner_restart_point_list -->
+		<spawn X="39440" Y="-46806" Z="910" />
+		<!-- other_restart_village_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="banish" />
+	</zone>
+	<zone name="rune_castle_agit_006" type="ClanHallZone" shape="NPoly" minZ="850" maxZ="1150">
+		<stat name="clanHallId" val="56" />
+		<!-- residence_territory -->
+		<node X="38371" Y="-46086" />
+		<node X="38577" Y="-45688" />
+		<node X="39111" Y="-45960" />
+		<node X="38906" Y="-46362" />
+		<node X="38688" Y="-46252" />
+		<node X="38631" Y="-46361" />
+		<node X="38554" Y="-46324" />
+		<node X="38610" Y="-46214" />
+		<!-- owner_restart_point_list -->
+		<spawn X="38712" Y="-46042" Z="910" />
+		<!-- other_restart_village_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="banish" />
+	</zone>
+	<zone name="rune_castle_agit_007" type="ClanHallZone" shape="NPoly" minZ="850" maxZ="1150">
+		<stat name="clanHallId" val="57" />
+		<!-- residence_territory -->
+		<node X="37432" Y="-45908" />
+		<node X="37700" Y="-45908" />
+		<node X="37700" Y="-46030" />
+		<node X="37790" Y="-46030" />
+		<node X="37790" Y="-45908" />
+		<node X="38033" Y="-45908" />
+		<node X="38033" Y="-45457" />
+		<node X="37432" Y="-45457" />
+		<!-- owner_restart_point_list -->
+		<spawn X="37711" Y="-45723" Z="910" />
+		<!-- other_restart_village_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="43858" Y="-48126" Z="-792" type="banish" />
+	</zone>
+	<zone name="schuttgart_castle_agit_001 " type="ClanHallZone" shape="NPoly" minZ="-1380" maxZ="-1130">
+		<stat name="clanHallId" val="58" />
+		<!-- residence_territory -->
+		<node X="85259" Y="-143315" />
+		<node X="86057" Y="-143416" />
+		<node X="86108" Y="-142966" />
+		<node X="85311" Y="-142865" />
+		<!-- owner_restart_point_list (NOTE: Retail Z is -1230 but seems to be a typo, so we use -1320) -->
+		<spawn X="85812" Y="-143183" Z="-1320" />
+		<!-- other_restart_village_list -->
+		<spawn X="87412" Y="-139881" Z="-1536" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="87412" Y="-139881" Z="-1536" type="banish" />
+	</zone>
+	<zone name="schuttgart_castle_agit_002" type="ClanHallZone" shape="NPoly" minZ="-1380" maxZ="-1130">
+		<stat name="clanHallId" val="59" />
+		<!-- residence_territory -->
+		<node X="86184" Y="-141594" />
+		<node X="86582" Y="-141377" />
+		<node X="86964" Y="-142085" />
+		<node X="86563" Y="-142300" />
+		<!-- owner_restart_point_list (NOTE: Retail Z is -1230 but seems to be a typo, so we use -1320) -->
+		<spawn X="86609" Y="-141949" Z="-1320" />
+		<!-- other_restart_village_list -->
+		<spawn X="87412" Y="-139881" Z="-1536" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="87412" Y="-139881" Z="-1536" type="banish" />
+	</zone>
+	<zone name="schuttgart_castle_agit_003" type="ClanHallZone" shape="NPoly" minZ="-1380" maxZ="-1130">
+		<stat name="clanHallId" val="60" />
+		<!-- residence_territory -->
+		<node X="87767" Y="-142096" />
+		<node X="88135" Y="-141383" />
+		<node X="88537" Y="-141591" />
+		<node X="88167" Y="-142307" />
+		<!-- owner_restart_point_list (NOTE: Retail Z is -1230 but seems to be a typo, so we use -1320) -->
+		<spawn X="88093" Y="-141931" Z="-1320" />
+		<!-- other_restart_village_list -->
+		<spawn X="87412" Y="-139881" Z="-1536" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="87412" Y="-139881" Z="-1536" type="banish" />
+	</zone>
+	<zone name="schuttgart_castle_agit_004" type="ClanHallZone" shape="NPoly" minZ="-1380" maxZ="-1130">
+		<stat name="clanHallId" val="61" />
+		<!-- residence_territory -->
+		<node X="88668" Y="-143423" />
+		<node X="89462" Y="-143324" />
+		<node X="89409" Y="-142877" />
+		<node X="88613" Y="-142975" />
+		<!-- owner_restart_point_list (NOTE: Retail Z is -1230 but seems to be a typo, so we use -1320) -->
+		<spawn X="88901" Y="-143200" Z="-1320" />
+		<!-- other_restart_village_list -->
+		<spawn X="87412" Y="-139881" Z="-1536" type="other" />
+		<!-- banish_point_list -->
+		<spawn X="87412" Y="-139881" Z="-1536" type="banish" />
+	</zone>
+	<zone name="rainbow_spring" type="SiegableHallZone" shape="NPoly" minZ="-1930" maxZ="-1680">
+		<stat name="clanHallId" val="62" />
+		<!-- residence_territory -->
+		<node X="141073" Y="-125043" />
+		<node X="140574" Y="-124709" />
+		<node X="140933" Y="-124171" />
+		<node X="141432" Y="-124505" />
+		<!-- owner_restart_point_list -->
+		<spawn X="140949" Y="-124658" Z="-1800" />
+		<!-- other_restart_village_list -->
+		<spawn X="148560" Y="-55904" Z="-2779" type="other" />
+		<spawn X="150704" Y="-55744" Z="-2979" type="other" />
+		<spawn X="150400" Y="-56752" Z="-2979" type="other" />
+		<spawn X="149872" Y="-57424" Z="-2979" type="other" />
+		<spawn X="149088" Y="-56256" Z="-2779" type="other" />
+		<spawn X="147664" Y="-56464" Z="-2779" type="other" />
+		<spawn X="147680" Y="-56928" Z="-2779" type="other" />
+		<spawn X="146832" Y="-55904" Z="-2779" type="other" />
+		<spawn X="146368" Y="-56256" Z="-2779" type="other" />
+		<spawn X="149120" Y="-58064" Z="-2979" type="other" />
+		<spawn X="148288" Y="-58304" Z="-2979" type="other" />
+		<spawn X="147680" Y="-58208" Z="-2979" type="other" />
+		<spawn X="147232" Y="-58480" Z="-2979" type="other" />
+		<spawn X="146272" Y="-58176" Z="-2979" type="other" />
+		<spawn X="145696" Y="-57696" Z="-2979" type="other" />
+		<spawn X="145264" Y="-57680" Z="-2979" type="other" />
+		<!-- chao_restart_point_list -->
+		<spawn X="142656" Y="-55008" Z="-3024" type="chaotic" />
+		<spawn X="142832" Y="-55680" Z="-3462" type="chaotic" />
+		<spawn X="143152" Y="-56368" Z="-3456" type="chaotic" />
+		<spawn X="145344" Y="-59472" Z="-3344" type="chaotic" />
+		<spawn X="145872" Y="-59744" Z="-3328" type="chaotic" />
+		<spawn X="150304" Y="-59800" Z="-3504" type="chaotic" />
+		<spawn X="145248" Y="-60064" Z="-3440" type="chaotic" />
+		<spawn X="144368" Y="-59616" Z="-3512" type="chaotic" />
+		<spawn X="149680" Y="-59600" Z="-3440" type="chaotic" />
+		<spawn X="149360" Y="-60576" Z="-3520" type="chaotic" />
+		<spawn X="152114" Y="-57296" Z="-3451" type="chaotic" />
+		<spawn X="150492" Y="-59719" Z="-3611" type="chaotic" />
+		<spawn X="148791" Y="-60361" Z="-3537" type="chaotic" />
+		<spawn X="146499" Y="-60242" Z="-3455" type="chaotic" />
+		<spawn X="143052" Y="-56418" Z="-3490" type="chaotic" />
+		<!-- banish_point_list -->
+		<spawn X="141103" Y="-120315" Z="-2000" type="banish" />
+		<!-- challenger_restart_point_list -->
+		<spawn X="153300" Y="-125491" Z="-2216" type="challenger" />
+		<spawn X="155378" Y="-126018" Z="-2216" type="challenger" />
+		<spawn X="153637" Y="-127283" Z="-2216" type="challenger" />
+		<spawn X="151742" Y="-126869" Z="-2216" type="challenger" />
+		<!-- agit_entrance_point -->
+		<!-- <spawn X="153300" Y="-125491" Z="-2216" type="entrance" /> TODO: Require Support -->
+		<!-- <spawn X="155378" Y="-126018" Z="-2216" type="entrance" /> TODO: Require Support -->
+		<!-- <spawn X="153637" Y="-127283" Z="-2216" type="entrance" /> TODO: Require Support -->
+		<!-- <spawn X="151742" Y="-126869" Z="-2216" type="entrance" /> TODO: Require Support -->
+	</zone>
+	<zone name="beast_farm_guildhall" type="SiegableHallZone" shape="NPoly" minZ="-1407" maxZ="-907">
+		<stat name="clanHallId" val="63" />
+		<!-- residence_territory -->
+		<node X="59997" Y="-96111" />
+		<node X="61969" Y="-92430" />
+		<node X="58303" Y="-89937" />
+		<node X="55402" Y="-91364" />
+		<node X="55254" Y="-92999" />
+		<node X="55344" Y="-93295" />
+		<node X="56049" Y="-94619" />
+		<!-- owner_restart_point_list -->
+		<spawn X="60608" Y="-94016" Z="-1349" />
+		<!-- other_restart_village_list -->
+		<spawn X="38096" Y="-46976" Z="899" type="other" />
+		<spawn X="38608" Y="-47168" Z="899" type="other" />
+		<spawn X="38752" Y="-47792" Z="899" type="other" />
+		<spawn X="38848" Y="-48640" Z="899" type="other" />
+		<spawn X="38272" Y="-49008" Z="899" type="other" />
+		<spawn X="38112" Y="-49792" Z="899" type="other" />
+		<spawn X="43408" Y="-51120" Z="-800" type="other" />
+		<spawn X="43536" Y="-50416" Z="-800" type="other" />
+		<spawn X="44368" Y="-50592" Z="-800" type="other" />
+		<spawn X="44000" Y="-49952" Z="-800" type="other" />
+		<spawn X="45072" Y="-49936" Z="-800" type="other" />
+		<spawn X="45824" Y="-49056" Z="-800" type="other" />
+		<spawn X="45632" Y="-47968" Z="-800" type="other" />
+		<spawn X="44864" Y="-47824" Z="-800" type="other" />
+		<spawn X="43744" Y="-47920" Z="-800" type="other" />
+		<spawn X="43792" Y="-48928" Z="-800" type="other" />
+		<!-- chao_restart_point_list -->
+		<spawn X="42640" Y="-54496" Z="-2310" type="chaotic" />
+		<spawn X="38304" Y="-55440" Z="-1136" type="chaotic" />
+		<spawn X="40192" Y="-57600" Z="-2343" type="chaotic" />
+		<spawn X="38400" Y="-56832" Z="-992" type="chaotic" />
+		<spawn X="35632" Y="-54800" Z="-1744" type="chaotic" />
+		<spawn X="37152" Y="-56272" Z="-272" type="chaotic" />
+		<spawn X="43936" Y="-56480" Z="-3627" type="chaotic" />
+		<spawn X="39440" Y="-60080" Z="-2870" type="chaotic" />
+		<spawn X="41376" Y="-55376" Z="-1488" type="chaotic" />
+		<spawn X="41920" Y="-57760" Z="-2392" type="chaotic" />
+		<spawn X="42496" Y="-58192" Z="-3264" type="chaotic" />
+		<spawn X="40784" Y="-59888" Z="-2600" type="chaotic" />
+		<!-- banish_point_list -->
+		<spawn X="47552" Y="-93280" Z="-2419" type="banish" />
+		<spawn X="46656" Y="-93456" Z="-2469" type="banish" />
+		<spawn X="46999" Y="-92986" Z="-2499" type="banish" />
+		<spawn X="47216" Y="-93152" Z="-2464" type="banish" />
+		<spawn X="46836" Y="-93252" Z="-2497" type="banish" />
+		<spawn X="46691" Y="-92882" Z="-2528" type="banish" />
+		<spawn X="48128" Y="-93344" Z="-2320" type="banish" />
+		<!-- challenger_restart_point_list -->
+		<spawn X="56019" Y="-91918" Z="-1360" type="challenger" />
+		<spawn X="58971" Y="-94265" Z="-1360" type="challenger" />
+		<spawn X="59860" Y="-92133" Z="-1360" type="challenger" />
+		<spawn X="57965" Y="-90683" Z="-1360" type="challenger" />
+		<spawn X="56788" Y="-94219" Z="-1360" type="challenger" />
+	</zone>
+	<zone name="fortress_of_restless" type="SiegableHallZone" shape="NPoly" minZ="305" maxZ="1685">
+		<stat name="clanHallId" val="64" />
+		<!-- residence_territory -->
+		<node X="58672" Y="-30158" />
+		<node X="59478" Y="-29345" />
+		<node X="59477" Y="-25636" />
+		<node X="56445" Y="-25638" />
+		<node X="56445" Y="-29326" />
+		<node X="57277" Y="-30154" />
+		<!-- owner_restart_point_list -->
+		<spawn X="57932" Y="-26064" Z="595" />
+		<!-- other_restart_village_list -->
+		<spawn X="38096" Y="-46976" Z="899" type="other" />
+		<spawn X="38608" Y="-47168" Z="899" type="other" />
+		<spawn X="38752" Y="-47792" Z="899" type="other" />
+		<spawn X="38848" Y="-48640" Z="899" type="other" />
+		<spawn X="38272" Y="-49008" Z="899" type="other" />
+		<spawn X="38112" Y="-49792" Z="899" type="other" />
+		<spawn X="43408" Y="-51120" Z="-800" type="other" />
+		<spawn X="43536" Y="-50416" Z="-800" type="other" />
+		<spawn X="44368" Y="-50592" Z="-800" type="other" />
+		<spawn X="44000" Y="-49952" Z="-800" type="other" />
+		<spawn X="45072" Y="-49936" Z="-800" type="other" />
+		<spawn X="45824" Y="-49056" Z="-800" type="other" />
+		<spawn X="45632" Y="-47968" Z="-800" type="other" />
+		<spawn X="44864" Y="-47824" Z="-800" type="other" />
+		<spawn X="43744" Y="-47920" Z="-800" type="other" />
+		<spawn X="43792" Y="-48928" Z="-800" type="other" />
+		<!-- chao_restart_point_list -->
+		<spawn X="42640" Y="-54496" Z="-2310" type="chaotic" />
+		<spawn X="38304" Y="-55440" Z="-1136" type="chaotic" />
+		<spawn X="40192" Y="-57600" Z="-2343" type="chaotic" />
+		<spawn X="38400" Y="-56832" Z="-992" type="chaotic" />
+		<spawn X="35632" Y="-54800" Z="-1744" type="chaotic" />
+		<spawn X="37152" Y="-56272" Z="-272" type="chaotic" />
+		<spawn X="43936" Y="-56480" Z="-3627" type="chaotic" />
+		<spawn X="39440" Y="-60080" Z="-2870" type="chaotic" />
+		<spawn X="41376" Y="-55376" Z="-1488" type="chaotic" />
+		<spawn X="41920" Y="-57760" Z="-2392" type="chaotic" />
+		<spawn X="42496" Y="-58192" Z="-3264" type="chaotic" />
+		<spawn X="40784" Y="-59888" Z="-2600" type="chaotic" />
+		<!-- banish_point_list -->
+		<spawn X="58048" Y="-32160" Z="298" type="banish" />
+	</zone>
+</list>

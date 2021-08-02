@@ -20,9 +20,6 @@
  */
 package l2jorion.game.handler.admin;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.model.L2Character;
@@ -33,11 +30,9 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.taskmanager.DecayTaskManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * This class handles following admin commands: - res = resurrects target L2Character
- * @version $Revision: 1.2.4.5 $ $Date: 2005/04/11 10:06:06 $
- */
 public class AdminRes implements IAdminCommandHandler
 {
 	private static Logger LOG = LoggerFactory.getLogger(AdminRes.class);
@@ -50,11 +45,6 @@ public class AdminRes implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		if (command.startsWith("admin_res "))
 		{
 			handleRes(activeChar, command.split(" ")[1]);
@@ -117,7 +107,9 @@ public class AdminRes implements IAdminCommandHandler
 				catch (final NumberFormatException e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					activeChar.sendMessage("Enter a valid player name or radius.");
 					return;
@@ -166,10 +158,12 @@ public class AdminRes implements IAdminCommandHandler
 				radius = Integer.parseInt(radiusStr);
 				
 				for (final L2Character knownChar : activeChar.getKnownList().getKnownCharactersInRadius(radius))
+				{
 					if (!(knownChar instanceof L2PcInstance) && !(knownChar instanceof L2ControllableMobInstance))
 					{
 						doResurrect(knownChar);
 					}
+				}
 				
 				activeChar.sendMessage("Resurrected all non-players within a " + radius + " unit radius.");
 			}
@@ -177,7 +171,9 @@ public class AdminRes implements IAdminCommandHandler
 		catch (final NumberFormatException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Enter a valid radius.");
 			return;
@@ -195,7 +191,9 @@ public class AdminRes implements IAdminCommandHandler
 	private void doResurrect(final L2Character targetChar)
 	{
 		if (!targetChar.isDead())
+		{
 			return;
+		}
 		
 		// If the target is a player, then restore the XP lost on death.
 		if (targetChar instanceof L2PcInstance)

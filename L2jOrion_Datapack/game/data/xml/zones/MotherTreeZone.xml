@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
+<!-- Mother trees -->
+	<zone name='' id='11050' type='MotherTreeZone' shape='Cuboid' minZ='-3500' maxZ='-3400'>
+		<stat name='affectedRace' val='1'/>
+	</zone>
+	<zone name='' id='11051' type='MotherTreeZone' shape='Cuboid' minZ='-3100' maxZ='-3000'>
+		<stat name='affectedRace' val='1'/>
+	</zone>
+	<zone name='' id='11052' type='MotherTreeZone' shape='Cuboid' minZ='-3700' maxZ='-3600'>
+		<stat name='affectedRace' val='1'/>
+	</zone>
+	<zone name='' id='11053' type='MotherTreeZone' shape='Cuboid' minZ='-3200' maxZ='-3100'>
+		<stat name='affectedRace' val='1'/>
+	</zone>
+	<zone name='' id='11054' type='MotherTreeZone' shape='Cuboid' minZ='-3800' maxZ='-3600'>
+		<stat name='affectedRace' val='1'/>
+	</zone>
+</list>

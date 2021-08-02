@@ -23,9 +23,6 @@ package l2jorion.game.skills.effects;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.L2Skill.SkillType;
@@ -33,6 +30,8 @@ import l2jorion.game.skills.Env;
 import l2jorion.game.skills.conditions.Condition;
 import l2jorion.game.skills.funcs.FuncTemplate;
 import l2jorion.game.skills.funcs.Lambda;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class EffectTemplate
 {
@@ -53,8 +52,8 @@ public final class EffectTemplate
 	public final String stackType;
 	public final String name;
 	public final float stackOrder;
-	public final double effectPower; // to thandle chance
-	public final SkillType effectType; // to handle resistences etc...
+	public final double effectPower;
+	public final SkillType effectType;
 	
 	public EffectTemplate(final Condition pAttachCond, final Condition pApplayCond, final String func, final Lambda pLambda, final int pCounter, final int pPeriod, final int pAbnormalEffect, final String pStackType, final float pStackOrder, final int pShowIcon, final SkillType eType, final double ePower)
 	{
@@ -78,7 +77,9 @@ public final class EffectTemplate
 		catch (final ClassNotFoundException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			throw new RuntimeException(e);
 		}
@@ -89,7 +90,9 @@ public final class EffectTemplate
 		catch (final NoSuchMethodException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			throw new RuntimeException(e);
 		}
@@ -98,12 +101,12 @@ public final class EffectTemplate
 	public L2Effect getEffect(final Env env)
 	{
 		if (attachCond != null && !attachCond.test(env))
+		{
 			return null;
+		}
 		try
 		{
 			final L2Effect effect = (L2Effect) _constructor.newInstance(env, this);
-			// if (_applayCond != null)
-			// effect.setCondition(_applayCond);
 			return effect;
 		}
 		catch (final IllegalAccessException e)

@@ -19,9 +19,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * @author chris_00 Asks the player to join a CC
- */
 public class ExAskJoinMPCC extends L2GameServerPacket
 {
 	private final String _requestorName;

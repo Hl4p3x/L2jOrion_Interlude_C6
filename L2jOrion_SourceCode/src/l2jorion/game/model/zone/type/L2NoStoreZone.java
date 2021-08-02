@@ -20,6 +20,7 @@ package l2jorion.game.model.zone.type;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.L2ZoneType;
+import l2jorion.game.model.zone.ZoneId;
 
 /**
  * Zone where store is not allowed.
@@ -37,7 +38,7 @@ public class L2NoStoreZone extends L2ZoneType
 	{
 		if (character instanceof L2PcInstance)
 		{
-			character.setInsideZone(L2Character.ZONE_NOSTORE, true);
+			character.setInsideZone(ZoneId.ZONE_NOSTORE, true);
 		}
 	}
 	
@@ -46,7 +47,7 @@ public class L2NoStoreZone extends L2ZoneType
 	{
 		if (character instanceof L2PcInstance)
 		{
-			character.setInsideZone(L2Character.ZONE_NOSTORE, false);
+			character.setInsideZone(ZoneId.ZONE_NOSTORE, false);
 		}
 	}
 	

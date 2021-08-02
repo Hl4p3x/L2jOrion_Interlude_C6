@@ -30,9 +30,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-/**
- * L2jOrion
- */
 public class ScriptDocument
 {
 	private Document _document;
@@ -69,6 +66,7 @@ public class ScriptDocument
 		{
 			
 			if (input != null)
+			{
 				try
 				{
 					input.close();
@@ -77,6 +75,7 @@ public class ScriptDocument
 				{
 					e.printStackTrace();
 				}
+			}
 		}
 	}
 	

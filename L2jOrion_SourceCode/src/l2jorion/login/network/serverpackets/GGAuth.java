@@ -20,14 +20,10 @@
  */
 package l2jorion.login.network.serverpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * Fromat: d d: response
- */
 public final class GGAuth extends L2LoginServerPacket
 {
 	static final Logger LOG = LoggerFactory.getLogger(GGAuth.class);
@@ -56,10 +52,6 @@ public final class GGAuth extends L2LoginServerPacket
 		writeD(0x00);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see L2jOrion.loginserver.network.serverpackets.L2LoginServerPacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

@@ -20,14 +20,21 @@ package l2jorion.game.model.actor.instance;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.taskmanager.DecayTaskManager;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.game.util.Util;
 
 public final class L2GourdInstance extends L2MonsterInstance
 {
-	// private static Logger LOG = LoggerFactory.getLogger(L2GourdInstance.class);
-	
 	private String _name;
 	private byte _nectar = 0;
 	private byte _good = 0;
+	
+	private static final int[] YETIS =
+	{
+		35596,
+		35597,
+		35598,
+		35599
+	};
 	
 	public L2GourdInstance(final int objectId, final L2NpcTemplate template)
 	{
@@ -68,11 +75,20 @@ public final class L2GourdInstance extends L2MonsterInstance
 	@Override
 	public void reduceCurrentHp(double damage, final L2Character attacker, final boolean awake)
 	{
+		L2NpcInstance target = (L2NpcInstance) attacker.getTarget();
+		if (target != null && Util.contains(YETIS, target.getNpcId()))
+		{
+			super.reduceCurrentHp(damage, attacker, awake);
+			return;
+		}
+		
 		if (!attacker.getName().equalsIgnoreCase(getOwner()))
 		{
 			damage = 0;
 		}
-		if (getTemplate().npcId == 12778 || getTemplate().npcId == 12779)
+		
+		if (getTemplate().getNpcId() == 12778 || getTemplate().getNpcId() == 12779)
+		{
 			if (attacker.getActiveWeaponInstance().getItemId() == 4202 || attacker.getActiveWeaponInstance().getItemId() == 5133 || attacker.getActiveWeaponInstance().getItemId() == 5817 || attacker.getActiveWeaponInstance().getItemId() == 7058)
 			{
 				super.reduceCurrentHp(damage, attacker, awake);
@@ -81,6 +97,7 @@ public final class L2GourdInstance extends L2MonsterInstance
 			{
 				damage = 0;
 			}
+		}
 		super.reduceCurrentHp(damage, attacker, awake);
 	}
 }

@@ -19,13 +19,8 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Format: ch (trigger).
- * @author KenM
- */
 public class ExShowAdventurerGuideBook extends L2GameServerPacket
 {
-	/** The Constant _S__FE_37_EXSHOWADVENTURERGUIDEBOOK. */
 	private static final String _S__FE_37_EXSHOWADVENTURERGUIDEBOOK = "[S] FE:37 ExShowAdventurerGuideBook";
 	
 	@Override
@@ -35,10 +30,6 @@ public class ExShowAdventurerGuideBook extends L2GameServerPacket
 		writeH(0x37);
 	}
 	
-	/**
-	 * Gets the type.
-	 * @return the type
-	 */
 	@Override
 	public String getType()
 	{

@@ -22,12 +22,8 @@ package l2jorion.game.skills.conditions;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public class ConditionLogicAnd extends Condition
 {
-	
 	private static Condition[] _emptyConditions = new Condition[0];
 	public Condition[] conditions = _emptyConditions;
 	
@@ -39,11 +35,15 @@ public class ConditionLogicAnd extends Condition
 	public void add(final Condition condition)
 	{
 		if (condition == null)
+		{
 			return;
+		}
+		
 		if (getListener() != null)
 		{
 			condition.setListener(this);
 		}
+		
 		final int len = conditions.length;
 		final Condition[] tmp = new Condition[len + 1];
 		System.arraycopy(conditions, 0, tmp, 0, len);
@@ -77,7 +77,9 @@ public class ConditionLogicAnd extends Condition
 		for (final Condition c : conditions)
 		{
 			if (!c.test(env))
+			{
 				return false;
+			}
 		}
 		return true;
 	}

@@ -19,6 +19,7 @@
 package l2jorion.game.model.actor.instance;
 
 import l2jorion.Config;
+import l2jorion.game.enums.AchType;
 import l2jorion.game.managers.RaidBossPointsManager;
 import l2jorion.game.managers.RaidBossSpawnManager;
 import l2jorion.game.model.L2Character;
@@ -26,6 +27,7 @@ import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.entity.Announcements;
 import l2jorion.game.model.spawn.AutoSpawn;
 import l2jorion.game.model.spawn.L2Spawn;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.PlaySound;
 import l2jorion.game.network.serverpackets.SystemMessage;
@@ -35,30 +37,16 @@ import l2jorion.util.random.Rnd;
 
 public final class L2RaidBossInstance extends L2MonsterInstance
 {
-	private static final int RAIDBOSS_MAINTENANCE_INTERVAL = 20000; // 20 sec
-
-	/** The _raid status. */
+	private static final int RAIDBOSS_MAINTENANCE_INTERVAL = 20000;
+	
 	private RaidBossSpawnManager.StatusEnum _raidStatus;
-
-	/**
-	 * Constructor of L2RaidBossInstance (use L2Character and L2NpcInstance constructor).<BR>
-	 * <BR>
-	 * <B><U> Actions</U> :</B><BR>
-	 * <BR>
-	 * <li>Call the L2Character constructor to set the _template of the L2RaidBossInstance (copy skills from template to
-	 * object and link _calculators to NPC_STD_CALCULATOR)</li> <li>Set the name of the L2RaidBossInstance</li> <li>
-	 * Create a RandomAnimation Task that will be launched after the calculated delay if the server allow it</li><BR>
-	 * <BR>
-	 *
-	 * @param objectId Identifier of the object to initialized
-	 * @param template the template
-	 */
+	
 	public L2RaidBossInstance(int objectId, L2NpcTemplate template)
 	{
 		super(objectId, template);
 		setIsRaid(true);
 	}
-
+	
 	@Override
 	protected int getMaintenanceInterval()
 	{
@@ -75,18 +63,17 @@ public final class L2RaidBossInstance extends L2MonsterInstance
 		
 		L2PcInstance player = null;
 		
-		if(killer instanceof L2PcInstance)
+		if (killer instanceof L2PcInstance)
 		{
 			player = (L2PcInstance) killer;
 		}
-		else if(killer instanceof L2Summon)
+		else if (killer instanceof L2Summon)
 		{
 			player = ((L2Summon) killer).getOwner();
 		}
 		
-		SystemMessage msg = new SystemMessage(SystemMessageId.RAID_WAS_SUCCESSFUL);
 		broadcastPacket(new PlaySound("systemmsg_e.1209"));
-		broadcastPacket(msg);
+		broadcastPacket(new SystemMessage(SystemMessageId.RAID_WAS_SUCCESSFUL));
 		
 		if (player != null && (getNpcId() != 22215 && getNpcId() != 22216 && getNpcId() != 22217 && getNpcId() != 22318 && getNpcId() != 22319))
 		{
@@ -94,11 +81,11 @@ public final class L2RaidBossInstance extends L2MonsterInstance
 			{
 				if (player.getClan() != null)
 				{
-					Announcements.getInstance().announceRB("The Raid Boss " + getName() + " was killed. Last hit: "+player.getName()+ " Clan: "+player.getClan().getName());
+					Announcements.getInstance().announceWithServerName("The Raid Boss " + getName() + " was killed. Last hit: " + player.getName() + " Clan: " + player.getClan().getName());
 				}
 				else
 				{
-					Announcements.getInstance().announceRB("The Raid Boss " + getName() + " was killed. Last hit: "+player.getName());
+					Announcements.getInstance().announceWithServerName("The Raid Boss " + getName() + " was killed. Last hit: " + player.getName());
 				}
 			}
 			
@@ -107,11 +94,13 @@ public final class L2RaidBossInstance extends L2MonsterInstance
 				for (L2PcInstance member : player.getParty().getPartyMembers())
 				{
 					RaidBossPointsManager.addPoints(member, getNpcId(), (getLevel() / 2) + Rnd.get(-5, 5));
+					member.getAchievement().increase(AchType.RAIDBOSS);
 				}
 			}
 			else
 			{
 				RaidBossPointsManager.addPoints(player, getNpcId(), (getLevel() / 2) + Rnd.get(-5, 5));
+				player.getAchievement().increase(AchType.RAIDBOSS);
 			}
 		}
 		
@@ -120,55 +109,64 @@ public final class L2RaidBossInstance extends L2MonsterInstance
 			RaidBossSpawnManager.getInstance().updateStatus(this, true);
 		}
 		
-		//Check auto spawn instance
+		// Check auto spawn instance
 		AutoSpawn.updateStatus(this, true);
 		
 		return true;
 	}
-
+	
 	@Override
 	protected void manageMinions()
 	{
 		_minionList.spawnMinions();
-		_minionMaintainTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new Runnable()
+		
+		if (_minionMaintainTask == null)
 		{
-			@Override
-			public void run()
+			_minionMaintainTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(() ->
 			{
-				// teleport raid boss home if it's too far from home location
 				L2Spawn bossSpawn = getSpawn();
+				
 				int rb_lock_range = Config.RBLOCKRAGE;
+				
 				if (Config.RBS_SPECIFIC_LOCK_RAGE.get(bossSpawn.getNpcid()) != null)
 				{
 					rb_lock_range = Config.RBS_SPECIFIC_LOCK_RAGE.get(bossSpawn.getNpcid());
 				}
 				
-				if (rb_lock_range != -1 && !isInsideRadius(bossSpawn.getLocx(), bossSpawn.getLocy(), bossSpawn.getLocz(), rb_lock_range, true, false))
+				if (Config.RBS_SPECIFIC_LOCK_RAGE.get(bossSpawn.getNpcid()) != null && Config.RBS_SPECIFIC_LOCK_RAGE.get(bossSpawn.getNpcid()).intValue() == 1)
+				{
+					if (!isInsideZone(ZoneId.ZONE_BOSS) && getSpawn() != null)
+					{
+						teleToLocation(getSpawn().getLocx(), getSpawn().getLocy(), getSpawn().getLocz(), false);
+					}
+				}
+				
+				if (rb_lock_range >= 100 && !isInsideRadius(bossSpawn.getLocx(), bossSpawn.getLocy(), bossSpawn.getLocz(), rb_lock_range, true, false))
 				{
 					teleToLocation(bossSpawn.getLocx(), bossSpawn.getLocy(), bossSpawn.getLocz(), false);
+					
 					if (Config.HEAL_RAIDBOSS)
+					{
 						healFull();
+					}
 				}
 				
 				_minionList.maintainMinions();
-				bossSpawn = null;
-			}
-		}, 60000, getMaintenanceInterval());
+			}, 60000, getMaintenanceInterval());
+		}
 	}
-
+	
 	/**
 	 * Sets the raid status.
-	 *
 	 * @param status the new raid status
 	 */
 	public void setRaidStatus(RaidBossSpawnManager.StatusEnum status)
 	{
 		_raidStatus = status;
 	}
-
+	
 	/**
 	 * Gets the raid status.
-	 *
 	 * @return the raid status
 	 */
 	public RaidBossSpawnManager.StatusEnum getRaidStatus()

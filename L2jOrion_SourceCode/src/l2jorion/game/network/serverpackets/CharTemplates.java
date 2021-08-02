@@ -25,14 +25,10 @@ import java.util.List;
 import javolution.util.FastList;
 import l2jorion.game.templates.L2PcTemplate;
 
-/**
- * This class ...
- * @version $Revision: 1.3.2.1.2.7 $ $Date: 2005/03/27 15:29:39 $
- */
 public class CharTemplates extends L2GameServerPacket
 {
-	// dddddddddddddddddddd
 	private static final String _S__23_CHARTEMPLATES = "[S] 23 CharTemplates";
+	
 	private final List<L2PcTemplate> _chars = new FastList<>();
 	
 	public void addChar(final L2PcTemplate template)
@@ -71,10 +67,6 @@ public class CharTemplates extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

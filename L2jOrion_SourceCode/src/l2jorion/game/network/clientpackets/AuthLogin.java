@@ -16,14 +16,19 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.strixplatform.StrixPlatform;
 
 import l2jguard.Protection;
 import l2jorion.Config;
 import l2jorion.game.network.L2GameClient;
+import l2jorion.game.network.SystemMessageId;
+import l2jorion.game.network.serverpackets.ServerClose;
+import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.thread.LoginServerThread;
 import l2jorion.game.thread.LoginServerThread.SessionKey;
+import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class AuthLogin extends L2GameClientPacket
 {
@@ -62,12 +67,27 @@ public final class AuthLogin extends L2GameClientPacket
 			}
 		}
 		
-		if (Config.DEBUG)
-		{
-			LOG.info("DEBUG " + getType() + ": user: " + _loginName + " key:" + key);
-		}
-		
 		final L2GameClient client = getClient();
+		
+		if (Config.USE_SUBSCRIPTION)
+		{
+			client.setLoginName(_loginName);
+			client.restoreSubscripionData(client.getLoginName());
+			if (client.getSubscription() == 0)
+			{
+				client.sendPacket(new SystemMessage(SystemMessageId.SUBSCRIPTION_MSG));
+				
+				ThreadPoolManager.getInstance().scheduleGeneral(new Runnable()
+				{
+					@Override
+					public void run()
+					{
+						client.closeNow();
+					}
+				}, Config.SUBSCRIPTION_DC_TIME * 1000);
+				return;
+			}
+		}
 		
 		// avoid potential exploits
 		if (client.getAccountName() == null)
@@ -82,6 +102,26 @@ public final class AuthLogin extends L2GameClientPacket
 			else
 			{
 				client.closeNow();
+			}
+		}
+		
+		if (Config.STRIX_PROTECTION)
+		{
+			if (StrixPlatform.getInstance().isPlatformAntibrute())
+			{
+				if (getClient().getStrixClientData() != null)
+				{
+					getClient().getStrixClientData().setClientAccount(_loginName);
+					if (StrixPlatform.getInstance().isAuthLogEnabled())
+					{
+						LOG.info("Account: [" + _loginName + "] HWID: [" + getClient().getStrixClientData().getClientHWID() + "] SessionID: [" + getClient().getStrixClientData().getSessionId() + "] entered to Game Server");
+					}
+				}
+				else
+				{
+					getClient().close(ServerClose.STATIC_PACKET);
+					return;
+				}
 			}
 		}
 	}

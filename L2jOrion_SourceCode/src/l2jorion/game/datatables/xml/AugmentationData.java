@@ -20,11 +20,16 @@
 package l2jorion.game.datatables.xml;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -34,13 +39,10 @@ import l2jorion.game.model.L2Augmentation;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.skills.Stats;
+import l2jorion.game.skills.holders.IntIntHolder;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
 
 public class AugmentationData
 {
@@ -83,12 +85,14 @@ public class AugmentationData
 	private final Map<Integer, FastList<augmentationSkill>> _purpleSkills;
 	private final Map<Integer, FastList<augmentationSkill>> _redSkills;
 	
+	private final Map<Integer, IntIntHolder> _allSkills = new HashMap<>();
+	
 	// =========================================================
 	// Constructor
 	@SuppressWarnings("unchecked")
 	private AugmentationData()
 	{
-		LOG.info("Initializing AugmentationData.");
+		// LOG.info("Initializing AugmentationData.");
 		
 		_augmentationStats = new FastList[4];
 		_augmentationStats[0] = new FastList<>();
@@ -109,7 +113,7 @@ public class AugmentationData
 		load();
 		
 		// Use size*4: since theres 4 blocks of stat-data with equivalent size
-		LOG.info("AugmentationData: Loaded: " + _augmentationStats[0].size() * 4 + " augmentation stats.");
+		LOG.info("AugmentationData: Loaded: " + _augmentationStats[0].size() * 4 + " augmentation stats");
 		
 		if (Config.DEBUG)
 		{
@@ -146,7 +150,9 @@ public class AugmentationData
 		public L2Skill getSkill(final int level)
 		{
 			if (level > _maxSkillLevel)
+			{
 				return SkillTable.getInstance().getInfo(_skillId, _maxSkillLevel);
+			}
 			
 			return SkillTable.getInstance().getInfo(_skillId, level);
 		}
@@ -187,7 +193,9 @@ public class AugmentationData
 		public float getSingleStatValue(final int i)
 		{
 			if (i >= _singleSize || i < 0)
+			{
 				return _singleValues[_singleSize - 1];
+			}
 			
 			return _singleValues[i];
 		}
@@ -195,7 +203,9 @@ public class AugmentationData
 		public float getCombinedStatValue(final int i)
 		{
 			if (i >= _combinedSize || i < 0)
+			{
 				return _combinedValues[_combinedSize - 1];
+			}
 			
 			return _combinedValues[i];
 		}
@@ -306,7 +316,7 @@ public class AugmentationData
 								_redSkills.get(k).add(new augmentationSkill(skillId, skillLvL, augmentationId));
 							}
 							
-							attrs = null;
+							_allSkills.put(augmentationId, new IntIntHolder(skillId, skillLvL));
 						}
 					}
 				}
@@ -316,14 +326,13 @@ public class AugmentationData
 			{
 				LOG.info("AugmentationData: " + badAugmantData + " bad skill(s) were skipped.");
 			}
-			
-			doc = null;
-			file = null;
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Error parsing augmentation_skillmap.xml.", e);
 			
@@ -408,22 +417,17 @@ public class AugmentationData
 								
 								// store this stat
 								_augmentationStats[(i - 1)].add(new augmentationStat(Stats.valueOfXml(statName), soloValues, combinedValues));
-								
-								statName = null;
-								attrs = null;
 							}
 						}
 					}
 				}
-				
-				doc = null;
-				file = null;
-				factory = null;
 			}
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.error("Error parsing augmentation_stats" + i + ".xml.", e);
 				return;
@@ -431,16 +435,46 @@ public class AugmentationData
 		}
 	}
 	
-	// =========================================================
-	// Properties - Public
+	public L2Augmentation generateAugmentationWithSkill(L2ItemInstance item, int id, int level)
+	{
+		int stat12 = 0;
+		int stat34 = 0;
+		int lifeStoneLevel = 9;
+		int lifeStoneGrade = 3;
+		int resultColor = 3;
+		
+		L2Skill skill = null;
+		for (int i : _allSkills.keySet())
+		{
+			L2Skill sk = _allSkills.get(i).getSkill();
+			if (sk.getId() == id)
+			{
+				if (sk.getLevel() == level)
+				{
+					skill = sk;
+				}
+				
+				stat34 = i;
+				break;
+			}
+		}
+		
+		if (skill == null)
+		{
+			skill = SkillTable.getInstance().getInfo(id, level);
+		}
+		
+		/*
+		 * for (int i = 1; i < 10; i++) { _a.sys("i:" + i); if (_blueSkills.get(i).contains(stat34)) { resultColor = 1; lifeStoneLevel = i; break; } else if (_redSkills.get(i).contains(stat34)) { resultColor = 2; lifeStoneLevel = i; break; } else if (_purpleSkills.get(i).contains(stat34)) {
+		 * resultColor = 3; lifeStoneLevel = i; break; } }
+		 */
+		
+		int offset = (lifeStoneLevel * STAT_SUBBLOCKSIZE) + Rnd.get(0, 1) * STAT_BLOCKSIZE + (lifeStoneGrade + resultColor) / 2 * (10 * STAT_SUBBLOCKSIZE) + 1;
+		stat12 = Rnd.get(offset, offset + STAT_SUBBLOCKSIZE - 1);
+		
+		return new L2Augmentation(item, ((stat34 << 16) + stat12), skill, true);
+	}
 	
-	/**
-	 * Generate a new random augmentation
-	 * @param item
-	 * @param lifeStoneLevel
-	 * @param lifeStoneGrade
-	 * @return L2Augmentation
-	 */
 	public L2Augmentation generateRandomAugmentation(final L2ItemInstance item, final int lifeStoneLevel, final int lifeStoneGrade)
 	{
 		// Note that stat12 stands for stat 1 AND 2 (same for stat34 ;p )

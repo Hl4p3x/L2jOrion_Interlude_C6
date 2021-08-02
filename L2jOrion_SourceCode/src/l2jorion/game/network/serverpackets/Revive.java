@@ -22,13 +22,10 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Object;
 
-/**
- * sample 0000: 0c 9b da 12 40 ....@ format d
- * @version $Revision: 1.1.2.1.2.3 $ $Date: 2005/03/27 15:29:40 $
- */
 public class Revive extends L2GameServerPacket
 {
 	private static final String _S__0C_REVIVE = "[S] 07 Revive";
+	
 	private final int _objectId;
 	
 	public Revive(final L2Object obj)
@@ -43,10 +40,6 @@ public class Revive extends L2GameServerPacket
 		writeD(_objectId);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

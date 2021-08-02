@@ -27,13 +27,8 @@ import l2jorion.game.datatables.sql.ItemTable;
 import l2jorion.game.model.base.ClassId;
 import l2jorion.game.model.base.Race;
 
-/**
- * @author mkizub
- */
 public class L2PcTemplate extends L2CharTemplate
 {
-	
-	/** The Class object of the L2PcInstance */
 	public final Race race;
 	public final ClassId classId;
 	
@@ -58,9 +53,11 @@ public class L2PcTemplate extends L2CharTemplate
 	public L2PcTemplate(final StatsSet set)
 	{
 		super(set);
+		
 		classId = ClassId.values()[set.getInteger("classId")];
 		race = Race.values()[set.getInteger("raceId")];
 		className = set.getString("className");
+		
 		_currentCollisionRadius = set.getInteger("collision_radius");
 		_currentCollisionHeight = set.getInteger("collision_height");
 		
@@ -77,10 +74,6 @@ public class L2PcTemplate extends L2CharTemplate
 		lvlMpMod = set.getFloat("lvlMpMod");
 	}
 	
-	/**
-	 * add starter equipment
-	 * @param itemId
-	 */
 	public void addItem(final int itemId)
 	{
 		final L2Item item = ItemTable.getInstance().getTemplate(itemId);
@@ -90,9 +83,6 @@ public class L2PcTemplate extends L2CharTemplate
 		}
 	}
 	
-	/**
-	 * @return itemIds of all the starter equipment
-	 */
 	public L2Item[] getItems()
 	{
 		return _items.toArray(new L2Item[_items.size()]);
@@ -113,13 +103,21 @@ public class L2PcTemplate extends L2CharTemplate
 	public int getBaseFallSafeHeight(final boolean female)
 	{
 		if (classId.getRace() == Race.darkelf || classId.getRace() == Race.elf)
+		{
 			return classId.isMage() ? (female ? 330 : 300) : female ? 380 : 350;
+		}
 		else if (classId.getRace() == Race.dwarf)
+		{
 			return female ? 200 : 180;
+		}
 		else if (classId.getRace() == Race.human)
+		{
 			return classId.isMage() ? (female ? 220 : 200) : female ? 270 : 250;
+		}
 		else if (classId.getRace() == Race.orc)
+		{
 			return classId.isMage() ? (female ? 280 : 250) : female ? 220 : 200;
+		}
 		
 		return 400;
 		

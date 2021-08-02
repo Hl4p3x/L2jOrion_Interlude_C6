@@ -59,7 +59,6 @@
   <set name="effectRange" val="-1"/>
   <set name="staticReuse" val="true"/>
   <set name="reuseDelay" val="3000" />
-  <set name="buffDuration" val="15000"/>
   <set name="isPotion" val="true"/>
   <for>
   </for>
@@ -237,16 +236,14 @@
   <set name="operateType" val="OP_ACTIVE"/>
 </skill>
 <skill id="2031" levels="1" name="Lesser Healing Potion">
-  <set name="power" val="1"/>
   <set name="target" val="TARGET_SELF"/>
   <set name="skillType" val="HOT"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="buffDuration" val="15000"/>
+  <set name="reuseDelay" val="10000" />
   <set name="isPotion" val="true"/>
   <for>
-    <!-- retail value: 8HP/sec; stat update every 3 units (2 sec) -->
-    <!-- Verified by slyce -  Interlude - 8th Aug 2007 -->
-    <effect count="7" name="HealOverTime" time="2" val="16" stackOrder="8" stackType="HpRecover"/>
+    <effect count="7" name="HealOverTime" time="2" val="16" stackOrder="1" stackType="HpRecover"/>
   </for>
 </skill>
 <skill id="2032" levels="1" name="Healing potion">
@@ -257,8 +254,6 @@
   <set name="reuseDelay" val="10000" />
   <set name="isPotion" val="true"/>
   <for>
-    <!-- retail value: 24HP/sec; stat update every 3 units (2 sec) -->
-    <!-- Verified by slyce -  Interlude - 8th Aug 2007 -->
     <effect count="7" name="HealOverTime" time="2" val="48" stackOrder="2" stackType="HpRecover"/>
   </for>
 </skill>
@@ -292,7 +287,6 @@
   </for>
 </skill>
 <skill id="2036" levels="2" name="Blessed Scroll of Escape">
-<!-- lvl 2 version is "L2day Blessed Scroll of Escape" -->
   <set name="target" val="TARGET_SELF"/>
   <set name="hitTime" val="200"/>
   <set name="skillType" val="RECALL"/>
@@ -306,9 +300,7 @@
   <set name="buffDuration" val="15000"/>
   <set name="isPotion" val="true"/>
   <for>
-    <!-- retail value: 50HP/sec; stat update every 3 units (2 sec) -->
-    <!-- Verified by slyce -  Interlude - 8th Aug 2007 -->
-    <effect count="7" name="HealOverTime" time="2" val="100" stackOrder="50" stackType="HpRecover"/>
+    <effect count="7" name="HealOverTime" time="2" val="100" stackOrder="3" stackType="HpRecover"/>
   </for>
 </skill>
 <skill id="2038" levels="1" name="Quick Healing Potion">

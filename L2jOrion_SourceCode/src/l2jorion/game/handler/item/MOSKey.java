@@ -31,15 +31,13 @@ import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * @author Damon
- */
 public class MOSKey implements IItemHandler
 {
 	private static final int[] ITEM_IDS =
 	{
 		8056
 	};
+	
 	public static final int INTERACTION_DISTANCE = 150;
 	public static long LAST_OPEN = 0;
 	
@@ -49,7 +47,9 @@ public class MOSKey implements IItemHandler
 		int itemId = item.getItemId();
 		
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		L2Object target = activeChar.getTarget();
@@ -72,20 +72,22 @@ public class MOSKey implements IItemHandler
 		
 		if (activeChar.getAbnormalEffect() > 0 || activeChar.isInCombat())
 		{
-			activeChar.sendMessage("You can`t use the key right now.");
+			activeChar.sendMessage("You can't use the key right now.");
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 		
 		if (LAST_OPEN + 1800000 > System.currentTimeMillis()) // 30 * 60 * 1000 = 1800000
 		{
-			activeChar.sendMessage("You can`t use the key right now.");
+			activeChar.sendMessage("You can't use the key right now.");
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 		
 		if (!playable.destroyItem("Consume", item.getObjectId(), 1, null, false))
+		{
 			return;
+		}
 		
 		if (itemId == 8056)
 		{
@@ -93,8 +95,6 @@ public class MOSKey implements IItemHandler
 			{
 				DoorTable.getInstance().getDoor(23150003).openMe();
 				DoorTable.getInstance().getDoor(23150004).openMe();
-				DoorTable.getInstance().getDoor(23150003).onOpen();
-				DoorTable.getInstance().getDoor(23150004).onOpen();
 				activeChar.broadcastPacket(new SocialAction(activeChar.getObjectId(), 3));
 				LAST_OPEN = System.currentTimeMillis();
 			}

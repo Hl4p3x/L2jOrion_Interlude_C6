@@ -21,9 +21,6 @@ package l2jorion.game.skills.conditions;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author Steuf
- */
 public class ConditionWithSkill extends Condition
 {
 	private final boolean _skill;
@@ -37,7 +34,9 @@ public class ConditionWithSkill extends Condition
 	public boolean testImpl(final Env env)
 	{
 		if (!_skill && env.skill != null)
+		{
 			return false;
+		}
 		return true;
 	}
 }

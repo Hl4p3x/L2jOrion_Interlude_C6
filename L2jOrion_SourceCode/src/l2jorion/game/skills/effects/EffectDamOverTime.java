@@ -27,10 +27,6 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.skills.Env;
 
-/**
- * @author L2jOrion dev
- */
-
 class EffectDamOverTime extends L2Effect
 {
 	public EffectDamOverTime(final Env env, final EffectTemplate template)
@@ -48,7 +44,9 @@ class EffectDamOverTime extends L2Effect
 	public boolean onActionTime()
 	{
 		if (getEffected().isDead())
+		{
 			return false;
+		}
 		
 		double damage = calc();
 		
@@ -64,9 +62,6 @@ class EffectDamOverTime extends L2Effect
 				return false;
 			}
 			
-			// ** This is just hotfix, needs better solution **
-			// 1947: "DOT skills shouldn't kill"
-			// Well, some of them should ;-)
 			if (getSkill().getId() != 4082)
 			{
 				damage = getEffected().getCurrentHp() - 1;
@@ -75,7 +70,6 @@ class EffectDamOverTime extends L2Effect
 		
 		final boolean awake = !(getEffected() instanceof L2Attackable) && !(getSkill().getTargetType() == SkillTargetType.TARGET_SELF && getSkill().isToggle());
 		
-		// getEffected().reduceCurrentHp(damage, getEffector(), awake);
 		getEffected().reduceCurrentHpByDamOverTime(damage, getEffector(), awake, this.getPeriod());
 		
 		return true;

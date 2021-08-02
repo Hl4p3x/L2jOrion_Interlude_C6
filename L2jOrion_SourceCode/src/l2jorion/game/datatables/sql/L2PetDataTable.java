@@ -28,19 +28,18 @@ import java.util.Map;
 import javolution.util.FastMap;
 import l2jorion.game.model.L2PetData;
 import l2jorion.game.model.actor.instance.L2PetInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class L2PetDataTable
 {
 	private final static Logger LOG = LoggerFactory.getLogger(L2PetInstance.class);
+	
 	private static L2PetDataTable _instance;
 	
-	// private static final int[] PET_LIST = { 12077, 12312, 12313, 12311, 12527, 12528, 12526 };
 	private static Map<Integer, Map<Integer, L2PetData>> _petTable;
 	
 	public static L2PetDataTable getInstance()
@@ -75,7 +74,6 @@ public class L2PetDataTable
 				petId = rset.getInt("typeID");
 				petLevel = rset.getInt("level");
 				
-				// build the petdata for this level
 				final L2PetData petData = new L2PetData();
 				
 				petData.setPetID(petId);
@@ -149,15 +147,9 @@ public class L2PetDataTable
 	
 	public L2PetData getPetData(final int petID, final int petLevel)
 	{
-		// LOG.info("Getting id "+petID+" level "+ petLevel);
 		return _petTable.get(petID).get(petLevel);
 	}
 	
-	/**
-	 * Pets stuffs
-	 * @param npcId
-	 * @return
-	 */
 	public static boolean isWolf(final int npcId)
 	{
 		return npcId == 12077;
@@ -175,7 +167,7 @@ public class L2PetDataTable
 	
 	public static boolean isStrider(final int npcId)
 	{
-		return npcId > 12525 && npcId < 12529;
+		return (npcId > 12525 && npcId < 12529) || (npcId >= 100 && npcId <= 299);
 	}
 	
 	public static boolean isWyvern(final int npcId)
@@ -226,60 +218,72 @@ public class L2PetDataTable
 	public static int getFoodItemId(final int npcId)
 	{
 		if (isWolf(npcId))
+		{
 			return 2515;
+		}
 		else if (isSinEater(npcId))
+		{
 			return 2515;
+		}
 		else if (isHatchling(npcId))
+		{
 			return 4038;
+		}
 		else if (isStrider(npcId))
+		{
 			return 5168;
+		}
 		else if (isBaby(npcId))
+		{
 			return 7582;
+		}
 		else
+		{
 			return 0;
+		}
 	}
 	
 	public static int getPetIdByItemId(final int itemId)
 	{
 		switch (itemId)
 		{
-		// wolf pet a
+			// wolf pet a
 			case 2375:
 				return 12077;
-				// Sin Eater
+			// Sin Eater
 			case 4425:
 				return 12564;
-				// hatchling of wind
+			// hatchling of wind
 			case 3500:
 				return 12311;
-				// hatchling of star
+			// hatchling of star
 			case 3501:
 				return 12312;
-				// hatchling of twilight
+			// hatchling of twilight
 			case 3502:
 				return 12313;
-				// wind strider
+			// wind strider
 			case 4422:
 				return 12526;
-				// Star strider
+			// Star strider
 			case 4423:
 				return 12527;
-				// Twilight strider
+			// Twilight strider
 			case 4424:
 				return 12528;
-				// Wyvern
+			// Wyvern
 			case 8663:
 				return 12621;
-				// Baby Buffalo
+			// Baby Buffalo
 			case 6648:
 				return 12780;
-				// Baby Cougar
+			// Baby Cougar
 			case 6649:
 				return 12782;
-				// Baby Kookaburra
+			// Baby Kookaburra
 			case 6650:
 				return 12781;
-				// unknown item id.. should never happen
+			// unknown item id.. should never happen
 			default:
 				return 0;
 		}
@@ -364,7 +368,7 @@ public class L2PetDataTable
 				{
 					4425
 				};
-				
+			
 			case 12311:// hatchling of wind
 			case 12312:// hatchling of star
 			case 12313:// hatchling of twilight
@@ -374,7 +378,7 @@ public class L2PetDataTable
 					3501,
 					3502
 				};
-				
+			
 			case 12526:// wind strider
 			case 12527:// Star strider
 			case 12528:// Twilight strider
@@ -384,13 +388,13 @@ public class L2PetDataTable
 					4423,
 					4424
 				};
-				
+			
 			case 12621:// Wyvern
 				return new int[]
 				{
 					8663
 				};
-				
+			
 			case 12780:// Baby Buffalo
 			case 12782:// Baby Cougar
 			case 12781:// Baby Kookaburra
@@ -400,8 +404,8 @@ public class L2PetDataTable
 					6649,
 					6650
 				};
-				
-				// unknown item id.. should never happen
+			
+			// unknown item id.. should never happen
 			default:
 				return new int[]
 				{

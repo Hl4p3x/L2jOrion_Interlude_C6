@@ -22,12 +22,8 @@ package l2jorion.game.skills.funcs;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public final class LambdaStats extends Lambda
 {
-	
 	public enum StatsType
 	{
 		PLAYER_LEVEL,
@@ -50,19 +46,27 @@ public final class LambdaStats extends Lambda
 		{
 			case PLAYER_LEVEL:
 				if (env.player == null)
+				{
 					return 1;
+				}
 				return env.player.getLevel();
 			case TARGET_LEVEL:
 				if (env.target == null)
+				{
 					return 1;
+				}
 				return env.target.getLevel();
 			case PLAYER_MAX_HP:
 				if (env.player == null)
+				{
 					return 1;
+				}
 				return env.player.getMaxHp();
 			case PLAYER_MAX_MP:
 				if (env.player == null)
+				{
 					return 1;
+				}
 				return env.player.getMaxMp();
 		}
 		return 0;

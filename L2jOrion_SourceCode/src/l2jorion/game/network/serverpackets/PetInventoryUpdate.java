@@ -26,24 +26,17 @@ import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.model.ItemInfo;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * This class ...
- * @author Yme
- * @version $Revision: 1.3.2.1.2.5 $ $Date: 2005/03/27 15:29:57 $ Rebuild 23.2.2006 by Advi
- */
 public class PetInventoryUpdate extends L2GameServerPacket
 {
 	private static Logger LOG = LoggerFactory.getLogger(InventoryUpdate.class);
+	
 	private static final String _S__37_INVENTORYUPDATE = "[S] b3 InventoryUpdate";
+	
 	private final List<ItemInfo> _items;
 	
-	/**
-	 * @param items
-	 */
 	public PetInventoryUpdate(final List<ItemInfo> items)
 	{
 		_items = items;
@@ -117,10 +110,6 @@ public class PetInventoryUpdate extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

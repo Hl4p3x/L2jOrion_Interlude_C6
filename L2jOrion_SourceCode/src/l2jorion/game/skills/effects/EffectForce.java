@@ -19,18 +19,14 @@
  */
 package l2jorion.game.skills.effects;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.skills.Env;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * @author kombat
- */
 public class EffectForce extends L2Effect
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(EffectForce.class);
@@ -81,7 +77,9 @@ public class EffectForce extends L2Effect
 		exit(false);
 		final L2Skill newSkill = SkillTable.getInstance().getInfo(getSkill().getId(), forces);
 		if (newSkill != null)
+		{
 			newSkill.getEffects(getEffector(), getEffected(), false, false, false);
+		}
 	}
 	
 	@Override

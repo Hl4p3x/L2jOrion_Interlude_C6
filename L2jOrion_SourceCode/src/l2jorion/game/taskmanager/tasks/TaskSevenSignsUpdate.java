@@ -19,22 +19,17 @@
  */
 package l2jorion.game.taskmanager.tasks;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.model.entity.sevensigns.SevenSignsFestival;
 import l2jorion.game.taskmanager.Task;
 import l2jorion.game.taskmanager.TaskManager;
-import l2jorion.game.taskmanager.TaskTypes;
 import l2jorion.game.taskmanager.TaskManager.ExecutedTask;
+import l2jorion.game.taskmanager.TaskTypes;
 import l2jorion.log.Log;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * Updates all data for the Seven Signs and Festival of Darkness engines, when time is elapsed.
- * @author Tempy
- */
 public class TaskSevenSignsUpdate extends Task
 {
 	private static final Logger LOG = LoggerFactory.getLogger(TaskSevenSignsUpdate.class);
@@ -54,16 +49,20 @@ public class TaskSevenSignsUpdate extends Task
 			SevenSigns.getInstance().saveSevenSignsData(null, true);
 			
 			if (!SevenSigns.getInstance().isSealValidationPeriod())
+			{
 				SevenSignsFestival.getInstance().saveFestivalData(false);
+			}
 			
-			//LOG.info("[GlobalTask] SevenSigns save launched.");
+			// LOG.info("[GlobalTask] SevenSigns save launched.");
 			final String text = "SevenSigns save launched.";
 			Log.add(text, "Global_Task");
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("SevenSigns: Failed to save Seven Signs configuration: " + e);
 		}

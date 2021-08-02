@@ -46,7 +46,9 @@ public final class RequestAutoSoulShot extends L2GameClientPacket
 		L2PcInstance activeChar = getClient().getActiveChar();
 		
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		// Like L2OFF you can't use soulshots while sitting
 		final int[] shots_ids =
@@ -71,16 +73,16 @@ public final class RequestAutoSoulShot extends L2GameClientPacket
 			3950,
 			3951,
 			3952,
-			10000, //Soulshot: D-grade
-			10001, //Soulshot: C-grade
-			10002, //Soulshot: B-grade
-			10003, //Soulshot: A-grade
-			10004, //Soulshot: S-grade
-			10005, //Blessed Spiritshot: D-Grade
-			10006, //Blessed Spiritshot: C-Grade
-			10007, //Blessed Spiritshot: B-Grade
-			10008, //Blessed Spiritshot: A-Grade
-			10009, //Blessed Spiritshot: S Grade
+			10000, // Soulshot: D-grade
+			10001, // Soulshot: C-grade
+			10002, // Soulshot: B-grade
+			10003, // Soulshot: A-grade
+			10004, // Soulshot: S-grade
+			10005, // Blessed Spiritshot: D-Grade
+			10006, // Blessed Spiritshot: C-Grade
+			10007, // Blessed Spiritshot: B-Grade
+			10008, // Blessed Spiritshot: A-Grade
+			10009, // Blessed Spiritshot: S Grade
 			10010,
 			10011
 		};
@@ -130,19 +132,15 @@ public final class RequestAutoSoulShot extends L2GameClientPacket
 						{
 							if (activeChar.getActiveWeaponItem() != activeChar.getFistsWeaponItem() && item.getItem().getCrystalType() == activeChar.getActiveWeaponItem().getCrystalType())
 							{
-								if (((_itemId <= 10011) || (_itemId >= 10005 && _itemId <= 10009) || (_itemId >= 3947 && _itemId <= 3952)) && activeChar.isInOlympiadMode())
-								{
-									final SystemMessage sm = new SystemMessage(SystemMessageId.THIS_ITEM_IS_NOT_AVAILABLE_FOR_THE_OLYMPIAD_EVENT);
-									sm.addString(item.getItemName());
-									activeChar.sendPacket(sm);
-								}
-								else
-								{
-									// start the auto soulshot use
-									final SystemMessage sm = new SystemMessage(SystemMessageId.USE_OF_S1_WILL_BE_AUTO);
-									sm.addString(item.getItemName());
-									activeChar.sendPacket(sm);
-								}
+								/*
+								 * if (((_itemId <= 10011) || (_itemId >= 10005 && _itemId <= 10009) || (_itemId >= 3947 && _itemId <= 3952)) && activeChar.isInOlympiadMode()) { final SystemMessage sm = new SystemMessage(SystemMessageId.THIS_ITEM_IS_NOT_AVAILABLE_FOR_THE_OLYMPIAD_EVENT);
+								 * sm.addString(item.getItemName()); activeChar.sendPacket(sm); } else {
+								 */
+								// start the auto soulshot use
+								final SystemMessage sm = new SystemMessage(SystemMessageId.USE_OF_S1_WILL_BE_AUTO);
+								sm.addString(item.getItemName());
+								activeChar.sendPacket(sm);
+								// }
 							}
 							else
 							{

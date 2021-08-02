@@ -27,18 +27,14 @@ import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.model.zone.L2ZoneType;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.serverpackets.EtcStatusUpdate;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.StringUtil;
 import l2jorion.util.random.Rnd;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * another type of damage zone with skills
- * @author kerberos
- */
 public class L2EffectZone extends L2ZoneType
 {
 	public static final Logger LOG = LoggerFactory.getLogger(L2EffectZone.class);
@@ -85,7 +81,9 @@ public class L2EffectZone extends L2ZoneType
 				{
 					final String[] skillSplit = skill.split("-");
 					if (skillSplit.length != 2)
+					{
 						LOG.warn(StringUtil.concat(getClass().getSimpleName() + ": invalid config property -> skillsIdLvl \"", skill, "\""));
+					}
 					else
 					{
 						try
@@ -95,7 +93,9 @@ public class L2EffectZone extends L2ZoneType
 						catch (final NumberFormatException nfe)
 						{
 							if (!skill.isEmpty())
+							{
 								LOG.warn(StringUtil.concat(getClass().getSimpleName() + ": invalid config property -> skillsIdLvl \"", skillSplit[0], "\"", skillSplit[1]));
+							}
 						}
 					}
 				}
@@ -119,14 +119,16 @@ public class L2EffectZone extends L2ZoneType
 				synchronized (this)
 				{
 					if (_task == null)
+					{
 						_task = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new ApplySkill(), _initialDelay, _reuse);
+					}
 				}
 			}
 		}
 		
 		if (character instanceof L2PcInstance && _isShowDangerIcon)
 		{
-			character.setInsideZone(L2Character.ZONE_DANGERAREA, true);
+			character.setInsideZone(ZoneId.ZONE_DANGERAREA, true);
 			character.sendPacket(new EtcStatusUpdate((L2PcInstance) character));
 		}
 	}
@@ -136,9 +138,11 @@ public class L2EffectZone extends L2ZoneType
 	{
 		if (character instanceof L2PcInstance && _isShowDangerIcon)
 		{
-			character.setInsideZone(L2Character.ZONE_DANGERAREA, false);
-			if (!character.isInsideZone(L2Character.ZONE_DANGERAREA))
+			character.setInsideZone(ZoneId.ZONE_DANGERAREA, false);
+			if (!character.isInsideZone(ZoneId.ZONE_DANGERAREA))
+			{
 				character.sendPacket(new EtcStatusUpdate((L2PcInstance) character));
+			}
 		}
 		
 		if (_characterList.isEmpty() && _task != null)
@@ -158,6 +162,7 @@ public class L2EffectZone extends L2ZoneType
 		return _chance;
 	}
 	
+	@Override
 	public boolean isEnabled()
 	{
 		return _enabled;
@@ -176,7 +181,9 @@ public class L2EffectZone extends L2ZoneType
 			synchronized (this)
 			{
 				if (_skills == null)
+				{
 					_skills = new FastMap<Integer, Integer>(3).shared();
+				}
 			}
 		}
 		_skills.put(skillId, skillLvL);
@@ -185,19 +192,25 @@ public class L2EffectZone extends L2ZoneType
 	public void removeSkill(final int skillId)
 	{
 		if (_skills != null)
+		{
 			_skills.remove(skillId);
+		}
 	}
 	
 	public void clearSkills()
 	{
 		if (_skills != null)
+		{
 			_skills.clear();
+		}
 	}
 	
 	public int getSkillLevel(final int skillId)
 	{
 		if (_skills == null || !_skills.containsKey(skillId))
+		{
 			return 0;
+		}
 		return _skills.get(skillId);
 	}
 	
@@ -216,7 +229,9 @@ public class L2EffectZone extends L2ZoneType
 		ApplySkill()
 		{
 			if (_skills == null)
+			{
 				throw new IllegalStateException("No skills defined.");
+			}
 		}
 		
 		@Override
@@ -229,8 +244,10 @@ public class L2EffectZone extends L2ZoneType
 					
 					if (temp != null && !temp.isDead())
 					{
-						if (!(temp instanceof L2PlayableInstance)) // effect on zones are just applied to Playable Instances
+						if (!(temp instanceof L2PlayableInstance))
+						{
 							continue;
+						}
 						
 						if (Rnd.get(100) < getChance())
 						{
@@ -245,12 +262,14 @@ public class L2EffectZone extends L2ZoneType
 								}
 								
 								if (skill.checkCondition(temp, temp, false))
+								{
 									if (temp.getFirstEffect(e.getKey()) == null)
 									{
 										
 										skill.getEffects(temp, temp);
 										
 									}
+								}
 							}
 						}
 					}

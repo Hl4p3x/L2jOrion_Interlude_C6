@@ -28,12 +28,11 @@ import java.util.Map;
 import javolution.util.FastMap;
 import l2jorion.game.model.L2LvlupData;
 import l2jorion.game.model.base.ClassId;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class LevelUpData
 {
@@ -92,13 +91,13 @@ public class LevelUpData
 				lvlDat.setClassMpAdd(rset.getFloat(MP_ADD));
 				lvlDat.setClassMpModifier(rset.getFloat(MP_MOD));
 				
-				lvlTable.put(new Integer(lvlDat.getClassid()), lvlDat);
+				lvlTable.put(Integer.valueOf(lvlDat.getClassid()), lvlDat);
 			}
 			
 			DatabaseUtils.close(statement);
 			DatabaseUtils.close(rset);
 			
-			LOG.info("LevelUpData: Loaded " + lvlTable.size() + " Character Level Up Templates.");
+			LOG.info("LevelUpData: Loaded " + lvlTable.size() + " character level up templates");
 		}
 		catch (final Exception e)
 		{

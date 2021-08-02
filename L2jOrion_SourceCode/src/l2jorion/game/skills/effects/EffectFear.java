@@ -23,7 +23,6 @@ package l2jorion.game.skills.effects;
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.geo.GeoData;
-import l2jorion.game.model.L2CharPosition;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2CommanderInstance;
@@ -76,23 +75,35 @@ final class EffectFear extends L2Effect
 	{
 		// Fear skills cannot be used l2pcinstance to l2pcinstance. Heroic Dread, Curse: Fear, Fear and Horror are the exceptions.
 		if (getEffected() instanceof L2PcInstance && getEffector() instanceof L2PcInstance && getSkill().getId() != 1376 && getSkill().getId() != 1169 && getSkill().getId() != 65 && getSkill().getId() != 1092)
+		{
 			return false;
+		}
 		
 		if (getEffected() instanceof L2FolkInstance)
+		{
 			return false;
+		}
 		
 		if (getEffected() instanceof L2SiegeGuardInstance)
+		{
 			return false;
+		}
 		
 		// Fear skills cannot be used on Headquarters Flag.
 		if (getEffected() instanceof L2SiegeFlagInstance)
+		{
 			return false;
+		}
 		
 		if (getEffected() instanceof L2SiegeSummonInstance)
+		{
 			return false;
+		}
 		
 		if (getEffected() instanceof L2FortSiegeGuardInstance || getEffected() instanceof L2CommanderInstance)
+		{
 			return false;
+		}
 		
 		int posX = getEffected().getX();
 		int posY = getEffected().getY();
@@ -113,7 +124,7 @@ final class EffectFear extends L2Effect
 		posX += signx * FEAR_RANGE;
 		posY += signy * FEAR_RANGE;
 		
-		if (Config.GEODATA > 0)
+		if (Config.GEODATA)
 		{
 			Location destiny = GeoData.getInstance().moveCheck(getEffected().getX(), getEffected().getY(), getEffected().getZ(), posX, posY, posZ, getEffected().getInstanceId());
 			posX = destiny.getX();
@@ -121,7 +132,7 @@ final class EffectFear extends L2Effect
 		}
 		
 		getEffected().setRunning();
-		getEffected().getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new L2CharPosition(posX, posY, posZ, 0));
+		getEffected().getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new Location(posX, posY, posZ, 0));
 		return true;
 	}
 }

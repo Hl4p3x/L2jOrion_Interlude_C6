@@ -20,9 +20,6 @@
  */
 package l2jorion.game.model.quest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.model.L2Character;
@@ -30,6 +27,8 @@ import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.spawn.L2Spawn;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
 /**
@@ -141,6 +140,12 @@ public final class QuestSpawn
 				spawn.setLocy(y);
 				spawn.setLocz(z + 20);
 				spawn.stopRespawn();
+				
+				if (!randomOffset)
+				{
+					spawn.setNoRandomLoc(true);
+				}
+				
 				result = spawn.spawnOne();
 				
 				if (despawnDelay > 0)
@@ -153,7 +158,9 @@ public final class QuestSpawn
 		catch (final Exception e1)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e1.printStackTrace();
+			}
 			
 			LOG.warn("Could not spawn Npc " + npcId);
 		}

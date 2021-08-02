@@ -23,9 +23,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ScheduledFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import l2jorion.Config;
@@ -47,6 +44,8 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
@@ -69,7 +68,6 @@ public class FourSepulchersManager extends GrandBossManager
 	protected boolean _inAttackTime = false;
 	protected boolean _inCoolDownTime = false;
 	public boolean StopKeyBoxMobRespawn = false;
-
 	
 	protected ScheduledFuture<?> _changeCoolDownTimeTask = null;
 	protected ScheduledFuture<?> _changeEntryTimeTask = null;
@@ -262,12 +260,12 @@ public class FourSepulchersManager extends GrandBossManager
 		return SingletonHolder._instance;
 	}
 	
-	public FourSepulchersManager()
+	protected FourSepulchersManager()
 	{
-		init();
+		
 	}
 	
-	private void init()
+	public void load()
 	{
 		if (_changeCoolDownTimeTask != null)
 		{
@@ -389,10 +387,9 @@ public class FourSepulchersManager extends GrandBossManager
 		
 		initLocationShadowSpawns();
 		
-		/*_shadowSpawns.put(31929, null);
-		_shadowSpawns.put(31934, null);
-		_shadowSpawns.put(31939, null);
-		_shadowSpawns.put(31944, null);*/
+		/*
+		 * _shadowSpawns.put(31929, null); _shadowSpawns.put(31934, null); _shadowSpawns.put(31939, null); _shadowSpawns.put(31944, null);
+		 */
 		
 		if (_archonSpawned.size() != 0)
 		{
@@ -523,7 +520,7 @@ public class FourSepulchersManager extends GrandBossManager
 		_keyBoxNpc.put(18129, 31457);
 		_keyBoxNpc.put(18130, 31457);
 		_keyBoxNpc.put(18131, 31457);
-		_keyBoxNpc.put(18149, 31458);//second room key box
+		_keyBoxNpc.put(18149, 31458);// second room key box
 		_keyBoxNpc.put(18150, 31459);
 		_keyBoxNpc.put(18151, 31459);
 		_keyBoxNpc.put(18152, 31459);
@@ -614,7 +611,9 @@ public class FourSepulchersManager extends GrandBossManager
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			// problem with initializing spawn, go to next one
 			LOG.warn("FourSepulchersManager.LoadMysteriousBox: Spawn could not be initialized: " + e);
@@ -656,7 +655,9 @@ public class FourSepulchersManager extends GrandBossManager
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.warn("FourSepulchersManager.InitKeyBoxSpawns: Spawn could not be initialized: " + e);
 			}
@@ -728,7 +729,9 @@ public class FourSepulchersManager extends GrandBossManager
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			// problem with initializing spawn, go to next one
 			LOG.warn("FourSepulchersManager.LoadPhysicalMonsters: Spawn could not be initialized: " + e);
@@ -808,7 +811,9 @@ public class FourSepulchersManager extends GrandBossManager
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			// problem with initializing spawn, go to next one
 			LOG.warn("FourSepulchersManager.LoadMagicalMonsters: Spawn could not be initialized: " + e);
@@ -889,7 +894,9 @@ public class FourSepulchersManager extends GrandBossManager
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			// problem with initializing spawn, go to next one
 			LOG.warn("FourSepulchersManager.LoadDukeMonsters: Spawn could not be initialized: " + e);
@@ -969,7 +976,9 @@ public class FourSepulchersManager extends GrandBossManager
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			// problem with initializing spawn, go to next one
 			LOG.warn("FourSepulchersManager.LoadEmperorsGraveMonsters: Spawn could not be initialized: " + e);
@@ -1017,7 +1026,9 @@ public class FourSepulchersManager extends GrandBossManager
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					LOG.warn("initLocationShadowSpawns:" + e.getMessage());
 				}
@@ -1059,7 +1070,9 @@ public class FourSepulchersManager extends GrandBossManager
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.warn("FourSepulchersManager.InitExecutionerSpawns: Spawn could not be initialized: " + e);
 			}
@@ -1081,7 +1094,7 @@ public class FourSepulchersManager extends GrandBossManager
 		final int npcId = npc.getNpcId();
 		switch (npcId)
 		{
-		// ID ok
+			// ID ok
 			case 31921:
 			case 31922:
 			case 31923:
@@ -1314,7 +1327,9 @@ public class FourSepulchersManager extends GrandBossManager
 	public void spawnMysteriousBox(final int npcId)
 	{
 		if (!isAttackTime())
+		{
 			return;
+		}
 		
 		L2Spawn spawnDat = _mysteriousBoxSpawns.get(npcId);
 		if (spawnDat != null)
@@ -1327,7 +1342,9 @@ public class FourSepulchersManager extends GrandBossManager
 	public void spawnMonster(int npcId)
 	{
 		if (!isAttackTime())
+		{
 			return;
+		}
 		
 		FastList<L2Spawn> monsterList;
 		FastList<L2SepulcherMonsterInstance> mobs = new FastList<>();
@@ -1347,7 +1364,7 @@ public class FourSepulchersManager extends GrandBossManager
 			boolean spawnKeyBoxMob = false;
 			boolean spawnedKeyBoxMob = false;
 			L2SepulcherMonsterInstance mob = null;
-
+			
 			for (L2Spawn spawnDat : monsterList)
 			{
 				if (spawnedKeyBoxMob)
@@ -1358,7 +1375,7 @@ public class FourSepulchersManager extends GrandBossManager
 				{
 					switch (npcId)
 					{
-						case 31469://4s second room first box
+						case 31469:// 4s second room first box
 						case 31474:
 						case 31479:
 						case 31484:
@@ -1366,14 +1383,14 @@ public class FourSepulchersManager extends GrandBossManager
 							{
 								spawnKeyBoxMob = true;
 								spawnedKeyBoxMob = true;
-								//LOG.info("key box spawned");
+								// LOG.info("key box spawned");
 							}
 							break;
 						default:
 							spawnKeyBoxMob = false;
 					}
 				}
-
+				
 				if (spawnKeyBoxMob)
 				{
 					try
@@ -1418,7 +1435,7 @@ public class FourSepulchersManager extends GrandBossManager
 					mob.mysteriousBoxId = npcId;
 					switch (npcId)
 					{
-						case 31469://4s second room first box
+						case 31469:// 4s second room first box
 						case 31474:
 						case 31479:
 						case 31484:
@@ -1434,7 +1451,7 @@ public class FourSepulchersManager extends GrandBossManager
 			
 			switch (npcId)
 			{
-				case 31469://4s second room first box
+				case 31469:// 4s second room first box
 				case 31474:
 				case 31479:
 				case 31484:
@@ -1450,19 +1467,22 @@ public class FourSepulchersManager extends GrandBossManager
 			}
 		}
 	}
-
 	
 	public synchronized boolean isViscountMobsAnnihilated(int npcId)
 	{
 		FastList<L2SepulcherMonsterInstance> mobs = _viscountMobs.get(npcId);
 		
 		if (mobs == null)
+		{
 			return true;
+		}
 		
 		for (L2SepulcherMonsterInstance mob : mobs)
 		{
 			if (!mob.isDead())
+			{
 				return false;
+			}
 		}
 		
 		return true;
@@ -1473,12 +1493,16 @@ public class FourSepulchersManager extends GrandBossManager
 		FastList<L2SepulcherMonsterInstance> mobs = _dukeMobs.get(npcId);
 		
 		if (mobs == null)
+		{
 			return true;
+		}
 		
 		for (L2SepulcherMonsterInstance mob : mobs)
 		{
 			if (!mob.isDead())
+			{
 				return false;
+			}
 		}
 		
 		return true;
@@ -1487,7 +1511,9 @@ public class FourSepulchersManager extends GrandBossManager
 	public void spawnKeyBox(L2NpcInstance activeChar)
 	{
 		if (!isAttackTime())
+		{
 			return;
+		}
 		
 		L2Spawn spawnDat = _keyBoxSpawns.get(activeChar.getNpcId());
 		if (spawnDat != null)
@@ -1506,7 +1532,9 @@ public class FourSepulchersManager extends GrandBossManager
 	public void spawnExecutionerOfHalisha(L2NpcInstance activeChar)
 	{
 		if (!isAttackTime())
+		{
 			return;
+		}
 		
 		L2Spawn spawnDat = _executionerSpawns.get(activeChar.getNpcId());
 		
@@ -1526,10 +1554,14 @@ public class FourSepulchersManager extends GrandBossManager
 	public void spawnArchonOfHalisha(final int npcId)
 	{
 		if (!isAttackTime())
+		{
 			return;
+		}
 		
 		if (_archonSpawned.get(npcId))
+		{
 			return;
+		}
 		
 		FastList<L2Spawn> monsterList = _dukeFinalMobs.get(npcId);
 		
@@ -1554,7 +1586,9 @@ public class FourSepulchersManager extends GrandBossManager
 	public void spawnEmperorsGraveNpc(final int npcId)
 	{
 		if (!isAttackTime())
+		{
 			return;
+		}
 		
 		FastList<L2Spawn> monsterList = _emperorsGraveNpcs.get(npcId);
 		
@@ -1597,7 +1631,9 @@ public class FourSepulchersManager extends GrandBossManager
 	public void spawnShadow(final int npcId)
 	{
 		if (!isAttackTime())
+		{
 			return;
+		}
 		
 		L2Spawn spawnDat = _shadowSpawns.get(npcId);
 		if (spawnDat != null)
@@ -1626,7 +1662,9 @@ public class FourSepulchersManager extends GrandBossManager
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.warn("deleteAllMobs: " + e.getMessage());
 			}
@@ -1653,7 +1691,9 @@ public class FourSepulchersManager extends GrandBossManager
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.warn("Failed closing door " + doorId + " - " + e.getMessage());
 			}
@@ -1743,8 +1783,10 @@ public class FourSepulchersManager extends GrandBossManager
 		if (_inAttackTime)
 		{
 			if (min < 5)
+			{
 				return; // do not shout when < 5 minutes
-				
+			}
+			
 			min = minuteSelect(min);
 			String msg = min + " minute(s) have passed."; // now this is a proper message^^
 			if (min == 90)
@@ -1855,8 +1897,7 @@ public class FourSepulchersManager extends GrandBossManager
 			}
 			else
 			{
-				interval = Config.FS_TIME_ENTRY * 60000; // else use stupid
-				// method
+				interval = Config.FS_TIME_ENTRY * 60000;
 			}
 			
 			// launching saying process...
@@ -1993,7 +2034,7 @@ public class FourSepulchersManager extends GrandBossManager
 				time.set(Calendar.HOUR, Calendar.getInstance().get(Calendar.HOUR) + 1);
 			}
 			time.set(Calendar.MINUTE, _newCycleMin);
-			//LOG.info("FourSepulchersManager: Entry time: " + time.getTime());
+			// LOG.info("FourSepulchersManager: Entry time: " + time.getTime());
 			if (_firstTimeRun)
 			{
 				_firstTimeRun = false; // cooldown phase ends event hour, so it

@@ -22,10 +22,6 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * sample format d
- * @version $Revision: 1.1.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public class ChairSit extends L2GameServerPacket
 {
 	private static final String _S__e1_CHAIRSIT = "[S] e1 ChairSit";
@@ -33,10 +29,6 @@ public class ChairSit extends L2GameServerPacket
 	private final L2PcInstance _activeChar;
 	private final int _staticObjectId;
 	
-	/**
-	 * @param player
-	 * @param staticObjectId
-	 */
 	public ChairSit(final L2PcInstance player, final int staticObjectId)
 	{
 		_activeChar = player;

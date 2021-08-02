@@ -20,10 +20,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * sample 0000: 85 00 00 00 00 f0 1a 00 00
- * @version $Revision: 1.4.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public class SetupGauge extends L2GameServerPacket
 {
 	private static final String _S__85_SETUPGAUGE = "[S] 6d SetupGauge";
@@ -46,14 +42,9 @@ public class SetupGauge extends L2GameServerPacket
 		writeC(0x6d);
 		writeD(_dat1);
 		writeD(_time);
-		
 		writeD(_time); // c2
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

@@ -23,10 +23,6 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.L2Party;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * This class ...
- * @version $Revision: 1.4.2.1.2.5 $ $Date: 2005/03/27 15:29:57 $
- */
 public final class PartySmallWindowAdd extends L2GameServerPacket
 {
 	private static final String _S__64_PARTYSMALLWINDOWADD = "[S] 4f PartySmallWindowAdd";
@@ -60,14 +56,10 @@ public final class PartySmallWindowAdd extends L2GameServerPacket
 		writeD(_member.getMaxMp());
 		writeD(_member.getLevel());
 		writeD(_member.getClassId().getId());
-		writeD(0);// writeD(0x01); ??
+		writeD(0);
 		writeD(0);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

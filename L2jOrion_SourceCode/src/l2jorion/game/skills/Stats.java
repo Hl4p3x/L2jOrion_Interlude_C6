@@ -24,19 +24,15 @@ import java.util.NoSuchElementException;
 
 public enum Stats
 {
-	//PVE Bonus
-	PVE_PHYSICAL_DMG("pvePhysDmg"),//done
-	PVE_PHYS_SKILL_DMG("pvePhysSkillsDmg"),//done
-	PVE_MAGICAL_DMG("pveMagicalDmg"),//done
-	
-	PVE_PHYSICAL_DEF("pvePhysDef"),//done
-	
-	PVE_PHYS_SKILL_DEF("pvePhysSkillsDef"),//done
-	
-	PVE_MAGICAL_DEF("pveMagicalDef"),//done
-	
-	PVE_BOW_DMG("pveBowDmg"),//done
-	PVE_BOW_SKILL_DMG("pveBowSkillsDmg"),//done
+	// PVE Bonus
+	PVE_PHYSICAL_DMG("pvePhysDmg"),
+	PVE_PHYS_SKILL_DMG("pvePhysSkillsDmg"),
+	PVE_MAGICAL_DMG("pveMagicalDmg"),
+	PVE_PHYSICAL_DEF("pvePhysDef"),
+	PVE_PHYS_SKILL_DEF("pvePhysSkillsDef"),
+	PVE_MAGICAL_DEF("pveMagicalDef"),
+	PVE_BOW_DMG("pveBowDmg"),
+	PVE_BOW_SKILL_DMG("pveBowSkillsDmg"),
 	PVE_BOW_DEF("pveBowDef"),
 	PVE_BOW_SKILL_DEF("pveBowSkillsDef"),
 	
@@ -245,7 +241,9 @@ public enum Stats
 		for (final Stats s : values())
 		{
 			if (s.getValue().equals(name))
+			{
 				return s;
+			}
 		}
 		
 		throw new NoSuchElementException("Unknown name '" + name + "' for enum BaseStats");

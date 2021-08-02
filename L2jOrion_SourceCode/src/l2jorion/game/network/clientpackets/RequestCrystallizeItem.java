@@ -20,9 +20,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2World;
@@ -38,6 +35,8 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.util.IllegalPlayerAction;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class RequestCrystallizeItem extends L2GameClientPacket
 {

@@ -22,18 +22,15 @@ import java.io.File;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import l2jorion.Config;
 import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.model.L2Character;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * @author Nik
- */
 public class hitConditionBonus
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(hitConditionBonus.class);
@@ -52,23 +49,35 @@ public class hitConditionBonus
 		double mod = 100;
 		// Get high or low bonus
 		if (attacker.getZ() - target.getZ() > 50)
+		{
 			mod += hitConditionBonus.highBonus;
+		}
 		else if (attacker.getZ() - target.getZ() < -50)
+		{
 			mod += hitConditionBonus.lowBonus;
+		}
 		
 		// Get weather bonus
 		if (GameTimeController.getInstance().isNight())
+		{
 			mod += hitConditionBonus.darkBonus;
-		// else if () No rain support yet.
-		// chance += hitConditionBonus.rainBonus;
+			// else if () No rain support yet.
+			// chance += hitConditionBonus.rainBonus;
+		}
 		
 		// Get side bonus
 		if (attacker.isBehindTarget())
+		{
 			mod += hitConditionBonus.backBonus;
+		}
 		else if (attacker.isFrontTarget())
+		{
 			mod += hitConditionBonus.frontBonus;
+		}
 		else
+		{
 			mod += hitConditionBonus.sideBonus;
+		}
 		
 		// If (mod / 10) is less than 0, return 0, because we cant lower more than 100%.
 		return Math.max(mod / 100, 0);
@@ -106,7 +115,9 @@ public class hitConditionBonus
 						try
 						{
 							if (cond.hasAttributes())
+							{
 								bonus = Integer.parseInt(cond.getAttributes().getNamedItem("val").getNodeValue());
+							}
 						}
 						catch (Exception e)
 						{
@@ -115,19 +126,31 @@ public class hitConditionBonus
 						finally
 						{
 							if ("front".equals(name))
+							{
 								frontBonus = bonus;
+							}
 							else if ("side".equals(name))
+							{
 								sideBonus = bonus;
+							}
 							else if ("back".equals(name))
+							{
 								backBonus = bonus;
+							}
 							else if ("high".equals(name))
+							{
 								highBonus = bonus;
+							}
 							else if ("low".equals(name))
+							{
 								lowBonus = bonus;
+							}
 							else if ("dark".equals(name))
+							{
 								darkBonus = bonus;
-							// else if ("rain".equals(name))
-							// rainBonus = bonus;
+								// else if ("rain".equals(name))
+								// rainBonus = bonus;
+							}
 						}
 						
 					}

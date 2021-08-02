@@ -32,11 +32,6 @@ import java.util.zip.ZipFile;
 
 import l2jorion.Config;
 
-/**
- * This is a class loader for the dynamic extensions used by DynamicExtension class.
- * @version $Revision: $ $Date: $
- * @author galun
- */
 public class JarClassLoader extends ClassLoader
 {
 	private final HashSet<String> _jars = new HashSet<>();
@@ -57,7 +52,9 @@ public class JarClassLoader extends ClassLoader
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			throw new ClassNotFoundException(name);
 		}
@@ -107,6 +104,7 @@ public class JarClassLoader extends ClassLoader
 			{
 				
 				if (zipStream != null)
+				{
 					try
 					{
 						zipStream.close();
@@ -115,6 +113,7 @@ public class JarClassLoader extends ClassLoader
 					{
 						e1.printStackTrace();
 					}
+				}
 				
 				if (is != null)
 				{
@@ -131,12 +130,16 @@ public class JarClassLoader extends ClassLoader
 			}
 			
 			if (breakable)
+			{
 				break;
+			}
 			
 		}
 		
 		if (classData == null)
+		{
 			throw new IOException("class not found in " + _jars);
+		}
 		
 		return classData;
 	}

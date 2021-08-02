@@ -24,10 +24,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.network.serverpackets.SSQStatus;
 
-/**
- * Seven Signs Record Update Request packet type id 0xc7 format: cc
- * @author Tempy
- */
 public final class RequestSSQStatus extends L2GameClientPacket
 {
 	private int _page;
@@ -43,10 +39,14 @@ public final class RequestSSQStatus extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		if ((SevenSigns.getInstance().isSealValidationPeriod() || SevenSigns.getInstance().isCompResultsPeriod()) && _page == 4)
+		{
 			return;
+		}
 		
 		final SSQStatus ssqs = new SSQStatus(activeChar, _page);
 		activeChar.sendPacket(ssqs);

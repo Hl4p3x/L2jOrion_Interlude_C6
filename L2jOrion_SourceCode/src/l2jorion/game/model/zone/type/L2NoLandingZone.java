@@ -23,11 +23,8 @@ import l2jorion.game.datatables.csv.MapRegionTable;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.L2ZoneType;
+import l2jorion.game.model.zone.ZoneId;
 
-/**
- * A no landing zone
- * @author durgus
- */
 public class L2NoLandingZone extends L2ZoneType
 {
 	private boolean _IsFlyingEnable = true;
@@ -59,8 +56,8 @@ public class L2NoLandingZone extends L2ZoneType
 				player.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 				return;
 			}
-			character.setInsideZone(L2Character.ZONE_NOLANDING, true);
-			character.setInsideZone(L2Character.ZONE_NOSUMMONFRIEND, true);
+			character.setInsideZone(ZoneId.ZONE_NOLANDING, true);
+			character.setInsideZone(ZoneId.ZONE_NOSUMMONFRIEND, true);
 		}
 	}
 	
@@ -69,8 +66,8 @@ public class L2NoLandingZone extends L2ZoneType
 	{
 		if (character instanceof L2PcInstance)
 		{
-			character.setInsideZone(L2Character.ZONE_NOLANDING, false);
-			character.setInsideZone(L2Character.ZONE_NOSUMMONFRIEND, false);
+			character.setInsideZone(ZoneId.ZONE_NOLANDING, false);
+			character.setInsideZone(ZoneId.ZONE_NOSUMMONFRIEND, false);
 		}
 	}
 	

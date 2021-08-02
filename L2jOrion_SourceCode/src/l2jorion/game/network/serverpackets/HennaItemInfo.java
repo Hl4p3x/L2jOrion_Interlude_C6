@@ -65,10 +65,6 @@ public class HennaItemInfo extends L2GameServerPacket
 		writeC(_activeChar.getWIT() + _henna.getStatWIT()); // equip WIT
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

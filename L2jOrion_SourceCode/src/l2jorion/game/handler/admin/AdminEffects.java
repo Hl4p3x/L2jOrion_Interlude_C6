@@ -110,6 +110,7 @@ public class AdminEffects implements IAdminCommandHandler
 			{
 				activeChar.getAppearance().setInvisible();
 				activeChar.decayMe();
+				L2World.getInstance().addPlayerToWorld(activeChar);
 				activeChar.broadcastUserInfo();
 				activeChar.spawnMe();
 			}
@@ -124,6 +125,7 @@ public class AdminEffects implements IAdminCommandHandler
 		{
 			activeChar.getAppearance().setInvisible();
 			activeChar.decayMe();
+			L2World.getInstance().addPlayerToWorld(activeChar);
 			activeChar.broadcastUserInfo();
 			activeChar.spawnMe();
 		}
@@ -131,6 +133,7 @@ public class AdminEffects implements IAdminCommandHandler
 		else if (command.startsWith("admin_vis"))
 		{
 			activeChar.getAppearance().setVisible();
+			L2World.getInstance().addPlayerToWorld(activeChar);
 			activeChar.broadcastUserInfo();
 		}
 		
@@ -150,7 +153,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Use: //earthquake <intensity> <duration>");
 			}
@@ -169,7 +174,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception ex)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					ex.printStackTrace();
+				}
 			}
 		}
 		
@@ -204,7 +211,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Target Npc before. Use: //npc_say");
 			}
@@ -223,7 +232,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final StringIndexOutOfBoundsException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		else if (command.startsWith("admin_play_sound"))
@@ -235,7 +246,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final StringIndexOutOfBoundsException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -385,7 +398,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -408,7 +423,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -434,7 +451,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Use //gmspeed value (0=off...4=max).");
 			}
@@ -465,7 +484,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -488,7 +509,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -505,7 +528,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -540,7 +565,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -558,7 +585,9 @@ public class AdminEffects implements IAdminCommandHandler
 				player = (L2PcInstance) target;
 			}
 			else
+			{
 				return false;
+			}
 			
 			player.setTeam(teamVal);
 			
@@ -608,17 +637,21 @@ public class AdminEffects implements IAdminCommandHandler
 								final int radius = Integer.parseInt(target);
 								
 								for (final L2Object object : activeChar.getKnownList().getKnownObjects().values())
+								{
 									if (activeChar.isInsideRadius(object, radius, false, false))
 									{
 										performSocial(social, object, activeChar);
 									}
+								}
 								
 								activeChar.sendMessage(radius + " units radius affected by your request.");
 							}
 							catch (final NumberFormatException nbe)
 							{
 								if (Config.ENABLE_ALL_EXCEPTIONS)
+								{
 									nbe.printStackTrace();
+								}
 								
 								activeChar.sendMessage("Incorrect parameter");
 							}
@@ -656,7 +689,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -680,7 +715,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -721,17 +758,21 @@ public class AdminEffects implements IAdminCommandHandler
 								final int radius = Integer.parseInt(target);
 								
 								for (final L2Object object : activeChar.getKnownList().getKnownObjects().values())
+								{
 									if (activeChar.isInsideRadius(object, radius, false, false))
 									{
 										performAbnormal(abnormal, object);
 									}
+								}
 								
 								activeChar.sendMessage(radius + " units radius affected by your request.");
 							}
 							catch (final NumberFormatException nbe)
 							{
 								if (Config.ENABLE_ALL_EXCEPTIONS)
+								{
 									nbe.printStackTrace();
+								}
 								
 								activeChar.sendMessage("Usage: //abnormal <hex_abnormal_mask> [player|radius]");
 							}
@@ -771,7 +812,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -815,7 +858,9 @@ public class AdminEffects implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Usage: //effect skill [level | level hittime]");
 			}
@@ -888,12 +933,16 @@ public class AdminEffects implements IAdminCommandHandler
 				character = null;
 			}
 			else
+			{
 				return false;
+			}
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		return true;
 	}

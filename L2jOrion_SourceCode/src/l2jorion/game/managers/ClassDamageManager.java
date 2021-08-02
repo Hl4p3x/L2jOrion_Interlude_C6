@@ -28,13 +28,12 @@ import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.ConfigLoader;
 import l2jorion.game.datatables.sql.CharTemplateTable;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class ClassDamageManager
 {
@@ -99,7 +98,7 @@ public class ClassDamageManager
 				}
 			}
 			
-			LOG.info("Loaded " + id_to_name.size() + " classes Damages configurations");
+			LOG.info("ClassDamageManager: Loaded " + id_to_name.size() + " class damage configurations");
 		}
 		catch (final Exception e)
 		{

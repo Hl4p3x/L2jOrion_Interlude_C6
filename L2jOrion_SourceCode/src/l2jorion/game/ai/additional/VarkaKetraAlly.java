@@ -115,7 +115,7 @@ public class VarkaKetraAlly extends Quest implements Runnable
 	
 	private void decreaseAlly(final L2NpcInstance npc, final L2PcInstance player)
 	{
-		if(player.getAllianceWithVarkaKetra() != 0)
+		if (player.getAllianceWithVarkaKetra() != 0)
 		{
 			if (player.isAlliedWithKetra() && npc.getFactionId() == "ketra")
 			{
@@ -139,7 +139,7 @@ public class VarkaKetraAlly extends Quest implements Runnable
 				
 				player.setAllianceWithVarkaKetra(player.getAllianceWithVarkaKetra() - 1);
 				
-				// Drop by 1 the level of that alliance.
+				// Drop down by 1 level of that alliance.
 				item = inventory.getItemByItemId(Ketra_Alliance_One);
 				if (item != null)
 				{
@@ -220,7 +220,7 @@ public class VarkaKetraAlly extends Quest implements Runnable
 				
 				player.setAllianceWithVarkaKetra(player.getAllianceWithVarkaKetra() + 1);
 				
-				// Drop by 1 the level of that alliance.
+				// Drop down by 1 level of that alliance.
 				item = inventory.getItemByItemId(Varka_Alliance_One);
 				if (item != null)
 				{

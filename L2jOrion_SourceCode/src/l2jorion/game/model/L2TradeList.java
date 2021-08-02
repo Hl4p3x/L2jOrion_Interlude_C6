@@ -25,9 +25,8 @@ import java.util.List;
 import javolution.util.FastList;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class L2TradeList
 {
@@ -53,9 +52,13 @@ public class L2TradeList
 		_npcId = id;
 		
 		if (id.equals("gm"))
+		{
 			_gm = true;
+		}
 		else
+		{
 			_gm = false;
+		}
 		
 	}
 	
@@ -80,14 +83,11 @@ public class L2TradeList
 				
 				if (price < (item.getReferencePrice() / 2))
 				{
-					
-					LOG.warn("L2TradeList " + this.getListId() + " itemId  " + itemID + " has an ADENA sell price lower then reference price.. Automatically Updating it..");
+					LOG.warn("TradeList:" + getListId() + " itemId:" + itemID + " has an ADENA sell price lower than reference price. Automatically updating it...");
 					price = item.getReferencePrice();
 				}
 				item.setPriceToSell(price);
 			}
-			
-			item = null;
 		}
 	}
 	
@@ -101,7 +101,9 @@ public class L2TradeList
 			if (item.getItemId() == itemID)
 			{
 				if (item.getCount() < count)
+				{
 					return false;
+				}
 				item.setCount(item.getCount() - count);
 			}
 			
@@ -188,7 +190,9 @@ public class L2TradeList
 			L2ItemInstance item = _items.get(i);
 			
 			if (item.getItemId() == itemId)
+			{
 				return item.getPriceToSell();
+			}
 			
 			item = null;
 		}
@@ -202,7 +206,9 @@ public class L2TradeList
 			L2ItemInstance item = _items.get(i);
 			
 			if (item.getItemId() == itemId)
+			{
 				return item.getCountDecrease();
+			}
 			
 			item = null;
 		}
@@ -214,7 +220,9 @@ public class L2TradeList
 		for (L2ItemInstance item : _items)
 		{
 			if (item.getItemId() == itemId)
+			{
 				return true;
+			}
 			
 			item = null;
 		}
@@ -229,7 +237,9 @@ public class L2TradeList
 			L2ItemInstance item = _items.get(i);
 			
 			if (item.getObjectId() == ObjectId)
+			{
 				return item;
+			}
 			
 			item = null;
 		}

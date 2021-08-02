@@ -32,7 +32,6 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.skills.Stats;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.L2Weapon;
-import l2jorion.game.util.Broadcast;
 
 public class SoulShots implements IItemHandler
 {
@@ -67,7 +66,9 @@ public class SoulShots implements IItemHandler
 	public void useItem(L2PlayableInstance playable, L2ItemInstance item)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		L2ItemInstance weaponInst = activeChar.getActiveWeaponInstance();
@@ -86,12 +87,8 @@ public class SoulShots implements IItemHandler
 		// Check for correct grade
 		final int weaponGrade = weaponItem.getCrystalType();
 		
-		if (weaponGrade == L2Item.CRYSTAL_NONE && (itemId != 5789 && itemId != 1835 && itemId != 10010) 
-			|| weaponGrade == L2Item.CRYSTAL_D && (itemId != 1463 && itemId != 10000) 
-			|| weaponGrade == L2Item.CRYSTAL_C && (itemId != 1464 && itemId != 10001) 
-			|| weaponGrade == L2Item.CRYSTAL_B && (itemId != 1465 && itemId != 10002) 
-			|| weaponGrade == L2Item.CRYSTAL_A && (itemId != 1466 && itemId != 10003) 
-			|| weaponGrade == L2Item.CRYSTAL_S && (itemId != 1467 && itemId != 10004))
+		if (weaponGrade == L2Item.CRYSTAL_NONE && (itemId != 5789 && itemId != 1835 && itemId != 10010) || weaponGrade == L2Item.CRYSTAL_D && (itemId != 1463 && itemId != 10000) || weaponGrade == L2Item.CRYSTAL_C && (itemId != 1464 && itemId != 10001)
+			|| weaponGrade == L2Item.CRYSTAL_B && (itemId != 1465 && itemId != 10002) || weaponGrade == L2Item.CRYSTAL_A && (itemId != 1466 && itemId != 10003) || weaponGrade == L2Item.CRYSTAL_S && (itemId != 1467 && itemId != 10004))
 		{
 			if (!activeChar.getAutoSoulShot().contains(itemId))
 			{
@@ -106,7 +103,9 @@ public class SoulShots implements IItemHandler
 		{
 			// Check if Soulshot is already active
 			if (weaponInst.getChargedSoulshot() != L2ItemInstance.CHARGED_NONE)
+			{
 				return;
+			}
 			
 			// Consume Soulshots if player has enough of them
 			final int saSSCount = (int) activeChar.getStat().calcStat(Stats.SOULSHOT_COUNT, 0, null, null);
@@ -142,9 +141,10 @@ public class SoulShots implements IItemHandler
 		
 		// Send message to client
 		activeChar.sendPacket(new SystemMessage(SystemMessageId.ENABLED_SOULSHOT));
+		
 		if (!activeChar.getEffects())
 		{
-			Broadcast.toSelfAndKnownPlayersInRadius(activeChar, new MagicSkillUser(activeChar, activeChar, SKILL_IDS[weaponGrade], 1, 0, 0), 360000);
+			activeChar.broadcastPacket(new MagicSkillUser(activeChar, activeChar, SKILL_IDS[weaponGrade], 1, 0, 0), 500);
 		}
 	}
 	

@@ -38,14 +38,9 @@ import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * Petition Manager
- * @author Tempy
- */
 public final class PetitionManager
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(PetitionManager.class);
@@ -84,7 +79,7 @@ public final class PetitionManager
 	{
 		if (_instance == null)
 		{
-			LOG.info("Initializing PetitionManager");
+			//LOG.info("Initializing PetitionManager");
 			_instance = new PetitionManager();
 		}
 		

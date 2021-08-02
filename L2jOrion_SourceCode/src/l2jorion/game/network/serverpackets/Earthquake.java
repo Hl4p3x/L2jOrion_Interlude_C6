@@ -20,25 +20,16 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * format dddddd
- */
 public class Earthquake extends L2GameServerPacket
 {
 	private static final String _S__C4_EARTHQUAKE = "[S] C4 Earthquake";
+	
 	private final int _x;
 	private final int _y;
 	private final int _z;
 	private final int _intensity;
 	private final int _duration;
 	
-	/**
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param intensity
-	 * @param duration
-	 */
 	public Earthquake(final int x, final int y, final int z, final int intensity, final int duration)
 	{
 		_x = x;
@@ -60,10 +51,6 @@ public class Earthquake extends L2GameServerPacket
 		writeD(0x00); // Unknown
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

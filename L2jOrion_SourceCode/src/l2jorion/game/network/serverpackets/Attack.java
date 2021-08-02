@@ -35,18 +35,22 @@ public class Attack extends L2GameServerPacket
 		{
 			_targetId = target.getObjectId();
 			_damage = damage;
+			
 			if (soulshot)
 			{
 				_flags |= 0x10 | _grade;
 			}
+			
 			if (crit)
 			{
 				_flags |= 0x20;
 			}
+			
 			if (shld)
 			{
 				_flags |= 0x40;
 			}
+			
 			if (miss)
 			{
 				_flags |= 0x80;
@@ -55,9 +59,8 @@ public class Attack extends L2GameServerPacket
 		}
 	}
 	
-	// dh
-	
 	private static final String _S__06_ATTACK = "[S] 06 Attack";
+	
 	protected final int _attackerObjId;
 	public final boolean soulshot;
 	protected int _grade;
@@ -66,11 +69,6 @@ public class Attack extends L2GameServerPacket
 	private final int _z;
 	private Hit[] _hits;
 	
-	/**
-	 * @param attacker the attacker L2Character
-	 * @param ss true if useing SoulShots
-	 * @param grade
-	 */
 	public Attack(final L2Character attacker, final boolean ss, final int grade)
 	{
 		_attackerObjId = attacker.getObjectId();
@@ -82,14 +80,6 @@ public class Attack extends L2GameServerPacket
 		_hits = new Hit[0];
 	}
 	
-	/**
-	 * Add this hit (target, damage, miss, critical, shield) to the Server-Client packet Attack.
-	 * @param target
-	 * @param damage
-	 * @param miss
-	 * @param crit
-	 * @param shld
-	 */
 	public void addHit(final L2Object target, final int damage, final boolean miss, final boolean crit, final boolean shld)
 	{
 		// Get the last position in the hits table
@@ -104,10 +94,6 @@ public class Attack extends L2GameServerPacket
 		_hits = tmp;
 	}
 	
-	/**
-	 * Return True if the Server-Client packet Attack contains at least 1 hit.
-	 * @return
-	 */
 	public boolean hasHits()
 	{
 		return _hits.length > 0;
@@ -134,10 +120,6 @@ public class Attack extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

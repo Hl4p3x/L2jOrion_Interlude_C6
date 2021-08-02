@@ -19,12 +19,10 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * @author devScarlet & mrTJO
- */
 public class ShowXMasSeal extends L2GameServerPacket
 {
 	private static final String _S__F2_SHOWXMASSEAL = "[S] F2 ShowXMasSeal";
+	
 	private final int _item;
 	
 	public ShowXMasSeal(final int item)
@@ -40,9 +38,6 @@ public class ShowXMasSeal extends L2GameServerPacket
 		writeD(_item);
 	}
 	
-	/**
-	 * @see l2jorion.game.network.serverpackets.L2GameServerPacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

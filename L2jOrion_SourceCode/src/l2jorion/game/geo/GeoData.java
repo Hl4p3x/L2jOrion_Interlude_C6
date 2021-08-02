@@ -23,9 +23,6 @@ package l2jorion.game.geo;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.csv.DoorTable;
 import l2jorion.game.geodriver.Cell;
@@ -33,14 +30,16 @@ import l2jorion.game.geodriver.GeoDriver;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.Location;
-import l2jorion.game.model.interfaces.ILocational;
 import l2jorion.game.util.GeoUtils;
 import l2jorion.game.util.LinePointIterator;
 import l2jorion.game.util.LinePointIterator3D;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class GeoData
 {
 	private static final Logger LOG = LoggerFactory.getLogger(GeoData.class);
+	
 	private static final String FILE_NAME_FORMAT = "%d_%d.l2j";
 	private static final int ELEVATED_SEE_OVER_DISTANCE = 2;
 	private static final int MAX_SEE_OVER_HEIGHT = 48;
@@ -53,7 +52,7 @@ public class GeoData
 		int loadedRegions = 0;
 		try
 		{
-			LOG.info("GeoEngine: Loading...");
+			// LOG.info("GeoEngine: Loading...");
 			for (int regionX = L2World.TILE_X_MIN; regionX <= L2World.TILE_X_MAX; regionX++)
 			{
 				for (int regionY = L2World.TILE_Y_MIN; regionY <= L2World.TILE_Y_MAX; regionY++)
@@ -77,7 +76,7 @@ public class GeoData
 						}
 						catch (Exception e)
 						{
-							LOG.warn("{}: Failed to load {}!", getClass().getSimpleName(), geoFilePath.getFileName(), e);
+							LOG.warn("{}: Failed to load {}", getClass().getSimpleName(), geoFilePath.getFileName(), e);
 						}
 					}
 				}
@@ -85,11 +84,11 @@ public class GeoData
 		}
 		catch (Exception e)
 		{
-			LOG.error("{}: Failed to load geodata!", e);
+			LOG.error("{}: Failed to load geodata", e);
 			System.exit(1);
 		}
 		
-		LOG.info("{}: Loaded {} regions.", getClass().getSimpleName(), loadedRegions);
+		LOG.info("{}: Loaded {} regions", getClass().getSimpleName(), loadedRegions);
 	}
 	
 	public boolean hasGeoPos(int geoX, int geoY)
@@ -163,8 +162,6 @@ public class GeoData
 		return _driver.getWorldY(geoY);
 	}
 	
-	// ///////////////////
-	// L2J METHODS
 	/**
 	 * Gets the height.
 	 * @param x the x coordinate
@@ -220,11 +217,16 @@ public class GeoData
 		{
 			return false;
 		}
+		
 		if (target.isDoor())
 		{
 			return true;
 		}
-		return canSeeTarget(cha.getX(), cha.getY(), cha.getZ(), cha.getInstanceId(), target.getX(), target.getY(), target.getZ(), target.getInstanceId());
+		
+		int chaZ = cha.getZ();
+		int targetZ = target.getZ();
+		
+		return canSeeTarget(cha.getX(), cha.getY(), chaZ, cha.getInstanceId(), target.getX(), target.getY(), targetZ, target.getInstanceId());
 	}
 	
 	/**
@@ -233,7 +235,7 @@ public class GeoData
 	 * @param worldPosition the world position
 	 * @return {@code true} if the character can see the target at the given world position, {@code false} otherwise
 	 */
-	public boolean canSeeTarget(L2Object cha, ILocational worldPosition)
+	public boolean canSeeTarget(L2Object cha, Location worldPosition)
 	{
 		return canSeeTarget(cha.getX(), cha.getY(), cha.getZ(), cha.getInstanceId(), worldPosition.getX(), worldPosition.getY(), worldPosition.getZ());
 	}
@@ -272,10 +274,11 @@ public class GeoData
 	 */
 	public boolean canSeeTarget(int x, int y, int z, int instanceId, int tx, int ty, int tz)
 	{
-		if (DoorTable.getInstance().checkIfDoorsBetween(x, y, z, tx, ty, tz))
+		if (DoorTable.getInstance().checkIfDoorsBetween(x, y, z, tx, ty, tz, true))
 		{
 			return false;
 		}
+		
 		return canSeeTarget(x, y, z, tx, ty, tz);
 	}
 	
@@ -290,6 +293,7 @@ public class GeoData
 		{
 			return getNearestZ(curX, curY, prevGeoZ);
 		}
+		
 		return getNextHigherZ(curX, curY, prevGeoZ);
 	}
 	
@@ -437,7 +441,7 @@ public class GeoData
 	 * @param destination the destination
 	 * @return the destination if there is a path or the closes location
 	 */
-	public Location moveCheck(ILocational origin, ILocational destination)
+	public Location moveCheck(Location origin, Location destination)
 	{
 		return moveCheck(origin.getX(), origin.getY(), origin.getZ(), destination.getX(), destination.getY(), destination.getZ(), origin.getInstanceId());
 	}
@@ -458,11 +462,12 @@ public class GeoData
 		int geoX = getGeoX(x);
 		int geoY = getGeoY(y);
 		z = getNearestZ(geoX, geoY, z);
+		
 		int tGeoX = getGeoX(tx);
 		int tGeoY = getGeoY(ty);
 		tz = getNearestZ(tGeoX, tGeoY, tz);
 		
-		if (DoorTable.getInstance().checkIfDoorsBetween(x, y, z, tx, ty, tz))
+		if (DoorTable.getInstance().checkIfDoorsBetween(x, y, z, tx, ty, tz, false))
 		{
 			return new Location(x, y, getHeight(x, y, z));
 		}
@@ -495,9 +500,9 @@ public class GeoData
 			prevZ = curZ;
 		}
 		
-		if (hasGeoPos(prevX, prevY) && (prevZ != tz))
+		// different floors, return start location
+		if (hasGeoPos(prevX, prevY) && (prevZ != tz) && prevZ != 712 && tz != -32) // quick fix for Rune town too (boss floors)
 		{
-			// different floors, return start location
 			return new Location(x, y, z);
 		}
 		
@@ -524,12 +529,13 @@ public class GeoData
 		int tGeoY = getGeoY(toY);
 		toZ = getNearestZ(tGeoX, tGeoY, toZ);
 		
-		if (DoorTable.getInstance().checkIfDoorsBetween(fromX, fromY, fromZ, toX, toY, toZ))
+		if (DoorTable.getInstance().checkIfDoorsBetween(fromX, fromY, fromZ, toX, toY, toZ, false))
 		{
 			return false;
 		}
 		
 		LinePointIterator pointIter = new LinePointIterator(geoX, geoY, tGeoX, tGeoY);
+		
 		// first point is guaranteed to be available
 		pointIter.next();
 		int prevX = pointIter.x();
@@ -598,7 +604,7 @@ public class GeoData
 	 * @param toZ the Z coordinate to end checking at
 	 * @return {@code true} if the character at start coordinates can move to end coordinates, {@code false} otherwise
 	 */
-	public boolean canMove(ILocational from, int toX, int toY, int toZ)
+	public boolean canMove(Location from, int toX, int toY, int toZ)
 	{
 		return canMove(from.getX(), from.getY(), from.getZ(), toX, toY, toZ, from.getInstanceId());
 	}
@@ -609,7 +615,7 @@ public class GeoData
 	 * @param to the {@code ILocational} to end checking at
 	 * @return {@code true} if the character at start coordinates can move to end coordinates, {@code false} otherwise
 	 */
-	public boolean canMove(ILocational from, ILocational to)
+	public boolean canMove(Location from, Location to)
 	{
 		return canMove(from, to.getX(), to.getY(), to.getZ());
 	}

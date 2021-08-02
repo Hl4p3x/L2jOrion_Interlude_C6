@@ -24,24 +24,14 @@ import java.util.Map;
 
 import javolution.util.FastMap;
 import l2jorion.Config;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author mkizub <BR>
- *         This class is used in order to have a set of couples (key,value).<BR>
- *         Methods deployed are accessors to the set (add/get value from its key) and addition of a whole set in the current one.
- */
 public final class StatsSet
 {
 	private final Logger LOG = LoggerFactory.getLogger(StatsSet.class);
 	private final Map<String, Object> _set = new FastMap<>();
 	
-	/**
-	 * Returns the set of values
-	 * @return HashMap
-	 */
 	public final Map<String, Object> getSet()
 	{
 		return _set;
@@ -229,7 +219,9 @@ public final class StatsSet
 			
 		}
 		if (val instanceof Number)
+		{
 			return ((Number) val).intValue();
+		}
 		try
 		{
 			return Integer.parseInt((String) val);
@@ -237,7 +229,9 @@ public final class StatsSet
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			throw new IllegalArgumentException("Integer value required, but found: " + val);
 		}

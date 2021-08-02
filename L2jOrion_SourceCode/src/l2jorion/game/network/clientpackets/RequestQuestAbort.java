@@ -20,9 +20,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.managers.QuestManager;
 import l2jorion.game.model.actor.instance.L2PcInstance;
@@ -31,6 +28,8 @@ import l2jorion.game.model.quest.QuestState;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.QuestList;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class RequestQuestAbort extends L2GameClientPacket
 {
@@ -50,21 +49,24 @@ public final class RequestQuestAbort extends L2GameClientPacket
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		Quest qe = null;
 		if (!Config.ALT_DEV_NO_QUESTS)
+		{
 			qe = QuestManager.getInstance().getQuest(_questId);
+		}
 		
 		if (qe != null)
 		{
 			final QuestState qs = activeChar.getQuestState(qe.getName());
 			if (qs != null)
 			{
-				if (qs == activeChar.getQuestState("605_AllianceWithKetraOrcs") || qs == activeChar.getQuestState("611_AllianceWithVarkaSilenos"))
-				{
-					activeChar.setAllianceWithVarkaKetra(0);
-				}
+				/*
+				 * if (qs == activeChar.getQuestState("605_AllianceWithKetraOrcs") || qs == activeChar.getQuestState("611_AllianceWithVarkaSilenos")) { activeChar.setAllianceWithVarkaKetra(0); }
+				 */
 				
 				qs.exitQuest(true);
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);

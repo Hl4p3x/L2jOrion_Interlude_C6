@@ -20,10 +20,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Format: (ch)
- * @author -Wooden-
- */
 public class ShowPCCafeCouponShowUI extends L2GameServerPacket
 {
 	private static final String _S__FE_43_SHOWPCCAFECOUPONSHOWUI = "[S] FE:43 ShowPCCafeCouponShowUI";

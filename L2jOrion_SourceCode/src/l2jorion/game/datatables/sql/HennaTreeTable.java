@@ -33,17 +33,11 @@ import l2jorion.game.datatables.csv.HennaTable;
 import l2jorion.game.model.actor.instance.L2HennaInstance;
 import l2jorion.game.model.base.ClassId;
 import l2jorion.game.templates.L2Henna;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * This class ...
- * @version $Revision$ $Date$
- */
 
 public class HennaTreeTable
 {
@@ -119,7 +113,7 @@ public class HennaTreeTable
 				
 				count += list.size();
 				if (Config.DEBUG)
-					LOG.info("Henna Tree for Class: " + classId + " has " + list.size() + " Henna Templates.");
+					LOG.info("Henna Tree for Class: " + classId + " has " + list.size() + " henna templates");
 			}
 			
 			classlist.close();
@@ -135,7 +129,7 @@ public class HennaTreeTable
 			CloseUtil.close(con);
 		}
 		
-		LOG.info("HennaTreeTable: Loaded " + count + " Henna Tree Templates.");
+		LOG.info("HennaTreeTable: Loaded " + count + " henna tree templates");
 		
 	}
 	

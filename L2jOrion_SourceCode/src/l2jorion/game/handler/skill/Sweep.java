@@ -34,9 +34,6 @@ import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.ItemList;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * @author _drunk_ TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code Templates
- */
 public class Sweep implements ISkillHandler
 {
 	private static final SkillType[] SKILL_IDS =
@@ -59,7 +56,9 @@ public class Sweep implements ISkillHandler
 		for (final L2Object target1 : targets)
 		{
 			if (!(target1 instanceof L2Attackable))
+			{
 				continue;
+			}
 			
 			L2Attackable target = (L2Attackable) target1;
 			
@@ -78,7 +77,9 @@ public class Sweep implements ISkillHandler
 			if (isSweeping)
 			{
 				if (items == null || items.length == 0)
+				{
 					continue;
+				}
 				
 				for (final L2Attackable.RewardItem ritem : items)
 				{
@@ -91,20 +92,22 @@ public class Sweep implements ISkillHandler
 						L2ItemInstance item = player.getInventory().addItem("Sweep", ritem.getItemId(), ritem.getCount(), player, target);
 						
 						if (iu != null)
+						{
 							iu.addItem(item);
+						}
 						
 						send = true;
 						
 						SystemMessage smsg;
 						if (ritem.getCount() > 1)
 						{
-							smsg = new SystemMessage(SystemMessageId.EARNED_S2_S1_S); // earned $s2$s1
+							smsg = new SystemMessage(SystemMessageId.EARNED_S2_S1_S);
 							smsg.addItemName(ritem.getItemId());
 							smsg.addNumber(ritem.getCount());
 						}
 						else
 						{
-							smsg = new SystemMessage(SystemMessageId.EARNED_ITEM); // earned $s1
+							smsg = new SystemMessage(SystemMessageId.EARNED_ITEM);
 							smsg.addItemName(ritem.getItemId());
 						}
 						player.sendPacket(smsg);
@@ -120,9 +123,13 @@ public class Sweep implements ISkillHandler
 			if (send)
 			{
 				if (iu != null)
+				{
 					player.sendPacket(iu);
+				}
 				else
+				{
 					player.sendPacket(new ItemList(player, false));
+				}
 			}
 		}
 	}

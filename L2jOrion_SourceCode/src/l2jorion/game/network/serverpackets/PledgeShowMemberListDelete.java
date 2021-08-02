@@ -20,13 +20,10 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class ...
- * @version $Revision: 1.2.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public class PledgeShowMemberListDelete extends L2GameServerPacket
 {
 	private static final String _S__6B_PLEDGESHOWMEMBERLISTDELETE = "[S] 56 PledgeShowMemberListDelete";
+	
 	private final String _player;
 	
 	public PledgeShowMemberListDelete(final String playerName)
@@ -41,10 +38,6 @@ public class PledgeShowMemberListDelete extends L2GameServerPacket
 		writeS(_player);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

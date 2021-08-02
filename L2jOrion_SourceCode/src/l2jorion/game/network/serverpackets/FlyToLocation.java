@@ -20,6 +20,7 @@ import l2jorion.game.model.L2Object;
 public final class FlyToLocation extends L2GameServerPacket
 {
 	private static final String _S__C5_FLYTOLOCATION = "[S] c5 FlyToLocation";
+	
 	private final int _destX, _destY, _destZ;
 	private final int _chaObjId, _chaX, _chaY, _chaZ;
 	private final FlyType _type;

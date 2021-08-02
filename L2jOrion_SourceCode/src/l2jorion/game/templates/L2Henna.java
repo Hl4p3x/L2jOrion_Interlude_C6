@@ -20,13 +20,8 @@
  */
 package l2jorion.game.templates;
 
-/**
- * This class ...
- * @version $Revision$ $Date$
- */
 public class L2Henna
 {
-	
 	public final int symbolId;
 	public final String symbolName;
 	public final int dye;
@@ -132,7 +127,4 @@ public class L2Henna
 	{
 		return statWIT;
 	}
-	/**
-	 * @return
-	 */
 }

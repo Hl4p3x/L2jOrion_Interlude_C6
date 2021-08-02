@@ -24,20 +24,17 @@ import java.util.Map;
 
 import javax.script.ScriptContext;
 
+import org.w3c.dom.Node;
+
 import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.script.IntList;
 import l2jorion.game.script.Parser;
 import l2jorion.game.script.ParserFactory;
 import l2jorion.game.script.ScriptEngine;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Node;
-
-/**
- * @author Luis Arias
- */
 public class FaenorWorldDataParser extends FaenorParser
 {
 	static Logger LOG = LoggerFactory.getLogger(FaenorWorldDataParser.class);
@@ -125,7 +122,9 @@ public class FaenorWorldDataParser extends FaenorParser
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			petData.petId = -1;
 			LOG.warn("ERROR(parseStat):" + e.getMessage());

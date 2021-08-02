@@ -26,14 +26,10 @@ import java.util.Map.Entry;
 import l2jorion.Config;
 import l2jorion.mmocore.IAcceptFilter;
 
-/**
- * Formatted Forsaiken's IPv4 filter [DrHouse]
- * @author Forsaiken
- */
 public class IPv4Filter implements IAcceptFilter, Runnable
 {
 	private final HashMap<Integer, Flood> _ipFloodMap;
-	private static final long SLEEP_TIME = 5000;
+	private static final long SLEEP_TIME = 10;
 	
 	public IPv4Filter()
 	{
@@ -44,10 +40,6 @@ public class IPv4Filter implements IAcceptFilter, Runnable
 		t.start();
 	}
 	
-	/**
-	 * @param ip
-	 * @return
-	 */
 	private static final int hash(final byte[] ip)
 	{
 		return ip[0] & 0xFF | ip[1] << 8 & 0xFF00 | ip[2] << 16 & 0xFF0000 | ip[3] << 24 & 0xFF000000;
@@ -126,7 +118,9 @@ public class IPv4Filter implements IAcceptFilter, Runnable
 				{
 					final Flood f = it.next().getValue();
 					if (f.lastAccess < reference)
+					{
 						it.remove();
+					}
 				}
 			}
 			
@@ -137,7 +131,9 @@ public class IPv4Filter implements IAcceptFilter, Runnable
 			catch (final InterruptedException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				return;
 			}

@@ -180,21 +180,15 @@
   </for>
 </skill>
 <skill id="222" levels="1" name="Fist Fury">
-  <set name="weaponsAllowed" val="1024"/>
   <set name="mpConsume" val="8"/>
   <set name="target" val="TARGET_SELF"/>
   <set name="skillType" val="CONT"/>
   <set name="operateType" val="OP_TOGGLE"/>
   <set name="castRange" val="-1"/>
   <set name="effectRange" val="-1"/>
-  <cond msg="Dual Fist required.">
-    <using kind="Fist, Dual Fist"/>
-  </cond>
   <for>
     <effect count="0x7fffffff" name="DamOverTime" time="1" val="13">
-      <mul order="0x30" stat="pAtkSpd" val="1.25">
-	    <using kind="Fist, Dual Fist"/>
-	  </mul>
+      <mul order="0x30" stat="pAtkSpd" val="1.25"/>
     </effect>
   </for>
 </skill>
@@ -691,35 +685,51 @@
     </mul>
   </for>
 </skill>
-<skill id="254" levels="11" name="Spoil" enchantLevels1="30" enchantLevels2="30">
+<skill id="254" levels="11" name="Spoil" enchantLevels1="30" enchantLevels2="30" >
   <table name="#enchantMagicLvl">76 76 76 77 77 77 78 78 78 79 79 79 80 80 80 81 81 81 82 82 82 82 83 83 83 84 84 85 85 85</table>
-  <enchant1 name="magicLvl" val="#enchantMagicLvl"/>
-  <enchant2 name="magicLvl" val="#enchantMagicLvl"/>
-  <table name="#mpConsume">12 19 25 31 38 44 50 55 59 63 67</table>
-  <table name="#magicLvl">10 20 28 36 43 49 55 60 64 68 72</table>
+  <table name="#ench123Power">1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30</table>
+  <table name="#mpConsume">12 19 25 31 38 44 50 55 59 63 67 </table>
+  <table name="#magicLvl">10 20 28 36 43 49 55 60 64 68 72 </table>
   <table name="#ench1Power">1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30</table>
   <table name="#ench2Power">0 1 2 2 3 4 4 5 6 6 7 8 8 9 10 10 11 12 12 13 14 14 15 16 16 17 18 18 19 20</table>
+  <set name="lvlDepend" val="1" />
   <set name="mpConsume" val="#mpConsume"/>
+  <set name="nextActionAttack" val="true" />
   <set name="magicLvl" val="#magicLvl"/>
   <set name="target" val="TARGET_ONE"/>
-  <set name="nextActionAttack" val="true" />
   <set name="reuseDelay" val="10000"/>
   <set name="hitTime" val="1800"/>
   <set name="skillType" val="SPOIL"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="castRange" val="40"/>
   <set name="effectRange" val="400"/>
-  <enchant1 name="power" val="#ench1Power"/>
-  <enchant2 name="power" val="#ench2Power"/>
+  <enchant1 name="magicLvl" val="#enchantMagicLvl" />
+  <enchant1 name="lvlDepend" val="1" />
+  <enchant1 name="isDebuff" val="true" />
+  <enchant1 name="element" val="3" /> <!-- Earth -->
+  <enchant1 name="power" val="100" />
+  <enchant1 name="skillType" val="DEBUFF" />
+  <enchant1 name="ignoreResists" val="true" />
+  <enchant2 name="magicLvl" val="#enchantMagicLvl" />
+  <enchant2 name="lvlDepend" val="1" />
+  <enchant2 name="isDebuff" val="true" />
+  <enchant2 name="elementPower" val="20" />
+  <enchant2 name="element" val="3" /> <!-- Earth -->
+  <enchant2 name="power" val="100" />
+  <enchant2 name="skillType" val="DOT" />
+  <enchant2 name="ignoreResists" val="true" />
   <for>
+  	<effect name="Spoil" noicon="1" val="0" />
   </for>
   <enchant1for>
-    <effect count="1" name="Buff" time="15" val="0" stackOrder="23" stackType="pAtkSpdDown">
-      <mul order="0x30" stat="pAtkSpd" val="0.77"/>
-    </effect>
+  	<effect name="Spoil" noicon="1" val="0" />
+  	<effect name="Debuff" time="15" val="0" effectPower="#ench123Power" stackOrder="3" stackType="pAtkSpdDown">
+    <mul order="0x30" stat="pAtkSpd" val="0.77"/>
+  	</effect>
   </enchant1for>
   <enchant2for>
-    <effect count="3" name="DamOverTime" time="3" val="354"/>
+  	<effect name="Spoil" noicon="1" val="0" />
+  	<effect count="5" name="DamOverTime" time="3" val="354" effectPower="#ench123Power" stackOrder="3" stackType="dot_attr" />
   </enchant2for>
 </skill>
 <skill id="255" levels="15" name="Power Smash">
@@ -1483,7 +1493,7 @@
   <set name="target" val="TARGET_ONE"/>
   <set name="reuseDelay" val="8000"/>
   <set name="hitTime" val="3000"/>
-  <set name="skillType" val="PARALYZE"/>
+  <set name="skillType" val="MDAM"/>
   <set name="isDebuff" val="true" />
   <set name="isMagic" val="true" />
   <set name="operateType" val="OP_ACTIVE"/>
@@ -1492,7 +1502,7 @@
   <enchant1 name="power" val="#enchant1Power"/>
   <enchant2 name="mpConsume" val="#enchant2MpConsume"/>
   <for>
-    <effect count="1" name="Paralyze" time="30" val="0" effectPower="40" effectType="PARALYZE"/>
+    <effect count="1" name="Paralyze" time="30" val="0" effectPower="25" effectType="PARALYZE"/>
   </for>
 </skill>
 <skill id="280" levels="37" name="Burning Fist" enchantLevels1="30" enchantLevels2="30">

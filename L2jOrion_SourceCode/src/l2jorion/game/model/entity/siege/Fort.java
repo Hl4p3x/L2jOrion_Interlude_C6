@@ -23,7 +23,6 @@ import java.util.Calendar;
 import java.util.List;
 
 import javolution.util.FastList;
-import l2jorion.game.datatables.csv.DoorTable;
 import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2Object;
@@ -35,16 +34,11 @@ import l2jorion.game.model.zone.type.L2FortZone;
 import l2jorion.game.network.serverpackets.PlaySound;
 import l2jorion.game.network.serverpackets.PledgeShowInfoUpdate;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author programmos
- */
 
 public class Fort
 {
@@ -54,7 +48,6 @@ public class Fort
 	// Data Field
 	private int _fortId = 0;
 	private final List<L2DoorInstance> _doors = new FastList<>();
-	private final List<String> _doorDefault = new FastList<>();
 	private String _name = "";
 	private int _ownerId = 0;
 	private L2Clan _fortOwner = null;
@@ -65,17 +58,12 @@ public class Fort
 	private L2FortZone _zone;
 	private L2Clan _formerOwner = null;
 	
-	// =========================================================
 	// Constructor
 	public Fort(final int fortId)
 	{
 		_fortId = fortId;
 		load();
-		loadDoor();
 	}
-	
-	// =========================================================
-	// Method - Public
 	
 	public void EndOfSiege(final L2Clan clan)
 	{
@@ -291,33 +279,27 @@ public class Fort
 	 */
 	public void spawnDoor(final boolean isDoorWeak)
 	{
-		for (int i = 0; i < getDoors().size(); i++)
+		for (L2DoorInstance door : _doors)
 		{
-			L2DoorInstance door = getDoors().get(i);
-			
-			if (door.getCurrentHp() >= 0)
+			if (door.getCurrentHp() <= 0)
 			{
 				door.decayMe(); // Kill current if not killed already
-				door = DoorTable.parseList(_doorDefault.get(i));
 				
 				if (isDoorWeak)
 				{
-					door.setCurrentHp(door.getMaxHp() / 2);
+					door.setCurrentHpDirect(door.getMaxHp() / 2);
 				}
 				else
 				{
-					door.setCurrentHp(door.getMaxHp());
+					door.setCurrentHpDirect(door.getMaxHp());
 				}
 				
 				door.spawnMe(door.getX(), door.getY(), door.getZ());
-				getDoors().set(i, door);
 			}
-			else if (!door.getOpen())
+			else if (door.getOpen())
 			{
 				door.closeMe();
 			}
-			
-			door = null;
 		}
 		
 		loadDoorUpgrade(); // Check for any upgrade the doors may have
@@ -405,47 +387,6 @@ public class Fort
 		catch (final Exception e)
 		{
 			LOG.warn("Exception: loadFortData(): " + e.getMessage());
-			e.printStackTrace();
-		}
-		finally
-		{
-			CloseUtil.close(con);
-			con = null;
-		}
-	}
-	
-	// This method loads fort door data from database
-	private void loadDoor()
-	{
-		Connection con = null;
-		try
-		{
-			con = L2DatabaseFactory.getInstance().getConnection();
-			PreparedStatement statement = con.prepareStatement("Select * from fort_door where fortId = ?");
-			statement.setInt(1, getFortId());
-			ResultSet rs = statement.executeQuery();
-			
-			while (rs.next())
-			{
-				// Create list of the door default for use when respawning dead doors
-				_doorDefault.add(rs.getString("name") + ";" + rs.getInt("id") + ";" + rs.getInt("x") + ";" + rs.getInt("y") + ";" + rs.getInt("z") + ";" + rs.getInt("range_xmin") + ";" + rs.getInt("range_ymin") + ";" + rs.getInt("range_zmin") + ";" + rs.getInt("range_xmax") + ";" + rs.getInt("range_ymax") + ";" + rs.getInt("range_zmax") + ";" + rs.getInt("hp") + ";" + rs.getInt("pDef") + ";" + rs.getInt("mDef"));
-				
-				L2DoorInstance door = DoorTable.parseList(_doorDefault.get(_doorDefault.size() - 1));
-				door.spawnMe(door.getX(), door.getY(), door.getZ());
-				
-				_doors.add(door);
-				
-				DoorTable.getInstance().putDoor(door);
-			}
-			
-			rs.close();
-			DatabaseUtils.close(statement);
-			statement = null;
-			rs = null;
-		}
-		catch (final Exception e)
-		{
-			LOG.warn("Exception: loadFortDoor(): " + e.getMessage());
 			e.printStackTrace();
 		}
 		finally

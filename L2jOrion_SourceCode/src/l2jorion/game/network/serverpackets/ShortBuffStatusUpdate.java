@@ -23,6 +23,7 @@ package l2jorion.game.network.serverpackets;
 public class ShortBuffStatusUpdate extends L2GameServerPacket
 {
 	private static final String _S__F4_SHORTBUFFSTATUSUPDATE = "[S] F4 ShortBuffStatusUpdate";
+	
 	private final int _skillId;
 	private final int _skillLvl;
 	private final int _duration;
@@ -43,10 +44,6 @@ public class ShortBuffStatusUpdate extends L2GameServerPacket
 		writeD(_duration);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

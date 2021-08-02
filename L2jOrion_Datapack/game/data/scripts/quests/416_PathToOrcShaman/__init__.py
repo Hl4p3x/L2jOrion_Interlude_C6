@@ -1,6 +1,3 @@
-# Maked by Mr. Have fun! Version 0.2
-# Shadow Weapon Coupons contributed by BiTi for the Official L2J Datapack Project
-# Visit http://forum.l2jdp.com for more details
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
@@ -73,8 +70,8 @@ class Quest (JQuest) :
     elif event == "30502_2" :
           htmltext = "30502-07.htm"
           st.takeItems(TOTEM_SPIRIT_BLOOD,st.getQuestItemsCount(TOTEM_SPIRIT_BLOOD))
+          st.addExpAndSp(16000,5650)
           st.giveItems(MASK_OF_MEDIUM,1)
-          st.addExpAndSp(3200,2600)
           st.set("cond","0")
           st.setState(COMPLETED)
           st.playSound("ItemSound.quest_finish")

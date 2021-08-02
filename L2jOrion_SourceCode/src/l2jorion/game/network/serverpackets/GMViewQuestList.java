@@ -24,10 +24,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.quest.Quest;
 import l2jorion.game.model.quest.QuestState;
 
-/**
- * Sh (dd) h (dddd)
- * @author Tempy
- */
 public class GMViewQuestList extends L2GameServerPacket
 {
 	private static final String _S__AC_GMVIEWQUESTLIST = "[S] ac GMViewQuestList";
@@ -73,10 +69,6 @@ public class GMViewQuestList extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

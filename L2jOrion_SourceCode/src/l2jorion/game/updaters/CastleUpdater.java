@@ -19,9 +19,6 @@
  */
 package l2jorion.game.updaters;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.model.ItemContainer;
@@ -29,10 +26,9 @@ import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.log.Log;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * Thorgrim - 2005 Class managing periodical events with castle
- */
 public class CastleUpdater implements Runnable
 {
 	protected static Logger LOG = LoggerFactory.getLogger(CastleUpdater.class);
@@ -69,7 +65,6 @@ public class CastleUpdater implements Runnable
 				_runCount++;
 				final CastleUpdater cu = new CastleUpdater(_clan, _runCount);
 				ThreadPoolManager.getInstance().scheduleGeneral(cu, 3600000);
-				warehouse = null;
 			}
 		}
 		catch (final Throwable e)

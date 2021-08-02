@@ -32,6 +32,7 @@ import l2jorion.game.model.L2Skill.SkillType;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.L2ZoneType;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.model.zone.type.L2FishingZone;
 import l2jorion.game.model.zone.type.L2WaterZone;
 import l2jorion.game.network.SystemMessageId;
@@ -116,7 +117,7 @@ public class Fishing implements ISkillHandler
 			return;
 		}
 		
-		if (player.isInsideZone(L2Character.ZONE_WATER))
+		if (player.isInsideZone(ZoneId.ZONE_WATER))
 		{
 			player.sendPacket(SystemMessageId.CANNOT_FISH_UNDER_WATER);
 			return;

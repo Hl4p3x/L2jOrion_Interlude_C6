@@ -26,12 +26,11 @@ import java.sql.ResultSet;
 
 import javolution.util.FastMap;
 import l2jorion.game.model.L2ArmorSet;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ArmorSetsTable
 {
@@ -84,7 +83,7 @@ public class ArmorSetsTable
 				cusArmorSets.put(id, new ArmorDummy(chest, legs, head, gloves, feet, skill_id, shield));
 			}
 			
-			LOG.info("Loaded: " + armorSets.size() + " armor sets.");
+			LOG.info("ArmorSetsTable: Loaded: " + armorSets.size() + " armor sets");
 			
 			DatabaseUtils.close(rset);
 			DatabaseUtils.close(statement);

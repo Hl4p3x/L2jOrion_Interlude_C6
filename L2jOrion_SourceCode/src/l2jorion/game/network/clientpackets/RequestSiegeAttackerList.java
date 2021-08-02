@@ -27,9 +27,6 @@ import l2jorion.game.model.entity.siege.Fort;
 import l2jorion.game.network.serverpackets.FortSiegeAttackerList;
 import l2jorion.game.network.serverpackets.SiegeAttackerList;
 
-/**
- * @author programmos
- */
 public final class RequestSiegeAttackerList extends L2GameClientPacket
 {
 	private int _castleId;
@@ -48,7 +45,9 @@ public final class RequestSiegeAttackerList extends L2GameClientPacket
 			final Castle castle = CastleManager.getInstance().getCastleById(_castleId);
 			
 			if (castle == null)
+			{
 				return;
+			}
 			
 			final SiegeAttackerList sal = new SiegeAttackerList(castle);
 			sendPacket(sal);
@@ -58,7 +57,9 @@ public final class RequestSiegeAttackerList extends L2GameClientPacket
 			final Fort fort = FortManager.getInstance().getFortById(_castleId);
 			
 			if (fort == null)
+			{
 				return;
+			}
 			
 			final FortSiegeAttackerList sal = new FortSiegeAttackerList(fort);
 			sendPacket(sal);

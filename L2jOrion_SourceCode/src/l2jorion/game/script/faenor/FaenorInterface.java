@@ -36,13 +36,9 @@ import l2jorion.game.script.EngineInterface;
 import l2jorion.game.script.EventDroplist;
 import l2jorion.game.script.Expression;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author Luis Arias
- */
 public class FaenorInterface implements EngineInterface
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(FaenorInterface.class);
@@ -165,10 +161,12 @@ public class FaenorInterface implements EngineInterface
 	public List<L2DropData> getQuestDrops(final int npcID)
 	{
 		final L2NpcTemplate npc = npcTable.getTemplate(npcID);
-
+		
 		if (npc == null)
+		{
 			return null;
-
+		}
+		
 		final List<L2DropData> questDrops = new FastList<>();
 		if (npc.getDropData() != null)
 		{
@@ -208,7 +206,7 @@ public class FaenorInterface implements EngineInterface
 			petData[level - 1].setPetID(petID);
 			petData[level - 1].setPetLevel(level);
 			
-			context.setAttribute("level", new Double(level), ScriptContext.ENGINE_SCOPE);
+			context.setAttribute("level", Double.valueOf(level), ScriptContext.ENGINE_SCOPE);
 			for (final String stat : stats.keySet())
 			{
 				value = ((Number) Expression.eval(context, "beanshell", stats.get(stat))).intValue();

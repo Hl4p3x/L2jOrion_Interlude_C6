@@ -28,20 +28,17 @@ import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.datatables.sql.SpawnTable;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.managers.GrandBossManager;
+import l2jorion.game.managers.RaidBossSpawnManager;
 import l2jorion.game.model.actor.instance.AutoSpawnInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.model.spawn.AutoSpawn;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.game.templates.L2NpcTemplate;
 
-/**
- * Admin Command Handler for Mammon NPCs
- * @author Tempy
- */
 public class AdminMammon implements IAdminCommandHandler
 {
-	
 	private static final String[] ADMIN_COMMANDS =
 	{
 		"admin_mammon_find",
@@ -54,14 +51,8 @@ public class AdminMammon implements IAdminCommandHandler
 	private final boolean _isSealValidation = SevenSigns.getInstance().isSealValidationPeriod();
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		int npcId = 0;
 		int teleportIndex = -1;
 		
@@ -80,7 +71,9 @@ public class AdminMammon implements IAdminCommandHandler
 			catch (final Exception NumberFormatException)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					NumberFormatException.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Usage: //mammon_find [teleportIndex] (where 1 = Blacksmith, 2 = Merchant)");
 			}
@@ -104,8 +97,6 @@ public class AdminMammon implements IAdminCommandHandler
 						activeChar.teleToLocation(x1, y1, z1, true);
 					}
 				}
-				
-				blackInst = null;
 			}
 			else
 			{
@@ -127,8 +118,6 @@ public class AdminMammon implements IAdminCommandHandler
 						activeChar.teleToLocation(x2, y2, z2, true);
 					}
 				}
-				
-				merchInst = null;
 			}
 			else
 			{
@@ -167,19 +156,32 @@ public class AdminMammon implements IAdminCommandHandler
 		
 		else if (command.startsWith("admin_list_spawns"))
 		{
-			boolean monster = true;
+			boolean GrandBoss = false;
+			boolean RaidBoss = false;
+			
 			String[] params = command.split(" ");
+			
 			Pattern pattern = Pattern.compile("[0-9]*");
 			Matcher regexp = pattern.matcher(params[1]);
+			boolean matches = regexp.matches();
 			
-			if (regexp.matches())
+			if (matches)
 			{
 				npcId = Integer.parseInt(params[1]);
 			}
 			else
 			{
 				params[1] = params[1].replace('_', ' ');
-				npcId = NpcTable.getInstance().getTemplateByName(params[1]).npcId;
+				L2NpcTemplate template = NpcTable.getInstance().getTemplateByName(params[1]);
+				if (template != null)
+				{
+					npcId = template.getNpcId();
+				}
+				else
+				{
+					activeChar.sendMessage("Name not found:" + params[1]);
+					return false;
+				}
 			}
 			
 			if (params.length > 2)
@@ -189,22 +191,36 @@ public class AdminMammon implements IAdminCommandHandler
 			
 			if (npcId > 0)
 			{
-				if (NpcTable.getInstance().getTemplateByName(params[1]).type.contains("L2GrandBoss") || NpcTable.getInstance().getTemplateByName(params[1]).type.contains("L2RaidBoss"))
+				L2NpcTemplate creature = NpcTable.getInstance().getTemplate(npcId);
+				if (creature == null)
 				{
-					monster = false;
+					activeChar.sendMessage("Wrong Id:" + npcId);
+					return false;
 				}
 				
-				if (monster)
+				if (NpcTable.getInstance().getTemplate(npcId).getType().contains("L2GrandBoss"))
 				{
-					SpawnTable.getInstance().findNPCInstances(activeChar, npcId, teleportIndex);
+					GrandBoss = true;
+				}
+				else if (NpcTable.getInstance().getTemplate(npcId).getType().contains("L2RaidBoss"))
+				{
+					RaidBoss = true;
+				}
+				
+				if (GrandBoss)
+				{
+					GrandBossManager.getInstance().findGrandBoss(activeChar, npcId, teleportIndex);
+				}
+				else if (RaidBoss)
+				{
+					RaidBossSpawnManager.getInstance().findRaidBoss(activeChar, npcId, teleportIndex);
 				}
 				else
 				{
-					GrandBossManager.getInstance().findBoss(activeChar, npcId, teleportIndex);
+					SpawnTable.getInstance().findNPCInstances(activeChar, npcId, teleportIndex);
 				}
 			}
 		}
-		// Used for testing SystemMessage IDs - Use //msg <ID>
 		else if (command.startsWith("admin_msg"))
 		{
 			int msgId = -1;
@@ -216,17 +232,15 @@ public class AdminMammon implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Command format: //msg <SYSTEM_MSG_ID>");
 				return true;
 			}
 			activeChar.sendPacket(new SystemMessage(msgId));
 		}
-		
-		merchSpawnInst = null;
-		blackSpawnInst = null;
-		
 		return true;
 	}
 	

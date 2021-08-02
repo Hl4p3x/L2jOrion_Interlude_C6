@@ -29,7 +29,9 @@ public class VehicleKnownList extends CharKnownList
 	public int getDistanceToForgetObject(L2Object object)
 	{
 		if (!(object instanceof L2PcInstance))
+		{
 			return 0;
+		}
 		
 		return object.getKnownList().getDistanceToForgetObject(_activeObject);
 	}
@@ -38,7 +40,9 @@ public class VehicleKnownList extends CharKnownList
 	public int getDistanceToWatchObject(L2Object object)
 	{
 		if (!(object instanceof L2PcInstance))
+		{
 			return 0;
+		}
 		
 		return object.getKnownList().getDistanceToWatchObject(_activeObject);
 	}

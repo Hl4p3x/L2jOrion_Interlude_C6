@@ -25,11 +25,10 @@ import java.security.GeneralSecurityException;
 
 import javax.crypto.Cipher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.GameServerTable.GameServerInfo;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.login.L2LoginClient;
 import l2jorion.login.LoginController;
 import l2jorion.login.L2LoginClient.LoginClientState;
@@ -132,7 +131,6 @@ public class RequestAuthLogin extends L2LoginClientPacket
 				{
 					getClient().sendPacket(new ServerList(getClient()));
 				}
-				
 				break;
 			case INVALID_PASSWORD:
 				client.close(LoginFailReason.REASON_USER_OR_PASS_WRONG);

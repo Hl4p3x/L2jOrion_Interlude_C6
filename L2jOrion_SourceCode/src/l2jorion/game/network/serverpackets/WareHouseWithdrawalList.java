@@ -20,25 +20,23 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * 0x42 WarehouseWithdrawalList dh (h dddhh dhhh d)
- * @version $Revision: 1.3.2.1.2.5 $ $Date: 2005/03/29 23:15:10 $
- */
 public class WareHouseWithdrawalList extends L2GameServerPacket
 {
+	private static Logger LOG = LoggerFactory.getLogger(WareHouseWithdrawalList.class);
+	
+	private static final String _S__54_WAREHOUSEWITHDRAWALLIST = "[S] 42 WareHouseWithdrawalList";
+	
 	public static final int PRIVATE = 1;
 	public static final int CLAN = 2;
 	public static final int CASTLE = 3; // not sure
 	public static final int FREIGHT = 4; // not sure
-	private static Logger LOG = LoggerFactory.getLogger(WareHouseWithdrawalList.class);
-	private static final String _S__54_WAREHOUSEWITHDRAWALLIST = "[S] 42 WareHouseWithdrawalList";
+	
 	private L2PcInstance _activeChar;
 	private int _playerAdena;
 	private L2ItemInstance[] _items;
@@ -71,9 +69,7 @@ public class WareHouseWithdrawalList extends L2GameServerPacket
 	protected final void writeImpl()
 	{
 		writeC(0x42);
-		/*
-		 * 0x01-Private Warehouse 0x02-Clan Warehouse 0x03-Castle Warehouse 0x04-Warehouse
-		 */
+		
 		writeH(_whType);
 		writeD(_playerAdena);
 		writeH(_items.length);
@@ -103,10 +99,6 @@ public class WareHouseWithdrawalList extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

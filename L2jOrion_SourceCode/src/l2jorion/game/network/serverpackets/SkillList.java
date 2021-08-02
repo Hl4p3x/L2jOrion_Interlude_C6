@@ -23,10 +23,10 @@ package l2jorion.game.network.serverpackets;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class SkillList extends L2GameServerPacket
 {
 	private static final String _S__6D_SKILLLIST = "[S] 58 SkillList";
+	
 	private final List<Skill> _skills = new ArrayList<>();
 	
 	static class Skill
@@ -65,7 +65,7 @@ public class SkillList extends L2GameServerPacket
 			writeC(temp.disabled ? 1 : 0);
 		}
 	}
-
+	
 	@Override
 	public String getType()
 	{

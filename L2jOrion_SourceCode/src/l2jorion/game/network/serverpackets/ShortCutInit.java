@@ -35,7 +35,9 @@ public class ShortCutInit extends L2GameServerPacket
 		_activeChar = activeChar;
 		
 		if (_activeChar == null)
+		{
 			return;
+		}
 		
 		_shortCuts = _activeChar.getAllShortCuts();
 	}
@@ -53,7 +55,7 @@ public class ShortCutInit extends L2GameServerPacket
 			
 			switch (sc.getType())
 			{
-				case L2ShortCut.TYPE_ITEM: // 1
+				case L2ShortCut.TYPE_ITEM:
 					writeD(sc.getId());
 					writeD(0x01);
 					writeD(-1);
@@ -62,35 +64,22 @@ public class ShortCutInit extends L2GameServerPacket
 					writeH(0x00);
 					writeH(0x00);
 					break;
-				case L2ShortCut.TYPE_SKILL: // 2
+				case L2ShortCut.TYPE_SKILL:
 					writeD(sc.getId());
 					writeD(sc.getLevel());
 					writeC(0x00); // C5
 					writeD(0x01); // C6
 					break;
-				case L2ShortCut.TYPE_ACTION: // 3
+				case L2ShortCut.TYPE_ACTION:
+				case L2ShortCut.TYPE_MACRO:
+				case L2ShortCut.TYPE_RECIPE:
 					writeD(sc.getId());
-					writeD(0x01); // C6
+					writeD(0x01);
 					break;
-				case L2ShortCut.TYPE_MACRO: // 4
-					writeD(sc.getId());
-					writeD(0x01); // C6
-					break;
-				case L2ShortCut.TYPE_RECIPE: // 5
-					writeD(sc.getId());
-					writeD(0x01); // C6
-					break;
-				default:
-					writeD(sc.getId());
-					writeD(0x01); // C6
 			}
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

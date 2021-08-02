@@ -20,10 +20,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class ...
- * @version $Revision: 1.4.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public class CharDeleteFail extends L2GameServerPacket
 {
 	private static final String _S__34_CHARDELETEFAIL = "[S] 24 CharDeleteFail";
@@ -46,10 +42,6 @@ public class CharDeleteFail extends L2GameServerPacket
 		writeD(_error);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

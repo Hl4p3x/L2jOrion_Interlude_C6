@@ -29,15 +29,13 @@ import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.managers.DayNightSpawnManager;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.model.entity.olympiad.Olympiad;
 import l2jorion.game.model.spawn.L2Spawn;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SpawnTable
 {
@@ -46,7 +44,6 @@ public class SpawnTable
 	private static final SpawnTable _instance = new SpawnTable();
 	
 	private Map<Integer, L2Spawn> spawntable = new FastMap<Integer, L2Spawn>().shared();
-	private int npcSpawnCount;
 	private int customSpawnCount;
 	
 	private int _highestId;
@@ -90,11 +87,8 @@ public class SpawnTable
 				template1 = NpcTable.getInstance().getTemplate(rset.getInt("npc_templateid"));
 				if (template1 != null)
 				{
-					if ((template1.type.equalsIgnoreCase("L2SiegeGuard")) 
-							|| (template1.type.equalsIgnoreCase("L2RaidBoss")) 
-							|| (template1.type.equalsIgnoreCase("L2GrandBoss"))
-							|| (!Config.ALLOW_CLASS_MASTERS && template1.type.equals("L2ClassMaster"))
-							|| (!Config.ALLOW_HITMAN_GDE && template1.type.equals("L2Hitman")))
+					if ((template1.type.equalsIgnoreCase("L2SiegeGuard")) || (template1.type.equalsIgnoreCase("L2RaidBoss")) || (template1.type.equalsIgnoreCase("L2GrandBoss")) || (!Config.ALLOW_CLASS_MASTERS && template1.type.equals("L2ClassMaster"))
+						|| (!Config.ALLOW_HITMAN_GDE && template1.type.equals("L2Hitman")))
 					{
 						continue;
 					}
@@ -115,15 +109,15 @@ public class SpawnTable
 					switch (rset.getInt("periodOfDay"))
 					{
 						case 0: // default
-							npcSpawnCount += spawnDat.init();
+							customSpawnCount += spawnDat.init();
 							break;
 						case 1: // Day
 							DayNightSpawnManager.getInstance().addDayCreature(spawnDat);
-							npcSpawnCount++;
+							customSpawnCount++;
 							break;
 						case 2: // Night
 							DayNightSpawnManager.getInstance().addNightCreature(spawnDat);
-							npcSpawnCount++;
+							customSpawnCount++;
 							break;
 					}
 					
@@ -132,11 +126,6 @@ public class SpawnTable
 					if (spawnDat.getId() > _highestId)
 					{
 						_highestId = spawnDat.getId();
-					}
-					
-					if (spawnDat.getTemplate().getNpcId() == Olympiad.OLY_MANAGER)
-					{
-						Olympiad.olymanagers.add(spawnDat);
 					}
 				}
 				else
@@ -156,8 +145,7 @@ public class SpawnTable
 			CloseUtil.close(con);
 		}
 		
-		LOG.info("SpawnTable: Loaded " + spawntable.size() + " Npc Spawn Locations. ");
-		LOG.info("SpawnTable: Spawning completed, total number of NPCs in the world: " + npcSpawnCount);
+		LOG.info("SpawnTable: Spawning completed, total number of NPCs in the world: " + spawntable.size());
 		
 		// -------------------------------Custom Spawnlist----------------------------//
 		if (Config.CUSTOM_SPAWNLIST_TABLE)
@@ -212,7 +200,7 @@ public class SpawnTable
 						{
 							_highestId = spawnDat.getId();
 						}
-					
+						
 					}
 					else
 					{
@@ -231,7 +219,6 @@ public class SpawnTable
 				CloseUtil.close(con);
 			}
 			
-			LOG.info("CustomSpawnTable: Loaded " + customSpawnCount + " Npc Spawn Locations. ");
 			LOG.info("CustomSpawnTable: Spawning completed, total number of NPCs in the world: " + customSpawnCount);
 		}
 	}
@@ -281,7 +268,9 @@ public class SpawnTable
 	public void deleteSpawn(final L2Spawn spawn, final boolean updateDb)
 	{
 		if (spawntable.remove(spawn.getId()) == null)
+		{
 			return;
+		}
 		
 		if (updateDb)
 		{

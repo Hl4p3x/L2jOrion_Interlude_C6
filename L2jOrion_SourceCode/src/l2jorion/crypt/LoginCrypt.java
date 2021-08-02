@@ -23,9 +23,6 @@ import java.io.IOException;
 
 import l2jorion.util.random.Rnd;
 
-/**
- * @author KenM
- */
 public class LoginCrypt
 {
 	private static final byte[] STATIC_BLOWFISH_KEY =

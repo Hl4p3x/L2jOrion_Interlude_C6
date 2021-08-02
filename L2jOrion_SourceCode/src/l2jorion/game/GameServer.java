@@ -30,20 +30,41 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.LogManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import OrionGuard.ProtectionMain;
 import l2jguard.Protection;
 import l2jorion.Config;
 import l2jorion.ConfigLoader;
 import l2jorion.ServerType;
-import l2jorion.game.ai.additional.manager.AILoader;
-import l2jorion.game.ai.boat.vehicles.BoatGiranTalking;
-import l2jorion.game.ai.boat.vehicles.BoatGludinRune;
-import l2jorion.game.ai.boat.vehicles.BoatInnadrilTour;
-import l2jorion.game.ai.boat.vehicles.BoatRunePrimeval;
-import l2jorion.game.ai.boat.vehicles.BoatTalkingGludin;
+import l2jorion.game.ai.additional.Antharas;
+import l2jorion.game.ai.additional.Baium;
+import l2jorion.game.ai.additional.Barakiel;
+import l2jorion.game.ai.additional.Benom;
+import l2jorion.game.ai.additional.Core;
+import l2jorion.game.ai.additional.FairyTrees;
+import l2jorion.game.ai.additional.Frintezza;
+import l2jorion.game.ai.additional.Frozen;
+import l2jorion.game.ai.additional.Golkonda;
+import l2jorion.game.ai.additional.Gordon;
+import l2jorion.game.ai.additional.Hallate;
+import l2jorion.game.ai.additional.IceFairySirra;
+import l2jorion.game.ai.additional.InterludeTutorial;
+import l2jorion.game.ai.additional.Kernon;
+import l2jorion.game.ai.additional.Monastery;
+import l2jorion.game.ai.additional.Orfen;
+import l2jorion.game.ai.additional.QueenAnt;
+import l2jorion.game.ai.additional.SummonMinions;
+import l2jorion.game.ai.additional.Transform;
+import l2jorion.game.ai.additional.Valakas;
+import l2jorion.game.ai.additional.VanHalter;
+import l2jorion.game.ai.additional.VarkaKetraAlly;
+import l2jorion.game.ai.additional.Zaken;
+import l2jorion.game.ai.additional.ZombieGatekeepers;
 import l2jorion.game.ai.phantom.phantomPlayers;
+import l2jorion.game.boat.routes.BoatGiranTalking;
+import l2jorion.game.boat.routes.BoatGludinRune;
+import l2jorion.game.boat.routes.BoatInnadrilTour;
+import l2jorion.game.boat.routes.BoatRunePrimeval;
+import l2jorion.game.boat.routes.BoatTalkingGludin;
 import l2jorion.game.cache.CrestCache;
 import l2jorion.game.cache.HtmCache;
 import l2jorion.game.community.manager.ForumsBBSManager;
@@ -61,9 +82,9 @@ import l2jorion.game.datatables.csv.FishTable;
 import l2jorion.game.datatables.csv.HennaTable;
 import l2jorion.game.datatables.csv.MapRegionTable;
 import l2jorion.game.datatables.csv.NpcWalkerRoutesTable;
+import l2jorion.game.datatables.csv.PetItemsData;
 import l2jorion.game.datatables.csv.RecipeTable;
 import l2jorion.game.datatables.csv.StaticObjects;
-import l2jorion.game.datatables.csv.SummonItemsData;
 import l2jorion.game.datatables.sql.AccessLevels;
 import l2jorion.game.datatables.sql.AdminCommandAccessRights;
 import l2jorion.game.datatables.sql.ArmorSetsTable;
@@ -79,8 +100,8 @@ import l2jorion.game.datatables.sql.LevelUpData;
 import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.datatables.sql.SkillSpellbookTable;
 import l2jorion.game.datatables.sql.SkillTreeTable;
-import l2jorion.game.datatables.sql.SpawnTable;
 import l2jorion.game.datatables.sql.TeleportLocationTable;
+import l2jorion.game.datatables.xml.AugmentScrollData;
 import l2jorion.game.datatables.xml.AugmentationData;
 import l2jorion.game.datatables.xml.ExperienceData;
 import l2jorion.game.geo.GeoData;
@@ -93,8 +114,10 @@ import l2jorion.game.handler.SkillHandler;
 import l2jorion.game.handler.UserCommandHandler;
 import l2jorion.game.handler.VoicedCommandHandler;
 import l2jorion.game.idfactory.IdFactory;
+import l2jorion.game.managers.AchievementManager;
 import l2jorion.game.managers.AuctionManager;
 import l2jorion.game.managers.AutoSaveManager;
+import l2jorion.game.managers.CHSiegeManager;
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.CastleManorManager;
 import l2jorion.game.managers.ClanHallManager;
@@ -123,34 +146,42 @@ import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.PartyMatchWaitingList;
 import l2jorion.game.model.entity.Announcements;
 import l2jorion.game.model.entity.Hero;
-import l2jorion.game.model.entity.Hitman;
 import l2jorion.game.model.entity.MonsterRace;
 import l2jorion.game.model.entity.event.manager.EventManager;
-import l2jorion.game.model.entity.olympiad.Olympiad;
+import l2jorion.game.model.entity.event.tournament.Arena2x2;
+import l2jorion.game.model.entity.event.tournament.Arena4x4;
+import l2jorion.game.model.entity.event.tournament.Arena9x9;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.model.entity.sevensigns.SevenSignsFestival;
-import l2jorion.game.model.entity.siege.clanhalls.BanditStrongholdSiege;
-import l2jorion.game.model.entity.siege.clanhalls.DevastatedCastle;
-import l2jorion.game.model.entity.siege.clanhalls.FortressOfResistance;
+import l2jorion.game.model.entity.siege.hallsiege.halls.BanditStrongHold;
+import l2jorion.game.model.entity.siege.hallsiege.halls.DevastatedCastle;
+import l2jorion.game.model.entity.siege.hallsiege.halls.FortressOfResistance;
+import l2jorion.game.model.entity.siege.hallsiege.halls.FortressOfTheDead;
+import l2jorion.game.model.entity.siege.hallsiege.halls.RainbowSpringsChateau;
+import l2jorion.game.model.entity.siege.hallsiege.halls.WildBeastReserve;
 import l2jorion.game.model.multisell.L2Multisell;
+import l2jorion.game.model.olympiad.Olympiad;
+import l2jorion.game.model.olympiad.OlympiadGameManager;
+import l2jorion.game.model.quest.Quest;
 import l2jorion.game.model.spawn.AutoSpawn;
 import l2jorion.game.network.L2GameClient;
 import l2jorion.game.network.L2GamePacketHandler;
 import l2jorion.game.powerpack.PowerPack;
 import l2jorion.game.script.EventDroplist;
 import l2jorion.game.script.faenor.FaenorScriptEngine;
-import l2jorion.game.scripting.CompiledScriptCache;
 import l2jorion.game.scripting.L2ScriptEngineManager;
 import l2jorion.game.taskmanager.KnownListUpdateTaskManager;
+import l2jorion.game.taskmanager.RandomZoneTaskManager;
 import l2jorion.game.taskmanager.TaskManager;
+import l2jorion.game.taskmanager.tasks.TaskItemDonate;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.thread.LoginServerThread;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.thread.daemons.DeadLockDetector;
 import l2jorion.game.thread.daemons.ItemsAutoDestroy;
 import l2jorion.game.thread.daemons.PcPoint;
-import l2jorion.game.util.DynamicExtension;
-import l2jorion.game.util.sql.SQLQueue;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.mmocore.SelectorConfig;
 import l2jorion.mmocore.SelectorThread;
 import l2jorion.status.Status;
@@ -172,19 +203,53 @@ public class GameServer
 	public static final Calendar dateTimeServerStarted = Calendar.getInstance();
 	public static final String dateTimeServerRestarted = new SimpleDateFormat("dd MMMM, E, yyyy, H:mm:ss").format(new Date(System.currentTimeMillis()));
 	
+	public static void main(String[] args) throws Exception
+	{
+		ServerType.serverMode = ServerType.MODE_GAMESERVER;
+		
+		final File logFolderBase = new File(LOG_FOLDER);
+		logFolderBase.mkdir();
+		
+		new File("log/game").mkdirs();
+		
+		try (InputStream is = new FileInputStream(new File(ConfigLoader.LOG_CONF_FILE)))
+		{
+			LogManager.getLogManager().readConfiguration(is);
+		}
+		
+		Config.load();
+		
+		ThreadPoolManager.getInstance();
+		
+		L2ScriptEngineManager.getInstance();
+		
+		if (Config.L2JGUARD_PROTECTION)
+		{
+			Util.printSection("L2JGuard");
+			Protection.Init();
+		}
+		
+		L2DatabaseFactory.getInstance();
+		
+		gameServer = new GameServer();
+		
+		if (Config.IS_TELNET_ENABLED)
+		{
+			Util.printSection("Telnet");
+			new Status(ServerType.serverMode).start();
+		}
+	}
+	
 	public GameServer() throws Exception
 	{
 		long serverLoadStart = System.currentTimeMillis();
-		
-		ThreadPoolManager.getInstance();
 		
 		new File(Config.DATAPACK_ROOT, "data/crests").mkdirs();
 		new File(Config.DATAPACK_ROOT, "data/faenor").mkdirs();
 		new File(Config.DATAPACK_ROOT, "data/geodata").mkdirs();
 		
+		Util.printSection("World");
 		HtmCache.getInstance();
-		CrestCache.getInstance();
-		L2ScriptEngineManager.getInstance();
 		
 		if (!IdFactory.getInstance().isInitialized())
 		{
@@ -192,7 +257,6 @@ public class GameServer
 			throw new Exception("Could not initialize the ID factory");
 		}
 		
-		Util.printSection("World");
 		GameTimeController.init();
 		L2Item.LoadAllIcons();
 		L2World.getInstance();
@@ -217,22 +281,27 @@ public class GameServer
 			AutoSaveManager.getInstance().startAutoSaveManager();
 		}
 		
+		if (Config.COMMUNITY_TYPE.equals("full"))
+		{
+			ForumsBBSManager.getInstance().initRoot();
+		}
+		
 		Util.printSection("Skills");
 		if (!SkillTable.getInstance().isInitialized())
 		{
-			LOG.info("Could not find the extraced files. Please Check Your Data.");
+			LOG.info("Could not find the extraced files. Please check your data.");
 			throw new Exception("Could not initialize the skill table");
 		}
+		
 		SkillTreeTable.getInstance();
 		SkillSpellbookTable.getInstance();
 		NobleSkillTable.getInstance();
 		HeroSkillTable.getInstance();
-		LOG.info("Skills: All skills loaded.");
 		
 		Util.printSection("Items");
 		if (!ItemTable.getInstance().isInitialized())
 		{
-			LOG.info("Could not find the extraced files. Please Check Your Data.");
+			LOG.info("Could not find the extraced files. Please check your data.");
 			throw new Exception("Could not initialize the item table");
 		}
 		ArmorSetsTable.getInstance();
@@ -241,29 +310,28 @@ public class GameServer
 			CustomArmorSetsTable.getInstance();
 		}
 		ExtractableItemsData.getInstance();
-		SummonItemsData.getInstance();
+		PetItemsData.getInstance();
 		if (Config.ALLOWFISHING)
 		{
 			FishTable.getInstance();
 		}
 		
-		Util.printSection("Npc");
+		TradeController.getInstance();
+		L2Multisell.getInstance();
+		
+		AugmentScrollData.getInstance();
+		
+		Util.printSection("Npcs");
 		NpcWalkerRoutesTable.getInstance().load();
 		if (!NpcTable.getInstance().isInitialized())
 		{
-			LOG.info("Could not find the extraced files. Please Check Your Data.");
+			LOG.info("Could not find the extraced files. Please check your data.");
 			throw new Exception("Could not initialize the npc table");
 		}
 		
-		Util.printSection("Characters");
-		if (Config.COMMUNITY_TYPE.equals("full"))
-		{
-			ForumsBBSManager.getInstance().initRoot();
-		}
-		
-		ClanTable.getInstance();
 		CharTemplateTable.getInstance();
 		LevelUpData.getInstance();
+		
 		if (!HennaTable.getInstance().isInitialized())
 		{
 			throw new Exception("Could not initialize the Henna Table");
@@ -279,37 +347,47 @@ public class GameServer
 			throw new Exception("Could not initialize the Helper Buff Table");
 		}
 		
-		if (Config.GEODATA > 0)
+		Util.printSection("Geodata");
+		if (Config.GEODATA)
 		{
-			Util.printSection("Geodata");
 			GeoData.getInstance();
 			PathFinding.getInstance();
 		}
+		else
+		{
+			LOG.info("Geodata: Disabled");
+		}
 		
-		Util.printSection("Economy");
-		TradeController.getInstance();
-		L2Multisell.getInstance();
-		LOG.info("Multisells Loaded.");
+		Util.printSection("Clans");
+		ClanTable.getInstance();
+		CrestCache.getInstance();
 		
 		Util.printSection("Clan Halls");
+		CHSiegeManager.getInstance();
 		ClanHallManager.getInstance();
-		FortressOfResistance.getInstance();
-		DevastatedCastle.getInstance();
-		BanditStrongholdSiege.getInstance();
 		AuctionManager.getInstance();
+		
+		Util.printSection("Doors");
+		DoorTable.getInstance();
 		
 		Util.printSection("Zones");
 		ZoneManager.getInstance();
+		CastleManager.getInstance();
+		SiegeManager.getInstance();
+		FortManager.getInstance();
+		FortSiegeManager.getInstance();
+		CrownManager.getInstance();
 		
 		if (!Config.ALT_DEV_NO_RB)
 		{
-			RaidBossSpawnManager.getInstance();
-			GrandBossManager.getInstance();
+			RaidBossSpawnManager.getInstance().load();
+			GrandBossManager.getInstance().init();
+			GrandBossManager.getInstance().initZones();
 			RaidBossPointsManager.init();
 		}
 		else
 		{
-			LOG.info("Bosses: disabled load.");
+			LOG.info("Bosses: disabled");
 		}
 		
 		DayNightSpawnManager.getInstance().notifyChangeMode();
@@ -328,7 +406,6 @@ public class GameServer
 		CursedWeaponsManager.getInstance();
 		TaskManager.getInstance();
 		L2PetDataTable.getInstance().loadPetsData();
-		SQLQueue.getInstance();
 		
 		if (Config.SAVE_DROPPED_ITEM)
 		{
@@ -354,55 +431,28 @@ public class GameServer
 		L2Manor.getInstance();
 		CastleManorManager.getInstance();
 		
-		Util.printSection("Castles");
-		CastleManager.getInstance();
-		SiegeManager.getInstance();
-		FortManager.getInstance();
-		FortSiegeManager.getInstance();
-		CrownManager.getInstance();
+		Util.printSection("4 Sepulchers");
+		FourSepulchersManager.getInstance().load();
 		
-		Util.printSection("Doors");
-		DoorTable.getInstance().parseData();
-		try
-		{
-			DoorTable doorTable = DoorTable.getInstance();
-			doorTable.getDoor(19160012).openMe();
-			doorTable.getDoor(19160013).openMe();
-			doorTable.getDoor(19160014).openMe();
-			doorTable.getDoor(19160015).openMe();
-			doorTable.getDoor(19160016).openMe();
-			doorTable.getDoor(19160017).openMe();
-			doorTable.getDoor(24190001).openMe();
-			doorTable.getDoor(24190002).openMe();
-			doorTable.getDoor(24190003).openMe();
-			doorTable.getDoor(24190004).openMe();
-			doorTable.getDoor(23180001).openMe();
-			doorTable.getDoor(23180002).openMe();
-			doorTable.getDoor(23180003).openMe();
-			doorTable.getDoor(23180004).openMe();
-			doorTable.getDoor(23180005).openMe();
-			doorTable.getDoor(23180006).openMe();
-			doorTable.checkAutoOpen();
-		}
-		catch (NullPointerException e)
-		{
-			LOG.info("There is errors in your Door.csv file. Update door.csv");
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				e.printStackTrace();
-			}
-		}
-		
-		Util.printSection("Four Sepulchers");
-		FourSepulchersManager.getInstance();
-		
-		Util.printSection("Seven Signs");
+		Util.printSection("7 Signs");
 		SevenSigns.getInstance();
 		SevenSignsFestival.getInstance();
 		AutoSpawn.getInstance();
 		AutoChatHandler.getInstance();
 		
-		Util.printSection("Olympiad System");
+		Util.printSection("Clan Hall Sieges");
+		DevastatedCastle.load();
+		FortressOfResistance.load();
+		FortressOfTheDead.load();
+		RainbowSpringsChateau.load();
+		
+		BanditStrongHold.load();
+		// CompetitionfortheBanditStronghold.load();
+		
+		WildBeastReserve.load();
+		
+		Util.printSection("Olympiad & Heros");
+		OlympiadGameManager.getInstance();
 		Olympiad.getInstance();
 		Hero.getInstance();
 		
@@ -418,101 +468,92 @@ public class GameServer
 		UserCommandHandler.getInstance();
 		VoicedCommandHandler.getInstance();
 		
-		LOG.info("AutoChatHandler: Loaded " + AutoChatHandler.getInstance().size() + " handlers.");
-		LOG.info("AutoSpawnHandler: Loaded " + AutoSpawn.getInstance().size() + " handlers.");
+		LOG.info("AutoChatHandler: Loaded " + AutoChatHandler.getInstance().size() + " handlers");
+		LOG.info("AutoSpawnHandler: Loaded " + AutoSpawn.getInstance().size() + " handlers");
 		
-		Util.printSection("AI & Scripts");
+		Util.printSection("Scripts");
+		QuestManager.getInstance();
+		
+		// Donate Items
+		TaskItemDonate.getInstance();
 		
 		if (!Config.ALT_DEV_NO_AI)
 		{
-			AILoader.init();
-		}
-		else
-		{
-			LOG.info("AI: disabled load.");
+			ThreadPoolManager.getInstance().scheduleAi(new Antharas(-1, "antharas", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Baium(-1, "baium", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Core(-1, "core", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new QueenAnt(-1, "queen_ant", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new VanHalter(-1, "vanhalter", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Gordon(-1, "Gordon", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Monastery(-1, "monastery", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Transform(-1, "transform", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new FairyTrees(-1, "FairyTrees", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new SummonMinions(-1, "SummonMinions", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new ZombieGatekeepers(-1, "ZombieGatekeepers", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new IceFairySirra(-1, "IceFairySirra", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Golkonda(-1, "Golkonda", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Hallate(-1, "Hallate", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Kernon(-1, "Kernon", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new VarkaKetraAlly(-1, "Varka Ketra Ally", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Barakiel(-1, "Barakiel", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Orfen(-1, "Orfen", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Zaken(-1, "Zaken", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Frintezza(-1, "Frintezza", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Valakas(-1, "valakas", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Benom(-1, "Benom", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new InterludeTutorial(-1, "Tutorial", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Frozen(-1, "Frozen", "ai"), 0);
+			
+			LOG.info("GameServer: Additional scripts loaded");
 		}
 		
 		if (!Config.ALT_DEV_NO_SCRIPT)
 		{
-			File scripts = new File(Config.DATAPACK_ROOT, "config/scripts.cfg");
-			L2ScriptEngineManager.getInstance().executeScriptsList(scripts);
-			
-			CompiledScriptCache compiledScriptCache = L2ScriptEngineManager.getInstance().getCompiledScriptCache();
-			if (compiledScriptCache == null)
+			try
 			{
-				LOG.info("Compiled Scripts Cache is disabled.");
+				L2ScriptEngineManager.getInstance().executeScriptList(new File(Config.DATAPACK_ROOT, "config/scripts.cfg"));
+				FaenorScriptEngine.getInstance();
 			}
-			else
+			catch (IOException ioe)
 			{
-				compiledScriptCache.purge();
-				if (compiledScriptCache.isModified())
-				{
-					compiledScriptCache.save();
-					LOG.info("Compiled Scripts Cache was saved.");
-				}
-				else
-				{
-					LOG.info("Compiled Scripts Cache is up-to-date.");
-				}
+				LOG.error("{}: Failed loading scripts.cfg.", getClass().getSimpleName());
 			}
 			
 			FaenorScriptEngine.getInstance();
-		}
-		else
-		{
-			LOG.info("Script: disabled load.");
-		}
-		
-		Util.printSection("Quests");
-		if (!Config.ALT_DEV_NO_QUESTS)
-		{
-			if (QuestManager.getInstance().getQuests().size() == 0)
-				QuestManager.getInstance().reloadAllQuests();
-			else
+			
+			if (!Config.ALT_DEV_NO_QUESTS)
+			{
 				QuestManager.getInstance().report();
-			
+			}
 		}
 		else
 		{
-			QuestManager.getInstance().unloadAllQuests();
+			LOG.info("Scripts: disabled");
 		}
-		Util.printSection("Game Server");
 		
-		LOG.info("IdFactory: Free ObjectID's remaining: " + IdFactory.getInstance().size());
-		try
-		{
-			DynamicExtension.getInstance();
-		}
-		catch (Exception ex)
-		{
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-				ex.printStackTrace();
-			
-			LOG.info("DynamicExtension could not be loaded and initialized" + ex);
-		}
+		Quest.LoadInit();
 		
 		Util.printSection("Mods");
-		
-		if (Config.L2JMOD_ALLOW_WEDDING || Config.PCB_ENABLE || Config.POWERPAK_ENABLED)
+		if (Config.ACHIEVEMENT_ENABLE)
 		{
-			if (Config.L2JMOD_ALLOW_WEDDING)
-				CoupleManager.getInstance();
-			
-			if (Config.PCB_ENABLE)
-				ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(PcPoint.getInstance(), Config.PCB_INTERVAL * 1000, Config.PCB_INTERVAL * 1000);
-			
-			if (Config.POWERPAK_ENABLED)
-				PowerPack.getInstance();
-		}
-		else
-		{
-			LOG.info("All custom mods are disabled.");
+			AchievementManager.getInstance();
 		}
 		
-		Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());
+		if (Config.L2JMOD_ALLOW_WEDDING)
+		{
+			CoupleManager.getInstance();
+		}
 		
-		Hitman.start();
-		Util.printSection("Events");
+		if (Config.PCB_ENABLE)
+		{
+			ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(PcPoint.getInstance(), Config.PCB_INTERVAL * 1000, Config.PCB_INTERVAL * 1000);
+		}
+		
+		if (Config.POWERPAK_ENABLED)
+		{
+			PowerPack.getInstance();
+		}
+		
 		EventManager.getInstance().startEventRegistration();
 		
 		if (EventManager.TVT_EVENT_ENABLED || EventManager.CTF_EVENT_ENABLED || EventManager.DM_EVENT_ENABLED)
@@ -530,40 +571,48 @@ public class GameServer
 				LOG.info("DM Event - Enabled");
 			}
 		}
-		else
+		
+		// TournamentSpawner.getInstance();
+		if (Config.ARENA_EVENT_ENABLED_2X2)
 		{
-			LOG.info("All events are disabled.");
+			ThreadPoolManager.getInstance().scheduleGeneral(Arena2x2.getInstance(), 0);
 		}
+		
+		if (Config.ARENA_EVENT_ENABLED_4X4)
+		{
+			ThreadPoolManager.getInstance().scheduleGeneral(Arena4x4.getInstance(), 0);
+		}
+		
+		if (Config.ARENA_EVENT_ENABLED_9X9)
+		{
+			ThreadPoolManager.getInstance().scheduleGeneral(Arena9x9.getInstance(), 0);
+		}
+		
+		Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());
+		
 		Util.printSection("Offline trade");
 		if ((Config.OFFLINE_TRADE_ENABLE || Config.OFFLINE_CRAFT_ENABLE) && Config.RESTORE_OFFLINERS)
 		{
 			OfflineTradeTable.restoreOfflineTraders();
 		}
 		
-		Util.printSection("Info");
-		LOG.info("OS: " + Util.getOSName() + " " + Util.getOSVersion() + " " + Util.getOSArch());
-		LOG.info("CPU's: " + Util.getAvailableProcessors());
-		LOG.info("Free memory " + Memory.getFreeMemory() + " MB of " + Memory.getTotalMemory() + " MB");
-		LOG.info("Used memory: " + Memory.getUsedMemory() + " MB");
+		Util.printSection("System");
+		LOG.info("OS: " + Util.getOSName() + " (" + Util.getOSVersion() + ") " + Util.getOSArch());
+		LOG.info("CPU: " + Util.getAvailableProcessors());
+		LOG.info("Memory: " + Memory.getUsedMemory() + "/" + Memory.getTotalMemory() + " MB");
 		
 		if (Config.ALLOW_PHANTOM_PLAYERS)
 		{
-			Util.printSection("Phantom system.");
+			Util.printSection("Phantom system");
 			phantomPlayers.init();
 		}
 		
-		Util.printSection("Spawnlist");
-		if (!Config.ALT_DEV_NO_SPAWNS)
-		{
-			SpawnTable.getInstance();
-			LOG.info("Spawnlist loaded.");
-		}
-		else
-		{
-			LOG.info("Spawnlist disabled.");
-		}
-		
 		KnownListUpdateTaskManager.getInstance();
+		
+		if (Config.ALLOW_RANDOM_PVP_ZONE)
+		{
+			RandomZoneTaskManager.getInstance();
+		}
 		
 		if (Config.DEADLOCK_DETECTOR)
 		{
@@ -626,44 +675,6 @@ public class GameServer
 			
 			LOG.error("Failed to open server socket. Reason: ", e);
 			System.exit(1);
-		}
-	}
-	
-	public static void main(String[] args) throws Exception
-	{
-		ServerType.serverMode = ServerType.MODE_GAMESERVER;
-		
-		final File logFolderBase = new File(LOG_FOLDER);
-		logFolderBase.mkdir();
-		
-		new File("log/game").mkdirs();
-		
-		try (InputStream is = new FileInputStream(new File(ConfigLoader.LOG_CONF_FILE)))
-		{
-			LogManager.getLogManager().readConfiguration(is);
-		}
-		
-		Config.load();
-		
-		if (PSystem.check())
-		{
-			return;
-		}
-		
-		if (Config.L2JGUARD_PROTECTION)
-		{
-			Util.printSection("L2JGuard");
-			Protection.Init();
-		}
-		
-		L2DatabaseFactory.getInstance();
-		
-		gameServer = new GameServer();
-		
-		if (Config.IS_TELNET_ENABLED)
-		{
-			Util.printSection("Telnet");
-			new Status(ServerType.serverMode).start();
 		}
 	}
 	

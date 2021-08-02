@@ -7,7 +7,6 @@ import l2jorion.game.skills.Env;
 
 public class EffectGrow extends L2Effect
 {
-	
 	public EffectGrow(final Env env, final EffectTemplate template)
 	{
 		super(env, template);

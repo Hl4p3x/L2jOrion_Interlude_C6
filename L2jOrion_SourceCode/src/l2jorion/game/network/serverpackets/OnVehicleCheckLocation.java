@@ -22,9 +22,6 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2BoatInstance;
 
-/**
- * @author Maktakien
- */
 public class OnVehicleCheckLocation extends L2GameServerPacket
 {
 	private final L2BoatInstance _boat;
@@ -46,10 +43,6 @@ public class OnVehicleCheckLocation extends L2GameServerPacket
 		_z = z;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#writeImpl()
-	 */
 	@Override
 	protected void writeImpl()
 	{
@@ -62,14 +55,9 @@ public class OnVehicleCheckLocation extends L2GameServerPacket
 		writeD(_boat.getPosition().getHeading());
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.BasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

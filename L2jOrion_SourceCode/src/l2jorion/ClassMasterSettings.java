@@ -89,10 +89,14 @@ public class ClassMasterSettings
 	public boolean isAllowed(final int job)
 	{
 		if (_allowedClassChange == null)
+		{
 			return false;
+		}
 		
 		if (_allowedClassChange.containsKey(job))
+		{
 			return _allowedClassChange.get(job);
+		}
 		
 		return false;
 	}
@@ -100,7 +104,9 @@ public class ClassMasterSettings
 	public FastMap<Integer, Integer> getRewardItems(final int job)
 	{
 		if (_rewardItems.containsKey(job))
+		{
 			return _rewardItems.get(job);
+		}
 		
 		return null;
 	}
@@ -108,7 +114,9 @@ public class ClassMasterSettings
 	public FastMap<Integer, Integer> getRequireItems(final int job)
 	{
 		if (_claimItems.containsKey(job))
+		{
 			return _claimItems.get(job);
+		}
 		
 		return null;
 	}

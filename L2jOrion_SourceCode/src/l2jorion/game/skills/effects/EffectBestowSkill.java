@@ -21,9 +21,6 @@ import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.skills.Env;
 
-/**
- * @author kombat
- */
 final class EffectBestowSkill extends L2Effect
 {
 	public EffectBestowSkill(final Env env, final EffectTemplate template)
@@ -31,18 +28,12 @@ final class EffectBestowSkill extends L2Effect
 		super(env, template);
 	}
 	
-	/**
-	 * @see l2jorion.game.model.L2Effect#getEffectType()
-	 */
 	@Override
 	public EffectType getEffectType()
 	{
 		return EffectType.BUFF;
 	}
 	
-	/**
-	 * @see l2jorion.game.model.L2Effect#onStart()
-	 */
 	@Override
 	public void onStart()
 	{
@@ -53,18 +44,12 @@ final class EffectBestowSkill extends L2Effect
 		}
 	}
 	
-	/**
-	 * @see l2jorion.game.model.L2Effect#onExit()
-	 */
 	@Override
 	public void onExit()
 	{
 		getEffected().removeSkill(getSkill().getTriggeredId());
 	}
 	
-	/**
-	 * @see l2jorion.game.model.L2Effect#onActionTime()
-	 */
 	@Override
 	public boolean onActionTime()
 	{

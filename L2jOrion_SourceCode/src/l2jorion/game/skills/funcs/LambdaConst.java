@@ -22,9 +22,6 @@ package l2jorion.game.skills.funcs;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public final class LambdaConst extends Lambda
 {
 	

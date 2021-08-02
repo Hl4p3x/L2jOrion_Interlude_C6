@@ -16,9 +16,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
@@ -27,14 +24,18 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-@SuppressWarnings("unused")
 public final class Action extends L2GameClientPacket
 {
 	private static Logger LOG = LoggerFactory.getLogger(Action.class);
 	private int _objectId;
+	@SuppressWarnings("unused")
 	private int _originX;
+	@SuppressWarnings("unused")
 	private int _originY;
+	@SuppressWarnings("unused")
 	private int _originZ;
 	private int _actionId;
 	
@@ -52,13 +53,17 @@ public final class Action extends L2GameClientPacket
 	protected void runImpl()
 	{
 		if (Config.DEBUG)
+		{
 			LOG.debug("DEBUG " + getType() + ": ActionId: " + _actionId + " , ObjectID: " + _objectId);
+		}
 		
 		// Get the current L2PcInstance of the player
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		if (activeChar.inObserverMode())
 		{
@@ -70,9 +75,13 @@ public final class Action extends L2GameClientPacket
 		final L2Object obj;
 		
 		if (activeChar.getTargetId() == _objectId)
+		{
 			obj = activeChar.getTarget();
+		}
 		else
+		{
 			obj = L2World.getInstance().findObject(_objectId);
+		}
 		
 		// If object requested does not exist
 		// pressing e.g. pickup many times quickly would get you here
@@ -81,6 +90,7 @@ public final class Action extends L2GameClientPacket
 			getClient().sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		if (activeChar.isSubmitingPin())
 		{
 			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
@@ -96,18 +106,24 @@ public final class Action extends L2GameClientPacket
 		}
 		
 		// Only GMs can directly interact with invisible characters
-		if (obj instanceof L2PcInstance && (((L2PcInstance) obj).getAppearance().getInvisible()) && !activeChar.isGM())
+		if (obj instanceof L2PcInstance)
 		{
-			getClient().sendPacket(ActionFailed.STATIC_PACKET);
-			return;
+			L2PcInstance player = (L2PcInstance) obj;
+			if (player.getAppearance().getInvisible() && !activeChar.isGM() || player.isInArenaEvent() && !activeChar.isInArenaEvent() || !player.isInArenaEvent() && activeChar.isInArenaEvent())
+			{
+				getClient().sendPacket(ActionFailed.STATIC_PACKET);
+				return;
+			}
 		}
 		
 		// reset old Moving task
 		if (activeChar.isMovingTaskDefined())
+		{
 			activeChar.setMovingTaskDefined(false);
+		}
 		
 		// Check if the target is valid, if the player haven't a shop or isn't the requester of a transaction (ex : FriendInvite, JoinAlly, JoinParty...)
-		if (activeChar.getPrivateStoreType() == 0/* && activeChar.getActiveRequester() == null */)
+		if (activeChar.getPrivateStoreType() == 0)
 		{
 			switch (_actionId)
 			{
@@ -116,9 +132,13 @@ public final class Action extends L2GameClientPacket
 					break;
 				case 1:
 					if (obj instanceof L2Character && ((L2Character) obj).isAlikeDead())
+					{
 						obj.onAction(activeChar);
+					}
 					else
+					{
 						obj.onActionShift(getClient());
+					}
 					break;
 				default:
 					// Invalid action detected (probably client cheating), LOGGER this
@@ -128,7 +148,9 @@ public final class Action extends L2GameClientPacket
 			}
 		}
 		else
+		{
 			getClient().sendPacket(ActionFailed.STATIC_PACKET); // Actions prohibited when in trade
+		}
 	}
 	
 	@Override

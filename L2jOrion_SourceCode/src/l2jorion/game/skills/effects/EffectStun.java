@@ -23,9 +23,6 @@ package l2jorion.game.skills.effects;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 final class EffectStun extends L2Effect
 {
 	
@@ -40,15 +37,15 @@ final class EffectStun extends L2Effect
 		return EffectType.STUN;
 	}
 	
-	/** Notify started */
 	@Override
 	public void onStart()
 	{
 		if (!getEffected().isRaid())
+		{
 			getEffected().startStunning();
+		}
 	}
 	
-	/** Notify exited */
 	@Override
 	public void onExit()
 	{
@@ -58,7 +55,6 @@ final class EffectStun extends L2Effect
 	@Override
 	public boolean onActionTime()
 	{
-		// just stop this effect
 		return false;
 	}
 }

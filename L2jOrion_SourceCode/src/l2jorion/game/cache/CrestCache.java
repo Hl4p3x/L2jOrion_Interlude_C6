@@ -28,8 +28,8 @@ import java.io.RandomAccessFile;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class CrestCache
 {
@@ -91,7 +91,7 @@ public class CrestCache
 			}
 			catch (Exception e)
 			{
-				LOG.warn("Crest Cache: Error loading crest file: " + file.getName());
+				LOG.warn("CrestCache: Error loading crest file: " + file.getName());
 				continue;
 			}
 			
@@ -100,13 +100,15 @@ public class CrestCache
 			for (CrestType type : CrestType.values())
 			{
 				if (!fileName.startsWith(type._prefix))
+				{
 					continue;
+				}
 				
 				_crests.put(Integer.valueOf(fileName.substring(type._prefix.length(), fileName.length() - 4)), data);
 			}
 		}
 		
-		LOG.info("Crest Cache: Loaded " + _crests.size() + " crest files.");
+		LOG.info("CrestCache: Loaded " + _crests.size() + " crest files");
 	}
 	
 	public final byte[] getCrest(CrestType type, int id)

@@ -42,13 +42,17 @@ public final class TradeDone extends L2GameClientPacket
 	{
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
+		
 		if (player.isSubmitingPin())
 		{
 			player.sendMessage("Unable to do any action while PIN is not submitted");
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		if (!getClient().getFloodProtectors().getTransaction().tryPerformAction("trade"))
 		{
 			player.sendMessage("You're trading too fast.");
@@ -63,10 +67,14 @@ public final class TradeDone extends L2GameClientPacket
 		}
 		
 		if (trade.getOwner().getActiveEnchantItem() != null || trade.getPartner().getActiveEnchantItem() != null)
+		{
 			return;
+		}
 		
 		if (trade.isLocked())
+		{
 			return;
+		}
 		
 		// abort cast anyway
 		player.abortCast(true);
@@ -81,21 +89,20 @@ public final class TradeDone extends L2GameClientPacket
 		{
 			if (trade.getPartner() == null || L2World.getInstance().findObject(trade.getPartner().getObjectId()) == null)
 			{
-				// Trade partner not found, cancel trade
 				player.cancelActiveTrade();
 				SystemMessage msg = new SystemMessage(SystemMessageId.TARGET_IS_NOT_FOUND_IN_THE_GAME);
 				player.sendPacket(msg);
-				msg = null;
 				return;
 			}
 			
 			if (!player.getAccessLevel().allowTransaction())
 			{
-				player.sendMessage("Unsufficient privileges.");
+				player.sendPacket(SystemMessageId.YOU_ARE_NOT_AUTHORIZED_TO_DO_THAT);
 				player.cancelActiveTrade();
 				player.sendPacket(ActionFailed.STATIC_PACKET);
 				return;
 			}
+			
 			trade.confirm();
 		}
 		else

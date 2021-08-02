@@ -31,10 +31,6 @@ import l2jorion.game.skills.Env;
 import l2jorion.game.skills.funcs.Func;
 import l2jorion.game.skills.funcs.FuncTemplate;
 
-/**
- * This class is dedicated to the management of armors.
- * @version $Revision: 1.2.2.1.2.6 $ $Date: 2005/03/27 15:30:10 $
- */
 public final class L2Armor extends L2Item
 {
 	private final int _avoidModifier;
@@ -44,15 +40,6 @@ public final class L2Armor extends L2Item
 	private final int _hpBonus;
 	private L2Skill _itemSkill = null; // for passive skill
 	
-	/**
-	 * Constructor for Armor.<BR>
-	 * <BR>
-	 * <U><I>Variables filled :</I></U><BR>
-	 * <LI>_avoidModifier</LI> <LI>_pDef & _mDef</LI> <LI>_mpBonus & _hpBonus</LI>
-	 * @param type : L2ArmorType designating the type of armor
-	 * @param set : StatsSet designating the set of couples (key,value) caracterizing the armor
-	 * @see L2Item constructor
-	 */
 	public L2Armor(final L2ArmorType type, final StatsSet set)
 	{
 		super(type, set);

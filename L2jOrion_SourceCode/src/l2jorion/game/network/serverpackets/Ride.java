@@ -23,6 +23,7 @@ package l2jorion.game.network.serverpackets;
 public class Ride extends L2GameServerPacket
 {
 	private static final String _S__86_Ride = "[S] 86 Ride";
+	
 	public static final int ACTION_MOUNT = 1;
 	public static final int ACTION_DISMOUNT = 0;
 	private final int _id;
@@ -37,8 +38,8 @@ public class Ride extends L2GameServerPacket
 		_rideClassID = rideClassId + 1000000; // npcID
 		
 		if (rideClassId == 12526 || // wind strider
-		rideClassId == 12527 || // star strider
-		rideClassId == 12528) // twilight strider
+			rideClassId == 12527 || // star strider
+			rideClassId == 12528) // twilight strider
 		{
 			_rideType = 1; // 1 for Strider ; 2 for wyvern
 		}
@@ -70,10 +71,6 @@ public class Ride extends L2GameServerPacket
 		writeD(_rideClassID);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

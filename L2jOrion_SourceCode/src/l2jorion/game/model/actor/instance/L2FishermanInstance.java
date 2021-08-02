@@ -22,9 +22,6 @@ package l2jorion.game.model.actor.instance;
 
 import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.text.TextBuilder;
 import l2jorion.Config;
 import l2jorion.game.controllers.TradeController;
@@ -41,6 +38,8 @@ import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.SellList;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class L2FishermanInstance extends L2FolkInstance
 {

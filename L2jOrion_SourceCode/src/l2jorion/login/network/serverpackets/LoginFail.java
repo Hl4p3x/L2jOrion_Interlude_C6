@@ -20,9 +20,6 @@
  */
 package l2jorion.login.network.serverpackets;
 
-/**
- * Fromat: d d: the failure reason
- */
 public final class LoginFail extends L2LoginServerPacket
 {
 	public static enum LoginFailReason

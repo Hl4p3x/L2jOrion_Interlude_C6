@@ -25,10 +25,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Stack;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
@@ -111,7 +110,9 @@ public class StackIDFactory extends IdFactory
 		// int hole = id - _curOID;
 		int hole = id - _tempOID;
 		if (hole > N - idx)
+		{
 			hole = N - idx;
+		}
 		for (int i = 1; i <= hole; i++)
 		{
 			// LOG.info("Free ID added " + (_tempOID));
@@ -120,7 +121,9 @@ public class StackIDFactory extends IdFactory
 			// _curOID++;
 		}
 		if (hole < N - idx)
+		{
 			_tempOID++;
+		}
 		return N - hole;
 	}
 	
@@ -134,7 +137,9 @@ public class StackIDFactory extends IdFactory
 	{
 		int id;
 		if (!_freeOIDStack.empty())
+		{
 			id = _freeOIDStack.pop();
+		}
 		else
 		{
 			id = _curOID;
@@ -143,10 +148,6 @@ public class StackIDFactory extends IdFactory
 		return id;
 	}
 	
-	/**
-	 * return a used Object ID back to the pool
-	 * @param id
-	 */
 	@Override
 	public synchronized void releaseId(final int id)
 	{

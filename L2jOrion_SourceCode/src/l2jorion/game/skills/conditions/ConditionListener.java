@@ -20,11 +20,7 @@
  */
 package l2jorion.game.skills.conditions;
 
-/**
- * @author mkizub
- */
 public interface ConditionListener
 {
-	
 	public void notifyChanged();
 }

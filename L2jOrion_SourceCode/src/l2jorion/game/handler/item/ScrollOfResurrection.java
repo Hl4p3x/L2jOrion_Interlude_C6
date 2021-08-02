@@ -21,6 +21,7 @@
 package l2jorion.game.handler.item;
 
 import l2jorion.game.datatables.SkillTable;
+import l2jorion.game.geo.GeoData;
 import l2jorion.game.handler.IItemHandler;
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.model.L2Character;
@@ -31,6 +32,7 @@ import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.network.SystemMessageId;
+import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
 public class ScrollOfResurrection implements IItemHandler
@@ -63,7 +65,7 @@ public class ScrollOfResurrection implements IItemHandler
 		
 		if (activeChar.isInOlympiadMode())
 		{
-			activeChar.sendMessage("This Item Cannot Be Used On Olympiad Games.");
+			activeChar.sendMessage("This item cannot be used on Olympiad Games.");
 		}
 		
 		if (activeChar.isMovementDisabled())
@@ -81,7 +83,13 @@ public class ScrollOfResurrection implements IItemHandler
 			return;
 		}
 		
-
+		if (!GeoData.getInstance().canSeeTarget(activeChar, target))
+		{
+			activeChar.sendPacket(new SystemMessage(SystemMessageId.CANT_SEE_TARGET));
+			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
+			return;
+		}
+		
 		L2PcInstance targetPlayer = null;
 		if (target instanceof L2PcInstance)
 		{
@@ -114,8 +122,15 @@ public class ScrollOfResurrection implements IItemHandler
 			
 			if (castle != null && castle.getSiege().getIsInProgress())
 			{
-				condGood = false;
-				activeChar.sendPacket(new SystemMessage(SystemMessageId.CANNOT_BE_RESURRECTED_DURING_SIEGE));
+				if (castle.getSiege().getFlagCount(activeChar.getClan()) > 0 || castle.getSiege().getTowerCount(activeChar.getClan()) > 0)
+				{
+					condGood = true;
+				}
+				else
+				{
+					condGood = false;
+					activeChar.sendPacket(new SystemMessage(SystemMessageId.CANNOT_BE_RESURRECTED_DURING_SIEGE));
+				}
 			}
 			
 			if (targetPet != null)
@@ -135,11 +150,6 @@ public class ScrollOfResurrection implements IItemHandler
 						condGood = false;
 					}
 				}
-				/*else if (!petScroll)
-				{
-					condGood = false;
-					activeChar.sendMessage("You do not have the correct scroll");
-				}*/
 			}
 			else if (targetPlayer != null)
 			{
@@ -195,7 +205,9 @@ public class ScrollOfResurrection implements IItemHandler
 					
 					// Consume the scroll
 					if (!activeChar.destroyItem("Consume", item.getObjectId(), 1, null, false))
+					{
 						return;
+					}
 					
 					final SystemMessage sm = new SystemMessage(SystemMessageId.S1_DISAPPEARED);
 					sm.addItemName(itemId);

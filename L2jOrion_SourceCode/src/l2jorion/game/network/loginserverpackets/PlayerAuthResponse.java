@@ -20,18 +20,12 @@
  */
 package l2jorion.game.network.loginserverpackets;
 
-/**
- * @author -Wooden-
- */
 public class PlayerAuthResponse extends LoginServerBasePacket
 {
 	
 	private final String _account;
 	private final boolean _authed;
 	
-	/**
-	 * @param decrypt
-	 */
 	public PlayerAuthResponse(final byte[] decrypt)
 	{
 		super(decrypt);
@@ -40,17 +34,11 @@ public class PlayerAuthResponse extends LoginServerBasePacket
 		_authed = readC() == 0 ? false : true;
 	}
 	
-	/**
-	 * @return Returns the account.
-	 */
 	public String getAccount()
 	{
 		return _account;
 	}
 	
-	/**
-	 * @return Returns the authed state.
-	 */
 	public boolean isAuthed()
 	{
 		return _authed;

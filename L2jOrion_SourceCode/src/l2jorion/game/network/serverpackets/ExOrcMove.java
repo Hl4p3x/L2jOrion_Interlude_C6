@@ -20,13 +20,8 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Format: (ch).
- * @author -Wooden-
- */
 public class ExOrcMove extends L2GameServerPacket
 {
-	/** The Constant _S__FE_44_EXORCMOVE. */
 	private static final String _S__FE_44_EXORCMOVE = "[S] FE:44 ExOrcMove";
 	
 	@Override

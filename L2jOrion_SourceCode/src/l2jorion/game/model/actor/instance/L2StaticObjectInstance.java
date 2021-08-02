@@ -23,9 +23,6 @@
  */
 package l2jorion.game.model.actor.instance;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.cache.HtmCache;
 import l2jorion.game.model.L2Character;
@@ -36,38 +33,25 @@ import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.ShowTownMap;
 import l2jorion.game.network.serverpackets.StaticObject;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * GODSON ROX!.
- */
 public class L2StaticObjectInstance extends L2Object
 {
-	
-	/** The LOG. */
 	private static Logger LOG = LoggerFactory.getLogger(L2StaticObjectInstance.class);
 	
-	/** The interaction distance of the L2StaticObjectInstance. */
 	public static final int INTERACTION_DISTANCE = 150;
 	
-	/** The _static object id. */
 	private int _staticObjectId;
 	
-	/** The _type. */
 	private int _type = -1; // 0 - map signs, 1 - throne , 2 - arena signs
 	
-	/** The _x. */
 	private int _x;
 	
-	/** The _y. */
 	private int _y;
 	
-	/** The _texture. */
 	private String _texture;
 	
-	/**
-	 * Gets the static object id.
-	 * @return Returns the StaticObjectId.
-	 */
 	public int getStaticObjectId()
 	{
 		return _staticObjectId;
@@ -152,10 +136,9 @@ public class L2StaticObjectInstance extends L2Object
 		{
 			LOG.info("L2StaticObjectInstance: StaticObject with invalid type! StaticObjectId: " + getStaticObjectId());
 		}
-		// Check if the L2PcInstance already target the L2NpcInstance
+		
 		if (this != player.getTarget())
 		{
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
 			player.sendPacket(new MyTargetSelected(getObjectId(), 0));
 		}
@@ -163,15 +146,11 @@ public class L2StaticObjectInstance extends L2Object
 		{
 			MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
 			player.sendPacket(my);
-			my = null;
 			
-			// Calculate the distance between the L2PcInstance and the L2NpcInstance
 			if (!player.isInsideRadius(this, INTERACTION_DISTANCE, false, false))
 			{
-				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 				
-				// Send a Server->Client packet ActionFailed (target is out of interaction range) to the L2PcInstance player
 				player.sendPacket(ActionFailed.STATIC_PACKET);
 			}
 			else
@@ -193,25 +172,17 @@ public class L2StaticObjectInstance extends L2Object
 					
 					player.sendPacket(html);
 					player.sendPacket(ActionFailed.STATIC_PACKET);
-					html = null;
-					filename = null;
-					content = null;
 				}
 				else if (_type == 0)
 				{
 					player.sendPacket(new ShowTownMap(_texture, getMapX(), getMapY()));
 				}
 				
-				// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
 				player.sendPacket(ActionFailed.STATIC_PACKET);
 			}
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Object#isAttackable()
-	 */
 	@Override
 	public boolean isAutoAttackable(final L2Character attacker)
 	{

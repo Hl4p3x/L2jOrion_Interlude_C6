@@ -24,7 +24,6 @@ import java.util.Map;
 
 import javolution.util.FastMap;
 import l2jorion.Config;
-import l2jorion.game.GameServer;
 import l2jorion.game.handler.user.ChannelDelete;
 import l2jorion.game.handler.user.ChannelLeave;
 import l2jorion.game.handler.user.ChannelListUpdate;
@@ -39,17 +38,12 @@ import l2jorion.game.handler.user.OlympiadStat;
 import l2jorion.game.handler.user.PartyInfo;
 import l2jorion.game.handler.user.SiegeStatus;
 import l2jorion.game.handler.user.Time;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * This class ...
- * @version $Revision: 1.1.2.1.2.5 $ $Date: 2005/03/27 15:30:09 $
- */
 public class UserCommandHandler
 {
-	private static final Logger LOG = LoggerFactory.getLogger(GameServer.class);
+	private static final Logger LOG = LoggerFactory.getLogger(UserCommandHandler.class);
 	
 	private static UserCommandHandler _instance;
 	
@@ -81,9 +75,13 @@ public class UserCommandHandler
 		registerUserCommandHandler(new Mount());
 		registerUserCommandHandler(new PartyInfo());
 		registerUserCommandHandler(new SiegeStatus());
+		
 		if (Config.OFFLINE_TRADE_ENABLE && Config.OFFLINE_COMMAND1)
+		{
 			registerUserCommandHandler(new OfflineShop());
-		LOG.info("UserCommandHandler: Loaded " + _datatable.size() + " handlers.");
+		}
+		
+		LOG.info("UserCommandHandler: Loaded " + _datatable.size() + " handlers");
 	}
 	
 	public void registerUserCommandHandler(final IUserCommandHandler handler)
@@ -92,28 +90,15 @@ public class UserCommandHandler
 		
 		for (final int id : ids)
 		{
-			if (Config.DEBUG)
-			{
-				LOG.debug("Adding handler for user command " + id);
-			}
-			_datatable.put(new Integer(id), handler);
+			_datatable.put(Integer.valueOf(id), handler);
 		}
-		ids = null;
 	}
 	
 	public IUserCommandHandler getUserCommandHandler(final int userCommand)
 	{
-		if (Config.DEBUG)
-		{
-			LOG.debug("getting handler for user command: " + userCommand);
-		}
-		
-		return _datatable.get(new Integer(userCommand));
+		return _datatable.get(Integer.valueOf(userCommand));
 	}
 	
-	/**
-	 * @return
-	 */
 	public int size()
 	{
 		return _datatable.size();

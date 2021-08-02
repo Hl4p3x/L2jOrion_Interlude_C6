@@ -28,10 +28,6 @@ import l2jorion.game.network.serverpackets.ExConfirmVariationRefiner;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 
-/**
- * Fromat(ch) dd
- * @author -Wooden-
- */
 public class RequestConfirmRefinerItem extends L2GameClientPacket
 {
 	private static final int GEMSTONE_D = 2130;
@@ -51,22 +47,26 @@ public class RequestConfirmRefinerItem extends L2GameClientPacket
 	protected void runImpl()
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
-
+		
 		if (activeChar == null)
+		{
 			return;
-
+		}
+		
 		if (!getClient().getFloodProtectors().getUseAugItem().tryPerformAction("use augitem"))
 		{
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
+		
 		final L2ItemInstance targetItem = (L2ItemInstance) L2World.getInstance().findObject(_targetItemObjId);
 		final L2ItemInstance refinerItem = (L2ItemInstance) L2World.getInstance().findObject(_refinerItemObjId);
 		
 		if (targetItem == null || refinerItem == null)
+		{
 			return;
-
+		}
+		
 		final int itemGrade = targetItem.getItem().getItemGrade();
 		final int refinerItemId = refinerItem.getItem().getItemId();
 		
@@ -79,6 +79,7 @@ public class RequestConfirmRefinerItem extends L2GameClientPacket
 		
 		int gemstoneCount = 0;
 		int gemstoneItemId = 0;
+		
 		@SuppressWarnings("unused")
 		final int lifeStoneLevel = getLifeStoneLevel(refinerItemId);
 		final SystemMessage sm = new SystemMessage(SystemMessageId.REQUIRES_S1_S2);
@@ -119,14 +120,20 @@ public class RequestConfirmRefinerItem extends L2GameClientPacket
 	{
 		itemId -= 8723;
 		if (itemId < 10)
+		{
 			return 0; // normal grade
-			
+		}
+		
 		if (itemId < 20)
+		{
 			return 1; // mid grade
-			
+		}
+		
 		if (itemId < 30)
+		{
 			return 2; // high grade
-			
+		}
+		
 		return 3; // top grade
 	}
 	

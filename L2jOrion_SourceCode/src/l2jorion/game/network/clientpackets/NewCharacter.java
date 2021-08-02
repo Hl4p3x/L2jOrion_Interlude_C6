@@ -16,10 +16,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import l2jorion.Config;
 import l2jorion.game.datatables.sql.CharTemplateTable;
 import l2jorion.game.model.base.ClassId;
 import l2jorion.game.network.serverpackets.CharTemplates;
@@ -27,8 +23,6 @@ import l2jorion.game.templates.L2PcTemplate;
 
 public final class NewCharacter extends L2GameClientPacket
 {
-	private static Logger LOG = LoggerFactory.getLogger(NewCharacter.class);
-	
 	@Override
 	protected void readImpl()
 	{
@@ -37,9 +31,6 @@ public final class NewCharacter extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		if (Config.DEBUG)
-			LOG.debug(getType() + ": Create New Char");
-		
 		final CharTemplates ct = new CharTemplates();
 		
 		L2PcTemplate template = CharTemplateTable.getInstance().getTemplate(0);

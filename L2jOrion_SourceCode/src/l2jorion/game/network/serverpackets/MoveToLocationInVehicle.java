@@ -20,19 +20,17 @@
  */
 package l2jorion.game.network.serverpackets;
 
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.util.Point3D;
-/**
- * @author Damon
- */
+
 public class MoveToLocationInVehicle extends L2GameServerPacket
 {
 	private final int _charObjId;
 	private final int _boatId;
-	private final Point3D _destination;
-	private final Point3D _origin;
+	private final Location _destination;
+	private final Location _origin;
 	
-	public MoveToLocationInVehicle(L2PcInstance player, Point3D pos, Point3D originPos)
+	public MoveToLocationInVehicle(L2PcInstance player, Location pos, Location originPos)
 	{
 		_charObjId = player.getObjectId();
 		_boatId = player.getBoat().getObjectId();

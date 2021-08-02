@@ -23,6 +23,7 @@ package l2jorion.game.network.serverpackets;
 public class TutorialShowHtml extends L2GameServerPacket
 {
 	private static final String _S__A0_TUTORIALSHOWHTML = "[S] a0 TutorialShowHtml";
+	
 	private final String _html;
 	
 	public TutorialShowHtml(final String html)

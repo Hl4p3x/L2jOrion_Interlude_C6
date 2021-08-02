@@ -21,16 +21,16 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.managers.BoatManager;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2BoatInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.GetOnVehicle;
-import l2jorion.util.Point3D;
 
 public final class RequestGetOnVehicle extends L2GameClientPacket
 {
 	private int _boatId;
-	private Point3D _pos;
+	private Location _pos;
 	
 	@Override
 	protected void readImpl()
@@ -40,7 +40,7 @@ public final class RequestGetOnVehicle extends L2GameClientPacket
 		x = readD();
 		y = readD();
 		z = readD();
-		_pos = new Point3D(x, y, z);
+		_pos = new Location(x, y, z);
 	}
 	
 	@Override

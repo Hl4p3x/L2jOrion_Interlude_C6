@@ -24,9 +24,6 @@ import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.skills.Env;
 
-/**
- * @author earendil
- */
 final class EffectNoblesseBless extends L2Effect
 {
 	
@@ -41,7 +38,6 @@ final class EffectNoblesseBless extends L2Effect
 		return EffectType.NOBLESSE_BLESSING;
 	}
 	
-	/** Notify started */
 	@Override
 	public void onStart()
 	{
@@ -51,7 +47,6 @@ final class EffectNoblesseBless extends L2Effect
 		}
 	}
 	
-	/** Notify exited */
 	@Override
 	public void onExit()
 	{
@@ -64,7 +59,6 @@ final class EffectNoblesseBless extends L2Effect
 	@Override
 	public boolean onActionTime()
 	{
-		// just stop this effect
 		return false;
 	}
 }

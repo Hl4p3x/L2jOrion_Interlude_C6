@@ -21,19 +21,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import l2jorion.game.datatables.sql.CharNameTable;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
 public class BlockList
 {
-	private static Logger LOG = LoggerFactory.getLogger(BlockList.class.getName());
+	private static Logger LOG = LoggerFactory.getLogger(BlockList.class);
+	
 	private static Map<Integer, List<Integer>> _offlineList = new HashMap<>();
 	
 	private final L2PcInstance _owner;
@@ -44,7 +45,9 @@ public class BlockList
 		_owner = owner;
 		_blockList = _offlineList.get(owner.getObjectId());
 		if (_blockList == null)
+		{
 			_blockList = loadList(_owner.getObjectId());
+		}
 	}
 	
 	private synchronized void addToBlockList(int target)
@@ -80,7 +83,9 @@ public class BlockList
 			{
 				friendId = rset.getInt("friend_id");
 				if (friendId == ObjId)
+				{
 					continue;
+				}
 				
 				list.add(friendId);
 			}
@@ -176,7 +181,9 @@ public class BlockList
 	public static void addToBlockList(L2PcInstance listOwner, int targetId)
 	{
 		if (listOwner == null)
+		{
 			return;
+		}
 		
 		String charName = CharNameTable.getInstance().getNameById(targetId);
 		
@@ -213,7 +220,9 @@ public class BlockList
 	public static void removeFromBlockList(L2PcInstance listOwner, int targetId)
 	{
 		if (listOwner == null)
+		{
 			return;
+		}
 		
 		SystemMessage sm;
 		String charName = CharNameTable.getInstance().getNameById(targetId);
@@ -253,25 +262,26 @@ public class BlockList
 		listOwner.sendPacket(SystemMessageId.BLOCK_LIST_HEADER);
 		
 		for (int playerId : listOwner.getBlockList().getBlockList())
+		{
 			listOwner.sendMessage((i++) + ". " + CharNameTable.getInstance().getNameById(playerId));
+		}
 		
 		listOwner.sendPacket(SystemMessageId.FRIEND_LIST_FOOT);
 	}
 	
-	/**
-	 * @param ownerId object id of owner block list
-	 * @param targetId object id of potential blocked player
-	 * @return true if blocked
-	 */
 	public static boolean isInBlockList(int ownerId, int targetId)
 	{
 		L2PcInstance player = L2World.getInstance().getPlayer(ownerId);
 		
 		if (player != null)
+		{
 			return BlockList.isBlocked(player, targetId);
+		}
 		
 		if (!_offlineList.containsKey(ownerId))
+		{
 			_offlineList.put(ownerId, loadList(ownerId));
+		}
 		
 		return _offlineList.get(ownerId).contains(targetId);
 	}

@@ -20,27 +20,15 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * sample
- * <p>
- * 7d c1 b2 e0 4a 00 00 00 00
- * <p>
- * format cdd
- * @version $Revision: 1.1.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class AskJoinFriend extends L2GameServerPacket
 {
 	private static final String _S__7d_ASKJoinFriend_0X7d = "[S] 7d AskJoinFriend 0x7d";
 	
 	private final String _requestorName;
 	
-	/**
-	 * @param requestorName
-	 */
 	public AskJoinFriend(final String requestorName)
 	{
 		_requestorName = requestorName;
-		// _itemDistribution = itemDistribution;
 	}
 	
 	@Override
@@ -51,10 +39,6 @@ public class AskJoinFriend extends L2GameServerPacket
 		writeD(0);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

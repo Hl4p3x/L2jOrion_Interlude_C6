@@ -99,6 +99,7 @@ class Quest (JQuest) :
             htmltext = "30329-11.htm"
             st.takeItems(COFFIN_ETERNAL_REST,1)
             st.giveItems(GAZE_OF_ABYSS,1)
+            st.addExpAndSp(16000,5650)
             st.set("cond","0")
             st.setState(COMPLETED)
             st.playSound("ItemSound.quest_finish")

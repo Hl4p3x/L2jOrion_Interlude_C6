@@ -20,9 +20,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.ClanWarehouse;
 import l2jorion.game.model.ItemContainer;
@@ -39,6 +36,8 @@ import l2jorion.game.network.serverpackets.ItemList;
 import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.powerpack.PowerPackConfig;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class SendWareHouseWithDrawList extends L2GameClientPacket
 {

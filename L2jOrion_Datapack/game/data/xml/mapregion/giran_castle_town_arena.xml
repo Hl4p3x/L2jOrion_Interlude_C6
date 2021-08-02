@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/MapRegion.xsd">
+	<!-- Giran Arena -->
+	<region name="giran_arena" town="Giran Arena" castle="3" locId="10" bbs="6">
+		<respawnPoint X="73907" Y="142629" Z="-3768" />
+	</region>
+</list>

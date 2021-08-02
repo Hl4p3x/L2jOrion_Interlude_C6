@@ -29,9 +29,8 @@ import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.templates.L2EtcItemType;
 import l2jorion.game.thread.ThreadPoolManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class ItemsAutoDestroy
 {
@@ -58,7 +57,6 @@ public class ItemsAutoDestroy
 	{
 		if (_instance == null)
 		{
-			LOG.info("Initializing ItemsAutoDestroy.");
 			_instance = new ItemsAutoDestroy();
 		}
 		return _instance;
@@ -72,13 +70,10 @@ public class ItemsAutoDestroy
 	
 	public synchronized void removeItems()
 	{
-		if (Config.DEBUG)
-		{
-			LOG.info("[ItemsAutoDestroy] : " + _items.size() + " items to check.");
-		}
-		
 		if (_items.isEmpty())
+		{
 			return;
+		}
 		
 		final long curtime = System.currentTimeMillis();
 		

@@ -21,9 +21,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.quest.QuestState;
 import l2jorion.game.network.serverpackets.TutorialCloseHtml;
 
-/**
- * @author ProGramMoS
- */
 public class RequestTutorialLinkHtml extends L2GameClientPacket
 {
 	private String _bypass;
@@ -47,9 +44,7 @@ public class RequestTutorialLinkHtml extends L2GameClientPacket
 			{
 				// not bot protection packet
 			}
-			
 		}
-		
 	}
 	
 	@Override
@@ -57,7 +52,9 @@ public class RequestTutorialLinkHtml extends L2GameClientPacket
 	{
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		
 		if (protector_packet)
 		{

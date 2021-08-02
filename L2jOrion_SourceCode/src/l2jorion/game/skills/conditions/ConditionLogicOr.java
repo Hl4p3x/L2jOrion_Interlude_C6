@@ -22,9 +22,6 @@ package l2jorion.game.skills.conditions;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public class ConditionLogicOr extends Condition
 {
 	
@@ -34,7 +31,9 @@ public class ConditionLogicOr extends Condition
 	public void add(final Condition condition)
 	{
 		if (condition == null)
+		{
 			return;
+		}
 		if (getListener() != null)
 		{
 			condition.setListener(this);
@@ -72,7 +71,9 @@ public class ConditionLogicOr extends Condition
 		for (final Condition c : conditions)
 		{
 			if (c.test(env))
+			{
 				return true;
+			}
 		}
 		return false;
 	}

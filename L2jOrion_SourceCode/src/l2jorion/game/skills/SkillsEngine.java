@@ -34,16 +34,11 @@ import l2jorion.game.templates.L2EtcItem;
 import l2jorion.game.templates.L2EtcItemType;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.L2Weapon;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author PrioGramMoS, L2jOrion
- */
 public class SkillsEngine
 {
-	
 	protected static final Logger LOG = LoggerFactory.getLogger(SkillsEngine.class);
 	
 	private static final SkillsEngine _instance = new SkillsEngine();
@@ -60,7 +55,6 @@ public class SkillsEngine
 	
 	private SkillsEngine()
 	{
-		// hashFiles("data/xml/etcitem", _etcitemFiles);
 		hashFiles("data/xml/armor", _armorFiles);
 		hashFiles("data/xml/weapon", _weaponFiles);
 		hashFiles("data/xml/skills", _skillFiles);
@@ -78,11 +72,14 @@ public class SkillsEngine
 		for (final File f : files)
 		{
 			if (f.getName().endsWith(".xml"))
+			{
 				if (!f.getName().startsWith("custom"))
 				{
 					hash.add(f);
 				}
+			}
 		}
+		
 		final File customfile = new File(Config.DATAPACK_ROOT, dirname + "/custom.xml");
 		if (customfile.exists())
 		{
@@ -97,6 +94,7 @@ public class SkillsEngine
 			LOG.warn("Skill file not found.");
 			return null;
 		}
+		
 		final DocumentSkill doc = new DocumentSkill(file);
 		doc.parse();
 		return doc.getSkills();
@@ -112,13 +110,14 @@ public class SkillsEngine
 			{
 				continue;
 			}
+			
 			for (final L2Skill skill : s)
 			{
 				allSkills.put(SkillTable.getSkillHashCode(skill), skill);
 				count++;
 			}
 		}
-		LOG.info("SkillsEngine: Loaded " + count + " Skill templates from XML files.");
+		LOG.info("SkillsEngine: Loaded " + count + " skill templates from XML files");
 	}
 	
 	public List<L2Armor> loadArmors(final Map<Integer, Item> armorData)

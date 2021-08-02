@@ -22,10 +22,6 @@ package l2jorion.game.skills.effects;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.skills.Env;
 
-/**
- * @author KidZor
- */
-
 public class EffectInterrupt extends L2Effect
 {
 	public EffectInterrupt(final Env env, final EffectTemplate template)

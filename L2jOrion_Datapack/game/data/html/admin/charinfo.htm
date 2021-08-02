@@ -1,30 +1,30 @@
 <html><body>
 <table width=280><tr>
-<td width=40><button value="Main" action="bypass -h admin_admin" width=40 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
-<td width=180><center><font color="00ff00">%name%</font> Information</center></td>
-<td width=40><button value="Back" action="bypass -h admin_show_characters 0" width=40 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
-</tr></table><br><br>
+<td width=40><button value="Main" action="bypass -h admin_admin" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td width=180><center><font color="00ff00">%name%</font></center></td>
+<td width=40><button value="Back" action="bypass -h admin_show_characters 0" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+</tr></table><br>
 <center>
 <table width=240>
 <tr>
-<td><button value="Go to" action="bypass -h admin_goto_char_menu %name%" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
-<td><button value="Recall" action="bypass -h admin_recall_char_menu %name%" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
-<td><button value="Skills" action="bypass -h admin_show_skills" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
-<td><button value="Edit" action="bypass -h admin_edit_character" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Go to" action="bypass -h admin_goto_char_menu %name%" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td><button value="Recall" action="bypass -h admin_recall_char_menu %name%" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td><button value="Skills" action="bypass -h admin_show_skills" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td><button value="Edit" action="bypass -h admin_edit_character" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
 </tr><tr>
-<td></td>
-<td><button value="Lv/Exp/Sp" action="bypass -h admin_add_exp_sp_to_character" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
-<td><button value="Class" action="bypass -h admin_setclass" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Buffs" action="bypass -h admin_getbuffs %name%" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td><button value="Lv/Exp/Sp" action="bypass -h admin_add_exp_sp_to_character" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td><button value="Class" action="bypass -h admin_setclass" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
 <td></td>
 </tr>
 </table>
 <br>
 <table width=240>
 <tr>
-<td>Reason:</td><td>Time:</td>
+<td>Reason/Message:</td><td>Time:</td>
 </tr>
 <tr>
-<td><multiedit var="reason" width=245 height=20></td><td><edit var="time" width=40 height=10></td>
+<td><multiedit var="reason" width=245 height=20></td><td><edit var="time" type="number" length="4" width=40 height=20></td>
 </tr></table>
 <table width=240>
 <tr>
@@ -35,15 +35,40 @@
 <td><button value="Kick" action="bypass -h admin_kick %name%" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
 </tr>
 </table>
+<table width=240>
+<tr>
+<td><button value="Chat [A]" action="bypass -h admin_send_message $reason" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Chat [A-R]" action="bypass -h admin_send_message2 $reason" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Chat [A-G]" action="bypass -h admin_send_message3 $reason" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td width=65 height=15></td>
+<td width=65 height=15></td>
+</tr>
+</table>
+<br>
+
+Items:
+<table width=240 align=center><tr>
+<td width=50>Give and put on (ID):</td>
+<td><edit var="itemid" width=40 height=10></td>
+<td><button value="Give" action="bypass -h admin_phantom_give_item $itemid" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr>
+</table>
+<table width=240>
+<tr>
+<td><button value="Karmian Set" action="bypass -h admin_phantom_give_cgrade_karmian" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Drake Set" action="bypass -h admin_phantom_give_cgrade_drake" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+<td><button value="Comp Set" action="bypass -h admin_phantom_give_cgrade_composite" width=55 height=15 back="sek.cbui94" fore="sek.cbui92"></td>
+</tr>
+</table>
 <br>
 <table width=280>		
-<tr><td width=135>Account: <font color="LEVEL"><a action="bypass -h admin_find_account %name%">%account%</a></font></td><td width=135>IP: <font color="LEVEL"><a action="bypass -h admin_find_ip %ip%">%ip%</a></font></td></tr>	
-<tr><td width=135>Name: <font color="LEVEL">%name%</font></td><td width=135>Level: <font color="LEVEL">%level%</font></td></tr>	
-<tr><td width=135>Clan: <font color="LEVEL">%clan%</font></td><td width=135>Exp: <font color="LEVEL">%xp%</font></td></tr>
-<tr><td width=135>Class: <font color="LEVEL">%class%</font></td><td width=135>SP: <font color="LEVEL">%sp%</font></td></tr>      
+<tr><td width=135>Account: <font color="3399ff"><a action="bypass -h admin_find_account %name%">%account%</a></font></td><td width=135>IP: <font color="99ff33"><a action="bypass -h admin_find_ip %ip%">%ip%</a></font></td></tr>	
+<tr><td width=135><font color="LEVEL">Name:</font> %name%</td><td width=135><font color="LEVEL">Level:</font> %level%</td></tr>	
+<tr><td width=135><font color="LEVEL">Clan:</font> %clan%</td><td width=135><font color="LEVEL">Exp:</font> %xp%</td></tr>
+<tr><td width=135><font color="LEVEL">Class:</font> %class%</td><td width=135><font color="LEVEL">SP:</font> %sp%</td></tr>      
 </table>
 <table width=280>
-<tr><td width=280>Coordinates: <font color="LEVEL">%x% %y% %z%</font> Heading: <font color="LEVEL">%heading%</font></td></tr>
+<tr><td width=280><font color="LEVEL">Coordinates:</font> %x% %y% %z% <font color="LEVEL">Heading:</font> %heading%</td></tr>
 </table>
 </center>
 </body></html>

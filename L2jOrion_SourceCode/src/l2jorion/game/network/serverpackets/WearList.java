@@ -30,6 +30,7 @@ import l2jorion.game.templates.L2Item;
 public class WearList extends L2GameServerPacket
 {
 	private static final String _S__EF_WEARLIST = "[S] EF WearList";
+	
 	private final int _listId;
 	private final L2ItemInstance[] _list;
 	private final int _money;
@@ -55,11 +56,11 @@ public class WearList extends L2GameServerPacket
 	protected final void writeImpl()
 	{
 		writeC(0xef);
-		writeC(0xc0); // ?
-		writeC(0x13); // ?
-		writeC(0x00); // ?
-		writeC(0x00); // ?
-		writeD(_money); // current money
+		writeC(0xc0);
+		writeC(0x13);
+		writeC(0x00);
+		writeC(0x00);
+		writeD(_money);
 		writeD(_listId);
 		
 		int newlength = 0;
@@ -81,23 +82,18 @@ public class WearList extends L2GameServerPacket
 				
 				if (item.getItem().getType1() != L2Item.TYPE1_ITEM_QUESTITEM_ADENA)
 				{
-					writeH(item.getItem().getBodyPart()); // rev 415 slot 0006-lr.ear 0008-neck 0030-lr.finger 0040-head 0080-?? 0100-l.hand 0200-gloves 0400-chest 0800-pants 1000-feet 2000-?? 4000-r.hand 8000-r.hand
+					writeH(item.getItem().getBodyPart());
 				}
 				else
 				{
-					writeH(0x00); // rev 415 slot 0006-lr.ear 0008-neck 0030-lr.finger 0040-head 0080-?? 0100-l.hand 0200-gloves 0400-chest 0800-pants 1000-feet 2000-?? 4000-r.hand 8000-r.hand
+					writeH(0x00);
 				}
 				
 				writeD(Config.WEAR_PRICE);
-				
 			}
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

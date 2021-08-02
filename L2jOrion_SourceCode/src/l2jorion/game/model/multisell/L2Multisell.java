@@ -24,6 +24,9 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
 import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.ItemTable;
@@ -33,11 +36,8 @@ import l2jorion.game.network.serverpackets.MultiSellList;
 import l2jorion.game.templates.L2Armor;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.L2Weapon;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class L2Multisell
 {
@@ -52,11 +52,13 @@ public class L2Multisell
 			for (final MultiSellListContainer list : _entries)
 			{
 				if (list.getListId() == id)
+				{
 					return list;
+				}
 			}
 		}
 		
-		LOG.warn("[L2Multisell] can't find list with id: " + id);
+		LOG.warn("L2Multisell: can't find list with id: " + id);
 		return null;
 	}
 	
@@ -70,12 +72,12 @@ public class L2Multisell
 		parseData();
 	}
 	
-	
-	
 	public static L2Multisell getInstance()
 	{
 		if (_instance == null)
+		{
 			_instance = new L2Multisell();
+		}
 		return _instance;
 	}
 	
@@ -103,7 +105,9 @@ public class L2Multisell
 		MultiSellListContainer list = new MultiSellListContainer();
 		
 		if (listTemplate == null)
+		{
 			return list;
+		}
 		
 		list = new MultiSellListContainer();
 		list.setListId(listId);
@@ -111,7 +115,9 @@ public class L2Multisell
 		if (inventoryOnly)
 		{
 			if (player == null)
+			{
 				return list;
+			}
 			
 			L2ItemInstance[] items;
 			
@@ -322,12 +328,13 @@ public class L2Multisell
 				factory.setValidating(false);
 				factory.setIgnoringComments(true);
 				doc = factory.newDocumentBuilder().parse(f);
-				factory = null;
 			}
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.error("Error loading file " + f, e);
 			}
@@ -339,12 +346,13 @@ public class L2Multisell
 				updateReferencePrice(list);
 				
 				_entries.add(list);
-				list = null;
 			}
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.error("Error in file " + f, e);
 			}
@@ -442,8 +450,6 @@ public class L2Multisell
 				
 				MultiSellIngredient e = new MultiSellIngredient(id, count, isTaxIngredient, mantainIngredient);
 				entry.addIngredient(e);
-				e = null;
-				attribute = null;
 			}
 			else if ("production".equalsIgnoreCase(n.getNodeName()))
 			{
@@ -462,47 +468,29 @@ public class L2Multisell
 		
 		entry.setEntryId(entryId);
 		
-		first = null;
-		
 		return entry;
 	}
 	
-	/**
-	 * This method checks and update the container to avoid possible items buy/sell duplication. Currently support ADENA check.
-	 * @param container
-	 */
 	private void updateReferencePrice(final MultiSellListContainer container)
 	{
-		
 		for (final MultiSellEntry entry : container.getEntries())
 		{
-			
 			// if ingredient is just 1 and is adena
 			if (entry.getIngredients().size() == 1 && entry.getIngredients().get(0).getItemId() == 57)
 			{
-				
 				// the buy price must necessarily higher then total reference item price / 2 that is the default sell price
-				
 				int totalProductReferencePrice = 0;
 				for (final MultiSellIngredient product : entry.getProducts())
 				{
-					
 					totalProductReferencePrice += (ItemTable.getInstance().getTemplate(product.getItemId()).getReferencePrice() * product.getItemCount());
-					
 				}
 				
 				if (entry.getIngredients().get(0).getItemCount() < (totalProductReferencePrice / 2))
 				{
-					
-					LOG.warn("Multisell " + container.getListId() + " entryId  " + entry.getEntryId() + " has an ADENA price less then total products reference price.. Automatically Updating it..");
+					LOG.warn("Multisell:" + container.getListId() + " entryId:" + entry.getEntryId() + " has an ADENA price lower than total products reference price. Automatically updating it...");
 					entry.getIngredients().get(0).setItemCount(totalProductReferencePrice);
-					
 				}
-				
 			}
-			
 		}
-		
 	}
-	
 }

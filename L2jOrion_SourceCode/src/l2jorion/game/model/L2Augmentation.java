@@ -32,12 +32,11 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.skills.Stats;
 import l2jorion.game.skills.funcs.FuncAdd;
 import l2jorion.game.skills.funcs.LambdaConst;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class L2Augmentation
 {
@@ -91,9 +90,11 @@ public final class L2Augmentation
 		
 		public void applyBoni(final L2PcInstance player)
 		{
-			// make sure the boni are not applyed twice..
+			// make sure the boni are not applyed twice
 			if (_active)
+			{
 				return;
+			}
 			
 			for (int i = 0; i < _stats.length; i++)
 			{
@@ -107,7 +108,9 @@ public final class L2Augmentation
 		{
 			// make sure the boni is not removed twice
 			if (!_active)
+			{
 				return;
+			}
 			
 			player.removeStatsOwner(this);
 			
@@ -153,9 +156,10 @@ public final class L2Augmentation
 	public void deleteAugmentationData()
 	{
 		if (!_item.isAugmented())
+		{
 			return;
+		}
 		
-		// delete the augmentation from the database
 		Connection con = null;
 		try
 		{
@@ -164,7 +168,6 @@ public final class L2Augmentation
 			statement.setInt(1, _item.getObjectId());
 			statement.executeUpdate();
 			DatabaseUtils.close(statement);
-			statement = null;
 		}
 		catch (final Exception e)
 		{
@@ -195,10 +198,8 @@ public final class L2Augmentation
 	{
 		_boni.applyBoni(player);
 		
-		// add the skill if any
 		if (_skill != null)
 		{
-			
 			player.addSkill(_skill);
 			
 			if (_skill.isActive() && Config.ACTIVE_AUGMENTS_START_REUSE_TIME > 0)
@@ -210,10 +211,6 @@ public final class L2Augmentation
 		}
 	}
 	
-	/**
-	 * Removes the augmentation boni from the player.
-	 * @param player
-	 */
 	public void removeBoni(final L2PcInstance player)
 	{
 		_boni.removeBoni(player);
@@ -232,8 +229,6 @@ public final class L2Augmentation
 			
 			if ((_skill.isPassive() && Config.DELETE_AUGM_PASSIVE_ON_CHANGE) || (_skill.isActive() && Config.DELETE_AUGM_ACTIVE_ON_CHANGE))
 			{
-				
-				// Iterate through all effects currently on the character.
 				final L2Effect[] effects = player.getAllEffects();
 				
 				for (final L2Effect currenteffect : effects)
@@ -250,7 +245,6 @@ public final class L2Augmentation
 			}
 			
 			player.sendSkillList();
-			
 		}
 	}
 }

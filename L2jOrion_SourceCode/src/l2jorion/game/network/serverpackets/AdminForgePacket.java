@@ -24,10 +24,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * This class is made to create packets with any format
- * @author Maktakien
- */
 public class AdminForgePacket extends L2GameServerPacket
 {
 	private final List<Part> _parts = new ArrayList<>();
@@ -46,7 +42,6 @@ public class AdminForgePacket extends L2GameServerPacket
 	
 	public AdminForgePacket()
 	{
-		
 	}
 	
 	@Override
@@ -59,20 +54,8 @@ public class AdminForgePacket extends L2GameServerPacket
 		
 	}
 	
-	@Override
-	public String getType()
-	{
-		return "[S] -1 AdminForge";
-	}
-	
-	/**
-	 * @param b
-	 * @param string
-	 * @return
-	 */
 	public boolean generate(final byte b, final String string)
 	{
-		// TODO Auto-generated method stub
 		if (b == 'C' || b == 'c')
 		{
 			writeC(Integer.decode(string));
@@ -111,4 +94,9 @@ public class AdminForgePacket extends L2GameServerPacket
 		_parts.add(new Part(b, string));
 	}
 	
+	@Override
+	public String getType()
+	{
+		return "[S] -1 AdminForge";
+	}
 }

@@ -20,10 +20,6 @@
  */
 package l2jorion.game.templates;
 
-/**
- * This class represents a Newbie Helper Buff Author: Ayor
- */
-
 public class L2HelperBuff
 {
 	/** Min level that the player must achieve to obtain this buff from Newbie Helper */

@@ -3,7 +3,7 @@ from l2jorion.game.ai import CtrlIntention
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
-from l2jorion.game.model import L2CharPosition
+from l2jorion.game.model import Location
 
 qn = "21_HiddenTruth"
 
@@ -74,19 +74,19 @@ class Quest (JQuest) :
             loc = int(event)
             x,y,z,heading=ROUTES[loc]
             if event == "1" :
-                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, L2CharPosition(x,y,z,heading))
+                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, Location(x,y,z,heading))
                 self.startQuestTimer("2",5000,npc,player)
             elif event == "2" :
-                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, L2CharPosition(x,y,z,heading))
+                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, Location(x,y,z,heading))
                 self.startQuestTimer("3",12000,npc,player)
             elif event == "3" :
-                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, L2CharPosition(x,y,z,heading))
+                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, Location(x,y,z,heading))
                 self.startQuestTimer("4",15000,npc,player)
             elif event == "4" :
-                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, L2CharPosition(x,y,z,heading))
+                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, Location(x,y,z,heading))
                 self.startQuestTimer("5",5000,npc,player)
             elif event == "5" :
-                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, L2CharPosition(x,y,z,heading))
+                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, Location(x,y,z,heading))
         return htmltext
 
  def onTalk (self,npc,player):

@@ -53,7 +53,6 @@ public class QueenAnt extends Quest implements Runnable
 	private static final int GUARD = 29004;
 	private static final int ROYAL = 29005;
 	
-	// QUEEN Status Tracking :
 	private static final int LIVE = 0; // Queen Ant is spawned.
 	private static final int DEAD = 1; // Queen Ant has been killed.
 
@@ -124,10 +123,7 @@ public class QueenAnt extends Quest implements Runnable
 					
 					if (Config.L2JMOD_CHAMPION_ENABLE)
 					{
-						if (Config.L2JMOD_CHAMP_RAID_BOSSES 
-								&& Config.L2JMOD_CHAMPION_FREQUENCY > 0 
-								&& queen.getLevel() >= Config.L2JMOD_CHAMP_MIN_LVL 
-								&& queen.getLevel() <= Config.L2JMOD_CHAMP_MAX_LVL)
+						if (Config.L2JMOD_CHAMP_RAID_BOSSES && Config.L2JMOD_CHAMPION_FREQUENCY > 0 && queen.getLevel() >= Config.L2JMOD_CHAMP_MIN_LVL && queen.getLevel() <= Config.L2JMOD_CHAMP_MAX_LVL)
 						{
 							queen.setChampion(false);
 							int random = Rnd.get(100);
@@ -168,7 +164,6 @@ public class QueenAnt extends Quest implements Runnable
 		npc.broadcastPacket(new PlaySound(1, "BS02_D", 1, npc.getObjectId(), npc.getX(), npc.getY(), npc.getZ()));
 		startQuestTimer("SPAWN_ROYAL", 1000, npc, null);
 		startQuestTimer("NURSES_SPAWN", 1000, npc, null);
-		//startQuestTimer("CHECK_MINIONS_ZONE", 120000, npc, null, true);
 		startQuestTimer("HEAL", 2000, null, null, true);
 		
 		_queen = npc;
@@ -399,20 +394,18 @@ public class QueenAnt extends Quest implements Runnable
 	@Override
 	public String onSpawn(L2NpcInstance npc)
 	{
-		final L2MonsterInstance mob = (L2MonsterInstance) npc;
-		switch (npc.getNpcId())
+		final L2Attackable mob = (L2Attackable) npc;
+		switch (mob.getNpcId())
 		{
 			case NURSE:
 				mob.setIsAttackDisabled(true);
-				mob.setIsRaidMinion(true);
-				break;
 			case LARVA:
 			case ROYAL:
 			case GUARD:
 				mob.setIsRaidMinion(true);
 				break;
 		}
-		return super.onSpawn(npc);
+		return super.onSpawn(mob);
 	}
 	
 	@Override

@@ -22,13 +22,10 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Clan;
 
-/**
- * sample 0000: cd b0 98 a0 48 1e 01 00 00 00 00 00 00 00 00 00 ....H........... 0010: 00 00 00 00 00 ..... format ddddd
- * @version $Revision: 1.1.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public class PledgeStatusChanged extends L2GameServerPacket
 {
 	private static final String _S__CD_PLEDGESTATUS_CHANGED = "[S] CD PledgeStatusChanged";
+	
 	private final L2Clan _clan;
 	
 	public PledgeStatusChanged(final L2Clan clan)
@@ -49,10 +46,6 @@ public class PledgeStatusChanged extends L2GameServerPacket
 		writeD(0);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

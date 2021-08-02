@@ -1,13 +1,4 @@
 /*
- * $Header: MinionList.java, 25/10/2005 18:42:48 luisantonioa Exp $
- *
- * $Author: luisantonioa $
- * $Date: 25/10/2005 18:42:48 $
- * $Revision: 1 $
- * $Log: MinionList.java,v $
- * Revision 1  25/10/2005 18:42:48  luisantonioa
- * Added copyright notice
- *
  *
  * L2jOrion Project - www.l2jorion.com 
  * 
@@ -43,21 +34,14 @@ import l2jorion.game.model.L2MinionData;
 import l2jorion.game.model.actor.instance.L2MinionInstance;
 import l2jorion.game.model.actor.instance.L2MonsterInstance;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * This class ...
- * @version $Revision: 1.2 $ $Date: 2004/06/27 08:12:59 $
- */
 
 public class MinionList
 {
 	private static Logger LOG = LoggerFactory.getLogger(L2MonsterInstance.class);
 	
-	/** List containing the current spawned minions for this L2MonsterInstance */
 	private final List<L2MinionInstance> minionReferences;
 	protected FastMap<Long, Integer> _respawnTasks = new FastMap<Long, Integer>().shared();
 	private final L2MonsterInstance master;
@@ -165,7 +149,9 @@ public class MinionList
 	public void maintainMinions()
 	{
 		if (master == null || master.isAlikeDead())
+		{
 			return;
+		}
 		
 		final Long current = System.currentTimeMillis();
 		
@@ -189,12 +175,15 @@ public class MinionList
 	 * <BR>
 	 * <B><U> Actions</U> :</B><BR>
 	 * <BR>
-	 * <li>Get the Minion data of all Minions that must be spawn</li> <li>For each Minion type, spawn the amount of Minion needed</li><BR>
+	 * <li>Get the Minion data of all Minions that must be spawn</li>
+	 * <li>For each Minion type, spawn the amount of Minion needed</li><BR>
 	 */
 	public void spawnMinions()
 	{
 		if (master == null || master.isAlikeDead())
+		{
 			return;
+		}
 		
 		final List<L2MinionData> minions = master.getTemplate().getMinionData();
 		
@@ -222,7 +211,11 @@ public class MinionList
 	 * <BR>
 	 * <B><U> Actions</U> :</B><BR>
 	 * <BR>
-	 * <li>Get the template of the Minion to spawn</li> <li>Create and Init the Minion and generate its Identifier</li> <li>Set the Minion HP, MP and Heading</li> <li>Set the Minion leader to this RaidBoss</li> <li>Init the position of the Minion and add it in the world as a visible object</li><BR>
+	 * <li>Get the template of the Minion to spawn</li>
+	 * <li>Create and Init the Minion and generate its Identifier</li>
+	 * <li>Set the Minion HP, MP and Heading</li>
+	 * <li>Set the Minion leader to this RaidBoss</li>
+	 * <li>Init the position of the Minion and add it in the world as a visible object</li><BR>
 	 * <BR>
 	 * @param minionid The I2NpcTemplate Identifier of the Minion to spawn
 	 */

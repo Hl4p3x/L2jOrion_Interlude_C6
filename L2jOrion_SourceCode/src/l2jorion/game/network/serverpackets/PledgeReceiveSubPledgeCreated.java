@@ -21,17 +21,12 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Clan.SubPledge;
 
-/**
- * @author -Wooden-
- */
 public class PledgeReceiveSubPledgeCreated extends L2GameServerPacket
 {
 	private static final String _S__FE_3F_PLEDGERECEIVESUBPLEDGECREATED = "[S] FE:3F PledgeReceiveSubPledgeCreated";
+	
 	private final SubPledge _subPledge;
 	
-	/**
-	 * @param subPledge
-	 */
 	public PledgeReceiveSubPledgeCreated(final SubPledge subPledge)
 	{
 		_subPledge = subPledge;

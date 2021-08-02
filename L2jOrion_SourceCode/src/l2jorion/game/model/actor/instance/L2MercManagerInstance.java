@@ -21,9 +21,6 @@ package l2jorion.game.model.actor.instance;
 
 import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.controllers.TradeController;
@@ -37,6 +34,8 @@ import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.util.Broadcast;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class L2MercManagerInstance extends L2FolkInstance
 {

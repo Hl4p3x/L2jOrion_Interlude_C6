@@ -26,10 +26,6 @@ import l2jorion.game.network.serverpackets.ExPartyRoomMember;
 import l2jorion.game.network.serverpackets.PartyMatchDetail;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * @author Gnacik
- */
-
 public final class RequestPartyMatchDetail extends L2GameClientPacket
 {
 	
@@ -59,11 +55,15 @@ public final class RequestPartyMatchDetail extends L2GameClientPacket
 	{
 		final L2PcInstance _activeChar = getClient().getActiveChar();
 		if (_activeChar == null)
+		{
 			return;
+		}
 		
 		final PartyMatchRoom _room = PartyMatchRoomList.getInstance().getRoom(_roomid);
 		if (_room == null)
+		{
 			return;
+		}
 		
 		if ((_activeChar.getLevel() >= _room.getMinLvl()) && (_activeChar.getLevel() <= _room.getMaxLvl()))
 		{
@@ -78,7 +78,9 @@ public final class RequestPartyMatchDetail extends L2GameClientPacket
 			for (final L2PcInstance _member : _room.getPartyMembers())
 			{
 				if (_member == null)
+				{
 					continue;
+				}
 				
 				_member.sendPacket(new ExManagePartyRoomMember(_activeChar, _room, 0));
 				_member.sendPacket(new SystemMessage(SystemMessageId.S1_ENTERED_PARTY_ROOM).addString(_activeChar.getName()));
@@ -89,7 +91,9 @@ public final class RequestPartyMatchDetail extends L2GameClientPacket
 			_activeChar.broadcastUserInfo();
 		}
 		else
+		{
 			_activeChar.sendPacket(new SystemMessage(SystemMessageId.CANT_ENTER_PARTY_ROOM));
+		}
 	}
 	
 	@Override

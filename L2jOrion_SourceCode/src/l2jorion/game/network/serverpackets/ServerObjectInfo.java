@@ -17,12 +17,10 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 
-/**
- * @author devScarlet & mrTJO
- */
 public final class ServerObjectInfo extends L2GameServerPacket
 {
 	private static final String _S__8C_SERVEROBJECTINFO = "[S] 8C ServerObjectInfo";
+	
 	private final L2NpcInstance _activeChar;
 	private final int _x, _y, _z, _heading;
 	private final int _idTemplate;

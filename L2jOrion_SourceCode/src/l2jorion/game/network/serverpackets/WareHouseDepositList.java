@@ -24,22 +24,20 @@ import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * 0x53 WareHouseDepositList dh (h dddhh dhhh d)
- * @version $Revision: 1.4.2.1.2.4 $ $Date: 2005/03/27 15:29:39 $
- */
 public class WareHouseDepositList extends L2GameServerPacket
 {
+	private static Logger LOG = LoggerFactory.getLogger(WareHouseDepositList.class);
+	
+	private static final String _S__53_WAREHOUSEDEPOSITLIST = "[S] 41 WareHouseDepositList";
+	
 	public static final int PRIVATE = 1;
 	public static final int CLAN = 2;
 	public static final int CASTLE = 3; // not sure
 	public static final int FREIGHT = 4; // not sure
-	private static Logger LOG = LoggerFactory.getLogger(WareHouseDepositList.class);
-	private static final String _S__53_WAREHOUSEDEPOSITLIST = "[S] 41 WareHouseDepositList";
+	
 	private final L2PcInstance _activeChar;
 	private final int _playerAdena;
 	private final FastList<L2ItemInstance> _items;
@@ -74,9 +72,7 @@ public class WareHouseDepositList extends L2GameServerPacket
 	protected final void writeImpl()
 	{
 		writeC(0x41);
-		/*
-		 * 0x01-Private Warehouse 0x02-Clan Warehouse 0x03-Castle Warehouse 0x04-Warehouse
-		 */
+		
 		writeH(_whType);
 		writeD(_playerAdena);
 		final int count = _items.size();
@@ -111,10 +107,6 @@ public class WareHouseDepositList extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

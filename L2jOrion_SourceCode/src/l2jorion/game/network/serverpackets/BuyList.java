@@ -30,6 +30,7 @@ import l2jorion.game.templates.L2Item;
 public final class BuyList extends L2GameServerPacket
 {
 	private static final String _S__1D_BUYLIST = "[S] 11 BuyList";
+	
 	private final int _listId;
 	private final L2ItemInstance[] _list;
 	private final int _money;
@@ -113,10 +114,6 @@ public final class BuyList extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

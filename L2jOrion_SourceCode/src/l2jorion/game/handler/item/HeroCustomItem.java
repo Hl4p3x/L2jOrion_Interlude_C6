@@ -9,15 +9,14 @@ package l2jorion.game.handler.item;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.handler.IItemHandler;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.network.serverpackets.SocialAction;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
@@ -39,7 +38,9 @@ public class HeroCustomItem implements IItemHandler
 		if (Config.HERO_CUSTOM_ITEMS)
 		{
 			if (!(playable instanceof L2PcInstance))
+			{
 				return;
+			}
 			
 			L2PcInstance activeChar = (L2PcInstance) playable;
 			
@@ -50,7 +51,7 @@ public class HeroCustomItem implements IItemHandler
 			
 			if (activeChar.isHero())
 			{
-				activeChar.sendMessage("You Are Already A Hero!.");
+				activeChar.sendMessage("You already have The Hero status!");
 			}
 			else
 			{
@@ -78,7 +79,9 @@ public class HeroCustomItem implements IItemHandler
 		try
 		{
 			if (player == null)
+			{
 				return;
+			}
 			
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement stmt = con.prepareStatement(INSERT_DATA);
@@ -96,7 +99,9 @@ public class HeroCustomItem implements IItemHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Error: could not update database: ", e);
 		}

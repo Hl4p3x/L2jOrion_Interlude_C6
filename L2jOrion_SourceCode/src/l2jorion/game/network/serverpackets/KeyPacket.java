@@ -20,21 +20,50 @@
  */
 package l2jorion.game.network.serverpackets;
 
+import org.strixplatform.StrixPlatform;
+import org.strixplatform.utils.StrixClientData;
+
+import l2jorion.Config;
+
 public final class KeyPacket extends L2GameServerPacket
 {
 	private static final String _S__01_KEYPACKET = "[S] 01 KeyPacket";
 	
-	private final byte[] _key;
+	private byte[] _key;
+	private final StrixClientData _clientData;
 	
 	public KeyPacket(final byte[] key)
 	{
 		_key = key;
+		_clientData = null;
+	}
+	
+	public KeyPacket(final byte[] key, final StrixClientData clientData)
+	{
+		_key = key;
+		_clientData = clientData;
+		
+		if (_key == null)
+		{
+			// just to fix null
+			LOG.info("New fake key sent");
+			_key = new byte[260];
+		}
 	}
 	
 	@Override
 	public void writeImpl()
 	{
 		writeC(0x00);
+		
+		if (Config.STRIX_PROTECTION)
+		{
+			if (StrixPlatform.getInstance().isBackNotificationEnabled() && _clientData != null)
+			{
+				writeC(_clientData.getServerResponse().ordinal());
+			}
+		}
+		
 		writeC(0x01);
 		writeB(_key);
 		writeD(0x01);

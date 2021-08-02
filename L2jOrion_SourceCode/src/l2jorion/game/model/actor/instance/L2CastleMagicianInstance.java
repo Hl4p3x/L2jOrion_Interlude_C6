@@ -16,17 +16,14 @@
  */
 package l2jorion.game.model.actor.instance;
 
-import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Effect.EffectType;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.templates.L2NpcTemplate;
 
-/**
- * The Class L2CastleMagicianInstance.
- * @author Kerberos | ZaKaX
- */
+
 public class L2CastleMagicianInstance extends L2NpcInstance
 {
 	
@@ -152,7 +149,7 @@ public class L2CastleMagicianInstance extends L2NpcInstance
 	 */
 	private static final boolean validateGateCondition(final L2PcInstance clanLeader, final L2PcInstance player)
 	{
-		if (clanLeader.isAlikeDead() || clanLeader.isInStoreMode() || clanLeader.isRooted() || clanLeader.isInCombat() || clanLeader.isInOlympiadMode() || clanLeader.isFestivalParticipant() || clanLeader.inObserverMode() || clanLeader.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND))
+		if (clanLeader.isAlikeDead() || clanLeader.isInStoreMode() || clanLeader.isRooted() || clanLeader.isInCombat() || clanLeader.isInOlympiadMode() || clanLeader.isFestivalParticipant() || clanLeader.inObserverMode() || clanLeader.isInsideZone(ZoneId.ZONE_NOSUMMONFRIEND))
 		{
 			player.sendMessage("Couldn't teleport to clan leader. The requirements was not meet.");
 			return false;

@@ -21,20 +21,15 @@
 package l2jorion.game.handler.item;
 
 import l2jorion.game.handler.IItemHandler;
-import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.Dice;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.util.Broadcast;
 import l2jorion.util.random.Rnd;
-
-/**
- * This class ...
- * @version $Revision: 1.1.4.2 $ $Date: 2005/03/27 15:30:07 $
- */
 
 public class RollingDice implements IItemHandler
 {
@@ -50,7 +45,9 @@ public class RollingDice implements IItemHandler
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		final int itemId = item.getItemId();
@@ -78,15 +75,13 @@ public class RollingDice implements IItemHandler
 				return;
 			}
 			
-			Dice d = new Dice(activeChar.getObjectId(), item.getItemId(), number, activeChar.getX() - 30, activeChar.getY() - 30, activeChar.getZ());
-			Broadcast.toSelfAndKnownPlayers(activeChar, d);
-			d = null;
+			activeChar.broadcastPacket(new Dice(activeChar.getObjectId(), item.getItemId(), number, activeChar.getX() - 30, activeChar.getY() - 30, activeChar.getZ()));
 			
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_ROLLED_S2);
 			sm.addString(activeChar.getName());
 			sm.addNumber(number);
 			activeChar.sendPacket(sm);
-			if (activeChar.isInsideZone(L2Character.ZONE_PEACE))
+			if (activeChar.isInsideZone(ZoneId.ZONE_PEACE))
 			{
 				Broadcast.toKnownPlayers(activeChar, sm);
 			}

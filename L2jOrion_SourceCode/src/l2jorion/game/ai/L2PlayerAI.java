@@ -31,12 +31,12 @@ import java.util.EmptyStackException;
 import java.util.Stack;
 
 import l2jorion.Config;
-import l2jorion.game.model.L2CharPosition;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
-import l2jorion.game.model.L2Character.AIAccessor;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2StaticObjectInstance;
+
 public class L2PlayerAI extends L2CharacterAI
 {
 	private boolean _thinking;
@@ -61,22 +61,14 @@ public class L2PlayerAI extends L2CharacterAI
 		return _interuptedIntentions;
 	}
 	
-	public L2PlayerAI(final AIAccessor accessor)
+	public L2PlayerAI(L2PcInstance creature)
 	{
-		super(accessor);
+		super(creature);
 	}
 	
-	/**
-	 * Saves the current Intention for this L2PlayerAI if necessary and calls changeIntention in AbstractAI.<BR>
-	 * <BR>
-	 * @param intention The new Intention to set to the AI
-	 * @param arg0 The first parameter of the Intention
-	 * @param arg1 The second parameter of the Intention
-	 */
 	@Override
 	public synchronized void changeIntention(final CtrlIntention intention, final Object arg0, final Object arg1)
 	{
-		// nothing to do if it does not CAST intention
 		if (intention != AI_INTENTION_CAST)
 		{
 			super.changeIntention(intention, arg0, arg1);
@@ -100,11 +92,6 @@ public class L2PlayerAI extends L2CharacterAI
 		super.changeIntention(intention, arg0, arg1);
 	}
 	
-	/**
-	 * Finalize the casting of a skill. This method overrides L2CharacterAI method.<BR>
-	 * <BR>
-	 * <B>What it does:</B> Check if actual intention is set to CAST and, if so, retrieves latest intention before the actual CAST and set it as the current intention for the player
-	 */
 	@Override
 	protected void onEvtFinishCasting()
 	{
@@ -116,7 +103,6 @@ public class L2PlayerAI extends L2CharacterAI
 		
 		if (getIntention() == AI_INTENTION_CAST)
 		{
-			// run interupted intention if it remain.
 			if (!getInterruptedIntentions().isEmpty())
 			{
 				IntentionCommand cmd = null;
@@ -127,13 +113,14 @@ public class L2PlayerAI extends L2CharacterAI
 				catch (final EmptyStackException ese)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						ese.printStackTrace();
+					}
 				}
 				
 				if (cmd != null && cmd._crtlIntention != AI_INTENTION_CAST) // previous state shouldn't be casting
 				{
 					setIntention(cmd._crtlIntention, cmd._arg0, cmd._arg1);
-					cmd = null;
 				}
 				else
 				{
@@ -166,7 +153,7 @@ public class L2PlayerAI extends L2CharacterAI
 	}
 	
 	@Override
-	public void clientStopMoving(L2CharPosition pos)
+	public void clientStopMoving(Location pos)
 	{
 		super.clientStopMoving(pos);
 		final L2PcInstance _player = (L2PcInstance) _actor;
@@ -194,6 +181,7 @@ public class L2PlayerAI extends L2CharacterAI
 	private void thinkAttack()
 	{
 		L2Character target = getAttackTarget();
+		
 		if (target == null)
 		{
 			return;
@@ -211,7 +199,8 @@ public class L2PlayerAI extends L2CharacterAI
 		}
 		
 		clientStopMoving(null);
-		_accessor.doAttack(target);
+		
+		_actor.doAttack(target);
 	}
 	
 	private void thinkCast()
@@ -222,7 +211,6 @@ public class L2PlayerAI extends L2CharacterAI
 		{
 			if (_skill.isOffensive() && getAttackTarget() != null)
 			{
-				// Notify the target
 				setCastTarget(null);
 			}
 			return;
@@ -231,7 +219,9 @@ public class L2PlayerAI extends L2CharacterAI
 		if (target != null)
 		{
 			if (maybeMoveToPawn(target, _actor.getMagicalAttackRange(_skill)))
+			{
 				return;
+			}
 		}
 		
 		if (_skill.getHitTime() > 50)
@@ -243,16 +233,13 @@ public class L2PlayerAI extends L2CharacterAI
 		
 		if (oldTarget != null)
 		{
-			// Replace the current target by the cast target
 			if (target != null && oldTarget != target)
 			{
 				_actor.setTarget(getCastTarget());
 			}
 			
-			// Launch the Cast of the skill
-			_accessor.doCast(_skill);
+			_actor.doCast(_skill);
 			
-			// Restore the initial target
 			if (target != null && oldTarget != target)
 			{
 				_actor.setTarget(oldTarget);
@@ -260,7 +247,7 @@ public class L2PlayerAI extends L2CharacterAI
 		}
 		else
 		{
-			_accessor.doCast(_skill);
+			_actor.doCast(_skill);
 		}
 		
 		return;
@@ -269,17 +256,24 @@ public class L2PlayerAI extends L2CharacterAI
 	private void thinkPickUp()
 	{
 		if (_actor.isAllSkillsDisabled() || _actor.isCastingNow())
+		{
 			return;
+		}
 		
 		final L2Object target = getTarget();
 		if (checkTargetLost(target))
+		{
 			return;
+		}
 		
 		if (maybeMoveToPawn(target, 36))
+		{
 			return;
+		}
 		
 		setIntention(AI_INTENTION_IDLE);
-		((L2PcInstance.AIAccessor) _accessor).doPickupItem(target);
+		
+		_actor.getActingPlayer().doPickupItem(target);
 		
 		return;
 	}
@@ -304,7 +298,7 @@ public class L2PlayerAI extends L2CharacterAI
 		
 		if (!(target instanceof L2StaticObjectInstance))
 		{
-			((L2PcInstance.AIAccessor) _accessor).doInteract((L2Character) target);
+			_actor.getActingPlayer().doInteract((L2Character) target);
 		}
 		
 		setIntention(AI_INTENTION_IDLE);

@@ -22,9 +22,6 @@ package l2jorion.game.model.actor.instance;
 
 import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.util.FastList;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.controllers.TradeController;
@@ -49,6 +46,8 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.util.Broadcast;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class L2ManorManagerInstance extends L2MerchantInstance
 {
@@ -64,7 +63,9 @@ public class L2ManorManagerInstance extends L2MerchantInstance
 	public void onAction(final L2PcInstance player)
 	{
 		if (!canTarget(player))
+		{
 			return;
+		}
 		
 		player.setLastFolkNPC(this);
 		
@@ -153,7 +154,9 @@ public class L2ManorManagerInstance extends L2MerchantInstance
 	{
 		// BypassValidation Exploit plug.
 		if (player.getLastFolkNPC() == null || player.getLastFolkNPC().getObjectId() != getObjectId())
+		{
 			return;
+		}
 		
 		if (command.startsWith("manor_menu_select"))
 		{
@@ -202,8 +205,6 @@ public class L2ManorManagerInstance extends L2MerchantInstance
 							int price = s.getPrice();
 							if (price < (item.getReferencePrice() / 2))
 							{
-								
-								//LOG.warn("L2TradeList " + tradeList.getListId() + " itemId  " + s.getId() + " has an ADENA sell price lower then reference price.. Automatically Updating it..");
 								price = item.getReferencePrice();
 							}
 							

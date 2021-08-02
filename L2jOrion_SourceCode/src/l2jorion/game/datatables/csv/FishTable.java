@@ -33,13 +33,9 @@ import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.SkillTreeTable;
 import l2jorion.game.model.FishData;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author -Nemesiss-
- */
 public class FishTable
 {
 	private static Logger LOG = LoggerFactory.getLogger(SkillTreeTable.class);
@@ -165,7 +161,7 @@ public class FishTable
 					e1.printStackTrace();
 				}
 		}
-		LOG.info("FishTable: Loaded " + count + " Fishes.");
+		LOG.info("FishTable: Loaded " + count + " fishes");
 		
 	}
 	
@@ -215,8 +211,6 @@ public class FishTable
 		{
 			LOG.warn("Cant Find Any Fish!? - Lvl: " + lvl + " Type: " + type);
 		}
-		
-		_Fishs = null;
 		
 		return result;
 	}

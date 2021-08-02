@@ -23,20 +23,15 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * This class stores references to all online game masters. (access level > 100)
- * @version $Revision: 1.2.2.1.2.7 $ $Date: 2005/04/05 19:41:24 $
- */
 public class GmListTable
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(GmListTable.class);
+	
 	private static GmListTable _instance;
 	
-	/** Set(L2PcInstance>) containing all the GM in game */
 	private final FastMap<L2PcInstance, Boolean> _gmList;
 	
 	public static GmListTable getInstance()
@@ -89,15 +84,10 @@ public class GmListTable
 	
 	private GmListTable()
 	{
-		LOG.info("GmListTable: initialized.");
+		// LOG.info("GmListTable: initialized.");
 		_gmList = new FastMap<L2PcInstance, Boolean>().shared();
 	}
 	
-	/**
-	 * Add a L2PcInstance player to the Set _gmList
-	 * @param player
-	 * @param hidden
-	 */
 	public void addGm(final L2PcInstance player, final boolean hidden)
 	{
 		if (Config.DEBUG)
@@ -151,7 +141,9 @@ public class GmListTable
 		for (final boolean b : _gmList.values())
 		{
 			if (includeHidden || !b)
+			{
 				return true;
+			}
 		}
 		
 		return false;
@@ -163,7 +155,6 @@ public class GmListTable
 		{
 			SystemMessage sm = new SystemMessage(SystemMessageId.GM_LIST);
 			player.sendPacket(sm);
-			sm = null;
 			
 			for (final String name : getAllGmNames(player.isGM()))
 			{
@@ -176,7 +167,6 @@ public class GmListTable
 		{
 			SystemMessage sm2 = new SystemMessage(SystemMessageId.NO_GM_PROVIDING_SERVICE_NOW);
 			player.sendPacket(sm2);
-			sm2 = null;
 		}
 	}
 	

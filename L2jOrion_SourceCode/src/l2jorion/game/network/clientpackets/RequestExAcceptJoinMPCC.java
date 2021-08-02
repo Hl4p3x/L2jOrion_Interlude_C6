@@ -25,9 +25,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * @author -Wooden-
- */
 public final class RequestExAcceptJoinMPCC extends L2GameClientPacket
 {
 	private int _response;
@@ -43,11 +40,15 @@ public final class RequestExAcceptJoinMPCC extends L2GameClientPacket
 	{
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		
 		final L2PcInstance requestor = player.getActiveRequester();
 		if (requestor == null)
+		{
 			return;
+		}
 		
 		if (_response == 1)
 		{
@@ -60,10 +61,14 @@ public final class RequestExAcceptJoinMPCC extends L2GameClientPacket
 			
 			requestor.getParty().getCommandChannel().addParty(player.getParty());
 			if (!newCc)
+			{
 				player.sendPacket(new SystemMessage(SystemMessageId.JOINED_COMMAND_CHANNEL));
+			}
 		}
 		else
+		{
 			requestor.sendPacket(new SystemMessage(SystemMessageId.S1_DECLINED_CHANNEL_INVITATION).addString(player.getName()));
+		}
 		
 		player.setActiveRequester(null);
 		requestor.onTransactionResponse();

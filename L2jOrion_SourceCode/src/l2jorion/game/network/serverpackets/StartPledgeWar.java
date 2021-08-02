@@ -23,6 +23,7 @@ package l2jorion.game.network.serverpackets;
 public class StartPledgeWar extends L2GameServerPacket
 {
 	private static final String _S__65_STARTPLEDGEWAR = "[S] 65 StartPledgeWar";
+	
 	private final String _pledgeName;
 	private final String _playerName;
 	

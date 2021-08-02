@@ -22,12 +22,8 @@ package l2jorion.game.skills.conditions;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public final class ConditionUsingSkill extends Condition
 {
-	
 	private final int _skillId;
 	
 	public ConditionUsingSkill(final int skillId)
@@ -39,7 +35,10 @@ public final class ConditionUsingSkill extends Condition
 	public boolean testImpl(final Env env)
 	{
 		if (env.skill == null)
+		{
 			return false;
+		}
+		
 		return env.skill.getId() == _skillId;
 	}
 }

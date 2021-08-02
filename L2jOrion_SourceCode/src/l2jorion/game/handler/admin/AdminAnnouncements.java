@@ -31,12 +31,6 @@ import l2jorion.game.network.clientpackets.Say2;
 import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.game.util.Broadcast;
 
-/**
- * This class handles following admin commands: - announce text = announces text to all players - list_announcements = show menu - reload_announcements = reloads announcements from txt file - announce_announcements = announce all stored announcements to all players - add_announcement text = adds
- * text to startup announcements - del_announcement id = deletes announcement with respective id
- * @version $Revision: 1.5 $
- * @author ProGramMoS
- */
 public class AdminAnnouncements implements IAdminCommandHandler
 {
 	private static final String[] ADMIN_COMMANDS =
@@ -76,11 +70,6 @@ public class AdminAnnouncements implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(String command, L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.log(record); }
-		 */
-		
 		StringTokenizer st = new StringTokenizer(command);
 		
 		String comm_s = st.nextToken();
@@ -90,7 +79,9 @@ public class AdminAnnouncements implements IAdminCommandHandler
 		CommandEnum comm = CommandEnum.valueOf(comm_s);
 		
 		if (comm == null)
+		{
 			return false;
+		}
 		
 		switch (comm)
 		{
@@ -134,7 +125,6 @@ public class AdminAnnouncements implements IAdminCommandHandler
 				if (st.hasMoreTokens())
 				{
 					text = command.replace(comm_s + " ", "");
-					// text = st.nextToken();
 				}
 				
 				if (!text.equals(""))
@@ -145,7 +135,7 @@ public class AdminAnnouncements implements IAdminCommandHandler
 				}
 				activeChar.sendMessage("You cannot announce Empty message");
 				return false;
-				
+			
 			case admin_del_announcement:
 				
 				if (st.hasMoreTokens())
@@ -186,7 +176,7 @@ public class AdminAnnouncements implements IAdminCommandHandler
 				return true;
 			case admin_gmchat2:
 				int offset = 0;
-
+				
 				String text4;
 				if (command.contains("menu"))
 				{
@@ -196,7 +186,7 @@ public class AdminAnnouncements implements IAdminCommandHandler
 				{
 					offset = 13;
 				}
-
+				
 				text4 = command.substring(offset);
 				CreatureSay cs4 = new CreatureSay(0, 9, activeChar.getName(), text4);
 				GmListTable.broadcastToGMs(cs4);
@@ -205,7 +195,9 @@ public class AdminAnnouncements implements IAdminCommandHandler
 			case admin_critannounce:
 				String text1 = command.substring(19);
 				if (Config.GM_CRITANNOUNCER_NAME && text1.length() > 0)
+				{
 					text1 = activeChar.getName() + ": " + text1;
+				}
 				
 				CreatureSay cs = new CreatureSay(activeChar.getObjectId(), Say2.CRITICAL_ANNOUNCE, "", "--------------------------------------------------------------------------------");
 				CreatureSay cs1 = new CreatureSay(activeChar.getObjectId(), Say2.CRITICAL_ANNOUNCE, "", text1);
@@ -215,11 +207,11 @@ public class AdminAnnouncements implements IAdminCommandHandler
 				Broadcast.toAllOnlinePlayers(cs3);
 				Announcements.getInstance().listAnnouncements(activeChar);
 				return true;
-
+			
 			case admin_list_autoannouncements:
 				AutoAnnouncementHandler.getInstance().listAutoAnnouncements(activeChar);
 				return true;
-
+			
 			case admin_add_autoannouncement:
 				
 				if (st.hasMoreTokens())
@@ -237,9 +229,9 @@ public class AdminAnnouncements implements IAdminCommandHandler
 						
 						activeChar.sendMessage("Usage: //add_autoannouncement <delay> (Seconds > 30) <Announcements>");
 						return false;
-
+						
 					}
-
+					
 					if (st.hasMoreTokens())
 					{
 						
@@ -256,7 +248,7 @@ public class AdminAnnouncements implements IAdminCommandHandler
 							AutoAnnouncementHandler.getInstance().listAutoAnnouncements(activeChar);
 							
 							return true;
-
+							
 						}
 						activeChar.sendMessage("Usage: //add_autoannouncement <delay> (Seconds > 30) <Announcements>");
 						return false;
@@ -269,7 +261,7 @@ public class AdminAnnouncements implements IAdminCommandHandler
 			case admin_del_autoannouncement:
 				if (st.hasMoreTokens())
 				{
-
+					
 					try
 					{
 						index = Integer.parseInt(st.nextToken());

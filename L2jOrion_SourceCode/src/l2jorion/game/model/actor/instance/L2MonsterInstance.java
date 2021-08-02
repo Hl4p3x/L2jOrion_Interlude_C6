@@ -20,11 +20,12 @@
  */
 package l2jorion.game.model.actor.instance;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
 import l2jorion.Config;
+import l2jorion.game.controllers.GameTimeController;
+import l2jorion.game.enums.AchType;
 import l2jorion.game.model.L2Attackable;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.knownlist.MonsterKnownList;
@@ -38,39 +39,19 @@ import l2jorion.util.random.Rnd;
 
 public class L2MonsterInstance extends L2Attackable
 {
-	// private static Logger LOG = LoggerFactory.getLogger(L2MonsterInstance.class);
-	
-	/** The _minion list. */
 	protected final MinionList _minionList;
 	
-	/** The _minion maintain task. */
 	protected ScheduledFuture<?> _minionMaintainTask = null;
 	
-	/** The Constant MONSTER_MAINTENANCE_INTERVAL. */
 	private static final int MONSTER_MAINTENANCE_INTERVAL = 1000;
 	
-	/**
-	 * Constructor of L2MonsterInstance (use L2Character and L2NpcInstance constructor).<BR>
-	 * <BR>
-	 * <B><U> Actions</U> :</B><BR>
-	 * <BR>
-	 * <li>Call the L2Character constructor to set the _template of the L2MonsterInstance (copy skills from template to object and link _calculators to NPC_STD_CALCULATOR)</li> <li>Set the name of the L2MonsterInstance</li> <li>Create a RandomAnimation Task that will be launched after the calculated
-	 * delay if the server allow it</li><BR>
-	 * <BR>
-	 * @param objectId Identifier of the object to initialized
-	 * @param template the template
-	 */
 	public L2MonsterInstance(final int objectId, final L2NpcTemplate template)
 	{
 		super(objectId, template);
-		getKnownList(); // init knownlist
+		getKnownList();
 		_minionList = new MinionList(this);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Attackable#getKnownList()
-	 */
 	@Override
 	public final MonsterKnownList getKnownList()
 	{
@@ -95,14 +76,14 @@ public class L2MonsterInstance extends L2Attackable
 				try
 				{
 					L2Spawn mobSpawn = getSpawn();
-					if ((!isRaid()) && (!isInCombat()) && (!isAlikeDead()) && (!isDead()) && (mobSpawn != null) && (!isInsideRadius(mobSpawn.getLocx(), mobSpawn.getLocy(), 300, false)))
+					if ((!isRaid()) && (!isInCombat()) && (!isAlikeDead()) && (!isDead()) && (mobSpawn != null) && (!isInsideRadius(mobSpawn.getLocx(), mobSpawn.getLocy(), Config.MAX_DRIFT_RANGE * 3, false)))
 					{
 						teleToLocation(mobSpawn.getLocx(), mobSpawn.getLocy(), mobSpawn.getLocz(), false);
 					}
 				}
 				catch (Exception e)
 				{
-					LOG.info("returnHome() ID:"+getNpcId()+" NAME:"+getName()+"", e);
+					LOG.info("returnHome() ID:" + getNpcId() + " NAME:" + getName() + "", e);
 				}
 				
 			}
@@ -119,26 +100,36 @@ public class L2MonsterInstance extends L2Attackable
 	public boolean isAutoAttackable(final L2Character attacker)
 	{
 		if (attacker instanceof L2MonsterInstance)
+		{
 			return false;
+		}
 		
 		return !isEventMob;
 	}
 	
-	/**
-	 * Return True if the L2MonsterInstance is Agressive (aggroRange > 0).<BR>
-	 * <BR>
-	 * @return true, if is aggressive
-	 */
 	@Override
 	public boolean isAggressive()
 	{
 		return getTemplate().aggroRange > 0 && !isEventMob;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Attackable#onSpawn()
-	 */
+	@Override
+	public boolean isBatNightMode()
+	{
+		String npcClass = getTemplate().getStatsSet().getString("jClass").toLowerCase();
+		boolean isNight = GameTimeController.getInstance().isNight();
+		
+		if (isNight)
+		{
+			if (npcClass.contains("monster.vampire_bat"))
+			{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	@Override
 	public void onSpawn()
 	{
@@ -163,7 +154,9 @@ public class L2MonsterInstance extends L2Attackable
 			catch (final NullPointerException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 			
 			switch (getTemplate().npcId)
@@ -179,18 +172,11 @@ public class L2MonsterInstance extends L2Attackable
 		super.onSpawn();
 	}
 	
-	/**
-	 * Gets the maintenance interval.
-	 * @return the maintenance interval
-	 */
 	protected int getMaintenanceInterval()
 	{
 		return MONSTER_MAINTENANCE_INTERVAL;
 	}
 	
-	/**
-	 * Spawn all minions at a regular interval.
-	 */
 	protected void manageMinions()
 	{
 		_minionMaintainTask = ThreadPoolManager.getInstance().scheduleGeneral(new Runnable()
@@ -203,9 +189,6 @@ public class L2MonsterInstance extends L2Attackable
 		}, getMaintenanceInterval());
 	}
 	
-	/**
-	 * Call minions.
-	 */
 	public void callMinions()
 	{
 		if (_minionList.hasMinions())
@@ -240,37 +223,23 @@ public class L2MonsterInstance extends L2Attackable
 		}
 	}
 	
-	/**
-	 * Call minions to assist.
-	 * @param attacker the attacker
-	 */
 	public void callMinionsToAssist(final L2Character attacker)
 	{
 		if (_minionList.hasMinions())
 		{
-			List<L2MinionInstance> spawnedMinions = _minionList.getSpawnedMinions();
-			if (spawnedMinions != null && spawnedMinions.size() > 0)
+			for (final L2MinionInstance minion : _minionList.getSpawnedMinions())
 			{
-				final Iterator<L2MinionInstance> itr = spawnedMinions.iterator();
-				L2MinionInstance minion;
-				while (itr.hasNext())
+				if (minion != null && !minion.isDead())
 				{
-					minion = itr.next();
-					// Trigger the aggro condition of the minion
-					if (minion != null && !minion.isDead())
+					if (this instanceof L2RaidBossInstance)
 					{
-						if (this instanceof L2RaidBossInstance)
-						{
-							minion.addDamage(attacker, 100);
-						}
-						else
-						{
-							minion.addDamage(attacker, 1);
-						}
+						minion.addDamage(attacker, 100);
+					}
+					else
+					{
+						minion.addDamage(attacker, 1);
 					}
 				}
-				spawnedMinions = null;
-				minion = null;
 			}
 		}
 	}
@@ -279,14 +248,22 @@ public class L2MonsterInstance extends L2Attackable
 	public boolean doDie(final L2Character killer)
 	{
 		if (!super.doDie(killer))
+		{
 			return false;
+		}
 		
-		//Check auto spawn instance
+		// Check auto spawn instance
 		AutoSpawn.updateStatus(this, true);
 		
 		if (_minionMaintainTask != null)
 		{
 			_minionMaintainTask.cancel(true); // doesn't do it?
+		}
+		
+		final L2PcInstance player = killer.getActingPlayer();
+		if (player != null && (player.getLevel() - getLevel() <= 10) && !(this instanceof L2RaidBossInstance) && !(this instanceof L2GrandBossInstance))
+		{
+			player.getAchievement().increase(getName().equals("Tyrannosaurus") ? AchType.TYRANNOSAURUS : isChampion() ? AchType.MONSTER_CHAMPION : AchType.MONSTER);
 		}
 		
 		if (this instanceof L2RaidBossInstance)
@@ -350,20 +327,12 @@ public class L2MonsterInstance extends L2Attackable
 		return _minionList.hasMinions();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Attackable#addDamageHate(l2jorion.game.model.L2Character, int, int)
-	 */
 	@Override
 	public void addDamageHate(final L2Character attacker, final int damage, final int aggro)
 	{
 		super.addDamageHate(attacker, damage, aggro);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.instance.L2NpcInstance#deleteMe()
-	 */
 	@Override
 	public void deleteMe()
 	{

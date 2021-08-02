@@ -22,19 +22,18 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
-import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.L2Clan.SubPledge;
+import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
 public class PledgeShowMemberListAll extends L2GameServerPacket
 {
 	private static final String _S__68_PLEDGESHOWMEMBERLISTALL = "[S] 53 PledgeShowMemberListAll";
+	
 	private final L2Clan _clan;
 	private final L2PcInstance _activeChar;
 	private final L2ClanMember[] _members;
 	private int _pledgeType;
-	
-	// private static Logger LOG = LoggerFactory.getLogger(PledgeShowMemberListAll.class);
 	
 	public PledgeShowMemberListAll(final L2Clan clan, final L2PcInstance activeChar)
 	{
@@ -105,11 +104,17 @@ public class PledgeShowMemberListAll extends L2GameServerPacket
 				continue;
 			}
 			if (m.getPledgeType() == -1)
+			{
 				yellow = m.getSponsor() != 0 ? 1 : 0;
+			}
 			else if (m.getPlayerInstance() != null)
+			{
 				yellow = m.getPlayerInstance().isClanLeader() ? 1 : 0;
+			}
 			else
+			{
 				yellow = 0;
+			}
 			writeS(m.getName());
 			writeD(m.getLevel());
 			writeD(m.getClassId());
@@ -120,10 +125,6 @@ public class PledgeShowMemberListAll extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

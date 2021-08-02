@@ -20,9 +20,8 @@
  */
 package l2jorion.login.network.gameserverpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.login.network.clientpackets.ClientBasePacket;
 
 /**

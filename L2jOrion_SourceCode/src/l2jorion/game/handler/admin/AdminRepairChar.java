@@ -24,20 +24,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-/**
- * This class handles following admin commands: - delete = deletes target
- * @version $Revision: 1.1.2.6.2.3 $ $Date: 2005/04/11 10:05:59 $
- */
 
 public class AdminRepairChar implements IAdminCommandHandler
 {
@@ -52,11 +46,6 @@ public class AdminRepairChar implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		handleRepair(command);
 		
 		return true;
@@ -73,7 +62,9 @@ public class AdminRepairChar implements IAdminCommandHandler
 		String[] parts = command.split(" ");
 		
 		if (parts.length != 2)
+		{
 			return;
+		}
 		
 		String cmd = "UPDATE characters SET x=-84318, y=244579, z=-3730 WHERE char_name=?";
 		Connection connection = null;
@@ -85,7 +76,6 @@ public class AdminRepairChar implements IAdminCommandHandler
 			statement.setString(1, parts[1]);
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 			
 			statement = connection.prepareStatement("SELECT obj_id FROM characters where char_name=?");
 			statement.setString(1, parts[1]);
@@ -100,8 +90,6 @@ public class AdminRepairChar implements IAdminCommandHandler
 			
 			DatabaseUtils.close(rset);
 			DatabaseUtils.close(statement);
-			rset = null;
-			statement = null;
 			
 			if (objId == 0)
 			{
@@ -113,27 +101,24 @@ public class AdminRepairChar implements IAdminCommandHandler
 			statement.setInt(1, objId);
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 			
 			statement = connection.prepareStatement("UPDATE items SET loc=\"INVENTORY\" WHERE owner_id=?");
 			statement.setInt(1, objId);
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("Could not repair char:", e);
 		}
 		finally
 		{
 			CloseUtil.close(connection);
-			connection = null;
-			cmd = null;
-			parts = null;
 		}
 	}
 }

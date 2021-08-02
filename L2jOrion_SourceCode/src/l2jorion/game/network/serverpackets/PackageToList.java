@@ -22,10 +22,6 @@ package l2jorion.game.network.serverpackets;
 
 import java.util.Map;
 
-/**
- * Format: (c) d[dS] d: list size [ d: char ID S: char Name ]
- * @author -Wooden-
- */
 public class PackageToList extends L2GameServerPacket
 {
 	private static final String _S__C2_PACKAGETOLIST = "[S] C2 PackageToList";

@@ -43,11 +43,10 @@ import l2jorion.game.powerpack.PowerPackConfig;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.templates.StatsSet;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Vilmis
@@ -58,24 +57,36 @@ public class RaidInfoHandler implements IVoicedCommandHandler, ICustomByPassHand
 	private String ROOT = "data/html/mods/boss/";
 	private static boolean open = false;
 	
-
 	@Override
 	public String[] getVoicedCommandList()
 	{
-		return new String[] {"boss"};
+		return new String[]
+		{
+			"boss"
+		};
 	}
 	
 	@Override
 	public boolean useVoicedCommand(String command, L2PcInstance player, String target)
 	{
 		if (player == null)
+		{
 			return false;
+		}
+		
+		if (PowerPackConfig.RESPAWN_BOSS_ONLY_FOR_LORD)
+		{
+			if (player.getClan() == null || player.getClan() != null && !player.getClan().hasCastle() || player.getClan() != null && !player.getClan().hasHideout())
+			{
+				player.sendMessage("This command is only for casle or clanhall owners.");
+				return true;
+			}
+		}
 		
 		if (command.equalsIgnoreCase("boss"))
 		{
 			showHtm(player);
 			open = false;
-			
 			return false;
 		}
 		
@@ -85,7 +96,7 @@ public class RaidInfoHandler implements IVoicedCommandHandler, ICustomByPassHand
 	private void showHtm(L2PcInstance player)
 	{
 		NpcHtmlMessage htm = new NpcHtmlMessage(1);
-		String text = HtmCache.getInstance().getHtm(ROOT+"index.htm");
+		String text = HtmCache.getInstance().getHtm(ROOT + "index.htm");
 		htm.setHtml(text);
 		player.sendPacket(htm);
 	}
@@ -93,12 +104,12 @@ public class RaidInfoHandler implements IVoicedCommandHandler, ICustomByPassHand
 	private void showRbListHtm(L2PcInstance player)
 	{
 		NpcHtmlMessage htm = new NpcHtmlMessage(1);
-		String text = HtmCache.getInstance().getHtm(ROOT+"rb_list.htm");
+		String text = HtmCache.getInstance().getHtm(ROOT + "rb_list.htm");
 		htm.setHtml(text);
 		
 		if (player.GetSelectedBoss().size() > 0)
 		{
-			htm.replace("%selected%", "<font color=3399ff>"+player.GetSelectedBoss().get(0)+"</font> <a action=\"bypass -h custom_bosses_rb_list_unselect\">Unselect</a>");
+			htm.replace("%selected%", "<font color=3399ff>" + player.GetSelectedBoss().get(0) + "</font> <a action=\"bypass -h custom_bosses_rb_list_unselect\">Unselect</a>");
 		}
 		else
 		{
@@ -111,7 +122,7 @@ public class RaidInfoHandler implements IVoicedCommandHandler, ICustomByPassHand
 	@Override
 	public String[] getByPassCommands()
 	{
-		return new String [] 
+		return new String[]
 		{
 			"bosses_gb_list",
 			"bosses_rb_list",
@@ -121,7 +132,7 @@ public class RaidInfoHandler implements IVoicedCommandHandler, ICustomByPassHand
 			"bosses_index"
 		};
 	}
-
+	
 	private enum CommandEnum
 	{
 		bosses_gb_list,
@@ -142,7 +153,9 @@ public class RaidInfoHandler implements IVoicedCommandHandler, ICustomByPassHand
 		CommandEnum comm = CommandEnum.valueOf(st.nextToken());
 		
 		if (comm == null)
+		{
 			return;
+		}
 		
 		switch (comm)
 		{
@@ -238,7 +251,7 @@ public class RaidInfoHandler implements IVoicedCommandHandler, ICustomByPassHand
 	private void sendGrandBossesInfo(L2PcInstance activeChar)
 	{
 		NpcHtmlMessage htm = new NpcHtmlMessage(5);
-		htm.setFile(ROOT+"gb_list.htm");
+		htm.setFile(ROOT + "gb_list.htm");
 		TextBuilder t = new TextBuilder();
 		
 		int color = 1;
@@ -265,19 +278,19 @@ public class RaidInfoHandler implements IVoicedCommandHandler, ICustomByPassHand
 				name = "<font color=\"ff0000\">" + name + "</font>";
 			}
 			
-			name = name +"&nbsp;<font color=\"ffff00\">"+template.getLevel()+"</font>";
+			name = name + "&nbsp;<font color=\"ffff00\">" + template.getLevel() + "</font>";
 			
 			if (color == 1)
 			{
 				t.append("<table width=300 border=0 bgcolor=000000><tr>");
-				t.append("<td width=150>"+name+"</td><td width=150>"+(delay <= System.currentTimeMillis() ? "<font color=\"009900\">Alive</font>" : "<font color=\"FF0000\">Dead: "+GetGrandBossKilledTime(boss)+"</font>")+"</td>");
+				t.append("<td width=150>" + name + "</td><td width=150>" + (delay <= System.currentTimeMillis() ? "<font color=\"009900\">Alive</font>" : "<font color=\"FF0000\">Dead: " + GetGrandBossKilledTime(boss) + "</font>") + "</td>");
 				t.append("</tr></table>");
 				color = 2;
 			}
 			else
 			{
 				t.append("<table width=300 border=0><tr>");
-				t.append("<td width=150>"+name+"</td><td width=150>"+(delay <= System.currentTimeMillis() ? "<font color=\"009900\">Alive</font>" : "<font color=\"FF0000\">Dead: "+GetGrandBossKilledTime(boss)+"</font>")+"</td>");
+				t.append("<td width=150>" + name + "</td><td width=150>" + (delay <= System.currentTimeMillis() ? "<font color=\"009900\">Alive</font>" : "<font color=\"FF0000\">Dead: " + GetGrandBossKilledTime(boss) + "</font>") + "</td>");
 				t.append("</tr></table>");
 				color = 1;
 			}
@@ -327,7 +340,7 @@ public class RaidInfoHandler implements IVoicedCommandHandler, ICustomByPassHand
 		}
 		
 		NpcHtmlMessage html = new NpcHtmlMessage(6);
-		html.setFile(ROOT+"rb_list_bylevels.htm");
+		html.setFile(ROOT + "rb_list_bylevels.htm");
 		TextBuilder th = new TextBuilder();
 		
 		int count = CharactersStart;
@@ -355,7 +368,7 @@ public class RaidInfoHandler implements IVoicedCommandHandler, ICustomByPassHand
 				
 				if (name.length() >= 16)
 				{
-					name = name.substring(0,16)+"...";
+					name = name.substring(0, 16) + "...";
 				}
 				
 				if (raid_boss != null && raid_boss.isChampion())
@@ -363,11 +376,11 @@ public class RaidInfoHandler implements IVoicedCommandHandler, ICustomByPassHand
 					name = "<font color=\"ff0000\">" + name + "</font>";
 				}
 				
-				name = name +"&nbsp;<font color=\"ffff00\">"+template.getLevel()+"</font>";
+				name = name + "&nbsp;<font color=\"ffff00\">" + template.getLevel() + "</font>";
 				
 				if (template.aggroRange > 0)
 				{
-					name = name +"<font color=\"ff0000\">*</font>";
+					name = name + "<font color=\"ff0000\">*</font>";
 				}
 				
 				delay = rInfo.getLong("respawnTime");
@@ -389,14 +402,16 @@ public class RaidInfoHandler implements IVoicedCommandHandler, ICustomByPassHand
 				if (color == 1)
 				{
 					th.append("<table width=300 border=0 bgcolor=000000><tr>");
-					th.append("<td width=20>"+count+".</td><td width=130><a action=\"bypass custom_bosses_rb_loc "+x+" "+y+" "+z+" "+locname+"\">"+name+"</a></td><td width=150>"+(delay <= System.currentTimeMillis() ? "<font color=\"009900\">Alive</font>" : "<font color=\"FF0000\">Dead: "+deadTime+"</font>")+"</td>");
+					th.append("<td width=20>" + count + ".</td><td width=130><a action=\"bypass custom_bosses_rb_loc " + x + " " + y + " " + z + " " + locname + "\">" + name + "</a></td><td width=150>"
+						+ (delay <= System.currentTimeMillis() ? "<font color=\"009900\">Alive</font>" : "<font color=\"FF0000\">Dead: " + deadTime + "</font>") + "</td>");
 					th.append("</tr></table>");
 					color = 2;
 				}
 				else
 				{
 					th.append("<table width=300 border=0><tr>");
-					th.append("<td width=20>"+count+".</td><td width=130><a action=\"bypass custom_bosses_rb_loc "+x+" "+y+" "+z+" "+locname+"\">"+name+"</a></td><td width=150>"+(delay <= System.currentTimeMillis() ? "<font color=\"009900\">Alive</font>" : "<font color=\"FF0000\">Dead: "+deadTime+"</font>")+"</td>");
+					th.append("<td width=20>" + count + ".</td><td width=130><a action=\"bypass custom_bosses_rb_loc " + x + " " + y + " " + z + " " + locname + "\">" + name + "</a></td><td width=150>"
+						+ (delay <= System.currentTimeMillis() ? "<font color=\"009900\">Alive</font>" : "<font color=\"FF0000\">Dead: " + deadTime + "</font>") + "</td>");
 					th.append("</tr></table>");
 					color = 1;
 				}
@@ -417,7 +432,7 @@ public class RaidInfoHandler implements IVoicedCommandHandler, ICustomByPassHand
 			}
 			else
 			{
-				th.append("<td width=20><a action=\"bypass -h custom_bosses_rb_bylevels "+minLv+" "+maxLv+" "+x+"\">[" + pagenr + "]</a>&nbsp;&nbsp;</td>");
+				th.append("<td width=20><a action=\"bypass -h custom_bosses_rb_bylevels " + minLv + " " + maxLv + " " + x + "\">[" + pagenr + "]</a>&nbsp;&nbsp;</td>");
 			}
 		}
 		th.append("</tr></table></center>");

@@ -22,10 +22,6 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
 
-/**
- * Format (ch)dddcccd d: cahacter oid d: time left d: fish hp c: c: c: 00 if fish gets damage 02 if fish regens d:
- * @author -Wooden-
- */
 public class ExFishingHpRegen extends L2GameServerPacket
 {
 	private static final String _S__FE_16_EXFISHINGHPREGEN = "[S] FE:16 ExFishingHPRegen";
@@ -44,10 +40,6 @@ public class ExFishingHpRegen extends L2GameServerPacket
 		_hpBarColor = hpBarColor;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#writeImpl()
-	 */
 	@Override
 	protected void writeImpl()
 	{
@@ -65,10 +57,6 @@ public class ExFishingHpRegen extends L2GameServerPacket
 		
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.BasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

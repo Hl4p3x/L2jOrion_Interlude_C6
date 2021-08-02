@@ -16,11 +16,9 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
-import l2jorion.crypt.nProtect;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class GameGuardReply extends L2GameClientPacket
 {
@@ -39,14 +37,10 @@ public class GameGuardReply extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		if (!nProtect.getInstance().checkGameGuardRepy(getClient(), _reply))
-			return;
-		
-		// L2jOrion cannot be reached with GameGuard: L2Net notification --> Close Client connection
 		if (Config.GAMEGUARD_L2NET_CHECK)
 		{
 			getClient().closeNow();
-			LOG.warn("Player with account name " + getClient().accountName + " kicked to use L2Net ");
+			LOG.warn("Player with account name " + getClient()._accountName + " kicked to use L2Net ");
 			return;
 		}
 		

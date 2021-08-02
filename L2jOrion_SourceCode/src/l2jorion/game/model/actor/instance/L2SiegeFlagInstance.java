@@ -56,7 +56,6 @@ public class L2SiegeFlagInstance extends L2NpcInstance
 			{
 				sc.addFlag(this);
 			}
-			sc = null;
 		}
 	}
 	
@@ -78,13 +77,15 @@ public class L2SiegeFlagInstance extends L2NpcInstance
 	public boolean doDie(final L2Character killer)
 	{
 		if (!super.doDie(killer))
+		{
 			return false;
+		}
+		
 		L2SiegeClan sc = _siege.getAttackerClan(_player.getClan());
 		if (sc != null)
 		{
 			sc.removeFlag(this);
 		}
-		sc = null;
 		
 		return true;
 	}

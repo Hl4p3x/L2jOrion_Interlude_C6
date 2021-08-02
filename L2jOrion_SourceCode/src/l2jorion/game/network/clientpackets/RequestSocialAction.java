@@ -20,9 +20,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.model.actor.instance.L2PcInstance;
@@ -31,6 +28,8 @@ import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class RequestSocialAction extends L2GameClientPacket
 {
@@ -48,7 +47,10 @@ public class RequestSocialAction extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
+		
 		if (activeChar.isSubmitingPin())
 		{
 			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
@@ -80,15 +82,9 @@ public class RequestSocialAction extends L2GameClientPacket
 			
 			final SocialAction atk = new SocialAction(activeChar.getObjectId(), _actionId);
 			activeChar.broadcastPacket(atk);
-			/*
-			 * // Schedule a social task to wait for the animation to finish ThreadPoolManager.getInstance().scheduleGeneral(new SocialTask(this), 2600); activeChar.setIsParalyzed(true);
-			 */
 		}
 	}
 	
-	/*
-	 * class SocialTask implements Runnable { L2PcInstance _player; SocialTask(RequestSocialAction action) { _player = getClient().getActiveChar(); } public void run() { _player.setIsParalyzed(false); } }
-	 */
 	
 	@Override
 	public String getType()

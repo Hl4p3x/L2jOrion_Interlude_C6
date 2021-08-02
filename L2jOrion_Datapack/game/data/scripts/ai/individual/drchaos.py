@@ -3,7 +3,7 @@ from java.lang import System
 from l2jorion import Config
 from l2jorion.game.ai import CtrlIntention
 from l2jorion.game.datatables.sql import SpawnTable
-from l2jorion.game.model import L2CharPosition
+from l2jorion.game.model import Location
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
@@ -59,7 +59,7 @@ class Quest (JQuest) :
        npc.broadcastPacket(SpecialCamera(npc.getObjectId(),1,-150,10,3000,20000))
        self.startQuestTimer("4",2500,npc,player)
     elif event == "4" :
-       npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, L2CharPosition(96055,-110759,-3312,0))
+       npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, Location(96055,-110759,-3312,0))
        self.startQuestTimer("5",2000,npc,player)
     elif event == "5" :
        player.teleToLocation(94832,-112624,-3304)
@@ -76,7 +76,7 @@ class Quest (JQuest) :
   def onFirstTalk (self,npc,player):
     npcId = npc.getNpcId()
     if npcId == Doctor_Chaos :
-       npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, L2CharPosition(96323,-110914,-3328,0))
+       npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, Location(96323,-110914,-3328,0))
        self.startQuestTimer("1",3000,npc,player)
     return ""
 

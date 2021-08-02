@@ -25,6 +25,7 @@ import l2jorion.game.model.L2Object;
 public final class DeleteObject extends L2GameServerPacket
 {
 	private static final String _S__1E_DELETEOBJECT = "[S] 12 DeleteObject";
+	
 	private final int _objectId;
 	
 	public DeleteObject(L2Object obj)
@@ -32,17 +33,12 @@ public final class DeleteObject extends L2GameServerPacket
 		_objectId = obj.getObjectId();
 	}
 	
-	public DeleteObject(int objectId)
-	{
-		_objectId = objectId;
-	}
-	
 	@Override
 	protected final void writeImpl()
 	{
 		writeC(0x12);
 		writeD(_objectId);
-		writeD(0x00); // c2
+		writeD(0x00);
 	}
 	
 	@Override

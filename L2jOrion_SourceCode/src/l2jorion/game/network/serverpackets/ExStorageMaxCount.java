@@ -22,11 +22,6 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * Format: (ch)ddddddd d: Number of Inventory Slots d: Number of Warehouse Slots d: Number of Freight Slots (unconfirmed) (200 for a low level dwarf) d: Private Sell Store Slots (unconfirmed) (4 for a low level dwarf) d: Private Buy Store Slots (unconfirmed) (5 for a low level dwarf) d: Dwarven
- * Recipe Book Slots d: Normal Recipe Book Slots
- * @author -Wooden- format from KenM
- */
 public class ExStorageMaxCount extends L2GameServerPacket
 {
 	private static final String _S__FE_2E_EXSTORAGEMAXCOUNT = "[S] FE:2E ExStorageMaxCount";
@@ -51,10 +46,6 @@ public class ExStorageMaxCount extends L2GameServerPacket
 		_recipe = _activeChar.GetCommonRecipeLimit();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#writeImpl()
-	 */
 	@Override
 	protected void writeImpl()
 	{
@@ -71,10 +62,6 @@ public class ExStorageMaxCount extends L2GameServerPacket
 		
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.BasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

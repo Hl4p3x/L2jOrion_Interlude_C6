@@ -16,9 +16,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * @author Gnacik
- */
 public class ExClosePartyRoom extends L2GameServerPacket
 {
 	public ExClosePartyRoom()

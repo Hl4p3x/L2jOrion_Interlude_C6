@@ -28,9 +28,6 @@ public class Expression
 {
 	private final ScriptContext _context;
 	
-	// private final String _lang;
-	// private final String _code;
-	
 	public static Object eval(final String lang, final String code)
 	{
 		try
@@ -73,8 +70,6 @@ public class Expression
 	private Expression(final ScriptContext pContext/* , String pLang, String pCode */)
 	{
 		_context = pContext;
-		// _lang = pLang;
-		// _code = pCode;
 	}
 	
 	public <T> void addDynamicVariable(final String name, final T value)

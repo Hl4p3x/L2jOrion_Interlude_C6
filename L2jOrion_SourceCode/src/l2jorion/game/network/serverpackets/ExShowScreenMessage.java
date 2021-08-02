@@ -21,14 +21,14 @@ public class ExShowScreenMessage extends L2GameServerPacket
 	public static enum SMPOS
 	{
 		DUMMY,
-		TOP_LEFT, //1
-		TOP_CENTER, //2
-		TOP_RIGHT, //3
-		MIDDLE_LEFT, //4
-		MIDDLE_CENTER, //5
-		MIDDLE_RIGHT, //6
-		BOTTOM_CENTER, //7
-		BOTTOM_RIGHT, //8
+		TOP_LEFT, // 1
+		TOP_CENTER, // 2
+		TOP_RIGHT, // 3
+		MIDDLE_LEFT, // 4
+		MIDDLE_CENTER, // 5
+		MIDDLE_RIGHT, // 6
+		BOTTOM_CENTER, // 7
+		BOTTOM_RIGHT, // 8
 	}
 	
 	private final int _type;
@@ -63,12 +63,6 @@ public class ExShowScreenMessage extends L2GameServerPacket
 		this(text, time, pos.ordinal(), effect);
 	}
 	
-	/**
-	 * Display a System Message on the screen for a given position and time.
-	 * @param systemMsg the System Message Id
-	 * @param position the position on the screen
-	 * @param time the display time
-	 */
 	public ExShowScreenMessage(SystemMessageId systemMsg, int position, int time)
 	{
 		_type = 1;
@@ -131,7 +125,7 @@ public class ExShowScreenMessage extends L2GameServerPacket
 		writeD(_fade ? 1 : 0); // fade effect (0 - disabled, 1 enabled)
 		writeS(_text); // your text (_type must be 1, otherwise no effect)
 	}
-
+	
 	@Override
 	public String getType()
 	{

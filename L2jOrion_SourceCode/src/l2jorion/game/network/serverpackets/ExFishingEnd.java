@@ -23,10 +23,6 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * Format: (ch) dc d: character object id c: 1 if won 0 if failed
- * @author -Wooden-
- */
 public class ExFishingEnd extends L2GameServerPacket
 {
 	private static final String _S__FE_14_EXFISHINGEND = "[S] FE:14 ExFishingEnd";
@@ -39,10 +35,6 @@ public class ExFishingEnd extends L2GameServerPacket
 		_activeChar = character;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#writeImpl()
-	 */
 	@Override
 	protected void writeImpl()
 	{
@@ -53,10 +45,6 @@ public class ExFishingEnd extends L2GameServerPacket
 		
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.BasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

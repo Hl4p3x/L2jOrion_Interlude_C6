@@ -20,9 +20,6 @@
  */
 package l2jorion.game.handler.custom;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.handler.ICustomByPassHandler;
 import l2jorion.game.handler.IItemHandler;
@@ -30,6 +27,8 @@ import l2jorion.game.handler.ItemHandler;
 import l2jorion.game.handler.item.ExtractableItems;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 /**
  * @author Nick

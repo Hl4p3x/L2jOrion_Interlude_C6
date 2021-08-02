@@ -23,6 +23,10 @@ package l2jorion.game.skills;
 import java.io.File;
 import java.util.List;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
 import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.model.L2Skill;
@@ -30,13 +34,8 @@ import l2jorion.game.model.L2Skill.SkillType;
 import l2jorion.game.skills.conditions.Condition;
 import l2jorion.game.templates.StatsSet;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-
 final class DocumentSkill extends DocumentBase
 {
-	
 	public class Skill
 	{
 		public int id;
@@ -83,7 +82,9 @@ final class DocumentSkill extends DocumentBase
 		catch (final RuntimeException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Error in table: " + name + " of Skill Id " + _currentSkill.id, e);
 			return "";
@@ -100,7 +101,9 @@ final class DocumentSkill extends DocumentBase
 		catch (final RuntimeException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("wrong level count in skill Id " + _currentSkill.id, e);
 			return "";
@@ -169,7 +172,9 @@ final class DocumentSkill extends DocumentBase
 		}
 		
 		if (_currentSkill.sets.length != lastLvl)
+		{
 			throw new RuntimeException("Skill id=" + skillId + " number of levels missmatch, " + lastLvl + " levels expected");
+		}
 		
 		final Node first = n.getFirstChild();
 		for (n = first; n != null; n = n.getNextSibling())
@@ -216,7 +221,9 @@ final class DocumentSkill extends DocumentBase
 		}
 		
 		if (_currentSkill.enchsets1.length != enchantLevels1)
+		{
 			throw new RuntimeException("Skill id=" + skillId + " number of levels missmatch, " + enchantLevels1 + " levels expected");
+		}
 		
 		for (int i = 0; i < enchantLevels2; i++)
 		{
@@ -243,7 +250,9 @@ final class DocumentSkill extends DocumentBase
 		}
 		
 		if (_currentSkill.enchsets2.length != enchantLevels2)
+		{
 			throw new RuntimeException("Skill id=" + skillId + " number of levels missmatch, " + enchantLevels2 + " levels expected");
+		}
 		
 		makeSkills();
 		for (int i = 0; i < lastLvl; i++)
@@ -385,7 +394,9 @@ final class DocumentSkill extends DocumentBase
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.error("Skill id=" + _currentSkill.sets[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.sets[i]).getDisplayId() + "level" + _currentSkill.sets[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.sets[i]).getLevel(), e);
 			}
@@ -402,7 +413,9 @@ final class DocumentSkill extends DocumentBase
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.error("Skill id=" + _currentSkill.enchsets1[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.enchsets1[i]).getDisplayId() + " level=" + _currentSkill.enchsets1[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.enchsets1[i]).getLevel(), e);
 			}
@@ -419,7 +432,9 @@ final class DocumentSkill extends DocumentBase
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.error("Skill id=" + _currentSkill.enchsets2[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.enchsets2[i]).getDisplayId() + " level=" + _currentSkill.enchsets2[i].getEnum("skillType", SkillType.class).makeSkill(_currentSkill.enchsets2[i]).getLevel(), e);
 			}

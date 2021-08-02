@@ -29,10 +29,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.L2ZoneType;
 import l2jorion.game.thread.ThreadPoolManager;
 
-/**
- * A dynamic zone? Maybe use this for interlude skills like protection field :>
- * @author durgus
- */
 public class L2DynamicZone extends L2ZoneType
 {
 	private final L2WorldRegion _region;
@@ -61,8 +57,6 @@ public class L2DynamicZone extends L2ZoneType
 			}
 		};
 		setTask(ThreadPoolManager.getInstance().scheduleGeneral(r, skill.getBuffDuration()));
-		
-		r = null;
 	}
 	
 	@Override

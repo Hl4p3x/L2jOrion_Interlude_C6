@@ -35,26 +35,18 @@ public final class GeoDriver
 	private static final int WORLD_MIN_Y = -589824;
 	private static final int WORLD_MAX_Y = 458751;
 	
-	/** Regions in the world on the x axis */
 	public static final int GEO_REGIONS_X = 32;
-	/** Regions in the world on the y axis */
 	public static final int GEO_REGIONS_Y = 32;
-	/** Region in the world */
+	
 	public static final int GEO_REGIONS = GEO_REGIONS_X * GEO_REGIONS_Y;
 	
-	/** Blocks in the world on the x axis */
 	public static final int GEO_BLOCKS_X = GEO_REGIONS_X * IRegion.REGION_BLOCKS_X;
-	/** Blocks in the world on the y axis */
 	public static final int GEO_BLOCKS_Y = GEO_REGIONS_Y * IRegion.REGION_BLOCKS_Y;
-	/** Blocks in the world */
 	public static final int GEO_BLOCKS = GEO_REGIONS * IRegion.REGION_BLOCKS;
 	
-	/** Cells in the world on the x axis */
 	public static final int GEO_CELLS_X = GEO_BLOCKS_X * IBlock.BLOCK_CELLS_X;
-	/** Cells in the world in the y axis */
 	public static final int GEO_CELLS_Y = GEO_BLOCKS_Y * IBlock.BLOCK_CELLS_Y;
 	
-	/** The regions array */
 	private final AtomicReferenceArray<IRegion> _regions = new AtomicReferenceArray<>(GEO_REGIONS);
 	
 	public GeoDriver()
@@ -134,6 +126,7 @@ public final class GeoDriver
 		{
 			throw new IllegalArgumentException();
 		}
+		
 		return (worldX - WORLD_MIN_X) / 16;
 	}
 	
@@ -143,6 +136,7 @@ public final class GeoDriver
 		{
 			throw new IllegalArgumentException();
 		}
+		
 		return (worldY - WORLD_MIN_Y) / 16;
 	}
 	

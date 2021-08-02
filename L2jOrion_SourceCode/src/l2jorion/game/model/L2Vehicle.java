@@ -20,13 +20,13 @@ import java.util.List;
 
 import javolution.util.FastList;
 import l2jorion.game.ai.CtrlIntention;
-import l2jorion.game.ai.L2CharacterAI;
 import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.datatables.csv.MapRegionTable;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.knownlist.VehicleKnownList;
 import l2jorion.game.model.actor.stat.VehicleStat;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.L2GameServerPacket;
@@ -35,9 +35,6 @@ import l2jorion.game.templates.L2Weapon;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Util;
 
-/**
- * @author Damon
- */
 public abstract class L2Vehicle extends L2Character
 {
 	protected int _dockId = 0;
@@ -91,12 +88,13 @@ public abstract class L2Vehicle extends L2Character
 			{
 				getStat().setMoveSpeed(point.moveSpeed);
 			}
+			
 			if (point.rotationSpeed > 0)
 			{
 				getStat().setRotationSpeed(point.rotationSpeed);
 			}
 			
-			getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new L2CharPosition(point.x, point.y, point.z, 0));
+			getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new Location(point.x, point.y, point.z, 0));
 			return;
 		}
 		getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE);
@@ -142,6 +140,7 @@ public abstract class L2Vehicle extends L2Character
 						final double dx = point.x - getX();
 						final double dy = point.y - getY();
 						final double distance = Math.sqrt((dx * dx) + (dy * dy));
+						
 						if (distance > 1) // vertical movement heading check
 						{
 							setHeading(Util.calculateHeadingFrom(getX(), getY(), point.x, point.y));
@@ -235,7 +234,7 @@ public abstract class L2Vehicle extends L2Character
 		player.setInVehiclePosition(null);
 		removePassenger(player);
 		
-		player.setInsideZone(ZONE_PEACE, false);
+		player.setInsideZone(ZoneId.ZONE_PEACE, false);
 		player.sendPacket(SystemMessageId.EXIT_PEACEFUL_ZONE);
 	}
 	
@@ -254,7 +253,7 @@ public abstract class L2Vehicle extends L2Character
 		
 		_passengers.add(player);
 		
-		player.setInsideZone(ZONE_PEACE, true);
+		player.setInsideZone(ZoneId.ZONE_PEACE, true);
 		player.sendPacket(SystemMessageId.ENTER_PEACEFUL_ZONE);
 		
 		return true;
@@ -292,14 +291,6 @@ public abstract class L2Vehicle extends L2Character
 		}
 	}
 	
-	/**
-	 * Consume ticket(s) and teleport player from boat if no correct ticket
-	 * @param itemId Ticket itemId
-	 * @param count Ticket count
-	 * @param oustX
-	 * @param oustY
-	 * @param oustZ
-	 */
 	public void payForRide(int itemId, int count, int oustX, int oustY, int oustZ)
 	{
 		final Collection<L2PcInstance> passengers = getKnownList().getKnownTypeInRadius(L2PcInstance.class, 1000);
@@ -388,13 +379,13 @@ public abstract class L2Vehicle extends L2Character
 	}
 	
 	@Override
-	public void stopMove(L2CharPosition pos)
+	public void stopMove(Location loc)
 	{
 		_move = null;
-		if (pos != null)
+		if (loc != null)
 		{
-			setXYZ(pos.x, pos.y, pos.z);
-			setHeading(pos.heading);
+			setXYZ(loc.getX(), loc.getY(), loc.getZ());
+			setHeading(loc.getHeading());
 			revalidateZone(true);
 		}
 	}
@@ -495,22 +486,5 @@ public abstract class L2Vehicle extends L2Character
 	public boolean isAutoAttackable(L2Character attacker)
 	{
 		return false;
-	}
-	
-	@Override
-	public void setAI(L2CharacterAI newAI)
-	{
-		if (_ai == null)
-		{
-			_ai = newAI;
-		}
-	}
-	
-	public class AIAccessor extends L2Character.AIAccessor
-	{
-		@Override
-		public void detachAI()
-		{
-		}
 	}
 }

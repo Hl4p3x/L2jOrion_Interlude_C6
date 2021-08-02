@@ -21,6 +21,7 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
+import l2jorion.game.enums.AchType;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
@@ -43,7 +44,9 @@ public final class RequestEvaluate extends L2GameClientPacket
 		SystemMessage sm;
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		if (!(activeChar.getTarget() instanceof L2PcInstance))
 		{
@@ -101,11 +104,12 @@ public final class RequestEvaluate extends L2GameClientPacket
 		sm.addString(target.getName());
 		sm.addNumber(activeChar.getRecomLeft());
 		activeChar.sendPacket(sm);
+		activeChar.getAchievement().increase(AchType.RECOMMEND);
 		
 		sm = new SystemMessage(SystemMessageId.YOU_HAVE_BEEN_RECOMMENDED);
 		sm.addString(activeChar.getName());
 		target.sendPacket(sm);
-		sm = null;
+		target.getAchievement().increase(AchType.RECOMMEND);
 		
 		activeChar.sendPacket(new UserInfo(activeChar));
 		target.broadcastUserInfo();

@@ -45,15 +45,14 @@ import javolution.xml.stream.XMLStreamException;
 import javolution.xml.stream.XMLStreamReaderImpl;
 import l2jorion.Config;
 import l2jorion.ConfigLoader;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.login.GameServerThread;
 import l2jorion.login.network.gameserverpackets.ServerStatus;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.util.random.Rnd;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class GameServerTable
 {
@@ -77,7 +76,9 @@ public class GameServerTable
 			_instance = new GameServerTable();
 		}
 		else
+		{
 			throw new IllegalStateException("Load can only be invoked a single time.");
+		}
 	}
 	
 	public static GameServerTable getInstance()
@@ -131,7 +132,7 @@ public class GameServerTable
 				{
 					if (xpp.getLocalName().toString().equals("server"))
 					{
-						Integer id = new Integer(xpp.getAttributeValue(null, "id").toString());
+						Integer id = Integer.valueOf(xpp.getAttributeValue(null, "id").toString());
 						String name = xpp.getAttributeValue(null, "name").toString();
 						_serverNames.put(id, name);
 						
@@ -145,7 +146,9 @@ public class GameServerTable
 		catch (final FileNotFoundException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("servername.xml could not be loaded: file not found");
 		}
@@ -303,7 +306,9 @@ public class GameServerTable
 		catch (final SQLException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("SQL error while saving gameserver: " + e);
 		}
@@ -337,7 +342,9 @@ public class GameServerTable
 	private String hexToString(final byte[] hex)
 	{
 		if (hex == null)
+		{
 			return "null";
+		}
 		
 		return new BigInteger(hex).toString(16);
 	}

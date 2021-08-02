@@ -28,6 +28,7 @@ import l2jorion.game.templates.L2Weapon;
 public class GMViewWarehouseWithdrawList extends L2GameServerPacket
 {
 	private static final String _S__95_GMViewWarehouseWithdrawList = "[S] 95 GMViewWarehouseWithdrawList";
+	
 	private final L2ItemInstance[] _items;
 	private final String _playerName;
 	private final L2PcInstance _activeChar;

@@ -67,7 +67,7 @@ public class Orfen extends Quest implements Runnable
 	{
 		super(questId, name, descr);
 		
-		StatsSet info = GrandBossManager.getInstance().getStatsSet(ORFEN);		
+		StatsSet info = GrandBossManager.getInstance().getStatsSet(ORFEN);
 		Integer status = GrandBossManager.getInstance().getBossStatus(ORFEN);
 		
 		addEventId(ORFEN, Quest.QuestEventType.ON_KILL);
@@ -76,7 +76,7 @@ public class Orfen extends Quest implements Runnable
 		switch (status)
 		{
 			case DEAD:
-			{			
+			{
 				long temp = info.getLong("respawn_time") - Calendar.getInstance().getTimeInMillis();
 				if (temp > 0)
 				{
@@ -92,19 +92,14 @@ public class Orfen extends Quest implements Runnable
 					orfen = (L2GrandBossInstance) addSpawn(ORFEN, loc_x, loc_y, loc_z, heading, false, 0);
 					if (Config.ANNOUNCE_TO_ALL_SPAWN_RB)
 					{
-						Announcements.getInstance().announceRB("The Grand boss " + orfen.getName() + " spawned in world.");
+						Announcements.getInstance().announceWithServerName("The Grand boss " + orfen.getName() + " spawned in world.");
 					}
 					GrandBossManager.getInstance().setBossStatus(ORFEN, LIVE);
 					GrandBossManager.getInstance().addBoss(orfen);
-					String text = "Orfen spawned.";
-					Log.add(text, "GrandBossSpawns");
 					
 					if (Config.L2JMOD_CHAMPION_ENABLE)
 					{
-						if (Config.L2JMOD_CHAMP_RAID_BOSSES 
-								&& Config.L2JMOD_CHAMPION_FREQUENCY > 0 
-								&& orfen.getLevel() >= Config.L2JMOD_CHAMP_MIN_LVL 
-								&& orfen.getLevel() <= Config.L2JMOD_CHAMP_MAX_LVL)
+						if (Config.L2JMOD_CHAMP_RAID_BOSSES && Config.L2JMOD_CHAMPION_FREQUENCY > 0 && orfen.getLevel() >= Config.L2JMOD_CHAMP_MIN_LVL && orfen.getLevel() <= Config.L2JMOD_CHAMP_MAX_LVL)
 						{
 							orfen.setChampion(false);
 							int random = Rnd.get(100);
@@ -118,7 +113,7 @@ public class Orfen extends Quest implements Runnable
 			}
 				break;
 			case LIVE:
-			{				
+			{
 				/*
 				 * int loc_x = info.getInteger("loc_x"); int loc_y = info.getInteger("loc_y"); int loc_z = info.getInteger("loc_z"); int heading = info.getInteger("heading");
 				 */
@@ -133,16 +128,14 @@ public class Orfen extends Quest implements Runnable
 				orfen = (L2GrandBossInstance) addSpawn(ORFEN, loc_x, loc_y, loc_z, heading, false, 0);
 				if (Config.ANNOUNCE_TO_ALL_SPAWN_RB)
 				{
-					Announcements.getInstance().announceRB("The Grand boss " + orfen.getName() + " spawned in world.");
+					Announcements.getInstance().announceWithServerName("The Grand boss " + orfen.getName() + " spawned in world.");
 				}
 				GrandBossManager.getInstance().addBoss(orfen);
-				String text = "Orfen spawned.";
-				Log.add(text, "GrandBossSpawns");
 				orfen.setCurrentHpMp(hp, mp);
 			}
 				break;
 			default:
-			{			
+			{
 				int loc_x = 55024;
 				int loc_y = 17368;
 				int loc_z = -5412;
@@ -151,14 +144,12 @@ public class Orfen extends Quest implements Runnable
 				orfen = (L2GrandBossInstance) addSpawn(ORFEN, loc_x, loc_y, loc_z, heading, false, 0);
 				if (Config.ANNOUNCE_TO_ALL_SPAWN_RB)
 				{
-					Announcements.getInstance().announceRB("The Grand boss " + orfen.getName() + " spawned in world.");
+					Announcements.getInstance().announceWithServerName("The Grand boss " + orfen.getName() + " spawned in world.");
 				}
 				GrandBossManager.getInstance().setBossStatus(ORFEN, LIVE);
-				GrandBossManager.getInstance().addBoss(orfen);		
-				String text = "Orfen spawned.";
-				Log.add(text, "GrandBossSpawns");
+				GrandBossManager.getInstance().addBoss(orfen);
 			}
-		}		
+		}
 	}
 	
 	@Override
@@ -169,7 +160,7 @@ public class Orfen extends Quest implements Runnable
 		switch (event_enum)
 		{
 			case ORFEN_SPAWN:
-			{				
+			{
 				int loc_x = 55024;
 				int loc_y = 17368;
 				int loc_z = -5412;
@@ -178,18 +169,16 @@ public class Orfen extends Quest implements Runnable
 				orfen = (L2GrandBossInstance) addSpawn(ORFEN, loc_x, loc_y, loc_z, heading, false, 0);
 				if (Config.ANNOUNCE_TO_ALL_SPAWN_RB)
 				{
-					Announcements.getInstance().announceRB("The Grand boss " + orfen.getName() + " spawned in world.");
+					Announcements.getInstance().announceWithServerName("The Grand boss " + orfen.getName() + " spawned in world.");
 				}
 				GrandBossManager.getInstance().setBossStatus(ORFEN, LIVE);
 				GrandBossManager.getInstance().addBoss(orfen);
-				String text = "Orfen spawned.";
-				Log.add(text, "GrandBossSpawns");
 			}
 				break;
 			case ORFEN_REFRESH:
-			{			
+			{
 				if (npc == null || npc.getSpawn() == null)
-				{				
+				{
 					cancelQuestTimer("ORFEN_REFRESH", npc, null);
 					break;
 				}
@@ -197,30 +186,30 @@ public class Orfen extends Quest implements Runnable
 				double saved_hp = -1;
 				
 				if (npc.getNpcId() == ORFEN && !npc.getSpawn().is_customBossInstance())
-				{					
+				{
 					saved_hp = GrandBossManager.getInstance().getStatsSet(ORFEN).getDouble("currentHP");
 					
 					if (saved_hp < npc.getCurrentHp())
 					{
 						npc.setCurrentHp(saved_hp);
 						GrandBossManager.getInstance().getStatsSet(ORFEN).set("currentHP", npc.getMaxHp());
-					}					
+					}
 				}
 				
 				if ((Teleported && npc.getCurrentHp() > npc.getMaxHp() * 0.95))
-				{				
+				{
 					cancelQuestTimer("ORFEN_REFRESH", npc, null);
-					startQuestTimer("ORFEN_RETURN", 10000, npc, null);					
+					startQuestTimer("ORFEN_RETURN", 10000, npc, null);
 				}
 				else
-				{ // restart the refresh scheduling				
-					startQuestTimer("ORFEN_REFRESH", 10000, npc, null);					
+				{ // restart the refresh scheduling
+					startQuestTimer("ORFEN_REFRESH", 10000, npc, null);
 				}
 				
 			}
 				break;
 			case ORFEN_RETURN:
-			{				
+			{
 				if (npc == null || npc.getSpawn() == null)
 				{
 					break;
@@ -232,16 +221,16 @@ public class Orfen extends Quest implements Runnable
 				npc.getSpawn().setLocx(55024);
 				npc.getSpawn().setLocy(17368);
 				npc.getSpawn().setLocz(-5412);
-				npc.teleToLocation(55024, 17368, -5412, false);				
+				npc.teleToLocation(55024, 17368, -5412, false);
 			}
 				break;
 			default:
 			{
 				LOG.info("ORFEN: Not defined event: " + event + "!");
-			}			
+			}
 		}
 		
-		return super.onAdvEvent(event, npc, player);		
+		return super.onAdvEvent(event, npc, player);
 	}
 	
 	@Override
@@ -276,7 +265,7 @@ public class Orfen extends Quest implements Runnable
 			}
 		}
 		
-		return super.onAttack(npc, attacker, damage, isPet);		
+		return super.onAttack(npc, attacker, damage, isPet);
 	}
 	
 	@Override
@@ -295,9 +284,9 @@ public class Orfen extends Quest implements Runnable
 				
 				Calendar time = Calendar.getInstance();
 				time.add(Calendar.HOUR, days);
-				time.set(Calendar.HOUR, Config.ORFEN_FIX_TIME_H);
-				time.set(Calendar.MINUTE, Rnd.get(0,Config.ORFEN_FIX_TIME_M));
-				time.set(Calendar.SECOND, Rnd.get(0,Config.ORFEN_FIX_TIME_S));
+				time.set(Calendar.HOUR_OF_DAY, Config.ORFEN_FIX_TIME_H);
+				time.set(Calendar.MINUTE, Rnd.get(0, Config.ORFEN_FIX_TIME_M));
+				time.set(Calendar.SECOND, Rnd.get(0, Config.ORFEN_FIX_TIME_S));
 				
 				long _respawnEnd = time.getTimeInMillis();
 				long _respawn = time.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
@@ -327,7 +316,7 @@ public class Orfen extends Quest implements Runnable
 				
 				String text = "Orfen killed. Next respawn: " + DateFormat.getDateTimeInstance().format(gc.getTime());
 				Log.add(text, "GrandBosses");
-			}			
+			}
 		}
 		
 		return super.onKill(npc, killer, isPet);
@@ -336,5 +325,5 @@ public class Orfen extends Quest implements Runnable
 	@Override
 	public void run()
 	{
-	}	
+	}
 }

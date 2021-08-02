@@ -19,9 +19,6 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.L2CommandChannel;
 import l2jorion.game.model.L2Party;
 
-/**
- * @author chris_00 ch sdd d[sdd]
- */
 public class ExMultiPartyCommandChannelInfo extends L2GameServerPacket
 {
 	private final L2CommandChannel _channel;
@@ -35,7 +32,9 @@ public class ExMultiPartyCommandChannelInfo extends L2GameServerPacket
 	protected void writeImpl()
 	{
 		if (_channel == null)
+		{
 			return;
+		}
 		
 		writeC(0xfe);
 		writeH(0x30);

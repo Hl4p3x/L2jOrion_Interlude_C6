@@ -18,9 +18,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.BlockList;
 import l2jorion.game.model.L2World;
@@ -33,7 +30,7 @@ import l2jorion.game.util.Util;
 
 public final class TradeRequest extends L2GameClientPacket
 {
-	private static Logger LOG = LoggerFactory.getLogger(TradeRequest.class.getName());
+	// private static Logger LOG = LoggerFactory.getLogger(TradeRequest.class.getName());
 	
 	private int _objectId;
 	
@@ -48,15 +45,17 @@ public final class TradeRequest extends L2GameClientPacket
 	{
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
-
+		}
+		
 		if (!player.getAccessLevel().allowTransaction())
 		{
 			player.sendMessage("Transactions are disable for your Access Level");
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
+		
 		final L2PcInstance target = L2World.getInstance().getPlayer(_objectId);
 		if ((target == null) || !player.getKnownList().knowsObject(target) || target.getObjectId() == player.getObjectId())
 		{
@@ -70,7 +69,7 @@ public final class TradeRequest extends L2GameClientPacket
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
+		
 		if (BlockList.isBlocked(target, player))
 		{
 			SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.S1_HAS_ADDED_YOU_TO_IGNORE_LIST);
@@ -85,7 +84,7 @@ public final class TradeRequest extends L2GameClientPacket
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
+		
 		if (target.isStunned())
 		{
 			player.sendMessage("You can't Request a Trade when target Stunned");
@@ -251,7 +250,7 @@ public final class TradeRequest extends L2GameClientPacket
 		{
 			if (player.getLevel() < 76 && target.getLevel() >= 76 || target.getLevel() < 76 || player.getLevel() >= 76)
 			{
-				player.sendMessage("You Cannot Trade a Lower Level Character");
+				player.sendMessage("You cannot trade a lower level character.");
 				player.sendPacket(ActionFailed.STATIC_PACKET);
 				return;
 			}
@@ -259,11 +258,6 @@ public final class TradeRequest extends L2GameClientPacket
 		
 		if (player.isProcessingTransaction())
 		{
-			if (Config.DEBUG)
-			{
-				LOG.warn("Already trading with someone");
-			}
-			
 			player.sendPacket(new SystemMessage(SystemMessageId.ALREADY_TRADING));
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
@@ -271,11 +265,6 @@ public final class TradeRequest extends L2GameClientPacket
 		
 		if (target.isProcessingRequest() || target.isProcessingTransaction())
 		{
-			if (Config.DEBUG)
-			{
-				LOG.info("Transaction already in progress.");
-			}
-			
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_IS_BUSY_TRY_LATER);
 			sm.addString(target.getName());
 			player.sendPacket(sm);

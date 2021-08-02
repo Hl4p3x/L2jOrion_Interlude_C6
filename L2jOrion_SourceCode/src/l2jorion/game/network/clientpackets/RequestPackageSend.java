@@ -38,13 +38,9 @@ import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.powerpack.PowerPackConfig;
 import l2jorion.game.templates.L2EtcItemType;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author -Wooden-
- */
 public final class RequestPackageSend extends L2GameClientPacket
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestPackageSend.class);
@@ -76,15 +72,21 @@ public final class RequestPackageSend extends L2GameClientPacket
 	protected void runImpl()
 	{
 		if (_count == -1 || _items == null)
+		{
 			return;
+		}
 		
 		final L2PcInstance player = getClient().getActiveChar();
 		
 		if (player == null)
+		{
 			return;
+		}
 		
 		if (player.getObjectId() == _objectID)
+		{
 			return;
+		}
 		
 		final L2PcInstance target = L2PcInstance.load(_objectID);
 		
@@ -93,10 +95,14 @@ public final class RequestPackageSend extends L2GameClientPacket
 			return;
 		}
 		else if (!player.getAccountChars().containsKey(_objectID))
+		{
 			return;
+		}
 		
 		if (L2World.getInstance().getPlayer(_objectID) != null)
+		{
 			return;
+		}
 		
 		if (!getClient().getFloodProtectors().getTransaction().tryPerformAction("deposit"))
 		{
@@ -110,14 +116,18 @@ public final class RequestPackageSend extends L2GameClientPacket
 		final ItemContainer warehouse = player.getActiveWarehouse();
 		
 		if (!PowerPackConfig.GMSHOP_USECOMMAND && warehouse == null)
+		{
 			return;
+		}
 		
 		final L2FolkInstance manager = player.getLastFolkNPC();
 		
 		if (!PowerPackConfig.GMSHOP_USECOMMAND)
 		{
 			if ((manager == null || !player.isInsideRadius(manager, L2NpcInstance.INTERACTION_DISTANCE, false, false)) && !player.isGM())
+			{
 				return;
+			}
 		}
 		
 		if (warehouse instanceof PcFreight && !player.getAccessLevel().allowTransaction())
@@ -129,7 +139,9 @@ public final class RequestPackageSend extends L2GameClientPacket
 		
 		// Alt game - Karma punishment
 		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_USE_WAREHOUSE && player.getKarma() > 0)
+		{
 			return;
+		}
 		
 		// Freight price from config or normal price per item slot (30)
 		final int fee = _count * Config.ALT_GAME_FREIGHT_PRICE;
@@ -161,7 +173,14 @@ public final class RequestPackageSend extends L2GameClientPacket
 			}
 			
 			if (!Config.UNTRADABLE_FOR_WAREHOUSE && !item.isTradeable() || item.getItemType() == L2EtcItemType.QUEST)
+			{
 				return;
+			}
+			
+			if (player.getLevel() < Config.PROTECTED_START_ITEMS_LVL && Config.LIST_PROTECTED_START_ITEMS.contains(item.getItemId()))
+			{
+				return;
+			}
 			
 			// Calculate needed adena and slots
 			if (item.getItemId() == 57)

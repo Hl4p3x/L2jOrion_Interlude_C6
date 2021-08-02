@@ -24,9 +24,6 @@ import javolution.util.FastList;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.skills.Env;
 
-/**
- * @author nBd
- */
 public class ConditionTargetRaceId extends Condition
 {
 	private final FastList<Integer> _raceIds;
@@ -40,7 +37,9 @@ public class ConditionTargetRaceId extends Condition
 	public boolean testImpl(final Env env)
 	{
 		if (_raceIds == null || env.target == null || !(env.target instanceof L2NpcInstance))
+		{
 			return false;
+		}
 		
 		final L2NpcInstance target = (L2NpcInstance) env.target;
 		if (target.getTemplate() != null && target.getTemplate().race != null)

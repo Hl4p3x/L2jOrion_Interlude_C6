@@ -22,13 +22,10 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2RecipeList;
 
-/**
- * format d d(dd)
- * @version $Revision: 1.1.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public class RecipeBookItemList extends L2GameServerPacket
 {
 	private static final String _S__D6_RECIPEBOOKITEMLIST = "[S] D6 RecipeBookItemList";
+	
 	private L2RecipeList[] _recipes;
 	private final boolean _isDwarvenCraft;
 	private final int _maxMp;
@@ -69,10 +66,6 @@ public class RecipeBookItemList extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

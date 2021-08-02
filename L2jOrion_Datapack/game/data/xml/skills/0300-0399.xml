@@ -33,33 +33,47 @@
 </skill>
 <skill id="302" levels="9" name="Spoil Festival" enchantLevels1="30" enchantLevels2="30">
   <table name="#enchantMagicLvl">76 76 76 77 77 77 78 78 78 79 79 79 80 80 80 81 81 81 82 82 82 82 83 83 83 84 84 85 85 85</table>
-  <enchant1 name="magicLvl" val="#enchantMagicLvl"/>
-  <enchant2 name="magicLvl" val="#enchantMagicLvl"/>
   <table name="#magicLvl">28 36 43 49 55 62 66 70 74</table>
   <table name="#mpConsume">73 93 113 131 150 172 183 194 204</table>
-  <table name="#ench12Power">0 1 2 2 3 4 4 5 6 6 7 8 8 9 10 10 11 12 12 13 14 14 15 16 16 17 18 18 19 20</table>
-  <set name="mpConsume" val="#mpConsume"/>
-  <set name="magicLvl" val="#magicLvl"/>
-  <set name="nextActionAttack" val="true" />
-  <set name="target" val="TARGET_AREA"/>
-  <set name="skillRadius" val="200"/>
-  <set name="reuseDelay" val="10000"/>
-  <set name="hitTime" val="1800"/>
-  <set name="skillType" val="SPOIL"/>
-  <set name="operateType" val="OP_ACTIVE"/>
+  <table name="#enchPower">0 1 2 2 3 4 4 5 6 6 7 8 8 9 10 10 11 12 12 13 14 14 15 16 16 17 18 18 19 20</table>
+  <set name="lvlDepend" val="1" />
   <set name="castRange" val="40"/>
   <set name="effectRange" val="400"/>
-  <enchant1 name="power" val="#ench12Power"/>
-  <enchant2 name="power" val="#ench12Power"/>
+  <set name="hitTime" val="1800"/>
+  <set name="mpConsume" val="#mpConsume"/>
+  <set name="magicLvl" val="#magicLvl"/>
+  <set name="skillRadius" val="200"/>
+  <set name="reuseDelay" val="10000"/>
+  <set name="skillType" val="SPOIL"/>
+  <set name="target" val="TARGET_AREA"/>
+  <set name="operateType" val="OP_ACTIVE"/>
+  <set name="nextActionAttack" val="true" />
+  <enchant1 name="magicLvl" val="#enchantMagicLvl" />
+  <enchant1 name="lvlDepend" val="1" />
+  <enchant1 name="isDebuff" val="true" />
+  <enchant1 name="element" val="4" /> <!-- Earth -->
+  <enchant1 name="power" val="100" />
+  <enchant1 name="skillType" val="DEBUFF" />
+  <enchant1 name="ignoreResists" val="true" />
+  <enchant2 name="magicLvl" val="#enchantMagicLvl" />
+  <enchant2 name="lvlDepend" val="1" />
+  <enchant2 name="isDebuff" val="true" />
+  <enchant2 name="element" val="4" /> <!-- Earth -->
+  <enchant2 name="power" val="20" />
+  <enchant2 name="skillType" val="DOT" />
+  <enchant2 name="ignoreResists" val="true" />
   <for>
+    <effect name="Spoil" noicon="1" val="0" />
   </for>
   <enchant1for>
-    <effect count="1" name="Buff" time="15" val="0" stackOrder="23" stackType="pAtkSpdDown">
+    <effect name="Spoil" noicon="1" val="0" />
+    <effect name="Debuff" time="15" val="0" effectPower="#enchPower" stackOrder="3" stackType="pAtkSpdDown">
       <mul order="0x30" stat="pAtkSpd" val="0.77"/>
     </effect>
   </enchant1for>
   <enchant2for>
-    <effect count="3" name="DamOverTime" time="3" val="354"/>
+    <effect name="Spoil" noicon="1" val="0" />
+    <effect count="5" name="DamOverTime" time="3" val="354" effectPower="#enchPower" stackOrder="3" stackType="dot_attr" />
   </enchant2for>
 </skill>
 <skill id="303" levels="4" name="Soul of Sagittarius" enchantLevels1="30">
@@ -390,7 +404,7 @@
   <set name="weaponsAllowed" val="32"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="target" val="TARGET_SELF"/>
-  <set name="reuseDelay" val="180000"/>
+  <set name="reuseDelay" val="18000"/>
   <set name="hitTime" val="2000"/>
   <set name="skillType" val="BUFF"/>
   <set name="operateType" val="OP_ACTIVE"/>
@@ -399,7 +413,7 @@
   <set name="aggroPoints" val="#aggro"/>
   <enchant2 name="mpConsume" val="#ench2MpConsume"/>
   <for>
-    <effect count="1" name="ImobileBuff" time="120" val="0">
+    <effect count="1" name="ImobileBuff" time="30" val="0">
       <add order="0x40" stat="pAtk" val="#pAtk">
       <cond msg="An equipped bow is required to use this skill.">
       <using kind="Bow"/>
@@ -728,6 +742,7 @@
   <set name="itemConsumeCount" val="300"/>
   <set name="target" val="TARGET_SELF"/>
   <set name="reuseDelay" val="3600000"/>
+  <set name="staticReuse" val="true"/>
   <set name="hitTime" val="4000"/>
   <set name="skillType" val="SIEGEFLAG"/>
   <set name="operateType" val="OP_ACTIVE"/>
@@ -1083,16 +1098,19 @@
   <set name="weaponsAllowed" val="16392"/>
   <set name="mpConsume" val="70"/>
   <set name="magicLvl" val="76"/>
-  <set name="power" val="2"/>
+  <set name="power" val="5"/>
   <set name="target" val="TARGET_ONE"/>
-  <set name="skillType" val="SPOIL"/>
+  <set name="skillType" val="PDAM"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="castRange" val="40"/>
   <set name="effectRange" val="400"/>
   <set name="reuseDelay" val="10000"/>
   <set name="hitTime" val="1800"/>
   <set name="SSBoost" val="2.0"/>
-  <set name="baseCritRate" val="15"/>
+  <set name="baseCritRate" val="20"/>
+  <for>
+	<effect name="Spoil" val="0" />
+  </for>
 </skill>
 <skill id="349" levels="1" name="Song of Renewal">
   <set name="mpConsume" val="60"/>
@@ -1125,7 +1143,7 @@
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="castRange" val="-1"/>
   <set name="effectRange" val="-1"/>
-  <set name="reuseDelay" val="600000"/>
+  <set name="reuseDelay" val="1000"/>
   <set name="hitTime" val="2000"/>
   <set name="aggroPoints" val="669"/>
   <for>

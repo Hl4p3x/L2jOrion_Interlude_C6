@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
+<!-- Boss zone Four Sepulchers -->
+  <zone name="Four Sepulcher" id="12002" type="BossZone" shape="Cuboid" minZ="-7350" maxZ="-6841">
+    <stat name="flying" val="false"/>
+    <stat name="InvadeTime" val="300000"/>
+  </zone>
+<!-- Boss zone Four Sepulchers -->
+  <zone name="Four Sepulcher" id="12003" type="BossZone" shape="Cuboid" minZ="-7350" maxZ="-6841">
+    <stat name="flying" val="false"/>
+    <stat name="InvadeTime" val="300000"/>
+  </zone>
+<!-- Boss zone Four Sepulchers -->
+  <zone name="Four Sepulcher" id="12004" type="BossZone" shape="Cuboid" minZ="-7350" maxZ="-6841">
+    <stat name="flying" val="false"/>
+    <stat name="InvadeTime" val="300000"/>
+  </zone>
+<!-- Boss zone Four Sepulchers -->
+  <zone name="Four Sepulcher" id="12005" type="BossZone" shape="Cuboid" minZ="-7350" maxZ="-6841">
+    <stat name="flying" val="false"/>
+    <stat name="InvadeTime" val="300000"/>
+  </zone>
+</list>

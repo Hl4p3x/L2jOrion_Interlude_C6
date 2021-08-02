@@ -20,13 +20,11 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.datatables.sql.SkillTreeTable;
 import l2jorion.game.datatables.xml.ExperienceData;
+import l2jorion.game.enums.AchType;
 import l2jorion.game.model.L2EnchantSkillLearn;
 import l2jorion.game.model.L2ShortCut;
 import l2jorion.game.model.L2Skill;
@@ -42,6 +40,8 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.network.serverpackets.UserInfo;
 import l2jorion.game.util.IllegalPlayerAction;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
 /**
@@ -66,10 +66,12 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 	{
 		
 		final L2PcInstance player = getClient().getActiveChar();
-
+		
 		if (player == null)
+		{
 			return;
-
+		}
+		
 		if (player.isSubmitingPin())
 		{
 			player.sendMessage("Unable to do any action while PIN is not submitted");
@@ -78,21 +80,31 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 		}
 		final L2FolkInstance trainer = player.getLastFolkNPC();
 		if (trainer == null)
+		{
 			return;
+		}
 		
 		final int npcid = trainer.getNpcId();
 		
 		if (!player.isInsideRadius(trainer, L2NpcInstance.INTERACTION_DISTANCE, false, false) && !player.isGM())
+		{
 			return;
+		}
 		
-		if (player.getSkillLevel(_skillId) >= _skillLvl)// already knows the skill with this level
+		if (player.getSkillLevel(_skillId) >= _skillLvl)
+		{
 			return;
+		}
 		
-		if (player.getClassId().getId() < 88) // requires to have 3rd class quest completed
+		if (player.getClassId().getId() < 88)
+		{
 			return;
+		}
 		
 		if (player.getLevel() < 76)
+		{
 			return;
+		}
 		
 		final L2Skill skill = SkillTable.getInstance().getInfo(_skillId, _skillLvl);
 		
@@ -131,7 +143,7 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 		{
 			if (!getClient().getFloodProtectors().getUseAugItem().tryPerformAction("use skill enchanter"))
 			{
-				LOG.info(player.getName()+" tried flood on SKILL enchanter.");
+				LOG.info(player.getName() + " tried flood on SKILL enchanter.");
 				player.sendPacket(ActionFailed.STATIC_PACKET);
 				return;
 			}
@@ -178,11 +190,6 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 		{
 			player.addSkill(skill, true);
 			
-			if (Config.DEBUG)
-			{
-				LOG.debug("Learned skill " + _skillId + " for " + _requiredSp + " SP.");
-			}
-			
 			player.getStat().removeExpAndSp(_requiredExp, _requiredSp);
 			
 			final StatusUpdate su = new StatusUpdate(player.getObjectId());
@@ -200,6 +207,12 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 			final SystemMessage sm = new SystemMessage(SystemMessageId.YOU_HAVE_SUCCEEDED_IN_ENCHANTING_THE_SKILL_S1);
 			sm.addSkillName(_skillId);
 			player.sendPacket(sm);
+			
+			int enchantValue = _skillLvl >= 130 ? _skillLvl - 140 : _skillLvl - 100;
+			if (player.getAchievement().getCount(AchType.ENCHANT_SKILL) < enchantValue)
+			{
+				player.getAchievement().increase(AchType.ENCHANT_SKILL, enchantValue, false, false);
+			}
 		}
 		else
 		{

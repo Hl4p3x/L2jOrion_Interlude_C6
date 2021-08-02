@@ -23,10 +23,6 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.PartyMatchWaitingList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * Format: (ch) this is just a trigger : no data
- * @author -Wooden-
- */
 public final class RequestExitPartyMatchingWaitingRoom extends L2GameClientPacket
 {
 	@Override
@@ -40,7 +36,9 @@ public final class RequestExitPartyMatchingWaitingRoom extends L2GameClientPacke
 	{
 		final L2PcInstance _activeChar = getClient().getActiveChar();
 		if (_activeChar == null)
+		{
 			return;
+		}
 		
 		PartyMatchWaitingList.getInstance().removePlayer(_activeChar);
 	}

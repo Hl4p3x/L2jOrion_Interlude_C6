@@ -21,12 +21,10 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author L2jOrion
- */
 public class TitleUpdate extends L2GameServerPacket
 {
 	private static final String _S__CC_TITLE_UPDATE = "[S] cc TitleUpdate";
+	
 	private final String _title;
 	private final int _objectId;
 	
@@ -36,9 +34,6 @@ public class TitleUpdate extends L2GameServerPacket
 		_title = cha.getTitle();
 	}
 	
-	/**
-	 * @see l2jorion.game.network.serverpackets.L2GameServerPacket#writeImpl()
-	 */
 	@Override
 	protected void writeImpl()
 	{
@@ -47,9 +42,6 @@ public class TitleUpdate extends L2GameServerPacket
 		writeS(_title);
 	}
 	
-	/**
-	 * @see l2jorion.game.network.serverpackets.L2GameServerPacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

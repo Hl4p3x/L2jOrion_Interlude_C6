@@ -25,9 +25,6 @@ import java.sql.PreparedStatement;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.text.TextBuilder;
 import l2jorion.Config;
 import l2jorion.game.controllers.TradeController;
@@ -64,6 +61,8 @@ import l2jorion.game.network.serverpackets.WareHouseWithdrawalList;
 import l2jorion.game.network.serverpackets.WearList;
 import l2jorion.game.powerpack.PowerPackConfig;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
@@ -71,11 +70,6 @@ public class L2MerchantInstance extends L2FolkInstance
 {
 	private static Logger LOG = LoggerFactory.getLogger(L2MerchantInstance.class);
 	
-	/**
-	 * Instantiates a new l2 merchant instance.
-	 * @param objectId the object id
-	 * @param template the template
-	 */
 	public L2MerchantInstance(final int objectId, final L2NpcTemplate template)
 	{
 		super(objectId, template);
@@ -102,7 +96,7 @@ public class L2MerchantInstance extends L2FolkInstance
 				return "data/html/disabled.htm";
 			}
 			
-			return "data/html/gmshop/"+pom+".htm";
+			return "data/html/gmshop/" + pom + ".htm";
 		}
 		
 		if (val == 0)
@@ -117,11 +111,6 @@ public class L2MerchantInstance extends L2FolkInstance
 		return "data/html/merchant/" + pom + ".htm";
 	}
 	
-	/**
-	 * Show wear window.
-	 * @param player the player
-	 * @param val the val
-	 */
 	private void showWearWindow(final L2PcInstance player, final int val)
 	{
 		player.tempInvetoryDisable();
@@ -221,8 +210,10 @@ public class L2MerchantInstance extends L2FolkInstance
 	public void onBypassFeedback(final L2PcInstance player, final String command)
 	{
 		if (player.getActiveEnchantItem() != null)
+		{
 			player.sendPacket(new EnchantResult(0));
-
+		}
+		
 		StringTokenizer st = new StringTokenizer(command, " ");
 		String actualCommand = st.nextToken(); // Get actual command
 		final int currency = Config.CUSTOM_ITEM_ID;
@@ -231,7 +222,9 @@ public class L2MerchantInstance extends L2FolkInstance
 		if (actualCommand.equalsIgnoreCase("Buy"))
 		{
 			if (st.countTokens() < 1)
+			{
 				return;
+			}
 			
 			player.setTempAccessBuy(false);
 			
@@ -260,7 +253,9 @@ public class L2MerchantInstance extends L2FolkInstance
 		else if (actualCommand.equalsIgnoreCase("Wear") && Config.ALLOW_WEAR)
 		{
 			if (st.countTokens() < 1)
+			{
 				return;
+			}
 			
 			final int val = Integer.parseInt(st.nextToken());
 			showWearWindow(player, val);
@@ -268,7 +263,9 @@ public class L2MerchantInstance extends L2FolkInstance
 		else if (actualCommand.equalsIgnoreCase("Multisell"))
 		{
 			if (st.countTokens() < 1)
+			{
 				return;
+			}
 			
 			player.setTempAccessBuy(false);
 			
@@ -278,7 +275,9 @@ public class L2MerchantInstance extends L2FolkInstance
 		else if (actualCommand.equalsIgnoreCase("Exc_Multisell"))
 		{
 			if (st.countTokens() < 1)
+			{
 				return;
+			}
 			
 			player.setTempAccessBuy(false);
 			
@@ -453,7 +452,7 @@ public class L2MerchantInstance extends L2FolkInstance
 				player.sendMessage("You don't have enough " + Config.ALT_SERVER_CUSTOM_ITEM_NAME + ".");
 				return;
 			}
-
+			
 			player.destroyItem("Consume", item.getObjectId(), Config.PREM_TITLE_COLOR, null, true);
 			player.getAppearance().setTitleColor(Integer.decode("0x" + val));
 			player.sendMessage("Your title color has been changed.");
@@ -477,7 +476,7 @@ public class L2MerchantInstance extends L2FolkInstance
 				player.sendMessage("You don't have enough " + Config.ALT_SERVER_CUSTOM_ITEM_NAME + ".");
 				return;
 			}
-
+			
 			player.destroyItem("Consume", item.getObjectId(), Config.PREM_NAME_COLOR, null, true);
 			player.getAppearance().setNameColor(Integer.decode("0x" + val));
 			player.sendMessage("Your name color has been changed.");
@@ -503,7 +502,7 @@ public class L2MerchantInstance extends L2FolkInstance
 				player.sendMessage("You don't have enough " + Config.ALT_SERVER_CUSTOM_ITEM_NAME + ".");
 				return;
 			}
-
+			
 			player.destroyItem("Consume", item.getObjectId(), Config.PREM_CLAN_SKILLS, null, true);
 			if (player.getClan() != null)
 			{
@@ -569,7 +568,7 @@ public class L2MerchantInstance extends L2FolkInstance
 				player.sendMessage("You don't have enough " + Config.ALT_SERVER_CUSTOM_ITEM_NAME + ".");
 				return;
 			}
-
+			
 			player.destroyItem("Consume", item.getObjectId(), Config.PREM_CLAN_LEVEL, null, true);
 			if (level >= 0 && level < 9)
 			{
@@ -609,7 +608,7 @@ public class L2MerchantInstance extends L2FolkInstance
 				player.sendMessage("You don't have enough " + Config.ALT_SERVER_CUSTOM_ITEM_NAME + ".");
 				return;
 			}
-
+			
 			player.destroyItem("Consume", item.getObjectId(), Config.PREM_CLAN_REP, null, true);
 			L2Clan clan = player.getClan();
 			
@@ -631,7 +630,7 @@ public class L2MerchantInstance extends L2FolkInstance
 				player.sendMessage("You don't have enough " + Config.ALT_SERVER_CUSTOM_ITEM_NAME + ".");
 				return;
 			}
-
+			
 			player.destroyItem("Consume", item.getObjectId(), Config.PREM_SET_SEX, null, true);
 			player.getAppearance().setSex(player.getAppearance().getSex() ? false : true);
 			L2PcInstance.setSexDB(player, 1);
@@ -648,21 +647,21 @@ public class L2MerchantInstance extends L2FolkInstance
 				player.sendMessage("You don't have enough " + Config.ALT_SERVER_CUSTOM_ITEM_NAME + ".");
 				return;
 			}
-
-			if(player.getPremiumService() == 1)
+			
+			if (player.getPremiumService() == 1)
 			{
-				player.sendMessage("You are already a Premium!");
+				player.sendMessage("You already have The Premium Account!");
 			}
 			else
 			{
 				player.destroyItem("Consume", item.getObjectId(), Config.PREM_WEEK, null, true);
 				player.setPremiumService(1);
 				updateDatabasePremium(player, 7 * 24L * 60L * 60L * 1000L);
-				player.sendMessage("Congratulation! You are The Premium account now.");
-				player.sendPacket(new ExShowScreenMessage("Congratulation! You are The Premium account now.", 4000, 0x07, false));
+				player.sendMessage("Congratulation! You're The Premium account now.");
+				player.sendPacket(new ExShowScreenMessage("Congratulation! You're The Premium account now.", 4000, 0x07, false));
 				PlaySound playSound = new PlaySound("ItemSound.quest_fanfare_1");
 				player.sendPacket(playSound);
-				if(Config.PREMIUM_NAME_COLOR_ENABLED && getPremiumService() == 1)
+				if (Config.PREMIUM_NAME_COLOR_ENABLED && getPremiumService() == 1)
 				{
 					player.getAppearance().setTitleColor(Config.PREMIUM_TITLE_COLOR);
 				}
@@ -677,10 +676,10 @@ public class L2MerchantInstance extends L2FolkInstance
 				player.sendMessage("You don't have enough " + Config.ALT_SERVER_CUSTOM_ITEM_NAME + ".");
 				return;
 			}
-
-			if(player.getPremiumService() == 1)
+			
+			if (player.getPremiumService() == 1)
 			{
-				player.sendMessage("You are already a Premium!");
+				player.sendMessage("You already have The Premium Account!");
 			}
 			else
 			{
@@ -691,7 +690,7 @@ public class L2MerchantInstance extends L2FolkInstance
 				player.sendPacket(new ExShowScreenMessage("Congratulation! You are The Premium account now.", 4000, 0x07, false));
 				PlaySound playSound = new PlaySound("ItemSound.quest_fanfare_1");
 				player.sendPacket(playSound);
-				if(Config.PREMIUM_NAME_COLOR_ENABLED && getPremiumService() == 1)
+				if (Config.PREMIUM_NAME_COLOR_ENABLED && getPremiumService() == 1)
 				{
 					player.getAppearance().setTitleColor(Config.PREMIUM_TITLE_COLOR);
 				}
@@ -717,7 +716,7 @@ public class L2MerchantInstance extends L2FolkInstance
 				player.sendMessage("You don't have enough " + Config.ALT_SERVER_CUSTOM_ITEM_NAME + ".");
 				return;
 			}
-
+			
 			player.destroyItem("Consume", item.getObjectId(), Config.PREM_NOKARMA, null, true);
 			setTargetKarma(player, 0);
 			player.sendMessage("Karma has been cleaned.");
@@ -725,7 +724,9 @@ public class L2MerchantInstance extends L2FolkInstance
 		else if (command.startsWith("Remove "))
 		{
 			if (!player.getClient().getFloodProtectors().getTransaction().tryPerformAction("HennaRemove"))
+			{
 				return;
+			}
 			
 			final int slot = Integer.parseInt(command.substring(7));
 			player.removeHenna(slot);
@@ -743,7 +744,9 @@ public class L2MerchantInstance extends L2FolkInstance
 			catch (final IndexOutOfBoundsException ioobe)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					ioobe.printStackTrace();
+				}
 			}
 			if (quest.length() == 0)
 			{
@@ -754,7 +757,7 @@ public class L2MerchantInstance extends L2FolkInstance
 				showQuestWindowSingle(player, quest);
 			}
 		}
-		else if(command.equalsIgnoreCase("learn_clan_skills"))
+		else if (command.equalsIgnoreCase("learn_clan_skills"))
 		{
 			showPledgeSkillList(player);
 		}
@@ -797,7 +800,9 @@ public class L2MerchantInstance extends L2FolkInstance
 	public void showRentPetWindow(final L2PcInstance player)
 	{
 		if (!Config.LIST_PET_RENT_NPC.contains(getTemplate().npcId))
+		{
 			return;
+		}
 		
 		TextBuilder html1 = new TextBuilder("<html><body>Pet Manager:<br>");
 		html1.append("You can rent a wyvern or strider for adena.<br>My prices:<br1>");
@@ -822,9 +827,13 @@ public class L2MerchantInstance extends L2FolkInstance
 	public void tryRentPet(final L2PcInstance player, int val)
 	{
 		if (player == null || player.getPet() != null || player.isMounted() || player.isRentedPet())
+		{
 			return;
+		}
 		if (!player.disarmWeapons())
+		{
 			return;
+		}
 		
 		int petId;
 		double price = 1;
@@ -855,13 +864,17 @@ public class L2MerchantInstance extends L2FolkInstance
 		}
 		
 		if (val < 1 || val > 4)
+		{
 			return;
+		}
 		
 		price *= cost[val - 1];
 		final int time = ridetime[val - 1];
 		
 		if (!player.reduceAdena("Rent", (int) price, player.getLastFolkNPC(), true))
+		{
 			return;
+		}
 		
 		Ride mount = new Ride(player.getObjectId(), Ride.ACTION_MOUNT, petId);
 		player.broadcastPacket(mount);
@@ -876,7 +889,9 @@ public class L2MerchantInstance extends L2FolkInstance
 	{
 		L2PcInstance player = client.getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		
 		if (player.getAccessLevel().isGm())
 		{
@@ -944,11 +959,13 @@ public class L2MerchantInstance extends L2FolkInstance
 		try
 		{
 			if (player == null)
+			{
 				return;
-
+			}
+			
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement stmt = con.prepareStatement("REPLACE INTO account_premium (account_name, premium_service, enddate) VALUES (?,?,?)");
-
+			
 			stmt.setString(1, player.getAccountName());
 			stmt.setInt(2, 1);
 			stmt.setLong(3, premiumTime == 0 ? 0 : System.currentTimeMillis() + premiumTime);
@@ -956,10 +973,12 @@ public class L2MerchantInstance extends L2FolkInstance
 			stmt.close();
 			stmt = null;
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("[MerchantInstance] Error: could not update database: ", e);
 		}
@@ -1004,30 +1023,32 @@ public class L2MerchantInstance extends L2FolkInstance
 	
 	public void showPledgeSkillList(L2PcInstance player)
 	{
-		if(Config.DEBUG)
+		if (Config.DEBUG)
 		{
 			LOG.warn("PledgeSkillList activated on: " + getObjectId());
 		}
-		if(player.getClan() == null)
+		if (player.getClan() == null)
+		{
 			return;
+		}
 		
 		L2PledgeSkillLearn[] skills = SkillTreeTable.getInstance().getAvailablePledgeSkills(player);
 		AquireSkillList asl = new AquireSkillList(AquireSkillList.skillType.Clan);
 		int counts = 0;
 		
-		for(L2PledgeSkillLearn s : skills)
+		for (L2PledgeSkillLearn s : skills)
 		{
 			int cost = s.getRepCost();
 			counts++;
-
+			
 			asl.addSkill(s.getId(), s.getLevel(), s.getLevel(), cost, 0);
 		}
 		
-		if(counts == 0)
+		if (counts == 0)
 		{
 			NpcHtmlMessage html = new NpcHtmlMessage(1);
-
-			if(player.getClan().getLevel() < 8)
+			
+			if (player.getClan().getLevel() < 8)
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.DO_NOT_HAVE_FURTHER_SKILLS_TO_LEARN);
 				sm.addNumber(player.getClan().getLevel() + 1);

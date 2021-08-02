@@ -26,6 +26,7 @@ import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.ExShowScreenMessage;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
+import l2jorion.util.random.Rnd;
 
 public class AdminPhantom implements IAdminCommandHandler
 {
@@ -138,7 +139,8 @@ public class AdminPhantom implements IAdminCommandHandler
 					if (phantom != null && phantom.isPhantom())
 					{
 						count++;
-						phantom.teleToLocation(activeChar.getX(), activeChar.getY(), activeChar.getZ(), true);
+						phantom.teleToLocation(activeChar.getX()+Rnd.get(-300,300), activeChar.getY()+Rnd.get(-300,300), activeChar.getZ(), true);
+						phantom.setMoveToPawn(true);
 						phantom.getAI().setIntention(AI_INTENTION_IDLE);
 					}
 				}
@@ -253,7 +255,7 @@ public class AdminPhantom implements IAdminCommandHandler
 			case admin_phantom_spawn:
 			{
 				reload = false;
-				int count = 1;
+				int count = 50;
 				int grade = 5;
 				phantomPlayers.getInstance().loadPhantomSystem(activeChar, reload, count, grade);
 				htm(activeChar, null, "phantom.htm");

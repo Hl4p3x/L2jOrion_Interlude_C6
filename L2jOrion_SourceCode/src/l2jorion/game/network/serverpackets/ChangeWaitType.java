@@ -22,13 +22,10 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
 
-/**
- * sample 0000: 3f 2a 89 00 4c 01 00 00 00 0a 15 00 00 66 fe 00 ?*..L........f.. 0010: 00 7c f1 ff ff .|... format dd ddd
- * @version $Revision: 1.3.2.1.2.4 $ $Date: 2005/03/27 15:29:57 $
- */
 public class ChangeWaitType extends L2GameServerPacket
 {
 	private static final String _S__3F_CHANGEWAITTYPE = "[S] 2F ChangeWaitType";
+	
 	private final int _charObjId;
 	private final int _moveType;
 	private final int _x, _y, _z;
@@ -59,10 +56,6 @@ public class ChangeWaitType extends L2GameServerPacket
 		writeD(_z);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

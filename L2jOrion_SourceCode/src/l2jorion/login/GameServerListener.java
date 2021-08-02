@@ -25,13 +25,9 @@ import java.util.List;
 
 import javolution.util.FastList;
 import l2jorion.Config;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author KenM
- */
 public class GameServerListener extends FloodProtectedListener
 {
 	private static Logger LOG = LoggerFactory.getLogger(GameServerListener.class);

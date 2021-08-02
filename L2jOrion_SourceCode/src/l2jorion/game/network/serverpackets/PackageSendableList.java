@@ -22,12 +22,10 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 
-/**
- * @author -Wooden-
- */
 public class PackageSendableList extends L2GameServerPacket
 {
 	private static final String _S__C3_PACKAGESENDABLELIST = "[S] C3 PackageSendableList";
+	
 	private final L2ItemInstance[] _items;
 	private final int _playerObjId;
 	

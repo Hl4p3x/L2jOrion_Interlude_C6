@@ -40,78 +40,65 @@ import l2jorion.game.skills.funcs.Func;
 
 public final class Calculator
 {
-	/** Empty Func table definition */
 	private static final Func[] _emptyFuncs = new Func[0];
 	
-	/** Table of Func object */
 	private Func[] _functions;
 	
-	/**
-	 * Constructor of Calculator (Init value : emptyFuncs).<BR>
-	 * <BR>
-	 */
 	public Calculator()
 	{
 		_functions = _emptyFuncs;
 	}
 	
-	/**
-	 * Constructor of Calculator (Init value : Calculator c).<BR>
-	 * <BR>
-	 * @param c
-	 */
 	public Calculator(final Calculator c)
 	{
 		_functions = c._functions;
 	}
 	
-	/**
-	 * Check if 2 calculators are equals.<BR>
-	 * <BR>
-	 * @param c1
-	 * @param c2
-	 * @return
-	 */
 	public static boolean equalsCals(final Calculator c1, final Calculator c2)
 	{
 		if (c1 == c2)
+		{
 			return true;
+		}
 		
 		if (c1 == null || c2 == null)
+		{
 			return false;
+		}
 		
 		final Func[] funcs1 = c1._functions;
 		final Func[] funcs2 = c2._functions;
 		
 		if (funcs1 == funcs2)
+		{
 			return true;
+		}
 		
 		if (funcs1.length != funcs2.length)
+		{
 			return false;
+		}
 		
 		if (funcs1.length == 0)
+		{
 			return true;
+		}
 		
 		for (int i = 0; i < funcs1.length; i++)
 		{
 			if (funcs1[i] != funcs2[i])
+			{
 				return false;
+			}
 		}
 		return true;
 	}
 	
-	/**
-	 * @return the number of Funcs in the Calculator.
-	 */
 	public int size()
 	{
 		return _functions.length;
 	}
 	
-	/**
-	 * Add a Func to the Calculator.
-	 * @param f
-	 */
 	public synchronized void addFunc(final Func f)
 	{
 		final Func[] funcs = _functions;
@@ -134,30 +121,25 @@ public final class Calculator
 		_functions = tmp;
 	}
 	
-	/**
-	 * Remove a Func from the Calculator.
-	 * @param f
-	 */
 	public synchronized void removeFunc(final Func f)
 	{
 		if (f == null)
+		{
 			return;
+		}
 		
 		final ArrayList<Func> tmp_arraylist = new ArrayList<>();
 		tmp_arraylist.addAll(Arrays.asList(_functions));
 		
 		if (tmp_arraylist.contains(f))
+		{
 			tmp_arraylist.remove(f);
+		}
 		
 		_functions = tmp_arraylist.toArray(new Func[tmp_arraylist.size()]);
 		
 	}
 	
-	/**
-	 * Remove each Func with the specified owner of the Calculator.
-	 * @param owner
-	 * @return
-	 */
 	public synchronized FastList<Stats> removeOwner(final Object owner)
 	{
 		final Func[] funcs = _functions;
@@ -174,10 +156,6 @@ public final class Calculator
 		return modifiedStats;
 	}
 	
-	/**
-	 * Run each Func of the Calculator.
-	 * @param env
-	 */
 	public void calc(final Env env)
 	{
 		final Func[] funcs = _functions;

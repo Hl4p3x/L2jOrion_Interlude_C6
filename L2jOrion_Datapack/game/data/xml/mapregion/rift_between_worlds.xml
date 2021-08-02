@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: Remove "castle" attributes from here, it should be loaded from TaxZones -->
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/MapRegion.xsd">
+	<!-- Rift Between Worlds -->
+	<region name="rift_between_worlds" town="Dimensional Rift" castle="0" locId="1643" bbs="100">
+		<respawnPoint X="-114444" Y="-178322" Z="-6752" />
+		<respawnPoint X="-114470" Y="-178883" Z="-6752" />
+		<respawnPoint X="-114449" Y="-179708" Z="-6752" />
+		<respawnPoint X="-114518" Y="-180567" Z="-6752" />
+		<respawnPoint X="-114537" Y="-181419" Z="-6752" />
+		<respawnPoint X="-114918" Y="-181706" Z="-6752" />
+		<respawnPoint X="-115072" Y="-180844" Z="-6752" />
+		<respawnPoint X="-115146" Y="-179844" Z="-6752" />
+		<respawnPoint X="-115160" Y="-179060" Z="-6752" />
+		<respawnPoint X="-114989" Y="-178312" Z="-6752" />
+		<respawnPoint X="-114434" Y="-180128" Z="-6752" />
+		<respawnPoint X="-114469" Y="-179415" Z="-6752" />
+		<respawnPoint X="-115139" Y="-180236" Z="-6752" />
+		<respawnPoint X="-115169" Y="-178312" Z="-6752" />
+		<respawnPoint X="-114459" Y="-178615" Z="-6752" isChaotic="true" />
+		<respawnPoint X="-114469" Y="-179415" Z="-6752" isChaotic="true" />
+		<respawnPoint X="-114434" Y="-180128" Z="-6752" isChaotic="true" />
+		<respawnPoint X="-114597" Y="-181000" Z="-6752" isChaotic="true" />
+		<respawnPoint X="-114708" Y="-181823" Z="-6752" isChaotic="true" />
+		<respawnPoint X="-115008" Y="-181224" Z="-6752" isChaotic="true" />
+		<respawnPoint X="-115139" Y="-180236" Z="-6752" isChaotic="true" />
+		<respawnPoint X="-115155" Y="-179354" Z="-6752" isChaotic="true" />
+		<respawnPoint X="-115169" Y="-178312" Z="-6752" isChaotic="true" />
+		<map X="16" Y="12" />
+	</region>
+</list>

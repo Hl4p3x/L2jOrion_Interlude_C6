@@ -20,10 +20,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class ...
- * @version $Revision: 1.1.4.2 $ $Date: 2005/03/27 15:29:40 $
- */
 public class Dice extends L2GameServerPacket
 {
 	private static final String _S__D4_Dice = "[S] D4 Dice";
@@ -65,10 +61,6 @@ public class Dice extends L2GameServerPacket
 		writeD(_z); // z
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

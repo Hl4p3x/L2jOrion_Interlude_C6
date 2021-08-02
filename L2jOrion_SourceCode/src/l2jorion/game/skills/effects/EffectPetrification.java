@@ -42,8 +42,6 @@ public class EffectPetrification extends L2Effect
 	public void onStart()
 	{
 		getEffected().startAbnormalEffect(L2Character.ABNORMAL_EFFECT_HOLD_2);
-		// getEffected().setIsParalyzed(true);
-		// getEffected().setIsInvul(true);
 		getEffected().setPetrified(true);
 	}
 	
@@ -51,8 +49,6 @@ public class EffectPetrification extends L2Effect
 	public void onExit()
 	{
 		getEffected().stopAbnormalEffect(L2Character.ABNORMAL_EFFECT_HOLD_2);
-		// getEffected().setIsParalyzed(false);
-		// getEffected().setIsInvul(false);
 		getEffected().setPetrified(false);
 	}
 	

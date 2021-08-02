@@ -22,42 +22,32 @@ package l2jorion.game.network.serverpackets;
 
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.datatables.sql.ClanTable;
+import l2jorion.game.managers.CHSiegeManager;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.model.entity.ClanHall;
 import l2jorion.game.model.entity.siege.Castle;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * Shows the Siege Info<BR>
- * <BR>
- * packet type id 0xc9<BR>
- * format: cdddSSdSdd<BR>
- * <BR>
- * c = c9<BR>
- * d = CastleID<BR>
- * d = Show Owner Controls (0x00 default || >=0x02(mask?) owner)<BR>
- * d = Owner ClanID<BR>
- * S = Owner ClanName<BR>
- * S = Owner Clan LeaderName<BR>
- * d = Owner AllyID<BR>
- * S = Owner AllyName<BR>
- * d = current time (seconds)<BR>
- * d = Siege time (seconds) (0 for selectable)<BR>
- * d = (UNKNOW) Siege Time Select Related?
- * @author KenM
- */
 public class SiegeInfo extends L2GameServerPacket
 {
-	private static final String _S__C9_SIEGEINFO = "[S] c9 SiegeInfo";
 	private static Logger LOG = LoggerFactory.getLogger(SiegeInfo.class);
-	private final Castle _castle;
 	
-	public SiegeInfo(final Castle castle)
+	private static final String _S__C9_SIEGEINFO = "[S] c9 SiegeInfo";
+	
+	private Castle _castle;
+	private ClanHall _hall;
+	
+	public SiegeInfo(Castle castle)
 	{
 		_castle = castle;
+	}
+	
+	public SiegeInfo(ClanHall hall)
+	{
+		_hall = hall;
 	}
 	
 	@Override
@@ -65,44 +55,79 @@ public class SiegeInfo extends L2GameServerPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		writeC(0xc9);
-		writeD(_castle.getCastleId());
-		writeD(_castle.getOwnerId() == activeChar.getClanId() && activeChar.isClanLeader() ? 0x01 : 0x00);
-		writeD(_castle.getOwnerId());
-		if (_castle.getOwnerId() > 0)
+		if (_castle != null)
 		{
-			final L2Clan owner = ClanTable.getInstance().getClan(_castle.getOwnerId());
-			if (owner != null)
+			writeD(_castle.getCastleId());
+			writeD(_castle.getOwnerId() == activeChar.getClanId() && activeChar.isClanLeader() ? 0x01 : 0x00);
+			writeD(_castle.getOwnerId());
+			if (_castle.getOwnerId() > 0)
 			{
-				writeS(owner.getName()); // Clan Name
-				writeS(owner.getLeaderName()); // Clan Leader Name
-				writeD(owner.getAllyId()); // Ally ID
-				writeS(owner.getAllyName()); // Ally Name
+				final L2Clan owner = ClanTable.getInstance().getClan(_castle.getOwnerId());
+				if (owner != null)
+				{
+					writeS(owner.getName()); // Clan Name
+					writeS(owner.getLeaderName()); // Clan Leader Name
+					writeD(owner.getAllyId()); // Ally ID
+					writeS(owner.getAllyName()); // Ally Name
+				}
+				else
+				{
+					LOG.warn("Null owner for castle: " + _castle.getName());
+				}
 			}
 			else
 			{
-				LOG.warn("Null owner for castle: " + _castle.getName());
+				writeS("NPC"); // Clan Name
+				writeS(""); // Clan Leader Name
+				writeD(0); // Ally ID
+				writeS(""); // Ally Name
 			}
+			
+			writeD((int) (Calendar.getInstance().getTimeInMillis() / 1000));
+			writeD((int) (_castle.getSiege().getSiegeDate().getTimeInMillis() / 1000));
+			writeD(0x00); // number of choices?
 		}
 		else
 		{
-			writeS("NPC"); // Clan Name
-			writeS(""); // Clan Leader Name
-			writeD(0); // Ally ID
-			writeS(""); // Ally Name
+			writeD(_hall.getId());
+			
+			final int ownerId = _hall.getOwnerId();
+			writeD(ownerId == activeChar.getClanId() && activeChar.isClanLeader() ? 0x01 : 0x00);
+			writeD(ownerId);
+			if (_hall.getOwnerId() > 0)
+			{
+				final L2Clan owner = ClanTable.getInstance().getClan(_hall.getOwnerId());
+				if (owner != null)
+				{
+					writeS(owner.getName()); // Clan Name
+					writeS(owner.getLeaderName()); // Clan Leader Name
+					writeD(owner.getAllyId()); // Ally ID
+					writeS(owner.getAllyName()); // Ally Name
+				}
+				else
+				{
+					LOG.warn("Null owner for castle: " + _castle.getName());
+				}
+			}
+			else
+			{
+				writeS("NPC"); // Clan Name
+				writeS(""); // Clan Leader Name
+				writeD(0); // Ally ID
+				writeS(""); // Ally Name
+			}
+			
+			writeD((int) (Calendar.getInstance().getTimeInMillis() / 1000));
+			writeD((int) ((CHSiegeManager.getInstance().getSiegableHall(_hall.getId()).getNextSiegeTime()) / 1000));
+			writeD(0x00); // number of choices?
 		}
-		
-		writeD((int) (Calendar.getInstance().getTimeInMillis() / 1000));
-		writeD((int) (_castle.getSiege().getSiegeDate().getTimeInMillis() / 1000));
-		writeD(0x00); // number of choices?
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

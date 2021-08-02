@@ -16,9 +16,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.PartyMatchWaitingList;
@@ -27,13 +24,11 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExPartyRoomMember;
 import l2jorion.game.network.serverpackets.PartyMatchDetail;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * author: Gnacik Packetformat Rev650 cdddddS
- */
 public class RequestPartyMatchList extends L2GameClientPacket
 {
-	
 	private static final Logger LOG = LoggerFactory.getLogger(RequestPartyMatchList.class);
 	
 	private int _roomid;
@@ -59,7 +54,9 @@ public class RequestPartyMatchList extends L2GameClientPacket
 	{
 		final L2PcInstance _activeChar = getClient().getActiveChar();
 		if (_activeChar == null)
+		{
 			return;
+		}
 		
 		if (_roomid > 0)
 		{
@@ -76,7 +73,9 @@ public class RequestPartyMatchList extends L2GameClientPacket
 				for (final L2PcInstance _member : _room.getPartyMembers())
 				{
 					if (_member == null)
+					{
 						continue;
+					}
 					
 					_member.sendPacket(new PartyMatchDetail(_activeChar, _room));
 					_member.sendPacket(new SystemMessage(SystemMessageId.PARTY_ROOM_REVISED));
@@ -100,9 +99,13 @@ public class RequestPartyMatchList extends L2GameClientPacket
 				for (final L2PcInstance ptmember : _activeChar.getParty().getPartyMembers())
 				{
 					if (ptmember == null)
+					{
 						continue;
+					}
 					if (ptmember == _activeChar)
+					{
 						continue;
+					}
 					
 					ptmember.setPartyRoom(_maxid);
 					

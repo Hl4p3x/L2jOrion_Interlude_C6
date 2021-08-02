@@ -25,9 +25,6 @@ import l2jorion.game.model.actor.instance.L2MonsterInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public class ConditionTargetAggro extends Condition
 {
 	
@@ -43,9 +40,13 @@ public class ConditionTargetAggro extends Condition
 	{
 		final L2Character target = env.target;
 		if (target instanceof L2MonsterInstance)
+		{
 			return ((L2MonsterInstance) target).isAggressive() == _isAggro;
+		}
 		if (target instanceof L2PcInstance)
+		{
 			return ((L2PcInstance) target).getKarma() > 0;
+		}
 		return false;
 	}
 }

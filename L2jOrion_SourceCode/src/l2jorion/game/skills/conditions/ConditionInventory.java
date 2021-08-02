@@ -22,9 +22,6 @@ package l2jorion.game.skills.conditions;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public abstract class ConditionInventory extends Condition
 {
 	protected final int _slot;

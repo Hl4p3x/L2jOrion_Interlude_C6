@@ -23,6 +23,7 @@ package l2jorion.game.handler.skill;
 import java.util.List;
 
 import javolution.util.FastList;
+import l2jorion.game.enums.AchType;
 import l2jorion.game.handler.ISkillHandler;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
@@ -34,11 +35,6 @@ import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.skills.Formulas;
 import l2jorion.game.taskmanager.DecayTaskManager;
-
-/**
- * This class ...
- * @version $Revision: 1.1.2.5.2.4 $ $Date: 2005/04/03 15:55:03 $
- */
 
 public class Resurrect implements ISkillHandler
 {
@@ -52,7 +48,9 @@ public class Resurrect implements ISkillHandler
 	{
 		L2PcInstance player = null;
 		if (activeChar instanceof L2PcInstance)
+		{
 			player = (L2PcInstance) activeChar;
+		}
 		
 		L2Character target = null;
 		L2PcInstance targetPlayer;
@@ -61,7 +59,9 @@ public class Resurrect implements ISkillHandler
 		for (final L2Object target2 : targets)
 		{
 			if (target2 == null)
+			{
 				continue;
+			}
 			
 			target = (L2Character) target2;
 			if (target instanceof L2PcInstance)
@@ -72,7 +72,9 @@ public class Resurrect implements ISkillHandler
 				if (skill.getTargetType() == SkillTargetType.TARGET_CORPSE_CLAN)
 				{
 					if ((player == null) || player.getClanId() != targetPlayer.getClanId())
+					{
 						continue;
+					}
 				}
 			}
 			
@@ -93,16 +95,25 @@ public class Resurrect implements ISkillHandler
 			if (activeChar instanceof L2PcInstance)
 			{
 				if (cha instanceof L2PcInstance)
+				{
 					((L2PcInstance) cha).reviveRequest((L2PcInstance) activeChar, skill, false);
+					((L2PcInstance) cha).getAchievement().increase(AchType.RESSURECT);
+				}
 				else if (cha instanceof L2PetInstance)
 				{
 					if (((L2PetInstance) cha).getOwner() == activeChar)
+					{
 						cha.doRevive(Formulas.getInstance().calculateSkillResurrectRestorePercent(skill.getPower(), activeChar));
+					}
 					else
+					{
 						((L2PetInstance) cha).getOwner().reviveRequest((L2PcInstance) activeChar, skill, true);
+					}
 				}
 				else
+				{
 					cha.doRevive(Formulas.getInstance().calculateSkillResurrectRestorePercent(skill.getPower(), activeChar));
+				}
 			}
 			else
 			{
@@ -114,14 +125,20 @@ public class Resurrect implements ISkillHandler
 		if (skill.isMagic() && skill.useSpiritShot())
 		{
 			if (activeChar.checkBss())
+			{
 				activeChar.removeBss();
+			}
 			if (activeChar.checkSps())
+			{
 				activeChar.removeSps();
+			}
 		}
 		else if (skill.useSoulShot())
 		{
 			if (activeChar.checkSs())
+			{
 				activeChar.removeSs();
+			}
 		}
 		
 	}

@@ -20,38 +20,23 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import l2jorion.game.model.actor.instance.L2PcInstance;
-
-/**
- * This class ...
- * @version $Revision: 1.4.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- * @author godson
- */
 public class ExOlympiadMode extends L2GameServerPacket
 {
 	private static final String _S__FE_2B_OLYMPIADMODE = "[S] FE:2B ExOlympiadMode";
+	
 	private final int _mode;
-	private final L2PcInstance _activeChar;
 	
 	/**
-	 * @param mode (0 = return, 3 = spectate)
-	 * @param player
+	 * @param mode (0 = return, 1 = side 1, 2 = side 2, 3 = spectate)
 	 */
-	public ExOlympiadMode(int mode, L2PcInstance player)
+	public ExOlympiadMode(int mode)
 	{
-		_activeChar = player;
 		_mode = mode;
 	}
 	
 	@Override
 	protected final void writeImpl()
 	{
-		if (_activeChar == null)
-			return;
-		
-		if (_mode == 3)
-			_activeChar.setObserverMode(true);
-		
 		writeC(0xfe);
 		writeH(0x2b);
 		writeC(_mode);

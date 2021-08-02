@@ -33,11 +33,12 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public final class SelectorThread<T extends MMOClient<?>> extends Thread
 {
-	// default BYTE_ORDER
+	//private static final Logger LOG = LoggerFactory.getLogger(GameServer.class);
+	
 	private static final ByteOrder BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
-	// default HEADER_SIZE
+	
 	private static final int HEADER_SIZE = 2;
-	// Selector
+	
 	private final Selector _selector;
 	// Implementations
 	private final IPacketHandler<T> _packetHandler;

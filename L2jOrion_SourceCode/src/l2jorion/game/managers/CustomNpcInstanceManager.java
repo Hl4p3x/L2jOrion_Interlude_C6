@@ -22,13 +22,12 @@ import java.sql.ResultSet;
 
 import javolution.util.FastMap;
 import l2jorion.Config;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.util.random.Rnd;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class CustomNpcInstanceManager
 {
@@ -36,8 +35,8 @@ public final class CustomNpcInstanceManager
 	
 	private static CustomNpcInstanceManager _instance;
 	
-	private FastMap<Integer, customInfo> spawns; // <Object id , info>
-	private FastMap<Integer, customInfo> templates; // <Npc Template Id , info>
+	private FastMap<Integer, customInfo> spawns;
+	private FastMap<Integer, customInfo> templates;
 	
 	public final class customInfo
 	{
@@ -46,24 +45,18 @@ public final class CustomNpcInstanceManager
 		public boolean booleanData[] = new boolean[8];
 	}
 	
-	/**
-	 * Constructor Calls to load the data
-	 */
-	CustomNpcInstanceManager()
+	public CustomNpcInstanceManager()
 	{
 		load();
 	}
 	
-	/**
-	 * Initiates the manager (if not initiated yet) and/or returns <b>this</b> manager instance
-	 * @return CustomNpcInstanceManager _instance
-	 */
 	public final static CustomNpcInstanceManager getInstance()
 	{
 		if (_instance == null)
 		{
 			_instance = new CustomNpcInstanceManager();
 		}
+		
 		return _instance;
 	}
 	
@@ -80,8 +73,6 @@ public final class CustomNpcInstanceManager
 		{
 			templates.clear();
 		}
-		spawns = null;
-		templates = null;
 		
 		load();
 	}
@@ -191,18 +182,18 @@ public final class CustomNpcInstanceManager
 				DatabaseUtils.close(rset);
 				rset = null;
 			}
-			LOG.info("CustomNpcInstanceManager: loaded " + count + " NPC to PC polymorphs.");
+			LOG.info("CustomNpcInstanceManager: Loaded " + count + " NPC to PC polymorphs");
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
-			/** LOG.warn( "CustomNpcInstanceManager: Passed "); **/
+			}
 		}
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
@@ -296,20 +287,19 @@ public final class CustomNpcInstanceManager
 			}
 			
 			DatabaseUtils.close(rset);
-			rset = null;
-			Query = null;
 		}
 		catch (final Throwable t)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				t.printStackTrace();
+			}
 			
 			LOG.warn("Could not add Npc Morph info into the DB: ");
 		}
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 }

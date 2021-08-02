@@ -25,10 +25,6 @@ import l2jorion.game.model.L2ManufactureList;
 import l2jorion.game.model.L2RecipeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * dd d(dd) d(ddd)
- * @version $Revision: 1.1.2.2.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class RecipeShopManageList extends L2GameServerPacket
 {
 	
@@ -107,10 +103,6 @@ public class RecipeShopManageList extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
+<!-- No landing -->
+	<zone name='' id='11060' type='NoLandingZone' shape='Cuboid' minZ='8552' maxZ='16301'/>
+<!-- 4s rcp bug fix -->
+	<zone name='' id='11061' type='NoLandingZone' shape='Cuboid' minZ='-5150' maxZ='10100'>
+		<stat name='flying' val='false'/>
+	</zone>
+</list>

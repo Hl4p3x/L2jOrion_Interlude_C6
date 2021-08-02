@@ -18,9 +18,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.BlockList;
 import l2jorion.game.model.L2Party;
@@ -33,6 +30,8 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.AskJoinParty;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class RequestJoinParty extends L2GameClientPacket
 {
@@ -54,20 +53,23 @@ public final class RequestJoinParty extends L2GameClientPacket
 		final L2PcInstance requestor = getClient().getActiveChar();
 		
 		if (requestor == null)
+		{
 			return;
+		}
 		
 		if (!getClient().getFloodProtectors().getPartyInvitation().tryPerformAction("PartyInvitation"))
 		{
 			requestor.sendMessage("You Cannot Invite into Party So Fast!");
 			return;
 		}
-
+		
 		if (requestor.isSubmitingPin())
 		{
 			requestor.sendMessage("Unable to do any action while PIN is not submitted");
 			requestor.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		final L2PcInstance target = L2World.getInstance().getPlayer(_name);
 		if (target == null)
 		{
@@ -94,12 +96,14 @@ public final class RequestJoinParty extends L2GameClientPacket
 			requestor.sendPacket(msg);
 			return;
 		}
+		
 		if (target.isSubmitingPin())
 		{
 			requestor.sendMessage("Unable to do any action while PIN is not submitted by the target.");
 			requestor.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		if (target == requestor)
 		{
 			requestor.sendPacket(new SystemMessage(SystemMessageId.INCORRECT_TARGET));
@@ -135,17 +139,20 @@ public final class RequestJoinParty extends L2GameClientPacket
 		}
 		
 		if (target.isInOlympiadMode() || requestor.isInOlympiadMode())
+		{
 			return;
+		}
 		
 		if (target.isInDuel() || requestor.isInDuel())
+		{
 			return;
+		}
 		
 		if (!requestor.isInParty()) // Asker has no party
 		{
 			createNewParty(target, requestor);
 		}
 		else
-		// Asker is in party
 		{
 			if (requestor.getParty().isInDimensionalRift())
 			{
@@ -205,13 +212,7 @@ public final class RequestJoinParty extends L2GameClientPacket
 			msg = new SystemMessage(SystemMessageId.S1_IS_BUSY_TRY_LATER);
 			msg.addString(target.getName());
 			requestor.sendPacket(msg);
-			
-			if (Config.DEBUG)
-			{
-				LOG.warn(requestor.getName() + " already received a party invitation");
-			}
 		}
-		msg = null;
 	}
 	
 	/**
@@ -230,11 +231,6 @@ public final class RequestJoinParty extends L2GameClientPacket
 			target.sendPacket(new AskJoinParty(requestor.getName(), _itemDistribution));
 			requestor.getParty().setPendingInvitation(true);
 			
-			if (Config.DEBUG)
-			{
-				LOG.warn("sent out a party invitation to:" + target.getName());
-			}
-			
 			msg = new SystemMessage(SystemMessageId.YOU_INVITED_S1_TO_PARTY);
 			msg.addString(target.getName());
 			requestor.sendPacket(msg);
@@ -244,11 +240,6 @@ public final class RequestJoinParty extends L2GameClientPacket
 			msg = new SystemMessage(SystemMessageId.S1_IS_BUSY_TRY_LATER);
 			msg.addString(target.getName());
 			requestor.sendPacket(msg);
-			
-			if (Config.DEBUG)
-			{
-				LOG.warn(requestor.getName() + " already received a party invitation");
-			}
 		}
 	}
 	

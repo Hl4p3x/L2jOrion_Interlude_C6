@@ -24,14 +24,10 @@ import l2jorion.game.model.L2ManufactureItem;
 import l2jorion.game.model.L2ManufactureList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * This class ... dddd d(ddd)
- * @version $Revision: 1.1.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public class RecipeShopSellList extends L2GameServerPacket
 {
-	
 	private static final String _S__D9_RecipeShopSellList = "[S] d9 RecipeShopSellList";
+	
 	private final L2PcInstance _buyer, _manufacturer;
 	
 	public RecipeShopSellList(final L2PcInstance buyer, final L2PcInstance manufacturer)
@@ -47,7 +43,6 @@ public class RecipeShopSellList extends L2GameServerPacket
 		
 		if (createList != null)
 		{
-			// dddd d(ddd)
 			writeC(0xd9);
 			writeD(_manufacturer.getObjectId());
 			writeD((int) _manufacturer.getCurrentMp());// Creator's MP
@@ -68,10 +63,6 @@ public class RecipeShopSellList extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

@@ -29,9 +29,6 @@ import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author littlecrow A special spawn implementation to spawn controllable mob
- */
 public class L2GroupSpawn extends L2Spawn
 {
 	private final Constructor<?> _constructor;
@@ -40,6 +37,7 @@ public class L2GroupSpawn extends L2Spawn
 	public L2GroupSpawn(final L2NpcTemplate mobTemplate) throws SecurityException, ClassNotFoundException, NoSuchMethodException
 	{
 		super(mobTemplate);
+		
 		_constructor = Class.forName("l2jorion.game.model.actor.instance.L2ControllableMobInstance").getConstructors()[0];
 		_template = mobTemplate;
 		
@@ -53,7 +51,9 @@ public class L2GroupSpawn extends L2Spawn
 		try
 		{
 			if (_template.type.equalsIgnoreCase("L2Pet") || _template.type.equalsIgnoreCase("L2Minion"))
+			{
 				return null;
+			}
 			
 			Object[] parameters =
 			{
@@ -63,7 +63,9 @@ public class L2GroupSpawn extends L2Spawn
 			Object tmp = _constructor.newInstance(parameters);
 			
 			if (!(tmp instanceof L2NpcInstance))
+			{
 				return null;
+			}
 			
 			mob = (L2NpcInstance) tmp;
 			
@@ -74,7 +76,9 @@ public class L2GroupSpawn extends L2Spawn
 			if (getLocx() == 0 && getLocy() == 0)
 			{
 				if (getLocation() == 0)
+				{
 					return null;
+				}
 				
 				final Location location = TerritoryTable.getInstance().getRandomPoint(getLocation());
 				if (location != null)
@@ -120,7 +124,9 @@ public class L2GroupSpawn extends L2Spawn
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("NPC class not found: " + e);
 			return null;

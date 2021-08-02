@@ -20,14 +20,13 @@
  */
 package l2jorion.game.handler.admin;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 /**
  * This class handles following admin commands: - invul = turns invulnerability on/off

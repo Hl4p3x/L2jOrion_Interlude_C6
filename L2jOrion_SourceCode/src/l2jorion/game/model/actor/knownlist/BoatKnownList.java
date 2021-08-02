@@ -24,15 +24,8 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author Maktakien
- */
 public class BoatKnownList extends CharKnownList
 {
-	
-	/**
-	 * @param activeChar
-	 */
 	public BoatKnownList(final L2Character activeChar)
 	{
 		super(activeChar);
@@ -42,7 +35,9 @@ public class BoatKnownList extends CharKnownList
 	public int getDistanceToForgetObject(final L2Object object)
 	{
 		if (!(object instanceof L2PcInstance))
+		{
 			return 0;
+		}
 		
 		return 8000;
 	}
@@ -51,7 +46,9 @@ public class BoatKnownList extends CharKnownList
 	public int getDistanceToWatchObject(final L2Object object)
 	{
 		if (!(object instanceof L2PcInstance))
+		{
 			return 0;
+		}
 		
 		return 4000;
 	}

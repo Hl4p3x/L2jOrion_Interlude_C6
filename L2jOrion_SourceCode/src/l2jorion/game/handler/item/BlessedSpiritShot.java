@@ -31,7 +31,6 @@ import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.L2Weapon;
-import l2jorion.game.util.Broadcast;
 
 public class BlessedSpiritShot implements IItemHandler
 {
@@ -44,12 +43,12 @@ public class BlessedSpiritShot implements IItemHandler
 		3950,
 		3951,
 		3952,
-		10005, //Blessed Spiritshot: D-Grade
-		10006, //Blessed Spiritshot: C-Grade
-		10007, //Blessed Spiritshot: B-Grade
-		10008, //Blessed Spiritshot: A-Grade
-		10009, //Blessed Spiritshot: S Grade
-		10011 //Blessed Spiritshot: None Grade
+		10005, // Blessed Spiritshot: D-Grade
+		10006, // Blessed Spiritshot: C-Grade
+		10007, // Blessed Spiritshot: B-Grade
+		10008, // Blessed Spiritshot: A-Grade
+		10009, // Blessed Spiritshot: S Grade
+		10011 // Blessed Spiritshot: None Grade
 	};
 	private static final int[] SKILL_IDS =
 	{
@@ -65,7 +64,9 @@ public class BlessedSpiritShot implements IItemHandler
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		L2ItemInstance weaponInst = activeChar.getActiveWeaponInstance();
@@ -78,8 +79,6 @@ public class BlessedSpiritShot implements IItemHandler
 			SystemMessage sm = new SystemMessage(SystemMessageId.THIS_ITEM_IS_NOT_AVAILABLE_FOR_THE_OLYMPIAD_EVENT);
 			sm.addString(item.getItemName());
 			activeChar.sendPacket(sm);
-			sm = null;
-			
 			return;
 		}
 		
@@ -96,16 +95,14 @@ public class BlessedSpiritShot implements IItemHandler
 		
 		// Check if Blessed Spiritshot is already active (it can be charged over Spiritshot)
 		if (weaponInst.getChargedSpiritshot() != L2ItemInstance.CHARGED_NONE)
+		{
 			return;
+		}
 		
 		// Check for correct grade
 		final int weaponGrade = weaponItem.getCrystalType();
-		if (weaponGrade == L2Item.CRYSTAL_NONE && (itemId != 3947 && itemId != 10011) 
-			|| weaponGrade == L2Item.CRYSTAL_D && (itemId != 3948 && itemId != 10005)
-			|| weaponGrade == L2Item.CRYSTAL_C && (itemId != 3949 && itemId != 10006) 
-			|| weaponGrade == L2Item.CRYSTAL_B && (itemId != 3950 && itemId != 10007) 
-			|| weaponGrade == L2Item.CRYSTAL_A && (itemId != 3951 && itemId != 10008)
-			|| weaponGrade == L2Item.CRYSTAL_S && (itemId != 3952 && itemId != 10009))
+		if (weaponGrade == L2Item.CRYSTAL_NONE && (itemId != 3947 && itemId != 10011) || weaponGrade == L2Item.CRYSTAL_D && (itemId != 3948 && itemId != 10005) || weaponGrade == L2Item.CRYSTAL_C && (itemId != 3949 && itemId != 10006)
+			|| weaponGrade == L2Item.CRYSTAL_B && (itemId != 3950 && itemId != 10007) || weaponGrade == L2Item.CRYSTAL_A && (itemId != 3951 && itemId != 10008) || weaponGrade == L2Item.CRYSTAL_S && (itemId != 3952 && itemId != 10009))
 		{
 			if (!activeChar.getAutoSoulShot().contains(itemId))
 			{
@@ -143,7 +140,7 @@ public class BlessedSpiritShot implements IItemHandler
 		activeChar.sendPacket(new SystemMessage(SystemMessageId.ENABLED_SPIRITSHOT));
 		if (!activeChar.getEffects())
 		{
-			Broadcast.toSelfAndKnownPlayersInRadius(activeChar, new MagicSkillUser(activeChar, activeChar, SKILL_IDS[weaponGrade], 1, 0, 0), 360000/* 600 */);
+			activeChar.broadcastPacket(new MagicSkillUser(activeChar, activeChar, SKILL_IDS[weaponGrade], 1, 0, 0), 500);
 		}
 	}
 	

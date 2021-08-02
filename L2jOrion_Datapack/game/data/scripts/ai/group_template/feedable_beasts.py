@@ -1,10 +1,8 @@
-# Growth-capable mobs: Polymorphing upon successful feeding.
-# Written by Fulminus
-# # # # # # # # # # #
 import sys
 from l2jorion.game.ai import CtrlIntention
 from l2jorion.game.datatables.sql import NpcTable
 from l2jorion.game.idfactory import IdFactory
+from l2jorion.game.enums import AchType
 from l2jorion.game.model.actor.instance import L2TamedBeastInstance
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
 from l2jorion.game.network.serverpackets import CreatureSay
@@ -16,8 +14,6 @@ CRYSTAL_SPICE = 6644
 SKILL_GOLDEN_SPICE = 2188
 SKILL_CRYSTAL_SPICE = 2189
 foodSkill = {GOLDEN_SPICE:SKILL_GOLDEN_SPICE, CRYSTAL_SPICE:SKILL_CRYSTAL_SPICE}
-
-#print "Feedable beasts"
 
 class feedable_beasts(JQuest) :
 
@@ -248,6 +244,7 @@ class feedable_beasts(JQuest) :
             # Polymorph the mob, with a certain chance, given its current growth level
             if Rnd.get(100) < self.growthCapableMobs[npcId][2] :
                 self.spawnNext(npc, growthLevel,player,food)
+                player.getAchievement().increase(AchType.FEED_BEAST);
         elif npcId in self.tamedBeasts :
             if skillId == npc.getFoodType() :
                 npc.onReceiveFood()

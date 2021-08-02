@@ -25,7 +25,6 @@ import l2jorion.game.skills.Env;
 
 public final class EffectSeed extends L2Effect
 {
-	
 	private int _power = 1;
 	
 	public EffectSeed(final Env env, final EffectTemplate template)
@@ -42,7 +41,6 @@ public final class EffectSeed extends L2Effect
 	@Override
 	public boolean onActionTime()
 	{
-		// just stop this effect
 		return false;
 	}
 	

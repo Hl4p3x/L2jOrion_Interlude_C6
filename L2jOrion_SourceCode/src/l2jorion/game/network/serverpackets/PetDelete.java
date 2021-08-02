@@ -20,8 +20,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- */
 public class PetDelete extends L2GameServerPacket
 {
 	private static final String _S__CF_PETDELETE = "[S] b6 PetDelete";

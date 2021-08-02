@@ -23,9 +23,6 @@ package l2jorion.game.skills.conditions;
 import l2jorion.game.skills.Env;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author Advi
- */
 public class ConditionGameChance extends Condition
 {
 	private final int _chance;

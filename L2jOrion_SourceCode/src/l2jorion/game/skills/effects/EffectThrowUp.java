@@ -19,8 +19,8 @@ import l2jorion.game.geo.GeoData;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.Location;
 import l2jorion.game.network.serverpackets.FlyToLocation;
-import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.network.serverpackets.FlyToLocation.FlyType;
+import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.skills.Env;
 
 public class EffectThrowUp extends L2Effect
@@ -77,7 +77,7 @@ public class EffectThrowUp extends L2Effect
 		_y = getEffector().getY() - (int) (offset * sin);
 		_z = getEffected().getZ();
 		
-		if (Config.GEODATA > 0)
+		if (Config.GEODATA)
 		{
 			Location destiny = GeoData.getInstance().moveCheck(getEffected().getX(), getEffected().getY(), getEffected().getZ(), _x, _y, _z, getEffected().getInstanceId());
 			_x = destiny.getX();

@@ -20,9 +20,6 @@ package l2jorion.game;
 
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.controllers.TradeController;
@@ -36,10 +33,11 @@ import l2jorion.game.managers.QuestManager;
 import l2jorion.game.managers.RaidBossSpawnManager;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.model.entity.Hero;
 import l2jorion.game.model.entity.Hitman;
-import l2jorion.game.model.entity.olympiad.Olympiad;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.model.entity.sevensigns.SevenSignsFestival;
+import l2jorion.game.model.olympiad.Olympiad;
 import l2jorion.game.model.spawn.AutoSpawn;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.gameserverpackets.ServerStatus;
@@ -49,13 +47,15 @@ import l2jorion.game.powerpack.buffer.BuffTable;
 import l2jorion.game.thread.LoginServerThread;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Broadcast;
-import l2jorion.game.util.sql.SQLQueue;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.Util;
 import l2jorion.util.database.L2DatabaseFactory;
 
 public class Shutdown extends Thread
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Shutdown.class);
+	
 	private static Shutdown _counterInstance = null;
 	
 	private int _secondsShut;
@@ -68,10 +68,10 @@ public class Shutdown extends Thread
 	
 	private static final String[] MODE_TEXT =
 	{
-			"SIGTERM",
-			"Shut down",
-			"Restart",
-			"Aborting"
+		"Sigterm",
+		"shutting down",
+		"restarting",
+		"aborting"
 	};
 	
 	private void SendServerQuit(int seconds)
@@ -122,14 +122,6 @@ public class Shutdown extends Thread
 			
 			try
 			{
-				SQLQueue.getInstance().shutdown();
-			}
-			catch (Exception e)
-			{
-			}
-			
-			try
-			{
 				if ((Config.OFFLINE_TRADE_ENABLE || Config.OFFLINE_CRAFT_ENABLE) && Config.RESTORE_OFFLINERS)
 				{
 					OfflineTradeTable.storeOffliners();
@@ -138,12 +130,11 @@ public class Shutdown extends Thread
 			}
 			catch (Throwable t)
 			{
+				LOG.warn("Error saving offline shops:");
 				if (Config.ENABLE_ALL_EXCEPTIONS)
 				{
 					t.printStackTrace();
 				}
-				
-				LOG.warn("Error saving offline shops.",t);
 			}
 			
 			try
@@ -195,14 +186,25 @@ public class Shutdown extends Thread
 				}
 			}
 			
-			// saveData sends messages to exit players, so shutdown selector after it
-			saveData();
+			try
+			{
+				// saveData sends messages to exit players, so shutdown selector after it
+				saveData();
+			}
+			catch (Throwable t)
+			{
+				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
+					t.printStackTrace();
+				}
+			}
+			
 			tc.restartCounter();
 			
 			try
 			{
 				GameServer.gameServer.getSelectorThread().shutdown();
-				LOG.info("Game Server: Selector thread has been shutdown ({}ms).", tc.getEstimatedTimeAndRestartCounter());
+				LOG.info("Game Server: Selector thread has been shutdown ({}ms)", tc.getEstimatedTimeAndRestartCounter());
 			}
 			catch (Throwable t)
 			{
@@ -215,7 +217,7 @@ public class Shutdown extends Thread
 			try
 			{
 				L2DatabaseFactory.getInstance().shutdown();
-				LOG.info("L2DatabaseFactory: Database connection has been shutdown ({}ms).", tc.getEstimatedTimeAndRestartCounter());
+				LOG.info("L2DatabaseFactory: Database connection has been shutdown ({}ms)", tc.getEstimatedTimeAndRestartCounter());
 			}
 			catch (Throwable t)
 			{
@@ -272,8 +274,11 @@ public class Shutdown extends Thread
 			_shutdownMode = GM_SHUTDOWN;
 		}
 		
-		Util.printSection("Initialized "+MODE_TEXT[_shutdownMode]);
-		LOG.info("{}({}) issued shutdown command. {} in {} seconds!", activeChar.getName(), activeChar.getObjectId(), MODE_TEXT[_shutdownMode], seconds);
+		Util.printSection("Initialized " + MODE_TEXT[_shutdownMode]);
+		
+		LOG.info("{}({}) issued shutdown command, {} in {} seconds.", activeChar.getName(), activeChar.getObjectId(), MODE_TEXT[_shutdownMode], seconds);
+		
+		Broadcast.toAllOnlinePlayers(Config.ALT_Server_Menu_Name + " is " + MODE_TEXT[_shutdownMode] + " in " + seconds + " seconds.");
 		
 		if (_shutdownMode > 0)
 		{
@@ -313,11 +318,11 @@ public class Shutdown extends Thread
 	
 	public void abort(L2PcInstance activeChar)
 	{
-		LOG.info("{}({}) issued shutdown ABORT. {} has been stopped!", activeChar.getName(), activeChar.getObjectId(), MODE_TEXT[_shutdownMode]);
+		LOG.info("{}({}) issued shutdown abort, {} stopped.", activeChar.getName(), activeChar.getObjectId(), MODE_TEXT[_shutdownMode]);
 		if (_counterInstance != null)
 		{
 			_counterInstance._abort();
-			Broadcast.toAllOnlinePlayers("Server aborts " + MODE_TEXT[_shutdownMode] + " and continues normal operation!", false);
+			Broadcast.toAllOnlinePlayers(Config.ALT_Server_Menu_Name + " aborts " + MODE_TEXT[_shutdownMode] + " and continues normal operation.", false);
 		}
 	}
 	
@@ -330,7 +335,7 @@ public class Shutdown extends Thread
 	{
 		_shutdownMode = ABORT;
 	}
-
+	
 	private void countdown()
 	{
 		try
@@ -409,7 +414,7 @@ public class Shutdown extends Thread
 	
 	private void saveData()
 	{
-		switch(_shutdownMode)
+		switch (_shutdownMode)
 		{
 			case SIGTERM:
 				LOG.info("SIGTERM received. Shutting down NOW!");
@@ -431,12 +436,11 @@ public class Shutdown extends Thread
 		}
 		catch (Throwable t)
 		{
+			LOG.error("Error in saveAllPlayers:");
 			if (Config.ENABLE_ALL_EXCEPTIONS)
 			{
 				t.printStackTrace();
 			}
-			
-			LOG.error("Error in saveAllPlayers",t);
 		}
 		
 		// Seven Signs data is now saved along with Festival data.
@@ -460,15 +464,14 @@ public class Shutdown extends Thread
 		
 		AutoSpawn.getInstance().cleanUp();
 		LOG.info("AutoSpawn: Data saved ({}ms).", tc.getEstimatedTimeAndRestartCounter());
-		try
-		{
-			Olympiad.getInstance().saveOlympiadStatus();
-			LOG.info("Olympiad: Data saved ({}ms).", tc.getEstimatedTimeAndRestartCounter());
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		
+		// Save olympiads
+		Olympiad.getInstance().saveOlympiadStatus();
+		LOG.info("Olympiad data has been saved ({}ms).", tc.getEstimatedTimeAndRestartCounter());
+		
+		// Save Hero data
+		Hero.getInstance().shutdown();
+		LOG.info("Hero data has been saved ({}ms).", tc.getEstimatedTimeAndRestartCounter());
 		
 		// Save Cursed Weapons data before closing.
 		CursedWeaponsManager.getInstance().saveData();
@@ -484,7 +487,7 @@ public class Shutdown extends Thread
 			QuestManager.getInstance().save();
 			LOG.info("Quest Manager: Data saved ({}ms).", tc.getEstimatedTimeAndRestartCounter());
 		}
-			
+		
 		if (Hitman.start())
 		{
 			Hitman.getInstance().save();
@@ -493,11 +496,12 @@ public class Shutdown extends Thread
 		BuffTable.getInstance().onServerShutdown();
 		LOG.info("Characters Schemes Table: Data saved ({}ms).", tc.getEstimatedTimeAndRestartCounter());
 		
-		//Save items on ground before closing
-		if(Config.SAVE_DROPPED_ITEM)
+		// Save items on ground before closing
+		if (Config.SAVE_DROPPED_ITEM)
 		{
 			ItemsOnGroundManager.getInstance().saveInDb();
 			LOG.info("Items On Ground Manager: Data saved ({}ms).", tc.getEstimatedTimeAndRestartCounter());
+			
 			ItemsOnGroundManager.getInstance().cleanUp();
 			LOG.info("Items On Ground Manager: Cleaned up ({}ms).", tc.getEstimatedTimeAndRestartCounter());
 		}
@@ -516,7 +520,9 @@ public class Shutdown extends Thread
 		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{
 			if (player == null)
+			{
 				continue;
+			}
 			
 			try
 			{
@@ -545,10 +551,10 @@ public class Shutdown extends Thread
 			{
 				if ((player.getClient() != null) && !player.getClient().isDetached())
 				{
-					//player.getClient().sendPacket(ServerClose.STATIC_PACKET);
-					//player.getClient().close(0);
-					//player.getClient().setActiveChar(null);
-					//player.setClient(null);
+					// player.getClient().sendPacket(ServerClose.STATIC_PACKET);
+					// player.getClient().close(0);
+					// player.getClient().setActiveChar(null);
+					// player.setClient(null);
 					
 					player.getClient().close(ServerClose.STATIC_PACKET);
 					player.getClient().setActiveChar(null);

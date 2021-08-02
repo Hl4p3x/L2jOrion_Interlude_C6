@@ -20,9 +20,6 @@ import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.skills.Env;
 
-/**
- * @author Kerberos
- */
 public final class EffectFusion extends L2Effect
 {
 	public int _effect;

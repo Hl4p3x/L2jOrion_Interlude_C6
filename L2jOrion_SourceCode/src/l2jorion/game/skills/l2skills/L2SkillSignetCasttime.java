@@ -29,6 +29,7 @@ public final class L2SkillSignetCasttime extends L2Skill
 	public L2SkillSignetCasttime(final StatsSet set)
 	{
 		super(set);
+		
 		_effectNpcId = set.getInteger("effectNpcId", -1);
 		effectId = set.getInteger("effectId", -1);
 	}
@@ -37,7 +38,9 @@ public final class L2SkillSignetCasttime extends L2Skill
 	public void useSkill(final L2Character caster, final L2Object[] targets)
 	{
 		if (caster.isAlikeDead())
+		{
 			return;
+		}
 		
 		getEffectsSelf(caster);
 	}

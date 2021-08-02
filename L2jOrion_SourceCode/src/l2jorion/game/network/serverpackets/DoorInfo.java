@@ -22,36 +22,49 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2DoorInstance;
 
-/**
- * 60 d6 6d c0 4b door id 8f 14 00 00 x b7 f1 00 00 y 60 f2 ff ff z 00 00 00 00 ?? format dddd rev 377 ID:%d X:%d Y:%d Z:%d ddddd rev 419
- * @version $Revision: 1.3.2.2.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class DoorInfo extends L2GameServerPacket
 {
 	private static final String _S__60_DOORINFO = "[S] 4c DoorInfo";
-	private final L2DoorInstance _door;
 	
-	public DoorInfo(final L2DoorInstance door, final boolean showHp)
+	private final int _staticObjectId;
+	private final int _objectId;
+	private final boolean _isTargetable;
+	private final boolean _isClosed;
+	private final int _maxHp;
+	private final int _currentHp;
+	private final boolean _showHp;
+	private final int _damageGrade;
+	
+	public DoorInfo(L2DoorInstance door)
 	{
-		_door = door;
+		_staticObjectId = door.getDoorId();
+		_objectId = door.getObjectId();
+		_isTargetable = door.isTargetable();
+		_isClosed = !door.getOpen();
+		_maxHp = door.getMaxHp();
+		_currentHp = (int) door.getCurrentHp();
+		_showHp = door.getCastle() != null && door.getCastle().getSiege().getIsInProgress(); // door.getIsShowHp();
+		_damageGrade = door.getDamage();
 	}
 	
 	@Override
 	protected final void writeImpl()
 	{
 		writeC(0x4c);
-		writeD(_door.getObjectId());
-		writeD(_door.getDoorId());
+		writeD(_objectId);
+		writeD(_staticObjectId);
+		writeD((_showHp) ? 1 : 0);
+		writeD(_isTargetable ? 1 : 0); // ??? (can target)
+		writeD(_isClosed ? 0 : 1);
+		writeD(_maxHp);
+		writeD(_currentHp);
+		writeD(0); // ??? (show HP)
+		writeD(_damageGrade); // ??? (Damage)
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{
 		return _S__60_DOORINFO;
 	}
-	
 }

@@ -20,9 +20,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.datatables.sql.SkillSpellbookTable;
@@ -45,6 +42,8 @@ import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.util.IllegalPlayerAction;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class RequestAquireSkill extends L2GameClientPacket
 {

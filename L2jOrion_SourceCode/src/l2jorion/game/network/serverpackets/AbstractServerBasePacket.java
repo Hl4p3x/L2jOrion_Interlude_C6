@@ -20,11 +20,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class makes runImpl() and writeImpl() abstract for custom classes outside of this package
- * @version $Revision: $ $Date: $
- * @author galun
- */
 public abstract class AbstractServerBasePacket extends L2GameServerPacket
 {
 	@Override

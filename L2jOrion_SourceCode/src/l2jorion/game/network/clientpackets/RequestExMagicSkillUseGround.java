@@ -21,10 +21,10 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.model.L2Skill;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.util.Util;
-import l2jorion.util.Point3D;
 
 public final class RequestExMagicSkillUseGround extends L2GameClientPacket
 {
@@ -51,7 +51,9 @@ public final class RequestExMagicSkillUseGround extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		// Get the level of the used skill
 		final int level = activeChar.getSkillLevel(_skillId);
@@ -66,13 +68,11 @@ public final class RequestExMagicSkillUseGround extends L2GameClientPacket
 		
 		if (skill != null)
 		{
-			activeChar.setCurrentSkillWorldPosition(new Point3D(_x, _y, _z));
+			activeChar.setCurrentSkillWorldPosition(new Location(_x, _y, _z));
 			
 			// normally magicskilluse packet turns char client side but for these skills, it doesn't (even with correct target)
 			activeChar.setHeading(Util.calculateHeadingFrom(activeChar.getX(), activeChar.getY(), _x, _y));
-			
-			// Putting a simple Validelocation chars can go up of wall spamming on position and clicking on a SIGNET
-			//activeChar.broadcastPacket(new ValidateLocation(activeChar));
+			// activeChar.broadcastPacket(new ValidateLocation(activeChar));
 			
 			activeChar.useMagic(skill, _ctrlPressed, _shiftPressed);
 		}

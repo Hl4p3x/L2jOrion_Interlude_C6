@@ -14,10 +14,10 @@
  */
 package l2jorion.game.ai;
 
-import l2jorion.game.model.L2CharPosition;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2BoatInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.VehicleDeparture;
@@ -26,9 +26,9 @@ import l2jorion.game.network.serverpackets.VehicleStarted;
 
 public class L2BoatAI extends L2CharacterAI
 {
-	public L2BoatAI(L2BoatInstance.AIAccessor accessor)
+	public L2BoatAI(L2BoatInstance creature)
 	{
-		super(accessor);
+		super(creature);
 	}
 	
 	@Override
@@ -42,17 +42,17 @@ public class L2BoatAI extends L2CharacterAI
 			}
 			
 			_clientMoving = true;
-			_accessor.moveTo(x, y, z);
+			_actor.moveToLocation(x, y, z, 0);
 			_actor.broadcastPacket(new VehicleDeparture(getActor()));
 		}
 	}
 	
 	@Override
-	public void clientStopMoving(L2CharPosition pos)
+	public void clientStopMoving(Location pos)
 	{
 		if (_actor.isMoving())
 		{
-			_accessor.stopMove(pos);
+			_actor.stopMove(pos);
 		}
 		
 		if (_clientMoving || (pos != null))

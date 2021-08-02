@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
+	<!-- Clan Hall Teleport Zones -->
+	<zone name="bandit_stronghold_restart_territory_1" type="ResidenceHallTeleportZone" shape="NPoly" minZ="-1814" maxZ="-1814">
+		<stat name="residenceId" val="35" />
+		<stat name="residenceZoneId" val="0" />  <!-- Identifier inside hall's teleport zones -->
+		<node X="80773" Y="-15854" />
+		<node X="80658" Y="-15971" />
+		<node X="79700" Y="-15968" />
+		<node X="79574" Y="-15836" />
+		<node X="79574" Y="-15120" />
+		<node X="79701" Y="-14996" />
+		<node X="80658" Y="-14996" />
+		<node X="80776" Y="-15131" />
+		<spawn X="81321" Y="-15448" Z="-1824" /> <!-- Battlefield spawn zone -->
+		<spawn X="81415" Y="-15084" Z="-1824" />
+	</zone>
+	<zone name="bandit_stronghold_restart_territory_2" type="ResidenceHallTeleportZone" shape="NPoly" minZ="-1245" maxZ="-1250">
+		<stat name="residenceId" val="35" />
+		<stat name="residenceZoneId" val="1" />
+		<node X="83536" Y="-18012" />
+		<node X="83499" Y="-18378" />
+		<node X="83326" Y="-18455" />
+		<node X="83185" Y="-18317" />
+		<node X="83220" Y="-17986" />
+		<spawn X="83526" Y="-17596" Z="-1824" />
+		<spawn X="83754" Y="-17722" Z="-1824" />
+	</zone>
+	<zone name="bandit_stronghold_restart_territory_3" type="ResidenceHallTeleportZone" shape="NPoly" minZ="-1245" maxZ="-1250">
+		<stat name="residenceId" val="35" />
+		<stat name="residenceZoneId" val="2" />
+		<node X="81492" Y="-17235" />
+		<node X="81361" Y="-17550" />
+		<node X="81168" Y="-17602" />
+		<node X="81071" Y="-17412" />
+		<node X="81206" Y="-17110" />
+		<spawn X="81807" Y="-17161" Z="-1816" />
+		<spawn X="82142" Y="-17288" Z="-1824" />
+	</zone>
+	<zone name="bandit_stronghold_restart_territory_4" type="ResidenceHallTeleportZone" shape="NPoly" minZ="-1245" maxZ="-1250">
+		<stat name="residenceId" val="35" />
+		<stat name="residenceZoneId" val="3" />
+		<node X="81638" Y="-14510" />
+		<node X="81676" Y="-14159" />
+		<node X="81845" Y="-14058" />
+		<node X="81995" Y="-14200" />
+		<node X="81957" Y="-14541" />
+		<spawn X="81944" Y="-15280" Z="-1840" />
+		<spawn X="82355" Y="-15265" Z="-1848" />
+	</zone>
+	<zone name="bandit_stronghold_restart_territory_5" type="ResidenceHallTeleportZone" shape="NPoly" minZ="-1245" maxZ="-1250">
+		<stat name="residenceId" val="35" />
+		<stat name="residenceZoneId" val="4" />
+		<node X="83463" Y="-14772" />
+		<node X="83528" Y="-14441" />
+		<node X="83713" Y="-14349" />
+		<node X="83852" Y="-14515" />
+		<node X="83778" Y="-14832" />
+		<spawn X="83425" Y="-15055" Z="-1824" />
+		<spawn X="83712" Y="-15106" Z="-1816" />
+	</zone>
+	<zone name="bandit_stronghold_restart_territory_6" type="ResidenceHallTeleportZone" shape="NPoly" minZ="-1245" maxZ="-1250">
+		<stat name="residenceId" val="35" />
+		<stat name="residenceZoneId" val="5" />
+		<node X="84997" Y="-15613" />
+		<node X="85158" Y="-15305" />
+		<node X="85364" Y="-15270" />
+		<node X="85434" Y="-15466" />
+		<node X="85270" Y="-15764" />
+		<spawn X="84568" Y="-15789" Z="-1824" />
+		<spawn X="84812" Y="-15839" Z="-1816" />
+	</zone>
+	<zone name="wild_beast_reserve_restart_territory_1" type="ResidenceHallTeleportZone" shape="NPoly" minZ="-1840" maxZ="-1540">
+		<stat name="residenceId" val="63" />
+		<stat name="residenceZoneId" val="0" />
+		<node X="60433" Y="-93298" />
+		<node X="61245" Y="-93736" />
+		<node X="60698" Y="-94776" />
+		<node X="59883" Y="-94346" />
+		<spawn X="59020" Y="-92374" Z="-1352" />
+	</zone>
+	<zone name="wild_beast_reserve_restart_territory_2" type="ResidenceHallTeleportZone" shape="NPoly" minZ="-1840" maxZ="-1540">
+		<stat name="residenceId" val="63" />
+		<stat name="residenceZoneId" val="1" />
+		<node X="55979" Y="-91116" />
+		<node X="55914" Y="-91224" />
+		<node X="56597" Y="-91452" />
+		<node X="56487" Y="-91696" />
+		<node X="56712" Y="-91815" />
+		<node X="56526" Y="-92170" />
+		<node X="56312" Y="-92032" />
+		<node X="56152" Y="-92328" />
+		<node X="55530" Y="-92031" />
+		<node X="55581" Y="-91939" />
+		<node X="55462" Y="-91837" />
+		<node X="55785" Y="-91191" />
+		<spawn X="56954" Y="-92338" Z="-1360" />
+	</zone>
+	<zone name="wild_beast_reserve_restart_territory_3" type="ResidenceHallTeleportZone" shape="NPoly" minZ="-1360" maxZ="-1281">
+		<stat name="residenceId" val="63" />
+		<stat name="residenceZoneId" val="2" />
+		<node X="58821" Y="-90419" />
+		<node X="58684" Y="-91068" />
+		<node X="58417" Y="-91047" />
+		<node X="58363" Y="-91289" />
+		<node X="57975" Y="-91224" />
+		<node X="58020" Y="-90983" />
+		<node X="57712" Y="-90910" />
+		<node X="57824" Y="-90219" />
+		<node X="57936" Y="-90243" />
+		<node X="57994" Y="-90103" />
+		<node X="58702" Y="-90225" />
+		<node X="58699" Y="-90363" />
+		<spawn X="57693" Y="-91641" Z="-1360" />
+	</zone>
+	<zone name="wild_beast_reserve_restart_territory_4" type="ResidenceHallTeleportZone" shape="NPoly" minZ="-1840" maxZ="-1540">
+		<stat name="residenceId" val="63" />
+		<stat name="residenceZoneId" val="3" />
+		<node X="60335" Y="-92873" />
+		<node X="59641" Y="-92960" />
+		<node X="59587" Y="-92680" />
+		<node X="59336" Y="-92708" />
+		<node X="59286" Y="-92330" />
+		<node X="59547" Y="-92304" />
+		<node X="59500" Y="-91980" />
+		<node X="60202" Y="-91869" />
+		<node X="60220" Y="-91986" />
+		<node X="60356" Y="-91987" />
+		<node X="60462" Y="-92711" />
+		<node X="60318" Y="-92759" />
+		<spawn X="58835" Y="-92432" Z="-1360" />
+	</zone>
+	<zone name="wild_beast_reserve_restart_territory_5" type="ResidenceHallTeleportZone" shape="NPoly" minZ="-1840" maxZ="-1540">
+		<stat name="residenceId" val="63" />
+		<stat name="residenceZoneId" val="4" />
+		<node X="58478" Y="-95028" />
+		<node X="58188" Y="-94413" />
+		<node X="58422" Y="-94266" />
+		<node X="58320" Y="-94053" />
+		<node X="58658" Y="-93878" />
+		<node X="58784" Y="-94085" />
+		<node X="59064" Y="-93972" />
+		<node X="59390" Y="-94582" />
+		<node X="59290" Y="-94648" />
+		<node X="59330" Y="-94776" />
+		<node X="58674" Y="-95107" />
+		<node X="58590" Y="-94988" />
+		<spawn X="58423" Y="-93505" Z="-1360" />
+	</zone>
+	<zone name="wild_beast_reserve_restart_territory_6" type="ResidenceHallTeleportZone" shape="NPoly" minZ="-1840" maxZ="-1540">
+		<stat name="residenceId" val="63" />
+		<stat name="residenceZoneId" val="5" />
+		<node X="55844" Y="-93986" />
+		<node X="56339" Y="-93521" />
+		<node X="56530" Y="-93688" />
+		<node X="56714" Y="-93521" />
+		<node X="56994" Y="-93798" />
+		<node X="56812" Y="-93977" />
+		<node X="57035" Y="-94204" />
+		<node X="56543" Y="-94704" />
+		<node X="56472" Y="-94630" />
+		<node X="56347" Y="-94704" />
+		<node X="55834" Y="-94198" />
+		<node X="55915" Y="-94067" />
+		<spawn X="57267" Y="-93405" Z="-1360" />
+	</zone>
+</list>

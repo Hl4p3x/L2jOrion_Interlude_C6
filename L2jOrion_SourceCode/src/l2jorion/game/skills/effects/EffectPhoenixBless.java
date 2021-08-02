@@ -24,9 +24,6 @@ import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.skills.Env;
 
-/**
- * @author Faror
- */
 final class EffectPhoenixBless extends L2Effect
 {
 	public EffectPhoenixBless(final Env env, final EffectTemplate template)
@@ -40,7 +37,6 @@ final class EffectPhoenixBless extends L2Effect
 		return EffectType.PHOENIX_BLESSING;
 	}
 	
-	/** Notify started */
 	@Override
 	public void onStart()
 	{
@@ -50,7 +46,6 @@ final class EffectPhoenixBless extends L2Effect
 		}
 	}
 	
-	/** Notify exited */
 	@Override
 	public void onExit()
 	{
@@ -63,7 +58,6 @@ final class EffectPhoenixBless extends L2Effect
 	@Override
 	public boolean onActionTime()
 	{
-		// just stop this effect
 		return false;
 	}
 }

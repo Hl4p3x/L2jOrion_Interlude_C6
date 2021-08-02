@@ -26,9 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
@@ -45,6 +42,8 @@ import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.util.Broadcast;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class L2AuctioneerInstance extends L2FolkInstance
 {
@@ -64,7 +63,9 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 	public void onAction(final L2PcInstance player)
 	{
 		if (!canTarget(player))
+		{
 			return;
+		}
 		
 		player.setLastFolkNPC(this);
 		
@@ -135,7 +136,9 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 			if (actualCommand.equalsIgnoreCase("auction"))
 			{
 				if (val == "")
+				{
 					return;
+				}
 				
 				try
 				{
@@ -177,7 +180,9 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 					catch (final Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 						
 						player.sendMessage("Invalid bid!");
 					}
@@ -185,7 +190,9 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					player.sendMessage("Invalid auction duration!");
 				}
@@ -203,7 +210,9 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					player.sendMessage("Invalid auction");
 				}
@@ -212,7 +221,9 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 			else if (actualCommand.equalsIgnoreCase("bidding"))
 			{
 				if (val == "")
+				{
 					return;
+				}
 				if (Config.DEBUG)
 				{
 					player.sendMessage("bidding show successful");
@@ -264,7 +275,9 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					player.sendMessage("Invalid auction!");
 				}
@@ -274,7 +287,9 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 			else if (actualCommand.equalsIgnoreCase("bid"))
 			{
 				if (val == "")
+				{
 					return;
+				}
 				
 				try
 				{
@@ -296,13 +311,17 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 					catch (final Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 					}
 				}
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					player.sendMessage("Invalid auction!");
 				}
@@ -318,7 +337,9 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 				}
 				
 				if (val == "")
+				{
 					return;
+				}
 				
 				if (player.getClan().getAuctionBiddedAt() > 0 && player.getClan().getAuctionBiddedAt() != Integer.parseInt(val) || player.getClan().getHasHideout() > 0)
 				{
@@ -351,7 +372,9 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					player.sendMessage("Invalid auction!");
 				}
@@ -405,7 +428,8 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 						i++;
 					}
 					
-					items += "<tr>" + "<td>" + ClanHallManager.getInstance().getClanHallById(a.getItemId()).getLocation() + "</td>" + "<td><a action=\"bypass -h npc_" + getObjectId() + "_bidding " + a.getId() + "\">" + a.getItemName() + "</a></td>" + "<td>" + format.format(a.getEndDate()) + "</td>" + "<td>" + a.getStartingBid() + "</td>" + "</tr>";
+					items += "<tr>" + "<td>" + ClanHallManager.getInstance().getClanHallById(a.getItemId()).getLocation() + "</td>" + "<td><a action=\"bypass -h npc_" + getObjectId() + "_bidding " + a.getId() + "\">" + a.getItemName() + "</a></td>" + "<td>" + format.format(a.getEndDate()) + "</td>"
+						+ "<td>" + a.getStartingBid() + "</td>" + "</tr>";
 				}
 				items += "</table>";
 				String filename = "data/html/auction/AgitAuctionList.htm";
@@ -429,7 +453,9 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 				if (val == "")
 				{
 					if (player.getClan().getAuctionBiddedAt() <= 0)
+					{
 						return;
+					}
 					auctionId = player.getClan().getAuctionBiddedAt();
 				}
 				else
@@ -688,7 +714,9 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					player.sendMessage("Invalid auction!");
 				}
@@ -749,7 +777,9 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 		if (getCastle() != null && getCastle().getCastleId() > 0)
 		{
 			if (getCastle().getSiege().getIsInProgress())
+			{
 				return COND_BUSY_BECAUSE_OF_SIEGE; // Busy because of siege
+			}
 			return COND_REGULAR;
 		}
 		return COND_ALL_FALSE;
@@ -757,7 +787,7 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 	
 	private String getPictureName(final L2PcInstance plyr)
 	{
-		final int nearestTownId = MapRegionTable.getInstance().getMapRegion(plyr.getX(), plyr.getY());
+		final int nearestTownId = MapRegionTable.getInstance().getMapRegionLocId(plyr.getX(), plyr.getY());
 		String nearestTown;
 		
 		switch (nearestTownId)

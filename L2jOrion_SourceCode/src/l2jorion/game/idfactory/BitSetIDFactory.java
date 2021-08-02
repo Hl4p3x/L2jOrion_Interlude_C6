@@ -33,18 +33,11 @@ package l2jorion.game.idfactory;
 import java.util.BitSet;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.PrimeFinder;
-
-/**
- * This class ..
- * @author Olympic
- * @version $Revision: 1.2 $ $Date: 2004/06/27 08:12:59 $
- */
 
 public class BitSetIDFactory extends IdFactory
 {
@@ -56,11 +49,6 @@ public class BitSetIDFactory extends IdFactory
 	
 	public class BitSetCapacityCheck implements Runnable
 	{
-		
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Runnable#run()
-		 */
 		@Override
 		public void run()
 		{
@@ -77,7 +65,8 @@ public class BitSetIDFactory extends IdFactory
 		super();
 		ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new BitSetCapacityCheck(), 30000, 30000);
 		initialize();
-		LOG.info("IDFactory: " + _freeIds.size() + " id's available.");
+		
+		// LOG.info("IDFactory: " + _freeIds.size() + " id's available.");
 	}
 	
 	public synchronized void initialize()
@@ -94,7 +83,9 @@ public class BitSetIDFactory extends IdFactory
 				if (objectID < 0)
 				{
 					if (Config.DEBUG)
+					{
 						LOG.warn("Object ID " + usedObjectId + " in DB is less than minimum ID of " + FIRST_OID);
+					}
 					continue;
 				}
 				_freeIds.set(usedObjectId - FIRST_OID);
@@ -121,7 +112,9 @@ public class BitSetIDFactory extends IdFactory
 			_freeIdCount.incrementAndGet();
 		}
 		else
+		{
 			LOG.warn("BitSet ID Factory: release objectID " + objectID + " failed (< " + FIRST_OID + ")");
+		}
 	}
 	
 	@Override

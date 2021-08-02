@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:element name="list">
+		<xs:complexType>
+			<xs:sequence maxOccurs="1" minOccurs="1">
+				<xs:element name="door" minOccurs="1" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:attribute name="id" type="xs:positiveInteger" use="required" />
+						<xs:attribute name="name" type="xs:normalizedString" use="required" />
+						<xs:attribute name="pos" type="xs:normalizedString" use="required" />
+						<xs:attribute name="height" type="xs:positiveInteger" use="required" />
+						<xs:attribute name="group" type="xs:normalizedString" />
+						<xs:attribute name="node1" type="xs:normalizedString" />
+						<xs:attribute name="node2" type="xs:normalizedString" />
+						<xs:attribute name="node3" type="xs:normalizedString" />
+						<xs:attribute name="node4" type="xs:normalizedString" />
+						<xs:attribute name="nodeZ" type="xs:normalizedString" />
+						<xs:attribute name="open_method" type="xs:nonNegativeInteger" use="required" />
+						<xs:attribute name="baseHpMax">
+							<xs:simpleType>
+								<xs:restriction base="xs:decimal">
+									<xs:minInclusive value="1" />
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="basePDef" type="xs:nonNegativeInteger" use="required" />
+						<xs:attribute name="baseMDef" type="xs:nonNegativeInteger" />
+						<xs:attribute name="level" type="xs:nonNegativeInteger" />
+						<xs:attribute name="hp_showable" type="xs:boolean" />
+						<xs:attribute name="targetable" type="xs:boolean" />
+						<xs:attribute name="check_collision" type="xs:boolean" />
+						<xs:attribute name="random_time" type="xs:integer" />
+						<xs:attribute name="open_time" type="xs:integer" />
+						<xs:attribute name="close_time" type="xs:integer" />
+						<xs:attribute name="child_id_event" type="xs:integer" />
+						<xs:attribute name="emitter_id" type="xs:positiveInteger" />
+						<xs:attribute name="clanhall_id" type="xs:positiveInteger" />
+						<xs:attribute name="is_wall" type="xs:boolean" />
+						<xs:attribute name="default_status">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:enumeration value="open" />
+									<xs:enumeration value="close" />
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="master_open_event">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:enumeration value="act_open" />
+									<xs:enumeration value="act_close" />
+									<xs:enumeration value="act_nothing" />
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="master_close_event">
+							<xs:simpleType>
+								<xs:restriction base="xs:token">
+									<xs:enumeration value="act_open" />
+									<xs:enumeration value="act_close" />
+									<xs:enumeration value="act_nothing" />
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="stealth" type="xs:boolean" />
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

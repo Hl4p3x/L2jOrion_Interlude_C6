@@ -22,12 +22,10 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.entity.ClanHall;
 import l2jorion.game.model.entity.ClanHall.ClanHallFunction;
 
-/**
- * @author Steuf
- */
 public class ClanHallDecoration extends L2GameServerPacket
 {
 	private static final String _S__F7_AGITDECOINFO = "[S] F7 AgitDecoInfo";
+	
 	private final ClanHall _clanHall;
 	private ClanHallFunction _function;
 	
@@ -36,10 +34,6 @@ public class ClanHallDecoration extends L2GameServerPacket
 		_clanHall = ClanHall;
 	}
 	
-	/*
-	 * Packet send, must be confirmed writeC(0xf7); writeD(0); // clanhall id writeC(0); // FUNC_RESTORE_HP (Fireplace) writeC(0); // FUNC_RESTORE_MP (Carpet) writeC(0); // FUNC_RESTORE_MP (Statue) writeC(0); // FUNC_RESTORE_EXP (Chandelier) writeC(0); // FUNC_TELEPORT (Mirror) writeC(0); // Crytal
-	 * writeC(0); // Curtain writeC(0); // FUNC_ITEM_CREATE (Magic Curtain) writeC(0); // FUNC_SUPPORT writeC(0); // FUNC_SUPPORT (Flag) writeC(0); // Front Platform writeC(0); // FUNC_ITEM_CREATE writeD(0); writeD(0);
-	 */
 	@Override
 	protected final void writeImpl()
 	{

@@ -20,26 +20,28 @@
  */
 package l2jorion.game.datatables.sql;
 
-import gnu.trove.TIntObjectHashMap;
-import l2jorion.Config;
-import l2jorion.game.model.base.ClassId;
-import l2jorion.game.templates.L2PcTemplate;
-import l2jorion.game.templates.StatsSet;
-import l2jorion.util.CloseUtil;
-import l2jorion.util.database.DatabaseUtils;
-import l2jorion.util.database.L2DatabaseFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.Config;
+import l2jorion.game.model.base.ClassId;
+import l2jorion.game.templates.L2PcTemplate;
+import l2jorion.game.templates.StatsSet;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
+import l2jorion.util.CloseUtil;
+import l2jorion.util.database.DatabaseUtils;
+import l2jorion.util.database.L2DatabaseFactory;
 
 public class CharTemplateTable
 {
 	private static Logger LOG = LoggerFactory.getLogger(CharTemplateTable.class);
+	
+	private final Map<Integer, L2PcTemplate> _templates = new ConcurrentHashMap<>();
 	
 	private static CharTemplateTable _instance;
 	
@@ -166,8 +168,6 @@ public class CharTemplateTable
 		"Maestro"
 	};
 	
-	private final TIntObjectHashMap<L2PcTemplate> _templates = new TIntObjectHashMap<>();
-	
 	public static CharTemplateTable getInstance()
 	{
 		if (_instance == null)
@@ -252,7 +252,9 @@ public class CharTemplateTable
 		catch (final SQLException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("error while loading char templates " + e.getMessage());
 		}
@@ -261,7 +263,7 @@ public class CharTemplateTable
 			CloseUtil.close(con);
 		}
 		
-		LOG.info("CharTemplateTable: Loaded " + _templates.size() + " Character Templates.");
+		LOG.info("CharTemplateTable: Loaded " + _templates.size() + " character templates");
 	}
 	
 	public L2PcTemplate getTemplate(final ClassId classId)
@@ -276,7 +278,7 @@ public class CharTemplateTable
 		return _templates.get(key);
 	}
 	
-	public static final String getClassNameById(final int classId)
+	public static final String getClassNameById(int classId)
 	{
 		return CHAR_CLASSES[classId];
 	}

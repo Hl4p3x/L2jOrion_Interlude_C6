@@ -23,9 +23,8 @@ import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 /**
  * This class manages all zones for a given world region
@@ -34,6 +33,7 @@ import org.slf4j.LoggerFactory;
 public class L2ZoneManager
 {
 	private final Logger LOG = LoggerFactory.getLogger(L2ZoneManager.class);
+	
 	private final FastList<L2ZoneType> _zones;
 	
 	/**
@@ -65,7 +65,9 @@ public class L2ZoneManager
 	public void revalidateZones(L2Character character)
 	{
 		if (Config.ZONE_DEBUG && character != null && character instanceof L2PcInstance && character.getName() != null)
+		{
 			LOG.debug("ZONE: Revalidating Zone for character: " + character.getName());
+		}
 		
 		for (L2ZoneType e : _zones)
 		{

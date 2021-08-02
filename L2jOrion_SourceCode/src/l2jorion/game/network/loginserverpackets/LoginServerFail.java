@@ -36,9 +36,6 @@ public class LoginServerFail extends LoginServerBasePacket
 	};
 	private final int _reason;
 	
-	/**
-	 * @param decrypt
-	 */
 	public LoginServerFail(final byte[] decrypt)
 	{
 		super(decrypt);

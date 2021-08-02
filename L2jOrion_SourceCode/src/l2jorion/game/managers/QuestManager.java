@@ -20,6 +20,7 @@
 package l2jorion.game.managers;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 import javolution.util.FastMap;
@@ -27,9 +28,8 @@ import l2jorion.Config;
 import l2jorion.game.model.quest.Quest;
 import l2jorion.game.scripting.L2ScriptEngineManager;
 import l2jorion.game.scripting.ScriptManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class QuestManager extends ScriptManager<Quest>
 {
@@ -48,7 +48,6 @@ public class QuestManager extends ScriptManager<Quest>
 	
 	public QuestManager()
 	{
-		//LOG.info("Initializing QuestManager");
 	}
 	
 	public final boolean reload(final String questFolder)
@@ -59,21 +58,18 @@ public class QuestManager extends ScriptManager<Quest>
 		return q.reload();
 	}
 	
-	/**
-	 * Reloads a the quest given by questId.<BR>
-	 * <B>NOTICE: Will only work if the quest name is equal the quest folder name</B>
-	 * @param questId The id of the quest to be reloaded
-	 * @return true if reload was succesful, false otherwise
-	 */
 	public final boolean reload(final int questId)
 	{
-		final Quest q = this.getQuest(questId);
+		final Quest q = getQuest(questId);
 		if (q == null)
+		{
 			return false;
+		}
+		
 		return q.reload();
 	}
 	
-	public final void reloadAllQuests()
+	public final void reloadAllQuests() throws IOException
 	{
 		LOG.info("Reloading Server Scripts");
 		// unload all scripts
@@ -86,13 +82,13 @@ public class QuestManager extends ScriptManager<Quest>
 		}
 		// now load all scripts
 		final File scripts = new File(Config.DATAPACK_ROOT, "config/scripts.cfg");
-		L2ScriptEngineManager.getInstance().executeScriptsList(scripts);
+		L2ScriptEngineManager.getInstance().executeScriptList(scripts);
 		QuestManager.getInstance().report();
 	}
 	
 	public final void report()
 	{
-		LOG.info("Loaded: " + _quests.size() + " quests");
+		LOG.info("QuestManager: Loaded: " + _quests.size() + " quests");
 	}
 	
 	public final void save()

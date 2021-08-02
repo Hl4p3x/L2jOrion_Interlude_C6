@@ -16,23 +16,25 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jguard.Protection;
 import l2jorion.Config;
+import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.L2GameClient.GameClientState;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.CharSelected;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class CharacterSelected extends L2GameClientPacket
 {
 	private static Logger LOG = LoggerFactory.getLogger(CharacterSelected.class);
+	
 	private int _charSlot;
 	
 	@SuppressWarnings("unused")
 	private int _unk1, _unk2, _unk3, _unk4;
+	
 	@Override
 	protected void readImpl()
 	{
@@ -42,7 +44,7 @@ public class CharacterSelected extends L2GameClientPacket
 		_unk3 = readD();
 		_unk4 = readD();
 	}
-
+	
 	@Override
 	protected void runImpl()
 	{
@@ -50,6 +52,7 @@ public class CharacterSelected extends L2GameClientPacket
 		{
 			return;
 		}
+		
 		// we should always be abble to acquire the lock but if we cant lock then nothing should be done (ie repeated packet)
 		if (getClient().getActiveCharLock().tryLock())
 		{
@@ -73,6 +76,8 @@ public class CharacterSelected extends L2GameClientPacket
 						sendPacket(ActionFailed.STATIC_PACKET);
 						return;
 					}
+					
+					L2World.getInstance().addPlayerToWorld(cha);
 					
 					if (cha.getAccessLevel().getLevel() < 0)
 					{

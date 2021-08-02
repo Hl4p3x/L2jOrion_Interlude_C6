@@ -24,12 +24,10 @@ import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author -Wooden-
- */
 public class PledgeShowMemberListUpdate extends L2GameServerPacket
 {
 	private static final String _S__54_PLEDGESHOWMEMBERLISTUPDATE = "[S] 54 PledgeShowMemberListUpdate";
+	
 	private final L2PcInstance _activeChar;
 	private final int _pledgeType;
 	private int _hasSponsor;
@@ -112,10 +110,6 @@ public class PledgeShowMemberListUpdate extends L2GameServerPacket
 		writeD(_hasSponsor);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

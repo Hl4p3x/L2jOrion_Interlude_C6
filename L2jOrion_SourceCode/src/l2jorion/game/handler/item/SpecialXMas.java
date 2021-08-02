@@ -26,9 +26,6 @@ import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ShowXMasSeal;
 
-/**
- * @author devScarlet & mrTJO
- */
 public class SpecialXMas implements IItemHandler
 {
 	private static int[] _itemIds =
@@ -40,7 +37,9 @@ public class SpecialXMas implements IItemHandler
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		final int itemId = item.getItemId();
@@ -57,14 +56,9 @@ public class SpecialXMas implements IItemHandler
 			ShowXMasSeal SXS = new ShowXMasSeal(5555);
 			activeChar.sendPacket(SXS);
 			// activeChar.broadcastPacket(SXS);
-			SXS = null;
 		}
-		activeChar = null;
 	}
 	
-	/**
-	 * @see l2jorion.game.handler.IItemHandler#getItemIds()
-	 */
 	@Override
 	public int[] getItemIds()
 	{

@@ -19,12 +19,8 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * @author chris_00 close the CommandChannel Information window
- */
 public class ExCloseMPCC extends L2GameServerPacket
 {
-	
 	@Override
 	protected void writeImpl()
 	{

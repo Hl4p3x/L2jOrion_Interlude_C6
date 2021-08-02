@@ -22,13 +22,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2BoatInstance;
 
-/**
- * @author Damon
- */
 public class VehicleDeparture extends L2GameServerPacket
 {
-	
-private final int _objId, _x, _y, _z, _moveSpeed, _rotationSpeed;
+	private final int _objId, _x, _y, _z, _moveSpeed, _rotationSpeed;
 	
 	public VehicleDeparture(L2BoatInstance boat)
 	{
@@ -50,7 +46,6 @@ private final int _objId, _x, _y, _z, _moveSpeed, _rotationSpeed;
 		writeD(_x);
 		writeD(_y);
 		writeD(_z);
-		
 	}
 	
 	@Override

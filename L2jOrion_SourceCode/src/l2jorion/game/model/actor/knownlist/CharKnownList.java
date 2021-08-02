@@ -43,13 +43,16 @@ public class CharKnownList extends ObjectKnownList
 	public boolean addKnownObject(L2Object object)
 	{
 		if (!super.addKnownObject(object))
+		{
 			return false;
+		}
 		
 		if (object instanceof L2PcInstance)
 		{
 			getKnownPlayers().put(object.getObjectId(), (L2PcInstance) object);
 			getKnownRelations().put(object.getObjectId(), -1);
 		}
+		
 		return true;
 	}
 	
@@ -78,7 +81,9 @@ public class CharKnownList extends ObjectKnownList
 	public boolean removeKnownObject(L2Object object)
 	{
 		if (!super.removeKnownObject(object))
+		{
 			return false;
+		}
 		
 		if (object instanceof L2PcInstance)
 		{
@@ -105,7 +110,7 @@ public class CharKnownList extends ObjectKnownList
 	{
 		return 0;
 	}
-
+	
 	@Override
 	public int getDistanceToWatchObject(L2Object object)
 	{
@@ -115,16 +120,18 @@ public class CharKnownList extends ObjectKnownList
 	public Collection<L2Character> getKnownCharacters()
 	{
 		FastList<L2Character> result = new FastList<>();
-
+		
 		final Collection<L2Object> objs = getKnownObjects().values();
 		for (L2Object obj : objs)
 		{
 			if (obj instanceof L2Character)
+			{
 				result.add((L2Character) obj);
+			}
 		}
 		return result;
 	}
-
+	
 	public Collection<L2Character> getKnownCharactersInRadius(long radius)
 	{
 		FastList<L2Character> result = new FastList<>();
@@ -135,7 +142,9 @@ public class CharKnownList extends ObjectKnownList
 			if (obj instanceof L2Character)
 			{
 				if (Util.checkIfInRange((int) radius, getActiveChar(), obj, true))
+				{
 					result.add((L2Character) obj);
+				}
 			}
 		}
 		return result;
@@ -144,15 +153,19 @@ public class CharKnownList extends ObjectKnownList
 	public final Map<Integer, L2PcInstance> getKnownPlayers()
 	{
 		if (_knownPlayers == null)
+		{
 			_knownPlayers = new FastMap<Integer, L2PcInstance>().shared();
+		}
 		
 		return _knownPlayers;
 	}
-
+	
 	public final Map<Integer, Integer> getKnownRelations()
 	{
 		if (_knownRelations == null)
+		{
 			_knownRelations = new FastMap<Integer, Integer>().shared();
+		}
 		
 		return _knownRelations;
 	}
@@ -163,8 +176,12 @@ public class CharKnownList extends ObjectKnownList
 		
 		final Collection<L2PcInstance> plrs = getKnownPlayers().values();
 		for (L2PcInstance player : plrs)
+		{
 			if (Util.checkIfInRange((int) radius, getActiveChar(), player, true))
+			{
 				result.add(player);
+			}
+		}
 		
 		return result;
 	}

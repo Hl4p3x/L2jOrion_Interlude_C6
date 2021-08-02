@@ -19,8 +19,6 @@ package l2jorion.game.taskmanager.tasks;
 
 import java.util.Calendar;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.ClanTable;
@@ -31,8 +29,10 @@ import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.taskmanager.Task;
 import l2jorion.game.taskmanager.TaskManager;
-import l2jorion.game.taskmanager.TaskTypes;
 import l2jorion.game.taskmanager.TaskManager.ExecutedTask;
+import l2jorion.game.taskmanager.TaskTypes;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class TaskRaidPointsReset extends Task
 {
@@ -61,7 +61,9 @@ public class TaskRaidPointsReset extends Task
 				{
 					L2Object obj = L2World.getInstance().findObject(entry.getKey());
 					if (obj instanceof L2PcInstance)
+					{
 						playerName = ((L2PcInstance) obj).getName();
+					}
 					if (entry.getValue() <= 100 && c.isMember(playerName))
 					{
 						int reputation = 0;
@@ -99,9 +101,13 @@ public class TaskRaidPointsReset extends Task
 								break;
 							default:
 								if (entry.getValue() <= 50)
+								{
 									reputation = Config.RAID_RANKING_UP_TO_50TH;
+								}
 								else
+								{
 									reputation = Config.RAID_RANKING_UP_TO_100TH;
+								}
 								break;
 						}
 						c.setReputationScore(c.getReputationScore() + reputation, true);
@@ -110,7 +116,7 @@ public class TaskRaidPointsReset extends Task
 			}
 			
 			RaidBossPointsManager.cleanUp();
-			LOG.info("Raid Points Reset Global Task: launched.");
+			LOG.info("Raid Points Global Task: Clan Reputation Points added for clans.");
 		}
 	}
 	

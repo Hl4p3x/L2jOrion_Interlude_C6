@@ -19,33 +19,32 @@
  */
 package l2jorion.game.model.zone;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-import javolution.util.FastList;
+import org.w3c.dom.Node;
+
 import javolution.util.FastMap;
-import l2jorion.Config;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.L2GameServerPacket;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Node;
-
-/**
- * Abstract base class for any zone type Handles basic operations
- * @author durgus
- */
 public abstract class L2ZoneType
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(L2ZoneType.class);
+	
 	private final int _id;
-	protected List<L2ZoneForm> _zone;
+	protected L2ZoneForm _zone;
 	public FastMap<Integer, L2Character> _characterList;
 	protected FastMap<Integer, Integer> _zones;
+	private String _name = null;
+	private boolean _enabled;
+	private AbstractZoneSettings _settings;
 	
-	/** Parameters to affect specific characters */
 	private boolean _checkAffected;
 	
 	private int _minLvl;
@@ -75,11 +74,6 @@ public abstract class L2ZoneType
 		return _id;
 	}
 	
-	/**
-	 * Setup new parameters for this zone
-	 * @param name
-	 * @param value
-	 */
 	public void setParameter(String name, String value)
 	{
 		_checkAffected = true;
@@ -169,7 +163,9 @@ public abstract class L2ZoneType
 	{
 		// Check lvl
 		if (character.getLevel() < _minLvl || character.getLevel() > _maxLvl)
+		{
 			return false;
+		}
 		
 		if (character instanceof L2PcInstance)
 		{
@@ -179,10 +175,14 @@ public abstract class L2ZoneType
 				if (((L2PcInstance) character).isMageClass())
 				{
 					if (_classType == 1)
+					{
 						return false;
+					}
 				}
 				else if (_classType == 2)
+				{
 					return false;
+				}
 			}
 			
 			// Check race
@@ -200,7 +200,9 @@ public abstract class L2ZoneType
 				}
 				
 				if (!ok)
+				{
 					return false;
+				}
 			}
 			
 			// Check class
@@ -218,19 +220,21 @@ public abstract class L2ZoneType
 				}
 				
 				if (!ok)
+				{
 					return false;
+				}
 			}
 		}
 		return true;
 	}
 	
-	/**
-	 * Set the zone for this L2ZoneType Instance
-	 * @param zone
-	 */
 	public void setZone(L2ZoneForm zone)
 	{
-		getZones().add(zone);
+		if (_zone != null)
+		{
+			throw new IllegalStateException("Zone already set");
+		}
+		_zone = zone;
 	}
 	
 	/**
@@ -239,29 +243,14 @@ public abstract class L2ZoneType
 	 */
 	public L2ZoneForm getZone()
 	{
-		for (L2ZoneForm zone : getZones())
-		{
-			return zone;
-		}
-		return null;
-	}
-	
-	public final List<L2ZoneForm> getZones()
-	{
-		if (_zone == null)
-			_zone = new FastList<>();
 		return _zone;
 	}
-
+	
 	public boolean isInsideZone(int x, int y)
 	{
-		for (L2ZoneForm zone : getZones())
-		{
-			if (zone.isInsideZone(x, y, zone.getHighZ()))
-				return true;
-		}
-		return false;
+		return _zone.isInsideZone(x, y, _zone.getHighZ());
 	}
+	
 	/**
 	 * Checks if the given coordinates are within the zone
 	 * @param x
@@ -271,12 +260,7 @@ public abstract class L2ZoneType
 	 */
 	public boolean isInsideZone(int x, int y, int z)
 	{
-		for (L2ZoneForm zone : getZones())
-		{
-			if (zone.isInsideZone(x, y, z))
-				return true;
-		}
-		return false;
+		return _zone.isInsideZone(x, y, z);
 	}
 	
 	/**
@@ -301,27 +285,16 @@ public abstract class L2ZoneType
 	
 	public void revalidateInZone(L2Character character)
 	{
-		// If the character can't be affected by this zone return
 		if (_checkAffected)
 		{
 			if (!isAffected(character))
+			{
 				return;
+			}
 		}
 		
-		if (Config.ZONE_DEBUG && character instanceof L2PcInstance && ((L2PcInstance) character).isGM())
+		if (isInsideZone(character))
 		{
-			
-			LOG.debug("ZONE: Character " + character.getName() + " has coords: ");
-			LOG.debug("ZONE: 	X: " + character.getX());
-			LOG.debug("ZONE: 	Y: " + character.getY());
-			LOG.debug("ZONE: 	Z: " + character.getZ());
-			LOG.debug("ZONE:  -  is inside zone " + _id + "?: " + isInsideZone(character.getX(), character.getY(), character.getZ()));
-			
-		}
-		// If the object is inside the zone...
-		if (isInsideZone(character.getX(), character.getY(), character.getZ()))
-		{
-			// Was the character not yet inside this zone?
 			if (!_characterList.containsKey(character.getObjectId()))
 			{
 				_characterList.put(character.getObjectId(), character);
@@ -330,25 +303,12 @@ public abstract class L2ZoneType
 		}
 		else
 		{
-			// Was the character inside this zone?
 			if (_characterList.containsKey(character.getObjectId()))
 			{
-				if (Config.ZONE_DEBUG && character instanceof L2PcInstance && character.getName() != null)
-					LOG.debug("ZONE: " + "Character " + character.getName() + " removed from zone.");
 				_characterList.remove(character.getObjectId());
 				onExit(character);
 			}
 		}
-		
-		if (Config.ZONE_DEBUG)
-		{
-			for (L2Character actual : _characterList.values())
-			{
-				if (actual instanceof L2PcInstance)
-					LOG.debug("ZONE:	 -  " + actual.getName() + " is inside zone " + _id);
-			}
-		}
-		
 	}
 	
 	/**
@@ -396,18 +356,84 @@ public abstract class L2ZoneType
 	public void broadcastPacket(L2GameServerPacket packet)
 	{
 		if (_characterList.isEmpty())
+		{
 			return;
+		}
 		
 		for (final L2Character character : _characterList.values())
 		{
 			if (character instanceof L2PcInstance)
+			{
 				character.sendPacket(packet);
+			}
 		}
 	}
 	
-	public FastMap<Integer, L2Character> getCharactersInside()
+	public Collection<L2Character> getCharactersInside()
 	{
-		return _characterList;
+		return _characterList.values();
 	}
 	
+	public List<L2PcInstance> getPlayersInside()
+	{
+		List<L2PcInstance> players = new ArrayList<>();
+		for (L2Character ch : _characterList.values())
+		{
+			if ((ch != null) && ch instanceof L2PcInstance)
+			{
+				players.add(ch.getActingPlayer());
+			}
+		}
+		
+		return players;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public final <A> List<A> getKnownTypeInside(Class<A> type)
+	{
+		List<A> result = new ArrayList<>();
+		
+		for (L2Object obj : _characterList.values())
+		{
+			if (type.isAssignableFrom(obj.getClass()))
+			{
+				result.add((A) obj);
+			}
+		}
+		return result;
+	}
+	
+	public AbstractZoneSettings getSettings()
+	{
+		return _settings;
+	}
+	
+	public void setSettings(AbstractZoneSettings settings)
+	{
+		if (_settings != null)
+		{
+			_settings.clear();
+		}
+		_settings = settings;
+	}
+	
+	public void setName(String name)
+	{
+		_name = name;
+	}
+	
+	public String getName()
+	{
+		return _name;
+	}
+	
+	public void setEnabled(boolean state)
+	{
+		_enabled = state;
+	}
+	
+	public boolean isEnabled()
+	{
+		return _enabled;
+	}
 }

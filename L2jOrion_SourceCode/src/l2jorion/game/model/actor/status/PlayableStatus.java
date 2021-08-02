@@ -24,18 +24,11 @@ import l2jorion.game.model.actor.instance.L2PlayableInstance;
 
 public class PlayableStatus extends CharStatus
 {
-	// =========================================================
-	// Data Field
-	
-	// =========================================================
-	// Constructor
 	public PlayableStatus(final L2PlayableInstance activeChar)
 	{
 		super(activeChar);
 	}
 	
-	// =========================================================
-	// Method - Public
 	@Override
 	public void reduceHp(final double value, final L2Character attacker)
 	{
@@ -46,7 +39,9 @@ public class PlayableStatus extends CharStatus
 	public void reduceHp(final double value, final L2Character attacker, final boolean awake)
 	{
 		if (getActiveChar().isDead())
+		{
 			return;
+		}
 		
 		super.reduceHp(value, attacker, awake);
 		/*
@@ -55,11 +50,6 @@ public class PlayableStatus extends CharStatus
 		 */
 	}
 	
-	// =========================================================
-	// Method - Private
-	
-	// =========================================================
-	// Property - Public
 	@Override
 	public L2PlayableInstance getActiveChar()
 	{

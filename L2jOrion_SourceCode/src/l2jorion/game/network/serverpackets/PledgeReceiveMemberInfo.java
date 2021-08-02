@@ -21,17 +21,12 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2ClanMember;
 
-/**
- * @author -Wooden-
- */
 public class PledgeReceiveMemberInfo extends L2GameServerPacket
 {
 	private static final String _S__FE_3D_PLEDGERECEIVEMEMBERINFO = "[S] FE:3D PledgeReceiveMemberInfo";
+	
 	private final L2ClanMember _member;
 	
-	/**
-	 * @param member
-	 */
 	public PledgeReceiveMemberInfo(final L2ClanMember member)
 	{
 		_member = member;

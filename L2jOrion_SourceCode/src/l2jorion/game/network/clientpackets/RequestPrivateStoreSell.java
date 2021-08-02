@@ -20,17 +20,17 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.ItemRequest;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.TradeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class RequestPrivateStoreSell extends L2GameClientPacket
 {
@@ -106,9 +106,12 @@ public final class RequestPrivateStoreSell extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
+		
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		if (player.isSubmitingPin())
 		{
 			player.sendMessage("Unable to do any action while PIN is not submitted");
@@ -123,15 +126,21 @@ public final class RequestPrivateStoreSell extends L2GameClientPacket
 		
 		final L2Object object = L2World.getInstance().findObject(_storePlayerId);
 		if (object == null || !(object instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		final L2PcInstance storePlayer = (L2PcInstance) object;
 		if (storePlayer.getPrivateStoreType() != L2PcInstance.STORE_PRIVATE_BUY)
+		{
 			return;
+		}
 		
 		final TradeList storeList = storePlayer.getBuyList();
 		if (storeList == null)
+		{
 			return;
+		}
 		
 		// Check if player didn't choose any items
 		if (_items == null || _items.length == 0)
@@ -149,7 +158,7 @@ public final class RequestPrivateStoreSell extends L2GameClientPacket
 		
 		if (!player.getAccessLevel().allowTransaction())
 		{
-			player.sendMessage("Unsufficient privileges.");
+			player.sendPacket(SystemMessageId.YOU_ARE_NOT_AUTHORIZED_TO_DO_THAT);
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}

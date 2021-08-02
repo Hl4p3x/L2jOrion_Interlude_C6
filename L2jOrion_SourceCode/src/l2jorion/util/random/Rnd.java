@@ -15,12 +15,11 @@
  */
 package l2jorion.util.random;
 
-/**
- * @author Damon
- */
+import java.util.List;
+
 public final class Rnd
 {
-	public static final double get()	// get random number from 0 to 1
+	public static final double get() // get random number from 0 to 1
 	{
 		return MTRandom.getInstance().getSecureRandom().nextDouble();
 	}
@@ -39,7 +38,7 @@ public final class Rnd
 	{
 		return (int) Math.floor(MTRandom.getInstance().getSecureRandom().nextDouble() * n);
 	}
-
+	
 	public static final int nextInt()
 	{
 		return MTRandom.getInstance().getSecureRandom().nextInt();
@@ -63,5 +62,15 @@ public final class Rnd
 	public static final void nextBytes(final byte[] array)
 	{
 		MTRandom.getInstance().getSecureRandom().nextBytes(array);
+	}
+	
+	public static final <T> T get(List<T> list)
+	{
+		if (list == null || list.size() == 0)
+		{
+			return null;
+		}
+		
+		return list.get(get(list.size()));
 	}
 }

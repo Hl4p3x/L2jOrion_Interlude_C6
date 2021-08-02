@@ -24,33 +24,32 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.model.L2ArmorSet;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-/**
- * @author ProGramMoS
- */
 public final class CustomArmorSetsTable
 {
 	private static final Logger LOG = LoggerFactory.getLogger(CustomArmorSetsTable.class);
+	
 	private static CustomArmorSetsTable _instance;
 	
 	public static CustomArmorSetsTable getInstance()
 	{
 		if (_instance == null)
+		{
 			_instance = new CustomArmorSetsTable();
+		}
 		return _instance;
 	}
 	
 	public CustomArmorSetsTable()
 	{
 		Connection con = null;
-		
+		int count = 0;
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
@@ -69,8 +68,12 @@ public final class CustomArmorSetsTable
 				final int shield_skill_id = rset.getInt("shield_skill_id");
 				final int enchant6skill = rset.getInt("enchant6skill");
 				ArmorSetsTable.getInstance().addObj(chest, new L2ArmorSet(chest, legs, head, gloves, feet, skill_id, shield, shield_skill_id, enchant6skill));
+				count++;
 			}
-			LOG.info("ArmorSetsTable: Loaded custom armor sets.");
+			if (count > 0)
+			{
+				LOG.info("ArmorSetsTable: Loaded custom armor sets");
+			}
 			
 			DatabaseUtils.close(statement);
 			DatabaseUtils.close(rset);

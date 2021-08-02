@@ -27,9 +27,6 @@ import l2jorion.game.model.L2Party;
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author zabbix
- */
 public class PartyMemberPosition extends L2GameServerPacket
 {
 	Map<Integer, Location> locations = new FastMap<>();
@@ -45,7 +42,9 @@ public class PartyMemberPosition extends L2GameServerPacket
 		for (final L2PcInstance member : party.getPartyMembers())
 		{
 			if (member == null)
+			{
 				continue;
+			}
 			locations.put(member.getObjectId(), new Location(member));
 		}
 	}

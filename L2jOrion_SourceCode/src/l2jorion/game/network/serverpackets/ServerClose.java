@@ -19,26 +19,18 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * @author devScarlet & mrTJO
- */
 public class ServerClose extends L2GameServerPacket
 {
 	private static final String _S__26_SERVERCLOSE = "[S] 26 ServerClose";
+	
 	public static final ServerClose STATIC_PACKET = new ServerClose();
 	
-	/**
-	 * @see l2jorion.game.network.serverpackets.L2GameServerPacket#writeImpl()
-	 */
 	@Override
 	protected void writeImpl()
 	{
 		writeC(0x26);
 	}
 	
-	/**
-	 * @see l2jorion.game.network.serverpackets.L2GameServerPacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

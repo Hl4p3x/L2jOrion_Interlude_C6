@@ -22,9 +22,6 @@ package l2jorion.game.skills.conditions;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public class ConditionTargetLevel extends Condition
 {
 	
@@ -39,7 +36,9 @@ public class ConditionTargetLevel extends Condition
 	public boolean testImpl(final Env env)
 	{
 		if (env.target == null)
+		{
 			return false;
+		}
 		return env.target.getLevel() >= _level;
 	}
 }

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
+<!-- Boss zone of Valakas -->
+  <zone name="Valakas Zone" id="12008" type="BossZone" shape="Cuboid" minZ="-1735" maxZ="16301">
+	<stat name="bossId" val="29028"/>
+    <stat name="flying" val="false"/>
+    <stat name="InvadeTime" val="300000"/>
+	<stat name="pvp" val="true"/>
+  </zone>
+<!-- Boss zone of Valakas -->
+<!-- Part 1 - Behind Klein -->
+<zone name='Lair of Valakas Place 3' id='12030' type='BossZone' shape='NPoly' minZ='-3305' maxZ='-1500'>
+	<stat name='flying' val='false'/>
+	<stat name='InvadeTime' val='300000'/>
+	<stat name='pvp' val='true'/>
+	<stat name="access" val="true"/>
+	<node X="181827" Y="-115096" />
+	<node X="182388" Y="-117548" />
+	<node X="184492" Y="-117475" />
+	<node X="184215" Y="-114868" />
+</zone>
+<!-- Boss zone of Valakas -->
+<!-- Part 2 on the Top -->
+<zone name='Lair of Valakas Place 1' id='12031' type='BossZone' shape='Cylinder' minZ='-1890' maxZ='16301' rad="12000">
+	<stat name='flying' val='false'/>
+	<stat name='InvadeTime' val='300000'/>
+	<stat name='pvp' val='true'/>
+	<stat name="access" val="true"/>
+	<node X="191879" Y="-115488" />
+</zone>
+<!-- Boss zone of Frintezza -->
+  <zone name="Frintezza Zone" id="12016" type="BossZone" shape="Cuboid" minZ="-6130" maxZ="-3000">
+	<stat name="bossId" val="29047"/>
+    <stat name="flying" val="false"/>
+    <stat name="InvadeTime" val="300000"/>
+	<stat name="pvp" val="true"/>
+  </zone>
+<!-- Boss zone of Antharas -->
+  <zone name="Antharas Zone" id="12006" type="BossZone" shape="Cuboid" minZ="-8220" maxZ="-4870">
+	<stat name="bossId" val="29019"/>
+    <stat name="flying" val="false"/>
+    <stat name="InvadeTime" val="300000"/>
+	<stat name="pvp" val="true"/>
+  </zone>
+<!-- Boss zone of Baium -->
+  <zone name="Baium Zone" id="12007" type="BossZone" shape="NPoly" minZ="9967" maxZ="16301">
+	<stat name="bossId" val="29020"/>
+    <stat name="flying" val="false"/>
+    <stat name="InvadeTime" val="300000"/>
+	<stat name="pvp" val="true"/>
+  </zone>
+<!-- Boss zone of Zaken -->
+  <zone name="Zaken Zone" id="12011" type="BossZone" shape="Cuboid" minZ="-3775" maxZ="-2690">
+	<stat name="bossId" val="29022"/>
+	<stat name="maxLevel" val="68"/>
+    <stat name="flying" val="false"/>
+	<stat name="access" val="true"/>
+    <stat name="InvadeTime" val="300000"/>
+	<stat name="pvp" val="true"/>
+  </zone>
+  <!-- Boss zone of Zaken (Correction) -->
+  <zone name="Zaken Zone (Correction)" type="BossZone" shape="NPoly" minZ="-3632" maxZ="-3000">
+	<stat name="bossId" val="29022"/>
+	<stat name="maxLevel" val="68"/>
+    <stat name="flying" val="false"/>
+	<stat name="access" val="true"/>
+    <stat name="InvadeTime" val="300000"/>
+	<stat name="pvp" val="true"/>
+	<node X="52413" Y="219015"/>
+	<node X="52726" Y="219053"/>
+	<node X="53407" Y="219939"/>
+	<node X="53401" Y="220319"/>
+	<node X="52608" Y="220053"/>
+	<node X="52423" Y="219292"/>
+  </zone>
+<!-- Boss zone of Orfen -->
+  <zone name="Orfen Zone" id="12018" type="BossZone" shape="NPoly" minZ="-5796" maxZ="-3796">
+	<stat name="bossId" val="29014"/>
+	<stat name="flying" val="false"/>
+	<stat name="maxLevel" val="58"/>
+	<stat name="teleportOut" val="false"/>
+	<stat name="pvp" val="true"/>
+  </zone>
+<!-- Boss zone of Ant Queen -->
+  <zone name="Ant Queen Zone" id="12019" type="BossZone" shape="NPoly" minZ="-5947" maxZ="-5547">
+	<stat name="bossId" val="29001"/>
+	<stat name="flying" val="false"/>
+	<stat name="maxLevel" val="49"/>
+	<stat name="access" val="true"/>
+    <stat name="InvadeTime" val="300000"/>
+	<stat name="pvp" val="true"/>
+	<stat name="AllowCursedWeapons" val="false"/>
+  </zone>
+<!-- Boss zone of Ant Queen - Level district zone 1 -->
+  <zone name="49 Level zone [1]" id="12020" type="BossZone" shape="NPoly" minZ="-5947" maxZ="-4072">
+	<stat name="flying" val="false"/>
+	<stat name="maxLevel" val="49"/>
+	<stat name="teleportOut" val="false"/>
+	<node X="-26086" Y="172934"/>
+	<node X="-25565" Y="173255"/>
+	<node X="-26032" Y="173952"/>
+	<node X="-26324" Y="173859"/>
+  </zone>
+<!-- Boss zone of Ant Queen - Level district zone 2 -->
+  <zone name="49 Level zone [2]" id="12026" type="BossZone" shape="NPoly" minZ="-5947" maxZ="-4384">
+	<stat name="flying" val="false"/>
+	<stat name="maxLevel" val="49"/>
+	<stat name="teleportOut" val="false"/>
+	<node X="-16533" Y="192819"/>
+	<node X="-16317" Y="193415"/>
+	<node X="-18512" Y="194160"/>
+	<node X="-18080" Y="193376"/>
+  </zone>
+<!-- Boss zone of Ant Queen - Level district zone 3 -->
+  <zone name="49 Level zone [3]" id="12027" type="BossZone" shape="NPoly" minZ="-5947" maxZ="-4016">
+	<stat name="flying" val="false"/>
+	<stat name="maxLevel" val="49"/>
+	<stat name="teleportOut" val="false"/>
+	<node X="-9546" Y="175883"/>
+	<node X="-10332" Y="176011"/>
+	<node X="-10395" Y="174754"/>
+	<node X="-10064" Y="174688"/>
+  </zone>
+<!-- Boss zone Sunlight Room (Devil Isle) -->
+  <zone name="Sunlight Room" id="12012" type="BossZone" shape="Cuboid" minZ="-2900" maxZ="-2690">
+    <stat name="flying" val="false"/>
+	<stat name="access" val="true"/>
+    <stat name="InvadeTime" val="300000"/>
+  </zone>
+<!-- Boss zone of Sailren -->
+  <zone name="Sailren Zone" id="12013" type="BossZone" shape="Cuboid" minZ="-2075" maxZ="-1944">
+	<stat name="bossId" val="29065"/>
+    <stat name="flying" val="false"/>
+	<stat name="access" val="true"/>
+    <stat name="InvadeTime" val="300000"/>
+	<stat name="pvp" val="true"/>
+  </zone>
+<!-- Boss zone Altar of Sacrifice (Van Halter)-->
+  <zone name="Altar of Sacrifice" id="12014" type="BossZone" shape="Cuboid" minZ="-10730" maxZ="-10290">
+    <stat name="flying" val="false"/>
+    <stat name="InvadeTime" val="300000"/>
+  </zone>
+<!-- Boss zone of Ice Fairy Sirra -->
+  <zone name="Ice Fairy Sirra Zone" id="12015" type="BossZone" shape="NPoly" minZ="-30000" maxZ="30000">
+	<stat name="bossId" val="29056"/>
+    <stat name="flying" val="false"/>
+	<stat name="InvadeTime" val="300000"/>
+  </zone>
+<!-- Boss zone of Lilith and Anakim -->
+  <zone name="Lilith and Anakim Zone" id="12009" type="BossZone" shape="Cuboid" minZ="-5600" maxZ="-3895">
+    <stat name="flying" val="false"/>
+	<stat name="access" val="true"/>
+    <stat name="InvadeTime" val="300000"/>
+  </zone>
+</list>

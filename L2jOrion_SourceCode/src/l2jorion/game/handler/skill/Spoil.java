@@ -21,6 +21,7 @@
 package l2jorion.game.handler.skill;
 
 import l2jorion.game.ai.CtrlEvent;
+import l2jorion.game.enums.AchType;
 import l2jorion.game.handler.ISkillHandler;
 import l2jorion.game.model.L2Attackable;
 import l2jorion.game.model.L2Character;
@@ -44,7 +45,9 @@ public class Spoil implements ISkillHandler
 	public void useSkill(final L2Character activeChar, final L2Skill skill, final L2Object[] targets)
 	{
 		if (!(activeChar instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		if (targets == null)
 		{
@@ -54,26 +57,30 @@ public class Spoil implements ISkillHandler
 		for (final L2Object target1 : targets)
 		{
 			if (!(target1 instanceof L2MonsterInstance))
-					continue;
-			
-			L2Attackable target = (L2Attackable) target1;
-			
-			if (target.isSpoil())
 			{
-				activeChar.sendPacket(new SystemMessage(SystemMessageId.ALREDAY_SPOILED));
 				continue;
 			}
 			
-			boolean spoil = false;
+			L2Attackable target = (L2Attackable) target1;
+			
+			if (target.isDead())
+			{
+				continue;
+			}
+			
+			if (target.getSpoilerId() != 0)
+			{
+				activeChar.sendPacket(new SystemMessage(SystemMessageId.ALREADY_SPOILED));
+				continue;
+			}
+			
 			if (!target.isDead())
 			{
-				spoil = Formulas.calcMagicSuccess(activeChar, (L2Character) target1, skill);
-				
-				if (spoil)
+				if (Formulas.calcMagicSuccess(activeChar, (L2Character) target1, skill))
 				{
-					target.setSpoil(true);
-					target.setIsSpoiledBy(activeChar.getObjectId());
-					activeChar.sendPacket(new SystemMessage(SystemMessageId.SPOIL_SUCCESS));
+					target.setSpoilerId(activeChar.getObjectId());
+					activeChar.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.SPOIL_SUCCESS));
+					((L2PcInstance) activeChar).getAchievement().increase(AchType.SPOIL);
 				}
 				else
 				{

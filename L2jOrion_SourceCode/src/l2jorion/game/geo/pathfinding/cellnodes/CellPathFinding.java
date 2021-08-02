@@ -31,13 +31,13 @@ import l2jorion.game.geo.pathfinding.AbstractNode;
 import l2jorion.game.geo.pathfinding.AbstractNodeLoc;
 import l2jorion.game.geo.pathfinding.PathFinding;
 import l2jorion.game.idfactory.IdFactory;
-import l2jorion.game.model.Inventory;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.util.StringUtil;
 
 public class CellPathFinding extends PathFinding
 {
-	private static final Logger _log = Logger.getLogger(CellPathFinding.class.getName());
+	private static final Logger LOG = Logger.getLogger(CellPathFinding.class.getName());
+	
 	private BufferInfo[] _allBuffers;
 	private int _findSuccess = 0;
 	private int _findFails = 0;
@@ -77,7 +77,7 @@ public class CellPathFinding extends PathFinding
 		}
 		catch (Exception e)
 		{
-			_log.log(Level.WARNING, "CellPathFinding: Problem during buffer init: " + e.getMessage(), e);
+			LOG.log(Level.WARNING, "CellPathFinding: Problem during buffer init: " + e.getMessage(), e);
 			throw new Error("CellPathFinding: load aborted");
 		}
 	}
@@ -97,6 +97,7 @@ public class CellPathFinding extends PathFinding
 		{
 			return null;
 		}
+		
 		int gz = GeoData.getInstance().getHeight(x, y, z);
 		int gtx = GeoData.getInstance().getGeoX(tx);
 		int gty = GeoData.getInstance().getGeoY(ty);
@@ -104,6 +105,7 @@ public class CellPathFinding extends PathFinding
 		{
 			return null;
 		}
+		
 		int gtz = GeoData.getInstance().getHeight(tx, ty, tz);
 		CellNodeBuffer buffer = alloc((Math.max(Math.abs(gx - gtx), Math.abs(gy - gty))), playable);
 		if (buffer == null)
@@ -146,7 +148,7 @@ public class CellPathFinding extends PathFinding
 					else
 					{
 						// known nodes
-						dropDebugItem(Inventory.ADENA_ID, (int) (n.getCost() * 10), n.getLoc());
+						// dropDebugItem(Inventory.ADENA_ID, (int) (n.getCost() * 10), n.getLoc());
 					}
 				}
 			}
@@ -161,7 +163,7 @@ public class CellPathFinding extends PathFinding
 		}
 		catch (Exception e)
 		{
-			_log.log(Level.WARNING, "", e);
+			LOG.log(Level.WARNING, "", e);
 			return null;
 		}
 		finally
@@ -177,6 +179,7 @@ public class CellPathFinding extends PathFinding
 		
 		long timeStamp = System.currentTimeMillis();
 		_postFilterUses++;
+		
 		if (playable)
 		{
 			_postFilterPlayableUses++;
@@ -201,6 +204,7 @@ public class CellPathFinding extends PathFinding
 			{
 				AbstractNodeLoc locMiddle = path.get(midPoint);
 				AbstractNodeLoc locEnd = endPoint.next();
+				
 				if (GeoData.getInstance().canMove(currentX, currentY, currentZ, locEnd.getX(), locEnd.getY(), locEnd.getZ(), instanceId))
 				{
 					path.remove(midPoint);
@@ -229,14 +233,17 @@ public class CellPathFinding extends PathFinding
 		
 		_findSuccess++;
 		_postFilterElapsed += System.currentTimeMillis() - timeStamp;
+		
 		return path;
 	}
 	
 	private List<AbstractNodeLoc> constructPath(AbstractNode<NodeLoc> node)
 	{
 		final List<AbstractNodeLoc> path = new CopyOnWriteArrayList<>();
+		
 		int previousDirectionX = Integer.MIN_VALUE;
 		int previousDirectionY = Integer.MIN_VALUE;
+		
 		int directionX, directionY;
 		
 		while (node.getParent() != null)
@@ -386,7 +393,8 @@ public class CellPathFinding extends PathFinding
 		StringUtil.append(stat, "LOS postfilter uses:", String.valueOf(_postFilterUses), "/", String.valueOf(_postFilterPlayableUses));
 		if (_postFilterUses > 0)
 		{
-			StringUtil.append(stat, " total/avg(ms):", String.valueOf(_postFilterElapsed), "/", String.format("%1.2f", (double) _postFilterElapsed / _postFilterUses), " passes total/avg:", String.valueOf(_postFilterPasses), "/", String.format("%1.1f", (double) _postFilterPasses / _postFilterUses), Config.EOL);
+			StringUtil.append(stat, " total/avg(ms):", String.valueOf(_postFilterElapsed), "/", String.format("%1.2f", (double) _postFilterElapsed / _postFilterUses), " passes total/avg:", String.valueOf(_postFilterPasses), "/", String.format("%1.1f", (double) _postFilterPasses
+				/ _postFilterUses), Config.EOL);
 		}
 		StringUtil.append(stat, "Pathfind success/fail:", String.valueOf(_findSuccess), "/", String.valueOf(_findFails));
 		result[result.length - 1] = stat.toString();

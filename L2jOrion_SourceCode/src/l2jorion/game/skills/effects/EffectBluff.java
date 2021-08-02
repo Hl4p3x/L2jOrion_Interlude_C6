@@ -24,9 +24,6 @@ import l2jorion.game.network.serverpackets.StopRotation;
 import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.skills.Env;
 
-/**
- * @author programmos, sword developers Implementation of the Bluff Effect
- */
 public class EffectBluff extends L2Effect
 {
 	
@@ -51,16 +48,18 @@ public class EffectBluff extends L2Effect
 	 * @Override public void onExit() { super.onExit(); }
 	 */
 	
-	/** Notify started */
-	
 	@Override
 	public void onStart()
 	{
 		if (getEffected().isDead() || getEffected().isAfraid())
+		{
 			return;
+		}
 		
 		if (getEffected() instanceof L2FolkInstance || getEffected() instanceof L2ControlTowerInstance || getEffected() instanceof L2ArtefactInstance || getEffected() instanceof L2EffectPointInstance || getEffected() instanceof L2SiegeFlagInstance || getEffected() instanceof L2SiegeSummonInstance)
+		{
 			return;
+		}
 		
 		super.onStart();
 		

@@ -29,15 +29,16 @@ import l2jorion.game.skills.Env;
 
 public class EffectCharge extends L2Effect
 {
-	public int numCharges;
+	public int numCharges = 1;
 	
 	public EffectCharge(final Env env, final EffectTemplate template)
 	{
 		super(env, template);
-		numCharges = 1;
+		
 		if (env.target instanceof L2PcInstance)
 		{
 			env.target.sendPacket(new EtcStatusUpdate((L2PcInstance) env.target));
+			
 			final SystemMessage sm = new SystemMessage(SystemMessageId.FORCE_INCREASED_TO_S1);
 			sm.addNumber(numCharges);
 			getEffected().sendPacket(sm);
@@ -61,6 +62,11 @@ public class EffectCharge extends L2Effect
 	public int getLevel()
 	{
 		return numCharges;
+	}
+	
+	public void setNumCharges(final int i)
+	{
+		numCharges = i;
 	}
 	
 	public void addNumCharges(final int i)

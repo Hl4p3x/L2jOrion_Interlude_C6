@@ -19,10 +19,10 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
-import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2ManufactureItem;
 import l2jorion.game.model.L2ManufactureList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.RecipeShopMsg;
@@ -58,32 +58,26 @@ public final class RequestRecipeShopListSet extends L2GameClientPacket
 	protected void runImpl()
 	{
 		L2PcInstance player = getClient().getActiveChar();
-		if(player == null)
+		if (player == null)
+		{
 			return;
+		}
 
-		if(player.isInDuel())
+		if (player.isInDuel())
 		{
 			player.sendPacket(new SystemMessage(SystemMessageId.CANT_CRAFT_DURING_COMBAT));
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
-		if(player.isTradeDisabled())
-		{
-			player.sendMessage("Private manufacture are disable here. Try in another place.");
-			player.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
 		
-		if (player.isInsideZone(L2Character.ZONE_NOSTORE))
+		if (player.isInsideZone(ZoneId.ZONE_NOSTORE))
 		{
-			// player.sendPacket(new RecipeShopManageList(player, player.isDwarven()));
 			player.sendMessage("Private manufacture are disable here. Try in another place.");
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 
-		if(_count == 0)
+		if (_count == 0)
 		{
 			player.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_NONE);
 			player.broadcastUserInfo();

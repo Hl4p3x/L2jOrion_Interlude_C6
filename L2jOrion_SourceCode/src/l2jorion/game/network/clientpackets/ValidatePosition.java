@@ -20,9 +20,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_ATTACK;
-import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_CAST;
-
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.GetOnVehicle;
@@ -50,7 +47,7 @@ public final class ValidatePosition extends L2GameClientPacket
 	protected void runImpl()
 	{
 		L2PcInstance activeChar = getClient().getActiveChar();
-		if (activeChar == null || activeChar.isTeleporting())
+		if (activeChar == null || activeChar.isTeleporting() || activeChar.inObserverMode())
 		{
 			return;
 		}
@@ -59,7 +56,7 @@ public final class ValidatePosition extends L2GameClientPacket
 		final int realY = activeChar.getY();
 		final int realZ = activeChar.getZ();
 		
-		if (_x == 0 && _y == 0) 
+		if (_x == 0 && _y == 0)
 		{
 			if (realX != 0) // in this case this seems like a client error
 			{
@@ -110,9 +107,13 @@ public final class ValidatePosition extends L2GameClientPacket
 				if (!activeChar.isMoving() || !activeChar.validateMovementHeading(_heading))
 				{
 					if (distance < 2500)
+					{
 						activeChar.getPosition().setXYZ(realX, realY, _z);
+					}
 					else
+					{
 						activeChar.getPosition().setXYZ(_x, _y, _z);
+					}
 				}
 				else
 				{
@@ -127,7 +128,7 @@ public final class ValidatePosition extends L2GameClientPacket
 			{
 				if ((distance > 250000 || Math.abs(dz) > 200))
 				{
-					if (Math.abs(dz) > 200 && Math.abs(dz) < 1500 && Math.abs(_z - activeChar.getClientZ()) < 800 )
+					if (Math.abs(dz) > 200 && Math.abs(dz) < 1500 && Math.abs(_z - activeChar.getClientZ()) < 800)
 					{
 						activeChar.setXYZ(realX, realY, realZ);
 					}
@@ -141,14 +142,18 @@ public final class ValidatePosition extends L2GameClientPacket
 		
 		if (Config.COORD_SYNCHRONIZE == 3)
 		{
-			if (activeChar.getAI().getIntention() == AI_INTENTION_ATTACK || activeChar.getAI().getIntention() == AI_INTENTION_CAST)
+			switch (activeChar.getAI().getIntention())
 			{
-				activeChar.getPosition().setXYZ(realX, realY, realZ);
+				case AI_INTENTION_ATTACK:
+				case AI_INTENTION_CAST:
+				case AI_INTENTION_FOLLOW:
+					activeChar.setXYZ(realX, realY, realZ);
+					break;
+				default:
+					activeChar.setXYZ(_x, _y, realZ);
+					break;
 			}
-			else
-			{
-				activeChar.setXYZ(_x, _y, realZ);
-			}
+			
 		}
 		
 		activeChar.setClientX(_x);

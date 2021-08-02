@@ -16,9 +16,6 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
 
-/**
- * @author Damon
- */
 public class VehicleStarted extends L2GameServerPacket
 {
 	private final int _objectId;

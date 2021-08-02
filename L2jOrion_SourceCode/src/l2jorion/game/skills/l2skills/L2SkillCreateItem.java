@@ -68,16 +68,9 @@ public class L2SkillCreateItem extends L2Skill
 		}
 	}
 	
-	/**
-	 * @param activeChar
-	 * @param itemId
-	 * @param count
-	 */
 	public void giveItems(final L2PcInstance activeChar, final int itemId, final int count)
 	{
 		final L2ItemInstance item = new L2ItemInstance(IdFactory.getInstance().getNextId(), itemId);
-		// if(item == null)
-		// return;
 		
 		item.setCount(count);
 		activeChar.getInventory().addItem("Skill", item, activeChar, activeChar);

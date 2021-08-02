@@ -22,9 +22,6 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2BoatInstance;
 
-/**
- * @author Damon
- */
 public class VehicleInfo extends L2GameServerPacket
 {
 	private final int _objId, _x, _y, _z, _heading;

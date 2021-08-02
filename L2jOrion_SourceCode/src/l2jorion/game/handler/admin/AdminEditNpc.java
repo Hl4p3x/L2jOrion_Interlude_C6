@@ -52,12 +52,11 @@ import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.templates.StatsSet;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AdminEditNpc implements IAdminCommandHandler
 {
@@ -134,7 +133,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					activeChar.sendMessage("Wrong usage: //edit_npc <npcId>");
 				}
@@ -169,7 +170,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 				activeChar.sendMessage("Usage: //load_npc <id>");
 			}
 			if (id > 0)
+			{
 				NpcTable.getInstance().reloadNpc(id);
+			}
 		}
 		else if (command.startsWith("admin_show_droplist "))
 		{
@@ -182,7 +185,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 			
 			if (npcId > 0)
@@ -249,9 +254,13 @@ public class AdminEditNpc implements IAdminCommandHandler
 				if (st.countTokens() <= 2)
 				{
 					if (st.hasMoreTokens())
+					{
 						npcId = Integer.parseInt(st.nextToken());
+					}
 					if (st.hasMoreTokens())
+					{
 						page = Integer.parseInt(st.nextToken());
+					}
 				}
 				
 				if (npcId > 0)
@@ -259,7 +268,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 					showNpcSkillList(activeChar, npcId, page);
 				}
 				else
+				{
 					activeChar.sendMessage("Usage: //show_skilllist_npc <npc_id> <page>");
+				}
 			}
 			catch (final Exception e)
 			{
@@ -321,7 +332,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 					{
 						final String[] input = command.substring(20).split(" ");
 						if (input.length < 1)
+						{
 							return true;
+						}
 						npcId = Integer.parseInt(input[0]);
 					}
 					catch (final Exception e)
@@ -402,7 +415,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 					catch (final Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 					}
 				}
 				else if (st.countTokens() == 6)
@@ -421,7 +436,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 					catch (final Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 						
 						LOG.warn("admin_edit_drop parements error: " + command);
 					}
@@ -436,7 +453,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 			catch (final StringIndexOutOfBoundsException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Usage: //edit_drop <npc_id> <item_id> <category> [<min> <max> <chance>]");
 			}
@@ -454,7 +473,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 						String[] input = command.substring(15).split(" ");
 						
 						if (input.length < 1)
+						{
 							return true;
+						}
 						
 						npcId = Integer.parseInt(input[0]);
 						input = null;
@@ -462,7 +483,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 					catch (final Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 					}
 					
 					if (npcId > 0)
@@ -488,7 +511,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 					catch (final Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 						
 						LOG.warn("admin_add_drop parements error: " + command);
 					}
@@ -503,7 +528,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 			catch (final StringIndexOutOfBoundsException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Usage: //add_drop <npc_id> [<item_id> <category> <min> <max> <chance>]");
 			}
@@ -526,7 +553,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 			
 			if (npcId > 0)
@@ -577,7 +606,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 					catch (final Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 						
 						LOG.info("box_access: " + e);
 					}
@@ -602,7 +633,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		L2Item item = ItemTable.getInstance().getTemplate(itemID);
 		
 		if (tradeList.getPriceForItemId(itemID) < 0)
+		{
 			return;
+		}
 		
 		if (args.length > 3)
 		{
@@ -652,7 +685,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		L2TradeList tradeList = TradeController.getInstance().getBuyList(tradeListID);
 		
 		if (tradeList.getPriceForItemId(itemID) < 0)
+		{
 			return;
+		}
 		
 		if (args.length > 3)
 		{
@@ -714,8 +749,7 @@ public class AdminEditNpc implements IAdminCommandHandler
 			
 			if (price < newItem.getReferencePrice())
 			{
-				
-				LOG.warn("L2TradeList " + tradeList.getListId() + " itemId  " + itemID + " has an ADENA sell price lower then reference price.. Automatically Updating it..");
+				LOG.warn("TradeList:" + tradeList.getListId() + " itemId :" + itemID + " has an ADENA sell price lower than reference price. Automatically updating it...");
 				price = newItem.getReferencePrice();
 			}
 			newItem.setPriceToSell(price);
@@ -725,13 +759,8 @@ public class AdminEditNpc implements IAdminCommandHandler
 			
 			activeChar.sendMessage("Added " + newItem.getItem().getName() + " to Trade List " + tradeList.getListId());
 			showShopList(activeChar, tradeListID, 1);
-			
-			newItem = null;
-			
 			return;
 		}
-		
-		tradeList = null;
 		
 		NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 		
@@ -753,9 +782,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 		
 		adminReply.setHtml(replyMSG.toString());
 		activeChar.sendPacket(adminReply);
-		
-		adminReply = null;
-		replyMSG = null;
 	}
 	
 	private void showShopList(final L2PcInstance activeChar, final int tradeListID, final int page)
@@ -763,7 +789,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		L2TradeList tradeList = TradeController.getInstance().getBuyList(tradeListID);
 		
 		if (page > tradeList.getItems().size() / PAGE_LIMIT + 1 || page < 1)
+		{
 			return;
+		}
 		
 		NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 		TextBuilder html = itemListHtml(tradeList, page);
@@ -974,7 +1002,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 			content = HtmCache.getInstance().getHtm("data/html/merchant/30001.htm");
 			
 			if (content == null)
+			{
 				return null;
+			}
 		}
 		
 		final List<L2TradeList> tradeLists = new FastList<>();
@@ -1087,9 +1117,13 @@ public class AdminEditNpc implements IAdminCommandHandler
 			{
 				
 				if (i == 3)
+				{
 					value += commandSplit[i];
+				}
 				else
+				{
 					value += " " + commandSplit[i];
+				}
 			}
 			
 			switch (statToSet)
@@ -1219,7 +1253,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("Error saving new npc value: " + e);
 		}
@@ -1255,7 +1291,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 		
 		TextBuilder replyMSG = new TextBuilder("<html><title>NPC: " + npcData.name + "(" + npcData.npcId + ") 's drop manage</title>");
 		replyMSG.append("<body>");
-		replyMSG.append("<br>Notes: click[drop_id]to show the detail of drop data,click[del] to delete the drop data!");
 		replyMSG.append("<table>");
 		replyMSG.append("<tr><td>npc_id itemId category</td><td>item[id]</td><td>type</td><td>del</td></tr>");
 		L2Item itemTemplate;
@@ -1269,7 +1304,8 @@ public class AdminEditNpc implements IAdminCommandHandler
 					LOG.warn(getClass().getSimpleName() + ": Unkown item Id: " + drop.getItemId() + " for NPC: " + npcData.npcId);
 					continue;
 				}
-				replyMSG.append("<tr><td><a action=\"bypass -h admin_edit_drop " + npcData.npcId + " " + drop.getItemId() + " " + cat.getCategoryType() + "\">" + npcData.npcId + " " + drop.getItemId() + " " + cat.getCategoryType() + "</a></td>" + "<td>" + itemTemplate.getName() + "[" + drop.getItemId() + "]" + "</td><td>" + (drop.isQuestDrop() ? "Q" : cat.isSweep() ? "S" : "D") + "</td><td>" + "<a action=\"bypass -h admin_del_drop " + npcData.npcId + " " + drop.getItemId() + " " + cat.getCategoryType() + "\">del</a></td></tr>");
+				replyMSG.append("<tr><td><a action=\"bypass -h admin_edit_drop " + npcData.npcId + " " + drop.getItemId() + " " + cat.getCategoryType() + "\">" + npcData.npcId + " " + drop.getItemId() + " " + cat.getCategoryType() + "</a></td>" + "<td>" + itemTemplate.getName() + "["
+					+ drop.getItemId() + "]" + "</td><td>" + (drop.isQuestDrop() ? "Q" : cat.isSweep() ? "S" : "D") + "</td><td>" + "<a action=\"bypass -h admin_del_drop " + npcData.npcId + " " + drop.getItemId() + " " + cat.getCategoryType() + "\">[x]</a></td></tr>");
 			}
 		}
 		
@@ -1283,9 +1319,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 		
 		adminReply.setHtml(replyMSG.toString());
 		activeChar.sendPacket(adminReply);
-		
-		adminReply = null;
-		replyMSG = null;
 	}
 	
 	private void showEditDropData(final L2PcInstance activeChar, final int npcId, final int itemId, final int category)
@@ -1336,7 +1369,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		finally
 		{
@@ -1473,7 +1508,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		finally
 		{
@@ -1516,7 +1553,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		finally
 		{
@@ -1530,7 +1569,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		L2NpcTemplate npcData = NpcTable.getInstance().getTemplate(npcId);
 		
 		if (npcData == null)
+		{
 			return;
+		}
 		
 		// reset the drop lists
 		npcData.clearAllDropData();
@@ -1578,7 +1619,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		finally
 		{
@@ -1602,15 +1645,21 @@ public class AdminEditNpc implements IAdminCommandHandler
 		final int MaxSkillsPerPage = 10;
 		int MaxPages = _skillsize / MaxSkillsPerPage;
 		if (_skillsize > MaxSkillsPerPage * MaxPages)
+		{
 			MaxPages++;
+		}
 		
 		if (page > MaxPages)
+		{
 			page = MaxPages;
+		}
 		
 		final int SkillsStart = MaxSkillsPerPage * page;
 		int SkillsEnd = _skillsize;
 		if (SkillsEnd - SkillsStart > MaxSkillsPerPage)
+		{
 			SkillsEnd = SkillsStart + MaxSkillsPerPage;
+		}
 		
 		final NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 		
@@ -1657,7 +1706,8 @@ public class AdminEditNpc implements IAdminCommandHandler
 				break;
 			}
 			skillobj = skillite.next();
-			replyMSG.append("<tr><td><a action=\"bypass -h admin_edit_skill_npc " + npcData.getNpcId() + " " + skills.get(skillobj).getId() + "\">" + skills.get(skillobj).getName() + " [" + skills.get(skillobj).getId() + "]" + "</a></td>" + "<td>" + skills.get(skillobj).getLevel() + "</td>" + "<td><a action=\"bypass -h admin_del_skill_npc " + npcData.getNpcId() + " " + skillobj + "\">Delete</a></td></tr>");
+			replyMSG.append("<tr><td><a action=\"bypass -h admin_edit_skill_npc " + npcData.getNpcId() + " " + skills.get(skillobj).getId() + "\">" + skills.get(skillobj).getName() + " [" + skills.get(skillobj).getId() + "]" + "</a></td>" + "<td>" + skills.get(skillobj).getLevel() + "</td>"
+				+ "<td><a action=\"bypass -h admin_del_skill_npc " + npcData.getNpcId() + " " + skillobj + "\">Delete</a></td></tr>");
 			
 		}
 		replyMSG.append("</table>");
@@ -1714,7 +1764,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		finally
 		{
@@ -1774,7 +1826,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		finally
 		{
@@ -1849,7 +1903,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		finally
 		{
@@ -1888,7 +1944,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		finally
 		{
@@ -1932,7 +1990,9 @@ public class AdminEditNpc implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		finally
 		{

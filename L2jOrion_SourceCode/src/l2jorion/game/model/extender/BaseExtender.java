@@ -22,9 +22,6 @@ package l2jorion.game.model.extender;
 
 import l2jorion.game.model.L2Object;
 
-/**
- * @author Azagthtot BaseExtender
- */
 public class BaseExtender
 {
 	public enum EventType
@@ -50,10 +47,6 @@ public class BaseExtender
 		}
 	}
 	
-	/**
-	 * @param object as L2Object<br>
-	 * @return as boolean<br>
-	 */
 	public static boolean canCreateFor(final L2Object object)
 	{
 		return true;
@@ -99,20 +92,32 @@ public class BaseExtender
 	public BaseExtender getExtender(final String simpleClassName)
 	{
 		if (this.getClass().getSimpleName().compareTo(simpleClassName) == 0)
+		{
 			return this;
+		}
 		else if (_next != null)
+		{
 			return _next.getExtender(simpleClassName);
+		}
 		else
+		{
 			return null;
+		}
 	}
 	
 	public void removeExtender(final BaseExtender ext)
 	{
 		if (_next != null)
+		{
 			if (_next == ext)
+			{
 				_next = _next._next;
+			}
 			else
+			{
 				_next.removeExtender(ext);
+			}
+		}
 	}
 	
 	public BaseExtender getNextExtender()

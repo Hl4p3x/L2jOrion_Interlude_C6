@@ -17,21 +17,14 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.network.L2GameClient;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.mmocore.SendablePacket;
 
-/**
- * The Class L2GameServerPacket.
- *
- * @author ProGramMoS
- */
 public abstract class L2GameServerPacket extends SendablePacket<L2GameClient>
 {
-	/** The Constant LOG. */
-	private static final Logger LOG = LoggerFactory.getLogger(L2GameServerPacket.class);
+	public static final Logger LOG = LoggerFactory.getLogger(L2GameServerPacket.class);
 	
 	@Override
 	protected void write()
@@ -39,31 +32,25 @@ public abstract class L2GameServerPacket extends SendablePacket<L2GameClient>
 		try
 		{
 			writeImpl();
+			
+			/*
+			 * if (!(this instanceof SystemMessage) && !(this instanceof SocialAction) && !(this instanceof CreatureSay) && !(this instanceof StatusUpdate)) { if (getClient() != null && getClient().getActiveChar() != null) { if (getClient().getActiveChar().isInOlympiadMode() ||
+			 * getClient().getActiveChar().inObserverMode()) { getClient().getActiveChar().sendPacket(new CreatureSay(2, Say2.HERO_VOICE, getClient().getActiveChar().getName() + " received", "" + getType())); String text = (getClient().getActiveChar().inObserverMode() ? "Spectator" : "Fighter") +
+			 * " " + getClient().getActiveChar().getName() + " received packet: " + getType(); Log.addOlyLog(text, getClient().getActiveChar().getName()); } } }
+			 */
 		}
-		catch(Throwable t)
+		catch (Throwable t)
 		{
 			LOG.error("Client: " + getClient().toString() + " - Failed writing: " + getType() + "");
 			t.printStackTrace();
 		}
 	}
-
-	/**
-	 * Run impl.
-	 */
+	
 	public void runImpl()
 	{
-
 	}
-
-	/**
-	 * Write impl.
-	 */
+	
 	protected abstract void writeImpl();
-
-	/**
-	 * Gets the type.
-	 *
-	 * @return A String with this packet name for debuging purposes
-	 */
+	
 	public abstract String getType();
 }

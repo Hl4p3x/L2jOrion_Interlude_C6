@@ -26,10 +26,6 @@ import javax.script.ScriptException;
 
 import l2jorion.Config;
 
-/**
- * Abstract class for classes that are meant to be implemented by scripts.
- * @author KenM
- */
 public abstract class ManagedScript
 {
 	private final File _scriptFile;
@@ -38,15 +34,10 @@ public abstract class ManagedScript
 	
 	public ManagedScript()
 	{
-		_scriptFile = L2ScriptEngineManager.getInstance().getCurrentLoadScript();
+		_scriptFile = L2ScriptEngineManager.getInstance().getCurrentLoadingScript();
 		setLastLoadTime(System.currentTimeMillis());
 	}
 	
-	/**
-	 * Attempts to reload this script and to refresh the necessary bindings with it ScriptControler.<BR>
-	 * Subclasses of this class should override this method to properly refresh their bindings when necessary.
-	 * @return true if and only if the script was reloaded, false otherwise.
-	 */
 	public boolean reload()
 	{
 		try
@@ -57,7 +48,9 @@ public abstract class ManagedScript
 		catch (final ScriptException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			return false;
 		}

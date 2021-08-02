@@ -17,176 +17,97 @@
  */
 package l2jorion.game.managers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javolution.util.FastList;
 import l2jorion.game.datatables.csv.MapRegionTable;
-import l2jorion.game.model.L2Object;
 import l2jorion.game.model.entity.siege.Castle;
+import l2jorion.game.model.zone.L2ZoneType;
 import l2jorion.game.model.zone.type.L2TownZone;
 
 public class TownManager
 {
-	private static final Logger LOG = LoggerFactory.getLogger(TownManager.class);
 	private static TownManager _instance;
-
+	
 	public static final TownManager getInstance()
 	{
-		if(_instance == null)
+		if (_instance == null)
 		{
-			LOG.info("Initializing TownManager");
 			_instance = new TownManager();
 		}
+		
 		return _instance;
 	}
-
-	private FastList<L2TownZone> _towns;
-
+	
 	public TownManager()
-	{}
-
-	public void addTown(L2TownZone arena)
 	{
-		if(_towns == null)
-		{
-			_towns = new FastList<>();
-		}
-		_towns.add(arena);
 	}
-
-	public final L2TownZone getClosestTown(L2Object activeObject)
+	
+	public static final int getTownCastle(int townId)
 	{
-		switch(MapRegionTable.getInstance().getMapRegion(activeObject.getPosition().getX(), activeObject.getPosition().getY()))
+		switch (townId)
 		{
-			case 0:
-				return getTown(2); // TI
-			case 1:
-				return getTown(3); // Elven
-			case 2:
-				return getTown(1); // DE
-			case 3:
-				return getTown(4); // Orc
-			case 4:
-				return getTown(6); // Dwarven
-			case 5:
-				return getTown(7); // Gludio
-			case 6:
-				return getTown(5); // Gludin
-			case 7:
-				return getTown(8); // Dion
-			case 8:
-				return getTown(9); // Giran
-			case 9:
-				return getTown(10); // Oren
-			case 10:
-				return getTown(12); // Aden
-			case 11:
-				return getTown(11); // HV
-			case 12:
-				return getTown(9); // Giran Harbour
-			case 13:
-				return getTown(15); // Heine
-			case 14:
-				return getTown(14); // Rune
-			case 15:
-				return getTown(13); // Goddard
-			case 16:
-				return getTown(17); // Schuttgart
-			case 17:
-				return getTown(16); // Floran
-			case 18:
-				return getTown(19); //Primeval Isle
-			case 19:
-				return getTown(20); //Bandit
+			case 912:
+				return 1;
+			case 916:
+				return 2;
+			case 918:
+				return 3;
+			case 922:
+				return 4;
+			case 924:
+				return 5;
+			case 926:
+				return 6;
+			case 1538:
+				return 7;
+			case 1537:
+				return 8;
+			case 1714:
+				return 9;
+			default:
+				return 0;
 		}
-		return getTown(16); // Default to floran
 	}
-
-	public final static int getClosestLocation(L2Object activeObject)
+	
+	public static final boolean townHasCastleInSiege(int townId)
 	{
-		switch (MapRegionTable.getInstance().getMapRegion(activeObject.getPosition().getX(), activeObject.getPosition().getY()))
-		{
-			case 0:	return 1; // TI
-			case 1: return 4; // Elven
-			case 2: return 3; // DE
-			case 3: return 9; // Orc
-			case 4: return 9; // Dwarven
-			case 5: return 2; // Gludio
-			case 6: return 2; // Gludin
-			case 7: return 5; // Dion
-			case 8: return 6; // Giran
-			case 9: return 10; // Oren
-			case 10: return 13; // Aden
-			case 11: return 11; // HV
-			case 12: return 6; // Giran Harbour
-			case 13: return 12; // Heine
-			case 14: return 14; // Rune
-			case 15: return 15; // Goddard
-			case 16: return 9; // Schuttgart
-		}
-		return 0;
-	}
-
-	public final boolean townHasCastleInSiege(int townId)
-	{
-		//int[] castleidarray = {0,0,0,0,0,0,0,1,2,3,4,0,5,0,0,6,0};
-		int[] castleidarray =
-		{
-				0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 0, 5, 7, 8, 6, 0, 9, 0
-		};
-		int castleIndex = castleidarray[townId];
-
-		if(castleIndex > 0)
+		int castleIndex = getTownCastle(townId);
+		
+		if (castleIndex > 0)
 		{
 			Castle castle = CastleManager.getInstance().getCastles().get(CastleManager.getInstance().getCastleIndex(castleIndex));
-			if(castle != null)
+			if (castle != null)
+			{
 				return castle.getSiege().getIsInProgress();
+			}
 		}
 		return false;
 	}
-
-	public final boolean townHasCastleInSiege(int x, int y)
+	
+	public static final boolean townHasCastleInSiege(int x, int y)
 	{
-		int curtown = MapRegionTable.getInstance().getMapRegion(x, y);
-		int[] castleidarray =
-		{
-				0, 0, 0, 0, 0, 1, 0, 2, 3, 4, 5, 0, 0, 6, 8, 7, 9, 0, 0
-		};
-		//find an instance of the castle for this town.
-		int castleIndex = castleidarray[curtown];
-		if(castleIndex > 0)
-		{
-			Castle castle = CastleManager.getInstance().getCastles().get(CastleManager.getInstance().getCastleIndex(castleIndex));
-			if(castle != null)
-				return castle.getSiege().getIsInProgress();
-		}
-		return false;
+		return townHasCastleInSiege(MapRegionTable.getInstance().getMapRegionLocId(x, y));
 	}
-
+	
 	public final L2TownZone getTown(int townId)
 	{
-		for(L2TownZone temp : _towns)
-			if(temp.getTownId() == townId)
+		for (L2TownZone temp : ZoneManager.getInstance().getAllZones(L2TownZone.class))
+		{
+			if (temp.getTownId() == townId)
+			{
 				return temp;
-
+			}
+		}
 		return null;
 	}
-
-	/**
-	 * Returns the town at that position (if any)
-	 * 
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return
-	 */
+	
 	public final L2TownZone getTown(int x, int y, int z)
 	{
-		for(L2TownZone temp : _towns)
-			if(temp.isInsideZone(x, y, z))
-				return temp;
-
+		for (L2ZoneType temp : ZoneManager.getInstance().getZones(x, y, z))
+		{
+			if (temp instanceof L2TownZone)
+			{
+				return (L2TownZone) temp;
+			}
+		}
 		return null;
 	}
 }

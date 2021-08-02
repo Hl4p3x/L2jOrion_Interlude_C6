@@ -22,11 +22,11 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2World;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2EffectPointInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.templates.StatsSet;
-import l2jorion.util.Point3D;
 
 public final class L2SkillSignet extends L2Skill
 {
@@ -36,6 +36,7 @@ public final class L2SkillSignet extends L2Skill
 	public L2SkillSignet(final StatsSet set)
 	{
 		super(set);
+		
 		_effectNpcId = set.getInteger("effectNpcId", -1);
 		effectId = set.getInteger("effectId", -1);
 	}
@@ -44,12 +45,17 @@ public final class L2SkillSignet extends L2Skill
 	public void useSkill(final L2Character caster, final L2Object[] targets)
 	{
 		if (caster.isAlikeDead())
+		{
 			return;
+		}
 		
 		final L2NpcTemplate template = NpcTable.getInstance().getTemplate(_effectNpcId);
+		
 		final L2EffectPointInstance effectPoint = new L2EffectPointInstance(IdFactory.getInstance().getNextId(), template, caster);
+		
 		effectPoint.getStatus().setCurrentHp(effectPoint.getMaxHp());
 		effectPoint.getStatus().setCurrentMp(effectPoint.getMaxMp());
+		
 		L2World.getInstance().storeObject(effectPoint);
 		
 		int x = caster.getX();
@@ -58,7 +64,7 @@ public final class L2SkillSignet extends L2Skill
 		
 		if (caster instanceof L2PcInstance && getTargetType() == L2Skill.SkillTargetType.TARGET_GROUND)
 		{
-			final Point3D wordPosition = ((L2PcInstance) caster).getCurrentSkillWorldPosition();
+			final Location wordPosition = ((L2PcInstance) caster).getCurrentSkillWorldPosition();
 			
 			if (wordPosition != null)
 			{
@@ -67,6 +73,7 @@ public final class L2SkillSignet extends L2Skill
 				z = wordPosition.getZ();
 			}
 		}
+		
 		getEffects(caster, effectPoint, false, false, false);
 		
 		effectPoint.setIsInvul(true);

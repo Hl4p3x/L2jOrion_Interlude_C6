@@ -22,14 +22,10 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.TradeList;
 
-/**
- * This class ...
- * @author Yme
- * @version $Revision: 1.2.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public class TradeOwnAdd extends L2GameServerPacket
 {
 	private static final String _S__30_TRADEOWNADD = "[S] 20 TradeOwnAdd";
+	
 	private final TradeList.TradeItem _item;
 	
 	public TradeOwnAdd(final TradeList.TradeItem item)
@@ -57,10 +53,6 @@ public class TradeOwnAdd extends L2GameServerPacket
 		writeH(0x00);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

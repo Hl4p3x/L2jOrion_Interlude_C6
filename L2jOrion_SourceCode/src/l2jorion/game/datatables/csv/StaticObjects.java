@@ -32,9 +32,8 @@ import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.idfactory.IdFactory;
 import l2jorion.game.model.actor.instance.L2StaticObjectInstance;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class StaticObjects
 {
@@ -57,7 +56,7 @@ public class StaticObjects
 	{
 		_staticObjects = new FastMap<>();
 		parseData();
-		LOG.info("StaticObject: Loaded " + _staticObjects.size() + " StaticObject Templates.");
+		LOG.info("StaticObject: Loaded " + _staticObjects.size() + " StaticObject Templates");
 	}
 	
 	private void parseData()
@@ -150,8 +149,6 @@ public class StaticObjects
 		final String texture = st.nextToken();
 		final int map_x = Integer.parseInt(st.nextToken());
 		final int map_y = Integer.parseInt(st.nextToken());
-		
-		st = null;
 		
 		final L2StaticObjectInstance obj = new L2StaticObjectInstance(IdFactory.getInstance().getNextId());
 		obj.setType(type);

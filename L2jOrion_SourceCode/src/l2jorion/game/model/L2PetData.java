@@ -24,11 +24,8 @@ public class L2PetData
 {
 	public static final String PET_TYPE = "typeID";
 	public static final String PET_LEVEL = "level";
-	// public static final String PET_EXP = "exp";
 	public static final String PET_MAX_EXP = "expMax";
-	// public static final String PET_HP = "hp";
 	public static final String PET_MAX_HP = "hpMax";
-	// public static final String PET_MP = "mp";
 	public static final String PET_MAX_MP = "mpMax";
 	public static final String PET_PATK = "patk";
 	public static final String PET_PDEF = "pdef";
@@ -40,11 +37,9 @@ public class L2PetData
 	public static final String PET_SPEED = "speed";
 	public static final String PET_ATK_SPEED = "atk_speed";
 	public static final String PET_CAST_SPEED = "cast_speed";
-	// public static final String PET_FEED = "feed";
 	public static final String PET_MAX_FEED = "feedMax";
 	public static final String PET_FEED_BATTLE = "feedbattle";
 	public static final String PET_FEED_NORMAL = "feednormal";
-	// public static final String PET_LOAD = "load";
 	public static final String PET_MAX_LOAD = "loadMax";
 	public static final String PET_REGEN_HP = "hpregen";
 	public static final String PET_REGEN_MP = "mpregen";
@@ -53,11 +48,8 @@ public class L2PetData
 	private int _petId;
 	private int _petLevel;
 	private float _ownerExpTaken;
-	// private int petExp;
 	private long _petMaxExp;
-	// private int petHP;
 	private int _petMaxHP;
-	// private int petMP;
 	private int _petMaxMP;
 	private int _petPAtk;
 	private int _petPDef;
@@ -69,7 +61,6 @@ public class L2PetData
 	private int _petSpeed;
 	private int _petAtkSpeed;
 	private int _petCastSpeed;
-	// private int petFeed;
 	private int _petMaxFeed;
 	private int _petFeedBattle;
 	private int _petFeedNormal;
@@ -79,17 +70,16 @@ public class L2PetData
 	
 	public void setStat(final String stat, final int value)
 	{
-		// if (stat.equalsIgnoreCase(PET_EXP)) { this.setPetExp(value); }
 		if (stat.equalsIgnoreCase(PET_MAX_EXP))
 		{
 			setPetMaxExp(value);
 		}
-		// else if (stat.equalsIgnoreCase(PET_HP)) { this.setPetHP(value); }
+		
 		else if (stat.equalsIgnoreCase(PET_MAX_HP))
 		{
 			setPetMaxHP(value);
 		}
-		// else if (stat.equalsIgnoreCase(PET_MP)) { this.setPetMP(value); }
+		
 		else if (stat.equalsIgnoreCase(PET_MAX_MP))
 		{
 			setPetMaxMP(value);
@@ -134,7 +124,7 @@ public class L2PetData
 		{
 			setPetCastSpeed(value);
 		}
-		// else if (stat.equalsIgnoreCase(PET_FEED)) { this.setPetFeed(value); }
+		
 		else if (stat.equalsIgnoreCase(PET_MAX_FEED))
 		{
 			setPetMaxFeed(value);
@@ -147,7 +137,7 @@ public class L2PetData
 		{
 			setPetFeedBattle(value);
 		}
-		// else if (stat.equalsIgnoreCase(PET_LOAD)) { this.setPetLoad(value); }
+		
 		else if (stat.equalsIgnoreCase(PET_MAX_LOAD))
 		{
 			setPetMaxLoad(value);
@@ -164,7 +154,6 @@ public class L2PetData
 	
 	public void setStat(final String stat, final long value)
 	{
-		// if (stat.equalsIgnoreCase(PET_EXP)) { this.setPetExp(value); }
 		if (stat.equalsIgnoreCase(PET_MAX_EXP))
 		{
 			setPetMaxExp(value);
@@ -173,7 +162,6 @@ public class L2PetData
 	
 	public void setStat(final String stat, final float value)
 	{
-		// if (stat.equalsIgnoreCase(PET_EXP)) { this.setPetExp(value); }
 		if (stat.equalsIgnoreCase(OWNER_EXP_TAKEN))
 		{
 			setOwnerExpTaken(value);
@@ -202,11 +190,6 @@ public class L2PetData
 		_petLevel = pPetLevel;
 	}
 	
-	// Exp
-	// public int getPetExp() { return petExp; }
-	// public void setPetExp(int petExp) { this.petExp = petExp; }
-	
-	// Max Exp
 	public long getPetMaxExp()
 	{
 		return _petMaxExp;
@@ -227,11 +210,6 @@ public class L2PetData
 		_ownerExpTaken = pOwnerExpTaken;
 	}
 	
-	// HP
-	// public int getPetHP() { return petHP; }
-	// public void setPetHP(int petHP) { this.petHP = petHP; }
-	
-	// Max HP
 	public int getPetMaxHP()
 	{
 		return _petMaxHP;
@@ -242,11 +220,6 @@ public class L2PetData
 		_petMaxHP = pPetMaxHP;
 	}
 	
-	// Mp
-	// public int getPetMP() { return petMP; }
-	// public void setPetMP(int petMP) { this.petMP = petMP; }
-	
-	// Max Mp
 	public int getPetMaxMP()
 	{
 		return _petMaxMP;

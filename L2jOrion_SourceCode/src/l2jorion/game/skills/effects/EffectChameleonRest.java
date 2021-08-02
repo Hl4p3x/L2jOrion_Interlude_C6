@@ -59,10 +59,6 @@ public final class EffectChameleonRest extends L2Effect
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Effect#onExit()
-	 */
 	@Override
 	public void onExit()
 	{
@@ -88,7 +84,9 @@ public final class EffectChameleonRest extends L2Effect
 		
 		// Only cont skills shouldn't end
 		if (getSkill().getSkillType() != SkillType.CONT)
+		{
 			return false;
+		}
 		
 		if (effected instanceof L2PcInstance)
 		{

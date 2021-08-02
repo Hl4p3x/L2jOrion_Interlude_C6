@@ -34,9 +34,8 @@ import l2jorion.Config;
 import l2jorion.game.controllers.RecipeController;
 import l2jorion.game.model.L2RecipeList;
 import l2jorion.game.model.actor.instance.L2RecipeInstance;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 /**
  * @author programmos
@@ -85,12 +84,14 @@ public class RecipeTable extends RecipeController
 				parseList(line);
 				
 			}
-			LOG.info("RecipeController: Loaded " + _lists.size() + " Recipes.");
+			LOG.info("RecipeController: Loaded " + _lists.size() + " recipes");
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			if (lnr != null)
 			{
@@ -105,6 +106,7 @@ public class RecipeTable extends RecipeController
 		finally
 		{
 			if (lnr != null)
+			{
 				try
 				{
 					lnr.close();
@@ -113,8 +115,10 @@ public class RecipeTable extends RecipeController
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 			if (buff != null)
+			{
 				try
 				{
 					buff.close();
@@ -123,8 +127,10 @@ public class RecipeTable extends RecipeController
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 			if (reader != null)
+			{
 				try
 				{
 					reader.close();
@@ -133,6 +139,7 @@ public class RecipeTable extends RecipeController
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 		}
 	}
@@ -201,7 +208,7 @@ public class RecipeTable extends RecipeController
 			{
 				recipeList.addRecipe(recipePart);
 			}
-			_lists.put(new Integer(_lists.size()), recipeList);
+			_lists.put(Integer.valueOf(_lists.size()), recipeList);
 			
 			recipeList = null;
 			recipeName = null;
@@ -227,9 +234,11 @@ public class RecipeTable extends RecipeController
 	{
 		for (int i = 0; i < _lists.size(); i++)
 		{
-			final L2RecipeList find = _lists.get(new Integer(i));
+			final L2RecipeList find = _lists.get(Integer.valueOf(i));
 			if (find.getRecipeId() == itemId)
+			{
 				return find;
+			}
 		}
 		return null;
 	}
@@ -238,9 +247,11 @@ public class RecipeTable extends RecipeController
 	{
 		for (int i = 0; i < _lists.size(); i++)
 		{
-			final L2RecipeList find = _lists.get(new Integer(i));
+			final L2RecipeList find = _lists.get(Integer.valueOf(i));
 			if (find.getId() == recId)
+			{
 				return find;
+			}
 		}
 		return null;
 	}

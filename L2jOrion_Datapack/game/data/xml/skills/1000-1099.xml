@@ -1024,7 +1024,7 @@
   <enchant2 name="mpConsume" val="#ench2mpConsume"/>
   <enchant2 name="mpInitialConsume" val="#ench2mpInitialConsume"/>
   <for>
-    <effect count="1" name="Buff" time="1200" val="0" stackOrder="#maxMp" stackType="MPregen">
+    <effect count="1" name="Buff" time="1200" val="0" stackOrder="#maxMp" stackType="MaxMPUp">
       <mul order="0x30" stat="maxMp" val="#maxMp"/>
     </effect>
   </for>
@@ -1219,7 +1219,7 @@
   <enchant2 name="mpConsume" val="#ench2MpConsume"/>
   <enchant2 name="mpInitialConsume" val="#ench2MpConsume_Init"/>
   <for>
-    <effect count="1" name="Mute" time="60" val="0" stackOrder="1" stackType="silence" effectPower="55" effectType="MUTE"/>
+    <effect count="1" name="Mute" time="30" val="0" stackOrder="1" stackType="silence"/>
   </for>
 </skill>
 <skill id="1068" levels="3" name="Might" enchantLevels1="30" enchantLevels2="30">

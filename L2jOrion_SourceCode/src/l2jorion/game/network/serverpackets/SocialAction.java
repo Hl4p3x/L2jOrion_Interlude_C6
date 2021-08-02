@@ -20,21 +20,13 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class ...
- * @version $Revision: 1.3.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public class SocialAction extends L2GameServerPacket
 {
 	private static final String _S__3D_SOCIALACTION = "[S] 2D SocialAction";
+	
 	private final int _charObjId;
 	private final int _actionId;
 	
-	/**
-	 * 0x3d SocialAction dd
-	 * @param playerId
-	 * @param actionId
-	 */
 	public SocialAction(final int playerId, final int actionId)
 	{
 		_charObjId = playerId;
@@ -49,10 +41,6 @@ public class SocialAction extends L2GameServerPacket
 		writeD(_actionId);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

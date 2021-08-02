@@ -21,9 +21,6 @@ package l2jorion.game.skills.effects;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author kombat
- */
 public final class EffectBattleForce extends EffectForce
 {
 	public EffectBattleForce(final Env env, final EffectTemplate template)

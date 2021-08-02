@@ -22,9 +22,6 @@ package l2jorion.game.network.clientpackets;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.cache.HtmCache;
 import l2jorion.game.controllers.TradeController;
@@ -46,6 +43,8 @@ import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class RequestBuyItem extends L2GameClientPacket
 {
@@ -171,7 +170,7 @@ public final class RequestBuyItem extends L2GameClientPacket
 		
 		if (merchant != null)
 		{
-			final List<L2TradeList> lists = TradeController.getInstance().getBuyListByNpcId(merchant.getNpcId());
+			final List<L2TradeList> lists = TradeController.getInstance().getBuyListById(String.valueOf(merchant.getNpcId()));
 			if (!player.isGM())
 			{
 				if (lists == null)
@@ -196,10 +195,10 @@ public final class RequestBuyItem extends L2GameClientPacket
 		}
 		else
 		{
-			L2TradeList access = TradeController.getInstance().getBuyList(_listId);
+			L2TradeList shopLists = TradeController.getInstance().getBuyList(_listId);
 			if (!player.isGM())
 			{
-				if (access != null && !access.getNpcId().equals(String.valueOf("shop")))
+				if (shopLists != null && !shopLists.getNpcId().equals(String.valueOf("shop")))
 				{
 					Util.handleIllegalPlayerAction(player, " Character " + player.getName() + " of account " + player.getAccountName() + " sent a false BuyList list_id "+_listId+"", Config.DEFAULT_PUNISH);
 					sendPacket(ActionFailed.STATIC_PACKET);
@@ -216,7 +215,7 @@ public final class RequestBuyItem extends L2GameClientPacket
 		
 		if (list == null)
 		{
-			Util.handleIllegalPlayerAction(player, " Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " sent a false BuyList id["+_listId+"] ", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(player, " Warning! Character:" + player.getName() + " Account:" + player.getAccountName() + " sent a false BuyList id["+_listId+"] ", Config.DEFAULT_PUNISH);
 			sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}

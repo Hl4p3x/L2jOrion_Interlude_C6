@@ -20,9 +20,6 @@
  */
 package l2jorion.game.handler.skill;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.handler.ISkillHandler;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Effect;
@@ -30,6 +27,8 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Skill.SkillType;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 /**
  * This class ...

@@ -23,9 +23,6 @@ package l2jorion.game.skills.conditions;
 import l2jorion.game.skills.Env;
 import l2jorion.game.templates.L2Weapon;
 
-/**
- * @author mkizub
- */
 public class ConditionTargetUsesWeaponKind extends Condition
 {
 	
@@ -41,12 +38,16 @@ public class ConditionTargetUsesWeaponKind extends Condition
 	{
 		
 		if (env.target == null)
+		{
 			return false;
+		}
 		
 		final L2Weapon item = env.target.getActiveWeaponItem();
 		
 		if (item == null)
+		{
 			return false;
+		}
 		
 		return (item.getItemType().mask() & _weaponMask) != 0;
 	}

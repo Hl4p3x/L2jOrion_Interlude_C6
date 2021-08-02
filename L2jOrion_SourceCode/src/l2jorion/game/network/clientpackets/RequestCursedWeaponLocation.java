@@ -18,14 +18,10 @@ import javolution.util.FastList;
 import l2jorion.game.managers.CursedWeaponsManager;
 import l2jorion.game.model.CursedWeapon;
 import l2jorion.game.model.L2Character;
+import l2jorion.game.model.Location;
 import l2jorion.game.network.serverpackets.ExCursedWeaponLocation;
 import l2jorion.game.network.serverpackets.ExCursedWeaponLocation.CursedWeaponInfo;
-import l2jorion.util.Point3D;
 
-/**
- * Format: (ch)
- * @author ProGramMoS
- */
 public final class RequestCursedWeaponLocation extends L2GameClientPacket
 {
 	@Override
@@ -39,7 +35,9 @@ public final class RequestCursedWeaponLocation extends L2GameClientPacket
 	{
 		final L2Character activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		final List<CursedWeaponInfo> list = new FastList<>();
 		for (final CursedWeapon cw : CursedWeaponsManager.getInstance().getCursedWeapons())
@@ -49,7 +47,7 @@ public final class RequestCursedWeaponLocation extends L2GameClientPacket
 				continue;
 			}
 			
-			final Point3D pos = cw.getWorldPosition();
+			final Location pos = cw.getWorldPosition();
 			
 			if (pos != null)
 			{

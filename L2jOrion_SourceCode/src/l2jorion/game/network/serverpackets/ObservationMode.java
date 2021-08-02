@@ -20,21 +20,12 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class ...
- * @version $Revision: 1.4.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class ObservationMode extends L2GameServerPacket
 {
-	// ddSS
 	private static final String _S__DF_OBSERVMODE = "[S] DF ObservationMode";
+	
 	private final int _x, _y, _z;
 	
-	/**
-	 * @param x
-	 * @param y
-	 * @param z
-	 */
 	public ObservationMode(final int x, final int y, final int z)
 	{
 		_x = x;

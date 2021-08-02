@@ -42,9 +42,8 @@ import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.util.EventData;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 /**
  * This class ...

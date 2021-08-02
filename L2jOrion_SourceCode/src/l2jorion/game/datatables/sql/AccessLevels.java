@@ -24,12 +24,11 @@ import java.sql.SQLException;
 import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.datatables.AccessLevel;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author FBIagent<br>

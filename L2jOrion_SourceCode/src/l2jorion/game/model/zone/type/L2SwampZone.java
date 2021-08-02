@@ -16,24 +16,28 @@
  */
 package l2jorion.game.model.zone.type;
 
+import l2jorion.game.managers.CastleManager;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.model.zone.L2ZoneType;
+import l2jorion.game.model.zone.ZoneId;
 
-/**
- * another type of zone where your speed is changed
- * @author kerberos
- */
 public class L2SwampZone extends L2ZoneType
 {
-	private int _move_bonus;
+	private double _move_bonus;
 	
-	public L2SwampZone(final int id)
+	private int _castleId;
+	private Castle _castle;
+	
+	public L2SwampZone(int id)
 	{
 		super(id);
 		
-		// Setup default speed reduce (in %)
-		_move_bonus = -50;
+		_move_bonus = 0.5;
+		
+		_castleId = 0;
+		_castle = null;
 	}
 	
 	@Override
@@ -41,7 +45,11 @@ public class L2SwampZone extends L2ZoneType
 	{
 		if (name.equals("move_bonus"))
 		{
-			_move_bonus = Integer.parseInt(value);
+			_move_bonus = Double.parseDouble(value);
+		}
+		else if (name.equals("castleId"))
+		{
+			_castleId = Integer.parseInt(value);
 		}
 		else
 		{
@@ -49,10 +57,36 @@ public class L2SwampZone extends L2ZoneType
 		}
 	}
 	
+	private Castle getCastle()
+	{
+		if ((_castleId > 0) && (_castle == null))
+		{
+			_castle = CastleManager.getInstance().getCastleById(_castleId);
+		}
+		
+		return _castle;
+	}
+	
 	@Override
 	protected void onEnter(final L2Character character)
 	{
-		character.setInsideZone(L2Character.ZONE_SWAMP, true);
+		if (getCastle() != null)
+		{
+			// castle zones active only during siege
+			if (!getCastle().getSiege().getIsInProgress() || !isEnabled())
+			{
+				return;
+			}
+			
+			// defenders not affected
+			final L2PcInstance player = character.getActingPlayer();
+			if ((player != null) && player.isInSiege() && (player.getSiegeState() == 2))
+			{
+				return;
+			}
+		}
+		
+		character.setInsideZone(ZoneId.ZONE_SWAMP, true);
 		if (character instanceof L2PcInstance)
 		{
 			((L2PcInstance) character).broadcastUserInfo();
@@ -62,16 +96,14 @@ public class L2SwampZone extends L2ZoneType
 	@Override
 	protected void onExit(final L2Character character)
 	{
-		character.setInsideZone(L2Character.ZONE_SWAMP, false);
-		if (character instanceof L2PcInstance)
+		if (character.isInsideZone(ZoneId.ZONE_SWAMP))
 		{
-			((L2PcInstance) character).broadcastUserInfo();
+			character.setInsideZone(ZoneId.ZONE_SWAMP, false);
+			if (character instanceof L2PcInstance)
+			{
+				((L2PcInstance) character).broadcastUserInfo();
+			}
 		}
-	}
-	
-	public int getMoveBonus()
-	{
-		return _move_bonus;
 	}
 	
 	@Override
@@ -84,4 +116,8 @@ public class L2SwampZone extends L2ZoneType
 	{
 	}
 	
+	public double getMoveBonus()
+	{
+		return _move_bonus;
+	}
 }

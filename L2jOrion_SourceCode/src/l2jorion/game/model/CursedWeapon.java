@@ -24,11 +24,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.concurrent.ScheduledFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.SkillTable;
+import l2jorion.game.enums.AchType;
 import l2jorion.game.managers.CursedWeaponsManager;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
@@ -44,8 +42,9 @@ import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
-import l2jorion.util.Point3D;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.util.random.Rnd;
@@ -115,7 +114,7 @@ public class CursedWeapon
 			else
 			{
 				// Remove from Db
-				//LOG.info(_name + " being removed offline.");
+				// LOG.info(_name + " being removed offline.");
 				Connection con = null;
 				try
 				{
@@ -336,7 +335,7 @@ public class CursedWeapon
 		{
 			LOG.info("Player " + _player.getName() + " has been awarded with skill " + skill);
 		}
-
+		
 		_player.sendSkillList();
 	}
 	
@@ -346,10 +345,12 @@ public class CursedWeapon
 		_player.removeSkill(SkillTable.getInstance().getInfo(3630, 1), false);
 		_player.removeSkill(SkillTable.getInstance().getInfo(3631, 1), false);
 		for (final L2Skill skillid : _player.getAllSkills())
+		{
 			if (skillid.getId() != 3630 && skillid.getId() != 3631)
 			{
 				_player.enableSkill(skillid);
 			}
+		}
 		_player.sendSkillList();
 	}
 	
@@ -413,19 +414,25 @@ public class CursedWeapon
 		if ((player._inEventTvT && !Config.TVT_JOIN_CURSED))
 		{
 			if (player._inEventTvT)
+			{
 				TvT.removePlayer(player);
+			}
 		}
 		
 		if ((player._inEventCTF && !Config.CTF_JOIN_CURSED))
 		{
 			if (player._inEventCTF)
+			{
 				CTF.removePlayer(player);
+			}
 		}
 		
 		if ((player._inEventDM && !Config.DM_JOIN_CURSED))
 		{
 			if (player._inEventDM)
+			{
 				DM.removePlayer(player);
+			}
 		}
 		
 		_isActivated = true;
@@ -477,6 +484,7 @@ public class CursedWeapon
 		sm = new SystemMessage(SystemMessageId.THE_OWNER_OF_S2_HAS_APPEARED_IN_THE_S1_REGION);
 		sm.addZoneName(_player.getX(), _player.getY(), _player.getZ()); // Region Name
 		sm.addItemName(_item.getItemId());
+		_player.getAchievement().increase(AchType.CURSED_WEAPON);
 		CursedWeaponsManager.announce(sm);
 	}
 	
@@ -705,7 +713,9 @@ public class CursedWeapon
 	public int getLevel()
 	{
 		if (_nbKills > _stageKills * _skillMaxLevel)
+		{
 			return _skillMaxLevel;
+		}
 		return _nbKills / _stageKills;
 	}
 	
@@ -722,7 +732,9 @@ public class CursedWeapon
 	public void goTo(final L2PcInstance player)
 	{
 		if (player == null)
+		{
 			return;
+		}
 		
 		if (_isActivated)
 		{
@@ -740,13 +752,17 @@ public class CursedWeapon
 		}
 	}
 	
-	public Point3D getWorldPosition()
+	public Location getWorldPosition()
 	{
 		if (_isActivated && _player != null)
+		{
 			return _player.getPosition().getWorldPosition();
+		}
 		
 		if (_isDropped && _item != null)
+		{
 			return _item.getPosition().getWorldPosition();
+		}
 		
 		return null;
 	}

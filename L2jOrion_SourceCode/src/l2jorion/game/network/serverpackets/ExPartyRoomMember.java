@@ -16,13 +16,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import l2jorion.game.managers.TownManager;
 import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author Gnacik
- */
 public class ExPartyRoomMember extends L2GameServerPacket
 {
 	private final PartyMatchRoom _room;
@@ -41,21 +37,29 @@ public class ExPartyRoomMember extends L2GameServerPacket
 		writeH(0x0e);
 		writeD(_mode);
 		writeD(_room.getMembers());
+		
 		for (final L2PcInstance _member : _room.getPartyMembers())
 		{
 			writeD(_member.getObjectId());
 			writeS(_member.getName());
 			writeD(_member.getActiveClass());
 			writeD(_member.getLevel());
-			writeD(TownManager.getClosestLocation(_member));
+			writeD(_room.getLocation());
+			
 			if (_room.getOwner().equals(_member))
+			{
 				writeD(1);
+			}
 			else
 			{
 				if ((_room.getOwner().isInParty() && _member.isInParty()) && (_room.getOwner().getParty().getPartyLeaderOID() == _member.getParty().getPartyLeaderOID()))
+				{
 					writeD(2);
+				}
 				else
+				{
 					writeD(0);
+				}
 			}
 		}
 	}

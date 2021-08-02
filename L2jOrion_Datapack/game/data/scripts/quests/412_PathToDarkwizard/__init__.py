@@ -102,6 +102,7 @@ class Quest (JQuest) :
             st.takeItems(SEEDS_OF_ANGER,1)
             st.takeItems(SEEDS_OF_LUNACY,1)
             st.takeItems(SEEDS_OF_DESPAIR,1)
+            st.addExpAndSp(16000,5650)
             st.giveItems(JEWEL_OF_DARKNESS,1)
             st.set("cond","0")
             st.setState(COMPLETED)

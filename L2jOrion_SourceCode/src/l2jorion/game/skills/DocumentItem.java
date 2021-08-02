@@ -24,6 +24,9 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import l2jorion.game.model.Item;
@@ -36,12 +39,6 @@ import l2jorion.game.templates.L2Weapon;
 import l2jorion.game.templates.L2WeaponType;
 import l2jorion.game.templates.StatsSet;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-
-/**
- * @author mkizub
- */
 final class DocumentItem extends DocumentBase
 {
 	private Item _currentItem = null;
@@ -123,7 +120,9 @@ final class DocumentItem extends DocumentBase
 		Item item;
 		
 		if ((item = _itemData.get(_currentItem.id)) == null)
+		{
 			throw new IllegalStateException("No SQL data for Item ID: " + itemId + " - name: " + itemName);
+		}
 		
 		_currentItem.set = item.set;
 		_currentItem.type = item.type;
@@ -158,7 +157,9 @@ final class DocumentItem extends DocumentBase
 	private void makeItem()
 	{
 		if (_currentItem.item != null)
+		{
 			return;
+		}
 		
 		if (_currentItem.type instanceof L2ArmorType)
 		{
@@ -173,7 +174,9 @@ final class DocumentItem extends DocumentBase
 			_currentItem.item = new L2EtcItem((L2EtcItemType) _currentItem.type, _currentItem.set);
 		}
 		else
+		{
 			throw new Error("Unknown item type " + _currentItem.type);
+		}
 	}
 	
 	/**

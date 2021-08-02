@@ -26,12 +26,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.text.TextBuilder;
 import l2jorion.Config;
-import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.game.cache.HtmCache;
 import l2jorion.game.controllers.TradeController;
 import l2jorion.game.datatables.SkillTable;
@@ -43,7 +39,6 @@ import l2jorion.game.datatables.xml.ExperienceData;
 import l2jorion.game.handler.IBBSHandler;
 import l2jorion.game.handler.ICustomByPassHandler;
 import l2jorion.game.handler.IVoicedCommandHandler;
-import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2PledgeSkillLearn;
 import l2jorion.game.model.L2Skill;
@@ -57,9 +52,10 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.event.CTF;
 import l2jorion.game.model.entity.event.DM;
 import l2jorion.game.model.entity.event.TvT;
-import l2jorion.game.model.entity.olympiad.Olympiad;
 import l2jorion.game.model.multisell.L2Multisell;
 import l2jorion.game.model.multisell.MultiSellListContainer;
+import l2jorion.game.model.olympiad.OlympiadManager;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.AquireSkillList;
@@ -86,7 +82,10 @@ import l2jorion.game.powerpack.PowerPackConfig;
 import l2jorion.game.taskmanager.AttackStanceTaskManager;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
+import l2jorion.util.database.L2DatabaseFactory;
 
 public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHandler
 {
@@ -95,7 +94,10 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 	@Override
 	public String[] getVoicedCommandList()
 	{
-		return new String[] {PowerPackConfig.GMSHOP_COMMAND};
+		return new String[]
+		{
+			PowerPackConfig.GMSHOP_COMMAND
+		};
 	}
 	
 	private boolean checkAllowed(L2PcInstance activeChar)
@@ -107,35 +109,62 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 		
 		String msg = null;
 		
-		if(activeChar.isSitting())
+		if (activeChar.isSitting())
+		{
 			msg = "Shop is not available when you sit.";
-		else if(PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("ALL"))
+		}
+		else if (PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("ALL"))
+		{
 			msg = "Shop is not available in this area.";
-		else if(PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("CURSED") && activeChar.isCursedWeaponEquiped())
-			msg = "Shop is not available with the cursed weapon."; 
-		else if(PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("ATTACK") && AttackStanceTaskManager.getInstance().getAttackStanceTask(activeChar))
+		}
+		else if (PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("CURSED") && activeChar.isCursedWeaponEquiped())
+		{
+			msg = "Shop is not available with the cursed weapon.";
+		}
+		else if (PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("ATTACK") && AttackStanceTaskManager.getInstance().getAttackStanceTask(activeChar))
+		{
 			msg = "Shop is not available during the battle.";
-		else if(PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("DUNGEON") && activeChar.isIn7sDungeon())
+		}
+		else if (PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("DUNGEON") && activeChar.isIn7sDungeon())
+		{
 			msg = "Shop is not available in the catacomb and necropolis.";
-		else if(PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("RB") && activeChar.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND))
-				msg = "Shop is not available in this area.";
-		else if(PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("PVP") && activeChar.isInsideZone(L2Character.ZONE_PVP))
+		}
+		else if (PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("RB") && activeChar.isInsideZone(ZoneId.ZONE_NOSUMMONFRIEND))
+		{
 			msg = "Shop is not available in this area.";
-		else if(PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("PEACE") && activeChar.isInsideZone(L2Character.ZONE_PEACE))
+		}
+		else if (PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("PVP") && activeChar.isInsideZone(ZoneId.ZONE_PVP))
+		{
 			msg = "Shop is not available in this area.";
-		else if(PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("SIEGE") && activeChar.isInsideZone(L2Character.ZONE_SIEGE))
+		}
+		else if (PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("PEACE") && activeChar.isInsideZone(ZoneId.ZONE_PEACE))
+		{
 			msg = "Shop is not available in this area.";
-		else if(PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("OLYMPIAD") && (activeChar.isInOlympiadMode() || activeChar.isInsideZone(L2Character.ZONE_OLY) || Olympiad.getInstance().isRegistered(activeChar) 
-				|| Olympiad.getInstance().isRegisteredInComp(activeChar))) 
+		}
+		else if (PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("SIEGE") && activeChar.isInsideZone(ZoneId.ZONE_SIEGE))
+		{
+			msg = "Shop is not available in this area.";
+		}
+		else if (PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("OLYMPIAD") && (activeChar.isInOlympiadMode() || activeChar.isInsideZone(ZoneId.ZONE_OLY) || OlympiadManager.getInstance().isRegistered(activeChar) || OlympiadManager.getInstance().isRegisteredInComp(activeChar)))
+		{
 			msg = "Shop is not available at Olympiad.";
-		else if(PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("EVENT") && (activeChar._inEvent))
+		}
+		else if (PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("EVENT") && (activeChar._inEvent))
+		{
 			msg = "Shop is not available at the opening event.";
-		else if(PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("TVT") && activeChar._inEventTvT && TvT.is_started() )
+		}
+		else if (PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("TVT") && activeChar._inEventTvT && TvT.is_started())
+		{
 			msg = "Shop is not available in TVT.";
-		else if(PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("CTF") && activeChar._inEventCTF && CTF.is_started() )
+		}
+		else if (PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("CTF") && activeChar._inEventCTF && CTF.is_started())
+		{
 			msg = "Shop is not available in CTF.";
-		else if(PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("DM") && activeChar._inEventDM && DM.is_started() )
+		}
+		else if (PowerPackConfig.GMSHOP_EXCLUDE_ON.contains("DM") && activeChar._inEventDM && DM.is_started())
+		{
 			msg = "Shop is not available in DM.";
+		}
 		
 		if (msg != null)
 		{
@@ -148,24 +177,28 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 	@Override
 	public boolean useVoicedCommand(String command, L2PcInstance activeChar, String params)
 	{
-		if (activeChar == null) 
+		if (activeChar == null)
+		{
 			return false;
+		}
 		
-		if (!checkAllowed(activeChar)) 
+		if (!checkAllowed(activeChar))
+		{
 			return false;
+		}
 		
 		if (command.compareTo(PowerPackConfig.GMSHOP_COMMAND) == 0)
 		{
 			String index = "";
-			if( params != null && params.length() != 0)
+			if (params != null && params.length() != 0)
 			{
 				if (!params.equals("0"))
 				{
-					index= "-"+params;
+					index = "-" + params;
 				}
 			}
 			
-			String text = HtmCache.getInstance().getHtm("data/html/gmshop/gmshop"+index+".htm");
+			String text = HtmCache.getInstance().getHtm("data/html/gmshop/gmshop" + index + ".htm");
 			NpcHtmlMessage htm = new NpcHtmlMessage(activeChar.getLastQuestNpcObject());
 			htm.setHtml(text);
 			activeChar.sendPacket(htm);
@@ -174,7 +207,10 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 		return false;
 	}
 	
-	private static String [] _CMD =  {"gmshop"};
+	private static String[] _CMD =
+	{
+		"gmshop"
+	};
 	
 	@Override
 	public String[] getByPassCommands()
@@ -206,7 +242,7 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 			return;
 		}
 		
-		L2NpcInstance gmshopnpc = null; 
+		L2NpcInstance gmshopnpc = null;
 		
 		if (!PowerPackConfig.GMSHOP_USEBBS && !PowerPackConfig.GMSHOP_USECOMMAND)
 		{
@@ -229,7 +265,7 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 		if (parameters.startsWith("multisell"))
 		{
 			try
-			{	
+			{
 				int listId = Integer.parseInt(parameters.substring(9).trim());
 				MultiSellListContainer list = L2Multisell.getInstance().getList(listId);
 				
@@ -243,10 +279,12 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 					player.sendMessage("This list does not exist");
 				}
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				player.sendMessage("This list does not exist");
 			}
@@ -264,10 +302,12 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 				player.setTempAccessBuy(true);
 				L2Multisell.getInstance().SeparateAndSend(listId, player, true, 0);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				player.sendMessage("This list does not exist");
 			}
@@ -278,10 +318,12 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 			{
 				showSellWindow(player);
 			}
-			catch(Exception e)
+			catch (Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		else if (parameters.startsWith("DepositP"))
@@ -359,7 +401,7 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 					if (freight.getSize() > 0)
 					{
 						freight.setActiveLocation(0);
-
+						
 						player.setActiveWarehouse(freight);
 						player.sendPacket(new WareHouseWithdrawalList(player, WareHouseWithdrawalList.FREIGHT));
 					}
@@ -432,7 +474,9 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 		else if (parameters.startsWith("Remove "))
 		{
 			if (!player.getClient().getFloodProtectors().getTransaction().tryPerformAction("HennaRemove"))
+			{
 				return;
+			}
 			
 			final int slot = Integer.parseInt(parameters.substring(7));
 			player.removeHenna(slot);
@@ -460,8 +504,8 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 		{
 			if (item == null || item.getCount() < Config.PREM_TITLE_COLOR)
 			{
-				player.sendMessage("You don't have enough "+currencyName+".");
-				player.sendPacket(new ExShowScreenMessage("You don't have enough "+currencyName+".", 1000, 2, false));
+				player.sendMessage("You don't have enough " + currencyName + ".");
+				player.sendPacket(new ExShowScreenMessage("You don't have enough " + currencyName + ".", 1000, 2, false));
 				player.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
 				return;
 			}
@@ -475,8 +519,8 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 		{
 			if (item == null || item.getCount() < Config.PREM_NAME_COLOR)
 			{
-				player.sendMessage("You don't have enough "+currencyName+".");
-				player.sendPacket(new ExShowScreenMessage("You don't have enough "+currencyName+".", 1000, 2, false));
+				player.sendMessage("You don't have enough " + currencyName + ".");
+				player.sendPacket(new ExShowScreenMessage("You don't have enough " + currencyName + ".", 1000, 2, false));
 				player.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
 				return;
 			}
@@ -502,8 +546,8 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 			
 			if (item == null || item.getCount() < Config.PREM_CLAN_SKILLS)
 			{
-				player.sendMessage("You don't have enough "+currencyName+".");
-				player.sendPacket(new ExShowScreenMessage("You don't have enough "+currencyName+".", 1000, 2, false));
+				player.sendMessage("You don't have enough " + currencyName + ".");
+				player.sendPacket(new ExShowScreenMessage("You don't have enough " + currencyName + ".", 1000, 2, false));
 				player.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
 				return;
 			}
@@ -555,8 +599,8 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 			
 			if (item == null || item.getCount() < Config.PREM_CLAN_LEVEL)
 			{
-				player.sendMessage("You don't have enough "+currencyName+".");
-				player.sendPacket(new ExShowScreenMessage("You don't have enough "+currencyName+".", 1000, 2, false));
+				player.sendMessage("You don't have enough " + currencyName + ".");
+				player.sendPacket(new ExShowScreenMessage("You don't have enough " + currencyName + ".", 1000, 2, false));
 				player.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
 				return;
 			}
@@ -565,7 +609,7 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 			if (level >= 0 && level < 9)
 			{
 				player.getClan().changeLevel(level);
-				player.sendMessage("Increased level up to " + level + " for the clan: "+player.getClan().getName()+"");
+				player.sendMessage("Increased level up to " + level + " for the clan: " + player.getClan().getName() + "");
 				return;
 			}
 		}
@@ -579,17 +623,17 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 			
 			int points = player.getClan().getReputationScore();
 			
-			if (points > 10000)
-			{
-				return;
-			}
-			
 			points = Integer.parseInt(parameters.substring(3).trim());
+			
+			// if (points > 10000)
+			// {
+			// return;
+			// }
 			
 			if (item == null || item.getCount() < Config.PREM_CLAN_REP)
 			{
-				player.sendMessage("You don't have enough "+currencyName+".");
-				player.sendPacket(new ExShowScreenMessage("You don't have enough "+currencyName+".", 1000, 2, false));
+				player.sendMessage("You don't have enough " + currencyName + ".");
+				player.sendPacket(new ExShowScreenMessage("You don't have enough " + currencyName + ".", 1000, 2, false));
 				player.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
 				return;
 			}
@@ -611,13 +655,13 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 		{
 			if (item == null || item.getCount() < Config.PREM_WEEK)
 			{
-				player.sendMessage("You don't have enough "+currencyName+".");
-				player.sendPacket(new ExShowScreenMessage("You don't have enough "+currencyName+".", 1000, 2, false));
+				player.sendMessage("You don't have enough " + currencyName + ".");
+				player.sendPacket(new ExShowScreenMessage("You don't have enough " + currencyName + ".", 1000, 2, false));
 				player.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
 				return;
 			}
 			
-			if(player.getPremiumService() == 1)
+			if (player.getPremiumService() == 1)
 			{
 				player.sendMessage("You already have The Premium Account!");
 			}
@@ -643,13 +687,13 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 		{
 			if (item == null || item.getCount() < Config.PREM_MONTH)
 			{
-				player.sendMessage("You don't have enough "+currencyName+".");
-				player.sendPacket(new ExShowScreenMessage("You don't have enough "+currencyName+".", 1000, 2, false));
+				player.sendMessage("You don't have enough " + currencyName + ".");
+				player.sendPacket(new ExShowScreenMessage("You don't have enough " + currencyName + ".", 1000, 2, false));
 				player.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
 				return;
 			}
 			
-			if(player.getPremiumService() == 1)
+			if (player.getPremiumService() == 1)
 			{
 				player.sendMessage("You already have The Premium Account!");
 			}
@@ -663,7 +707,7 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 				PlaySound playSound = new PlaySound("ItemSound.quest_fanfare_1");
 				player.sendPacket(playSound);
 				
-				if(Config.PREMIUM_NAME_COLOR_ENABLED && player.getPremiumService() == 1)
+				if (Config.PREMIUM_NAME_COLOR_ENABLED && player.getPremiumService() == 1)
 				{
 					player.getAppearance().setTitleColor(Config.PREMIUM_TITLE_COLOR);
 				}
@@ -687,8 +731,8 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 			
 			if (item == null || item.getCount() < Config.PREM_NOKARMA)
 			{
-				player.sendMessage("You don't have enough "+currencyName+".");
-				player.sendPacket(new ExShowScreenMessage("You don't have enough "+currencyName+".", 1000, 2, false));
+				player.sendMessage("You don't have enough " + currencyName + ".");
+				player.sendPacket(new ExShowScreenMessage("You don't have enough " + currencyName + ".", 1000, 2, false));
 				player.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
 				return;
 			}
@@ -710,8 +754,8 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 			{
 				if (item == null || item.getCount() < price)
 				{
-					player.sendMessage("You don't have enough "+currencyName+".");
-					player.sendPacket(new ExShowScreenMessage("You don't have enough "+currencyName+".", 1000, 2, false));
+					player.sendMessage("You don't have enough " + currencyName + ".");
+					player.sendPacket(new ExShowScreenMessage("You don't have enough " + currencyName + ".", 1000, 2, false));
 					player.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
 					return;
 				}
@@ -732,7 +776,7 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 					PlaySound playSound = new PlaySound("ItemSound.quest_fanfare_1");
 					player.sendPacket(playSound);
 					
-					if(Config.PREMIUM_NAME_COLOR_ENABLED && player.getPremiumService() == 1)
+					if (Config.PREMIUM_NAME_COLOR_ENABLED && player.getPremiumService() == 1)
 					{
 						player.getAppearance().setTitleColor(Config.PREMIUM_TITLE_COLOR);
 					}
@@ -748,7 +792,7 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 			
 			int playerLvl = player.getLevel();
 			int lvl1 = playerLvl + Integer.parseInt("1") - Integer.parseInt(delevelNumber);
-			String addLvl = ""+lvl1;
+			String addLvl = "" + lvl1;
 			byte lvl = Byte.parseByte(addLvl);
 			
 			if (player.isSubClassActive())
@@ -766,8 +810,8 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 			{
 				if (item == null || item.getCount() < (1 * Integer.parseInt(delevelNumber)))
 				{
-					player.sendMessage("You don't have enough "+currencyName+".");
-					player.sendPacket(new ExShowScreenMessage("You don't have enough "+currencyName+".", 1000, 2, false));
+					player.sendMessage("You don't have enough " + currencyName + ".");
+					player.sendPacket(new ExShowScreenMessage("You don't have enough " + currencyName + ".", 1000, 2, false));
 					player.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
 					return;
 				}
@@ -781,7 +825,7 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 				
 				if (pXp > tXp)
 				{
-					//level down
+					// level down
 					player.getStat().removeExpAndSp(pXp - tXp, 0);
 				}
 				else if (pXp < tXp)
@@ -789,7 +833,6 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 					// level up
 					player.getStat().addExpAndSp(tXp - pXp, 0);
 				}
-				
 				
 				if (playerLvl < maxLvl)
 				{
@@ -801,12 +844,12 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 				}
 				
 				player.getStat().addExp(-lostExp);
-			
-				player.sendMessage("Your level has been changed to "+player.getLevel()+".");
+				
+				player.sendMessage("Your level has been changed to " + player.getLevel() + ".");
 				return;
 			}
 			
-			player.sendMessage("Your number: "+delevelNumber+" is too big.");
+			player.sendMessage("Your number: " + delevelNumber + " is too big.");
 		}
 		else if (parameters.startsWith("changename"))
 		{
@@ -814,8 +857,8 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 			
 			if (item == null || item.getCount() < 10)
 			{
-				player.sendMessage("You don't have enough "+currencyName+".");
-				player.sendPacket(new ExShowScreenMessage("You don't have enough "+currencyName+".", 1000, 2, false));
+				player.sendMessage("You don't have enough " + currencyName + ".");
+				player.sendPacket(new ExShowScreenMessage("You don't have enough " + currencyName + ".", 1000, 2, false));
 				player.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
 				return;
 			}
@@ -837,7 +880,7 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 			L2World.getInstance().removeFromAllPlayers(player);
 			player.setName(name);
 			player.store();
-			L2World.getInstance().addToAllPlayers(player);
+			L2World.getInstance().addPlayerToWorld(player);
 			
 			if (player.isInParty())
 			{
@@ -867,14 +910,16 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 		else if (parameters.startsWith("Remove "))
 		{
 			if (!player.getClient().getFloodProtectors().getTransaction().tryPerformAction("HennaRemove"))
+			{
 				return;
+			}
 			
 			final int slot = Integer.parseInt(command.substring(7));
 			player.removeHenna(slot);
 			
 			player.sendPacket(new ItemList(player, false));
 		}
-		else if(parameters.startsWith("Chat"))
+		else if (parameters.startsWith("Chat"))
 		{
 			String chatIndex = parameters.substring(4).trim();
 			
@@ -885,7 +930,7 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 				chatIndex = "";
 			}
 			
-			String text = HtmCache.getInstance().getHtm("data/html/gmshop/gmshop"+chatIndex+".htm");
+			String text = HtmCache.getInstance().getHtm("data/html/gmshop/gmshop" + chatIndex + ".htm");
 			
 			NpcHtmlMessage htm = new NpcHtmlMessage(player.getLastQuestNpcObject());
 			htm.setHtml(text);
@@ -925,7 +970,7 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 			stmt.execute();
 			stmt.close();
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
 			{
@@ -1056,25 +1101,27 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 	public void showPledgeSkillList(L2PcInstance player)
 	{
 		if (player.getClan() == null)
+		{
 			return;
+		}
 		
 		L2PledgeSkillLearn[] skills = SkillTreeTable.getInstance().getAvailablePledgeSkills(player);
 		AquireSkillList asl = new AquireSkillList(AquireSkillList.skillType.Clan);
 		int counts = 0;
 		
-		for(L2PledgeSkillLearn s : skills)
+		for (L2PledgeSkillLearn s : skills)
 		{
 			int cost = s.getRepCost();
 			counts++;
-
+			
 			asl.addSkill(s.getId(), s.getLevel(), s.getLevel(), cost, 0);
 		}
 		
-		if(counts == 0)
+		if (counts == 0)
 		{
 			NpcHtmlMessage html = new NpcHtmlMessage(1);
-
-			if(player.getClan().getLevel() < 8)
+			
+			if (player.getClan().getLevel() < 8)
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.DO_NOT_HAVE_FURTHER_SKILLS_TO_LEARN);
 				sm.addNumber(player.getClan().getLevel() + 1);
@@ -1113,7 +1160,9 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 		catch (final PatternSyntaxException e) // case of illegal pattern
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("Shop Character name pattern of config is wrong!");
 			pattern = Pattern.compile(".*");
@@ -1121,7 +1170,9 @@ public class Shop implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHa
 		
 		final Matcher regexp = pattern.matcher(test);
 		if (!regexp.matches())
+		{
 			result = false;
+		}
 		
 		return result;
 	}

@@ -54,28 +54,28 @@ public class Escape implements IUserCommandHandler
 			activeChar.sendMessage("You may not use an escape command in a festival.");
 			return false;
 		}
-
+		
 		// Check to see if the current player is in TVT Event.
 		if (activeChar._inEventTvT && TvT.is_started())
 		{
 			activeChar.sendMessage("You may not use an escape skill in TvT.");
 			return false;
 		}
-
+		
 		// Check to see if the current player is in CTF Event.
 		if (activeChar._inEventCTF && CTF.is_started())
 		{
 			activeChar.sendMessage("You may not use an escape skill in CTF.");
 			return false;
 		}
-
+		
 		// Check to see if the current player is in DM Event.
 		if (activeChar._inEventDM && DM.is_started())
 		{
 			activeChar.sendMessage("You may not use an escape skill in DM.");
 			return false;
 		}
-
+		
 		// Check to see if the current player is in Vip Event.
 		if (activeChar._inEventVIP && VIP._started)
 		{
@@ -170,36 +170,38 @@ public class Escape implements IUserCommandHandler
 		{
 			_activeChar = activeChar;
 		}
-
+		
 		@Override
 		public void run()
 		{
-			if(_activeChar.isDead())
+			if (_activeChar.isDead())
+			{
 				return;
-
+			}
+			
 			_activeChar.setIsIn7sDungeon(false);
 			_activeChar.enableAllSkills();
-
+			
 			try
 			{
-				if(_activeChar.getKarma()>0 && Config.ALT_KARMA_TELEPORT_TO_FLORAN){
+				if (_activeChar.getKarma()>0 && Config.ALT_KARMA_TELEPORT_TO_FLORAN)
+				{
 					_activeChar.teleToLocation(17836, 170178, -3507, true); // Floran
 					return;
 				}
 				
 				_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 			}
-			catch(Throwable e)
+			catch (Throwable e)
 			{
-				if(Config.ENABLE_ALL_EXCEPTIONS)
+				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 	}
-
-	/* (non-Javadoc)
-	 * @see l2jorion.game.handler.IUserCommandHandler#getUserCommandList()
-	 */
+	
 	@Override
 	public int[] getUserCommandList()
 	{

@@ -20,7 +20,7 @@
 Price:
 </td>
 <td>
-Choose price item:
+Price item:
 </td>
 </tr>
 <tr>
@@ -28,10 +28,11 @@ Choose price item:
 <edit var="price" width="90" height="12" type="number" length="12">
 </td>
 <td>
-<combobox width="90" var="priceList" list="Adena;Gold Bar;Orion Adena;">﻿
+<combobox width="90" var="priceList" list="%priceItems%">
 </td>
 </tr>
 </table>
+<br>
 <button value="Add" action="bypass -h custom_market ComfirmAdd %itemObjId% 1 $price %augmentationId% %augmentationSkill% %augmentationSkillLevel% %augmentationBonus% $priceList" width=65 height=20 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"><br>
 <button value="Cancel" action="bypass -h custom_market Main" width=65 height=20 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2">
 

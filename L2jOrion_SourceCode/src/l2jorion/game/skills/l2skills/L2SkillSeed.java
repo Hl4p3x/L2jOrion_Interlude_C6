@@ -28,7 +28,6 @@ import l2jorion.game.templates.StatsSet;
 
 public class L2SkillSeed extends L2Skill
 {
-	
 	public L2SkillSeed(final StatsSet set)
 	{
 		super(set);
@@ -38,7 +37,9 @@ public class L2SkillSeed extends L2Skill
 	public void useSkill(final L2Character caster, final L2Object[] targets)
 	{
 		if (caster.isAlikeDead())
+		{
 			return;
+		}
 		
 		// Update Seeds Effects
 		for (final L2Object target2 : targets)
@@ -61,13 +62,12 @@ public class L2SkillSeed extends L2Skill
 			
 			final L2Effect[] effects = target.getAllEffects();
 			for (final L2Effect effect : effects)
+			{
 				if (effect.getEffectType() == L2Effect.EffectType.SEED)
 				{
 					effect.rescheduleEffect();
-					/*
-					 * for (int j=0;j<effects.length;j++ { if (effects[j].getEffectType()==L2Effect.EffectType.SEED) { EffectSeed e = (EffectSeed)effects[j]; if (e.getInUse() || e.getSkill().getId()==this.getId()) { e.rescheduleEffect(); } } }
-					 */
 				}
+			}
 		}
 	}
 }

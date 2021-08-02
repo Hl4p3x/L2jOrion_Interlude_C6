@@ -33,22 +33,16 @@ import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.templates.L2EtcItemType;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.thread.daemons.ItemsAutoDestroy;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * This class manage all items on ground
- * @version $Revision: $ $Date: $
- * @author DiezelMax - original ideea
- * @author Enforcer - actual build
- */
 public class ItemsOnGroundManager
 {
-	static final Logger LOG = LoggerFactory.getLogger(ItemsOnGroundManager.class);
+	public static final Logger LOG = LoggerFactory.getLogger(ItemsOnGroundManager.class);
+	
 	protected List<L2ItemInstance> _items = new FastList<>();
 	
 	public static final ItemsOnGroundManager getInstance()
@@ -62,18 +56,21 @@ public class ItemsOnGroundManager
 		if (!Config.SAVE_DROPPED_ITEM)
 		{
 			if (Config.CLEAR_DROPPED_ITEM_TABLE)
+			{
 				emptyTable();
-			
+			}
 			return;
 		}
 		
-		LOG.info("Initializing ItemsOnGroundManager.");
+		// LOG.info("Initializing ItemsOnGroundManager.");
 		
 		_items.clear();
 		load();
 		
 		if (!Config.SAVE_DROPPED_ITEM)
+		{
 			return;
+		}
 		
 		if (Config.SAVE_DROPPED_ITEM_INTERVAL > 0)
 		{
@@ -104,8 +101,6 @@ public class ItemsOnGroundManager
 				statement.setLong(1, System.currentTimeMillis());
 				statement.execute();
 				DatabaseUtils.close(statement);
-				str = null;
-				statement = null;
 			}
 			catch (final Exception e)
 			{
@@ -115,7 +110,6 @@ public class ItemsOnGroundManager
 			finally
 			{
 				CloseUtil.close(con);
-				con = null;
 			}
 		}
 		
@@ -172,17 +166,14 @@ public class ItemsOnGroundManager
 							}
 						}
 					}
-					item = null;
 				}
 				
 				result.close();
 				s.close();
-				result = null;
-				s = null;
 				
 				if (count > 0)
 				{
-					LOG.info("ItemsOnGroundManager: restored " + count + " items.");
+					LOG.info("ItemsOnGroundManager: Restored " + count + " items");
 				}
 			}
 			catch (final Exception e)
@@ -205,7 +196,9 @@ public class ItemsOnGroundManager
 	public void save(final L2ItemInstance item)
 	{
 		if (!Config.SAVE_DROPPED_ITEM)
+		{
 			return;
+		}
 		
 		_items.add(item);
 	}
@@ -213,7 +206,9 @@ public class ItemsOnGroundManager
 	public void removeObject(final L2Object item)
 	{
 		if (!Config.SAVE_DROPPED_ITEM)
+		{
 			return;
+		}
 		
 		_items.remove(item);
 	}
@@ -221,7 +216,9 @@ public class ItemsOnGroundManager
 	public void saveInDb()
 	{
 		if (!Config.SAVE_DROPPED_ITEM)
+		{
 			return;
+		}
 		
 		ThreadPoolManager.getInstance().executeTask(new StoreInDb());
 	}
@@ -272,13 +269,17 @@ public class ItemsOnGroundManager
 			
 			for (L2ItemInstance item : _items)
 			{
-
+				
 				if (item == null)
+				{
 					continue;
+				}
 				
 				if (CursedWeaponsManager.getInstance().isCursed(item.getItemId()))
+				{
 					continue;
-
+				}
+				
 				Connection con = null;
 				try
 				{
@@ -315,7 +316,7 @@ public class ItemsOnGroundManager
 				catch (Exception e)
 				{
 					LOG.error("error while inserting into table ItemsOnGround (item id: " + item.getItemId() + ") " + e);
-					//e.printStackTrace();
+					// e.printStackTrace();
 				}
 				finally
 				{
@@ -328,7 +329,7 @@ public class ItemsOnGroundManager
 			}
 		}
 	}
-
+	
 	private static class SingletonHolder
 	{
 		protected static final ItemsOnGroundManager _instance = new ItemsOnGroundManager();

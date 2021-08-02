@@ -21,9 +21,6 @@ package l2jorion.login;
 
 import java.nio.ByteBuffer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.login.L2LoginClient.LoginClientState;
 import l2jorion.login.network.clientpackets.AuthGameGuard;
@@ -33,6 +30,8 @@ import l2jorion.login.network.clientpackets.RequestServerLogin;
 import l2jorion.mmocore.IPacketHandler;
 import l2jorion.mmocore.ReceivablePacket;
 import l2jorion.log.Log;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class L2LoginPacketHandler implements IPacketHandler<L2LoginClient>
 {

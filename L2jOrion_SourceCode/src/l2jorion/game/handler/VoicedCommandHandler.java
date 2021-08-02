@@ -19,19 +19,20 @@
 package l2jorion.game.handler;
 
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.GameServer;
-import l2jorion.game.handler.voiced.Event_CTF;
-import l2jorion.game.handler.voiced.Event_DM;
-import l2jorion.game.handler.voiced.OfflineShop;
-import l2jorion.game.handler.voiced.Online;
-import l2jorion.game.handler.voiced.SellBuffs;
-import l2jorion.game.handler.voiced.Event_TVT;
-import l2jorion.game.handler.voiced.Wedding;
+import l2jorion.game.handler.voice.DressMe;
+import l2jorion.game.handler.voice.Event_CTF;
+import l2jorion.game.handler.voice.Event_DM;
+import l2jorion.game.handler.voice.Event_TVT;
+import l2jorion.game.handler.voice.OfflineShop;
+import l2jorion.game.handler.voice.Online;
+import l2jorion.game.handler.voice.SellBuffs;
+import l2jorion.game.handler.voice.Wedding;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class VoicedCommandHandler
 {
@@ -90,7 +91,12 @@ public class VoicedCommandHandler
 			registerVoicedCommandHandler(new SellBuffs());
 		}
 		
-		LOG.info("VoicedCommandHandler: Loaded " + _datatable.size() + " handlers.");
+		if (Config.ALLOW_DRESS_ME_SYSTEM)
+		{
+			registerVoicedCommandHandler(new DressMe());
+		}
+		
+		LOG.info("VoicedCommandHandler: Loaded " + _datatable.size() + " handlers");
 		
 	}
 	

@@ -1,6 +1,3 @@
-# Made by Mr. Have fun! Version 0.2
-# Shadow Weapon Coupons contributed by BiTi for the Official L2J Datapack Project
-# Visit http://forum.l2jdp.com for more details
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
@@ -290,7 +287,7 @@ class Quest (JQuest) :
             st.set("id",str(st.getInt("id")+1))
    elif npcId == 27058 :
         if st.getInt("cond") and st.getQuestItemsCount(BEAR_PIC) == 1 and st.getQuestItemsCount(HONEY_JAR) < 5 :
-          if npc.isSpoil() :
+          if npc.getSpoilerId() != 0 :
             st.giveItems(HONEY_JAR,1)
             if st.getQuestItemsCount(HONEY_JAR) == 5 :
               st.playSound("ItemSound.quest_middle")
@@ -299,7 +296,7 @@ class Quest (JQuest) :
               st.playSound("ItemSound.quest_itemget")
    elif npcId == 20403 :
         if st.getInt("cond") and st.getQuestItemsCount(TARANTULA_PIC) == 1 and st.getQuestItemsCount(BEAD) < 20 :
-          if npc.isSpoil() :
+          if npc.getSpoilerId() != 0 :
             if st.getRandom(2) == 0 :
               st.giveItems(BEAD,1)
               if st.getQuestItemsCount(BEAD) == 20 :
@@ -309,7 +306,7 @@ class Quest (JQuest) :
                 st.playSound("ItemSound.quest_itemget")
    elif npcId == 20508 :
         if st.getInt("cond") and st.getQuestItemsCount(TARANTULA_PIC) == 1 and st.getQuestItemsCount(BEAD) < 20 :
-          if npc.isSpoil() :
+          if npc.getSpoilerId() != 0 :
             if st.getRandom(10) < 6 :
               st.giveItems(BEAD,1)
               if st.getQuestItemsCount(BEAD) == 20 :

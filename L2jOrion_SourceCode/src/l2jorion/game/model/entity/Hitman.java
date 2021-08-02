@@ -19,21 +19,17 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.CharNameTable;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
-/**
- * @author Setekh
- */
 public class Hitman
 {
 	private static Hitman _instance;

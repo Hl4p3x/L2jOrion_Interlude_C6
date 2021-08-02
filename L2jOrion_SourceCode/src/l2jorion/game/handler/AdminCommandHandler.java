@@ -19,8 +19,6 @@
 package l2jorion.game.handler;
 
 import java.util.Arrays;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javolution.util.FastMap;
 import l2jorion.Config;
@@ -30,6 +28,7 @@ import l2jorion.game.handler.admin.AdminAnnouncements;
 import l2jorion.game.handler.admin.AdminBan;
 import l2jorion.game.handler.admin.AdminBanHwid;
 import l2jorion.game.handler.admin.AdminBuffs;
+import l2jorion.game.handler.admin.AdminCHSiege;
 import l2jorion.game.handler.admin.AdminCTFEngine;
 import l2jorion.game.handler.admin.AdminCache;
 import l2jorion.game.handler.admin.AdminChangeAccessLevel;
@@ -94,6 +93,8 @@ import l2jorion.game.handler.admin.AdminVIPEngine;
 import l2jorion.game.handler.admin.AdminWho;
 import l2jorion.game.handler.admin.AdminZone;
 import l2jorion.game.handler.admin.Hero;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class AdminCommandHandler
 {
@@ -123,6 +124,7 @@ public class AdminCommandHandler
 		
 		registerAdminCommandHandler(new AdminAdmin());
 		registerAdminCommandHandler(new AdminInvul());
+		registerAdminCommandHandler(new AdminCHSiege());
 		registerAdminCommandHandler(new AdminDelete());
 		registerAdminCommandHandler(new AdminKill());
 		registerAdminCommandHandler(new AdminFakeOnline());
@@ -191,7 +193,7 @@ public class AdminCommandHandler
 		registerAdminCommandHandler(new Hero());
 		registerAdminCommandHandler(new AdminPhantom());
 		
-		LOG.info("AdminCommandHandler: Loaded " + _datatable.size() + " handlers.");
+		LOG.info("AdminCommandHandler: Loaded " + _datatable.size() + " handlers");
 		
 		if (Config.DEBUG)
 		{

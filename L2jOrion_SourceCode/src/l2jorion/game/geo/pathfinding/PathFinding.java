@@ -20,21 +20,19 @@ package l2jorion.game.geo.pathfinding;
 
 import java.util.List;
 
-import l2jorion.Config;
 import l2jorion.game.geo.pathfinding.cellnodes.CellPathFinding;
-import l2jorion.game.geo.pathfinding.geonodes.GeoPathFinding;
 import l2jorion.game.model.L2World;
 
 public abstract class PathFinding
 {
 	public static PathFinding getInstance()
 	{
-		if (Config.GEODATA == 1)
-		{
-			// Higher Memory Usage, Smaller Cpu Usage
-			return GeoPathFinding.getInstance();
-		}
-		// Cell pathfinding, calculated directly from geodata files
+		// if (Config.GEODATA)
+		// {
+		// Higher Memory Usage, Smaller Cpu Usage
+		// return GeoPathFinding.getInstance();
+		// }
+		
 		return CellPathFinding.getInstance();
 	}
 	
@@ -42,21 +40,11 @@ public abstract class PathFinding
 	
 	public abstract List<AbstractNodeLoc> findPath(int x, int y, int z, int tx, int ty, int tz, int instanceId, boolean playable);
 	
-	/**
-	 * Convert geodata position to pathnode position
-	 * @param geo_pos
-	 * @return pathnode position
-	 */
 	public short getNodePos(int geo_pos)
 	{
-		return (short) (geo_pos >> 3); // OK?
+		return (short) (geo_pos >> 3);
 	}
 	
-	/**
-	 * Convert node position to pathnode block position
-	 * @param node_pos
-	 * @return pathnode block position (0...255)
-	 */
 	public short getNodeBlock(int node_pos)
 	{
 		return (short) (node_pos % 256);

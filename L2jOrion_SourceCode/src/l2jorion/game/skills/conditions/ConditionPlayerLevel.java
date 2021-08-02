@@ -22,12 +22,8 @@ package l2jorion.game.skills.conditions;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public class ConditionPlayerLevel extends Condition
 {
-	
 	private final int _level;
 	
 	public ConditionPlayerLevel(final int level)

@@ -21,12 +21,11 @@
 
 package l2jorion.game.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.skills.effects.EffectForce;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 /**
  * @author ProGramMoS, L2jOrion

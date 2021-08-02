@@ -32,36 +32,24 @@ import l2jorion.game.model.Inventory;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.L2GameClient;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * This class ...
- * @version $Revision: 1.8.2.4.2.6 $ $Date: 2005/04/06 16:13:46 $
- */
 public class CharSelectInfo extends L2GameServerPacket
 {
-	// d SdSddddddddddffddddddddddddddddddddddddddddddddddddddddddddddffd
 	private static final String _S__1F_CHARSELECTINFO = "[S] 1F CharSelectInfo";
 	
 	private static Logger LOG = LoggerFactory.getLogger(CharSelectInfo.class);
 	
 	private final String _loginName;
-	
 	private final int _sessionId;
-	
 	private int _activeId;
 	
 	private final CharSelectInfoPackage[] _characterPackages;
 	
-	/**
-	 * @param loginName
-	 * @param sessionId
-	 */
 	public CharSelectInfo(final String loginName, final int sessionId)
 	{
 		_sessionId = sessionId;
@@ -96,16 +84,21 @@ public class CharSelectInfo extends L2GameServerPacket
 		if (_activeId == -1)
 		{
 			for (int i = 0; i < size; i++)
+			{
 				if (lastAccess < _characterPackages[i].getLastAccess())
 				{
 					lastAccess = _characterPackages[i].getLastAccess();
 					_activeId = i;
 				}
+			}
 		}
 		
 		for (int i = 0; i < size; i++)
 		{
 			final CharSelectInfoPackage charInfoPackage = _characterPackages[i];
+			
+			final int fakeArmorObjectId = charInfoPackage.getFakeArmorObjectId();
+			final int fakeArmorItemId = charInfoPackage.getFakeArmorItemId();
 			
 			writeS(charInfoPackage.getName());
 			writeD(charInfoPackage.getCharId());
@@ -156,13 +149,22 @@ public class CharSelectInfo extends L2GameServerPacket
 			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_NECK));
 			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_RFINGER));
 			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LFINGER));
-			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_HEAD));
+			
+			// writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_HEAD));
+			writeD(fakeArmorObjectId == 0 ? charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_HEAD) : 0);
+			
 			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_RHAND));
 			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LHAND));
-			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_GLOVES));
-			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_CHEST));
-			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LEGS));
-			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_FEET));
+			
+			// writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_GLOVES));
+			// writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_CHEST));
+			// writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LEGS));
+			// writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_FEET));
+			writeD(fakeArmorObjectId == 0 ? charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_GLOVES) : 0);
+			writeD(fakeArmorObjectId == 0 ? charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_CHEST) : fakeArmorObjectId);
+			writeD(fakeArmorObjectId == 0 ? charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LEGS) : 0);
+			writeD(fakeArmorObjectId == 0 ? charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_FEET) : 0);
+			
 			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_BACK));
 			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LRHAND));
 			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_HAIR));
@@ -174,13 +176,22 @@ public class CharSelectInfo extends L2GameServerPacket
 			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_NECK));
 			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_RFINGER));
 			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LFINGER));
-			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_HEAD));
+			
+			// writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_HEAD));
+			writeD(fakeArmorItemId == 0 ? charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_HEAD) : 0);
+			
 			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_RHAND));
 			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LHAND));
-			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_GLOVES));
-			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_CHEST));
-			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LEGS));
-			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_FEET));
+			
+			// writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_GLOVES));
+			// writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_CHEST));
+			// writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LEGS));
+			// writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_FEET));
+			writeD(fakeArmorItemId == 0 ? charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_GLOVES) : 0);
+			writeD(fakeArmorItemId == 0 ? charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_CHEST) : fakeArmorItemId);
+			writeD(fakeArmorItemId == 0 ? charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LEGS) : 0);
+			writeD(fakeArmorItemId == 0 ? charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_FEET) : 0);
+			
 			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_BACK));
 			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LRHAND));
 			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_HAIR));
@@ -198,10 +209,14 @@ public class CharSelectInfo extends L2GameServerPacket
 			int deletedays = 0;
 			
 			if (deleteTime > 0)
+			{
 				deletedays = (int) ((deleteTime - System.currentTimeMillis()) / 1000);
+			}
 			else if (accesslevels < 0)
+			{
 				deletedays = -1; // like L2OFF player looks dead if he is banned.
-				
+			}
+			
 			writeD(deletedays); // days left before
 			// delete .. if != 0
 			// then char is inactive
@@ -232,7 +247,13 @@ public class CharSelectInfo extends L2GameServerPacket
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
-			final PreparedStatement statement = con.prepareStatement("SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, sp, karma, pvpkills, pkkills, clanid, maxload, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, base_class FROM characters WHERE account_name=?");
+			PreparedStatement statement = con.prepareStatement("SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, sp, karma, pvpkills, pkkills, clanid, maxload, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, base_class FROM characters WHERE account_name=?");
+			
+			if (Config.FAKE_ARMORS)
+			{
+				statement = con.prepareStatement("SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, sp, karma, pvpkills, pkkills, clanid, maxload, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, base_class, fakeArmorObjectId, fakeArmorItemId, fakeWeaponObjectId, fakeWeaponItemId FROM characters WHERE account_name=?");
+			}
+			
 			statement.setString(1, _loginName);
 			final ResultSet charList = statement.executeQuery();
 			
@@ -257,8 +278,6 @@ public class CharSelectInfo extends L2GameServerPacket
 		}
 		
 		return characterList.toArray(new CharSelectInfoPackage[characterList.size()]);
-		
-		// return new CharSelectInfoPackage[0];
 	}
 	
 	private void loadCharacterSubclassInfo(final CharSelectInfoPackage charInfopackage, final int ObjectId, final int activeClassId)
@@ -339,6 +358,12 @@ public class CharSelectInfo extends L2GameServerPacket
 		
 		charInfopackage.setAccessLevel(chardata.getInt("accesslevel"));
 		
+		if (Config.FAKE_ARMORS)
+		{
+			charInfopackage.setFakeArmorObjectId(chardata.getInt("fakeArmorObjectId"));
+			charInfopackage.setFakeArmorItemId(chardata.getInt("fakeArmorItemId"));
+		}
+		
 		final int baseClassId = chardata.getInt("base_class");
 		final int activeClassId = chardata.getInt("classid");
 		
@@ -378,20 +403,18 @@ public class CharSelectInfo extends L2GameServerPacket
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.warn("Could not restore augmentation info: " + e);
 			}
 			finally
 			{
 				CloseUtil.close(con);
-				con = null;
 			}
 		}
 		
-		/*
-		 * Check if the base class is set to zero and alse doesn't match with the current active class, otherwise send the base class ID. This prevents chars created before base class was introduced from being displayed incorrectly.
-		 */
 		if (baseClassId == 0 && activeClassId > 0)
 		{
 			charInfopackage.setBaseClassId(activeClassId);

@@ -30,21 +30,13 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
+import l2jorion.game.model.Location;
 import l2jorion.game.network.serverpackets.NpcInfo;
 import l2jorion.game.network.serverpackets.StopMove;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
-import l2jorion.util.Point3D;
 import l2jorion.util.random.Rnd;
 
-// While a tamed beast behaves a lot like a pet (ingame) and does have
-// an owner, in all other aspects, it acts like a mob.
-// In addition, it can be fed in order to increase its duration.
-// This class handles the running tasks, AI, and feed of the mob.
-// The (mostly optional) AI on feeding the spawn is handled by the datapack ai script
-/**
- * The Class L2TamedBeastInstance.
- */
 public final class L2TamedBeastInstance extends L2FeedableBeastInstance
 {
 	
@@ -134,9 +126,9 @@ public final class L2TamedBeastInstance extends L2FeedableBeastInstance
 	 * Gets the home.
 	 * @return the home
 	 */
-	public Point3D getHome()
+	public Location getHome()
 	{
-		return new Point3D(_homeX, _homeY, _homeZ);
+		return new Location(_homeX, _homeY, _homeZ);
 	}
 	
 	/**
@@ -217,7 +209,9 @@ public final class L2TamedBeastInstance extends L2FeedableBeastInstance
 	public boolean doDie(final L2Character killer)
 	{
 		if (!super.doDie(killer))
+		{
 			return false;
+		}
 		
 		getAI().stopFollow();
 		cleanTasks();
@@ -352,11 +346,15 @@ public final class L2TamedBeastInstance extends L2FeedableBeastInstance
 		
 		// if the owner is dead, do nothing...
 		if (_owner.isDead())
+		{
 			return;
+		}
 		
 		// if the tamed beast is currently in the middle of casting, let it complete its skill...
 		if (isCastingNow())
+		{
 			return;
+		}
 		
 		final float HPRatio = (float) _owner.getCurrentHp() / _owner.getMaxHp();
 		
@@ -387,7 +385,10 @@ public final class L2TamedBeastInstance extends L2FeedableBeastInstance
 			for (final L2Skill skill : getTemplate().getSkills().values())
 			{
 				// if the skill is a buff, check if the owner has it already [ owner.getEffect(L2Skill skill) ]
-				if (Rnd.get(5) < chance && (skill.getSkillType() == L2Skill.SkillType.HEAL || skill.getSkillType() == L2Skill.SkillType.HOT || skill.getSkillType() == L2Skill.SkillType.BALANCE_LIFE || skill.getSkillType() == L2Skill.SkillType.HEAL_PERCENT || skill.getSkillType() == L2Skill.SkillType.HEAL_STATIC || skill.getSkillType() == L2Skill.SkillType.COMBATPOINTHEAL || skill.getSkillType() == L2Skill.SkillType.COMBATPOINTPERCENTHEAL || skill.getSkillType() == L2Skill.SkillType.CPHOT || skill.getSkillType() == L2Skill.SkillType.MANAHEAL || skill.getSkillType() == L2Skill.SkillType.MANA_BY_LEVEL || skill.getSkillType() == L2Skill.SkillType.MANAHEAL_PERCENT || skill.getSkillType() == L2Skill.SkillType.MANARECHARGE || skill.getSkillType() == L2Skill.SkillType.MPHOT))
+				if (Rnd.get(5) < chance
+					&& (skill.getSkillType() == L2Skill.SkillType.HEAL || skill.getSkillType() == L2Skill.SkillType.HOT || skill.getSkillType() == L2Skill.SkillType.BALANCE_LIFE || skill.getSkillType() == L2Skill.SkillType.HEAL_PERCENT || skill.getSkillType() == L2Skill.SkillType.HEAL_STATIC
+						|| skill.getSkillType() == L2Skill.SkillType.COMBATPOINTHEAL || skill.getSkillType() == L2Skill.SkillType.COMBATPOINTPERCENTHEAL || skill.getSkillType() == L2Skill.SkillType.CPHOT || skill.getSkillType() == L2Skill.SkillType.MANAHEAL
+						|| skill.getSkillType() == L2Skill.SkillType.MANA_BY_LEVEL || skill.getSkillType() == L2Skill.SkillType.MANAHEAL_PERCENT || skill.getSkillType() == L2Skill.SkillType.MANARECHARGE || skill.getSkillType() == L2Skill.SkillType.MPHOT))
 				{
 					sitCastAndFollow(skill, _owner);
 					return;
@@ -549,11 +550,15 @@ public final class L2TamedBeastInstance extends L2FeedableBeastInstance
 			
 			// if the owner is dead, do nothing...
 			if (owner.isDead())
+			{
 				return;
+			}
 			
 			// if the tamed beast is currently casting a spell, do not interfere (do not attempt to cast anything new yet).
 			if (isCastingNow())
+			{
 				return;
+			}
 			
 			int totalBuffsOnOwner = 0;
 			int i = 0;
@@ -567,7 +572,9 @@ public final class L2TamedBeastInstance extends L2FeedableBeastInstance
 				if (skill.getSkillType() == L2Skill.SkillType.BUFF)
 				{
 					if (i++ == rand)
+					{
 						buffToGive = skill;
+					}
 					
 					if (owner.getFirstEffect(skill) != null)
 					{

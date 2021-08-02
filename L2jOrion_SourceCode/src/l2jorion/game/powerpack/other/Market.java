@@ -25,9 +25,6 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.text.TextBuilder;
 import javolution.util.FastList;
 import l2jorion.game.community.manager.MailBBSManager;
@@ -39,7 +36,6 @@ import l2jorion.game.handler.IBBSHandler;
 import l2jorion.game.handler.ICustomByPassHandler;
 import l2jorion.game.handler.IVoicedCommandHandler;
 import l2jorion.game.idfactory.IdFactory;
-import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2ItemMarketModel;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2World;
@@ -49,7 +45,8 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.event.CTF;
 import l2jorion.game.model.entity.event.DM;
 import l2jorion.game.model.entity.event.TvT;
-import l2jorion.game.model.entity.olympiad.Olympiad;
+import l2jorion.game.model.olympiad.OlympiadManager;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ExShowScreenMessage;
@@ -64,8 +61,10 @@ import l2jorion.game.templates.L2EtcItemType;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.L2WeaponType;
 import l2jorion.game.util.Util;
-import l2jorion.util.database.L2DatabaseFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
+import l2jorion.util.database.L2DatabaseFactory;
 
 public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBSHandler
 {
@@ -75,31 +74,34 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 	
 	private static Market _instance = null;
 	
-	private final int ITEMS_PER_PAGE	= 8;
+	private final int ITEMS_PER_PAGE = 8;
 	
-	private final int ALL				= 0x00;
-	private final int WEAPON			= 0x01;
-	private final int ARMOR				= 0x02;
-	private final int RECIPE 			= 0x03;
-	private final int SHOTS 			= 0x04;
-	private final int BOOK 				= 0x05;
-	private final int OTHER 			= 0x06;
-	private final int MATERIAL			= 0x07;
+	private final int ALL = 0x00;
+	private final int WEAPON = 0x01;
+	private final int ARMOR = 0x02;
+	private final int RECIPE = 0x03;
+	private final int SHOTS = 0x04;
+	private final int BOOK = 0x05;
+	private final int OTHER = 0x06;
+	private final int MATERIAL = 0x07;
 	
-	//Item Grade
-	private final int NO_G 				= 0x00;
-	private final int D_G 				= 0x01;
-	private final int C_G 				= 0x02;
-	private final int B_G 				= 0x03;
-	private final int A_G 				= 0x04;
-	private final int S_G 				= 0x05;
-	private final int AUG 				= 0x06;
-	private final int ALL_G				= 0x07;
+	// Item Grade
+	private final int NO_G = 0x00;
+	private final int D_G = 0x01;
+	private final int C_G = 0x02;
+	private final int B_G = 0x03;
+	private final int A_G = 0x04;
+	private final int S_G = 0x05;
+	private final int AUG = 0x06;
+	private final int ALL_G = 0x07;
 	
 	@Override
 	public String[] getVoicedCommandList()
 	{
-		return new String[] {PowerPackConfig.MARKET_COMMAND};
+		return new String[]
+		{
+			PowerPackConfig.MARKET_COMMAND
+		};
 	}
 	
 	public static Market getInstance()
@@ -121,35 +123,62 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		
 		String msg = null;
 		
-		if(activeChar.isSitting())
+		if (activeChar.isSitting())
+		{
 			msg = "Market is not available when you sit.";
-		else if(PowerPackConfig.MARKET_EXCLUDE_ON.contains("ALL"))
+		}
+		else if (PowerPackConfig.MARKET_EXCLUDE_ON.contains("ALL"))
+		{
 			msg = "Market is not available in this area.";
-		else if(PowerPackConfig.MARKET_EXCLUDE_ON.contains("CURSED") && activeChar.isCursedWeaponEquiped())
-			msg = "Market is not available with the cursed weapon."; 
-		else if(PowerPackConfig.MARKET_EXCLUDE_ON.contains("ATTACK") && AttackStanceTaskManager.getInstance().getAttackStanceTask(activeChar))
+		}
+		else if (PowerPackConfig.MARKET_EXCLUDE_ON.contains("CURSED") && activeChar.isCursedWeaponEquiped())
+		{
+			msg = "Market is not available with the cursed weapon.";
+		}
+		else if (PowerPackConfig.MARKET_EXCLUDE_ON.contains("ATTACK") && AttackStanceTaskManager.getInstance().getAttackStanceTask(activeChar))
+		{
 			msg = "Market is not available during the battle.";
-		else if(PowerPackConfig.MARKET_EXCLUDE_ON.contains("DUNGEON") && activeChar.isIn7sDungeon())
+		}
+		else if (PowerPackConfig.MARKET_EXCLUDE_ON.contains("DUNGEON") && activeChar.isIn7sDungeon())
+		{
 			msg = "Market is not available in the catacomb and necropolis.";
-		else if(PowerPackConfig.MARKET_EXCLUDE_ON.contains("RB") && activeChar.isInsideZone(L2Character.ZONE_NOSUMMONFRIEND))
+		}
+		else if (PowerPackConfig.MARKET_EXCLUDE_ON.contains("RB") && activeChar.isInsideZone(ZoneId.ZONE_NOSUMMONFRIEND))
+		{
 			msg = "Market is not available in this area.";
-		else if(PowerPackConfig.MARKET_EXCLUDE_ON.contains("PVP") && activeChar.isInsideZone(L2Character.ZONE_PVP))
+		}
+		else if (PowerPackConfig.MARKET_EXCLUDE_ON.contains("PVP") && activeChar.isInsideZone(ZoneId.ZONE_PVP))
+		{
 			msg = "Market is not available in this area.";
-		else if(PowerPackConfig.MARKET_EXCLUDE_ON.contains("PEACE") && activeChar.isInsideZone(L2Character.ZONE_PEACE))
+		}
+		else if (PowerPackConfig.MARKET_EXCLUDE_ON.contains("PEACE") && activeChar.isInsideZone(ZoneId.ZONE_PEACE))
+		{
 			msg = "Market is not available in this area.";
-		else if(PowerPackConfig.MARKET_EXCLUDE_ON.contains("SIEGE") && activeChar.isInsideZone(L2Character.ZONE_SIEGE))
+		}
+		else if (PowerPackConfig.MARKET_EXCLUDE_ON.contains("SIEGE") && activeChar.isInsideZone(ZoneId.ZONE_SIEGE))
+		{
 			msg = "Market is not available in this area.";
-		else if(PowerPackConfig.MARKET_EXCLUDE_ON.contains("OLYMPIAD") && (activeChar.isInOlympiadMode() || activeChar.isInsideZone(L2Character.ZONE_OLY) || Olympiad.getInstance().isRegistered(activeChar) 
-				|| Olympiad.getInstance().isRegisteredInComp(activeChar))) 
+		}
+		else if (PowerPackConfig.MARKET_EXCLUDE_ON.contains("OLYMPIAD") && (activeChar.isInOlympiadMode() || activeChar.isInsideZone(ZoneId.ZONE_OLY) || OlympiadManager.getInstance().isRegistered(activeChar) || OlympiadManager.getInstance().isRegisteredInComp(activeChar)))
+		{
 			msg = "Market is not available at Olympiad.";
-		else if(PowerPackConfig.MARKET_EXCLUDE_ON.contains("EVENT") && (activeChar._inEvent))
+		}
+		else if (PowerPackConfig.MARKET_EXCLUDE_ON.contains("EVENT") && (activeChar._inEvent))
+		{
 			msg = "Market is not available at the opening event.";
-		else if(PowerPackConfig.MARKET_EXCLUDE_ON.contains("TVT") && activeChar._inEventTvT && TvT.is_started() )
+		}
+		else if (PowerPackConfig.MARKET_EXCLUDE_ON.contains("TVT") && activeChar._inEventTvT && TvT.is_started())
+		{
 			msg = "Market is not available in TVT.";
-		else if(PowerPackConfig.MARKET_EXCLUDE_ON.contains("CTF") && activeChar._inEventCTF && CTF.is_started() )
+		}
+		else if (PowerPackConfig.MARKET_EXCLUDE_ON.contains("CTF") && activeChar._inEventCTF && CTF.is_started())
+		{
 			msg = "Market is not available in CTF.";
-		else if(PowerPackConfig.MARKET_EXCLUDE_ON.contains("DM") && activeChar._inEventDM && DM.is_started() )
+		}
+		else if (PowerPackConfig.MARKET_EXCLUDE_ON.contains("DM") && activeChar._inEventDM && DM.is_started())
+		{
 			msg = "Market is not available in DM.";
+		}
 		
 		if (msg != null)
 		{
@@ -180,7 +209,10 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		return false;
 	}
 	
-	private static String [] _CMD = {"market"};
+	private static String[] _CMD =
+	{
+		"market"
+	};
 	
 	@Override
 	public String[] getByPassCommands()
@@ -206,7 +238,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 			return;
 		}
 		
-		L2NpcInstance marketNpc = null; 
+		L2NpcInstance marketNpc = null;
 		
 		if (!PowerPackConfig.MARKET_USEBBS && !PowerPackConfig.MARKET_USECOMMAND)
 		{
@@ -247,12 +279,12 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 					return;
 				}
 				
-				int bitmask = new Integer(st.nextToken());
+				int bitmask = Integer.valueOf(st.nextToken());
 				int pgId = 0;
 				
 				if (st.hasMoreTokens())
 				{
-					pgId = new Integer(st.nextToken());
+					pgId = Integer.valueOf(st.nextToken());
 				}
 				
 				searchList = ItemMarketTable.getInstance().getSearchItems(itemName);
@@ -275,7 +307,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 			int pId = 0;
 			if (st.hasMoreTokens())
 			{
-				pId = new Integer(st.nextToken());
+				pId = Integer.valueOf(st.nextToken());
 			}
 			showPrivateItemList(list, pId, player);
 		}
@@ -283,11 +315,11 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		{
 			if (st.hasMoreTokens())
 			{
-				int bitmask = new Integer(st.nextToken());
+				int bitmask = Integer.valueOf(st.nextToken());
 				int pgId = 0;
 				if (st.hasMoreTokens())
 				{
-					pgId = new Integer(st.nextToken());
+					pgId = Integer.valueOf(st.nextToken());
 				}
 				list = ItemMarketTable.getInstance().getAllItems();
 				if (list != null)
@@ -314,21 +346,21 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		{
 			if (st.hasMoreTokens())
 			{
-				int itemObjId = new Integer(st.nextToken());
+				int itemObjId = Integer.valueOf(st.nextToken());
 				if (st.hasMoreTokens())
 				{
-					int count = new Integer(st.nextToken());
+					int count = Integer.valueOf(st.nextToken());
 					
 					if (st.hasMoreTokens())
 					{
-						int price = new Integer(st.nextToken());
+						int price = Integer.valueOf(st.nextToken());
 						
-						int augmentationId = new Integer(st.nextToken());
-						int augmentationSkill = new Integer(st.nextToken());
-						int augmentationSkillLevel = new Integer(st.nextToken());
+						int augmentationId = Integer.valueOf(st.nextToken());
+						int augmentationSkill = Integer.valueOf(st.nextToken());
+						int augmentationSkillLevel = Integer.valueOf(st.nextToken());
 						String augmentationBonus = st.nextToken();
 						
-						int priceItem = new Integer(st.nextToken());
+						int priceItem = Integer.valueOf(st.nextToken());
 						
 						L2ItemInstance item = player.getInventory().getItemByObjectId(itemObjId);
 						list = getItemList(player);
@@ -336,7 +368,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 						if (canAddItem(item, count, list, player))
 						{
 							player.destroyItem("Market Add", item.getObjectId(), count, null, true);
-							addItem(player, item, count, priceItem,  price, augmentationId, augmentationSkill, augmentationSkillLevel, augmentationBonus);
+							addItem(player, item, count, priceItem, price, augmentationId, augmentationSkill, augmentationSkillLevel, augmentationBonus);
 						}
 						else
 						{
@@ -353,7 +385,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 			int pageId = 0;
 			if (st.hasMoreTokens())
 			{
-				pageId = new Integer(st.nextToken());
+				pageId = Integer.valueOf(st.nextToken());
 			}
 			showInvList(player, pageId);
 		}
@@ -361,13 +393,13 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		{
 			if (st.hasMoreTokens())
 			{
-				int pgId = new Integer(st.nextToken());
+				int pgId = Integer.valueOf(st.nextToken());
 				if (st.hasMoreTokens())
 				{
-					int bitmask = new Integer(st.nextToken());
+					int bitmask = Integer.valueOf(st.nextToken());
 					if (st.hasMoreTokens())
 					{
-						int itemObjId = new Integer(st.nextToken());
+						int itemObjId = Integer.valueOf(st.nextToken());
 						L2ItemMarketModel mrktItem = ItemMarketTable.getInstance().getItem(itemObjId);
 						if (mrktItem != null)
 						{
@@ -386,7 +418,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		{
 			if (st.hasMoreTokens())
 			{
-				int itemObjId = new Integer(st.nextToken());
+				int itemObjId = Integer.valueOf(st.nextToken());
 				
 				NpcHtmlMessage html = new NpcHtmlMessage(1);
 				
@@ -418,38 +450,38 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 					{
 						if (item.getAugmentation().getBonus()._stats.length > 0)
 						{
-							stats1 = (item.getAugmentation().getBonus()._stats[0])+":_+"+(item.getAugmentation().getBonus()._values[0]);
+							stats1 = (item.getAugmentation().getBonus()._stats[0]) + ":_+" + (item.getAugmentation().getBonus()._values[0]);
 							stats1 = stats1.toLowerCase();
 							stats1 = stats1.substring(0, 1).toUpperCase() + stats1.substring(1);
-							stats1 = stats1+"<br1>";
+							stats1 = stats1 + "<br1>";
 						}
 						
 						if (item.getAugmentation().getBonus()._stats.length > 1)
 						{
-							stats2 = (item.getAugmentation().getBonus()._stats[1])+":_+"+(item.getAugmentation().getBonus()._values[1]);
+							stats2 = (item.getAugmentation().getBonus()._stats[1]) + ":_+" + (item.getAugmentation().getBonus()._values[1]);
 							stats2 = stats2.toLowerCase();
 							stats2 = stats2.substring(0, 1).toUpperCase() + stats2.substring(1);
-							stats2 = stats2+"<br1>";
+							stats2 = stats2 + "<br1>";
 						}
 						
 						if (item.getAugmentation().getBonus()._stats.length > 2)
 						{
-							stats3 = (item.getAugmentation().getBonus()._stats[2])+":_+"+(item.getAugmentation().getBonus()._values[2]);
+							stats3 = (item.getAugmentation().getBonus()._stats[2]) + ":_+" + (item.getAugmentation().getBonus()._values[2]);
 							stats3 = stats3.toLowerCase();
 							stats3 = stats3.substring(0, 1).toUpperCase() + stats3.substring(1);
-							stats3 = stats3+"<br1>";
+							stats3 = stats3 + "<br1>";
 						}
 						
 						if (item.getAugmentation().getBonus()._stats.length > 3)
 						{
-							stats4 = (item.getAugmentation().getBonus()._stats[3])+":_+"+(item.getAugmentation().getBonus()._values[3]);
+							stats4 = (item.getAugmentation().getBonus()._stats[3]) + ":_+" + (item.getAugmentation().getBonus()._values[3]);
 							stats4 = stats4.toLowerCase();
 							stats4 = stats4.substring(0, 1).toUpperCase() + stats4.substring(1);
-							stats4 = stats4+"<br1>";
+							stats4 = stats4 + "<br1>";
 						}
 					}
 					
-					augmentationBonus = stats1+""+stats2+""+stats3+""+stats4;
+					augmentationBonus = stats1 + "" + stats2 + "" + stats3 + "" + stats4;
 					
 					if (item.getAugmentation().getSkill() != null)
 					{
@@ -462,9 +494,9 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 				for (String itemId : PowerPackConfig.PRICE_ITEMS.split(","))
 				{
 					String itemName = getItemNameById(Integer.parseInt(itemId));
-					itemName = itemName.replaceAll(" ","_");
+					itemName = itemName.replaceAll(" ", "_");
 					
-					htm.append(itemName+";");
+					htm.append(itemName + ";");
 					
 					_priceItems.put(itemName, Integer.parseInt(itemId));
 				}
@@ -474,11 +506,11 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 				
 				if (item.getEnchantLevel() > 0)
 				{
-					html.replace("%itemName%", "<font color=3399ff>+"+item.getEnchantLevel()+"</font> "+(item.isAugmented() ? "Augmented" : "")+" "+item.getItemName());
+					html.replace("%itemName%", "<font color=3399ff>+" + item.getEnchantLevel() + "</font> " + (item.isAugmented() ? "Augmented" : "") + " " + item.getItemName());
 				}
 				else
 				{
-					html.replace("%itemName%", (item.isAugmented() ? "Augmented" : "")+" "+item.getItemName());
+					html.replace("%itemName%", (item.isAugmented() ? "Augmented" : "") + " " + item.getItemName());
 				}
 				
 				html.replace("%count%", Util.formatAdena(item.getCount()));
@@ -498,10 +530,10 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		{
 			if (st.hasMoreTokens())
 			{
-				int pgId = new Integer(st.nextToken());
+				int pgId = Integer.valueOf(st.nextToken());
 				if (st.hasMoreTokens())
 				{
-					int itemObjId = new Integer(st.nextToken());
+					int itemObjId = Integer.valueOf(st.nextToken());
 					L2ItemMarketModel mrktItem = ItemMarketTable.getInstance().getItem(itemObjId);
 					if (mrktItem != null)
 					{
@@ -514,7 +546,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		{
 			if (st.hasMoreTokens())
 			{
-				int itemObjId = new Integer(st.nextToken());
+				int itemObjId = Integer.valueOf(st.nextToken());
 				L2ItemMarketModel mrktItem = ItemMarketTable.getInstance().getItem(itemObjId);
 				if (mrktItem != null && player.getObjectId() == mrktItem.getOwnerId())
 				{
@@ -554,17 +586,17 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 					
 					if (mrktItem.getCount() > 1)
 					{
-						sendMsg("Removed succesfully: <font color=\"LEVEL\">"+mrktItem.getItemName()+"</font> ("+Util.formatAdena(mrktItem.getCount())+").", player);
+						sendMsg("Removed succesfully: <font color=\"LEVEL\">" + mrktItem.getItemName() + "</font> (" + Util.formatAdena(mrktItem.getCount()) + ").", player);
 					}
 					else
 					{
 						if (mrktItem.getEnchLvl() > 0)
 						{
-							sendMsg("Removed succesfully: <font color=3399ff>+"+mrktItem.getEnchLvl()+"</font> <font color=\"LEVEL\">"+(item.isAugmented() ? "Augmented" : "")+" "+mrktItem.getItemName()+"</font>.", player);
+							sendMsg("Removed succesfully: <font color=3399ff>+" + mrktItem.getEnchLvl() + "</font> <font color=\"LEVEL\">" + (item.isAugmented() ? "Augmented" : "") + " " + mrktItem.getItemName() + "</font>.", player);
 						}
 						else
 						{
-							sendMsg("Removed succesfully: <font color=\"LEVEL\">"+(item.isAugmented() ? "Augmented" : "")+" "+mrktItem.getItemName()+"</font>.", player);
+							sendMsg("Removed succesfully: <font color=\"LEVEL\">" + (item.isAugmented() ? "Augmented" : "") + " " + mrktItem.getItemName() + "</font>.", player);
 						}
 					}
 					
@@ -582,7 +614,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		{
 			if (st.hasMoreTokens())
 			{
-				int itemObjId = new Integer(st.nextToken());
+				int itemObjId = Integer.valueOf(st.nextToken());
 				L2ItemInstance item = player.getInventory().getItemByObjectId(itemObjId);
 				if (item == null)
 				{
@@ -591,7 +623,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 				
 				if (st.hasMoreTokens())
 				{
-					int count = new Integer(st.nextToken());
+					int count = Integer.valueOf(st.nextToken());
 					if (count <= 0 || item.getCount() < count)
 					{
 						sendMsg("Item count must be a valid value.", player);
@@ -600,7 +632,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 					
 					if (st.hasMoreTokens())
 					{
-						int price = new Integer(st.nextToken());
+						int price = Integer.valueOf(st.nextToken());
 						if (price <= 0)
 						{
 							sendMsg("Price must be a valid value.", player);
@@ -614,26 +646,26 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 						
 						String priceItem = st.nextToken();
 						
-						String priceItemName = priceItem.replaceAll("_"," ");
+						String priceItemName = priceItem.replaceAll("_", " ");
 						
-						String priceItemId = ""+_priceItems.get(priceItem);
+						String priceItemId = "" + _priceItems.get(priceItem);
 						
 						player.sendPacket(ActionFailed.STATIC_PACKET);
 						String filename = "data/html/market/comfirm.htm";
 						NpcHtmlMessage html = new NpcHtmlMessage(1);
 						html.setFile(filename);
 						
-						html.replace("%priceItemName%", ""+priceItemName);
-						html.replace("%priceItem%", ""+priceItemId);
-						html.replace("%count%", ""+count);
+						html.replace("%priceItemName%", "" + priceItemName);
+						html.replace("%priceItem%", "" + priceItemId);
+						html.replace("%count%", "" + count);
 						
 						if (item.getEnchantLevel() > 0)
 						{
-							html.replace("%itemName%", "<font color=3399ff>+"+item.getEnchantLevel()+"</font> "+(item.isAugmented() ? "Augmented" : "")+" "+item.getItemName());
+							html.replace("%itemName%", "<font color=3399ff>+" + item.getEnchantLevel() + "</font> " + (item.isAugmented() ? "Augmented" : "") + " " + item.getItemName());
 						}
 						else
 						{
-							html.replace("%itemName%", (item.isAugmented() ? "Augmented" : "")+" "+item.getItemName());
+							html.replace("%itemName%", (item.isAugmented() ? "Augmented" : "") + " " + item.getItemName());
 						}
 						
 						html.replace("%itemIcon%", getItemIcon(item.getItemId()));
@@ -675,29 +707,29 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		
 		if (playerItems > 0)
 		{
-			html.replace("%playerItems%", "<font color=00ff00>"+playerItems+"</font>");
+			html.replace("%playerItems%", "<font color=00ff00>" + playerItems + "</font>");
 		}
 		else
 		{
-			html.replace("%playerItems%", "<font color=ff0000>"+playerItems+"</font>");
+			html.replace("%playerItems%", "<font color=ff0000>" + playerItems + "</font>");
 		}
 		
 		if (allItems > 0)
 		{
-			html.replace("%allItems%", "<font color=00ff00>"+allItems+"</font>");
+			html.replace("%allItems%", "<font color=00ff00>" + allItems + "</font>");
 		}
 		else
 		{
-			html.replace("%allItems%", "<font color=ff0000>"+allItems+"</font>");
+			html.replace("%allItems%", "<font color=ff0000>" + allItems + "</font>");
 		}
 		
 		if (sellers > 0)
 		{
-			html.replace("%sellers%", "<font color=00ff00>"+sellers+"</font>");
+			html.replace("%sellers%", "<font color=00ff00>" + sellers + "</font>");
 		}
 		else
 		{
-			html.replace("%sellers%", "<font color=ff0000>"+sellers+"</font>");
+			html.replace("%sellers%", "<font color=ff0000>" + sellers + "</font>");
 		}
 		
 		TextBuilder reply = new TextBuilder("");
@@ -730,11 +762,11 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 				
 				if (mrktItem.getOwnerId() == player.getObjectId())
 				{
-					link = ("ItemInfo2 "+pageId+" "+mrktItem.getItemObjId());
+					link = ("ItemInfo2 " + pageId + " " + mrktItem.getItemObjId());
 				}
 				else
 				{
-					link = ("ItemInfo "+pageId+" "+mask+" "+mrktItem.getItemObjId());
+					link = ("ItemInfo " + pageId + " " + mask + " " + mrktItem.getItemObjId());
 				}
 				
 				String itemIcon = getItemIcon(mrktItem.getItemId());
@@ -750,26 +782,27 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 					color = 1;
 				}
 				
-				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market "+link+"\" width=32 height=32 back=\""+itemIcon +"\" fore=\""+itemIcon +"\"></td>");
+				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market " + link + "\" width=32 height=32 back=\"" + itemIcon + "\" fore=\"" + itemIcon + "\"></td>");
 				reply.append("<td valign=top width=235>");
 				reply.append("<table border=0 width=100%>");
 				
 				if (mrktItem.getCount() > 1)
 				{
-					reply.append("<tr><td width=235><a action=\"bypass -h custom_market "+link+"\">"+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+" ("+Util.formatAdena(mrktItem.getCount())+")</a> </td><td> "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+					reply.append("<tr><td width=235><a action=\"bypass -h custom_market " + link + "\">" + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName() + " (" + Util.formatAdena(mrktItem.getCount()) + ")</a> </td><td> " + getGrade(mrktItem.getItemGrade())
+						+ "</td></tr>");
 				}
 				else
 				{
 					if (mrktItem.getEnchLvl() > 0)
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market "+link+"\">+"+mrktItem.getEnchLvl()+" "+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+"</a> </td><td>  "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market " + link + "\">+" + mrktItem.getEnchLvl() + " " + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName() + "</a> </td><td>  " + getGrade(mrktItem.getItemGrade()) + "</td></tr>");
 					}
 					else
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market "+link+"\">"+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+"</a> </td><td> "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market " + link + "\">" + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName() + "</a> </td><td> " + getGrade(mrktItem.getItemGrade()) + "</td></tr>");
 					}
 				}
-				reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">"+Util.formatAdena(mrktItem.getPrice())+" "+getItemNameById(mrktItem.getPriceItem())+"</font></td><td></td></tr></table></td>");
+				reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">" + Util.formatAdena(mrktItem.getPrice()) + " " + getItemNameById(mrktItem.getPriceItem()) + "</font></td><td></td></tr></table></td>");
 				reply.append("</tr></table>");
 			}
 		}
@@ -798,7 +831,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		itemModel.setAugmentationSkill(augmentationSkill);
 		itemModel.setAugmentationSkillLevel(augmentationSkillLevel);
 		
-		augmentationBonus = augmentationBonus.replaceAll("_"," ");
+		augmentationBonus = augmentationBonus.replaceAll("_", " ");
 		itemModel.setAugmentationBonus(augmentationBonus);
 		
 		itemModel.setItemType(item.getItem().getItemType().toString());
@@ -809,35 +842,65 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		if (item.isEquipable())
 		{
 			if (item.getItemType() == L2WeaponType.NONE)
+			{
 				itemModel.setL2Type("Armor");
+			}
 			else if (item.getItemType() == L2WeaponType.SWORD)
+			{
 				itemModel.setL2Type("Weapon");
+			}
 			else if (item.getItemType() == L2WeaponType.BLUNT)
+			{
 				itemModel.setL2Type("Weapon");
+			}
 			else if (item.getItemType() == L2WeaponType.DAGGER)
+			{
 				itemModel.setL2Type("Weapon");
+			}
 			else if (item.getItemType() == L2WeaponType.BOW)
+			{
 				itemModel.setL2Type("Weapon");
+			}
 			else if (item.getItemType() == L2WeaponType.POLE)
+			{
 				itemModel.setL2Type("Weapon");
+			}
 			else if (item.getItemType() == L2WeaponType.ETC)
+			{
 				itemModel.setL2Type("Weapon");
+			}
 			else if (item.getItemType() == L2WeaponType.FIST)
+			{
 				itemModel.setL2Type("Weapon");
+			}
 			else if (item.getItemType() == L2WeaponType.DUAL)
+			{
 				itemModel.setL2Type("Weapon");
+			}
 			else if (item.getItemType() == L2WeaponType.DUALFIST)
+			{
 				itemModel.setL2Type("Weapon");
+			}
 			else if (item.getItemType() == L2WeaponType.BIGSWORD)
+			{
 				itemModel.setL2Type("Weapon");
+			}
 			else if (item.getItemType() == L2WeaponType.PET)
+			{
 				itemModel.setL2Type("Weapon");
+			}
 			else if (item.getItemType() == L2WeaponType.ROD)
+			{
 				itemModel.setL2Type("Weapon");
+			}
 			else if (item.getItemType() == L2WeaponType.BIGBLUNT)
+			{
 				itemModel.setL2Type("Weapon");
+			}
 			else
+			{
 				itemModel.setL2Type("Armor");
+			}
 		}
 		else
 		{
@@ -852,12 +915,12 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 			else if (item.getItemType() == L2EtcItemType.SPELLBOOK)
 			{
 				itemModel.setL2Type("Spellbook");
-			} 
+			}
 			else if (item.getItemType() == L2EtcItemType.SHOT)
 			{
 				itemModel.setL2Type("Shot");
 			}
-			else 
+			else
 			{
 				itemModel.setL2Type("Other");
 			}
@@ -867,17 +930,17 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		
 		if (count > 1)
 		{
-			sendMsg("Added: <font color=\"00ff00\">"+item.getItemName()+"</font> ("+Util.formatAdena(count)+").", player);
+			sendMsg("Added: <font color=\"00ff00\">" + item.getItemName() + "</font> (" + Util.formatAdena(count) + ").", player);
 		}
 		else
 		{
 			if (item.getEnchantLevel() > 0)
 			{
-				sendMsg("Added: <font color=3399ff>+"+item.getEnchantLevel()+"</font> <font color=\"00ff00\">"+(item.isAugmented() ? "Augmented" : "")+" "+item.getItemName()+"</font>.", player);
+				sendMsg("Added: <font color=3399ff>+" + item.getEnchantLevel() + "</font> <font color=\"00ff00\">" + (item.isAugmented() ? "Augmented" : "") + " " + item.getItemName() + "</font>.", player);
 			}
 			else
 			{
-				sendMsg("Added: <font color=\"00ff00\">"+(item.isAugmented() ? "Augmented" : "")+" "+item.getItemName()+"</font>.", player);
+				sendMsg("Added: <font color=\"00ff00\">" + (item.isAugmented() ? "Augmented" : "") + " " + item.getItemName() + "</font>.", player);
 			}
 		}
 		
@@ -901,7 +964,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		
 		if (list != null && !list.isEmpty())
 		{
-			for	(L2ItemMarketModel model : list)
+			for (L2ItemMarketModel model : list)
 			{
 				if (model != null)
 				{
@@ -940,7 +1003,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		
 		if (mrktItem != null)
 		{
-			int itemId  = mrktItem.getItemId();
+			int itemId = mrktItem.getItemId();
 			int itemCount = mrktItem.getCount();
 			int price = mrktItem.getPrice();
 			
@@ -948,12 +1011,12 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 			
 			if (currency == null || currency.getCount() < price)
 			{
-				sendMsg("You don't have enough <font color=\"ff0000\">"+getItemNameById(mrktItem.getPriceItem())+"</font>.", player);
-				player.sendPacket(new ExShowScreenMessage("You don't have enough "+getItemNameById(mrktItem.getPriceItem())+".", 1000, 2, false));
+				sendMsg("You don't have enough <font color=\"ff0000\">" + getItemNameById(mrktItem.getPriceItem()) + "</font>.", player);
+				player.sendPacket(new ExShowScreenMessage("You don't have enough " + getItemNameById(mrktItem.getPriceItem()) + ".", 1000, 2, false));
 				player.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
 				return;
 			}
-			if (currency.getCount() >= price) 
+			if (currency.getCount() >= price)
 			{
 				// Remove item from market
 				ItemMarketTable.getInstance().removeItemFromMarket(mrktItem.getOwnerId(), mrktItem.getItemObjId(), itemCount);
@@ -961,14 +1024,13 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 				// Destroy currency
 				player.destroyItem("Destroy currency", currency.getObjectId(), price, null, true);
 				
-				
 				// Send money for seller
 				L2PcInstance seller = L2World.getInstance().getPlayer(mrktItem.getOwnerName());
 				if (seller != null && seller.isOnline() == 1)
 				{
 					seller.getInventory().addItem("Market Sell", currency.getItemId(), price, seller, null);
-					MailBBSManager.getInstance().sendMail(mrktItem.getOwnerName(), "Market", ""+player.getName()+" bought your an item: "+mrktItem.getItemName()+" from the Market. "
-							+ "You've got: "+Util.formatAdena(price)+" "+currency.getItemName()+". Check your inventory!", player);
+					MailBBSManager.getInstance().sendMail(mrktItem.getOwnerName(), "Market", "" + player.getName() + " bought your an item: " + mrktItem.getItemName() + " from the Market. " + "You've got: " + Util.formatAdena(price) + " " + currency.getItemName()
+						+ ". Check your inventory!", player);
 					
 					if (price > 1)
 					{
@@ -987,8 +1049,8 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 				else
 				{
 					addItemForOffliner(mrktItem.getOwnerId(), IdFactory.getInstance().getNextId(), currency.getItemId(), price);
-					MailBBSManager.getInstance().sendMail(mrktItem.getOwnerName(), "Market", ""+player.getName()+" bought your an item: "+mrktItem.getItemName()+" from the Market. "
-							+ "You've got: "+Util.formatAdena(price)+" "+currency.getItemName()+". Check your inventory!", player);
+					MailBBSManager.getInstance().sendMail(mrktItem.getOwnerName(), "Market", "" + player.getName() + " bought your an item: " + mrktItem.getItemName() + " from the Market. " + "You've got: " + Util.formatAdena(price) + " " + currency.getItemName()
+						+ ". Check your inventory!", player);
 				}
 				// Send item for buyer
 				L2ItemInstance item = ItemTable.getInstance().createItem("Market Buy", itemId, itemCount, player);
@@ -1028,17 +1090,17 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 				
 				if (itemCount > 1)
 				{
-					sendMsg("Bought: <font color=\"LEVEL\">"+mrktItem.getItemName()+"</font> ("+Util.formatAdena(itemCount)+").", player);
+					sendMsg("Bought: <font color=\"LEVEL\">" + mrktItem.getItemName() + "</font> (" + Util.formatAdena(itemCount) + ").", player);
 				}
 				else
 				{
 					if (mrktItem.getEnchLvl() > 0)
 					{
-						sendMsg("Bought: <font color=3399ff>+"+mrktItem.getEnchLvl()+"</font> <font color=\"LEVEL\">"+(item.isAugmented() ? "Augmented" : "")+" "+mrktItem.getItemName()+"</font>.", player);
+						sendMsg("Bought: <font color=3399ff>+" + mrktItem.getEnchLvl() + "</font> <font color=\"LEVEL\">" + (item.isAugmented() ? "Augmented" : "") + " " + mrktItem.getItemName() + "</font>.", player);
 					}
 					else
 					{
-						sendMsg("Bought: <font color=\"LEVEL\">"+(item.isAugmented() ? "Augmented" : "")+" "+mrktItem.getItemName()+"</font>.", player);
+						sendMsg("Bought: <font color=\"LEVEL\">" + (item.isAugmented() ? "Augmented" : "") + " " + mrktItem.getItemName() + "</font>.", player);
 					}
 				}
 				
@@ -1057,10 +1119,10 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 	{
 		List<L2ItemMarketModel> mrktList = new FastList<>();
 		int itype = mask >> 3;
-		switch(itype)
+		switch (itype)
 		{
 			case ALL:
-			return filterItemGrade(mask, list);
+				return filterItemGrade(mask, list);
 			case WEAPON:
 				for (L2ItemMarketModel model : list)
 				{
@@ -1076,7 +1138,8 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 			case ARMOR:
 				for (L2ItemMarketModel model : list)
 				{
-					if (model != null) {
+					if (model != null)
+					{
 						if (model.getL2Type().equalsIgnoreCase("Armor"))
 						{
 							mrktList.add(model);
@@ -1135,8 +1198,8 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 			case MATERIAL:
 				for (L2ItemMarketModel model : list)
 				{
-				if (model != null)
-				{
+					if (model != null)
+					{
 						if (model.getL2Type().equalsIgnoreCase("Material"))
 						{
 							mrktList.add(model);
@@ -1152,7 +1215,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 	{
 		List<L2ItemMarketModel> mrktList = new FastList<>();
 		int igrade = mask & 7;
-		switch(igrade)
+		switch (igrade)
 		{
 			case ALL_G:
 				return list;
@@ -1181,12 +1244,12 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 				}
 				return mrktList;
 			case C_G:
-			for (L2ItemMarketModel model : list)
-			{
+				for (L2ItemMarketModel model : list)
+				{
 					if (model != null)
 					{
-					if (model.getItemGrade() == C_G)
-					{
+						if (model.getItemGrade() == C_G)
+						{
 							mrktList.add(model);
 						}
 					}
@@ -1247,7 +1310,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 	private List<L2ItemInstance> filterInventory(L2ItemInstance[] inv)
 	{
 		List<L2ItemInstance> filteredInventory = new FastList<>();
-		for(L2ItemInstance item : inv)
+		for (L2ItemInstance item : inv)
 		{
 			if (canAddItem(item))
 			{
@@ -1291,7 +1354,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		}
 		
 		if (pageId > pages)
-		{ 
+		{
 			pageId = pages;
 		}
 		
@@ -1320,23 +1383,25 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 			if (color == 1)
 			{
 				reply.append("<table width=300 border=0 bgcolor=000000><tr>");
-				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market SelectItem "+item.getObjectId()+"\" width=32 height=32 back=\""+itemIcon +"\" fore=\""+itemIcon +"\"></td>");
+				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market SelectItem " + item.getObjectId() + "\" width=32 height=32 back=\"" + itemIcon + "\" fore=\"" + itemIcon + "\"></td>");
 				reply.append("<td valign=top width=235>");
 				reply.append("<table border=0 width=100%>");
 				
 				if (item.getCount() > 1)
 				{
-					reply.append("<tr><td width=235><a action=\"bypass -h custom_market SelectItem "+item.getObjectId()+"\">"+item.getItemName()+" ("+Util.formatAdena(item.getCount())+")</a> </td><td> "+getGradeByCrystal(String.valueOf(item.getItem().getCrystalType()))+"</td></tr>");
+					reply.append("<tr><td width=235><a action=\"bypass -h custom_market SelectItem " + item.getObjectId() + "\">" + item.getItemName() + " (" + Util.formatAdena(item.getCount()) + ")</a> </td><td> " + getGradeByCrystal(String.valueOf(item.getItem().getCrystalType())) + "</td></tr>");
 				}
 				else
 				{
 					if (item.getEnchantLevel() > 0)
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market SelectItem "+item.getObjectId()+"\">+"+item.getEnchantLevel()+" "+(item.isAugmented() ? "Augmented" : "")+" "+item.getItemName()+"</a> </td><td>  "+getGradeByCrystal(String.valueOf(item.getItem().getCrystalType()))+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market SelectItem " + item.getObjectId() + "\">+" + item.getEnchantLevel() + " " + (item.isAugmented() ? "Augmented" : "") + " " + item.getItemName() + "</a> </td><td>  "
+							+ getGradeByCrystal(String.valueOf(item.getItem().getCrystalType())) + "</td></tr>");
 					}
 					else
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market SelectItem "+item.getObjectId()+"\">"+(item.isAugmented() ? "Augmented" : "")+" "+item.getItemName()+"</a> </td><td> "+getGradeByCrystal(String.valueOf(item.getItem().getCrystalType()))+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market SelectItem " + item.getObjectId() + "\">" + (item.isAugmented() ? "Augmented" : "") + " " + item.getItemName() + "</a> </td><td> " + getGradeByCrystal(String.valueOf(item.getItem().getCrystalType()))
+							+ "</td></tr>");
 					}
 				}
 				
@@ -1347,36 +1412,38 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 			else
 			{
 				reply.append("<table width=300 border=0><tr>");
-				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market"+" SelectItem "+item.getObjectId()+"\" width=32 height=32 back=\""+itemIcon +"\" fore=\""+itemIcon +"\"></td>");
+				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market" + " SelectItem " + item.getObjectId() + "\" width=32 height=32 back=\"" + itemIcon + "\" fore=\"" + itemIcon + "\"></td>");
 				reply.append("<td valign=top width=235>");
 				reply.append("<table border=0 width=100%>");
-			
+				
 				if (item.getCount() > 1)
 				{
-					reply.append("<tr><td width=235><a action=\"bypass -h custom_market SelectItem "+item.getObjectId()+"\">"+item.getItemName()+" ("+Util.formatAdena(item.getCount())+")</a> </td><td> "+getGradeByCrystal(String.valueOf(item.getItem().getCrystalType()))+"</td></tr>");
+					reply.append("<tr><td width=235><a action=\"bypass -h custom_market SelectItem " + item.getObjectId() + "\">" + item.getItemName() + " (" + Util.formatAdena(item.getCount()) + ")</a> </td><td> " + getGradeByCrystal(String.valueOf(item.getItem().getCrystalType())) + "</td></tr>");
 				}
 				else
 				{
 					if (item.getEnchantLevel() > 0)
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market SelectItem "+item.getObjectId()+"\">+"+item.getEnchantLevel()+" "+(item.isAugmented() ? "Augmented" : "")+" "+item.getItemName()+"</a> </td><td>  "+getGradeByCrystal(String.valueOf(item.getItem().getCrystalType()))+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market SelectItem " + item.getObjectId() + "\">+" + item.getEnchantLevel() + " " + (item.isAugmented() ? "Augmented" : "") + " " + item.getItemName() + "</a> </td><td>  "
+							+ getGradeByCrystal(String.valueOf(item.getItem().getCrystalType())) + "</td></tr>");
 					}
 					else
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market SelectItem "+item.getObjectId()+"\">"+(item.isAugmented() ? "Augmented" : "")+" "+item.getItemName()+"</a> </td><td> "+getGradeByCrystal(String.valueOf(item.getItem().getCrystalType()))+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market SelectItem " + item.getObjectId() + "\">" + (item.isAugmented() ? "Augmented" : "") + " " + item.getItemName() + "</a> </td><td> " + getGradeByCrystal(String.valueOf(item.getItem().getCrystalType()))
+							+ "</td></tr>");
 					}
 				}
 				
 				reply.append("</table></td>");
 				reply.append("</tr></table>");
 				color = 1;
-			}	
+			}
 		}
 		reply.append("<img src=\"l2ui.SquareGray\" width=\"298\" height=\"1\">");
 		reply.append("<table width=300><tr>");
-		reply.append("<td width=66><button value=\"Back\" action=\"bypass -h custom_market"+((pageId==0)?" Main ":" ListInv ")+(pageId-1)+"\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td>");
+		reply.append("<td width=66><button value=\"Back\" action=\"bypass -h custom_market" + ((pageId == 0) ? " Main " : " ListInv ") + (pageId - 1) + "\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td>");
 		reply.append("<td width=138></td>");
-		reply.append("<td width=66>"+((pageId+1<pages)?"<button value=\"Next\" action=\"bypass -h custom_market"+" ListInv "+(pageId+1)+"\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\">":"")+"</td>");
+		reply.append("<td width=66>" + ((pageId + 1 < pages) ? "<button value=\"Next\" action=\"bypass -h custom_market" + " ListInv " + (pageId + 1) + "\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\">" : "") + "</td>");
 		reply.append("</tr></table>");
 		reply.append("</body></html>");
 		npcReply.setHtml(reply.toString());
@@ -1400,7 +1467,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		}
 		
 		if (pageId > pages)
-		{ 
+		{
 			pageId = pages;
 		}
 		
@@ -1440,54 +1507,60 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 			if (color == 1)
 			{
 				reply.append("<table width=300 bgcolor=000000 border=0><tr>");
-				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market"+" ItemInfo "+pageId+" "+mask+" "+mrktItem.getItemObjId()+"\" width=32 height=32 back=\""+itemIcon +"\" fore=\""+itemIcon +"\"></td>");
+				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market" + " ItemInfo " + pageId + " " + mask + " " + mrktItem.getItemObjId() + "\" width=32 height=32 back=\"" + itemIcon + "\" fore=\"" + itemIcon + "\"></td>");
 				reply.append("<td valign=top width=235>");
 				reply.append("<table border=0 width=100%>");
 				
 				if (mrktItem.getCount() > 1)
 				{
-					reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo "+pageId+" "+mask+" "+mrktItem.getItemObjId()+"\">"+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+" ("+Util.formatAdena(mrktItem.getCount())+")</a> </td><td> "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+					reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo " + pageId + " " + mask + " " + mrktItem.getItemObjId() + "\">" + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName() + " (" + Util.formatAdena(mrktItem.getCount())
+						+ ")</a> </td><td> " + getGrade(mrktItem.getItemGrade()) + "</td></tr>");
 				}
 				else
 				{
 					if (mrktItem.getEnchLvl() > 0)
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo "+pageId+" "+mask+" "+mrktItem.getItemObjId()+"\">+"+mrktItem.getEnchLvl()+" "+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+"</a> </td><td>  "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo " + pageId + " " + mask + " " + mrktItem.getItemObjId() + "\">+" + mrktItem.getEnchLvl() + " " + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName()
+							+ "</a> </td><td>  " + getGrade(mrktItem.getItemGrade()) + "</td></tr>");
 					}
 					else
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo "+pageId+" "+mask+" "+mrktItem.getItemObjId()+"\">"+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+"</a> </td><td> "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo " + pageId + " " + mask + " " + mrktItem.getItemObjId() + "\">" + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName() + "</a> </td><td> "
+							+ getGrade(mrktItem.getItemGrade()) + "</td></tr>");
 					}
 				}
 				
-				reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">"+Util.formatAdena(mrktItem.getPrice())+" "+getItemNameById(mrktItem.getPriceItem())+"</font></td><td></td></tr></table></td>");
+				reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">" + Util.formatAdena(mrktItem.getPrice()) + " " + getItemNameById(mrktItem.getPriceItem()) + "</font></td><td></td></tr></table></td>");
 				reply.append("</tr></table>");
 				color = 2;
 			}
 			else
 			{
 				reply.append("<table width=300 border=0><tr>");
-				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market"+" ItemInfo "+pageId+" "+mask+" "+mrktItem.getItemObjId()+"\" width=32 height=32 back=\""+itemIcon +"\" fore=\""+itemIcon +"\"></td>");
+				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market" + " ItemInfo " + pageId + " " + mask + " " + mrktItem.getItemObjId() + "\" width=32 height=32 back=\"" + itemIcon + "\" fore=\"" + itemIcon + "\"></td>");
 				reply.append("<td valign=top width=235>");
 				reply.append("<table border=0 width=100%>");
 				
 				if (mrktItem.getCount() > 1)
 				{
-					reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo "+pageId+" "+mask+" "+mrktItem.getItemObjId()+"\">"+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+" ("+Util.formatAdena(mrktItem.getCount())+")</a> </td><td> "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+					reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo " + pageId + " " + mask + " " + mrktItem.getItemObjId() + "\">" + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName() + " (" + Util.formatAdena(mrktItem.getCount())
+						+ ")</a> </td><td> " + getGrade(mrktItem.getItemGrade()) + "</td></tr>");
 				}
 				else
 				{
 					if (mrktItem.getEnchLvl() > 0)
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo "+pageId+" "+mask+" "+mrktItem.getItemObjId()+"\">+"+mrktItem.getEnchLvl()+" "+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+"</a> </td><td>  "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo " + pageId + " " + mask + " " + mrktItem.getItemObjId() + "\">+" + mrktItem.getEnchLvl() + " " + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName()
+							+ "</a> </td><td>  " + getGrade(mrktItem.getItemGrade()) + "</td></tr>");
 					}
 					else
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo "+pageId+" "+mask+" "+mrktItem.getItemObjId()+"\">"+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+"</a> </td><td> "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo " + pageId + " " + mask + " " + mrktItem.getItemObjId() + "\">" + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName() + "</a> </td><td> "
+							+ getGrade(mrktItem.getItemGrade()) + "</td></tr>");
 					}
 				}
 				
-				reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">"+Util.formatAdena(mrktItem.getPrice())+" "+getItemNameById(mrktItem.getPriceItem())+"</font></td><td></td></tr></table></td>");
+				reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">" + Util.formatAdena(mrktItem.getPrice()) + " " + getItemNameById(mrktItem.getPriceItem()) + "</font></td><td></td></tr></table></td>");
 				reply.append("</tr></table>");
 				color = 1;
 			}
@@ -1495,9 +1568,9 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		
 		reply.append("<img src=\"l2ui.SquareGray\" width=\"298\" height=\"1\">");
 		reply.append("<table width=100%><tr>");
-		reply.append("<td width=66><button value=\"Back\" action=\"bypass -h custom_market"+((pageId==0)?" Main ":" See ")+mask+" "+(pageId-1)+"\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td>");
+		reply.append("<td width=66><button value=\"Back\" action=\"bypass -h custom_market" + ((pageId == 0) ? " Main " : " See ") + mask + " " + (pageId - 1) + "\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td>");
 		reply.append("<td width=138></td>");
-		reply.append("<td width=66>"+((pageId+1<pages)?"<button value=\"Next\" action=\"bypass -h custom_market"+" See "+mask+" "+(pageId+1)+"\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\">":"")+"</td>");
+		reply.append("<td width=66>" + ((pageId + 1 < pages) ? "<button value=\"Next\" action=\"bypass -h custom_market" + " See " + mask + " " + (pageId + 1) + "\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\">" : "") + "</td>");
 		reply.append("</tr></table>");
 		
 		reply.append("</body></html>");
@@ -1511,36 +1584,36 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		TextBuilder reply = new TextBuilder("<html><body>");
 		reply.append("<center>Item Info</center>");
 		reply.append("<table width=100%><tr>");
-		reply.append("<td width=66><button value=\"Back\" action=\"bypass -h custom_market"+" See "+mask+" "+pageId+"\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td>");
+		reply.append("<td width=66><button value=\"Back\" action=\"bypass -h custom_market" + " See " + mask + " " + pageId + "\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td>");
 		reply.append("<td width=138></td>");
 		reply.append("</tr></table>");
 		reply.append("<img src=\"l2ui.SquareGray\" width=\"298\" height=\"1\">");
 		
 		reply.append("<table width=300 border=0 bgcolor=000000><tr>");
-		reply.append("<td valign=top width=35><img src="+getItemIcon(mrktItem.getItemId())+" width=32 height=32 align=left></td>");
+		reply.append("<td valign=top width=35><img src=" + getItemIcon(mrktItem.getItemId()) + " width=32 height=32 align=left></td>");
 		reply.append("<td valign=top width=235>");
 		reply.append("<table border=0 width=100%>");
 		
 		if (mrktItem.getEnchLvl() > 0)
 		{
-			reply.append("<tr><td><font color=\"3399ff\">+"+mrktItem.getEnchLvl()+"</font> "+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+" ("+Util.formatAdena(mrktItem.getCount())+")</td></tr>");
+			reply.append("<tr><td><font color=\"3399ff\">+" + mrktItem.getEnchLvl() + "</font> " + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName() + " (" + Util.formatAdena(mrktItem.getCount()) + ")</td></tr>");
 		}
 		else
 		{
-			reply.append("<tr><td>"+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+" ("+Util.formatAdena(mrktItem.getCount())+")</td></tr>");
+			reply.append("<tr><td>" + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName() + " (" + Util.formatAdena(mrktItem.getCount()) + ")</td></tr>");
 		}
 		
-		reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">"+Util.formatAdena(mrktItem.getPrice())+" "+getItemNameById(mrktItem.getPriceItem())+"</font></td></tr>");
-		reply.append("<tr><td><font color=\"A2A0A2\"><br1>Seller:</font> <font color=\"B09878\">"+mrktItem.getOwnerName()+"</font></td></tr>");
+		reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">" + Util.formatAdena(mrktItem.getPrice()) + " " + getItemNameById(mrktItem.getPriceItem()) + "</font></td></tr>");
+		reply.append("<tr><td><font color=\"A2A0A2\"><br1>Seller:</font> <font color=\"B09878\">" + mrktItem.getOwnerName() + "</font></td></tr>");
 		
 		if (mrktItem.getAugmentationId() > 0)
 		{
 			reply.append("<tr><td><br><font color=009900>Augmentation effects:</font></td></tr>");
-			reply.append("<tr><td>"+mrktItem.getAugmentationBonus()+"</td></tr>");
+			reply.append("<tr><td>" + mrktItem.getAugmentationBonus() + "</td></tr>");
 			L2Skill skill = SkillTable.getInstance().getInfo(mrktItem.getAugmentationSkill(), mrktItem.getAugmentationSkillLevel());
 			if (mrktItem.getAugmentationSkill() != 0)
 			{
-				reply.append("<tr><td>"+skill.getName()+" Level: "+skill.getLevel()+" "+(skill.isActive() ? "(Active)" : "(Passive)")+"</td></tr>");
+				reply.append("<tr><td>" + skill.getName() + " Level: " + skill.getLevel() + " " + (skill.isActive() ? "(Active)" : "(Passive)") + "</td></tr>");
 			}
 			else
 			{
@@ -1548,7 +1621,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 			}
 		}
 		
-		reply.append("<tr><td><button value=\"Buy\" action=\"bypass -h custom_market"+" BuyItem "+mrktItem.getItemObjId()+" "+mrktItem.getPrice()+"\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td></tr></table></td>");
+		reply.append("<tr><td><button value=\"Buy\" action=\"bypass -h custom_market" + " BuyItem " + mrktItem.getItemObjId() + " " + mrktItem.getPrice() + "\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td></tr></table></td>");
 		
 		reply.append("</tr></table>");
 		reply.append("<img src=\"l2ui.SquareGray\" width=\"298\" height=\"1\">");
@@ -1574,7 +1647,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		}
 		
 		if (pageId > pages)
-		{ 
+		{
 			pageId = pages;
 		}
 		int itemStart = pageId * itemsOnPage;
@@ -1593,7 +1666,8 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		for (int i = itemStart; i < itemEnd; i++)
 		{
 			L2ItemMarketModel mrktItem = list.get(i);
-			if (mrktItem == null) {
+			if (mrktItem == null)
+			{
 				continue;
 			}
 			
@@ -1608,63 +1682,67 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 			if (color == 1)
 			{
 				reply.append("<table width=300 border=0 bgcolor=000000><tr>");
-				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market"+" ItemInfo2 "+pageId+" "+mrktItem.getItemObjId()+"\" width=32 height=32 back=\""+itemIcon +"\" fore=\""+itemIcon +"\"></td>");
+				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market" + " ItemInfo2 " + pageId + " " + mrktItem.getItemObjId() + "\" width=32 height=32 back=\"" + itemIcon + "\" fore=\"" + itemIcon + "\"></td>");
 				reply.append("<td valign=top width=235>");
 				reply.append("<table border=0 width=100%>");
 				
 				if (mrktItem.getCount() > 1)
 				{
-					reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo2 "+pageId+" "+mrktItem.getItemObjId()+"\">"+mrktItem.getItemName()+" ("+Util.formatAdena(mrktItem.getCount())+")</a> </td><td> "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+					reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo2 " + pageId + " " + mrktItem.getItemObjId() + "\">" + mrktItem.getItemName() + " (" + Util.formatAdena(mrktItem.getCount()) + ")</a> </td><td> " + getGrade(mrktItem.getItemGrade()) + "</td></tr>");
 				}
 				else
 				{
 					if (mrktItem.getEnchLvl() > 0)
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo2 "+pageId+" "+mrktItem.getItemObjId()+"\">+"+mrktItem.getEnchLvl()+" "+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+"</a> </td><td>  "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo2 " + pageId + " " + mrktItem.getItemObjId() + "\">+" + mrktItem.getEnchLvl() + " " + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName() + "</a> </td><td>  "
+							+ getGrade(mrktItem.getItemGrade()) + "</td></tr>");
 					}
 					else
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo2 "+pageId+" "+mrktItem.getItemObjId()+"\">"+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+"</a> </td><td> "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo2 " + pageId + " " + mrktItem.getItemObjId() + "\">" + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName() + "</a> </td><td> " + getGrade(mrktItem.getItemGrade())
+							+ "</td></tr>");
 					}
 				}
 				
-				reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">"+Util.formatAdena(mrktItem.getPrice())+" "+getItemNameById(mrktItem.getPriceItem())+"</font></td><td></td></tr></table></td>");
+				reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">" + Util.formatAdena(mrktItem.getPrice()) + " " + getItemNameById(mrktItem.getPriceItem()) + "</font></td><td></td></tr></table></td>");
 				reply.append("</tr></table>");
 				color = 2;
 			}
 			else
 			{
 				reply.append("<table width=300 border=0><tr>");
-				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market"+" ItemInfo2 "+pageId+" "+mrktItem.getItemObjId()+"\" width=32 height=32 back=\""+itemIcon +"\" fore=\""+itemIcon +"\"></td>");
+				reply.append("<td valign=top width=35><button value=\"\" action=\"bypass -h custom_market" + " ItemInfo2 " + pageId + " " + mrktItem.getItemObjId() + "\" width=32 height=32 back=\"" + itemIcon + "\" fore=\"" + itemIcon + "\"></td>");
 				reply.append("<td valign=top width=235>");
 				reply.append("<table border=0 width=100%>");
 				
 				if (mrktItem.getCount() > 1)
 				{
-					reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo2 "+pageId+" "+mrktItem.getItemObjId()+"\">"+mrktItem.getItemName()+" ("+Util.formatAdena(mrktItem.getCount())+")</a> </td><td> "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+					reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo2 " + pageId + " " + mrktItem.getItemObjId() + "\">" + mrktItem.getItemName() + " (" + Util.formatAdena(mrktItem.getCount()) + ")</a> </td><td> " + getGrade(mrktItem.getItemGrade()) + "</td></tr>");
 				}
 				else
 				{
 					if (mrktItem.getEnchLvl() > 0)
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo2 "+pageId+" "+mrktItem.getItemObjId()+"\">+"+mrktItem.getEnchLvl()+" "+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+"</a> </td><td>  "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo2 " + pageId + " " + mrktItem.getItemObjId() + "\">+" + mrktItem.getEnchLvl() + " " + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName() + "</a> </td><td>  "
+							+ getGrade(mrktItem.getItemGrade()) + "</td></tr>");
 					}
 					else
 					{
-						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo2 "+pageId+" "+mrktItem.getItemObjId()+"\">"+(mrktItem.getAugmentationId() > 0 ? "Augmented" : "")+" "+mrktItem.getItemName()+"</a> </td><td> "+getGrade(mrktItem.getItemGrade())+"</td></tr>");
+						reply.append("<tr><td width=235><a action=\"bypass -h custom_market ItemInfo2 " + pageId + " " + mrktItem.getItemObjId() + "\">" + (mrktItem.getAugmentationId() > 0 ? "Augmented" : "") + " " + mrktItem.getItemName() + "</a> </td><td> " + getGrade(mrktItem.getItemGrade())
+							+ "</td></tr>");
 					}
 				}
 				
-				reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">"+Util.formatAdena(mrktItem.getPrice())+" "+getItemNameById(mrktItem.getPriceItem())+"</font></td><td></td></tr></table></td>");
+				reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">" + Util.formatAdena(mrktItem.getPrice()) + " " + getItemNameById(mrktItem.getPriceItem()) + "</font></td><td></td></tr></table></td>");
 				reply.append("</tr></table>");
 				color = 1;
 			}
 		}
 		reply.append("<img src=\"l2ui.SquareGray\" width=\"298\" height=\"1\">");
 		reply.append("<table width=300><tr>");
-		reply.append("<td width=66><button value=\"Back\" action=\"bypass -h custom_market"+((pageId==0)?" Main ":" Private ")+(pageId-1)+"\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td>");
+		reply.append("<td width=66><button value=\"Back\" action=\"bypass -h custom_market" + ((pageId == 0) ? " Main " : " Private ") + (pageId - 1) + "\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td>");
 		reply.append("<td width=138></td>");
-		reply.append("<td width=66>"+((pageId+1<pages)?"<button value=\"Next\" action=\"bypass -h custom_market"+" Private "+(pageId+1)+"\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\">":"")+"</td>");
+		reply.append("<td width=66>" + ((pageId + 1 < pages) ? "<button value=\"Next\" action=\"bypass -h custom_market" + " Private " + (pageId + 1) + "\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\">" : "") + "</td>");
 		reply.append("</tr></table>");
 		
 		reply.append("</body></html>");
@@ -1678,7 +1756,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		NpcHtmlMessage npcReply = new NpcHtmlMessage(1);
 		TextBuilder reply = new TextBuilder("<html><body>");
 		reply.append(message);
-		reply.append("<br><a action=\"bypass -h custom_market "+"Main\">Back</a>");
+		reply.append("<br><a action=\"bypass -h custom_market " + "Main\">Back</a>");
 		reply.append("</body></html>");
 		npcReply.setHtml(reply.toString());
 		player.sendPacket(npcReply);
@@ -1691,27 +1769,27 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		reply.append("<center>Info</center>");
 		
 		reply.append("<table width=300><tr>");
-		reply.append("<td width=66><button value=\"Back\" action=\"bypass -h custom_market"+" Private "+pageId+"\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td>");
+		reply.append("<td width=66><button value=\"Back\" action=\"bypass -h custom_market" + " Private " + pageId + "\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td>");
 		reply.append("<td width=138></td>");
 		reply.append("</tr></table>");
 		reply.append("<img src=\"l2ui.SquareGray\" width=\"298\" height=\"1\">");
 		
 		reply.append("<table width=300 border=0 bgcolor=000000><tr>");
-		reply.append("<td valign=top width=35><img src="+getItemIcon(mrktItem.getItemId())+" width=32 height=32 align=left></td>");
+		reply.append("<td valign=top width=35><img src=" + getItemIcon(mrktItem.getItemId()) + " width=32 height=32 align=left></td>");
 		reply.append("<td valign=top width=235>");
 		reply.append("<table border=0 width=100%>");
 		
 		if (mrktItem.getEnchLvl() > 0)
 		{
-			reply.append("<tr><td><font color=\"B09878\">+"+mrktItem.getEnchLvl()+"</font> "+mrktItem.getItemName()+" ("+Util.formatAdena(mrktItem.getCount())+")</td></tr>");
+			reply.append("<tr><td><font color=\"B09878\">+" + mrktItem.getEnchLvl() + "</font> " + mrktItem.getItemName() + " (" + Util.formatAdena(mrktItem.getCount()) + ")</td></tr>");
 		}
 		else
 		{
-			reply.append("<tr><td>"+mrktItem.getItemName()+" ("+Util.formatAdena(mrktItem.getCount())+")</td></tr>");
+			reply.append("<tr><td>" + mrktItem.getItemName() + " (" + Util.formatAdena(mrktItem.getCount()) + ")</td></tr>");
 		}
 		
-		reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">"+Util.formatAdena(mrktItem.getPrice())+" "+getItemNameById(mrktItem.getPriceItem())+"</font></td></tr>");
-		reply.append("<tr><td><button value=\"Remove\" action=\"bypass -h custom_market"+" TakeItem "+mrktItem.getItemObjId()+"\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td></tr></table></td>");
+		reply.append("<tr><td><font color=\"A2A0A2\">Price:</font> <font color=\"LEVEL\">" + Util.formatAdena(mrktItem.getPrice()) + " " + getItemNameById(mrktItem.getPriceItem()) + "</font></td></tr>");
+		reply.append("<tr><td><button value=\"Remove\" action=\"bypass -h custom_market" + " TakeItem " + mrktItem.getItemObjId() + "\" width=66 height=16 back=\"L2UI.DefaultButton_click\" fore=\"L2UI.DefaultButton\"></td></tr></table></td>");
 		reply.append("</tr></table>");
 		reply.append("<img src=\"l2ui.SquareGray\" width=\"298\" height=\"1\">");
 		reply.append("</body></html>");
@@ -1769,7 +1847,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 			statement.setInt(2, objectId);
 			statement.setInt(3, itemId);
 			statement.setInt(4, itemCount);
-			statement.setInt(5, 0);//enchant level
+			statement.setInt(5, 0);// enchant level
 			statement.setString(6, "INVENTORY");
 			statement.setInt(7, 0);
 			statement.setInt(8, 0);
@@ -1783,7 +1861,7 @@ public class Market implements IVoicedCommandHandler, ICustomByPassHandler, IBBS
 		}
 		catch (Exception e)
 		{
-			System.out.println("Error while adding a new time into DB " + e.getMessage());
+			LOG.error("Error while adding a new time into DB " + e.getMessage());
 		}
 		finally
 		{

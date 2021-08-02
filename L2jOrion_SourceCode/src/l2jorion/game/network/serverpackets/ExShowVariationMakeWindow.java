@@ -19,13 +19,8 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Format: ch Trigger packet.
- * @author KenM
- */
 public class ExShowVariationMakeWindow extends L2GameServerPacket
 {
-	/** The Constant _S__FE_50_EXSHOWVARIATIONMAKEWINDOW. */
 	private static final String _S__FE_50_EXSHOWVARIATIONMAKEWINDOW = "[S] FE:50 ExShowVariationMakeWindow";
 	
 	@Override
@@ -35,10 +30,6 @@ public class ExShowVariationMakeWindow extends L2GameServerPacket
 		writeH(0x50);
 	}
 	
-	/**
-	 * Gets the type.
-	 * @return the type
-	 */
 	@Override
 	public String getType()
 	{

@@ -20,20 +20,17 @@
  */
 package l2jorion.game.network.serverpackets;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javolution.util.FastList;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2SummonInstance;
 
-/**
- * This class ...
- * @version $Revision: 1.3.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public class PartySpelled extends L2GameServerPacket
 {
 	private static final String _S__EE_PartySpelled = "[S] EE PartySpelled";
+	
 	private final List<Effect> _effects;
 	private final L2Character _activeChar;
 	
@@ -53,7 +50,7 @@ public class PartySpelled extends L2GameServerPacket
 	
 	public PartySpelled(final L2Character cha)
 	{
-		_effects = new FastList<>();
+		_effects = new ArrayList<>();
 		_activeChar = cha;
 	}
 	
@@ -61,11 +58,16 @@ public class PartySpelled extends L2GameServerPacket
 	protected final void writeImpl()
 	{
 		if (_activeChar == null)
+		{
 			return;
+		}
+		
 		writeC(0xee);
+		
 		writeD(_activeChar instanceof L2SummonInstance ? 2 : _activeChar instanceof L2PetInstance ? 1 : 0);
 		writeD(_activeChar.getObjectId());
 		writeD(_effects.size());
+		
 		for (final Effect temp : _effects)
 		{
 			writeD(temp._skillId);
@@ -80,10 +82,6 @@ public class PartySpelled extends L2GameServerPacket
 		_effects.add(new Effect(skillId, dat, duration));
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

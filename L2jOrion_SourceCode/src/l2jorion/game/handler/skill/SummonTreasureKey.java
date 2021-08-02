@@ -20,9 +20,6 @@
  */
 package l2jorion.game.handler.skill;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.handler.ISkillHandler;
 import l2jorion.game.model.L2Character;
@@ -32,6 +29,8 @@ import l2jorion.game.model.L2Skill.SkillType;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
 /**

@@ -15,9 +15,6 @@ package l2jorion.game.skills.effects;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.skills.Env;
 
-/**
- * @author L2jOrion dev
- */
 public class EffectBigHead extends L2Effect
 {
 	

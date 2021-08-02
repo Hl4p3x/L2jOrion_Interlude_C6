@@ -23,9 +23,6 @@ package l2jorion.game.network.serverpackets;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.managers.CursedWeaponsManager;
@@ -34,6 +31,8 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2CubicInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class CharInfo extends L2GameServerPacket
 {
@@ -58,6 +57,8 @@ public class CharInfo extends L2GameServerPacket
 	private float _moveMultiplier, _attackSpeedMultiplier;
 	private int _maxCp;
 	
+	private final int _fakeArmorItemId;
+	
 	public CharInfo(L2PcInstance player)
 	{
 		_activeChar = player;
@@ -78,25 +79,13 @@ public class CharInfo extends L2GameServerPacket
 		_swimRunSpd = _flRunSpd = _flyRunSpd = _runSpd;
 		_swimWalkSpd = _flWalkSpd = _flyWalkSpd = _walkSpd;
 		_maxCp = player.getMaxCp();
+		
+		_fakeArmorItemId = _activeChar.getFakeArmorItemId();
 	}
 	
 	@Override
 	protected final void writeImpl()
 	{
-		boolean receiver_is_gm = false;
-		
-		L2PcInstance player = getClient().getActiveChar();
-		
-		if (player != null && player.isGM())
-		{
-			receiver_is_gm = true;
-		}
-		
-		if (!receiver_is_gm && _activeChar.getAppearance().getInvisible())
-		{
-			return;
-		}
-		
 		if (_activeChar.getPoly().isMorphed())
 		{
 			L2NpcTemplate template = NpcTable.getInstance().getTemplate(_activeChar.getPoly().getPolyId());
@@ -193,18 +182,58 @@ public class CharInfo extends L2GameServerPacket
 				writeD(_activeChar.getBaseClass());
 			}
 			
-			writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_DHAIR));
-			writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_HEAD));
-			writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_RHAND));
-			writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_LHAND));
-			writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_GLOVES));
-			writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_CHEST));
-			writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_LEGS));
-			writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_FEET));
-			writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_BACK));
-			writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_LRHAND));
-			writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_HAIR));
-			writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_FACE));
+			if (!_activeChar.isDressMeEnabled())
+			{
+				
+				writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_DHAIR));
+				
+				if (!Config.FAKE_ARMORS)
+				{
+					writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_HEAD));
+				}
+				else
+				{
+					writeD(_fakeArmorItemId == 0 ? _inv.getPaperdollItemId(Inventory.PAPERDOLL_HEAD) : 0);
+				}
+				
+				writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_RHAND));
+				writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_LHAND));
+				
+				if (!Config.FAKE_ARMORS)
+				{
+					writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_GLOVES));
+					writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_CHEST));
+					writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_LEGS));
+					writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_FEET));
+				}
+				else
+				{
+					writeD(_fakeArmorItemId == 0 ? _inv.getPaperdollItemId(Inventory.PAPERDOLL_GLOVES) : 0);
+					writeD(_fakeArmorItemId == 0 ? _inv.getPaperdollItemId(Inventory.PAPERDOLL_CHEST) : _fakeArmorItemId);
+					writeD(_fakeArmorItemId == 0 ? _inv.getPaperdollItemId(Inventory.PAPERDOLL_LEGS) : 0);
+					writeD(_fakeArmorItemId == 0 ? _inv.getPaperdollItemId(Inventory.PAPERDOLL_FEET) : 0);
+				}
+				
+				writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_BACK));
+				writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_LRHAND));
+				writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_HAIR));
+				writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_FACE));
+			}
+			else
+			{
+				writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_DHAIR));
+				writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_HEAD));
+				writeD(_activeChar.getDressMeData() == null ? _activeChar.getInventory().getPaperdollItemId(Inventory.PAPERDOLL_RHAND) : (_activeChar.getDressMeData().getWeapId() == 0 ? _activeChar.getInventory().getPaperdollItemId(Inventory.PAPERDOLL_RHAND) : _activeChar.getDressMeData().getWeapId()));
+				writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_LHAND));
+				writeD(_activeChar.getDressMeData() == null ? _activeChar.getInventory().getPaperdollItemId(Inventory.PAPERDOLL_GLOVES) : (_activeChar.getDressMeData().getGlovesId() == 0 ? _activeChar.getInventory().getPaperdollItemId(Inventory.PAPERDOLL_GLOVES) : _activeChar.getDressMeData().getGlovesId()));
+				writeD(_activeChar.getDressMeData() == null ? _activeChar.getInventory().getPaperdollItemId(Inventory.PAPERDOLL_CHEST) : (_activeChar.getDressMeData().getChestId() == 0 ? _activeChar.getInventory().getPaperdollItemId(Inventory.PAPERDOLL_CHEST) : _activeChar.getDressMeData().getChestId()));
+				writeD(_activeChar.getDressMeData() == null ? _activeChar.getInventory().getPaperdollItemId(Inventory.PAPERDOLL_LEGS) : (_activeChar.getDressMeData().getLegsId() == 0 ? _activeChar.getInventory().getPaperdollItemId(Inventory.PAPERDOLL_LEGS) : _activeChar.getDressMeData().getLegsId()));
+				writeD(_activeChar.getDressMeData() == null ? _activeChar.getInventory().getPaperdollItemId(Inventory.PAPERDOLL_FEET) : (_activeChar.getDressMeData().getBootsId() == 0 ? _activeChar.getInventory().getPaperdollItemId(Inventory.PAPERDOLL_FEET) : _activeChar.getDressMeData().getBootsId()));
+				writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_BACK));
+				writeD(_activeChar.getDressMeData() == null ? _activeChar.getInventory().getPaperdollItemId(Inventory.PAPERDOLL_RHAND) : (_activeChar.getDressMeData().getWeapId() == 0 ? _activeChar.getInventory().getPaperdollItemId(Inventory.PAPERDOLL_RHAND) : _activeChar.getDressMeData().getWeapId()));
+				writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_HAIR));
+				writeD(_inv.getPaperdollItemId(Inventory.PAPERDOLL_FACE));
+			}
 			
 			// c6 new h's
 			writeH(0x00);

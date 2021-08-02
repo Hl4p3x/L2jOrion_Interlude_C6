@@ -88,6 +88,7 @@ class Quest (JQuest) :
             st.set("cond","0")
             st.setState(COMPLETED)
             st.playSound("ItemSound.quest_finish")
+            st.addExpAndSp(16000,5650)
             if st.getQuestItemsCount(ELVEN_KNIGHT_BROOCH) == 0 :
               st.giveItems(ELVEN_KNIGHT_BROOCH,1)
             htmltext = "30327-10.htm"

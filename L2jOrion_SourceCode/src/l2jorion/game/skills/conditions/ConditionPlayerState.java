@@ -23,9 +23,6 @@ package l2jorion.game.skills.conditions;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public class ConditionPlayerState extends Condition
 {
 	public enum CheckPlayerState
@@ -55,7 +52,9 @@ public class ConditionPlayerState extends Condition
 		{
 			case RESTING:
 				if (env.player instanceof L2PcInstance)
+				{
 					return ((L2PcInstance) env.player).isSitting() == _required;
+				}
 				return !_required;
 			case MOVING:
 				return env.player.isMoving() == _required;

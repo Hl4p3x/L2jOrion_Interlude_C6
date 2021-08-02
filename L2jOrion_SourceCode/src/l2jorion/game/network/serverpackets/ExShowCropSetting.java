@@ -26,11 +26,6 @@ import l2jorion.game.managers.CastleManorManager.CropProcure;
 import l2jorion.game.model.L2Manor;
 import l2jorion.game.model.entity.siege.Castle;
 
-/**
- * format(packet 0xFE) ch dd [ddcdcdddddddcddc] c - id h - sub id d - manor id d - size [ d - crop id d - seed level c d - reward 1 id c d - reward 2 id d - next sale limit d d - min crop price d - max crop price d - today buy d - today price c - today reward d - next buy d - next price c - next
- * reward ]
- * @author l3x
- */
 public class ExShowCropSetting extends L2GameServerPacket
 {
 	private static final String _S__FE_20_EXSHOWCROPSETTING = "[S] FE:20 ExShowCropSetting";

@@ -48,9 +48,6 @@ public class MultiSellListContainer
 		return _npcId;
 	}
 	
-	/**
-	 * @param listId The listId to set.
-	 */
 	public void setListId(final int listId)
 	{
 		_listId = listId;

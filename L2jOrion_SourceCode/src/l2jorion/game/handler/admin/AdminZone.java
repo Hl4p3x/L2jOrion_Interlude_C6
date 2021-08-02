@@ -22,16 +22,11 @@ package l2jorion.game.handler.admin;
 
 import java.util.StringTokenizer;
 
-import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.datatables.csv.MapRegionTable;
 import l2jorion.game.handler.IAdminCommandHandler;
-import l2jorion.game.model.L2Character;
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-
-/**
- * @author luisantonioa
- */
+import l2jorion.game.model.zone.ZoneId;
 
 public class AdminZone implements IAdminCommandHandler
 {
@@ -41,28 +36,15 @@ public class AdminZone implements IAdminCommandHandler
 		"admin_zone_reload"
 	};
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.handler.IAdminCommandHandler#useAdminCommand(java.lang.String, l2jorion.game.model.L2PcInstance)
-	 */
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		StringTokenizer st = new StringTokenizer(command, " ");
 		String actualCommand = st.nextToken(); // Get actual command
 		
-		// String val = "";
-		// if (st.countTokens() >= 1) {val = st.nextToken();}
-		
 		if (actualCommand.equalsIgnoreCase("admin_zone_check"))
 		{
-			if (activeChar.isInsideZone(L2Character.ZONE_PVP))
+			if (activeChar.isInsideZone(ZoneId.ZONE_PVP))
 			{
 				activeChar.sendMessage("This is a PvP zone.");
 			}
@@ -71,7 +53,7 @@ public class AdminZone implements IAdminCommandHandler
 				activeChar.sendMessage("This is NOT a PvP zone.");
 			}
 			
-			if (activeChar.isInsideZone(L2Character.ZONE_NOLANDING))
+			if (activeChar.isInsideZone(ZoneId.ZONE_NOLANDING))
 			{
 				activeChar.sendMessage("This is a no landing zone.");
 			}
@@ -97,25 +79,10 @@ public class AdminZone implements IAdminCommandHandler
 			
 			loc = MapRegionTable.getInstance().getTeleToLocation(activeChar, MapRegionTable.TeleportWhereType.Town);
 			activeChar.sendMessage("TeleToLocation (Town): x:" + loc.getX() + " y:" + loc.getY() + " z:" + loc.getZ());
-			
-			loc = null;
 		}
-		else if (actualCommand.equalsIgnoreCase("admin_zone_reload"))
-		{
-			// TODO: ZONETODO ZoneManager.getInstance().reload();
-			GmListTable.broadcastMessageToGMs("Zones can not be reloaded in this version.");
-		}
-		
-		actualCommand = null;
-		st = null;
-		
 		return true;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.handler.IAdminCommandHandler#getAdminCommandList()
-	 */
 	@Override
 	public String[] getAdminCommandList()
 	{

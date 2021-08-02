@@ -18,9 +18,6 @@
  */
 package l2jorion.game.model.actor.instance;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.text.TextBuilder;
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
@@ -41,6 +38,8 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.util.Broadcast;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
 public final class L2ClassMasterInstance extends L2FolkInstance
@@ -74,15 +73,18 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 		
 	}
 	
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see l2jorion.game.model.actor.instance.L2FolkInstance#onAction(l2jorion.game.model.actor.instance.L2PcInstance)
 	 */
 	@Override
 	public void onAction(final L2PcInstance player)
 	{
 		if (!canTarget(player))
+		{
 			return;
-
+		}
+		
 		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
 		{
@@ -95,14 +97,14 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 			
 			// Remove player spawn protection
 			player.onActionRequest();
-
+			
 			// Send a Server->Client packet ValidateLocation to correct the L2NpcInstance position and heading on the client
 			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
 			// Calculate the distance between the L2PcInstance and the L2NpcInstance
-			if(!canInteract(player))
+			if (!canInteract(player))
 			{
 				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
@@ -117,7 +119,7 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 				int jobLevel = 0;
 				int level = player.getLevel();
 				ClassLevel lvl = PlayerClass.values()[classId.getId()].getLevel();
-				switch(lvl)
+				switch (lvl)
 				{
 					case First:
 						jobLevel = 1;
@@ -141,46 +143,41 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 					
 					player.sendPacket(ActionFailed.STATIC_PACKET);
 				}
-				else if (level >= 20 && jobLevel == 1 && Config.ALLOW_CLASS_MASTERS_FIRST_CLASS 
-						|| level >= 40 && jobLevel == 2 && Config.ALLOW_CLASS_MASTERS_SECOND_CLASS 
-						|| level >= 76 && jobLevel == 3 && Config.ALLOW_CLASS_MASTERS_THIRD_CLASS || Config.CLASS_MASTER_STRIDER_UPDATE)
+				else if (level >= 20 && jobLevel == 1 && Config.ALLOW_CLASS_MASTERS_FIRST_CLASS || level >= 40 && jobLevel == 2 && Config.ALLOW_CLASS_MASTERS_SECOND_CLASS || level >= 76 && jobLevel == 3 && Config.ALLOW_CLASS_MASTERS_THIRD_CLASS || Config.CLASS_MASTER_STRIDER_UPDATE)
 				{
 					NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 					TextBuilder sb = new TextBuilder();
-					sb.append("<html><title>Class Changer</title><body><center><img src=L2Font-e.replay_logo-e width=258 height=60><br><br><br><img src=L2UI_CH3.herotower_deco width=256 height=32></center><br><br>");
+					sb.append("<html><title>Class Changer</title><body><center><br><br><br><br><br><br><font color=AAAAAA>Please choose from the list of classes below:</font><img src=L2UI_CH3.herotower_deco width=256 height=32><br>");
 					
-					if (level >= 20 && jobLevel == 1 && Config.ALLOW_CLASS_MASTERS_FIRST_CLASS 
-							|| level >= 40 && jobLevel == 2 && Config.ALLOW_CLASS_MASTERS_SECOND_CLASS 
-							|| level >= 76 && jobLevel == 3 && Config.ALLOW_CLASS_MASTERS_THIRD_CLASS)
+					if (level >= 20 && jobLevel == 1 && Config.ALLOW_CLASS_MASTERS_FIRST_CLASS || level >= 40 && jobLevel == 2 && Config.ALLOW_CLASS_MASTERS_SECOND_CLASS || level >= 76 && jobLevel == 3 && Config.ALLOW_CLASS_MASTERS_THIRD_CLASS)
 					{
-						sb.append("<font color=AAAAAA>Please choose from the list of classes below:</font><br><br>");
 						
 						for (ClassId child : ClassId.values())
 						{
 							if (child.childOf(classId) && child.level() == jobLevel)
 							{
-								sb.append("<br><a action=\"bypass -h npc_" + getObjectId() + "_change_class " + child.getId() + "\"> " + CharTemplateTable.getClassNameById(child.getId()) + "</a>");
+								sb.append("<a action=\"bypass -h npc_" + getObjectId() + "_change_class " + child.getId() + "\"> " + CharTemplateTable.getClassNameById(child.getId()) + "</a><br>");
 							}
 						}
 						
 						if (Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel) != null && Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel).size() > 0)
 						{
-							sb.append("<br><br>Item(s) required for class change:");
+							sb.append("<br>Items required for class change:");
 							sb.append("<table width=220>");
-							for(Integer _itemId : Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel).keySet())
+							for (Integer _itemId : Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel).keySet())
 							{
 								int _count = Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel).get(_itemId);
-								sb.append("<tr><td><font color=\"LEVEL\">" + _count + "</font></td><td>" + ItemTable.getInstance().getTemplate(_itemId).getName() + "</td></tr>");
+								sb.append("<tr><td><center><font color=\"LEVEL\">" + _count + "</font></center></td><td><center>" + ItemTable.getInstance().getTemplate(_itemId).getName() + "</center></td></tr>");
 							}
 							sb.append("</table>");
 						}
 					}
 					
-					if(Config.CLASS_MASTER_STRIDER_UPDATE)
+					if (Config.CLASS_MASTER_STRIDER_UPDATE)
 					{
 						sb.append("<br><br><a action=\"bypass -h npc_" + getObjectId() + "_upgrade_hatchling\">Upgrade Hatchling to Strider</a><br>");
 					}
-					sb.append("<br><center><img src=L2UI_CH3.herotower_deco width=256 height=32></center></body></html>");
+					sb.append("<img src=L2UI_CH3.herotower_deco width=256 height=32></center></body></html>");
 					html.setHtml(sb.toString());
 					player.sendPacket(html);
 					// Like L2OFF player must rotate to the Npc
@@ -192,20 +189,20 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 				{
 					NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 					TextBuilder sb = new TextBuilder();
-					sb.append("<html><title>Class Changer</title><body><center><img src=L2Font-e.replay_logo-e width=258 height=60><br><br><br><img src=L2UI_CH3.herotower_deco width=256 height=32></center><br><br>");
-					switch(jobLevel)
+					sb.append("<html><title>Class Changer</title><body><center><br><br><br><br><br><br><img src=L2UI_CH3.herotower_deco width=256 height=32><br>");
+					switch (jobLevel)
 					{
 						case 1:
-							sb.append("Come back here when you reach level 20 to change your class.<br>");
+							sb.append("Reach level 20 to change your class.<br>");
 							break;
 						case 2:
-							sb.append("Come back here when you reach level 40 to change your class.<br>");
+							sb.append("Reach level 40 to change your class.<br>");
 							break;
 						case 3:
-							sb.append("Come back here when you reach level 76 to change your class.<br>");
+							sb.append("Reach level 76 to change your class.<br>");
 							break;
 						case 4:
-							sb.append("There are no more class changes for you.<br>");
+							sb.append("No more class changes for you.<br>");
 							break;
 					}
 					
@@ -217,7 +214,7 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 					{
 						sb.append("Event: <a action=\"bypass -h Quest " + q.getName() + "\">" + q.getDescr() + "</a><br>");
 					}
-					sb.append("<br><center><img src=L2UI_CH3.herotower_deco width=256 height=32></center></body></html>");
+					sb.append("<img src=L2UI_CH3.herotower_deco width=256 height=32></center></body></html>");
 					html.setHtml(sb.toString());
 					player.sendPacket(html);
 					
@@ -230,14 +227,14 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 		}
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
-
+	
 	public void onTable(final L2PcInstance player)
 	{
 		ClassId classId = player.getClassId();
 		int jobLevel = 0;
 		int level = player.getLevel();
 		ClassLevel lvl = PlayerClass.values()[classId.getId()].getLevel();
-		switch(lvl)
+		switch (lvl)
 		{
 			case First:
 				jobLevel = 1;
@@ -255,39 +252,39 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 		{
 			showChatWindowChooseClass(player);
 		}
-		else if(level >= 20 && jobLevel == 1 && Config.ALLOW_CLASS_MASTERS_FIRST_CLASS || level >= 40 && jobLevel == 2 && Config.ALLOW_CLASS_MASTERS_SECOND_CLASS || level >= 76 && jobLevel == 3 && Config.ALLOW_CLASS_MASTERS_THIRD_CLASS || Config.CLASS_MASTER_STRIDER_UPDATE)
+		else if (level >= 20 && jobLevel == 1 && Config.ALLOW_CLASS_MASTERS_FIRST_CLASS || level >= 40 && jobLevel == 2 && Config.ALLOW_CLASS_MASTERS_SECOND_CLASS || level >= 76 && jobLevel == 3 && Config.ALLOW_CLASS_MASTERS_THIRD_CLASS || Config.CLASS_MASTER_STRIDER_UPDATE)
 		{
 			NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 			TextBuilder sb = new TextBuilder();
-			sb.append("<html><title>Class Changer</title><body><center><img src=L2Font-e.replay_logo-e width=258 height=60><br><br><br><img src=L2UI_CH3.herotower_deco width=256 height=32></center><br><br>");
-
-			if(level >= 20 && jobLevel == 1 && Config.ALLOW_CLASS_MASTERS_FIRST_CLASS || level >= 40 && jobLevel == 2 && Config.ALLOW_CLASS_MASTERS_SECOND_CLASS || level >= 76 && jobLevel == 3 && Config.ALLOW_CLASS_MASTERS_THIRD_CLASS)
+			// TODO 1st
+			sb.append("<html><title>Class Changer</title><body><center><br><br><br><br><br><br><font color=AAAAAA>Choose class from the list below:</font><img src=L2UI_CH3.herotower_deco width=256 height=32><br>");
+			if (level >= 20 && jobLevel == 1 && Config.ALLOW_CLASS_MASTERS_FIRST_CLASS || level >= 40 && jobLevel == 2 && Config.ALLOW_CLASS_MASTERS_SECOND_CLASS || level >= 76 && jobLevel == 3 && Config.ALLOW_CLASS_MASTERS_THIRD_CLASS)
 			{
-				sb.append("<font color=AAAAAA>Please choose from the list of classes below:</font><br><br>");
-
-				for(ClassId child : ClassId.values())
-					if(child.childOf(classId) && child.level() == jobLevel)
+				for (ClassId child : ClassId.values())
+				{
+					if (child.childOf(classId) && child.level() == jobLevel)
 					{
-						sb.append("<br><a action=\"bypass -h npc_" + getObjectId() + "_change_class " + child.getId() + "\"> " + CharTemplateTable.getClassNameById(child.getId()) + "</a>");
+						sb.append("<a action=\"bypass -h npc_" + getObjectId() + "_change_class " + child.getId() + "\"> " + CharTemplateTable.getClassNameById(child.getId()) + "</a><br>");
 					}
-
+				}
+				
 				if (Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel) != null && Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel).size() > 0)
 				{
-					sb.append("<br><br>Item(s) required for class change:");
+					sb.append("<br>Items required for class change:");
 					sb.append("<table width=220>");
-					for(Integer _itemId : Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel).keySet())
+					for (Integer _itemId : Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel).keySet())
 					{
 						int _count = Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel).get(_itemId);
-						sb.append("<tr><td><font color=\"LEVEL\">" + _count + "</font></td><td>" + ItemTable.getInstance().getTemplate(_itemId).getName() + "</td></tr>");
+						sb.append("<tr><td><center><font color=\"LEVEL\">" + _count + "</font></center></td><td><center>" + ItemTable.getInstance().getTemplate(_itemId).getName() + "</center></td></tr>");
 					}
 					sb.append("</table>");
 				}
 			}
-			if(Config.CLASS_MASTER_STRIDER_UPDATE)
+			if (Config.CLASS_MASTER_STRIDER_UPDATE)
 			{
 				sb.append("<br><br><a action=\"bypass -h npc_" + getObjectId() + "_upgrade_hatchling\">Upgrade Hatchling to Strider</a><br>");
 			}
-			sb.append("<br><center><img src=L2UI_CH3.herotower_deco width=256 height=32></center></body></html>");
+			sb.append("<img src=L2UI_CH3.herotower_deco width=256 height=32></center></body></html>");
 			html.setHtml(sb.toString());
 			player.sendPacket(html);
 		}
@@ -295,40 +292,40 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 		{
 			NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 			TextBuilder sb = new TextBuilder();
-			sb.append("<html><title>Class Changer</title><body><center><img src=L2Font-e.replay_logo-e width=258 height=60><br><br><br><img src=L2UI_CH3.herotower_deco width=256 height=32></center><br><br>");
-			switch(jobLevel)
+			sb.append("<html><title>Class Changer</title><body><center><br><br><br><br><br><br></font><img src=L2UI_CH3.herotower_deco width=256 height=32><br>");
+			switch (jobLevel)
 			{
 				case 1:
-					sb.append("Come back here when you reach level 20 to change your class.<br>");
+					sb.append("Reach level 20 to change your class.<br>");
 					break;
 				case 2:
-					sb.append("Come back here when you reach level 40 to change your class.<br>");
+					sb.append("Reach level 40 to change your class.<br>");
 					break;
 				case 3:
-					sb.append("Come back here when you reach level 76 to change your class.<br>");
+					sb.append("Reach level 76 to change your class.<br>");
 					break;
 				case 4:
-					sb.append("There are no more class changes for you.<br>");
+					sb.append("No more class changes for you.<br>");
 					break;
 			}
-			if(Config.CLASS_MASTER_STRIDER_UPDATE)
+			if (Config.CLASS_MASTER_STRIDER_UPDATE)
 			{
 				sb.append("<br><br><a action=\"bypass -h npc_" + getObjectId() + "_upgrade_hatchling\">Upgrade Hatchling to Strider</a><br>");
 			}
-			for(Quest q : Quest.findAllEvents())
+			for (Quest q : Quest.findAllEvents())
 			{
 				sb.append("Event: <a action=\"bypass -h Quest " + q.getName() + "\">" + q.getDescr() + "</a><br>");
 			}
-			sb.append("<br><center><img src=L2UI_CH3.herotower_deco width=256 height=32></center></body></html>");
+			sb.append("<img src=L2UI_CH3.herotower_deco width=256 height=32></center></body></html>");
 			html.setHtml(sb.toString());
 			player.sendPacket(html);
 		}
 	}
-
+	
 	@Override
 	public void onBypassFeedback(final L2PcInstance player, final String command)
 	{
-		if(command.startsWith("1stClass"))
+		if (command.startsWith("1stClass"))
 		{
 			if (player.isGM())
 			{
@@ -351,13 +348,13 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 		}
 		else if (command.startsWith("baseClass"))
 		{
-			if(player.isGM())
+			if (player.isGM())
 			{
 				showChatWindowBase(player);
 			}
 		}
 		else if (command.startsWith("change_class"))
-		{			
+		{
 			int val = Integer.parseInt(command.substring(13));
 			
 			// Exploit prevention
@@ -386,15 +383,15 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 				
 				NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 				TextBuilder sb = new TextBuilder();
-				sb.append("<html><title>Class Changer</title><body><center><img src=L2Font-e.replay_logo-e width=258 height=60><br><br><br><img src=L2UI_CH3.herotower_deco width=256 height=32></center><br><br>");
-				sb.append("You have now become a <font color=\"LEVEL\">" + CharTemplateTable.getClassNameById(player.getClassId().getId()) + "</font>.");
-				sb.append("<br><center><img src=L2UI_CH3.herotower_deco width=256 height=32></center></body></html>");
+				sb.append("<html><title>Class Changer</title><body><center><br><br><br><br><br><br><img src=L2UI_CH3.herotower_deco width=256 height=32><br>");
+				sb.append("You have now become a <font color=\"LEVEL\">" + CharTemplateTable.getClassNameById(player.getClassId().getId()) + "</font>.<br>");
+				sb.append("<img src=L2UI_CH3.herotower_deco width=256 height=32></center></body></html>");
 				
 				html.setHtml(sb.toString());
 				player.sendPacket(html);
 				return;
 			}
-			switch(lvlnow)
+			switch (lvlnow)
 			{
 				case First:
 					jobLevel = 1;
@@ -409,11 +406,13 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 					jobLevel = 4;
 			}
 			
-			if( jobLevel == 4)
+			if (jobLevel == 4)
+			{
 				return; // no more job changes
+			}
 			
 			ClassLevel lvlnext = PlayerClass.values()[val].getLevel();
-			switch(lvlnext)
+			switch (lvlnext)
 			{
 				case First:
 					newJobLevel = 1;
@@ -430,30 +429,44 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 			
 			// prevents changing between same level jobs
 			if (newJobLevel != jobLevel + 1)
+			{
 				return;
+			}
 			
 			if (level < 20 && newJobLevel > 1)
+			{
 				return;
+			}
 			if (level < 40 && newJobLevel > 2)
+			{
 				return;
+			}
 			if (level < 76 && newJobLevel > 3)
+			{
 				return;
-			// -- prevention ends
+				// -- prevention ends
+			}
 			
 			if (newJobLevel == 2 && !Config.ALLOW_CLASS_MASTERS_FIRST_CLASS)
+			{
 				return;
+			}
 			
 			if (newJobLevel == 3 && !Config.ALLOW_CLASS_MASTERS_SECOND_CLASS)
+			{
 				return;
+			}
 			
 			if (newJobLevel == 4 && !Config.ALLOW_CLASS_MASTERS_THIRD_CLASS)
+			{
 				return;
+			}
 			
 			// check if player have all required items for class transfer
 			for (Integer _itemId : Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel).keySet())
 			{
 				int _count = Config.CLASS_MASTER_SETTINGS.getRequireItems(jobLevel).get(_itemId);
-				if(player.getInventory().getInventoryItemCount(_itemId, -1) < _count)
+				if (player.getInventory().getInventoryItemCount(_itemId, -1) < _count)
 				{
 					player.sendPacket(new SystemMessage(SystemMessageId.NOT_ENOUGH_ITEMS));
 					return;
@@ -478,7 +491,7 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 			
 			player.rewardSkills();
 			
-			if(!Config.ALT_GAME_SKILL_LEARN)
+			if (!Config.ALT_GAME_SKILL_LEARN)
 			{
 				player.checkAllowedSkills();
 			}
@@ -494,9 +507,9 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 			
 			NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 			TextBuilder sb = new TextBuilder();
-			sb.append("<html><title>Class Changer</title><body><center><img src=L2Font-e.replay_logo-e width=258 height=60><br><br><br><img src=L2UI_CH3.herotower_deco width=256 height=32></center><br><br>");
-			sb.append("You have now become a <font color=\"LEVEL\">" + CharTemplateTable.getClassNameById(player.getClassId().getId()) + "</font>.");
-			sb.append("<br><center><img src=L2UI_CH3.herotower_deco width=256 height=32></center></body></html>");
+			sb.append("<html><title>Class Changer</title><body><center><br><br><br><br><br><br><img src=L2UI_CH3.herotower_deco width=256 height=32><br>");
+			sb.append("You have now become a <font color=\"LEVEL\">" + CharTemplateTable.getClassNameById(player.getClassId().getId()) + "</font>.<br>");
+			sb.append("<img src=L2UI_CH3.herotower_deco width=256 height=32></center></body></html>");
 			
 			html.setHtml(sb.toString());
 			player.sendPacket(html);
@@ -509,19 +522,19 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 			}
 			
 			// check lvl for next class
-			if ((level >= 40 && newJobLevel == 2) || (level >=  76 && newJobLevel == 3))
+			if ((level >= 40 && newJobLevel == 2) || (level >= 76 && newJobLevel == 3))
 			{
 				onTable(player);
 			}
 		}
-		else if(command.startsWith("upgrade_hatchling") && Config.CLASS_MASTER_STRIDER_UPDATE)
+		else if (command.startsWith("upgrade_hatchling") && Config.CLASS_MASTER_STRIDER_UPDATE)
 		{
 			boolean canUpgrade = false;
 			if (player.getPet() != null)
 			{
-				if(player.getPet().getNpcId() == 12311 || player.getPet().getNpcId() == 12312 || player.getPet().getNpcId() == 12313)
+				if (player.getPet().getNpcId() == 12311 || player.getPet().getNpcId() == 12312 || player.getPet().getNpcId() == 12313)
 				{
-					if(player.getPet().getLevel() >= 55)
+					if (player.getPet().getLevel() >= 55)
 					{
 						canUpgrade = true;
 					}
@@ -539,30 +552,36 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 			{
 				player.sendMessage("You have to summon your hatchling if you want to upgrade him.");
 			}
-
-			if(!canUpgrade)
+			
+			if (!canUpgrade)
+			{
 				return;
-
+			}
+			
 			int[] hatchCollar =
 			{
-					3500, 3501, 3502
+				3500,
+				3501,
+				3502
 			};
 			int[] striderCollar =
 			{
-					4422, 4423, 4424
+				4422,
+				4423,
+				4424
 			};
-
-			for(int i = 0; i < 3; i++)
+			
+			for (int i = 0; i < 3; i++)
 			{
 				L2ItemInstance collar = player.getInventory().getItemByItemId(hatchCollar[i]);
-
-				if(collar != null)
+				
+				if (collar != null)
 				{
 					// Unsummon the hatchling
 					player.getPet().unSummon(player);
 					player.destroyItem("ClassMaster", collar, player, true);
 					player.addItem("ClassMaster", striderCollar[i], 1, player, true);
-
+					
 					return;
 				}
 			}
@@ -572,10 +591,9 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 			super.onBypassFeedback(player, command);
 		}
 	}
-
+	
 	/**
 	 * Show chat window choose class.
-	 *
 	 * @param player the player
 	 */
 	private void showChatWindowChooseClass(L2PcInstance player)
@@ -601,10 +619,9 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 		sb = null;
 		return;
 	}
-
+	
 	/**
 	 * Show chat window1st.
-	 *
 	 * @param player the player
 	 */
 	private void showChatWindow1st(L2PcInstance player)
@@ -643,10 +660,9 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 		sb = null;
 		return;
 	}
-
+	
 	/**
 	 * Show chat window2nd.
-	 *
 	 * @param player the player
 	 */
 	private void showChatWindow2nd(L2PcInstance player)
@@ -698,10 +714,9 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 		sb = null;
 		return;
 	}
-
+	
 	/**
 	 * Show chat window3rd.
-	 *
 	 * @param player the player
 	 */
 	private void showChatWindow3rd(L2PcInstance player)
@@ -753,10 +768,9 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 		sb = null;
 		return;
 	}
-
+	
 	/**
 	 * Show chat window base.
-	 *
 	 * @param player the player
 	 */
 	private void showChatWindowBase(L2PcInstance player)
@@ -784,10 +798,9 @@ public final class L2ClassMasterInstance extends L2FolkInstance
 		player.sendPacket(html);
 		return;
 	}
-
+	
 	/**
 	 * Change class.
-	 *
 	 * @param player the player
 	 * @param val the val
 	 */

@@ -18,9 +18,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.model.L2Object;
@@ -31,6 +28,8 @@ import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class RequestUnEquipItem extends L2GameClientPacket
 {

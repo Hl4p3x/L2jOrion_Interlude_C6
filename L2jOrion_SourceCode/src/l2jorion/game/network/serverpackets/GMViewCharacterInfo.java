@@ -26,6 +26,7 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 public class GMViewCharacterInfo extends L2GameServerPacket
 {
 	private static final String _S__8F_GMVIEWCHARINFO = "[S] 8F GMViewCharacterInfo";
+	
 	private final L2PcInstance _activeChar;
 	
 	public GMViewCharacterInfo(final L2PcInstance character)

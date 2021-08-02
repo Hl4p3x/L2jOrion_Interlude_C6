@@ -22,25 +22,14 @@ package l2jorion.game.network.serverpackets;
 
 import java.util.List;
 
-import l2jorion.util.Point3D;
+import l2jorion.game.model.Location;
 
-/**
- * Format: (ch) d[ddddd].
- * @author -Wooden-
- */
 public class ExCursedWeaponLocation extends L2GameServerPacket
 {
-	
-	/** The Constant _S__FE_46_EXCURSEDWEAPONLOCATION. */
 	private static final String _S__FE_46_EXCURSEDWEAPONLOCATION = "[S] FE:46 ExCursedWeaponLocation";
 	
-	/** The _cursed weapon info. */
 	private final List<CursedWeaponInfo> _cursedWeaponInfo;
 	
-	/**
-	 * Instantiates a new ex cursed weapon location.
-	 * @param cursedWeaponInfo the cursed weapon info
-	 */
 	public ExCursedWeaponLocation(final List<CursedWeaponInfo> cursedWeaponInfo)
 	{
 		_cursedWeaponInfo = cursedWeaponInfo;
@@ -72,42 +61,24 @@ public class ExCursedWeaponLocation extends L2GameServerPacket
 		}
 	}
 	
-	/**
-	 * Gets the type.
-	 * @return the type
-	 */
-	@Override
-	public String getType()
-	{
-		return _S__FE_46_EXCURSEDWEAPONLOCATION;
-	}
-	
-	/**
-	 * The Class CursedWeaponInfo.
-	 */
 	public static class CursedWeaponInfo
 	{
-		
-		/** The pos. */
-		public Point3D pos;
-		
-		/** The id. */
+		public Location pos;
 		public int id;
-		
-		/** The activated. */
 		public int activated; // 0 - not activated ? 1 - activated
 		
-		/**
-		 * Instantiates a new cursed weapon info.
-		 * @param p the p
-		 * @param ID the iD
-		 * @param status the status
-		 */
-		public CursedWeaponInfo(final Point3D p, final int ID, final int status)
+		public CursedWeaponInfo(final Location p, final int ID, final int status)
 		{
 			pos = p;
 			id = ID;
 			activated = status;
 		}
 	}
+	
+	@Override
+	public String getType()
+	{
+		return _S__FE_46_EXCURSEDWEAPONLOCATION;
+	}
+	
 }

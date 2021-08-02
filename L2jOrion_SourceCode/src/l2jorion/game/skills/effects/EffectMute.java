@@ -45,7 +45,6 @@ public class EffectMute extends L2Effect
 	@Override
 	public boolean onActionTime()
 	{
-		// Simply stop the effect
 		getEffected().stopMuted(this);
 		return false;
 	}

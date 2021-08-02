@@ -23,10 +23,6 @@ import javolution.util.FastList;
 import l2jorion.game.managers.CastleManorManager.SeedProduction;
 import l2jorion.game.model.L2Manor;
 
-/**
- * format(packet 0xFE) ch ddd [dddddcdcd] c - id h - sub id d - manor id d d - size [ d - seed id d - left to buy d - started amount d - sell price d - seed level c d - reward 1 id c d - reward 2 id ]
- * @author l3x
- */
 public class ExShowSeedInfo extends L2GameServerPacket
 {
 	private static final String _S__FE_1C_EXSHOWSEEDINFO = "[S] FE:1C ExShowSeedInfo";

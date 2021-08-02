@@ -22,43 +22,44 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * This class ...
- * @version $Revision: 1.4.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- * @author godson
- */
 public class ExOlympiadUserInfo extends L2GameServerPacket
 {
-	// chcdSddddd
 	private static final String _S__FE_29_OLYMPIADUSERINFO = "[S] FE:29 ExOlympiadUserInfo";
-	private final int _side;
-	private final L2PcInstance _activeChar;
 	
-	/**
-	 * @param player
-	 * @param side (1 = right, 2 = left)
-	 */
-	public ExOlympiadUserInfo(final L2PcInstance player, final int side)
+	private int _side;
+	private int _objectId;
+	private String _name;
+	private int _classId;
+	private int _curHp;
+	private int _maxHp;
+	private int _curCp;
+	private int _maxCp;
+	
+	public ExOlympiadUserInfo(L2PcInstance player)
 	{
-		_activeChar = player;
-		_side = side;
+		_side = player.getOlympiadSide();
+		_objectId = player.getObjectId();
+		_name = player.getName();
+		_classId = player.getClassId().getId();
+		_curHp = (int) player.getCurrentHp();
+		_maxHp = player.getMaxHp();
+		_curCp = (int) player.getCurrentCp();
+		_maxCp = player.getMaxCp();
 	}
 	
 	@Override
 	protected final void writeImpl()
 	{
-		if (_activeChar == null)
-			return;
 		writeC(0xfe);
 		writeH(0x29);
 		writeC(_side);
-		writeD(_activeChar.getObjectId());
-		writeS(_activeChar.getName());
-		writeD(_activeChar.getClassId().getId());
-		writeD((int) _activeChar.getCurrentHp());
-		writeD(_activeChar.getMaxHp());
-		writeD((int) _activeChar.getCurrentCp());
-		writeD(_activeChar.getMaxCp());
+		writeD(_objectId);
+		writeS(_name);
+		writeD(_classId);
+		writeD(_curHp);
+		writeD(_maxHp);
+		writeD(_curCp);
+		writeD(_maxCp);
 	}
 	
 	@Override

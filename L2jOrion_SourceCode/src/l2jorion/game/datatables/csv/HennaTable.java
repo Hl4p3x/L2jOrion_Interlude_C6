@@ -33,14 +33,9 @@ import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.templates.L2Henna;
 import l2jorion.game.templates.StatsSet;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * This class ...
- * @version $Revision$ $Date$
- */
 public class HennaTable
 {
 	private static Logger LOG = LoggerFactory.getLogger(HennaTable.class);
@@ -112,7 +107,7 @@ public class HennaTable
 				template = null;
 			}
 			
-			LOG.info("HennaTable: Loaded " + _henna.size() + " Templates.");
+			LOG.info("HennaTable: Loaded " + _henna.size() + " henna templates");
 		}
 		catch (final FileNotFoundException e)
 		{

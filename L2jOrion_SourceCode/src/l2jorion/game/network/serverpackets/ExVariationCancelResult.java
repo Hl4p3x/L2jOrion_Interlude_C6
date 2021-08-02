@@ -19,24 +19,14 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Format: (ch)ddd.
- */
 public class ExVariationCancelResult extends L2GameServerPacket
 {
-	/** The Constant _S__FE_57_EXVARIATIONCANCELRESULT. */
 	private static final String _S__FE_57_EXVARIATIONCANCELRESULT = "[S] FE:57 ExVariationCancelResult";
 	
-	/** The _close window. */
 	private final int _closeWindow;
 	
-	/** The _unk1. */
 	private final int _unk1;
 	
-	/**
-	 * Instantiates a new ex variation cancel result.
-	 * @param result the result
-	 */
 	public ExVariationCancelResult(final int result)
 	{
 		_closeWindow = 1;
@@ -52,10 +42,6 @@ public class ExVariationCancelResult extends L2GameServerPacket
 		writeD(_unk1);
 	}
 	
-	/**
-	 * Gets the type.
-	 * @return the type
-	 */
 	@Override
 	public String getType()
 	{

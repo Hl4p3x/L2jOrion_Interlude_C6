@@ -22,13 +22,13 @@ import java.util.Map;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
 import l2jorion.Config;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class ExperienceData
 {
@@ -90,8 +90,8 @@ public class ExperienceData
 		}
 		
 		LOG.info(getClass().getSimpleName() + ": Loaded " + _expTable.size() + " levels");
-		LOG.info(getClass().getSimpleName() + ": Max Player Level is: " + (MAX_LEVEL - 1));
-		LOG.info(getClass().getSimpleName() + ": Max Pet Level is: " + (MAX_PET_LEVEL - 1));
+		LOG.info(getClass().getSimpleName() + ": Max player level is: " + (MAX_LEVEL - 1));
+		LOG.info(getClass().getSimpleName() + ": Max pet level is: " + (MAX_PET_LEVEL - 1));
 	}
 	
 	public long getExpForLevel(final int level)

@@ -25,9 +25,6 @@ import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public final class ConditionSlotItemType extends ConditionInventory
 {
 	
@@ -43,11 +40,15 @@ public final class ConditionSlotItemType extends ConditionInventory
 	public boolean testImpl(final Env env)
 	{
 		if (!(env.player instanceof L2PcInstance))
+		{
 			return false;
+		}
 		final Inventory inv = ((L2PcInstance) env.player).getInventory();
 		final L2ItemInstance item = inv.getPaperdollItem(_slot);
 		if (item == null)
+		{
 			return false;
+		}
 		return (item.getItem().getItemMask() & _mask) != 0;
 	}
 }

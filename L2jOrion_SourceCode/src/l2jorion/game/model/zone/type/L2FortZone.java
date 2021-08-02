@@ -25,13 +25,10 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2SiegeSummonInstance;
 import l2jorion.game.model.entity.siege.Fort;
 import l2jorion.game.model.zone.L2ZoneType;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * A castle zone
- * @author programmos
- */
 public class L2FortZone extends L2ZoneType
 {
 	private int _fortId;
@@ -77,8 +74,8 @@ public class L2FortZone extends L2ZoneType
 	{
 		if (_fort.getSiege().getIsInProgress())
 		{
-			character.setInsideZone(L2Character.ZONE_PVP, true);
-			character.setInsideZone(L2Character.ZONE_SIEGE, true);
+			character.setInsideZone(ZoneId.ZONE_PVP, true);
+			character.setInsideZone(ZoneId.ZONE_SIEGE, true);
 			
 			if (character instanceof L2PcInstance)
 			{
@@ -92,8 +89,8 @@ public class L2FortZone extends L2ZoneType
 	{
 		if (_fort.getSiege().getIsInProgress())
 		{
-			character.setInsideZone(L2Character.ZONE_PVP, false);
-			character.setInsideZone(L2Character.ZONE_SIEGE, false);
+			character.setInsideZone(ZoneId.ZONE_PVP, false);
+			character.setInsideZone(ZoneId.ZONE_SIEGE, false);
 			
 			if (character instanceof L2PcInstance)
 			{
@@ -135,7 +132,9 @@ public class L2FortZone extends L2ZoneType
 				catch (final NullPointerException e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -145,8 +144,8 @@ public class L2FortZone extends L2ZoneType
 			{
 				try
 				{
-					character.setInsideZone(L2Character.ZONE_PVP, false);
-					character.setInsideZone(L2Character.ZONE_SIEGE, false);
+					character.setInsideZone(ZoneId.ZONE_PVP, false);
+					character.setInsideZone(ZoneId.ZONE_SIEGE, false);
 					
 					if (character instanceof L2PcInstance)
 					{
@@ -161,7 +160,9 @@ public class L2FortZone extends L2ZoneType
 				catch (final NullPointerException e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 				}
 			}
 		}

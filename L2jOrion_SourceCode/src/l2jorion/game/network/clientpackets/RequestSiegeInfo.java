@@ -21,21 +21,16 @@
 
 package l2jorion.game.network.clientpackets;
 
-/**
- * @author L2jOrion
- */
 public class RequestSiegeInfo extends L2GameClientPacket
 {
 	@Override
 	protected void readImpl()
 	{
-		// trigger
 	}
 	
 	@Override
 	protected void runImpl()
 	{
-		// TODO this
 	}
 	
 	@Override

@@ -32,16 +32,15 @@ import l2jorion.game.datatables.sql.ItemTable;
 import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.datatables.sql.TeleportLocationTable;
 import l2jorion.game.handler.IAdminCommandHandler;
+import l2jorion.game.managers.AchievementManager;
 import l2jorion.game.managers.DatatablesManager;
 import l2jorion.game.managers.Manager;
 import l2jorion.game.managers.QuestManager;
+import l2jorion.game.managers.ZoneManager;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.multisell.L2Multisell;
 import l2jorion.game.scripting.L2ScriptEngineManager;
 
-/**
- * @author KidZor
- */
 public class AdminReload implements IAdminCommandHandler
 {
 	private static final String[] ADMIN_COMMANDS =
@@ -169,20 +168,19 @@ public class AdminReload implements IAdminCommandHandler
 					}
 					
 				}
-				/*else if (type.startsWith("scripts_faenor"))
+				else if (type.startsWith("zone"))
 				{
-					try
-					{
-						FaenorScriptEngine.getInstance().reloadPackages();
-						
-					}
-					catch (final Exception ioe)
-					{
-						activeChar.sendMessage("Failed loading faenor scripts, no script going to be loaded");
-						ioe.printStackTrace();
-					}
-					
-				}*/
+					ZoneManager.getInstance().reload();
+					activeChar.sendMessage("Zones reloaded.");
+				}
+				else if (type.startsWith("ach"))
+				{
+					AchievementManager.getInstance().reload();
+					activeChar.sendMessage("Achievement data has been reloaded.");
+				}
+				/*
+				 * else if (type.startsWith("scripts_faenor")) { try { FaenorScriptEngine.getInstance().reloadPackages(); } catch (final Exception ioe) { activeChar.sendMessage("Failed loading faenor scripts, no script going to be loaded"); ioe.printStackTrace(); } }
+				 */
 				activeChar.sendMessage("WARNING: There are several known issues regarding this feature. Reloading server data during runtime is STRONGLY NOT RECOMMENDED for live servers, just for developing environments.");
 			}
 			catch (final Exception e)
@@ -198,10 +196,6 @@ public class AdminReload implements IAdminCommandHandler
 		return true;
 	}
 	
-	/**
-	 * send reload page
-	 * @param activeChar
-	 */
 	private void sendReloadPage(final L2PcInstance activeChar)
 	{
 		AdminHelpPage.showSubMenuPage(activeChar, "reload_menu.htm");

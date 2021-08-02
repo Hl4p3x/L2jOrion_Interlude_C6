@@ -38,10 +38,6 @@ public class ChooseInventoryItem extends L2GameServerPacket
 		writeD(_itemId);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

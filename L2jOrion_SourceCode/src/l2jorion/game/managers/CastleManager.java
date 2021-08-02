@@ -22,9 +22,9 @@ package l2jorion.game.managers;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2ClanMember;
@@ -33,12 +33,11 @@ import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.model.entity.siege.Castle;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class CastleManager
 {
@@ -50,14 +49,8 @@ public class CastleManager
 		return SingletonHolder._instance;
 	}
 	
-	// =========================================================
+	private final List<Castle> _castles = new ArrayList<>();
 	
-	// =========================================================
-	// Data Field
-	private List<Castle> _castles;
-	
-	// =========================================================
-	// Constructor
 	private static final int _castleCirclets[] =
 	{
 		0,
@@ -76,9 +69,6 @@ public class CastleManager
 	{
 		load();
 	}
-	
-	// =========================================================
-	// Method - Public
 	
 	public final int findNearestCastlesIndex(final L2Object obj)
 	{
@@ -110,11 +100,8 @@ public class CastleManager
 		return index;
 	}
 	
-	// =========================================================
-	// Method - Private
 	private final void load()
 	{
-		LOG.info("Initializing CastleManager");
 		Connection con = null;
 		try
 		{
@@ -124,13 +111,13 @@ public class CastleManager
 			
 			while (rs.next())
 			{
-				getCastles().add(new Castle(rs.getInt("id")));
+				_castles.add(new Castle(rs.getInt("id")));
 			}
 			
 			rs.close();
 			DatabaseUtils.close(statement);
 			
-			LOG.info("Loaded: " + getCastles().size() + " castles");
+			LOG.info("CastleManager: Loaded " + _castles.size() + " castles");
 		}
 		catch (final Exception e)
 		{
@@ -139,21 +126,18 @@ public class CastleManager
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
-	// =========================================================
-	// Property - Public
-	
-	public final Castle getCastleById(final int castleId)
+	public final Castle getCastleById(int castleId)
 	{
-		for (final Castle temp : getCastles())
+		for (Castle temp : _castles)
 		{
-			if (temp.getCastleId() == castleId)
+			if (temp.getResidenceId() == castleId)
+			{
 				return temp;
+			}
 		}
-		
 		return null;
 	}
 	
@@ -167,7 +151,9 @@ public class CastleManager
 		for (final Castle temp : getCastles())
 		{
 			if (temp != null && temp.getOwnerId() == clan.getClanId())
+			{
 				return temp;
+			}
 		}
 		
 		return null;
@@ -183,7 +169,9 @@ public class CastleManager
 		for (final Castle temp : getCastles())
 		{
 			if (temp.getName().equalsIgnoreCase(name.trim()))
+			{
 				return temp;
+			}
 		}
 		
 		return null;
@@ -194,65 +182,54 @@ public class CastleManager
 		for (final Castle temp : getCastles())
 		{
 			if (temp.checkIfInZone(x, y, z))
+			{
 				return temp;
+			}
 		}
 		
 		return null;
 	}
 	
-	public final Castle getCastle(final L2Object activeObject)
+	public final Castle getCastle(L2Object activeObject)
 	{
-		if (activeObject == null)
-		{
-			return null;
-		}
-		
 		return getCastle(activeObject.getX(), activeObject.getY(), activeObject.getZ());
 	}
 	
-	public final int getCastleIndex(final int castleId)
+	public final int getCastleIndex(int castleId)
 	{
 		Castle castle;
-		for (int i = 0; i < getCastles().size(); i++)
+		for (int i = 0; i < _castles.size(); i++)
 		{
-			castle = getCastles().get(i);
-			if (castle != null && castle.getCastleId() == castleId)
+			castle = _castles.get(i);
+			if ((castle != null) && (castle.getResidenceId() == castleId))
 			{
-				castle = null;
 				return i;
 			}
 		}
-		castle = null;
 		return -1;
 	}
 	
-	public final int getCastleIndex(final L2Object activeObject)
+	public final int getCastleIndex(L2Object activeObject)
 	{
 		return getCastleIndex(activeObject.getX(), activeObject.getY(), activeObject.getZ());
 	}
 	
-	public final int getCastleIndex(final int x, final int y, final int z)
+	public final int getCastleIndex(int x, int y, int z)
 	{
 		Castle castle;
-		for (int i = 0; i < getCastles().size(); i++)
+		for (int i = 0; i < _castles.size(); i++)
 		{
-			castle = getCastles().get(i);
-			if (castle != null && castle.checkIfInZone(x, y, z))
+			castle = _castles.get(i);
+			if ((castle != null) && castle.checkIfInZone(x, y, z))
 			{
-				castle = null;
 				return i;
 			}
 		}
-		castle = null;
 		return -1;
 	}
 	
 	public final List<Castle> getCastles()
 	{
-		if (_castles == null)
-		{
-			_castles = new FastList<>();
-		}
 		return _castles;
 	}
 	
@@ -274,10 +251,12 @@ public class CastleManager
 		}
 		
 		for (final Castle castle : _castles)
+		{
 			if (castle.getTaxPercent() > maxTax)
 			{
 				castle.setTaxPercent(maxTax);
 			}
+		}
 	}
 	
 	int _castleId = 1; // from this castle
@@ -290,7 +269,9 @@ public class CastleManager
 	public int getCircletByCastleId(final int castleId)
 	{
 		if (castleId > 0 && castleId < 10)
+		{
 			return _castleCirclets[castleId];
+		}
 		
 		return 0;
 	}
@@ -309,7 +290,9 @@ public class CastleManager
 	public void removeCirclet(final L2ClanMember member, final int castleId)
 	{
 		if (member == null)
+		{
 			return;
+		}
 		
 		L2PcInstance player = member.getPlayerInstance();
 		final int circletId = getCircletByCastleId(castleId);
@@ -352,7 +335,9 @@ public class CastleManager
 				{
 					// continue removing offline
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 				}
 			}
 			// else offline-player circlet removal
@@ -383,10 +368,8 @@ public class CastleManager
 			finally
 			{
 				CloseUtil.close(con);
-				con = null;
 			}
 		}
-		player = null;
 	}
 	
 	private static class SingletonHolder

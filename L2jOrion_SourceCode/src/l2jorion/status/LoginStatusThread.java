@@ -27,12 +27,11 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.Properties;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.ConfigLoader;
 import l2jorion.game.datatables.GameServerTable;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.login.L2LoginServer;
 import l2jorion.login.LoginController;
 

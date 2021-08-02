@@ -16,16 +16,15 @@
  */
 package l2jorion.game.model.actor.instance;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.model.L2Attackable;
-import l2jorion.game.model.L2CharPosition;
 import l2jorion.game.model.L2Character;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.knownlist.CommanderKnownList;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 /**
  * @author programmos
@@ -70,7 +69,9 @@ public class L2CommanderInstance extends L2Attackable
 	public void addDamageHate(final L2Character attacker, final int damage, final int aggro)
 	{
 		if (attacker == null)
+		{
 			return;
+		}
 		
 		if (!(attacker instanceof L2CommanderInstance))
 		{
@@ -82,7 +83,9 @@ public class L2CommanderInstance extends L2Attackable
 	public boolean doDie(final L2Character killer)
 	{
 		if (!super.doDie(killer))
+		{
 			return false;
+		}
 		
 		if (getFort().getSiege().getIsInProgress())
 		{
@@ -134,7 +137,7 @@ public class L2CommanderInstance extends L2Attackable
 			
 			if (hasAI())
 			{
-				getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new L2CharPosition(_homeX, _homeY, _homeZ, 0));
+				getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new Location(_homeX, _homeY, _homeZ, 0));
 			}
 		}
 	}

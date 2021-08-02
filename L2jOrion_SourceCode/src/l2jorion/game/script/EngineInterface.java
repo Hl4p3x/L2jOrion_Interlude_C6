@@ -39,7 +39,6 @@ import l2jorion.game.model.entity.Announcements;
 
 public interface EngineInterface
 {
-	// * keep the references of Singletons to prevent garbage collection
 	public CharNameTable charNametable = CharNameTable.getInstance();
 	
 	public IdFactory idFactory = IdFactory.getInstance();
@@ -63,8 +62,6 @@ public interface EngineInterface
 	public Announcements announcements = Announcements.getInstance();
 	public MapRegionTable mapRegions = MapRegionTable.getInstance();
 	
-	// public ArrayList getAllPlayers();
-	// public Player getPlayer(String characterName);
 	public void addQuestDrop(int npcID, int itemID, int min, int max, int chance, String questID, String[] states);
 	
 	public void addEventDrop(int[] items, int[] count, double chance, DateRange range);

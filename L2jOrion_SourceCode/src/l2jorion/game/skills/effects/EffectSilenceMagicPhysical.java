@@ -24,7 +24,6 @@ import l2jorion.game.skills.Env;
 
 public class EffectSilenceMagicPhysical extends L2Effect
 {
-	
 	public EffectSilenceMagicPhysical(final Env env, final EffectTemplate template)
 	{
 		super(env, template);

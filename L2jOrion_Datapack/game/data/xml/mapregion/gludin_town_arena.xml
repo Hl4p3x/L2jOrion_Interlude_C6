@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/MapRegion.xsd">
+	<!-- Gludin Arena -->
+	<region name="gludin_arena" town="Gludin Arena" castle="1" locId="11" bbs="2">
+		<respawnPoint X="-86979" Y="142402" Z="-3643" />
+	</region>
+</list>

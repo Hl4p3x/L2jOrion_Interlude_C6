@@ -20,10 +20,9 @@
  */
 package l2jorion.crypt;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class Base64
 {
@@ -59,74 +58,74 @@ public class Base64
 	/** The 64 valid Base64 values. */
 	private final static byte[] ALPHABET;
 	private final static byte[] _NATIVE_ALPHABET =
-	/* May be something funny like EBCDIC */
-	{
-		(byte) 'A',
-		(byte) 'B',
-		(byte) 'C',
-		(byte) 'D',
-		(byte) 'E',
-		(byte) 'F',
-		(byte) 'G',
-		(byte) 'H',
-		(byte) 'I',
-		(byte) 'J',
-		(byte) 'K',
-		(byte) 'L',
-		(byte) 'M',
-		(byte) 'N',
-		(byte) 'O',
-		(byte) 'P',
-		(byte) 'Q',
-		(byte) 'R',
-		(byte) 'S',
-		(byte) 'T',
-		(byte) 'U',
-		(byte) 'V',
-		(byte) 'W',
-		(byte) 'X',
-		(byte) 'Y',
-		(byte) 'Z',
-		(byte) 'a',
-		(byte) 'b',
-		(byte) 'c',
-		(byte) 'd',
-		(byte) 'e',
-		(byte) 'f',
-		(byte) 'g',
-		(byte) 'h',
-		(byte) 'i',
-		(byte) 'j',
-		(byte) 'k',
-		(byte) 'l',
-		(byte) 'm',
-		(byte) 'n',
-		(byte) 'o',
-		(byte) 'p',
-		(byte) 'q',
-		(byte) 'r',
-		(byte) 's',
-		(byte) 't',
-		(byte) 'u',
-		(byte) 'v',
-		(byte) 'w',
-		(byte) 'x',
-		(byte) 'y',
-		(byte) 'z',
-		(byte) '0',
-		(byte) '1',
-		(byte) '2',
-		(byte) '3',
-		(byte) '4',
-		(byte) '5',
-		(byte) '6',
-		(byte) '7',
-		(byte) '8',
-		(byte) '9',
-		(byte) '+',
-		(byte) '/'
-	};
-	
+		/* May be something funny like EBCDIC */
+		{
+			(byte) 'A',
+			(byte) 'B',
+			(byte) 'C',
+			(byte) 'D',
+			(byte) 'E',
+			(byte) 'F',
+			(byte) 'G',
+			(byte) 'H',
+			(byte) 'I',
+			(byte) 'J',
+			(byte) 'K',
+			(byte) 'L',
+			(byte) 'M',
+			(byte) 'N',
+			(byte) 'O',
+			(byte) 'P',
+			(byte) 'Q',
+			(byte) 'R',
+			(byte) 'S',
+			(byte) 'T',
+			(byte) 'U',
+			(byte) 'V',
+			(byte) 'W',
+			(byte) 'X',
+			(byte) 'Y',
+			(byte) 'Z',
+			(byte) 'a',
+			(byte) 'b',
+			(byte) 'c',
+			(byte) 'd',
+			(byte) 'e',
+			(byte) 'f',
+			(byte) 'g',
+			(byte) 'h',
+			(byte) 'i',
+			(byte) 'j',
+			(byte) 'k',
+			(byte) 'l',
+			(byte) 'm',
+			(byte) 'n',
+			(byte) 'o',
+			(byte) 'p',
+			(byte) 'q',
+			(byte) 'r',
+			(byte) 's',
+			(byte) 't',
+			(byte) 'u',
+			(byte) 'v',
+			(byte) 'w',
+			(byte) 'x',
+			(byte) 'y',
+			(byte) 'z',
+			(byte) '0',
+			(byte) '1',
+			(byte) '2',
+			(byte) '3',
+			(byte) '4',
+			(byte) '5',
+			(byte) '6',
+			(byte) '7',
+			(byte) '8',
+			(byte) '9',
+			(byte) '+',
+			(byte) '/'
+		};
+		
 	/** Determine which ALPHABET to use. */
 	static
 	{
@@ -274,12 +273,12 @@ public class Base64
 		-9,
 		-9,
 		-9
-	// Decimal 123 - 126
-	/*
-	 * ,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 127 - 139 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 140 - 152 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 153 - 165 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 166 - 178 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, //
-	 * Decimal 179 - 191 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 192 - 204 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 205 - 217 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 218 - 230 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 231 - 243
-	 * -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9 // Decimal 244 - 255
-	 */
+		// Decimal 123 - 126
+		/*
+		 * ,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 127 - 139 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 140 - 152 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 153 - 165 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 166 - 178 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, //
+		 * Decimal 179 - 191 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 192 - 204 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 205 - 217 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 218 - 230 -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9, // Decimal 231 - 243
+		 * -9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9,-9 // Decimal 244 - 255
+		 */
 	};
 	
 	// private final static byte BAD_ENCODING = -9; // Indicates error in encoding
@@ -374,21 +373,21 @@ public class Base64
 				destination[destOffset + 2] = ALPHABET[inBuff >>> 6 & 0x3f];
 				destination[destOffset + 3] = ALPHABET[inBuff & 0x3f];
 				return destination;
-				
+			
 			case 2:
 				destination[destOffset] = ALPHABET[(inBuff >>> 18)];
 				destination[destOffset + 1] = ALPHABET[inBuff >>> 12 & 0x3f];
 				destination[destOffset + 2] = ALPHABET[inBuff >>> 6 & 0x3f];
 				destination[destOffset + 3] = EQUALS_SIGN;
 				return destination;
-				
+			
 			case 1:
 				destination[destOffset] = ALPHABET[(inBuff >>> 18)];
 				destination[destOffset + 1] = ALPHABET[inBuff >>> 12 & 0x3f];
 				destination[destOffset + 2] = EQUALS_SIGN;
 				destination[destOffset + 3] = EQUALS_SIGN;
 				return destination;
-				
+			
 			default:
 				return destination;
 		} // end switch
@@ -475,7 +474,9 @@ public class Base64
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 			try
 			{
@@ -487,7 +488,9 @@ public class Base64
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 			try
 			{
@@ -499,7 +502,9 @@ public class Base64
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 			try
 			{
@@ -511,7 +516,9 @@ public class Base64
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		} // end finally
 		
@@ -525,7 +532,9 @@ public class Base64
 			catch (final java.io.UnsupportedEncodingException uue)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					uue.printStackTrace();
+				}
 				
 				return new String(baos.toByteArray());
 			} // end catch
@@ -646,7 +655,9 @@ public class Base64
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 				}
 				try
 				{
@@ -658,7 +669,9 @@ public class Base64
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 				}
 				try
 				{
@@ -670,7 +683,9 @@ public class Base64
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 				}
 			} // end finally
 			
@@ -684,7 +699,9 @@ public class Base64
 				catch (final java.io.UnsupportedEncodingException uue)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						uue.printStackTrace();
+					}
 					
 					return new String(baos.toByteArray());
 				} // end catch
@@ -729,7 +746,9 @@ public class Base64
 		catch (final java.io.UnsupportedEncodingException uue)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				uue.printStackTrace();
+			}
 			return new String(outBuff, 0, e);
 		} // end catch
 			// end else: don't compress
@@ -900,7 +919,9 @@ public class Base64
 		catch (final java.io.UnsupportedEncodingException uee)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				uee.printStackTrace();
+			}
 			
 			bytes = s.getBytes();
 		} // end catch
@@ -916,7 +937,7 @@ public class Base64
 			
 			final int head = bytes[0] & 0xff | bytes[1] << 8 & 0xff00;
 			if (bytes.length >= 4 && // Don't want to get ArrayIndexOutOfBounds exception
-			java.util.zip.GZIPInputStream.GZIP_MAGIC == head)
+				java.util.zip.GZIPInputStream.GZIP_MAGIC == head)
 			{
 				java.io.ByteArrayInputStream bais = null;
 				java.util.zip.GZIPInputStream gzis = null;
@@ -943,11 +964,14 @@ public class Base64
 				{
 					// Just return originally-decoded bytes
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 				} // end catch
 				finally
 				{
 					if (baos != null)
+					{
 						try
 						{
 							baos.close();
@@ -956,7 +980,9 @@ public class Base64
 						{
 							e.printStackTrace();
 						}
+					}
 					if (gzis != null)
+					{
 						try
 						{
 							gzis.close();
@@ -964,9 +990,13 @@ public class Base64
 						catch (final Exception e)
 						{
 							if (Config.ENABLE_ALL_EXCEPTIONS)
+							{
 								e.printStackTrace();
+							}
 						}
+					}
 					if (bais != null)
+					{
 						try
 						{
 							bais.close();
@@ -974,8 +1004,11 @@ public class Base64
 						catch (final Exception e)
 						{
 							if (Config.ENABLE_ALL_EXCEPTIONS)
+							{
 								e.printStackTrace();
+							}
 						}
+					}
 				} // end finally
 				
 			} // end if: gzipped
@@ -1013,6 +1046,7 @@ public class Base64
 		finally
 		{
 			if (bais != null)
+			{
 				try
 				{
 					bais.close();
@@ -1021,7 +1055,9 @@ public class Base64
 				{
 					e.printStackTrace();
 				}
+			}
 			if (ois != null)
+			{
 				try
 				{
 					ois.close();
@@ -1030,6 +1066,7 @@ public class Base64
 				{
 					e.printStackTrace();
 				}
+			}
 		} // end finally
 		
 		return obj;
@@ -1128,11 +1165,15 @@ public class Base64
 						catch (final java.io.IOException e)
 						{
 							if (Config.ENABLE_ALL_EXCEPTIONS)
+							{
 								e.printStackTrace();
+							}
 							
 							// Only a problem if we got no data at all.
 							if (i == 0)
+							{
 								throw e;
+							}
 							
 						} // end catch
 					} // end for: each needed input byte
@@ -1144,7 +1185,9 @@ public class Base64
 						numSigBytes = 4;
 					} // end if: got data
 					else
+					{
 						return -1;
+					}
 				} // end if: encoding
 				
 				// Else decoding
@@ -1176,10 +1219,14 @@ public class Base64
 						position = 0;
 					} // end if: got four characters
 					else if (i == 0)
+					{
 						return -1;
+					}
 					else
+					{
 						// Must have broken out from above.
 						throw new java.io.IOException("Improperly padded Base64 input.");
+					}
 					
 				} // end else: decode
 			} // end else: get data
@@ -1189,7 +1236,9 @@ public class Base64
 			{
 				// End of relevant data?
 				if ( /* !encode && */position >= numSigBytes)
+				{
 					return -1;
+				}
 				
 				if (encode && breakLines && lineLength >= MAX_LINE_LENGTH)
 				{
@@ -1242,7 +1291,9 @@ public class Base64
 					dest[off + i] = (byte) b;
 				}
 				else if (i == 0)
+				{
 					return -1;
+				}
 				else
 				{
 					break; // Out of 'for' loop
@@ -1367,7 +1418,9 @@ public class Base64
 					} // end if: enough to output
 				} // end if: meaningful base64 character
 				else if (DECODABET[theByte & 0x7f] != WHITE_SPACE_ENC)
+				{
 					throw new java.io.IOException("Invalid character in Base64 data.");
+				}
 			} // end else: decoding
 		} // end write
 		
@@ -1409,7 +1462,9 @@ public class Base64
 					position = 0;
 				} // end if: encoding
 				else
+				{
 					throw new java.io.IOException("Base64 input not properly padded.");
+				}
 			} // end if: buffer partially full
 			
 		} // end flush

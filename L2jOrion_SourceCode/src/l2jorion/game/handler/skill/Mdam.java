@@ -47,7 +47,9 @@ public class Mdam implements ISkillHandler
 	public void useSkill(L2Character activeChar, final L2Skill skill, final L2Object[] targets)
 	{
 		if (activeChar.isAlikeDead())
+		{
 			return;
+		}
 		
 		final boolean bss = activeChar.checkBss();
 		final boolean sps = activeChar.checkSps();
@@ -55,7 +57,9 @@ public class Mdam implements ISkillHandler
 		for (final L2Object obj : targets)
 		{
 			if (!(obj instanceof L2Character))
+			{
 				continue;
+			}
 			
 			L2Character target = (L2Character) obj;
 			if (activeChar instanceof L2PcInstance && target instanceof L2PcInstance && target.isAlikeDead() && target.isFakeDeath())
@@ -78,11 +82,17 @@ public class Mdam implements ISkillHandler
 			{
 				String name = "";
 				if (target instanceof L2RaidBossInstance)
+				{
 					name = "RaidBoss ";
+				}
 				if (target instanceof L2NpcInstance)
+				{
 					name += target.getName() + "(" + ((L2NpcInstance) target).getTemplate().npcId + ")";
+				}
 				if (target instanceof L2PcInstance)
+				{
 					name = target.getName() + "(" + target.getObjectId() + ") ";
+				}
 				name += target.getLevel() + " lvl";
 				Log.add(activeChar.getName() + "(" + activeChar.getObjectId() + ") " + activeChar.getLevel() + " lvl did damage " + damage + " with skill " + skill.getName() + "(" + skill.getId() + ") to " + name, "damage_mdam");
 			}
@@ -103,11 +113,10 @@ public class Mdam implements ISkillHandler
 					if (target.reflectSkill(skill))
 					{
 						activeChar.stopSkillEffects(skill.getId());
-						skill.getEffects(null, activeChar, false, sps, bss);
+						skill.getEffects(target, activeChar, false, sps, bss);
 						SystemMessage sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
 						sm.addSkillName(skill.getId());
 						activeChar.sendPacket(sm);
-						sm = null;
 					}
 					else
 					{

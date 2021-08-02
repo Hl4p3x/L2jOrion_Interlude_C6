@@ -1,7 +1,6 @@
 import sys
 from l2jorion.game.ai import CtrlIntention
 from l2jorion.game.managers import GrandBossManager
-from l2jorion.game.model import L2CharPosition
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest

@@ -20,10 +20,6 @@
  */
 package l2jorion.game.templates;
 
-/**
- * This class is dedicated to the management of EtcItem.
- * @version $Revision: 1.2.2.1.2.3 $ $Date: 2005/03/27 15:30:10 $
- */
 public final class L2EtcItem extends L2Item
 {
 	/**

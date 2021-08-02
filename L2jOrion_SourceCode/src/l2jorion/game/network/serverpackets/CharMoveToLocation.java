@@ -25,6 +25,7 @@ import l2jorion.game.model.L2Character;
 public class CharMoveToLocation extends L2GameServerPacket
 {
 	private static final String _S__01_CHARMOVETOLOCATION = "[S] 01 CharMoveToLocation";
+	
 	private final int _charObjId, _x, _y, _z, _xDst, _yDst, _zDst;
 	
 	public CharMoveToLocation(L2Character cha)

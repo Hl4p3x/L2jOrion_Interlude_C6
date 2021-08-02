@@ -28,15 +28,15 @@ import l2jorion.game.thread.ThreadPoolManager;
 
 public class QuestTimer
 {
-	// =========================================================
-	// Schedule Task
 	public class ScheduleTimerTask implements Runnable
 	{
 		@Override
 		public void run()
 		{
 			if (!getIsActive())
+			{
 				return;
+			}
 			
 			try
 			{
@@ -49,13 +49,13 @@ public class QuestTimer
 			catch (final Throwable t)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					t.printStackTrace();
+				}
 			}
 		}
 	}
 	
-	// =========================================================
-	// Data Field
 	private boolean _isActive = true;
 	private final String _name;
 	private final Quest _quest;
@@ -64,8 +64,6 @@ public class QuestTimer
 	private final boolean _isRepeating;
 	private ScheduledFuture<?> _schedular;
 	
-	// =========================================================
-	// Constructor
 	public QuestTimer(final Quest quest, final String name, final long time, final L2NpcInstance npc, final L2PcInstance player, final boolean repeating)
 	{
 		_name = name;
@@ -74,9 +72,13 @@ public class QuestTimer
 		_npc = npc;
 		_isRepeating = repeating;
 		if (repeating)
+		{
 			_schedular = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new ScheduleTimerTask(), time, time); // Prepare auto end task
+		}
 		else
+		{
 			_schedular = ThreadPoolManager.getInstance().scheduleGeneral(new ScheduleTimerTask(), time); // Prepare auto end task
+		}
 	}
 	
 	public QuestTimer(final Quest quest, final String name, final long time, final L2NpcInstance npc, final L2PcInstance player)
@@ -110,7 +112,9 @@ public class QuestTimer
 		}
 		
 		if (removeTimer)
+		{
 			getQuest().removeQuestTimer(this);
+		}
 		
 	}
 	
@@ -120,17 +124,21 @@ public class QuestTimer
 	public boolean isMatch(final Quest quest, final String name, final L2NpcInstance npc, final L2PcInstance player)
 	{
 		/*
-		 * if (quest instanceof Frintezza_l2j) { LOG.info("#### INPUT Parameters ####"); LOG.info("Quest Name: " + quest.getName()); LOG.info("Quest Timer Name: " + name); LOG.info("Quest NPC: " + npc); if (npc != null) { LOG.info(" NPC Name: " + npc.getName());
-		 * LOG.info(" NPC Id: " + npc.getNpcId()); LOG.info(" NPC Instance: " + npc.getInstanceId()); } LOG.info("Quest Player: " + player); if (player != null) { LOG.info(" Player Name: " + player.getName()); LOG.info(" Player Instance: " + player.getInstanceId()); }
-		 * LOG.info("\n#### LOCAL Parameters ####"); LOG.info("Quest Name: " + getQuest().getName()); LOG.info("Quest Timer Name: " + getName()); LOG.info("Quest NPC: " + getNpc()); if (getNpc() != null) { LOG.info(" NPC Name: " + getNpc().getName()); LOG.info(" NPC Id: " +
-		 * getNpc().getNpcId()); LOG.info(" NPC Instance: " + getNpc().getInstanceId()); } LOG.info("Quest Player: " + getPlayer()); if (getPlayer() != null) { LOG.info(" Player Name: " + getPlayer().getName()); LOG.info(" Player Instance: " + getPlayer().getInstanceId()); } }
+		 * if (quest instanceof Frintezza_l2j) { LOG.info("#### INPUT Parameters ####"); LOG.info("Quest Name: " + quest.getName()); LOG.info("Quest Timer Name: " + name); LOG.info("Quest NPC: " + npc); if (npc != null) { LOG.info(" NPC Name: " + npc.getName()); LOG.info(" NPC Id: " +
+		 * npc.getNpcId()); LOG.info(" NPC Instance: " + npc.getInstanceId()); } LOG.info("Quest Player: " + player); if (player != null) { LOG.info(" Player Name: " + player.getName()); LOG.info(" Player Instance: " + player.getInstanceId()); } LOG.info("\n#### LOCAL Parameters ####");
+		 * LOG.info("Quest Name: " + getQuest().getName()); LOG.info("Quest Timer Name: " + getName()); LOG.info("Quest NPC: " + getNpc()); if (getNpc() != null) { LOG.info(" NPC Name: " + getNpc().getName()); LOG.info(" NPC Id: " + getNpc().getNpcId()); LOG.info(" NPC Instance: " +
+		 * getNpc().getInstanceId()); } LOG.info("Quest Player: " + getPlayer()); if (getPlayer() != null) { LOG.info(" Player Name: " + getPlayer().getName()); LOG.info(" Player Instance: " + getPlayer().getInstanceId()); } }
 		 */
 		
 		if (quest == null || name == null)
+		{
 			return false;
+		}
 		
 		if (quest != getQuest() || name.compareToIgnoreCase(getName()) != 0)
+		{
 			return false;
+		}
 		
 		return npc == getNpc() && player == getPlayer();
 	}

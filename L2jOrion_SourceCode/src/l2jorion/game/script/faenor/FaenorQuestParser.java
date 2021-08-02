@@ -22,14 +22,14 @@ package l2jorion.game.script.faenor;
 
 import javax.script.ScriptContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
 import l2jorion.Config;
 import l2jorion.game.script.Parser;
 import l2jorion.game.script.ParserFactory;
 import l2jorion.game.script.ScriptEngine;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 /**
  * @author Luis Arias

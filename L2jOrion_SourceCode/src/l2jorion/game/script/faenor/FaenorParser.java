@@ -32,9 +32,6 @@ import org.w3c.dom.NodeList;
 import l2jorion.Config;
 import l2jorion.game.script.Parser;
 
-/**
- * @author Luis Arias
- */
 public abstract class FaenorParser extends Parser
 {
 	protected static FaenorInterface _bridge = FaenorInterface.getInstance();
@@ -64,10 +61,14 @@ public abstract class FaenorParser extends Parser
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			if (defaultValue != null)
+			{
 				return defaultValue;
+			}
 			throw new NullPointerException("FaenorParser: attribute " + e.getMessage());
 		}
 	}
@@ -81,16 +82,22 @@ public abstract class FaenorParser extends Parser
 			{
 				final Node node = list.item(i);
 				if (node.getNodeName().equalsIgnoreCase(elementName))
+				{
 					return node.getTextContent();
+				}
 			}
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		if (defaultValue != null)
+		{
 			return defaultValue;
+		}
 		throw new NullPointerException();
 		
 	}

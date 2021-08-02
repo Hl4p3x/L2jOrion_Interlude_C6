@@ -94,6 +94,7 @@ class Quest (JQuest) :
             st.takeItems(DAIRY_OF_ALLANA,1)
             st.takeItems(LIZARD_CAPTAIN_ORDER,1)
             st.takeItems(CRYSTAL_MEDALLION,1)
+            st.addExpAndSp(16000,5650)
             st.giveItems(LEAF_OF_ORACLE,1)
             st.set("cond","0")
             st.setState(COMPLETED)

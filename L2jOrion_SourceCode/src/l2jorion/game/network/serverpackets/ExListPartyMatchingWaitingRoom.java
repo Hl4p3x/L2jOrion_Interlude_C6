@@ -22,12 +22,10 @@ import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.PartyMatchWaitingList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author Gnacik
- */
 public class ExListPartyMatchingWaitingRoom extends L2GameServerPacket
 {
 	private final L2PcInstance _activeChar;
+	
 	@SuppressWarnings("unused")
 	private final int _page;
 	private final int _minlvl;
@@ -68,7 +66,9 @@ public class ExListPartyMatchingWaitingRoom extends L2GameServerPacket
 		{
 			// Don't add yourself in the list
 			if (cha == null || cha == _activeChar)
+			{
 				continue;
+			}
 			
 			if (!cha.isPartyWaiting())
 			{
@@ -77,7 +77,9 @@ public class ExListPartyMatchingWaitingRoom extends L2GameServerPacket
 			}
 			
 			if ((cha.getLevel() < _minlvl) || (cha.getLevel() > _maxlvl))
+			{
 				continue;
+			}
 			
 			_members.add(cha);
 		}

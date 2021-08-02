@@ -29,16 +29,11 @@ import javolution.util.FastList;
 import l2jorion.game.datatables.csv.HennaTable;
 import l2jorion.game.templates.L2HelperBuff;
 import l2jorion.game.templates.StatsSet;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * This class represents the Newbie Helper Buff list. Author: Ayor
- */
 
 public class HelperBuffTable
 {
@@ -167,7 +162,7 @@ public class HelperBuffTable
 			helperBuff.add(template);
 		}
 		
-		LOG.info("Helper Buff Table: Loaded " + helperBuff.size() + " templates");
+		LOG.info("HelperBuffTable: Loaded " + helperBuff.size() + " helper buff templates");
 		
 	}
 	

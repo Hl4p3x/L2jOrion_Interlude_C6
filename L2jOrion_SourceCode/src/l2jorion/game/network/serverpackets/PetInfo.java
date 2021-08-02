@@ -24,15 +24,10 @@ import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2SummonInstance;
 
-/**
- * This class ...
- * @version $Revision: 1.6.2.5.2.12 $ $Date: 2005/03/31 09:19:16 $
- */
 public class PetInfo extends L2GameServerPacket
 {
-	// private static Logger LOG = LoggerFactory.getLogger(PetInfo.class);
-	
 	private static final String _S__CA_PETINFO = "[S] b1 PetInfo";
+	
 	private final L2Summon _summon;
 	private final int _x, _y, _z, _heading;
 	private final boolean _isSummoned;
@@ -45,10 +40,6 @@ public class PetInfo extends L2GameServerPacket
 	private final int _maxHp, _maxMp;
 	private int _maxFed, _curFed;
 	
-	/**
-	 * rev 478 dddddddddddddddddddffffdddcccccSSdddddddddddddddddddddddddddhc
-	 * @param summon
-	 */
 	public PetInfo(final L2Summon summon)
 	{
 		_summon = summon;
@@ -65,6 +56,7 @@ public class PetInfo extends L2GameServerPacket
 		_swimWalkSpd = _flWalkSpd = _flyWalkSpd = _walkSpd;
 		_maxHp = _summon.getMaxHp();
 		_maxMp = _summon.getMaxMp();
+		
 		if (_summon instanceof L2PetInstance)
 		{
 			final L2PetInstance pet = (L2PetInstance) _summon;
@@ -104,8 +96,8 @@ public class PetInfo extends L2GameServerPacket
 		writeD(_flyRunSpd);
 		writeD(_flyWalkSpd);
 		
-		writeF(1/* _cha.getProperMultiplier() */);
-		writeF(1/* _cha.getAttackSpeedMultiplier() */);
+		writeF(1);
+		writeF(1);
 		writeF(_summon.getTemplate().collisionRadius);
 		writeF(_summon.getTemplate().collisionHeight);
 		writeD(0); // right hand weapon
@@ -166,10 +158,6 @@ public class PetInfo extends L2GameServerPacket
 		writeD(_summon.getSpiritShotsPerHit()); // How many spiritshots this servitor uses per hit
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

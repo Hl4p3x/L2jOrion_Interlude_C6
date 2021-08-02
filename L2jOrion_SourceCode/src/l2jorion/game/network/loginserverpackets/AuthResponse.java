@@ -20,18 +20,11 @@
  */
 package l2jorion.game.network.loginserverpackets;
 
-/**
- * @author -Wooden-
- */
 public class AuthResponse extends LoginServerBasePacket
 {
-	
 	private final int _serverId;
 	private final String _serverName;
 	
-	/**
-	 * @param decrypt
-	 */
 	public AuthResponse(final byte[] decrypt)
 	{
 		super(decrypt);
@@ -39,17 +32,11 @@ public class AuthResponse extends LoginServerBasePacket
 		_serverName = readS();
 	}
 	
-	/**
-	 * @return Returns the serverId.
-	 */
 	public int getServerId()
 	{
 		return _serverId;
 	}
 	
-	/**
-	 * @return Returns the serverName.
-	 */
 	public String getServerName()
 	{
 		return _serverName;

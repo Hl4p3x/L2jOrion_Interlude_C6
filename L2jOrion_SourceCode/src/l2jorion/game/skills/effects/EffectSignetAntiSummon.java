@@ -54,7 +54,9 @@ public final class EffectSignetAntiSummon extends L2Effect
 	public boolean onActionTime()
 	{
 		if (getCount() == getTotalCount() - 1)
+		{
 			return true; // do nothing first time
+		}
 		final int mpConsume = getSkill().getMpConsume();
 		
 		for (final L2Character cha : _actor.getKnownList().getKnownCharactersInRadius(getSkill().getSkillRadius()))

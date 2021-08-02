@@ -22,6 +22,7 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
 import l2jorion.game.managers.BoatManager;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2BoatInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
@@ -29,7 +30,6 @@ import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToLocationInVehicle;
 import l2jorion.game.network.serverpackets.StopMoveInVehicle;
 import l2jorion.game.templates.L2WeaponType;
-import l2jorion.util.Point3D;
 
 public final class RequestMoveToLocationInVehicle extends L2GameClientPacket
 {
@@ -109,8 +109,8 @@ public final class RequestMoveToLocationInVehicle extends L2GameClientPacket
 			activeChar.getPosition().setZ(activeChar.getClientZ());
 		}
 		
-		final Point3D pos = new Point3D(_targetX, _targetY, _targetZ);
-		final Point3D originPos = new Point3D(_originX, _originY, _originZ);
+		final Location pos = new Location(_targetX, _targetY, _targetZ);
+		final Location originPos = new Location(_originX, _originY, _originZ);
 		activeChar.setInVehiclePosition(pos);
 		activeChar.broadcastPacket(new MoveToLocationInVehicle(activeChar, pos, originPos));
 	}

@@ -23,9 +23,6 @@ import l2jorion.game.model.actor.instance.L2SiegeSummonInstance;
 import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.skills.Env;
 
-/**
- * @author Damon L2jOrion
- */
 public class EffectTargetMe extends L2Effect
 {
 	public EffectTargetMe(final Env env, final EffectTemplate template)
@@ -33,31 +30,25 @@ public class EffectTargetMe extends L2Effect
 		super(env, template);
 	}
 	
-	/**
-	 * @see l2jorion.game.model.L2Effect#getEffectType()
-	 */
 	@Override
 	public EffectType getEffectType()
 	{
 		return EffectType.TARGET_ME;
 	}
 	
-	/**
-	 * @see l2jorion.game.model.L2Effect#onStart()
-	 */
 	@Override
 	public void onStart()
 	{
 		if (getEffected() instanceof L2PlayableInstance)
 		{
 			if (getEffected() instanceof L2SiegeSummonInstance)
+			{
 				return;
+			}
 			
 			if (getEffected().getTarget() != getEffector())
 			{
-				// Target is different - stop autoattack and break cast
-				// getEffected().abortAttack();
-				// getEffected().abortCast();
+				
 				getEffected().setTarget(getEffector());
 				final MyTargetSelected my = new MyTargetSelected(getEffector().getObjectId(), 0);
 				getEffected().sendPacket(my);
@@ -67,22 +58,14 @@ public class EffectTargetMe extends L2Effect
 		}
 	}
 	
-	/**
-	 * @see l2jorion.game.model.L2Effect#onExit()
-	 */
 	@Override
 	public void onExit()
 	{
-		// nothing
 	}
 	
-	/**
-	 * @see l2jorion.game.model.L2Effect#onActionTime()
-	 */
 	@Override
 	public boolean onActionTime()
 	{
-		// nothing
 		return false;
 	}
 }

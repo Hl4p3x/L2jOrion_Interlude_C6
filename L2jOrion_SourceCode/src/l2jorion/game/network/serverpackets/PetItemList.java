@@ -20,21 +20,18 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PetInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * This class ...
- * @version $Revision: 1.4.2.1.2.4 $ $Date: 2005/03/27 15:29:39 $
- */
 public class PetItemList extends L2GameServerPacket
 {
 	private static Logger LOG = LoggerFactory.getLogger(PetItemList.class);
+	
 	private static final String _S__cb_PETITEMLIST = "[S] b2  PetItemList";
+	
 	private final L2PetInstance _activeChar;
 	
 	public PetItemList(final L2PetInstance character)
@@ -82,10 +79,6 @@ public class PetItemList extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

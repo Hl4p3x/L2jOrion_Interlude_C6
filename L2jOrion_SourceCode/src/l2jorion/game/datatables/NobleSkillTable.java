@@ -21,9 +21,6 @@ package l2jorion.game.datatables;
 
 import l2jorion.game.model.L2Skill;
 
-/**
- * @author -Nemesiss-
- */
 public class NobleSkillTable
 {
 	private static NobleSkillTable _instance;

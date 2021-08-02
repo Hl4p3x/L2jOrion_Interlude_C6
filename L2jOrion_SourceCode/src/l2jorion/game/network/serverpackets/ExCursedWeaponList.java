@@ -22,13 +22,10 @@ package l2jorion.game.network.serverpackets;
 
 import java.util.List;
 
-/**
- * Format: (ch) d[d]
- * @author -Wooden-
- */
 public class ExCursedWeaponList extends L2GameServerPacket
 {
 	private static final String _S__FE_45_EXCURSEDWEAPONLIST = "[S] FE:45 ExCursedWeaponList";
+	
 	private final List<Integer> _cursedWeaponIds;
 	
 	public ExCursedWeaponList(final List<Integer> cursedWeaponIds)

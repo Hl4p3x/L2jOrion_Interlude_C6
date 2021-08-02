@@ -23,23 +23,24 @@ package l2jorion.game.handler.item;
 
 import l2jorion.Config;
 import l2jorion.game.datatables.SkillTable;
-import l2jorion.game.datatables.csv.SummonItemsData;
+import l2jorion.game.datatables.csv.PetItemsData;
 import l2jorion.game.datatables.sql.NpcTable;
+import l2jorion.game.enums.AchType;
 import l2jorion.game.handler.IItemHandler;
 import l2jorion.game.idfactory.IdFactory;
-import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2SummonItem;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.model.actor.instance.L2PcInstance.SkillDat;
 import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
-import l2jorion.game.model.actor.instance.L2PcInstance.SkillDat;
 import l2jorion.game.model.entity.event.CTF;
 import l2jorion.game.model.entity.event.DM;
 import l2jorion.game.model.entity.event.TvT;
 import l2jorion.game.model.spawn.L2Spawn;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MagicSkillLaunched;
@@ -55,7 +56,9 @@ public class SummonItems implements IItemHandler
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		
@@ -66,7 +69,7 @@ public class SummonItems implements IItemHandler
 		}
 		
 		// if(activeChar._inEventTvT && TvT._started && !Config.TVT_ALLOW_SUMMON)
-		if (activeChar._inEventTvT && TvT.is_started() && !Config.TVT_ALLOW_SUMMON || activeChar.isInsideZone(L2Character.ZONE_NOLANDING))
+		if (activeChar._inEventTvT && TvT.is_started() && !Config.TVT_ALLOW_SUMMON || activeChar.isInsideZone(ZoneId.ZONE_NOLANDING))
 		{
 			final ActionFailed af = ActionFailed.STATIC_PACKET;
 			activeChar.sendPacket(af);
@@ -81,7 +84,6 @@ public class SummonItems implements IItemHandler
 			return;
 		}
 		
-		// if(activeChar._inEventCTF && CTF._started && !Config.CTF_ALLOW_SUMMON)
 		if (activeChar._inEventCTF && CTF.is_started() && !Config.CTF_ALLOW_SUMMON)
 		{
 			final ActionFailed af = ActionFailed.STATIC_PACKET;
@@ -97,13 +99,15 @@ public class SummonItems implements IItemHandler
 		
 		if (activeChar.isParalyzed())
 		{
-			activeChar.sendMessage("You Cannot Use This While You Are Paralyzed");
+			activeChar.sendMessage("You cannot use this while you are paralyzed.");
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 		
 		if (activeChar.inObserverMode())
+		{
 			return;
+		}
 		
 		if (activeChar.isInOlympiadMode())
 		{
@@ -111,7 +115,7 @@ public class SummonItems implements IItemHandler
 			return;
 		}
 		
-		L2SummonItem sitem = SummonItemsData.getInstance().getSummonItem(item.getItemId());
+		L2SummonItem sitem = PetItemsData.getInstance().getSummonItem(item.getItemId());
 		
 		if ((!activeChar.isGM() && activeChar.getPet() != null || activeChar.isMounted()) && sitem.isPetSummon())
 		{
@@ -135,12 +139,16 @@ public class SummonItems implements IItemHandler
 		final int npcID = sitem.getNpcId();
 		
 		if (npcID == 0)
+		{
 			return;
+		}
 		
 		L2NpcTemplate npcTemplate = NpcTable.getInstance().getTemplate(npcID);
 		
 		if (npcTemplate == null)
+		{
 			return;
+		}
 		
 		switch (sitem.getType())
 		{
@@ -148,10 +156,6 @@ public class SummonItems implements IItemHandler
 				try
 				{
 					L2Spawn spawn = new L2Spawn(npcTemplate);
-					
-					// if(spawn == null)
-					// return;
-					
 					spawn.setId(IdFactory.getInstance().getNextId());
 					spawn.setLocx(activeChar.getX());
 					spawn.setLocy(activeChar.getY());
@@ -159,13 +163,18 @@ public class SummonItems implements IItemHandler
 					L2World.getInstance().storeObject(spawn.spawnOne());
 					activeChar.destroyItem("Summon", item.getObjectId(), 1, null, false);
 					activeChar.sendMessage("Created " + npcTemplate.name + " at x: " + spawn.getLocx() + " y: " + spawn.getLocy() + " z: " + spawn.getLocz());
-					spawn = null;
+					
+					if (npcTemplate.getNpcId() == ChristmasTree.SPECIAL_TREE_ID)
+					{
+						activeChar.getAchievement().increase(AchType.SPAWN_CHRISTMAS_TREE);
+					}
 				}
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
-					
+					}
 					activeChar.sendMessage("Target is not ingame.");
 				}
 				
@@ -177,11 +186,12 @@ public class SummonItems implements IItemHandler
 				activeChar.useMagic(skill, true, true);
 				activeChar.sendPacket(new SystemMessage(SystemMessageId.SUMMON_A_PET));
 				ThreadPoolManager.getInstance().scheduleGeneral(new PetSummonFinalizer(activeChar, npcTemplate, item), 4800);
-				
 				break;
 			case 2: // wyvern
 				if (!activeChar.disarmWeapons())
+				{
 					return;
+				}
 				
 				final Ride mount = new Ride(activeChar.getObjectId(), Ride.ACTION_MOUNT, sitem.getNpcId());
 				activeChar.sendPacket(mount);
@@ -189,10 +199,6 @@ public class SummonItems implements IItemHandler
 				activeChar.setMountType(mount.getMountType());
 				activeChar.setMountObjectID(item.getObjectId());
 		}
-		
-		activeChar = null;
-		sitem = null;
-		npcTemplate = null;
 	}
 	
 	static class PetSummonFeedWait implements Runnable
@@ -223,7 +229,9 @@ public class SummonItems implements IItemHandler
 			catch (final Throwable e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -249,18 +257,24 @@ public class SummonItems implements IItemHandler
 				final SkillDat skilldat = _activeChar.getCurrentSkill();
 				
 				if (!_activeChar.isCastingNow() || (skilldat != null && skilldat.getSkillId() != 2046))
+				{
 					return;
+				}
 				
 				_activeChar.sendPacket(new MagicSkillLaunched(_activeChar, 2046, 1));
 				
 				// check for summon item validity
 				if (_item == null || _item.getOwnerId() != _activeChar.getObjectId() || _item.getLocation() != L2ItemInstance.ItemLocation.INVENTORY)
+				{
 					return;
+				}
 				
 				final L2PetInstance petSummon = L2PetInstance.spawnPet(_npcTemplate, _activeChar, _item);
 				
 				if (petSummon == null)
+				{
 					return;
+				}
 				
 				petSummon.setTitle(_activeChar.getName());
 				
@@ -303,7 +317,9 @@ public class SummonItems implements IItemHandler
 			catch (final Throwable e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -311,6 +327,6 @@ public class SummonItems implements IItemHandler
 	@Override
 	public int[] getItemIds()
 	{
-		return SummonItemsData.getInstance().itemIDs();
+		return PetItemsData.getInstance().itemIDs();
 	}
 }

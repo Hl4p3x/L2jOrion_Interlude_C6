@@ -1,6 +1,6 @@
 /*
- * L2jOrion Project - www.l2jorion.com 
- * 
+ * L2jOrion Project - www.l2jorion.com
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -27,6 +27,7 @@ import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.cache.HtmCache;
 import l2jorion.game.controllers.GameTimeController;
+import l2jorion.game.enums.AchType;
 import l2jorion.game.managers.QuestManager;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2DropData;
@@ -36,7 +37,6 @@ import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExShowQuestMark;
-import l2jorion.game.network.serverpackets.ExShowScreenMessage;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.ItemList;
 import l2jorion.game.network.serverpackets.PlaySound;
@@ -48,54 +48,31 @@ import l2jorion.game.network.serverpackets.TutorialEnableClientEvent;
 import l2jorion.game.network.serverpackets.TutorialShowHtml;
 import l2jorion.game.network.serverpackets.TutorialShowQuestionMark;
 import l2jorion.game.skills.Stats;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author Luis Arias
- */
 public final class QuestState
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(Quest.class);
 	
-	/** Quest associated to the QuestState */
 	private final String _questName;
 	
-	/** Player who engaged the quest */
 	private final L2PcInstance _player;
 	
-	/** State of the quest */
 	private State _state;
 	
-	/** Boolean representing the completion of the quest */
 	private boolean _isCompleted;
 	
-	/** List of couples (variable for quest,value of the variable for quest) */
 	private Map<String, String> _vars;
 	
-	/** Boolean flag letting QuestStateManager know to exit quest when cleaning up */
 	private boolean _isExitQuestOnCleanUp = false;
 	
-	/**
-	 * Constructor of the QuestState : save the quest in the list of quests of the player.<BR/>
-	 * <BR/>
-	 * <U><I>Actions :</U></I><BR/>
-	 * <LI>Save informations in the object QuestState created (Quest, Player, Completion, State)</LI> <LI>Add the QuestState in the player's list of quests by using setQuestState()</LI> <LI>Add drops gotten by the quest</LI> <BR/>
-	 * @param quest : quest associated with the QuestState
-	 * @param player : L2PcInstance pointing out the player
-	 * @param state : state of the quest
-	 * @param completed : boolean for completion of the quest
-	 */
 	QuestState(final Quest quest, final L2PcInstance player, final State state, final boolean completed)
 	{
 		_questName = quest.getName();
 		_player = player;
-		
 		_isCompleted = completed;
-		
-		// set the state of the quest
 		_state = state;
 	}
 	
@@ -104,67 +81,43 @@ public final class QuestState
 		return _questName;
 	}
 	
-	/**
-	 * Return the quest
-	 * @return Quest
-	 */
 	public Quest getQuest()
 	{
 		return QuestManager.getInstance().getQuest(_questName);
 	}
 	
-	/**
-	 * Return the L2PcInstance
-	 * @return L2PcInstance
-	 */
 	public L2PcInstance getPlayer()
 	{
 		return _player;
 	}
 	
-	/**
-	 * Return the state of the quest
-	 * @return State
-	 */
 	public State getState()
 	{
 		return _state;
 	}
 	
-	/**
-	 * Return true if quest completed, false otherwise
-	 * @return boolean
-	 */
 	public boolean isCompleted()
 	{
 		return _isCompleted;
 	}
 	
-	/**
-	 * Return true if quest started, false otherwise
-	 * @return boolean
-	 */
 	public boolean isStarted()
 	{
 		if (getStateId().equals("Start") || getStateId().equals("Completed"))
+		{
 			return false;
+		}
 		
 		return true;
 	}
 	
-	/**
-	 * Return state of the quest after its initialization.<BR>
-	 * <BR>
-	 * <U><I>Actions :</I></U> <LI>Remove drops from previous state</LI> <LI>Set new state of the quest</LI> <LI>Add drop for new state</LI> <LI>Update information in database</LI> <LI>Send packet QuestList to client</LI>
-	 * @param state
-	 * @return object
-	 */
 	public Object setState(final State state)
 	{
-		// set new state
 		_state = state;
 		if (state == null)
+		{
 			return null;
+		}
 		
 		if (getStateId().equals("Completed"))
 		{
@@ -177,29 +130,21 @@ public final class QuestState
 		
 		Quest.updateQuestInDb(this);
 		
-		final QuestList ql = new QuestList();
-		getPlayer().sendPacket(ql);
+		getPlayer().sendPacket(new QuestList());
+		
 		return state;
 	}
 	
-	/**
-	 * Return ID of the state of the quest
-	 * @return String
-	 */
 	public String getStateId()
 	{
 		if (getState() != null)
+		{
 			return getState().getName();
+		}
 		
 		return "Created";
 	}
 	
-	/**
-	 * Add parameter used in quests.
-	 * @param var : String pointing out the name of the variable for quest
-	 * @param val : String pointing out the value of the variable for quest
-	 * @return String (equal to parameter "val")
-	 */
 	String setInternal(final String var, String val)
 	{
 		if (_vars == null)
@@ -217,17 +162,6 @@ public final class QuestState
 		return val;
 	}
 	
-	/**
-	 * Return value of parameter "val" after adding the couple (var,val) in class variable "vars".<BR>
-	 * <BR>
-	 * <U><I>Actions :</I></U><BR>
-	 * <LI>Initialize class variable "vars" if is null</LI> <LI>Initialize parameter "val" if is null</LI> <LI>Add/Update couple (var,val) in class variable FastMap "vars"</LI> <LI>If the key represented by "var" exists in FastMap "vars", the couple (var,val) is updated in the database. The key is
-	 * known as existing if the preceding value of the key (given as result of function put()) is not null.<BR>
-	 * If the key doesn't exist, the couple is added/created in the database</LI>
-	 * @param var : String indicating the name of the variable for quest
-	 * @param val : String indicating the value of the variable for quest
-	 * @return String (equal to parameter "val")
-	 */
 	public String set(final String var, String val)
 	{
 		if (_vars == null)
@@ -240,7 +174,6 @@ public final class QuestState
 			val = "";
 		}
 		
-		// FastMap.put() returns previous value associated with specified key, or null if there was no mapping for key.
 		String old = _vars.put(var, val);
 		
 		int previousVal = 0;
@@ -253,8 +186,7 @@ public final class QuestState
 			}
 			catch (final NumberFormatException e)
 			{
-				//LOG.info(getPlayer().getName() + ", " + getQuestName() + " cond [" + val + "] is not an integer. Info: " + e);
-				
+				// LOG.info(getPlayer().getName() + ", " + getQuestName() + " cond [" + val + "] is not an integer. Info: " + e);
 			}
 			
 			Quest.updateQuestVarInDb(this, var, val);
@@ -296,22 +228,15 @@ public final class QuestState
 		return val;
 	}
 	
-	/**
-	 * Internally handles the progression of the quest so that it is ready for sending appropriate packets to the client<BR>
-	 * <BR>
-	 * <U><I>Actions :</I></U><BR>
-	 * <LI>Check if the new progress number resets the quest to a previous (smaller) step</LI> <LI>If not, check if quest progress steps have been skipped</LI> <LI>If skipped, prepare the variable completedStateFlags appropriately to be ready for sending to clients</LI> <LI>If no steps were skipped,
-	 * flags do not need to be prepared...</LI> <LI>If the passed step resets the quest to a previous step, reset such that steps after the parameter are not considered, while skipped steps before the parameter, if any, maintain their info</LI>
-	 * @param cond : int indicating the step number for the current quest progress (as will be shown to the client)
-	 * @param old : int indicating the previously noted step For more info on the variable communicating the progress steps to the client, please see
-	 */
 	private void setCond(final int cond, final int old)
 	{
 		int completedStateFlags = 0; // initializing...
 		
 		// if there is no change since last setting, there is nothing to do here
 		if (cond == old)
+		{
 			return;
+		}
 		
 		// cond 0 and 1 do not need completedStateFlags. Also, if cond > 1, the 1st step must
 		// always exist (i.e. it can never be skipped). So if cond is 2, we can still safely
@@ -382,25 +307,26 @@ public final class QuestState
 		}
 		
 		// send a packet to the client to inform it of the quest progress (step change)
-		QuestList ql = new QuestList();
-		getPlayer().sendPacket(ql);
+		getPlayer().sendPacket(new QuestList());
 		
 		int questId = getQuest().getQuestIntId();
 		if (questId > 0 && cond > 0)
+		{
 			getPlayer().sendPacket(new ExShowQuestMark(questId));
+		}
+		
+		if (isCompleted())
+		{
+			getPlayer().getAchievement().increase(AchType.QUEST_COMPLETE);
+		}
 	}
 	
-	/**
-	 * Remove the variable of quest from the list of variables for the quest.<BR>
-	 * <BR>
-	 * <U><I>Concept : </I></U> Remove the variable of quest represented by "var" from the class variable FastMap "vars" and from the database.
-	 * @param var : String designating the variable for the quest to be deleted
-	 * @return String pointing out the previous value associated with the variable "var"
-	 */
 	public String unset(final String var)
 	{
 		if (_vars == null)
+		{
 			return null;
+		}
 		
 		final String old = _vars.remove(var);
 		
@@ -412,70 +338,63 @@ public final class QuestState
 		return old;
 	}
 	
-	/**
-	 * Return the value of the variable of quest represented by "var"
-	 * @param var : name of the variable of quest
-	 * @return Object
-	 */
 	public Object get(final String var)
 	{
 		if (_vars == null)
+		{
 			return null;
+		}
 		
 		return _vars.get(var);
 	}
 	
-	/**
-	 * Return the value of the variable of quest represented by "var"
-	 * @param var : String designating the variable for the quest
-	 * @return int
-	 */
 	public int getInt(final String var)
 	{
+		if (_vars == null)
+		{
+			return 0;
+		}
+		
+		final String variable = _vars.get(var);
+		if ((variable == null) || variable.isEmpty())
+		{
+			return 0;
+		}
+		
 		int varint = 0;
 		
-		String var_value = "";
-		if (_vars != null && (var_value = _vars.get(var)) != null)
+		try
 		{
-			try
+			varint = Integer.parseInt(variable);
+		}
+		catch (final Exception e)
+		{
+			if (Config.ENABLE_ALL_EXCEPTIONS)
 			{
-				
-				varint = Integer.parseInt(var_value);
+				e.printStackTrace();
 			}
-			catch (final Exception e)
+			
+			LOG.info(getPlayer().getName() + ": variable " + var + " isn't an integer: returned value will be " + varint + e);
+			
+			if (Config.AUTODELETE_INVALID_QUEST_DATA)
 			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-					e.printStackTrace();
-				
-				LOG.info(getPlayer().getName() + ": variable " + var + " isn't an integer: returned value will be " + varint + e);
-				
-				if (Config.AUTODELETE_INVALID_QUEST_DATA)
-				{
-					exitQuest(true);
-				}
+				exitQuest(true);
 			}
 		}
 		
 		return varint;
 	}
 	
-	/**
-	 * Add player to get notification of characters death
-	 * @param character : L2Character of the character to get notification of death
-	 */
 	public void addNotifyOfDeath(final L2Character character)
 	{
 		if (character == null)
+		{
 			return;
+		}
 		
 		character.addNotifyQuestOfDeath(this);
 	}
 	
-	/**
-	 * Return the quantity of one sort of item hold by the player
-	 * @param itemId : ID of the item wanted to be count
-	 * @return int
-	 */
 	public int getQuestItemsCount(final int itemId)
 	{
 		int count = 0;
@@ -484,36 +403,30 @@ public final class QuestState
 		{
 			
 			for (final L2ItemInstance item : getPlayer().getInventory().getItems())
+			{
 				if (item != null && item.getItemId() == itemId)
 				{
 					count += item.getCount();
 				}
+			}
 			
 		}
 		
 		return count;
 	}
 	
-	/**
-	 * Return the level of enchantment on the weapon of the player(Done specifically for weapon SA's)
-	 * @param itemId : ID of the item to check enchantment
-	 * @return int
-	 */
 	public int getEnchantLevel(final int itemId)
 	{
 		final L2ItemInstance enchanteditem = getPlayer().getInventory().getItemByItemId(itemId);
 		
 		if (enchanteditem == null)
+		{
 			return 0;
+		}
 		
 		return enchanteditem.getEnchantLevel();
 	}
 	
-	/**
-	 * Give item/reward to the player
-	 * @param itemId
-	 * @param count
-	 */
 	public synchronized void giveItems(final int itemId, final int count)
 	{
 		giveItems(itemId, count, 0);
@@ -522,7 +435,9 @@ public final class QuestState
 	public synchronized void giveItems(final int itemId, int count, final int enchantlevel)
 	{
 		if (count <= 0)
+		{
 			return;
+		}
 		
 		final int questId = getQuest().getQuestIntId();
 		
@@ -537,7 +452,9 @@ public final class QuestState
 		final L2ItemInstance item = getPlayer().getInventory().addItem("Quest", itemId, count, getPlayer(), getPlayer().getTarget());
 		
 		if (item == null)
+		{
 			return;
+		}
 		
 		if (enchantlevel > 0)
 		{
@@ -551,7 +468,6 @@ public final class QuestState
 			smsg.addNumber(count);
 			getPlayer().sendPacket(smsg);
 		}
-		// Otherwise, send message of object reward to client
 		else
 		{
 			if (count > 1)
@@ -585,15 +501,6 @@ public final class QuestState
 		getPlayer().sendPacket(su);
 	}
 	
-	/**
-	 * Drop Quest item using Config.RATE_DROP_QUEST
-	 * @param itemId int Item Identifier of the item to be dropped
-	 * @param count (minCount, maxCount) : int Quantity of items to be dropped
-	 * @param neededCount Quantity of items needed for quest
-	 * @param dropChance int Base chance of drop, same as in droplist
-	 * @param sound boolean indicating whether to play sound
-	 * @return boolean indicating whether player has requested number of items
-	 */
 	public boolean dropQuestItems(final int itemId, final int count, final int neededCount, final int dropChance, final boolean sound)
 	{
 		return dropQuestItems(itemId, count, count, neededCount, dropChance, sound);
@@ -606,17 +513,20 @@ public final class QuestState
 		final int currentCount = getQuestItemsCount(itemId);
 		
 		if (neededCount > 0 && currentCount >= neededCount)
+		{
 			return true;
+		}
 		
 		if (currentCount >= neededCount)
+		{
 			return true;
+		}
 		
 		int itemCount = 0;
 		final int random = Rnd.get(L2DropData.MAX_CHANCE);
 		
 		while (random < dropChance)
 		{
-			// Get the item quantity dropped
 			if (minCount < maxCount)
 			{
 				itemCount += Rnd.get(minCount, maxCount);
@@ -644,7 +554,9 @@ public final class QuestState
 			
 			// Inventory slot check
 			if (!getPlayer().getInventory().validateCapacityByItemId(itemId))
+			{
 				return false;
+			}
 			
 			// just wait 3-5 seconds before the drop
 			try
@@ -685,21 +597,15 @@ public final class QuestState
 	}
 	
 	// END STUFF THAT WILL PROBABLY BE CHANGED
-	
-	/**
-	 * Remove items from player's inventory when talking to NPC in order to have rewards.<BR>
-	 * <BR>
-	 * <U><I>Actions :</I></U> <LI>Destroy quantity of items wanted</LI> <LI>Send new inventory list to player</LI>
-	 * @param itemId : Identifier of the item
-	 * @param count : Quantity of items to destroy
-	 */
 	public void takeItems(final int itemId, int count)
 	{
 		// Get object item from player's inventory list
 		L2ItemInstance item = getPlayer().getInventory().getItemByItemId(itemId);
 		
 		if (item == null)
+		{
 			return;
+		}
 		
 		if (getPlayer().isProcessingTransaction())
 		{
@@ -721,7 +627,9 @@ public final class QuestState
 		{
 			// Fix for destroyed quest items
 			if (item.isEquipped())
+			{
 				getPlayer().getInventory().unEquipItemInBodySlotAndRecord(item.getItem().getBodyPart());
+			}
 			
 			getPlayer().destroyItemByItemId("Quest", itemId, count, getPlayer(), true);
 		}
@@ -917,7 +825,9 @@ public final class QuestState
 	public QuestState exitQuest(final boolean repeatable)
 	{
 		if (isCompleted())
+		{
 			return this;
+		}
 		
 		// Say quest is completed
 		_isCompleted = true;
@@ -937,8 +847,7 @@ public final class QuestState
 		{
 			getPlayer().delQuestState(getQuestName());
 			Quest.deleteQuestInDb(this);
-			
-			_vars = null;
+			getPlayer().sendPacket(new QuestList());
 		}
 		else
 		{
@@ -954,8 +863,6 @@ public final class QuestState
 			
 			Quest.updateQuestInDb(this);
 		}
-		
-		itemIdList = null;
 		
 		return this;
 	}
@@ -981,7 +888,6 @@ public final class QuestState
 		}
 		
 		getPlayer().sendPacket(new TutorialShowHtml(text));
-		text = null;
 	}
 	
 	public void closeTutorialHtml()
@@ -1014,14 +920,15 @@ public final class QuestState
 	{
 		final int questId = getQuest().getQuestIntId();
 		
+		String questName = "255_Tutorial";
+		final QuestState st = _player.getQuestState(questName);
+		
 		if (questId == 1 || questId == 2 || questId == 4 || questId == 5 || questId == 166 || questId == 174)
 		{
 			if (_player != null)
 			{
-				final QuestState st = _player.getQuestState("7003_NewbieHelper");
 				if (st != null && st.getInt("cond") <= 1)
 				{
-					_player.sendPacket(new ExShowScreenMessage("Quest completed. Find the Newbie Helper.", 4000));
 					st.set("cond", "2");
 				}
 			}
@@ -1030,13 +937,8 @@ public final class QuestState
 		{
 			if (_player != null)
 			{
-				final QuestState st = _player.getQuestState("7003_NewbieHelper");
 				if (st != null && st.getInt("cond") == 4)
 				{
-					if (_player.getClassId().isMage())
-						_player.sendPacket(new ExShowScreenMessage("You earned a spiritshots for beginners. Find the Newbie Helper.", 4000));
-					else
-						_player.sendPacket(new ExShowScreenMessage("You earned a soulshots for beginners. Find the Newbie Helper.", 4000));
 					st.set("cond", "5");
 				}
 			}
@@ -1045,10 +947,8 @@ public final class QuestState
 		{
 			if (_player != null)
 			{
-				final QuestState st = _player.getQuestState("7003_NewbieHelper");
 				if (st != null && st.getInt("cond") == 6)
 				{
-					_player.sendPacket(new ExShowScreenMessage("You earned a new weapon. Go to the Newbie Helper.", 4000));
 					st.set("cond", "7");
 				}
 			}
@@ -1057,20 +957,14 @@ public final class QuestState
 		{
 			if (_player != null)
 			{
-				final QuestState st = _player.getQuestState("7003_NewbieHelper");
 				if (st != null && st.getInt("cond") == 8)
 				{
-					_player.sendPacket(new ExShowScreenMessage("Last stage completed. Go to the Newbie Helper.", 4000));
 					st.set("cond", "9");
 				}
 			}
 		}
 	}
 	
-	/**
-	 * @param itemId : ID of the item you're looking for
-	 * @return true if item exists in player's inventory, false - if not
-	 */
 	public boolean hasQuestItems(int itemId)
 	{
 		return _player.getInventory().getItemByItemId(itemId) != null;

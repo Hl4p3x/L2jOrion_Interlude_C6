@@ -40,6 +40,7 @@ public class ShortCutRegister extends L2GameServerPacket
 		
 		writeD(_shortcut.getType());
 		writeD(_shortcut.getSlot() + _shortcut.getPage() * 12); // C4 Client
+		
 		switch (_shortcut.getType())
 		{
 			case L2ShortCut.TYPE_ITEM: // 1
@@ -66,10 +67,6 @@ public class ShortCutRegister extends L2GameServerPacket
 		writeD(1);// ??
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

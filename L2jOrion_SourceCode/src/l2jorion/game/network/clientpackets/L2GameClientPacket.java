@@ -16,24 +16,17 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import java.nio.BufferOverflowException;
 import java.nio.BufferUnderflowException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import l2jorion.Config;
 import l2jorion.game.network.L2GameClient;
 import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.mmocore.ReceivablePacket;
 
-/**
- * Packets received by the game server from clients
- * @author KenM
- */
 public abstract class L2GameClientPacket extends ReceivablePacket<L2GameClient>
 {
-	private static final Logger LOG = LoggerFactory.getLogger(L2GameClientPacket.class);
+	protected static final Logger LOG = Logger.getLogger(L2GameClientPacket.class.getName());
 	
 	@Override
 	protected boolean read()
@@ -43,31 +36,14 @@ public abstract class L2GameClientPacket extends ReceivablePacket<L2GameClient>
 			readImpl();
 			return true;
 		}
-		catch (final BufferOverflowException e)
+		catch (Exception e)
 		{
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-				e.printStackTrace();
+			LOG.log(Level.SEVERE, "Client: " + getClient().toString() + " - Failed reading: " + getType() + " ; " + e.getMessage(), e);
 			
-			if (getClient() != null)
+			if (e instanceof BufferUnderflowException)
 			{
-				getClient().closeNow();
+				getClient().onBufferUnderflow();
 			}
-			
-			LOG.warn("Client: " + getClient().toString() + " - Buffer overflow and has been kicked");
-		}
-		catch (final BufferUnderflowException e)
-		{
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				e.printStackTrace();
-			}
-			
-			getClient().onBufferUnderflow();
-		}
-		catch (final Throwable t)
-		{
-			LOG.error("Client: " + getClient().toString() + " - Failed reading: " + getType() + " ; " + t.getMessage(), t);
-			t.printStackTrace();
 		}
 		return false;
 	}
@@ -80,6 +56,7 @@ public abstract class L2GameClientPacket extends ReceivablePacket<L2GameClient>
 		try
 		{
 			runImpl();
+			
 			if (this instanceof MoveBackwardToLocation || this instanceof AttackRequest || this instanceof RequestMagicSkillUse)
 			{
 				if (getClient().getActiveChar() != null)
@@ -90,8 +67,7 @@ public abstract class L2GameClientPacket extends ReceivablePacket<L2GameClient>
 		}
 		catch (final Throwable t)
 		{
-			LOG.error("Client: " + getClient().toString() + " - Failed reading: " + getType() + " ; " + t.getMessage(), t);
-			t.printStackTrace();
+			LOG.log(Level.SEVERE, "Client: " + getClient().toString() + " - Failed running: " + getType() + " ; " + t.getMessage(), t);
 			
 			if (this instanceof EnterWorld)
 			{
@@ -107,8 +83,5 @@ public abstract class L2GameClientPacket extends ReceivablePacket<L2GameClient>
 		getClient().sendPacket(gsp);
 	}
 	
-	/**
-	 * @return A String with this packet name for debuging purposes
-	 */
 	public abstract String getType();
 }

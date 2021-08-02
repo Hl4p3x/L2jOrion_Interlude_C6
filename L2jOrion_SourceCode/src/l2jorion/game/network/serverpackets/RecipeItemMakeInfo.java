@@ -20,21 +20,17 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.csv.RecipeTable;
 import l2jorion.game.model.L2RecipeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * format dddd
- * @version $Revision: 1.1.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class RecipeItemMakeInfo extends L2GameServerPacket
 {
 	private static final String _S__D7_RECIPEITEMMAKEINFO = "[S] D7 RecipeItemMakeInfo";
+	
 	private static Logger LOG = LoggerFactory.getLogger(RecipeItemMakeInfo.class);
 	
 	private final int _id;
@@ -76,10 +72,6 @@ public class RecipeItemMakeInfo extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

@@ -25,16 +25,16 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
 public class CharNameTable
 {
 	private final static Logger LOG = LoggerFactory.getLogger(CharNameTable.class);
+	
 	private final Map<Integer, String> _chars;
 	private final Map<Integer, Integer> _accessLevels;
 	
@@ -43,23 +43,23 @@ public class CharNameTable
 		_chars = new HashMap<>();
 		_accessLevels = new HashMap<>();
 	}
-
+	
 	private static CharNameTable _instance;
-
+	
 	public static CharNameTable getInstance()
 	{
-		if(_instance == null)
+		if (_instance == null)
 		{
 			_instance = new CharNameTable();
 		}
 		return _instance;
 	}
-
+	
 	public synchronized boolean doesCharNameExist(String name)
 	{
 		boolean result = true;
 		Connection con = null;
-
+		
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
@@ -67,13 +67,13 @@ public class CharNameTable
 			statement.setString(1, name);
 			final ResultSet rset = statement.executeQuery();
 			result = rset.next();
-
+			
 			statement.close();
 			rset.close();
 		}
-		catch(SQLException e)
+		catch (SQLException e)
 		{
-			LOG.error("could not check existing charname"+" "+ e);
+			LOG.error("could not check existing charname" + " " + e);
 		}
 		finally
 		{
@@ -81,7 +81,7 @@ public class CharNameTable
 		}
 		return result;
 	}
-
+	
 	public int accountCharNumber(String account)
 	{
 		Connection con = null;
@@ -94,7 +94,7 @@ public class CharNameTable
 			statement.setString(1, account);
 			final ResultSet rset = statement.executeQuery();
 			
-			while(rset.next())
+			while (rset.next())
 			{
 				number = rset.getInt(1);
 			}
@@ -102,7 +102,7 @@ public class CharNameTable
 			statement.close();
 			rset.close();
 		}
-		catch(SQLException e)
+		catch (SQLException e)
 		{
 			LOG.error("could not check existing char number");
 			e.printStackTrace();
@@ -111,7 +111,7 @@ public class CharNameTable
 		{
 			CloseUtil.close(con);
 		}
-
+		
 		return number;
 	}
 	
@@ -119,23 +119,23 @@ public class CharNameTable
 	{
 		Connection con = null;
 		int number = 0;
-
+		
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
-			final PreparedStatement statement = con.prepareStatement("SELECT count(char_name) FROM "+Config.LOGINSERVER_DB+".accounts a, "+Config.GAMESERVER_DB+".characters c where a.login = c.account_name and a.lastIP=?");
+			final PreparedStatement statement = con.prepareStatement("SELECT count(char_name) FROM " + Config.LOGINSERVER_DB + ".accounts a, " + Config.GAMESERVER_DB + ".characters c where a.login = c.account_name and a.lastIP=?");
 			statement.setString(1, ip);
 			final ResultSet rset = statement.executeQuery();
-
-			while(rset.next())
+			
+			while (rset.next())
 			{
 				number = rset.getInt(1);
 			}
-
+			
 			statement.close();
 			rset.close();
 		}
-		catch(SQLException e)
+		catch (SQLException e)
 		{
 			LOG.error("could not check existing char number");
 			e.printStackTrace();
@@ -144,19 +144,23 @@ public class CharNameTable
 		{
 			CloseUtil.close(con);
 		}
-
+		
 		return number;
 	}
-
+	
 	public final String getNameById(int id)
 	{
 		Connection con = null;
 		if (id <= 0)
+		{
 			return null;
+		}
 		
 		String name = _chars.get(id);
 		if (name != null)
+		{
 			return name;
+		}
 		
 		int accessLevel = 0;
 		
@@ -193,16 +197,20 @@ public class CharNameTable
 		
 		return null; // not found
 	}
-
+	
 	public final int getIdByName(String name)
 	{
 		if (name == null || name.isEmpty())
+		{
 			return -1;
+		}
 		
 		for (Map.Entry<Integer, String> entry : _chars.entrySet())
 		{
 			if (entry.getValue().equalsIgnoreCase(name))
+			{
 				return entry.getKey();
+			}
 		}
 		
 		int id = -1;
@@ -230,7 +238,6 @@ public class CharNameTable
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 		
 		if (id > 0)
@@ -242,11 +249,13 @@ public class CharNameTable
 		
 		return -1; // not found
 	}
-
+	
 	public final int getAccessLevelById(int objectId)
 	{
 		if (getNameById(objectId) != null)
+		{
 			return _accessLevels.get(objectId);
+		}
 		
 		return 0;
 	}

@@ -30,7 +30,7 @@ import l2jorion.game.util.Broadcast;
 
 public final class DeadLockDetector extends Thread
 {
-	private static Logger _log = Logger.getLogger(DeadLockDetector.class.getName());
+	private static Logger LOG = Logger.getLogger(DeadLockDetector.class.getName());
 	
 	private static final int _sleepTime = Config.DEADLOCK_CHECK_INTERVAL * 1000;
 	
@@ -97,7 +97,7 @@ public final class DeadLockDetector extends Thread
 							info.append(Config.EOL);
 						}
 					}
-					_log.warning(info.toString());
+					LOG.warning(info.toString());
 					
 					if (Config.RESTART_ON_DEADLOCK)
 					{
@@ -110,7 +110,7 @@ public final class DeadLockDetector extends Thread
 			}
 			catch (Exception e)
 			{
-				_log.log(Level.WARNING, "DeadLockDetector: ", e);
+				LOG.log(Level.WARNING, "DeadLockDetector: ", e);
 			}
 		}
 	}

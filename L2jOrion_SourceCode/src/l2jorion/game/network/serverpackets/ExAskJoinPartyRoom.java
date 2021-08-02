@@ -19,10 +19,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Format: ch S
- * @author KenM
- */
 public class ExAskJoinPartyRoom extends L2GameServerPacket
 {
 	private final String _charName;

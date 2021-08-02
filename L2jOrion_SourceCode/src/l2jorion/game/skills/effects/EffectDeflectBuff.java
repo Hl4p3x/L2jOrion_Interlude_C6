@@ -26,40 +26,27 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.skills.Env;
 
-/**
- * @author Java
- */
 public final class EffectDeflectBuff extends L2Effect
 {
-	/**
-	 * @param env
-	 * @param template
-	 */
 	public EffectDeflectBuff(final Env env, final EffectTemplate template)
 	{
 		super(env, template);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Effect#getEffectType()
-	 */
 	@Override
 	public EffectType getEffectType()
 	{
 		return EffectType.PREVENT_BUFF;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Effect#onActionTime()
-	 */
 	@Override
 	public boolean onActionTime()
 	{
 		// Only cont skills shouldn't end
 		if (getSkill().getSkillType() != SkillType.CONT)
+		{
 			return false;
+		}
 		
 		final double manaDam = calc();
 		
@@ -74,10 +61,6 @@ public final class EffectDeflectBuff extends L2Effect
 		return true;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Effect#onStart()
-	 */
 	@Override
 	public void onStart()
 	{
@@ -85,10 +68,6 @@ public final class EffectDeflectBuff extends L2Effect
 		return;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Effect#onExit()
-	 */
 	@Override
 	public void onExit()
 	{

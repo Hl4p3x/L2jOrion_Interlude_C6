@@ -36,95 +36,62 @@ import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * The Class Auction.
- */
 public class Auction
 {
-	
-	/** The Constant LOG. */
 	protected static final Logger LOG = LoggerFactory.getLogger(Auction.class);
 	
-	/** The _id. */
 	private int _id = 0;
 	
-	/** The _adena id. */
 	private final int _adenaId = 57;
 	
-	/** The _end date. */
 	private long _endDate;
 	
-	/** The _highest bidder id. */
 	private int _highestBidderId = 0;
 	
-	/** The _highest bidder name. */
 	private String _highestBidderName = "";
 	
-	/** The _highest bidder max bid. */
 	private int _highestBidderMaxBid = 0;
 	
-	/** The _item id. */
 	private int _itemId = 0;
 	
-	/** The _item name. */
 	private String _itemName = "";
 	
-	/** The _item object id. */
 	private int _itemObjectId = 0;
 	
-	/** The _item quantity. */
 	private final int _itemQuantity = 0;
 	
-	/** The _item type. */
 	private String _itemType = "";
 	
-	/** The _seller id. */
 	private int _sellerId = 0;
 	
-	/** The _seller clan name. */
 	private String _sellerClanName = "";
 	
-	/** The _seller name. */
 	private String _sellerName = "";
 	
-	/** The _current bid. */
 	private int _currentBid = 0;
 	
-	/** The _starting bid. */
 	private int _startingBid = 0;
 	
-	/** The Constant MAX_ADENA. */
 	public static final long MAX_ADENA = 99900000000L;
 	
-	/** The _bidders. */
 	private final Map<Integer, Bidder> _bidders = new FastMap<>();
 	
-	/** The Constant ItemTypeName. */
 	private static final String[] ItemTypeName =
 	{
 		"ClanHall"
 	};
 	
-	/**
-	 * The Enum ItemTypeEnum.
-	 */
 	public static enum ItemTypeEnum
 	{
-		
-		/** The Clan hall. */
 		ClanHall
 	}
 	
-	/**
-	 * The Class Bidder.
-	 */
 	public class Bidder
 	{
 		

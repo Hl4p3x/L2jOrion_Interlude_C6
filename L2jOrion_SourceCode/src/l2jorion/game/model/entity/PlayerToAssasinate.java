@@ -16,9 +16,6 @@ package l2jorion.game.model.entity;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author Setekh
- */
 public class PlayerToAssasinate
 {
 	private int _objectId;
@@ -60,12 +57,12 @@ public class PlayerToAssasinate
 	{
 		_name = name;
 	}
-
+	
 	public String getName()
 	{
 		return _name;
 	}
-
+	
 	public void setBounty(int vol)
 	{
 		_bounty = vol;
@@ -75,42 +72,42 @@ public class PlayerToAssasinate
 	{
 		_bounty += vol;
 	}
-
+	
 	public void decBountyBy(int vol)
 	{
 		_bounty -= vol;
 	}
-
+	
 	public int getBounty()
 	{
 		return _bounty;
 	}
-
+	
 	public void setOnline(boolean online)
 	{
 		_online = online;
 	}
-
+	
 	public boolean isOnline()
 	{
 		return _online;
 	}
-
+	
 	public void setClientId(int clientId)
 	{
 		_clientId = clientId;
 	}
-
+	
 	public int getClientId()
 	{
 		return _clientId;
 	}
-
+	
 	public void setPendingDelete(boolean pendingDelete)
 	{
 		_pendingDelete = pendingDelete;
 	}
-
+	
 	public boolean isPendingDelete()
 	{
 		return _pendingDelete;

@@ -26,22 +26,17 @@ import java.sql.ResultSet;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.ExAutoSoulShot;
 import l2jorion.game.network.serverpackets.ShortCutInit;
 import l2jorion.game.templates.L2EtcItemType;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-/**
- * This class ...
- * @version $Revision: 1.1.2.1.2.3 $ $Date: 2005/03/27 15:29:33 $
- */
 public class ShortCuts
 {
 	private static Logger LOG = LoggerFactory.getLogger(ShortCuts.class);
@@ -69,7 +64,6 @@ public class ShortCuts
 			if (_owner.getInventory().getItemByObjectId(sc.getId()) == null)
 			{
 				deleteShortCut(sc.getSlot(), sc.getPage());
-				sc = null;
 			}
 		}
 		
@@ -79,8 +73,8 @@ public class ShortCuts
 	public synchronized void registerShortCut(final L2ShortCut shortcut)
 	{
 		L2ShortCut oldShortCut = _shortCuts.put(shortcut.getSlot() + 12 * shortcut.getPage(), shortcut);
+		
 		registerShortCutInDb(shortcut, oldShortCut);
-		oldShortCut = null;
 	}
 	
 	private void registerShortCutInDb(final L2ShortCut shortcut, final L2ShortCut oldShortCut)
@@ -106,7 +100,6 @@ public class ShortCuts
 			statement.setInt(7, _owner.getClassIndex());
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 		}
 		catch (final Exception e)
 		{
@@ -118,16 +111,14 @@ public class ShortCuts
 		}
 	}
 	
-	/**
-	 * @param slot
-	 * @param page
-	 */
 	public synchronized void deleteShortCut(final int slot, final int page)
 	{
 		L2ShortCut old = _shortCuts.remove(slot + page * 12);
 		
 		if (old == null || _owner == null)
+		{
 			return;
+		}
 		
 		deleteShortCutFromDb(old);
 		
@@ -143,6 +134,7 @@ public class ShortCuts
 		}
 		
 		_owner.sendPacket(new ShortCutInit(_owner));
+		
 		for (final int shotId : _owner.getAutoSoulShot())
 		{
 			_owner.sendPacket(new ExAutoSoulShot(shotId, 1));
@@ -166,13 +158,8 @@ public class ShortCuts
 		{
 			deleteShortCut(toRemove.getSlot(), toRemove.getPage());
 		}
-		
-		toRemove = null;
 	}
 	
-	/**
-	 * @param shortcut
-	 */
 	private void deleteShortCutFromDb(final L2ShortCut shortcut)
 	{
 		Connection con = null;
@@ -188,7 +175,6 @@ public class ShortCuts
 			statement.setInt(4, _owner.getClassIndex());
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 		}
 		catch (final Exception e)
 		{
@@ -224,13 +210,10 @@ public class ShortCuts
 				
 				L2ShortCut sc = new L2ShortCut(slot, page, type, id, level, 1);
 				_shortCuts.put(slot + page * 12, sc);
-				sc = null;
 			}
 			
 			DatabaseUtils.close(rset);
 			DatabaseUtils.close(statement);
-			rset = null;
-			statement = null;
 		}
 		catch (final Exception e)
 		{
@@ -246,7 +229,8 @@ public class ShortCuts
 		{
 			if (sc.getType() == L2ShortCut.TYPE_ITEM)
 			{
-				if (_owner.getInventory().getItemByObjectId(sc.getId()) == null)
+				L2ItemInstance item = _owner.getInventory().getItemByObjectId(sc.getId());
+				if (item == null)
 				{
 					deleteShortCut(sc.getSlot(), sc.getPage());
 				}

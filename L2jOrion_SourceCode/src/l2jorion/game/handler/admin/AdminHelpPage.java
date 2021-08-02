@@ -21,7 +21,6 @@
 package l2jorion.game.handler.admin;
 
 import l2jorion.Config;
-import l2jorion.game.cache.HtmCache;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
@@ -58,7 +57,9 @@ public class AdminHelpPage implements IAdminCommandHandler
 			{
 				// case of empty filename
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -71,25 +72,19 @@ public class AdminHelpPage implements IAdminCommandHandler
 		return ADMIN_COMMANDS;
 	}
 	
-	// FIXME: implement method to send html to player in L2PcInstance directly
-	// PUBLIC & STATIC so other classes from package can include it directly
 	public static void showHelpPage(final L2PcInstance targetChar, final String filename)
 	{
-		String content = HtmCache.getInstance().getHtmForce("data/html/admin/" + filename);
+		// String content = HtmCache.getInstance().getHtmForce("data/html/admin/" + filename);
 		NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
-		adminReply.setHtml(content);
+		adminReply.setFile("data/html/admin/" + filename);
 		targetChar.sendPacket(adminReply);
-		content = null;
-		adminReply = null;
 	}
 	
 	public static void showSubMenuPage(final L2PcInstance targetChar, final String filename)
 	{
-		String content = HtmCache.getInstance().getHtmForce("data/html/admin/" + filename);
+		// String content = HtmCache.getInstance().getHtmForce("data/html/admin/" + filename);
 		NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
-		adminReply.setHtml(content);
+		adminReply.setFile("data/html/admin/" + filename);
 		targetChar.sendPacket(adminReply);
-		content = null;
-		adminReply = null;
 	}
 }

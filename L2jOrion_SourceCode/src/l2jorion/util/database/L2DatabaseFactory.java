@@ -20,117 +20,71 @@
  */
 package l2jorion.util.database;
 
+import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import l2jorion.Config;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class L2DatabaseFactory
 {
 	private static final Logger LOG = LoggerFactory.getLogger(Config.class);
 	
-	public static enum ProviderType
-	{
-		MySql,
-		MsSql
-	}
-	
 	private static L2DatabaseFactory _instance;
-	private ProviderType _providerType;
-	private ComboPooledDataSource _source;
 	
-	public L2DatabaseFactory() throws SQLException
+	private final ComboPooledDataSource _source;
+	
+	public L2DatabaseFactory()
 	{
+		if (Config.DATABASE_MAX_CONNECTIONS < 2)
+		{
+			Config.DATABASE_MAX_CONNECTIONS = 2;
+			LOG.warn("A minimum of " + Config.DATABASE_MAX_CONNECTIONS + " db connections are required.");
+		}
+		
+		_source = new ComboPooledDataSource();
+		_source.setAutoCommitOnClose(true);
+		
+		_source.setInitialPoolSize(10);
+		_source.setMinPoolSize(10);
+		_source.setMaxPoolSize(Math.max(10, Config.DATABASE_MAX_CONNECTIONS));
+		_source.setNumHelperThreads(10);
+		_source.setAcquireRetryAttempts(0);
+		_source.setAcquireRetryDelay(500);
+		_source.setCheckoutTimeout(0);
+		_source.setAcquireIncrement(5);
+		_source.setTestConnectionOnCheckin(false);
+		_source.setIdleConnectionTestPeriod(3600);
+		_source.setMaxIdleTime(Config.DATABASE_MAX_IDLE_TIME);
+		_source.setMaxStatementsPerConnection(100);
+		_source.setBreakAfterAcquireFailure(false);
+		
 		try
 		{
-			if (Config.DATABASE_MAX_CONNECTIONS < 2)
-			{
-				Config.DATABASE_MAX_CONNECTIONS = 2;
-				LOG.warn("A minimum of " + Config.DATABASE_MAX_CONNECTIONS + " db connections are required.");
-			}
-			
-			_source = new ComboPooledDataSource();
-			_source.setAutoCommitOnClose(true);
-			
-			_source.setInitialPoolSize(10);
-			_source.setMinPoolSize(10);
-			_source.setMaxPoolSize(Math.max(10, Config.DATABASE_MAX_CONNECTIONS));
-			_source.setNumHelperThreads(10);
-			_source.setAcquireRetryAttempts(0);
-			_source.setAcquireRetryDelay(500);
-			_source.setCheckoutTimeout(0);
-			_source.setAcquireIncrement(5);
-			_source.setAutomaticTestTable("connection_test_table");
-			_source.setTestConnectionOnCheckin(false);
-			_source.setIdleConnectionTestPeriod(3600);
-			_source.setMaxIdleTime(Config.DATABASE_MAX_IDLE_TIME);
-			_source.setMaxStatementsPerConnection(100);
-			_source.setBreakAfterAcquireFailure(false);
 			_source.setDriverClass(Config.DATABASE_DRIVER);
-			_source.setJdbcUrl(Config.DATABASE_URL);
-			_source.setUser(Config.DATABASE_LOGIN);
-			_source.setPassword(Config.DATABASE_PASSWORD);
-			
+		}
+		catch (PropertyVetoException e)
+		{
+			LOG.error("There has been a problem setting the driver class.", e);
+		}
+		
+		_source.setJdbcUrl(Config.DATABASE_URL);
+		_source.setUser(Config.DATABASE_LOGIN);
+		_source.setPassword(Config.DATABASE_PASSWORD);
+		
+		try
+		{
 			_source.getConnection().close();
-			
-			if (Config.DEBUG)
-			{
-				LOG.debug("Database Connection Working");
-			}
-			
-			if (Config.DATABASE_DRIVER.toLowerCase().contains("microsoft"))
-			{
-				_providerType = ProviderType.MsSql;
-			}
-			else
-			{
-				_providerType = ProviderType.MySql;
-			}
 		}
-		catch (SQLException x)
+		catch (SQLException e)
 		{
-			if (Config.DEBUG)
-			{
-				LOG.error("Database Connection FAILED");
-			}
-			
-			throw x;
+			LOG.warn("There has been a problem closing the test connection!", e);
 		}
-		catch (Exception e)
-		{
-			if (Config.DEBUG)
-			{
-				LOG.error("Database Connection FAILED");
-			}
-			
-			throw new SQLException("Could not init DB connection:" + e.getMessage());
-		}
-	}
-	
-	public final String prepQuerySelect(final String[] fields, final String tableName, final String whereClause, final boolean returnOnlyTopRecord)
-	{
-		String msSqlTop1 = "";
-		String mySqlTop1 = "";
-		
-		if (returnOnlyTopRecord)
-		{
-			if (getProviderType() == ProviderType.MsSql)
-			{
-				msSqlTop1 = " Top 1 ";
-			}
-			if (getProviderType() == ProviderType.MySql)
-			{
-				mySqlTop1 = " Limit 1 ";
-			}
-		}
-		
-		final String query = "SELECT " + msSqlTop1 + safetyString(fields) + " FROM " + tableName + " WHERE " + whereClause + mySqlTop1;
-		return query;
 	}
 	
 	public void shutdown()
@@ -143,32 +97,15 @@ public class L2DatabaseFactory
 		{
 			LOG.error("",e);
 		}
-		try
-		{
-			_source = null;
-		}
-		catch (final Exception e)
-		{
-			LOG.error("",e);
-		}
 	}
 	
 	public final String safetyString(final String... whatToCheck)
 	{
-		// NOTE: Use brace as a safty precaution just incase name is a reserved word
 		final char braceLeft;
 		final char braceRight;
 		
-		if (getProviderType() == ProviderType.MsSql)
-		{
-			braceLeft = '[';
-			braceRight = ']';
-		}
-		else
-		{
-			braceLeft = '`';
-			braceRight = '`';
-		}
+		braceLeft = '`';
+		braceRight = '`';
 		
 		int length = 0;
 		
@@ -194,14 +131,11 @@ public class L2DatabaseFactory
 		return sbResult.toString();
 	}
 	
-	public static L2DatabaseFactory getInstance() throws SQLException
+	public static L2DatabaseFactory getInstance()
 	{
-		synchronized (L2DatabaseFactory.class)
+		if (_instance == null)
 		{
-			if (_instance == null)
-			{
-				_instance = new L2DatabaseFactory();
-			}
+			_instance = new L2DatabaseFactory();
 		}
 		
 		return _instance;
@@ -224,7 +158,7 @@ public class L2DatabaseFactory
 		return con;
 	}
 
-	public Connection getConnection(final boolean checkclose)
+	public Connection getConnection(boolean checkclose)
 	{
 		Connection con = null;
 		while (con == null)
@@ -243,37 +177,5 @@ public class L2DatabaseFactory
 			}
 		}
 		return con;
-	}
-
-	public static void close(Connection con)
-	{
-		if (con == null)
-		{
-			return;
-		}
-		
-		try
-		{
-			con.close();
-		}
-		catch (final SQLException e)
-		{
-			LOG.error("Failed to close database connection!", e);
-		}
-	}
-
-	public int getBusyConnectionCount() throws SQLException
-	{
-		return _source.getNumBusyConnectionsDefaultUser();
-	}
-	
-	public int getIdleConnectionCount() throws SQLException
-	{
-		return _source.getNumIdleConnectionsDefaultUser();
-	}
-	
-	public final ProviderType getProviderType()
-	{
-		return _providerType;
 	}
 }

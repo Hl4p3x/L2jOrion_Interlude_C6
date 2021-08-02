@@ -34,21 +34,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
-/**
- * This class ...
- * @author Olympic
- * @version $Revision: 1.2 $ $Date: 2004/06/27 08:12:59 $
- */
 public class CompactionIDFactory extends IdFactory
 {
 	private static Logger LOG = LoggerFactory.getLogger(CompactionIDFactory.class);
+	
 	private int _curOID;
 	private final int _freeSize;
 	
@@ -115,7 +110,9 @@ public class CompactionIDFactory extends IdFactory
 		
 		int hole = id - _curOID;
 		if (hole > N - idx)
+		{
 			hole = N - idx;
+		}
 		for (int i = 1; i <= hole; i++)
 		{
 			id = tmp_obj_ids[N - i];
@@ -131,26 +128,21 @@ public class CompactionIDFactory extends IdFactory
 			_curOID++;
 		}
 		if (hole < N - idx)
+		{
 			_curOID++;
+		}
 		return N - hole;
 	}
 	
 	@Override
 	public synchronized int getNextId()
 	{
-		/* if (_freeSize == 0) */return _curOID++;
-		/*
-		 * else return _freeOIDs[--_freeSize];
-		 */
+		return _curOID++;
 	}
 	
 	@Override
 	public synchronized void releaseId(final int id)
 	{
-		// dont release ids until we are sure it isnt messing up
-		/*
-		 * if (_freeSize >= _freeOIDs.length) { int[] tmp = new int[_freeSize + STACK_SIZE_INCREMENT]; System.arraycopy(_freeOIDs, 0, tmp, 0, _freeSize); _freeOIDs = tmp; } _freeOIDs[_freeSize++] = id;
-		 */
 	}
 	
 	@Override

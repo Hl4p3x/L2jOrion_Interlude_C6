@@ -40,14 +40,13 @@ public final class SystemMessage extends L2GameServerPacket
 	
 	public SystemMessage(SystemMessageId messageId)
 	{
-		if(Config.DEBUG && messageId == SystemMessageId.TARGET_IS_INCORRECT)
+		if (Config.DEBUG && messageId == SystemMessageId.TARGET_IS_INCORRECT)
 		{
 			Thread.dumpStack();
 		}
 		_messageId = messageId.getId();
 	}
 	
-	@Deprecated
 	public SystemMessage(int messageId)
 	{
 		_messageId = messageId;
@@ -57,28 +56,28 @@ public final class SystemMessage extends L2GameServerPacket
 	{
 		SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 		sm.addString(msg);
-
+		
 		return sm;
 	}
 	
 	public SystemMessage addString(String text)
 	{
-		_types.add(new Integer(TYPE_TEXT));
+		_types.add(Integer.valueOf(TYPE_TEXT));
 		_values.add(text);
 		return this;
 	}
 	
 	public SystemMessage addNumber(int number)
 	{
-		_types.add(new Integer(TYPE_NUMBER));
-		_values.add(new Integer(number));
+		_types.add(Integer.valueOf(TYPE_NUMBER));
+		_values.add((number));
 		return this;
 	}
 	
 	public SystemMessage addNpcName(int id)
 	{
-		_types.add(new Integer(TYPE_NPC_NAME));
-		_values.add(new Integer(1000000 + id));
+		_types.add(Integer.valueOf(TYPE_NPC_NAME));
+		_values.add(Integer.valueOf(1000000 + id));
 		
 		return this;
 	}
@@ -88,56 +87,69 @@ public final class SystemMessage extends L2GameServerPacket
 		if (cha instanceof L2NpcInstance)
 		{
 			if (((L2NpcInstance) cha).getTemplate().serverSideName)
-				return addString(((L2NpcInstance)cha).getTemplate().name);
-			return addNpcName((L2NpcInstance)cha);
+			{
+				return addString(((L2NpcInstance) cha).getTemplate().name);
+			}
+			return addNpcName((L2NpcInstance) cha);
 		}
+		
 		if (cha instanceof L2PcInstance)
-			return addPcName((L2PcInstance)cha);
+		{
+			return addPcName((L2PcInstance) cha);
+		}
+		
 		if (cha instanceof L2Summon)
 		{
-			if (((L2Summon)cha).getTemplate().serverSideName)
-				return addString(((L2Summon)cha).getTemplate().name);
-			return addNpcName((L2Summon)cha);
+			if (((L2Summon) cha).getTemplate().serverSideName)
+			{
+				return addString(((L2Summon) cha).getTemplate().name);
+			}
+			return addNpcName((L2Summon) cha);
 		}
+		
 		return addString(cha.getName());
 	}
 	
 	public SystemMessage addPcName(L2PcInstance pc)
 	{
-		return addString(pc.getAppearance().getVisibleName());
+		return addString(pc.getName());
 	}
-
+	
 	public SystemMessage addNpcName(L2NpcInstance npc)
 	{
 		return addNpcName(npc.getTemplate());
 	}
-
+	
 	public SystemMessage addNpcName(L2Summon npc)
 	{
 		return addNpcName(npc.getNpcId());
 	}
-
+	
 	public SystemMessage addNpcName(L2NpcTemplate tpl)
 	{
 		if (tpl.isCustom())
+		{
 			return addString(tpl.name);
+		}
 		return addNpcName(tpl.npcId);
 	}
 	
 	public SystemMessage addItemName(int id)
 	{
-		_types.add(new Integer(TYPE_ITEM_NAME));
-		_values.add(new Integer(id));
+		_types.add(Integer.valueOf(TYPE_ITEM_NAME));
+		_values.add(Integer.valueOf(id));
 		
 		return this;
 	}
 	
 	public SystemMessage addZoneName(int x, int y, int z)
 	{
-		_types.add(new Integer(TYPE_ZONE_NAME));
+		_types.add(Integer.valueOf(TYPE_ZONE_NAME));
 		int[] coord =
 		{
-				x, y, z
+			x,
+			y,
+			z
 		};
 		_values.add(coord);
 		
@@ -146,8 +158,13 @@ public final class SystemMessage extends L2GameServerPacket
 	
 	public SystemMessage ZoneName(int x, int y, int z)
 	{
-		_types.add(new Integer(TYPE_ZONE_NAME));
-		int[] coord = {x, y, z};
+		_types.add(Integer.valueOf(TYPE_ZONE_NAME));
+		int[] coord =
+		{
+			x,
+			y,
+			z
+		};
 		_values.add(coord);
 		
 		return this;
@@ -160,8 +177,8 @@ public final class SystemMessage extends L2GameServerPacket
 	
 	public SystemMessage addSkillName(int id, int lvl)
 	{
-		_types.add(new Integer(TYPE_SKILL_NAME));
-		_values.add(new Integer(id));
+		_types.add(Integer.valueOf(TYPE_SKILL_NAME));
+		_values.add(Integer.valueOf(id));
 		_skillLvL = lvl;
 		
 		return this;
@@ -184,13 +201,13 @@ public final class SystemMessage extends L2GameServerPacket
 		writeD(_messageId);
 		writeD(_types.size());
 		
-		for(int i = 0; i < _types.size(); i++)
+		for (int i = 0; i < _types.size(); i++)
 		{
 			int t = _types.get(i).intValue();
 			
 			writeD(t);
 			
-			switch(t)
+			switch (t)
 			{
 				case TYPE_TEXT:
 				{

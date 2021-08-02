@@ -24,13 +24,13 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 
 public final class RequestReplySurrenderPledgeWar extends L2GameClientPacket
 {
+	private String _reqName;
 	private int _answer;
 	
 	@Override
 	protected void readImpl()
 	{
-		@SuppressWarnings("unused")
-		final String _reqName = readS();
+		_reqName = readS();
 		_answer = readD();
 	}
 	
@@ -39,11 +39,15 @@ public final class RequestReplySurrenderPledgeWar extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		final L2PcInstance requestor = activeChar.getActiveRequester();
 		if (requestor == null)
+		{
 			return;
+		}
 		
 		if (_answer == 1)
 		{
@@ -52,6 +56,7 @@ public final class RequestReplySurrenderPledgeWar extends L2GameClientPacket
 		}
 		else
 		{
+			LOG.info(getClass().getSimpleName() + ": Missing implementation for answer: " + _answer + " and name: " + _reqName + "!");
 		}
 		
 		activeChar.onTransactionRequest(null);

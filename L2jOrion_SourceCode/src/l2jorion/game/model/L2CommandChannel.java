@@ -63,7 +63,9 @@ public class L2CommandChannel
 	public void addParty(final L2Party party)
 	{
 		if (party == null)
+		{
 			return;
+		}
 		
 		_partys.add(party);
 		
@@ -84,7 +86,9 @@ public class L2CommandChannel
 	public void removeParty(final L2Party party)
 	{
 		if (party == null)
+		{
 			return;
+		}
 		
 		_partys.remove(party);
 		_channelLvl = 0;
@@ -117,7 +121,9 @@ public class L2CommandChannel
 			for (final L2Party party : _partys)
 			{
 				if (party != null)
+				{
 					removeParty(party);
+				}
 			}
 			_partys.clear();
 		}
@@ -165,7 +171,9 @@ public class L2CommandChannel
 			for (final L2Party party : _partys)
 			{
 				if (party != null)
+				{
 					party.broadcastCSToPartyMembers(gsp, broadcaster);
+				}
 			}
 		}
 	}
@@ -228,7 +236,9 @@ public class L2CommandChannel
 	public boolean meetRaidWarCondition(final L2Object obj)
 	{
 		if (!(obj instanceof L2RaidBossInstance) || !(obj instanceof L2GrandBossInstance))
+		{
 			return false;
+		}
 		
 		final int npcId = ((L2Attackable) obj).getNpcId();
 		

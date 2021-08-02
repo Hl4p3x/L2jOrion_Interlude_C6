@@ -18,37 +18,19 @@ package l2jorion.game.network.serverpackets;
 
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.siege.Fort;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * Shows the Siege Info<BR>
- * <BR>
- * packet type id 0xc9<BR>
- * format: cdddSSdSdd<BR>
- * <BR>
- * c = c9<BR>
- * d = FortID<BR>
- * d = Show Owner Controls (0x00 default || >=0x02(mask?) owner)<BR>
- * d = Owner ClanID<BR>
- * S = Owner ClanName<BR>
- * S = Owner Clan LeaderName<BR>
- * d = Owner AllyID<BR>
- * S = Owner AllyName<BR>
- * d = current time (seconds)<BR>
- * d = Siege time (seconds) (0 for selectable)<BR>
- * d = (UNKNOW) Siege Time Select Related?
- * @author programmos
- */
 public class FortressSiegeInfo extends L2GameServerPacket
 {
 	private static final String _S__C9_SIEGEINFO = "[S] c9 SiegeInfo";
+	
 	private static Logger LOG = LoggerFactory.getLogger(FortressSiegeInfo.class);
+	
 	private final Fort _fort;
 	
 	public FortressSiegeInfo(final Fort fort)
@@ -61,7 +43,9 @@ public class FortressSiegeInfo extends L2GameServerPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		writeC(0xc9);
 		writeD(_fort.getFortId());
@@ -95,10 +79,6 @@ public class FortressSiegeInfo extends L2GameServerPacket
 		writeD(0x00); // number of choices?
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

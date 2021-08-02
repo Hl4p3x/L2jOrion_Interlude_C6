@@ -20,8 +20,6 @@ package l2jorion.game.network.clientpackets;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import l2jorion.game.datatables.sql.CharNameTable;
 import l2jorion.game.model.L2World;
@@ -30,6 +28,8 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.FriendList;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
@@ -37,7 +37,7 @@ public final class RequestFriendDel extends L2GameClientPacket
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestFriendDel.class.getName());
 	
-private String _name;
+	private String _name;
 	
 	@Override
 	protected void readImpl()
@@ -50,7 +50,9 @@ private String _name;
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		if (activeChar.isSubmitingPin())
 		{
 			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
@@ -79,7 +81,7 @@ private String _name;
 			// Player deleted from your friendlist
 			activeChar.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.S1_HAS_BEEN_DELETED_FROM_YOUR_FRIENDS_LIST).addString(_name));
 			
-			activeChar.getFriendList().remove(new Integer(id));
+			activeChar.getFriendList().remove(Integer.valueOf(id));
 			activeChar.sendPacket(new FriendList(activeChar)); // update friendList *heavy method*
 			
 			L2PcInstance player = L2World.getInstance().getPlayer(_name);

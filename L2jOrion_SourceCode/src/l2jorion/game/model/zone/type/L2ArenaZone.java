@@ -24,6 +24,7 @@ import l2jorion.game.datatables.csv.MapRegionTable;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.L2ZoneType;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
@@ -62,7 +63,7 @@ public class L2ArenaZone extends L2ZoneType
 	@Override
 	protected void onEnter(final L2Character character)
 	{
-		character.setInsideZone(L2Character.ZONE_PVP, true);
+		character.setInsideZone(ZoneId.ZONE_PVP, true);
 		
 		if (character instanceof L2PcInstance)
 		{
@@ -78,7 +79,7 @@ public class L2ArenaZone extends L2ZoneType
 	@Override
 	protected void onExit(final L2Character character)
 	{
-		character.setInsideZone(L2Character.ZONE_PVP, false);
+		character.setInsideZone(ZoneId.ZONE_PVP, false);
 		
 		if (character instanceof L2PcInstance)
 		{
@@ -99,10 +100,14 @@ public class L2ArenaZone extends L2ZoneType
 	public void oustAllPlayers()
 	{
 		if (_characterList == null)
+		{
 			return;
+		}
 		
 		if (_characterList.isEmpty())
+		{
 			return;
+		}
 		
 		for (final L2Character character : _characterList.values())
 		{

@@ -27,13 +27,9 @@ public class TutorialShowQuestionMark extends L2GameServerPacket
 	
 	public TutorialShowQuestionMark(final int blink)
 	{
-		_blink = blink; // this influences the blinking frequancy :S
+		_blink = blink;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#writeImpl()
-	 */
 	@Override
 	protected void writeImpl()
 	{
@@ -42,10 +38,6 @@ public class TutorialShowQuestionMark extends L2GameServerPacket
 		
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.BasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

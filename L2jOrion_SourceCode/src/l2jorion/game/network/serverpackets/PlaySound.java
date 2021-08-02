@@ -20,13 +20,10 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class ...
- * @version $Revision: 1.1.6.2 $ $Date: 2005/03/27 15:29:39 $
- */
 public class PlaySound extends L2GameServerPacket
 {
 	private static final String _S__98_PlaySound = "[S] 98 PlaySound";
+	
 	private final int _unknown1;
 	private final String _soundFile;
 	private final int _unknown3;
@@ -70,10 +67,6 @@ public class PlaySound extends L2GameServerPacket
 		writeD(_unknown7); // z
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

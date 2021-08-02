@@ -20,9 +20,6 @@ package l2jorion.game.model.actor.instance;
 
 import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.TeleportLocationTable;
 import l2jorion.game.managers.CastleManager;
@@ -31,19 +28,24 @@ import l2jorion.game.managers.SiegeManager;
 import l2jorion.game.managers.TownManager;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2TeleportLocation;
-import l2jorion.game.model.entity.olympiad.Olympiad;
+import l2jorion.game.model.base.ClassId;
+import l2jorion.game.model.olympiad.OlympiadManager;
 import l2jorion.game.model.zone.type.L2BossZone;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
+import l2jorion.game.network.serverpackets.ExShowScreenMessage;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.powerpack.PowerPackConfig;
+import l2jorion.game.taskmanager.RandomZoneTaskManager;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class L2TeleporterInstance extends L2FolkInstance
 {
 	protected static Logger LOG = LoggerFactory.getLogger(L2TeleporterInstance.class);
-
+	
 	/** The Constant COND_ALL_FALSE. */
 	private static final int COND_ALL_FALSE = 0;
 	
@@ -55,10 +57,9 @@ public final class L2TeleporterInstance extends L2FolkInstance
 	
 	/** The Constant COND_REGULAR. */
 	private static final int COND_REGULAR = 3;
-
+	
 	/**
 	 * Instantiates a new l2 teleporter instance.
-	 *
 	 * @param objectId the object id
 	 * @param template the template
 	 */
@@ -66,14 +67,14 @@ public final class L2TeleporterInstance extends L2FolkInstance
 	{
 		super(objectId, template);
 	}
-
+	
 	@Override
 	public void onBypassFeedback(L2PcInstance player, String command)
 	{
 		L2Object target = player.getTarget();
 		player.sendPacket(ActionFailed.STATIC_PACKET);
-
-		if (Olympiad.getInstance().isRegisteredInComp(player))
+		
+		if (OlympiadManager.getInstance().isRegisteredInComp(player))
 		{
 			player.sendMessage("You are not allowed to use a teleport while registered in olympiad game.");
 			return;
@@ -83,17 +84,17 @@ public final class L2TeleporterInstance extends L2FolkInstance
 		{
 			return;
 		}
-
+		
 		int condition = validateCondition(player);
-
+		
 		StringTokenizer st = new StringTokenizer(command, " ");
 		String actualCommand = st.nextToken(); // Get actual command
-
-		if(actualCommand.equalsIgnoreCase("goto"))
+		
+		if (actualCommand.equalsIgnoreCase("goto"))
 		{
 			int npcId = getTemplate().npcId;
-
-			switch(npcId)
+			
+			switch (npcId)
 			{
 				case 31095: //
 				case 31096: //
@@ -103,7 +104,7 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				case 31100: //
 				case 31101: //
 				case 31102: //
-
+				
 				case 31114: //
 				case 31115: //
 				case 31116: // Enter Catacombs
@@ -120,7 +121,7 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				case 31108: //
 				case 31109: //
 				case 31110: //
-
+				
 				case 31120: //
 				case 31121: //
 				case 31122: // Exit Catacombs
@@ -130,25 +131,27 @@ public final class L2TeleporterInstance extends L2FolkInstance
 					player.setIsIn7sDungeon(false);
 					break;
 			}
-
-			if(st.countTokens() <= 0)
+			
+			if (st.countTokens() <= 0)
+			{
 				return;
-
+			}
+			
 			int whereTo = Integer.parseInt(st.nextToken());
-			if(condition == COND_REGULAR)
+			if (condition == COND_REGULAR)
 			{
 				doTeleport(player, whereTo);
 				return;
 			}
-			else if(condition == COND_OWNER)
+			else if (condition == COND_OWNER)
 			{
 				int minPrivilegeLevel = 0; // NOTE: Replace 0 with highest level when privilege level is implemented
-				if(st.countTokens() >= 1)
+				if (st.countTokens() >= 1)
 				{
 					minPrivilegeLevel = Integer.parseInt(st.nextToken());
 				}
-
-				if(10 >= minPrivilegeLevel)
+				
+				if (10 >= minPrivilegeLevel)
 				{
 					doTeleport(player, whereTo);
 				}
@@ -156,9 +159,20 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				{
 					player.sendMessage("You don't have the sufficient access level to teleport there.");
 				}
-
+				
 				return;
 			}
+		}
+		else if (actualCommand.equalsIgnoreCase("pvp"))
+		{
+			if (Config.PROHIBIT_HEALER_CLASS && (player.getClassId() == ClassId.cardinal || player.getClassId() == ClassId.evaSaint || player.getClassId() == ClassId.shillienSaint))
+			{
+				player.sendMessage("You can't enter to zone with Healer Class!");
+				player.sendPacket(new ExShowScreenMessage("You can't enter to zone with Healer Class!", 3000, 0x02, false));
+				return;
+			}
+			
+			player.teleToLocation(RandomZoneTaskManager.getInstance().getCurrentZone().getLoc(), 25);
 		}
 		super.onBypassFeedback(player, command);
 	}
@@ -184,7 +198,7 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				return "data/html/disabled.htm";
 			}
 			
-			return "data/html/gatekeeper/"+pom+".htm";
+			return "data/html/gatekeeper/" + pom + ".htm";
 		}
 		
 		if (val == 0)
@@ -208,35 +222,34 @@ public final class L2TeleporterInstance extends L2FolkInstance
 	public void showChatWindow(L2PcInstance player)
 	{
 		String filename = "data/html/teleporter/castleteleporter-no.htm";
-
+		
 		int condition = validateCondition(player);
-		if(condition == COND_REGULAR)
+		if (condition == COND_REGULAR)
 		{
 			super.showChatWindow(player);
 			return;
 		}
-		else if(condition > COND_ALL_FALSE)
+		else if (condition > COND_ALL_FALSE)
 		{
-			if(condition == COND_BUSY_BECAUSE_OF_SIEGE)
+			if (condition == COND_BUSY_BECAUSE_OF_SIEGE)
 			{
 				filename = "data/html/teleporter/castleteleporter-busy.htm"; // Busy because of siege
 			}
-			else if(condition == COND_OWNER)
+			else if (condition == COND_OWNER)
 			{
 				filename = getHtmlPath(player, getNpcId(), 0);
 			}
 		}
-
+		
 		NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 		html.setFile(filename);
 		html.replace("%objectId%", String.valueOf(getObjectId()));
 		html.replace("%npcname%", getName());
 		player.sendPacket(html);
 	}
-
+	
 	/**
 	 * Do teleport.
-	 *
 	 * @param player the player
 	 * @param val the val
 	 */
@@ -246,30 +259,30 @@ public final class L2TeleporterInstance extends L2FolkInstance
 		
 		if (list != null && player != null)
 		{
-			//you cannot teleport to village that is in siege
-			if(!SiegeManager.getInstance().is_teleport_to_siege_allowed() && SiegeManager.getInstance().getSiege(list.getLocX(), list.getLocY(), list.getLocZ()) != null && !player.isNoble())
+			// you cannot teleport to village that is in siege
+			if (!SiegeManager.getInstance().is_teleport_to_siege_allowed() && SiegeManager.getInstance().getSiege(list.getLocX(), list.getLocY(), list.getLocZ()) != null && !player.isNoble())
 			{
 				player.sendPacket(new SystemMessage(SystemMessageId.NO_PORT_THAT_IS_IN_SIGE));
 				return;
 			}
-			else if(!SiegeManager.getInstance().is_teleport_to_siege_town_allowed() && TownManager.getInstance().townHasCastleInSiege(list.getLocX(), list.getLocY()) && !player.isNoble())
+			else if (!SiegeManager.getInstance().is_teleport_to_siege_town_allowed() && TownManager.townHasCastleInSiege(list.getLocX(), list.getLocY()) && !player.isNoble())
 			{
 				player.sendPacket(new SystemMessage(SystemMessageId.NO_PORT_THAT_IS_IN_SIGE));
 				return;
 			}
-			else if(!player.isGM() && !Config.FLAGED_PLAYER_CAN_USE_GK && player.getPvpFlag() > 0)
+			else if (!player.isGM() && !Config.FLAGED_PLAYER_CAN_USE_GK && player.getPvpFlag() > 0)
 			{
 				player.sendMessage("Don't run from PvP! You will be able to use the teleporter only after your flag is gone.");
 				return;
 			}
-			else if(!Config.ALT_GAME_KARMA_PLAYER_CAN_USE_GK && player.getKarma() > 0) //karma
+			else if (!Config.ALT_GAME_KARMA_PLAYER_CAN_USE_GK && player.getKarma() > 0) // karma
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 				sm.addString("Go away, you're not welcome here.");
 				player.sendPacket(sm);
 				return;
 			}
-			else if(list.getIsForNoble() && !player.isNoble())
+			else if (list.getIsForNoble() && !player.isNoble())
 			{
 				String filename = "data/html/teleporter/nobleteleporter-no.htm";
 				NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
@@ -279,21 +292,21 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				player.sendPacket(html);
 				return;
 			}
-			else if(player.isAlikeDead())
-			{	
+			else if (player.isAlikeDead())
+			{
 				player.sendMessage("You can't use teleport when you are dead.");
 				return;
-			}	
-			else if(player.isSitting())
-			{	
+			}
+			else if (player.isSitting())
+			{
 				player.sendMessage("You can't use teleport when you are sitting.");
 				return;
-			}	
-			else if(list.getTeleId() == 9982 && list.getTeleId() == 9983 && list.getTeleId() == 9984 && getNpcId() == 30483 && player.getLevel() >= Config.CRUMA_TOWER_LEVEL_RESTRICT)
+			}
+			else if (list.getTeleId() == 9982 && list.getTeleId() == 9983 && list.getTeleId() == 9984 && getNpcId() == 30483 && player.getLevel() >= Config.CRUMA_TOWER_LEVEL_RESTRICT)
 			{
 				// Chars level XX can't enter in Cruma Tower. Retail: level 56 and above
 				int maxlvl = Config.CRUMA_TOWER_LEVEL_RESTRICT;
-
+				
 				String filename = "data/html/teleporter/30483-biglvl.htm";
 				NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 				html.setFile(filename);
@@ -301,18 +314,18 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				player.sendPacket(html);
 				return;
 			}
-			//Lilith and Anakim have BossZone, so players must be allowed to enter
-			else if(list.getTeleId() == 450)
+			// Lilith and Anakim have BossZone, so players must be allowed to enter
+			else if (list.getTeleId() == 450)
 			{
 				L2BossZone _zone = GrandBossManager.getInstance().getZone(list.getLocX(), list.getLocY(), list.getLocZ());
 				_zone.allowPlayerEntry(player, 300);
 				player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), true);
 			}
-			else if(!list.getIsForNoble() && ((Config.ALT_GAME_FREE_TELEPORT || player.getLevel() <= Config.FREE_TELEPORT_UNTIL) || player.reduceAdena("Teleport", list.getPrice(), this, true)))
+			else if (!list.getIsForNoble() && ((Config.ALT_GAME_FREE_TELEPORT || player.getLevel() <= Config.FREE_TELEPORT_UNTIL) || player.reduceAdena("Teleport", list.getPrice(), this, true)))
 			{
 				player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), true);
 			}
-			else if(list.getIsForNoble() && (Config.ALT_GAME_FREE_TELEPORT || player.destroyItemByItemId("Noble Teleport", 6651, list.getPrice(), this, true)))
+			else if (list.getIsForNoble() && (Config.ALT_GAME_FREE_TELEPORT || player.destroyItemByItemId("Noble Teleport", 6651, list.getPrice(), this, true)))
 			{
 				player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), true);
 			}
@@ -323,25 +336,30 @@ public final class L2TeleporterInstance extends L2FolkInstance
 		}
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
-
+	
 	/**
 	 * Validate condition.
-	 *
 	 * @param player the player
 	 * @return the int
 	 */
 	private int validateCondition(L2PcInstance player)
 	{
-		if(CastleManager.getInstance().getCastleIndex(this) < 0) // Teleporter isn't on castle ground
-			return COND_REGULAR; // Regular access
-		else if(getCastle().getSiege().getIsInProgress()) // Teleporter is on castle ground and siege is in progress
-			return COND_BUSY_BECAUSE_OF_SIEGE; // Busy because of siege
-		else if(player.getClan() != null) // Teleporter is on castle ground and player is in a clan
+		if (CastleManager.getInstance().getCastleIndex(this) < 0)
 		{
-			if(getCastle().getOwnerId() == player.getClanId()) // Clan owns castle
-				return COND_OWNER; // Owner
+			return COND_REGULAR; // Regular access
 		}
-
+		else if (getCastle().getSiege().getIsInProgress())
+		{
+			return COND_BUSY_BECAUSE_OF_SIEGE; // Busy because of siege
+		}
+		else if (player.getClan() != null) // Teleporter is on castle ground and player is in a clan
+		{
+			if (getCastle().getOwnerId() == player.getClanId())
+			{
+				return COND_OWNER; // Owner
+			}
+		}
+		
 		return COND_ALL_FALSE;
 	}
 }

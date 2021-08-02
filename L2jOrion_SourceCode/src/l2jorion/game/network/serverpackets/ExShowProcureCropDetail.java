@@ -6,10 +6,6 @@ import l2jorion.game.managers.CastleManorManager;
 import l2jorion.game.managers.CastleManorManager.CropProcure;
 import l2jorion.game.model.entity.siege.Castle;
 
-/**
- * format(packet 0xFE) ch dd [dddc] c - id h - sub id d - crop id d - size [ d - manor name d - buy residual d - buy price c - reward type ]
- * @author l3x
- */
 public class ExShowProcureCropDetail extends L2GameServerPacket
 {
 	private static final String _S__FE_22_EXSHOWPROCURECROPDETAIL = "[S] FE:22 ExShowProcureCropDetail";

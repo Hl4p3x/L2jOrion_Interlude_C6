@@ -42,27 +42,9 @@ public class AdminQuest implements IAdminCommandHandler
 		"admin_quest_reload"
 	};
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.handler.IAdminCommandHandler#useAdminCommand(java.lang.String, l2jorion.game.model.L2PcInstance)
-	 */
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
-		// syntax will either be:
-		// quest_reload <id>
-		// quest_reload <questName>
-		// The questName MUST start with a non-numeric character for this to work,
-		// regardless which of the two formats is used.
-		// Example: //quest_reload orc_occupation_change_1
-		// Example: //quest_reload chests
-		// Example: //quest_reload SagasSuperclass
-		// Example: //quest_reload 12
 		if (command.startsWith("admin_quest_reload"))
 		{
 			String[] parts = command.split(" ");
@@ -90,7 +72,9 @@ public class AdminQuest implements IAdminCommandHandler
 				catch (final NumberFormatException e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					if (QuestManager.getInstance().reload(parts[1]))
 					{
@@ -102,17 +86,11 @@ public class AdminQuest implements IAdminCommandHandler
 					}
 				}
 			}
-			
-			parts = null;
 		}
 		
 		return true;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.handler.IAdminCommandHandler#getAdminCommandList()
-	 */
 	@Override
 	public String[] getAdminCommandList()
 	{

@@ -21,8 +21,8 @@ import l2jorion.game.handler.ISkillHandler;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
-import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.L2Skill.SkillType;
+import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
@@ -30,62 +30,69 @@ import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.skills.Formulas;
 
-/**
- * Class handling the Mana damage skill
- * 
- * @author slyce
- */
 public class Manadam implements ISkillHandler
 {
-	private static final SkillType[] SKILL_IDS = { SkillType.MANADAM };
-
+	private static final SkillType[] SKILL_IDS =
+	{
+		SkillType.MANADAM
+	};
+	
 	@Override
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
 		L2Character target = null;
-
-		if(activeChar.isAlikeDead())
+		
+		if (activeChar.isAlikeDead())
+		{
 			return;
-
+		}
+		
 		boolean sps = activeChar.checkSps();
 		boolean bss = activeChar.checkBss();
-
-		for(L2Object target2 : targets)
+		
+		for (L2Object target2 : targets)
 		{
 			target = (L2Character) target2;
-
-			if(target.reflectSkill(skill))
-				target = activeChar;
 			
-			boolean acted = Formulas.getInstance().calcMagicAffected(activeChar, target, skill);
-			if(target.isInvul() || !acted)
+			if (target.reflectSkill(skill))
 			{
-					activeChar.sendPacket(new SystemMessage(SystemMessageId.MISSED_TARGET));
+				target = activeChar;
+			}
+			
+			boolean chance = Formulas.getInstance().calcMagicAffected(activeChar, target, skill);
+			
+			if (target.isInvul() || !chance)
+			{
+				activeChar.sendPacket(new SystemMessage(SystemMessageId.ATTACK_FAILED));
 			}
 			else
 			{
 				double damage = Formulas.getInstance().calcManaDam(activeChar, target, skill, sps, bss);
-
+				
 				double mp = (damage > target.getCurrentMp() ? target.getCurrentMp() : damage);
 				target.reduceCurrentMp(mp);
-
-				if(damage > 0)
-					if(target.isSleeping())
+				
+				if (damage > 0)
+				{
+					if (target.isSleeping())
+					{
 						target.stopSleeping(null);
-
+					}
+				}
+				
 				StatusUpdate sump = new StatusUpdate(target.getObjectId());
 				sump.addAttribute(StatusUpdate.CUR_MP, (int) target.getCurrentMp());
 				target.sendPacket(sump);
 				sump = null;
-
+				
 				SystemMessage sm = new SystemMessage(SystemMessageId.S2_MP_HAS_BEEN_DRAINED_BY_S1);
-
-				if(activeChar instanceof L2NpcInstance)
+				
+				if (activeChar instanceof L2NpcInstance)
 				{
 					int mobId = ((L2NpcInstance) activeChar).getNpcId();
 					sm.addNpcName(mobId);
 				}
-				else if(activeChar instanceof L2Summon)
+				else if (activeChar instanceof L2Summon)
 				{
 					int mobId = ((L2Summon) activeChar).getNpcId();
 					sm.addNpcName(mobId);
@@ -96,11 +103,11 @@ public class Manadam implements ISkillHandler
 				}
 				sm.addNumber((int) mp);
 				target.sendPacket(sm);
-
+				
 				target = null;
 				sm = null;
-
-				if(activeChar instanceof L2PcInstance)
+				
+				if (activeChar instanceof L2PcInstance)
 				{
 					SystemMessage sm2 = new SystemMessage(SystemMessageId.YOUR_OPPONENTS_MP_WAS_REDUCED_BY_S1);
 					sm2.addNumber((int) mp);
@@ -109,14 +116,17 @@ public class Manadam implements ISkillHandler
 			}
 		}
 		
-		if (bss){
+		if (bss)
+		{
 			activeChar.removeBss();
-		}else if(sps){
+		}
+		else if (sps)
+		{
 			activeChar.removeSps();
 		}
 		
 	}
-
+	
 	@Override
 	public SkillType[] getSkillIds()
 	{

@@ -1,5 +1,5 @@
 import sys
-from l2jorion.game.model.entity.siege.clanhalls import BanditStrongholdSiege
+from l2jorion.game.managers import CHSiegeManager;
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
@@ -55,7 +55,7 @@ class Quest (JQuest) :
 		if not clan.getLeaderName() == player.getName():
 			htmltext = "a6.htm"
 			return htmltext
-		if BanditStrongholdSiege.getInstance().isRegistrationPeriod():
+		if CHSiegeManager.getInstance().getSiegableHall(35).isWaitingBattle():
 			if npcId == Messenger :
 				if cond == 0 :
 					htmltext = "a1.htm"

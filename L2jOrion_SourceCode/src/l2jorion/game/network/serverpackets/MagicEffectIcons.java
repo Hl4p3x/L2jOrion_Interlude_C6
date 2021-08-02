@@ -20,19 +20,14 @@
  */
 package l2jorion.game.network.serverpackets;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javolution.util.FastList;
-
-/**
- * MagicEffectIcons format h (dhd)
- * @version $Revision: 1.3.2.1.2.6 $ $Date: 2005/04/05 19:41:08 $
- */
 public class MagicEffectIcons extends L2GameServerPacket
 {
 	private static String _S__97_MAGICEFFECTICONS = "[S] 7f MagicEffectIcons";
+	
 	private List<Effect> _effects;
-	private List<Effect> _debuffs;
 	
 	private class Effect
 	{
@@ -50,19 +45,17 @@ public class MagicEffectIcons extends L2GameServerPacket
 	
 	public MagicEffectIcons()
 	{
-		_effects = new FastList<>();
-		_debuffs = new FastList<>();
+		_effects = new ArrayList<>();
 	}
 	
-	public void addEffect(final int skillId, final int level, final int duration, final boolean debuff)
+	public void addEffect(final int skillId, final int level, final int duration)
 	{
 		if (skillId == 2031 || skillId == 2032 || skillId == 2037)
+		{
 			return;
+		}
 		
-		if (debuff)
-			_debuffs.add(new Effect(skillId, level, duration));
-		else
-			_effects.add(new Effect(skillId, level, duration));
+		_effects.add(new Effect(skillId, level, duration));
 	}
 	
 	@Override
@@ -70,24 +63,9 @@ public class MagicEffectIcons extends L2GameServerPacket
 	{
 		writeC(0x7f);
 		
-		writeH(_effects.size() + _debuffs.size());
+		writeH(_effects.size());
 		
-		for (final Effect temp : _effects)
-		{
-			writeD(temp._skillId);
-			writeH(temp._level);
-			
-			if (temp._duration == -1)
-			{
-				writeD(-1);
-			}
-			else
-			{
-				writeD(temp._duration / 1000);
-			}
-		}
-		
-		for (final Effect temp : _debuffs)
+		for (Effect temp : _effects)
 		{
 			writeD(temp._skillId);
 			writeH(temp._level);
@@ -103,10 +81,6 @@ public class MagicEffectIcons extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

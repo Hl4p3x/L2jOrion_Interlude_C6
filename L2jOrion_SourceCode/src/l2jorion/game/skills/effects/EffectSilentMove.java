@@ -35,7 +35,6 @@ final class EffectSilentMove extends L2Effect
 		super(env, template);
 	}
 	
-	/** Notify started */
 	@Override
 	public void onStart()
 	{
@@ -43,10 +42,11 @@ final class EffectSilentMove extends L2Effect
 		
 		final L2Character effected = getEffected();
 		if (effected instanceof L2PcInstance)
+		{
 			((L2PcInstance) effected).setSilentMoving(true);
+		}
 	}
 	
-	/** Notify exited */
 	@Override
 	public void onExit()
 	{
@@ -54,7 +54,9 @@ final class EffectSilentMove extends L2Effect
 		
 		final L2Character effected = getEffected();
 		if (effected instanceof L2PcInstance)
+		{
 			((L2PcInstance) effected).setSilentMoving(false);
+		}
 	}
 	
 	@Override
@@ -68,10 +70,14 @@ final class EffectSilentMove extends L2Effect
 	{
 		// Only cont skills shouldn't end
 		if (getSkill().getSkillType() != SkillType.CONT)
+		{
 			return false;
+		}
 		
 		if (getEffected().isDead())
+		{
 			return false;
+		}
 		
 		final double manaDam = calc();
 		

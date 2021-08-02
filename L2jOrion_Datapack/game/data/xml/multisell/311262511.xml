@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <!-- Seven Signs - Blacksmith of Mammon - Weapon Upgrade -->
-<list maintainEnchantment="true">
+<list maintainEnchantment="false">
 <!--Claymore -->
   <!-- for Flamberge-->
   <item id="1">

@@ -20,10 +20,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class ...
- * @version $Revision: 1.3.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class PartySmallWindowDeleteAll extends L2GameServerPacket
 {
 	private static final String _S__65_PARTYSMALLWINDOWDELETEALL = "[S] 50 PartySmallWindowDeleteAll";
@@ -34,10 +30,6 @@ public class PartySmallWindowDeleteAll extends L2GameServerPacket
 		writeC(0x50);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

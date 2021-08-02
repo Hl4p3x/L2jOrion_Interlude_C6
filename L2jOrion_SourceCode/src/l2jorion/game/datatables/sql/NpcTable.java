@@ -42,12 +42,11 @@ import l2jorion.game.skills.BaseStats;
 import l2jorion.game.skills.Stats;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.templates.StatsSet;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class NpcTable
 {
@@ -56,6 +55,7 @@ public class NpcTable
 	private static NpcTable _instance;
 	
 	private final Map<Integer, L2NpcTemplate> npcs;
+	
 	private boolean _initialized = false;
 	
 	public static NpcTable getInstance()
@@ -73,6 +73,9 @@ public class NpcTable
 		npcs = new FastMap<>();
 		
 		restoreNpcData();
+		
+		LOG.info("NpcTable: Loaded " + npcs.size() + " npc templates");
+		
 		loadNpcsAI(0);
 	}
 	
@@ -144,6 +147,7 @@ public class NpcTable
 			}
 			
 			if (Config.CUSTOM_NPC_TABLE)
+			{
 				try
 				{
 					if (con == null)
@@ -205,6 +209,8 @@ public class NpcTable
 				{
 					LOG.error("NPCTable: Error creating custom NPC table", e);
 				}
+			}
+			
 			try
 			{
 				if (con == null)
@@ -268,7 +274,9 @@ public class NpcTable
 						"min",
 						"max",
 						"category",
-						"chance"
+						"chance",
+						"enchantMin",
+						"enchantMax"
 					}) + " FROM custom_droplist ORDER BY mobId, chance DESC");
 					final ResultSet dropData = statement.executeQuery();
 					
@@ -291,6 +299,8 @@ public class NpcTable
 						dropDat.setMinDrop(dropData.getInt("min"));
 						dropDat.setMaxDrop(dropData.getInt("max"));
 						dropDat.setChance(dropData.getInt("chance"));
+						dropDat.setMinEnchant(dropData.getInt("enchantMin"));
+						dropDat.setMaxEnchant(dropData.getInt("enchantMax"));
 						final int category = dropData.getInt("category");
 						
 						npcDat.addDropData(dropDat, category);
@@ -298,7 +308,11 @@ public class NpcTable
 					}
 					dropData.close();
 					DatabaseUtils.close(statement);
-					LOG.info("CustomDropList : Added " + cCount + " custom droplist");
+					
+					if (cCount > 0)
+					{
+						LOG.info("CustomDropList: Added " + cCount + " custom droplist");
+					}
 					
 					if (Config.ENABLE_CACHE_INFO)
 					{
@@ -324,7 +338,9 @@ public class NpcTable
 					"min",
 					"max",
 					"category",
-					"chance"
+					"chance",
+					"enchantMin",
+					"enchantMax"
 				}) + " FROM droplist ORDER BY mobId, chance DESC");
 				final ResultSet dropData = statement.executeQuery();
 				L2DropData dropDat = null;
@@ -347,7 +363,8 @@ public class NpcTable
 					dropDat.setMinDrop(dropData.getInt("min"));
 					dropDat.setMaxDrop(dropData.getInt("max"));
 					dropDat.setChance(dropData.getInt("chance"));
-					
+					dropDat.setMinEnchant(dropData.getInt("enchantMin"));
+					dropDat.setMaxEnchant(dropData.getInt("enchantMax"));
 					final int category = dropData.getInt("category");
 					
 					npcDat.addDropData(dropDat, category);
@@ -436,7 +453,7 @@ public class NpcTable
 				
 				minionData.close();
 				DatabaseUtils.close(statement);
-				LOG.info("NpcTable: Loaded " + cnt + " Minions.");
+				LOG.info("NpcTable: Loaded " + cnt + " minions");
 			}
 			catch (final Exception e)
 			{
@@ -483,20 +500,24 @@ public class NpcTable
 						level = Config.QA_LEVEL;
 					}
 					else
+					{
 						level = NpcData.getInt("level");
+					}
 					
 				}
 					break;
 				case 29022:
 				{ // zaken
-				
+					
 					if (Config.ZAKEN_LEVEL > 0)
 					{
 						diff = Config.ZAKEN_LEVEL - NpcData.getInt("level");
 						level = Config.ZAKEN_LEVEL;
 					}
 					else
+					{
 						level = NpcData.getInt("level");
+					}
 					
 				}
 					break;
@@ -514,7 +535,9 @@ public class NpcTable
 						level = Config.ORFEN_LEVEL;
 					}
 					else
+					{
 						level = NpcData.getInt("level");
+					}
 					
 				}
 					break;
@@ -531,7 +554,9 @@ public class NpcTable
 						level = Config.CORE_LEVEL;
 					}
 					else
+					{
 						level = NpcData.getInt("level");
+					}
 					
 				}
 					break;
@@ -585,7 +610,7 @@ public class NpcTable
 				{
 					case 29001:
 					{// queenAnt
-					
+						
 						if (Config.QA_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.QA_POWER_MULTIPLIER;
@@ -595,7 +620,7 @@ public class NpcTable
 						break;
 					case 29022:
 					{ // zaken
-					
+						
 						if (Config.ZAKEN_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.ZAKEN_POWER_MULTIPLIER;
@@ -605,7 +630,7 @@ public class NpcTable
 						break;
 					case 29014:
 					{// orfen
-					
+						
 						if (Config.ORFEN_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.ORFEN_POWER_MULTIPLIER;
@@ -615,7 +640,7 @@ public class NpcTable
 						break;
 					case 29006:
 					{ // core
-					
+						
 						if (Config.CORE_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.CORE_POWER_MULTIPLIER;
@@ -625,7 +650,7 @@ public class NpcTable
 						break;
 					case 29019:
 					{ // antharas
-					
+						
 						if (Config.ANTHARAS_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.ANTHARAS_POWER_MULTIPLIER;
@@ -635,7 +660,7 @@ public class NpcTable
 						break;
 					case 29028:
 					{ // valakas
-					
+						
 						if (Config.VALAKAS_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.VALAKAS_POWER_MULTIPLIER;
@@ -645,7 +670,7 @@ public class NpcTable
 						break;
 					case 29020:
 					{ // baium
-					
+						
 						if (Config.BAIUM_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.BAIUM_POWER_MULTIPLIER;
@@ -655,7 +680,7 @@ public class NpcTable
 						break;
 					case 29045:
 					{ // frintezza
-					
+						
 						if (Config.FRINTEZZA_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.FRINTEZZA_POWER_MULTIPLIER;
@@ -698,9 +723,7 @@ public class NpcTable
 			npcDat.safeSet("baseINT", NpcData.getInt("int"), 0, BaseStats.MAX_STAT_VALUE, "Loading npc template id: " + NpcData.getInt("idTemplate"));
 			npcDat.safeSet("baseWIT", NpcData.getInt("wit"), 0, BaseStats.MAX_STAT_VALUE, "Loading npc template id: " + NpcData.getInt("idTemplate"));
 			npcDat.safeSet("baseMEN", NpcData.getInt("men"), 0, BaseStats.MAX_STAT_VALUE, "Loading npc template id: " + NpcData.getInt("idTemplate"));
-			/*
-			 * npcDat.set("baseSTR", NpcData.getInt("str")); npcDat.set("baseCON", NpcData.getInt("con")); npcDat.set("baseDEX", NpcData.getInt("dex")); npcDat.set("baseINT", NpcData.getInt("int")); npcDat.set("baseWIT", NpcData.getInt("wit")); npcDat.set("baseMEN", NpcData.getInt("men"));
-			 */
+			
 			npcDat.set("baseCpMax", 0);
 			
 			npcDat.set("factionId", NpcData.getString("faction_id"));
@@ -719,8 +742,6 @@ public class NpcTable
 			
 			npcs.put(id, template);
 		}
-		
-		LOG.info("NpcTable: Loaded " + npcs.size() + " Npc Templates.");
 	}
 	
 	public void loadNpcsAI(int id)
@@ -753,6 +774,7 @@ public class NpcTable
 				int npcId = rset.getInt("npc_id");
 				
 				npcDat = npcs.get(npcId);
+				
 				if (npcDat == null)
 				{
 					LOG.error("NPCTable: AI Data Error with id : " + npcId);
@@ -787,7 +809,7 @@ public class NpcTable
 			rset.close();
 			statement.close();
 			
-			LOG.info("NpcTable: Loaded " + cnt + " AIs.");
+			LOG.info("NpcTable: Loaded " + cnt + " npc ai data");
 		}
 		catch (Exception e)
 		{
@@ -1046,8 +1068,15 @@ public class NpcTable
 	public L2NpcTemplate getTemplateByName(final String name)
 	{
 		for (final L2NpcTemplate npcTemplate : npcs.values())
-			if (npcTemplate.name.equalsIgnoreCase(name))
+		{
+			String name1 = npcTemplate.name.toLowerCase();
+			String name2 = name.toLowerCase();
+			
+			if (name1.equalsIgnoreCase(name2))
+			{
 				return npcTemplate;
+			}
+		}
 		
 		return null;
 	}
@@ -1057,10 +1086,12 @@ public class NpcTable
 		final List<L2NpcTemplate> list = new FastList<>();
 		
 		for (final L2NpcTemplate t : npcs.values())
+		{
 			if (t.level == lvl)
 			{
 				list.add(t);
 			}
+		}
 		
 		return list.toArray(new L2NpcTemplate[list.size()]);
 	}
@@ -1070,10 +1101,12 @@ public class NpcTable
 		final List<L2NpcTemplate> list = new FastList<>();
 		
 		for (final L2NpcTemplate t : npcs.values())
+		{
 			if (t.level == lvl && "L2Monster".equals(t.type))
 			{
 				list.add(t);
 			}
+		}
 		
 		return list.toArray(new L2NpcTemplate[list.size()]);
 	}
@@ -1083,10 +1116,12 @@ public class NpcTable
 		final List<L2NpcTemplate> list = new FastList<>();
 		
 		for (final L2NpcTemplate t : npcs.values())
+		{
 			if (t.name.startsWith(letter) && "L2Npc".equals(t.type))
 			{
 				list.add(t);
 			}
+		}
 		
 		return list.toArray(new L2NpcTemplate[list.size()]);
 	}

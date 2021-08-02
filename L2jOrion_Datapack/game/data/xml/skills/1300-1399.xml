@@ -4,7 +4,7 @@
   <table name="#mpConsume_Init">7 9 11</table>
   <table name="#mpConsume">28 35 44</table>
   <table name="#negatePower">3 7 9</table>
-  <table name="#aggro">379 457 566</table>
+  <!--<table name="#aggro">379 457 566</table> Servitor Skills can't generate aggro by L2OFF -->
   <table name="#magicLvl">40 48 60</table>
   <set name="mpInitialConsume" val="#mpConsume_Init"/>
   <set name="mpConsume" val="#mpConsume"/>
@@ -18,7 +18,7 @@
   <set name="effectRange" val="1100"/>
   <set name="negateSkillTypes" val="POISON BLEED"/>
   <set name="negatePower" val="#negatePower"/>
-  <set name="aggroPoints" val="#aggro"/>
+  <!--<set name="aggroPoints" val="#aggro"/> Servitor Skills can't generate aggro by L2OFF -->
   <set name="magicLvl" val="#magicLvl"/>
   <for>
   </for>
@@ -37,7 +37,7 @@
   <set name="effectRange" val="1100"/>
   <set name="negateSkillTypes" val="ROOT PARALYZE DEBUFF"/>
   <set name="negatePower" val="3"/>
-  <set name="aggroPoints" val="582"/>
+  <!--<set name="aggroPoints" val="582"/> Servitor Skills can't generate aggro by L2OFF -->
   <for>
   </for>
 </skill>
@@ -879,7 +879,7 @@
   <set name="castRange" val="600"/>
   <set name="effectRange" val="1100"/>
   <for>
-    <effect count="1" name="SilenceMagicPhysical" time="30" val="0" stackOrder="30" stackType="silence_all" effectPower="40" effectType="MUTE"/>
+    <effect count="1" name="SilenceMagicPhysical" time="30" val="0" stackOrder="1" stackType="silence_all"/>
   </for>
 </skill>
 <skill id="1337" levels="1" name="Curse of Abyss">
@@ -899,7 +899,7 @@
   <set name="castRange" val="600"/>
   <set name="effectRange" val="1100"/>
   <for>
-    <effect count="1" name="Debuff" time="120" val="0" effectPower="40" effectType="DEBUFF">
+    <effect count="1" name="Debuff" time="120" val="0" stackOrder="1" stackType="ultimate_debuff">
       <mul order="0x30" stat="runSpd" val="0.9"/>
       <sub order="0x40" stat="rEvas" val="6"/>
       <mul order="0x30" stat="pDef" val="0.7"/>
@@ -1104,7 +1104,7 @@
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="castRange" val="400"/>
   <set name="effectRange" val="900"/>
-  <set name="aggroPoints" val="666"/>
+  <!--<set name="aggroPoints" val="666"/> Servitor Skills can't generate aggro by L2OFF -->
   <for>
     <effect count="1" name="Buff" time="300" val="0" stackOrder="1" stackType="CoV">
       <mul order="0x30" stat="pDef" val="1.2"/>
@@ -1131,7 +1131,7 @@
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="castRange" val="400"/>
   <set name="effectRange" val="900"/>
-  <set name="aggroPoints" val="666"/>
+  <!--<set name="aggroPoints" val="666"/> Servitor Skills can't generate aggro by L2OFF -->
   <for>
     <effect count="1" name="Buff" time="300" val="0" stackOrder="1" stackType="CoV">
       <mul order="0x30" stat="regMp" val="1.2"/>
@@ -1157,7 +1157,7 @@
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="castRange" val="400"/>
   <set name="effectRange" val="900"/>
-  <set name="aggroPoints" val="666"/>
+  <!--<set name="aggroPoints" val="666"/> Servitor Skills can't generate aggro by L2OFF -->
   <for>
     <effect count="1" name="Buff" time="300" val="0" stackOrder="1" stackType="CoV">
       <add order="0x40" stat="accCombat" val="4"/>
@@ -1191,7 +1191,7 @@
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="castRange" val="400"/>
   <set name="effectRange" val="900"/>
-  <set name="aggroPoints" val="669"/>
+  <!--<set name="aggroPoints" val="669"/> Servitor Skills can't generate aggro by L2OFF -->
   <for>
     <effect count="1" name="Buff" time="300" val="0" stackOrder="2" stackType="CoV">
       <basemul order="0x30" stat="rCrit" val="0.2"/>
@@ -1713,14 +1713,13 @@
   <set name="isMagic" val="true"/>
   <set name="isDebuff" val="true" />
   <for>
-    <effect count="1" name="Buff" time="30" val="0">
-      <mul order="0x30" stat="mDef" val="0.5"/>
-      <mul order="0x30" stat="pDef" val="0.5"/>
-      <sub order="0x40" stat="rEvas" val="16"/>
-      <mul order="0x30" stat="rShld" val="0.5"/>
-      <!-- increases the chance of negating the effects of magical damage -->
-    </effect>
-    <effect count="1" name="SilenceMagicPhysical" time="30" val="0"/>
+	<effect name="SilenceMagicPhysical" time="30" val="0" stackOrder="2" stackType="hero_debuff">
+		<mul order="0x30" stat="mDef" val="0.5"/>
+		<mul order="0x30" stat="pDef" val="0.5"/>
+		<sub order="0x40" stat="rEvas" val="16"/>
+		<mul order="0x30" stat="rShld" val="0.5"/>
+		<sub order="0x40" stat="cancel" val="65" />
+	</effect>
   </for>
 </skill>
 <skill id="1376" levels="1" name="Heroic Dread">
@@ -1741,7 +1740,7 @@
   <set name="isMagic" val="true"/>
   <set name="isDebuff" val="true" />
   <for>
-    <effect count="5" name="Fear" time="5" val="0">
+    <effect count="5" name="Fear" time="5" val="0" stackOrder="2" stackType="hero_debuff">
       <add order="0x30" stat="runSpd" val="64"/>
     </effect>
   </for>

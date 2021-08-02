@@ -22,14 +22,8 @@ package l2jorion.game.skills.conditions;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public abstract class Condition implements ConditionListener
 {
-	
-	// private static final Logger LOG = LoggerFactory.getLogger(Condition.class);
-	
 	private ConditionListener _listener;
 	private String _msg;
 	private boolean _result;
@@ -47,6 +41,7 @@ public abstract class Condition implements ConditionListener
 	void setListener(final ConditionListener listener)
 	{
 		_listener = listener;
+		
 		notifyChanged();
 	}
 	
@@ -58,11 +53,13 @@ public abstract class Condition implements ConditionListener
 	public final boolean test(final Env env)
 	{
 		final boolean res = testImpl(env);
+		
 		if (_listener != null && res != _result)
 		{
 			_result = res;
 			notifyChanged();
 		}
+		
 		return res;
 	}
 	

@@ -23,9 +23,6 @@ package l2jorion.game.network.clientpackets;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.controllers.TradeController;
 import l2jorion.game.datatables.sql.ItemTable;
@@ -44,6 +41,8 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class RequestWearItem extends L2GameClientPacket
 {
@@ -78,7 +77,9 @@ public final class RequestWearItem extends L2GameClientPacket
 			catch (final Throwable e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.error("", e);
 			}
@@ -129,7 +130,9 @@ public final class RequestWearItem extends L2GameClientPacket
 		// Get the current player and return if null
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		
 		if (!Config.ALLOW_WEAR)
 		{
@@ -139,15 +142,19 @@ public final class RequestWearItem extends L2GameClientPacket
 		
 		// If Alternate rule Karma punishment is set to true, forbid Wear to player with Karma
 		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_SHOP && player.getKarma() > 0)
+		{
 			return;
+		}
 		
 		// Check current target of the player and the INTERACTION_DISTANCE
 		final L2Object target = player.getTarget();
 		if (!player.isGM() && (target == null // No target (ie GM Shop)
 			|| !(target instanceof L2MerchantInstance || target instanceof L2MercManagerInstance) // Target not a merchant and not mercmanager
-		|| !player.isInsideRadius(target, L2NpcInstance.INTERACTION_DISTANCE, false, false)))
+			|| !player.isInsideRadius(target, L2NpcInstance.INTERACTION_DISTANCE, false, false)))
+		{
 			return; // Distance is too far
-			
+		}
+		
 		L2TradeList list = null;
 		
 		// Get the current merchant targeted by the player

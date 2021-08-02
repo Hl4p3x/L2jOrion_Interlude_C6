@@ -23,9 +23,6 @@ package l2jorion.game.handler.admin;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.handler.IAdminCommandHandler;
@@ -33,6 +30,8 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.Announcements;
 import l2jorion.game.network.serverpackets.SocialAction;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 

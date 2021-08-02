@@ -26,13 +26,13 @@ import l2jorion.game.cache.HtmCache;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.datatables.csv.MapRegionTable.TeleportWhereType;
 import l2jorion.game.model.L2Attackable;
-import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.siege.Siege;
 import l2jorion.game.model.quest.Quest;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.clientpackets.Say2;
 import l2jorion.game.network.serverpackets.NpcSay;
 import l2jorion.util.random.Rnd;
@@ -45,25 +45,36 @@ public final class Benom extends Quest implements Runnable
 	
 	private static final Location[] TARGET_TELEPORTS =
 	{
-			new Location(12860, -49158, 976),
-			new Location(14878, -51339, 1024),
-			new Location(15674, -49970, 864),
-			new Location(15696, -48326, 864),
-			new Location(14873, -46956, 1024),
-			new Location(12157, -49135, -1088),
-			new Location(12875, -46392, -288),
-			new Location(14087, -46706, -288),
-			new Location(14086, -51593, -288),
-			new Location(12864, -51898, -288),
-			new Location(15538, -49153, -1056),
-			new Location(17001, -49149, -1064)
+		new Location(12860, -49158, 976),
+		new Location(14878, -51339, 1024),
+		new Location(15674, -49970, 864),
+		new Location(15696, -48326, 864),
+		new Location(14873, -46956, 1024),
+		new Location(12157, -49135, -1088),
+		new Location(12875, -46392, -288),
+		new Location(14087, -46706, -288),
+		new Location(14086, -51593, -288),
+		new Location(12864, -51898, -288),
+		new Location(15538, -49153, -1056),
+		new Location(17001, -49149, -1064)
 	};
 	
 	private static final int[] TARGET_TELEPORTS_OFFSET =
 	{
-			650, 100, 100, 100, 100, 650, 200, 200, 200, 200, 200, 650
+		650,
+		100,
+		100,
+		100,
+		100,
+		650,
+		200,
+		200,
+		200,
+		200,
+		200,
+		650
 	};
-		
+	
 	private static final Location TRHONE = new Location(11025, -49152, -537);
 	private static final Location DUNGEON = new Location(11882, -49216, -3008);
 	
@@ -145,7 +156,7 @@ public final class Benom extends Quest implements Runnable
 				break;
 			
 			case "raid_check":
-				if (!npc.isInsideZone(L2Character.ZONE_SIEGE) && !npc.isTeleporting())
+				if (!npc.isInsideZone(ZoneId.ZONE_SIEGE) && !npc.isTeleporting())
 				{
 					npc.teleToLocation(TRHONE, false);
 				}
@@ -175,14 +186,18 @@ public final class Benom extends Quest implements Runnable
 	{
 		// Don't go further if the castle isn't owned.
 		if (_siege.getCastle().getOwnerId() <= 0)
+		{
 			return;
+		}
 		
 		switch (_siege.getStatus())
 		{
 			case IN_PROGRESS:
 				_isPrisonOpened = false;
 				if (_benom != null && !_benom.isDead())
+				{
 					startQuestTimer("tower_check", 30000, _benom, null, true);
+				}
 				break;
 			
 			case REGISTRATION_OPENED:

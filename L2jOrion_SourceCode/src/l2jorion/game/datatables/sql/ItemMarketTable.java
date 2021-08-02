@@ -17,19 +17,18 @@ package l2jorion.game.datatables.sql;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import javolution.util.FastList;
 import javolution.util.FastMap;
 import l2jorion.game.model.L2ItemMarketModel;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
-import javolution.util.FastList;
 
 public class ItemMarketTable
 {
@@ -70,8 +69,8 @@ public class ItemMarketTable
 			PreparedStatement statement = con.prepareStatement("Select * From market_items Order By ownerId");
 			ResultSet rset = statement.executeQuery();
 			
-		while (rset.next())
-		{	
+			while (rset.next())
+			{
 				int ownerId = rset.getInt("ownerId");
 				String ownerName = rset.getString("ownerName");
 				int itemObjId = rset.getInt("itemObjId");
@@ -88,7 +87,7 @@ public class ItemMarketTable
 				int augmentationSkill = rset.getInt("augmentationSkill");
 				int augmentationSkillLevel = rset.getInt("augmentationSkillLevel");
 				String augmentationBonus = rset.getString("augmentationBonus");
-			
+				
 				L2ItemMarketModel mrktItem = new L2ItemMarketModel();
 				mrktItem.setOwnerId(ownerId);
 				mrktItem.setOwnerName(ownerName);
@@ -128,7 +127,10 @@ public class ItemMarketTable
 				mrktCount++;
 			}
 			
-			LOG.info("ItemMarketTable: Loaded "+mrktCount+" market items.");
+			if (mrktCount > 0)
+			{
+				LOG.info("Market: Loaded " + mrktCount + " items");
+			}
 			
 			rset.close();
 			statement.close();
@@ -156,7 +158,7 @@ public class ItemMarketTable
 			PreparedStatement statement = con.prepareStatement("Select * From market_icons");
 			ResultSet rset = statement.executeQuery();
 			
-			while(rset.next())
+			while (rset.next())
 			{
 				int itemId = rset.getInt("itemId");
 				String itemIcon = rset.getString("itemIcon");
@@ -166,29 +168,24 @@ public class ItemMarketTable
 			rset.close();
 			statement.close();
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			LOG.warn("Error while loading market icons " + e.getMessage());
 		}
 		finally
 		{
-			try {
-				if (con != null) {
-					con.close();
-				}
-			} catch (Exception e) {
-			}
+			CloseUtil.close(con);
 		}
 	}
 	
 	public void addItemToMarket(L2ItemMarketModel itemToMarket, L2PcInstance owner)
 	{
-		synchronized(this)
+		synchronized (this)
 		{
 			if (_marketItems != null && owner != null && itemToMarket != null)
 			{
 				List<L2ItemMarketModel> list = _marketItems.get(owner.getObjectId());
-				if (list != null) 
+				if (list != null)
 				{
 					list.add(itemToMarket);
 					_marketItems.put(owner.getObjectId(), list);
@@ -240,7 +237,7 @@ public class ItemMarketTable
 	
 	public List<L2ItemMarketModel> getItemsByOwnerId(int ownerId)
 	{
-		synchronized(this)
+		synchronized (this)
 		{
 			if (_marketItems != null && !_marketItems.isEmpty())
 			{
@@ -265,16 +262,16 @@ public class ItemMarketTable
 		}
 		return null;
 	}
-
+	
 	public List<L2ItemMarketModel> getAllItems()
 	{
-		synchronized(this)
+		synchronized (this)
 		{
 			if (_marketItems != null && !_marketItems.isEmpty())
 			{
 				List<L2ItemMarketModel> list = new FastList<>();
 				
-				for (List<L2ItemMarketModel> lst : _marketItems.values()) 
+				for (List<L2ItemMarketModel> lst : _marketItems.values())
 				{
 					if (lst != null && !lst.isEmpty())
 					{
@@ -305,12 +302,12 @@ public class ItemMarketTable
 	
 	public List<L2ItemMarketModel> getSearchItems(String name)
 	{
-		synchronized(this)
+		synchronized (this)
 		{
 			if (_marketItems != null && !_marketItems.isEmpty())
 			{
 				List<L2ItemMarketModel> searchList = new FastList<>();
-				for (List<L2ItemMarketModel> lst : _marketItems.values()) 
+				for (List<L2ItemMarketModel> lst : _marketItems.values())
 				{
 					if (lst != null && !lst.isEmpty())
 					{

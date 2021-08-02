@@ -304,7 +304,7 @@
   <set name="target" val="TARGET_ONE"/>
   <set name="reuseDelay" val="20000"/>
   <set name="hitTime" val="1200"/>
-  <set name="skillType" val="AGGREDUCE_CHAR"/>
+  <set name="skillType" val="DEBUFF"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="castRange" val="400"/>
   <set name="effectRange" val="900"/>

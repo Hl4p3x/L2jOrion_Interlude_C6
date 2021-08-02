@@ -23,18 +23,10 @@ import l2jorion.Config;
 import l2jorion.game.handler.ICustomByPassHandler;
 import l2jorion.game.idfactory.BitSetIDFactory;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.model.entity.L2Rebirth;
+import l2jorion.game.model.entity.Rebirth;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * This 'Bypass Handler' is a handy tool indeed!<br>
- * Basically, you can send any custom bypass commmands to it from ANY npc and it will call the appropriate function.<br>
- * <strong>Example:</strong><br>
- * <button value=" Request Rebirth " action="bypass -h custom_rebirth_confirmrequest" width=110 height=36 back="L2UI_ct1.button_df" fore="L2UI_ct1.button_df">
- * @author JStar
- */
 public class CustomBypassHandler
 {
 	private static Logger LOG = LoggerFactory.getLogger(BitSetIDFactory.class);
@@ -49,10 +41,6 @@ public class CustomBypassHandler
 		registerCustomBypassHandler(new ExtractableByPassHandler());
 	}
 	
-	/**
-	 * Receives the non-static instance of the RebirthManager.
-	 * @return
-	 */
 	public static CustomBypassHandler getInstance()
 	{
 		if (_instance == null)
@@ -63,9 +51,6 @@ public class CustomBypassHandler
 		return _instance;
 	}
 	
-	/**
-	 * @param handler as ICustomByPassHandler
-	 */
 	public void registerCustomBypassHandler(final ICustomByPassHandler handler)
 	{
 		for (final String s : handler.getByPassCommands())
@@ -74,15 +59,8 @@ public class CustomBypassHandler
 		}
 	}
 	
-	/**
-	 * Handles player's Bypass request to the Custom Content.
-	 * @param player
-	 * @param command
-	 */
 	public void handleBypass(final L2PcInstance player, final String command)
 	{
-		// Rebirth Manager and Engine Caller
-		
 		String cmd = "";
 		String params = "";
 		final int iPos = command.indexOf(" ");
@@ -107,11 +85,11 @@ public class CustomBypassHandler
 				// Check to see if Rebirth is enabled to avoid hacks
 				if (!Config.REBIRTH_ENABLE)
 				{
-					LOG.warn("[WARNING] Player " + player.getName() + " is trying to use rebirth system when it's disabled.");
+					LOG.warn("Player " + player.getName() + " is trying to use rebirth system when it's disabled.");
 					return;
 				}
 				
-				L2Rebirth.getInstance().handleCommand(player, command);
+				Rebirth.getInstance().handleCommand(player, command);
 			}
 		}
 	}

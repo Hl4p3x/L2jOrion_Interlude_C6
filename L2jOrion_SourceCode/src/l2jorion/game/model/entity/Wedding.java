@@ -25,25 +25,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.idfactory.IdFactory;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-/**
- * @author evill33t
- */
 public class Wedding
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(Wedding.class);
 	
-	// =========================================================
-	// Data Field
 	private int _Id = 0;
 	private int _player1Id = 0;
 	private int _player2Id = 0;
@@ -52,8 +46,6 @@ public class Wedding
 	private Calendar _weddingDate;
 	private int _type = 0;
 	
-	// =========================================================
-	// Constructor
 	public Wedding(final int coupleId)
 	{
 		_Id = coupleId;

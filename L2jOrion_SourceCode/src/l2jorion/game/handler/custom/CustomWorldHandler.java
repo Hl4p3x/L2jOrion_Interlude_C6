@@ -17,7 +17,7 @@
 package l2jorion.game.handler.custom;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.model.entity.L2Rebirth;
+import l2jorion.game.model.entity.Rebirth;
 
 /**
  * This will simply manage any custom 'Enter World callers' needed.<br>
@@ -57,7 +57,7 @@ public class CustomWorldHandler
 		// L2Rebirth's skills must be actived only on main class
 		if (!player.isSubClassActive())
 		{
-			L2Rebirth.getInstance().grantRebirthSkills(player);// Rebirth Caller - if player has any skills, they will be granted them.
+			Rebirth.getInstance().grantRebirthSkills(player);// Rebirth Caller - if player has any skills, they will be granted them.
 		}
 	}
 	

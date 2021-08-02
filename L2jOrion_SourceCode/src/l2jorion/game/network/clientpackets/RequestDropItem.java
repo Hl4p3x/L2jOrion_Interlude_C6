@@ -20,9 +20,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.managers.CursedWeaponsManager;
@@ -38,6 +35,8 @@ import l2jorion.game.templates.L2Item;
 import l2jorion.game.util.IllegalPlayerAction;
 import l2jorion.game.util.Util;
 import l2jorion.log.Log;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class RequestDropItem extends L2GameClientPacket
 {
@@ -64,7 +63,9 @@ public final class RequestDropItem extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null || activeChar.isDead())
+		{
 			return;
+		}
 		if (activeChar.isSubmitingPin())
 		{
 			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
@@ -86,7 +87,9 @@ public final class RequestDropItem extends L2GameClientPacket
 		
 		// Flood protect drop to avoid packet lag
 		if (!getClient().getFloodProtectors().getDropItem().tryPerformAction("drop item"))
+		{
 			return;
+		}
 		
 		final L2ItemInstance item = activeChar.getInventory().getItemByObjectId(_objectId);
 		
@@ -102,6 +105,12 @@ public final class RequestDropItem extends L2GameClientPacket
 			return;
 		}
 		
+		if (activeChar.getLevel() < Config.PROTECTED_START_ITEMS_LVL && Config.LIST_PROTECTED_START_ITEMS.contains(item.getItemId()))
+		{
+			activeChar.sendPacket(new SystemMessage(SystemMessageId.CANNOT_DISCARD_THIS_ITEM));
+			return;
+		}
+		
 		if (item.isAugmented())
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.AUGMENTED_ITEM_CANNOT_BE_DISCARDED));
@@ -109,7 +118,9 @@ public final class RequestDropItem extends L2GameClientPacket
 		}
 		
 		if (item.getItemType() == L2EtcItemType.QUEST && !(activeChar.isGM()))
+		{
 			return;
+		}
 		
 		// Drop item disabled by config
 		if (activeChar.isGM() && Config.GM_TRADE_RESTRICTED_ITEMS)
@@ -121,9 +132,17 @@ public final class RequestDropItem extends L2GameClientPacket
 		
 		final int itemId = item.getItemId();
 		
+		if (activeChar.getFakeArmorObjectId() == item.getObjectId())
+		{
+			activeChar.sendPacket(SystemMessageId.CANNOT_DISCARD_THIS_ITEM);
+			return;
+		}
+		
 		// Cursed Weapons cannot be dropped
 		if (CursedWeaponsManager.getInstance().isCursed(itemId))
+		{
 			return;
+		}
 		
 		if (_count > item.getCount())
 		{
@@ -239,7 +258,7 @@ public final class RequestDropItem extends L2GameClientPacket
 		if (dropedItem != null && dropedItem.getItemId() == 57 && dropedItem.getCount() >= 1000000 && Config.RATE_DROP_ADENA <= 200)
 		{
 			final String msg = "Character (" + activeChar.getName() + ") has dropped (" + dropedItem.getCount() + ")adena at (" + _x + "," + _y + "," + _z + ")";
-			//LOG.warn(msg);
+			// LOG.warn(msg);
 			String text = msg;
 			Log.add(text, "Dropped_adena");
 			GmListTable.broadcastMessageToGMs(msg);

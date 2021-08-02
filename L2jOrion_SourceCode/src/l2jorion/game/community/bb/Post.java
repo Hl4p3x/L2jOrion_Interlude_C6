@@ -7,11 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import l2jorion.game.community.manager.PostBBSManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Post
 {

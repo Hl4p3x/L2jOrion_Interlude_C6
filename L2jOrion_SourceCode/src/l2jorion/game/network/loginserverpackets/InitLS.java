@@ -35,9 +35,6 @@ public class InitLS extends LoginServerBasePacket
 		return _key;
 	}
 	
-	/**
-	 * @param decrypt
-	 */
 	public InitLS(final byte[] decrypt)
 	{
 		super(decrypt);

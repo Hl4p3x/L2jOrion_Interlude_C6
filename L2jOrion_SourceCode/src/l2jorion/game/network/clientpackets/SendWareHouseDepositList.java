@@ -20,9 +20,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.managers.CursedWeaponsManager;
 import l2jorion.game.model.ClanWarehouse;
@@ -40,6 +37,8 @@ import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.powerpack.PowerPackConfig;
 import l2jorion.game.templates.L2EtcItemType;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class SendWareHouseDepositList extends L2GameClientPacket
 {
@@ -81,11 +80,15 @@ public final class SendWareHouseDepositList extends L2GameClientPacket
 	protected void runImpl()
 	{
 		if (_items == null)
+		{
 			return;
+		}
 		
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		if (player.isSubmitingPin())
 		{
 			player.sendMessage("Unable to do any action while PIN is not submitted");
@@ -95,14 +98,18 @@ public final class SendWareHouseDepositList extends L2GameClientPacket
 		final ItemContainer warehouse = player.getActiveWarehouse();
 		
 		if (!PowerPackConfig.GMSHOP_USECOMMAND && warehouse == null)
+		{
 			return;
+		}
 		
 		final L2FolkInstance manager = player.getLastFolkNPC();
 		
 		if (!PowerPackConfig.GMSHOP_USECOMMAND)
 		{
 			if (manager == null || !player.isInsideRadius(manager, L2NpcInstance.INTERACTION_DISTANCE, false, false))
+			{
 				return;
+			}
 		}
 		
 		if (!getClient().getFloodProtectors().getTransaction().tryPerformAction("deposit"))
@@ -146,7 +153,9 @@ public final class SendWareHouseDepositList extends L2GameClientPacket
 		
 		// Alt game - Karma punishment
 		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_USE_WAREHOUSE && player.getKarma() > 0)
+		{
 			return;
+		}
 		
 		// Like L2OFF enchant window must close
 		if (player.getActiveEnchantItem() != null)
@@ -158,7 +167,7 @@ public final class SendWareHouseDepositList extends L2GameClientPacket
 		}
 		
 		// Freight price from config or normal price per item slot (30)
-		final int fee = _count * 30;
+		final int fee = _count * Config.ALT_WAREHOUSE_DEPOSIT_PRICE;
 		int currentAdena = player.getAdena();
 		int slots = 0;
 		
@@ -178,7 +187,14 @@ public final class SendWareHouseDepositList extends L2GameClientPacket
 			}
 			
 			if (warehouse instanceof ClanWarehouse && !item.isTradeable() || item.getItemType() == L2EtcItemType.QUEST)
+			{
 				return;
+			}
+			
+			if (player.getLevel() < Config.PROTECTED_START_ITEMS_LVL && Config.LIST_PROTECTED_START_ITEMS.contains(item.getItemId()))
+			{
+				return;
+			}
 			
 			// Calculate needed adena and slots
 			if (item.getItemId() == 57)
@@ -253,17 +269,25 @@ public final class SendWareHouseDepositList extends L2GameClientPacket
 			if (playerIU != null)
 			{
 				if (oldItem.getCount() > 0 && oldItem != newItem)
+				{
 					playerIU.addModifiedItem(oldItem);
+				}
 				else
+				{
 					playerIU.addRemovedItem(oldItem);
+				}
 			}
 		}
 		
 		// Send updated item list to the player
 		if (playerIU != null)
+		{
 			player.sendPacket(playerIU);
+		}
 		else
+		{
 			player.sendPacket(new ItemList(player, false));
+		}
 		
 		// Update current load status on player
 		final StatusUpdate su = new StatusUpdate(player.getObjectId());

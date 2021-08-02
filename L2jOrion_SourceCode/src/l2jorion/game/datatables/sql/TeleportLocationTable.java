@@ -28,12 +28,11 @@ import java.util.Map;
 import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.model.L2TeleportLocation;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TeleportLocationTable
 {
@@ -87,7 +86,7 @@ public class TeleportLocationTable
 			DatabaseUtils.close(statement);
 			DatabaseUtils.close(rset);
 			
-			LOG.info("TeleportLocationTable: Loaded " + teleports.size() + " Teleport Location Templates.");
+			LOG.info("TeleportLocationTable: Loaded " + teleports.size() + " Teleport Location Templates");
 		}
 		catch (final Exception e)
 		{
@@ -127,7 +126,7 @@ public class TeleportLocationTable
 				
 				if (_cTeleCount > 0)
 				{
-					LOG.info("TeleportLocationTable: Loaded " + _cTeleCount + " Custom Teleport Location Templates.");
+					LOG.info("TeleportLocationTable: Loaded " + _cTeleCount + " Custom Teleport Location Templates");
 				}
 				
 			}

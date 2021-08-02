@@ -121,6 +121,7 @@ class Quest (JQuest) :
    elif npcId == 30328 and st.getInt("cond") and st.getQuestItemsCount(HONORARY_GUARD)>0 :
         htmltext = "30328-07.htm"
         st.takeItems(HONORARY_GUARD,1)
+        st.addExpAndSp(16000,5650)
         st.giveItems(REORIA_RECOMMENDATION,1)
         st.set("cond","0")
         st.setState(COMPLETED)

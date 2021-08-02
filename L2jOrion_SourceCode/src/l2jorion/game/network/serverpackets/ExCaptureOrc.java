@@ -19,9 +19,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * @author KenM
- */
 public class ExCaptureOrc extends L2GameServerPacket
 {
 	private static final String _S__FE_44_EXCAPTUREORC = "[S] FE:44 ExCaptureOrc";
@@ -98,9 +95,6 @@ public class ExCaptureOrc extends L2GameServerPacket
 		};
 	}
 	
-	/**
-	 * @see l2jorion.game.network.serverpackets.L2GameServerPacket#writeImpl()
-	 */
 	@Override
 	protected void writeImpl()
 	{
@@ -109,9 +103,6 @@ public class ExCaptureOrc extends L2GameServerPacket
 		writeB(_test);
 	}
 	
-	/**
-	 * @see l2jorion.game.network.serverpackets.L2GameServerPacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

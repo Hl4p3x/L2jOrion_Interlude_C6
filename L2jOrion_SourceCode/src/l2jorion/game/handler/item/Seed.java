@@ -39,9 +39,6 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * @author l3x
- */
 public class Seed implements IItemHandler
 {
 	
@@ -313,10 +310,14 @@ public class Seed implements IItemHandler
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		if (CastleManorManager.getInstance().isDisabled())
+		{
 			return;
+		}
 		
 		_activeChar = (L2PcInstance) playable;
 		L2Object target = _activeChar.getTarget();
@@ -336,7 +337,6 @@ public class Seed implements IItemHandler
 		}
 		
 		_target = (L2MonsterInstance) target;
-		target = null;
 		
 		if (_target == null || _target.isDead())
 		{
@@ -355,11 +355,9 @@ public class Seed implements IItemHandler
 		
 		if (areaValid(MapRegionTable.getInstance().getAreaCastle(_activeChar)))
 		{
-			// TODO: get right skill level
 			_target.setSeeded(_seedId, _activeChar);
 			L2Skill skill = SkillTable.getInstance().getInfo(2097, 3); // sowing skill
 			_activeChar.useMagic(skill, false, false);
-			skill = null;
 		}
 		else
 		{

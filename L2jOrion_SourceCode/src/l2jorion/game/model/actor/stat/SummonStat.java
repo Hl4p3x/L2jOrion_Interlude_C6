@@ -23,24 +23,11 @@ import l2jorion.game.model.L2Summon;
 
 public class SummonStat extends PlayableStat
 {
-	// =========================================================
-	// Data Field
-	
-	// =========================================================
-	// Constructor
 	public SummonStat(final L2Summon activeChar)
 	{
 		super(activeChar);
 	}
 	
-	// =========================================================
-	// Method - Public
-	
-	// =========================================================
-	// Method - Private
-	
-	// =========================================================
-	// Property - Public
 	@Override
 	public L2Summon getActiveChar()
 	{

@@ -31,9 +31,6 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.util.random.Rnd;
 
-/**
- * This class manages all chest.
- */
 public final class L2ChestInstance extends L2MonsterInstance
 {
 	private volatile boolean _isInteracted;
@@ -76,9 +73,9 @@ public final class L2ChestInstance extends L2MonsterInstance
 	}
 	
 	@Override
-	public void doItemDrop(final L2NpcTemplate npcTemplate, final L2Character lastAttacker)
+	public void doItemDrop(L2NpcTemplate npcTemplate, L2Character lastAttacker)
 	{
-		int id = getTemplate().npcId;
+		int id = getTemplate().getNpcId();
 		
 		if (!_specialDrop)
 		{
@@ -115,13 +112,12 @@ public final class L2ChestInstance extends L2MonsterInstance
 		super.doItemDrop(NpcTable.getInstance().getTemplate(id), lastAttacker);
 	}
 	
-	// cast - trap chest
 	public void chestTrap(final L2Character player)
 	{
 		int trapSkillId = 0;
 		final int rnd = Rnd.get(120);
 		
-		if (getTemplate().level >= 61)
+		if (getTemplate().getLevel() >= 61)
 		{
 			if (rnd >= 90)
 			{
@@ -140,7 +136,7 @@ public final class L2ChestInstance extends L2MonsterInstance
 				trapSkillId = 223;// sting
 			}
 		}
-		else if (getTemplate().level >= 41)
+		else if (getTemplate().getLevel() >= 41)
 		{
 			if (rnd >= 90)
 			{
@@ -159,7 +155,7 @@ public final class L2ChestInstance extends L2MonsterInstance
 				trapSkillId = 4118;// area paralysys
 			}
 		}
-		else if (getTemplate().level >= 21)
+		else if (getTemplate().getLevel() >= 21)
 		{
 			if (rnd >= 80)
 			{
@@ -198,13 +194,10 @@ public final class L2ChestInstance extends L2MonsterInstance
 		handleCast(player, trapSkillId);
 	}
 	
-	// <--
-	// cast casse
-	// <--
 	private boolean handleCast(final L2Character player, final int skillId)
 	{
 		int skillLevel = 1;
-		final byte lvl = getTemplate().level;
+		final byte lvl = getTemplate().getLevel();
 		if (lvl > 20 && lvl <= 40)
 		{
 			skillLevel = 3;
@@ -219,7 +212,9 @@ public final class L2ChestInstance extends L2MonsterInstance
 		}
 		
 		if (player.isDead() || !player.isVisible() || !player.isInsideRadius(this, getDistanceToWatchObject(player), false, false))
+		{
 			return false;
+		}
 		
 		L2Skill skill = SkillTable.getInstance().getInfo(skillId, skillLevel);
 		
@@ -227,7 +222,6 @@ public final class L2ChestInstance extends L2MonsterInstance
 		{
 			skill.getEffects(this, player, false, false, false);
 			broadcastPacket(new MagicSkillUser(this, player, skill.getId(), skillLevel, skill.getHitTime(), 0));
-			skill = null;
 			return true;
 		}
 		return false;
@@ -237,10 +231,14 @@ public final class L2ChestInstance extends L2MonsterInstance
 	public boolean isMovementDisabled()
 	{
 		if (super.isMovementDisabled())
+		{
 			return true;
+		}
 		
 		if (isInteracted())
+		{
 			return false;
+		}
 		
 		return true;
 	}

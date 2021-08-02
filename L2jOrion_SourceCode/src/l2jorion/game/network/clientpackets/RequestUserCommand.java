@@ -20,14 +20,13 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.handler.IUserCommandHandler;
 import l2jorion.game.handler.UserCommandHandler;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class RequestUserCommand extends L2GameClientPacket
 {
@@ -46,7 +45,9 @@ public class RequestUserCommand extends L2GameClientPacket
 	{
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		
 		final IUserCommandHandler handler = UserCommandHandler.getInstance().getUserCommandHandler(_command);
 		
@@ -55,7 +56,6 @@ public class RequestUserCommand extends L2GameClientPacket
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 			sm.addString("user commandID " + _command + " not implemented yet");
 			player.sendPacket(sm);
-			sm = null;
 		}
 		else
 		{

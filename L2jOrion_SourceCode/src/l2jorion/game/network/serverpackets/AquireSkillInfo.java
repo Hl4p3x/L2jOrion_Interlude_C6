@@ -24,20 +24,10 @@ import java.util.List;
 
 import javolution.util.FastList;
 
-/**
- * <code>
- * sample
- * 
- * a4
- * 4d000000 01000000 98030000 			Attack Aura, level 1, sp cost
- * 01000000 							number of requirements
- * 05000000 47040000 0100000 000000000	   1 x spellbook advanced ATTACK                                                 .
- * </code> format ddd d (dddd)
- * @version $Revision: 1.3.2.1.2.4 $ $Date: 2005/03/27 15:29:39 $
- */
 public class AquireSkillInfo extends L2GameServerPacket
 {
 	private static final String _S__A4_AQUIRESKILLINFO = "[S] 8b AquireSkillInfo";
+	
 	private final List<Req> _reqs;
 	private final int _id, _level, _spCost, _mode;
 	
@@ -91,10 +81,6 @@ public class AquireSkillInfo extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

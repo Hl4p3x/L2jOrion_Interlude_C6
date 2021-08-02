@@ -25,6 +25,7 @@ import l2jorion.game.model.L2Character;
 public class StopRotation extends L2GameServerPacket
 {
 	private static final String _S__78_STOPROTATION = "[S] 63 StopRotation";
+	
 	private int _charObjId, _degree, _speed;
 	
 	public StopRotation(L2Character player, int degree, int speed)

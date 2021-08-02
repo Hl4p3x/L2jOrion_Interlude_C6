@@ -23,6 +23,7 @@ import l2jorion.Config;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.L2ZoneType;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
@@ -38,17 +39,17 @@ public class L2JailZone extends L2ZoneType
 	{
 		if (character instanceof L2PcInstance)
 		{
-			character.setInsideZone(L2Character.ZONE_JAIL, true);
-			character.setInsideZone(L2Character.ZONE_NOSUMMONFRIEND, true);
+			character.setInsideZone(ZoneId.ZONE_JAIL, true);
+			character.setInsideZone(ZoneId.ZONE_NOSUMMONFRIEND, true);
 			
 			if (Config.JAIL_IS_PVP)
 			{
-				character.setInsideZone(L2Character.ZONE_PVP, true);
+				character.setInsideZone(ZoneId.ZONE_PVP, true);
 				((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
 			}
 			else
 			{
-				character.setInsideZone(L2Character.ZONE_PEACE, true);
+				character.setInsideZone(ZoneId.ZONE_PEACE, true);
 			}
 		}
 	}
@@ -58,25 +59,23 @@ public class L2JailZone extends L2ZoneType
 	{
 		if (character instanceof L2PcInstance)
 		{
-			character.setInsideZone(L2Character.ZONE_JAIL, false);
-			character.setInsideZone(L2Character.ZONE_NOSUMMONFRIEND, false);
+			character.setInsideZone(ZoneId.ZONE_JAIL, false);
+			character.setInsideZone(ZoneId.ZONE_NOSUMMONFRIEND, false);
 			
 			if (Config.JAIL_IS_PVP)
 			{
-				character.setInsideZone(L2Character.ZONE_PVP, false);
+				character.setInsideZone(ZoneId.ZONE_PVP, false);
 				((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
 			}
 			else
 			{
-				character.setInsideZone(L2Character.ZONE_PEACE, false);
+				character.setInsideZone(ZoneId.ZONE_PEACE, false);
 			}
 			
-			/*if (((L2PcInstance) character).isInJail())
-			{
-				// when a player wants to exit jail even if he is still jailed, teleport him back to jail
-				ThreadPoolManager.getInstance().scheduleGeneral(new BackToJail(character), 2000);
-				((L2PcInstance) character).sendMessage("You can't cheat your way out of here. You must wait until your jail time is over.");
-			}*/
+			/*
+			 * if (((L2PcInstance) character).isInJail()) { // when a player wants to exit jail even if he is still jailed, teleport him back to jail ThreadPoolManager.getInstance().scheduleGeneral(new BackToJail(character), 2000); ((L2PcInstance)
+			 * character).sendMessage("You can't cheat your way out of here. You must wait until your jail time is over."); }
+			 */
 		}
 	}
 	
@@ -90,7 +89,7 @@ public class L2JailZone extends L2ZoneType
 	{
 	}
 	
-	static class BackToJail implements Runnable
+	public static class BackToJail implements Runnable
 	{
 		private final L2PcInstance _activeChar;
 		

@@ -22,10 +22,6 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.L2Party;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * Format: ch d[Sdd]
- * @author KenM
- */
 public class ExMPCCShowPartyMemberInfo extends L2GameServerPacket
 {
 	private final L2Party _party;

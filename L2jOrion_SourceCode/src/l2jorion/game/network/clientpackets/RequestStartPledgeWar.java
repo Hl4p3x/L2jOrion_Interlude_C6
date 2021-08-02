@@ -45,16 +45,22 @@ public final class RequestStartPledgeWar extends L2GameClientPacket
 	{
 		player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
+		
 		if (player.isSubmitingPin())
 		{
 			player.sendMessage("Unable to do any action while PIN is not submitted");
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		_clan = getClient().getActiveChar().getClan();
 		if (_clan == null)
+		{
 			return;
+		}
 		
 		if (_clan.getLevel() < 3 || _clan.getMembersCount() < Config.ALT_CLAN_MEMBERS_FOR_WAR)
 		{
@@ -83,7 +89,6 @@ public final class RequestStartPledgeWar extends L2GameClientPacket
 			SystemMessage sm = new SystemMessage(SystemMessageId.CLAN_WAR_AGAINST_A_ALLIED_CLAN_NOT_WORK);
 			player.sendPacket(sm);
 			player.sendPacket(ActionFailed.STATIC_PACKET);
-			sm = null;
 			return;
 		}
 		else if (clan.getLevel() < 3 || clan.getMembersCount() < Config.ALT_CLAN_MEMBERS_FOR_WAR)
@@ -99,43 +104,8 @@ public final class RequestStartPledgeWar extends L2GameClientPacket
 			sm.addString(clan.getName());
 			player.sendPacket(sm);
 			player.sendPacket(ActionFailed.STATIC_PACKET);
-			sm = null;
 			return;
 		}
-		
-		// LOG.warn("RequestStartPledgeWar, leader: " + clan.getLeaderName() + " clan: "+ _clan.getName());
-		
-		// L2PcInstance leader = L2World.getInstance().getPlayer(clan.getLeaderName());
-		
-		// if(leader == null)
-		// return;
-		
-		// if(leader != null && leader.isOnline() == 0)
-		// {
-		// player.sendMessage("Clan leader isn't online.");
-		// player.sendPacket(ActionFailed.STATIC_PACKET);
-		// return;
-		// }
-		
-		// if (leader.isProcessingRequest())
-		// {
-		// SystemMessage sm = new SystemMessage(SystemMessage.S1_IS_BUSY_TRY_LATER);
-		// sm.addString(leader.getName());
-		// player.sendPacket(sm);
-		// return;
-		// }
-		
-		// if (leader.isTransactionInProgress())
-		// {
-		// SystemMessage sm = new SystemMessage(SystemMessage.S1_IS_BUSY_TRY_LATER);
-		// sm.addString(leader.getName());
-		// player.sendPacket(sm);
-		// return;
-		// }
-		
-		// leader.setTransactionRequester(player);
-		// player.setTransactionRequester(leader);
-		// leader.sendPacket(new StartPledgeWar(_clan.getName(),player.getName()));
 		
 		ClanTable.getInstance().storeclanswars(player.getClanId(), clan.getClanId());
 		for (final L2PcInstance cha : L2World.getInstance().getAllPlayers().values())

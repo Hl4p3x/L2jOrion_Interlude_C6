@@ -17,9 +17,6 @@
  */
 package l2jorion.mmocore;
 
-/**
- * @author KenM
- */
 public final class SelectorConfig
 {
 	public int READ_BUFFER_SIZE = 64 * 1024;

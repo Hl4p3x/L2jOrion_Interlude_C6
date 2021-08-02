@@ -79,6 +79,7 @@ class Quest (JQuest) :
         htmltext = "30022-09.htm"
         st.takeItems(LEMONIELLS_COVENANT,1)
         st.takeItems(LETTER_OF_ORDER2,1)
+        st.addExpAndSp(16000,5650)
         st.giveItems(MARK_OF_FAITH,1)
         st.set("cond","0")
         st.setState(COMPLETED)

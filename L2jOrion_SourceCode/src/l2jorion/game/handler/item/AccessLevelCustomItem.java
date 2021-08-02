@@ -8,8 +8,6 @@ package l2jorion.game.handler.item;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import l2jorion.Config;
 import l2jorion.game.handler.IItemHandler;
@@ -19,6 +17,8 @@ import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.network.serverpackets.ExShowScreenMessage;
 import l2jorion.game.network.serverpackets.PlaySound;
 import l2jorion.game.network.serverpackets.UserInfo;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 

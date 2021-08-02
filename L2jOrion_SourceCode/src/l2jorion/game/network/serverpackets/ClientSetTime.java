@@ -20,11 +20,8 @@ import l2jorion.game.controllers.GameTimeController;
 
 public class ClientSetTime extends L2GameServerPacket
 {
-	private static final String _S__EC_CLIENTSETTIME = "[S] f2 ClientSetTime [dd]";
+	private static final String _S__EC_CLIENTSETTIME = "[S] f2 ClientSetTime";
 	
-	/*
-	 * public static final ClientSetTime STATIC_PACKET = new ClientSetTime(); private ClientSetTime() { }
-	 */
 	@Override
 	protected final void writeImpl()
 	{
@@ -33,10 +30,6 @@ public class ClientSetTime extends L2GameServerPacket
 		writeD(6); // constant to match the server time( this determines the speed of the client clock)
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

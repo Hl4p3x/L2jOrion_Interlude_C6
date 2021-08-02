@@ -16,7 +16,7 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import l2jorion.game.managers.TownManager;
+import l2jorion.game.datatables.csv.MapRegionTable;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.PartyMatchRoomList;
@@ -27,10 +27,6 @@ import l2jorion.game.network.serverpackets.ExClosePartyRoom;
 import l2jorion.game.network.serverpackets.PartyMatchList;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * format (ch) d
- * @author -Wooden-
- */
 public final class RequestOustFromPartyRoom extends L2GameClientPacket
 {
 	
@@ -48,21 +44,31 @@ public final class RequestOustFromPartyRoom extends L2GameClientPacket
 		
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		final L2PcInstance member = L2World.getInstance().getPlayer(_charid);
 		if (member == null)
+		{
 			return;
+		}
 		
 		final PartyMatchRoom _room = PartyMatchRoomList.getInstance().getPlayerRoom(member);
 		if (_room == null)
+		{
 			return;
+		}
 		
 		if (_room.getOwner() != activeChar)
+		{
 			return;
+		}
 		
 		if (activeChar.isInParty() && member.isInParty() && activeChar.getParty().getPartyLeaderOID() == member.getParty().getPartyLeaderOID())
+		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.CANNOT_DISMISS_PARTY_MEMBER));
+		}
 		else
 		{
 			_room.deleteMember(member);
@@ -75,7 +81,7 @@ public final class RequestOustFromPartyRoom extends L2GameClientPacket
 			PartyMatchWaitingList.getInstance().addPlayer(member);
 			
 			// Send Room list
-			final int _loc = TownManager.getClosestLocation(member);
+			final int _loc = MapRegionTable.getInstance().getMapRegion(member).getBbs();
 			member.sendPacket(new PartyMatchList(member, 0, _loc, member.getLevel()));
 			
 			// Clean player's LFP title

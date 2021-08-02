@@ -56,41 +56,34 @@ public final class Util
 		return file.toURI().getPath().substring(base.toURI().getPath().length());
 	}
 	
-	/**
-	 * @param obj1
-	 * @param obj2
-	 * @return degree value of object 2 to the horizontal line with object 1 being the origin
-	 */
 	public static double calculateAngleFrom(final L2Object obj1, final L2Object obj2)
 	{
 		return calculateAngleFrom(obj1.getX(), obj1.getY(), obj2.getX(), obj2.getY());
 	}
 	
-	/**
-	 * @param obj1X
-	 * @param obj1Y
-	 * @param obj2X
-	 * @param obj2Y
-	 * @return degree value of object 2 to the horizontal line with object 1 being the origin
-	 */
 	public final static double calculateAngleFrom(int obj1X, int obj1Y, int obj2X, int obj2Y)
 	{
 		double angleTarget = Math.toDegrees(Math.atan2(obj2Y - obj1Y, obj2X - obj1X));
 		if (angleTarget < 0)
+		{
 			angleTarget = 360 + angleTarget;
+		}
 		return angleTarget;
 	}
 	
 	public final static double convertHeadingToDegree(int clientHeading)
 	{
 		double degree = clientHeading / 182.044444444;
+		
 		return degree;
 	}
 	
 	public final static int convertDegreeToClientHeading(double degree)
 	{
 		if (degree < 0)
+		{
 			degree = 360 + degree;
+		}
 		return (int) (degree * 182.044444444);
 	}
 	
@@ -102,8 +95,12 @@ public final class Util
 	public final static int calculateHeadingFrom(int obj1X, int obj1Y, int obj2X, int obj2Y)
 	{
 		double angleTarget = Math.toDegrees(Math.atan2(obj2Y - obj1Y, obj2X - obj1X));
+		
 		if (angleTarget < 0)
+		{
 			angleTarget = 360 + angleTarget;
+		}
+		
 		return (int) (angleTarget * 182.044444444);
 	}
 	
@@ -111,7 +108,9 @@ public final class Util
 	{
 		double angleTarget = Math.toDegrees(Math.atan2(dy, dx));
 		if (angleTarget < 0)
+		{
 			angleTarget = 360 + angleTarget;
+		}
 		return (int) (angleTarget * 182.044444444);
 	}
 	
@@ -131,7 +130,9 @@ public final class Util
 	public static double calculateDistance(final L2Object obj1, final L2Object obj2, final boolean includeZAxis)
 	{
 		if (obj1 == null || obj2 == null)
+		{
 			return 1000000;
+		}
 		return calculateDistance(obj1.getPosition().getX(), obj1.getPosition().getY(), obj1.getPosition().getZ(), obj2.getPosition().getX(), obj2.getPosition().getY(), obj2.getPosition().getZ(), includeZAxis);
 	}
 	
@@ -146,7 +147,9 @@ public final class Util
 		str = str.trim();
 		
 		if (str.length() > 0 && Character.isLetter(str.charAt(0)))
+		{
 			return str.substring(0, 1).toUpperCase() + str.substring(1);
+		}
 		
 		return str;
 	}
@@ -216,18 +219,19 @@ public final class Util
 	}
 	
 	/*
-	 *  Checks if object is within short (sqrt(int.max_value)) radius, 
-	 *  not using collisionRadius. Faster calculation than checkIfInRange
-	 *  if distance is short and collisionRadius isn't needed.
-	 *  Not for long distance checks (potential teleports, far away castles etc)
+	 * Checks if object is within short (sqrt(int.max_value)) radius, not using collisionRadius. Faster calculation than checkIfInRange if distance is short and collisionRadius isn't needed. Not for long distance checks (potential teleports, far away castles etc)
 	 */
 	public static boolean checkIfInShortRadius(int radius, L2Object obj1, L2Object obj2, boolean includeZAxis)
 	{
 		if (obj1 == null || obj2 == null)
+		{
 			return false;
+		}
 		if (radius == -1)
+		{
 			return true; // not limited
-			
+		}
+		
 		int dx = obj1.getX() - obj2.getX();
 		int dy = obj1.getY() - obj2.getY();
 		
@@ -290,7 +294,9 @@ public final class Util
 	public static float roundTo(final float val, final int numPlaces)
 	{
 		if (numPlaces <= 1)
+		{
 			return Math.round(val);
+		}
 		
 		final float exponent = (float) Math.pow(10, numPlaces);
 		
@@ -318,6 +324,29 @@ public final class Util
 	 * @return String formatted adena amount
 	 */
 	public static String formatAdena(int amount)
+	{
+		String s = "";
+		int rem = amount % 1000;
+		s = Integer.toString(rem);
+		amount = (amount - rem) / 1000;
+		while (amount > 0)
+		{
+			if (rem < 99)
+			{
+				s = '0' + s;
+			}
+			if (rem < 9)
+			{
+				s = '0' + s;
+			}
+			rem = amount % 1000;
+			s = Integer.toString(rem) + "," + s;
+			amount = (amount - rem) / 1000;
+		}
+		return s;
+	}
+	
+	public static String formatItem(int amount)
 	{
 		String s = "";
 		int rem = amount % 1000;
@@ -368,17 +397,25 @@ public final class Util
 		int angle;
 		// int angle;
 		if (heading == 0)
+		{
 			angle = 360;
+		}
 		else
 		{
 			angle = (int) (heading / 182.03999999999999D);
 		}
 		if (angle <= 90)
+		{
 			angle += 90;
+		}
 		else if ((angle > 90) && (angle <= 180))
+		{
 			angle -= 90;
+		}
 		else if ((angle > 180) && (angle <= 270))
+		{
 			angle += 90;
+		}
 		else if ((angle > 270) && (angle <= 360))
 		{
 			angle -= 90;
@@ -389,6 +426,16 @@ public final class Util
 	public static int calcCameraAngle(final L2NpcInstance target)
 	{
 		return calcCameraAngle(target.getHeading());
+	}
+	
+	public static boolean contains(int number, int number2)
+	{
+		if (number == number2)
+		{
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public static boolean contains(final int[] array, final int obj)
@@ -416,17 +463,13 @@ public final class Util
 		return false;
 	}
 	
-	/**
-	 * Format the given date on the given format
-	 * @param date : the date to format.
-	 * @param format : the format to correct by.
-	 * @return a string representation of the formatted date.
-	 */
 	public static String formatDate(Date date, String format)
 	{
 		final DateFormat dateFormat = new SimpleDateFormat(format);
 		if (date != null)
+		{
 			return dateFormat.format(date);
+		}
 		
 		return null;
 	}
@@ -435,11 +478,13 @@ public final class Util
 	{
 		final DateFormat dateFormat = new SimpleDateFormat(format);
 		if (date > 0)
+		{
 			return dateFormat.format(date);
+		}
 		
 		return null;
 	}
-
+	
 	public static int getPlayersCountInRadius(int range, L2Character npc, boolean invisible)
 	{
 		int count = 0;
@@ -468,10 +513,6 @@ public final class Util
 		return count;
 	}
 	
-	/**
-	 * @param text - the text to check
-	 * @return {@code true} if {@code text} contains only numbers, {@code false} otherwise
-	 */
 	public static boolean isDigit(String text)
 	{
 		if ((text == null) || text.isEmpty())

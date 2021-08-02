@@ -20,10 +20,9 @@
 package l2jorion.game.model.actor.instance;
 
 import l2jorion.game.ai.CtrlIntention;
-import l2jorion.game.model.L2CharPosition;
+import l2jorion.game.model.Location;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MyTargetSelected;
-import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.util.random.Rnd;
@@ -36,14 +35,16 @@ public class L2TownPetInstance extends L2NpcInstance
 	{
 		super(objectId, template);
 		
-		ThreadPoolManager.getInstance().scheduleAiAtFixedRate(new RandomWalkTask(), 2000, Rnd.get(4000,8000));
+		ThreadPoolManager.getInstance().scheduleAiAtFixedRate(new RandomWalkTask(), 2000, Rnd.get(4000, 8000));
 	}
 	
 	@Override
 	public void onAction(final L2PcInstance player)
 	{
 		if (!canTarget(player))
+		{
 			return;
+		}
 		
 		if (this != player.getTarget())
 		{
@@ -54,9 +55,6 @@ public class L2TownPetInstance extends L2NpcInstance
 			// The color to display in the select window is White
 			final MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
 			player.sendPacket(my);
-			
-			// Send a Server->Client packet ValidateLocation to correct the L2ArtefactInstance position and heading on the client
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
@@ -84,14 +82,17 @@ public class L2TownPetInstance extends L2NpcInstance
 		@Override
 		public void run()
 		{
-			if(!isInActiveRegion()) return;
+			if (!isInActiveRegion())
+			{
+				return;
+			}
 			
-			randomX = spawnX + Rnd.get(2*50)-50;
-			randomY = spawnY + Rnd.get(2*50)-50;
+			randomX = spawnX + Rnd.get(2 * 50) - 50;
+			randomY = spawnY + Rnd.get(2 * 50) - 50;
 			setRunning();
 			if ((randomX != getX()) && (randomY != getY()))
 			{
-				getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new L2CharPosition(randomX, randomY, getZ(), 0));
+				getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new Location(randomX, randomY, getZ(), 0));
 			}
 		}
 	}

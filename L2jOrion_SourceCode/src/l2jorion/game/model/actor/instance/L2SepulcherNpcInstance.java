@@ -20,9 +20,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
@@ -42,6 +39,8 @@ import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Broadcast;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
 /**
@@ -106,7 +105,9 @@ public class L2SepulcherNpcInstance extends L2NpcInstance
 	public void onAction(final L2PcInstance player)
 	{
 		if (!canTarget(player))
+		{
 			return;
+		}
 		
 		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
@@ -212,8 +213,8 @@ public class L2SepulcherNpcInstance extends L2NpcInstance
 		
 		switch (getNpcId())
 		{
-			case 31468://4s first room first box
-			case 31469://4s second room first box
+			case 31468:// 4s first room first box
+			case 31469:// 4s second room first box
 			case 31470:
 			case 31471:
 			case 31472:
@@ -235,10 +236,12 @@ public class L2SepulcherNpcInstance extends L2NpcInstance
 				setIsInvul(false);
 				reduceCurrentHp(getMaxHp() + 1, player);
 				if (_spawnMonsterTask != null)
+				{
 					_spawnMonsterTask.cancel(true);
+				}
 				_spawnMonsterTask = ThreadPoolManager.getInstance().scheduleEffect(new SpawnMonster(getNpcId()), 3500);
 				break;
-
+			
 			case 31455:// first room key box
 			case 31456:
 			case 31457:
@@ -255,8 +258,10 @@ public class L2SepulcherNpcInstance extends L2NpcInstance
 				setIsInvul(false);
 				reduceCurrentHp(getMaxHp() + 1, player);
 				if (player.getParty() != null && !player.getParty().isLeader(player))
+				{
 					player = player.getParty().getLeader();
-					player.addItem("Quest", HALLS_KEY, 1, player, true);
+				}
+				player.addItem("Quest", HALLS_KEY, 1, player, true);
 				break;
 			
 			default:
@@ -328,7 +333,9 @@ public class L2SepulcherNpcInstance extends L2NpcInstance
 			catch (IndexOutOfBoundsException | NumberFormatException ioobe)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					ioobe.printStackTrace();
+				}
 			}
 			showChatWindow(player, val);
 		}
@@ -347,7 +354,7 @@ public class L2SepulcherNpcInstance extends L2NpcInstance
 					case 31934:
 					case 31939:
 					case 31944:
-							FourSepulchersManager.getInstance().spawnShadow(getNpcId());
+						FourSepulchersManager.getInstance().spawnShadow(getNpcId());
 					default:
 					{
 						openNextDoor(getNpcId());
@@ -415,7 +422,9 @@ public class L2SepulcherNpcInstance extends L2NpcInstance
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.warn(e.getMessage());
 			}
@@ -457,10 +466,16 @@ public class L2SepulcherNpcInstance extends L2NpcInstance
 	public void sayInShout(final String msg)
 	{
 		if (msg == null || msg.isEmpty())
+		{
 			return;// wrong usage
+		}
+		
 		final Collection<L2PcInstance> knownPlayers = L2World.getInstance().getAllPlayers().values();
 		if (knownPlayers == null || knownPlayers.isEmpty())
+		{
 			return;
+		}
+		
 		final CreatureSay sm = new CreatureSay(0, 1, getName(), msg);
 		for (final L2PcInstance player : knownPlayers)
 		{
@@ -468,6 +483,7 @@ public class L2SepulcherNpcInstance extends L2NpcInstance
 			{
 				continue;
 			}
+			
 			if (Util.checkIfInRange(15000, player, this, true))
 			{
 				player.sendPacket(sm);

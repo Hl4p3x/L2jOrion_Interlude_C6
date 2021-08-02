@@ -23,9 +23,6 @@ package l2jorion.game.skills.conditions;
 import l2jorion.game.skills.Env;
 import l2jorion.game.skills.Stats;
 
-/**
- * @author mkizub
- */
 public class ConditionSkillStats extends Condition
 {
 	
@@ -41,7 +38,9 @@ public class ConditionSkillStats extends Condition
 	public boolean testImpl(final Env env)
 	{
 		if (env.skill == null)
+		{
 			return false;
+		}
 		return env.skill.getStat() == _stat;
 	}
 }

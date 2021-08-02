@@ -1,34 +1,37 @@
 package l2jorion.game.network.serverpackets;
 
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import l2jorion.game.model.TimeStamp;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.model.actor.instance.L2PcInstance.TimeStamp;
 
 public class SkillCoolTime extends L2GameServerPacket
 {
-	public Collection<TimeStamp> _reuseTimeStamps;
+	private final List<TimeStamp> _skillReuseTimeStamps = new ArrayList<>();
 	
-	public SkillCoolTime(L2PcInstance cha)
+	public SkillCoolTime(L2PcInstance player)
 	{
-		_reuseTimeStamps = cha.getReuseTimeStamps();
-		Iterator<TimeStamp> iter = _reuseTimeStamps.iterator();
-		while (iter.hasNext())
+		final Map<Integer, TimeStamp> skillReuseTimeStamps = player.getSkillReuseTimeStamps();
+		if (skillReuseTimeStamps != null)
 		{
-			if (!iter.next().hasNotPassed()) // remove expired timestamps
+			for (TimeStamp ts : skillReuseTimeStamps.values())
 			{
-				iter.remove();
+				if (ts.hasNotPassed())
+				{
+					_skillReuseTimeStamps.add(ts);
+				}
 			}
 		}
 	}
-
+	
 	@Override
 	protected void writeImpl()
 	{
 		writeC(0xc1);
-		writeD(_reuseTimeStamps.size()); // list size
-		for (TimeStamp ts : _reuseTimeStamps)
+		writeD(_skillReuseTimeStamps.size());
+		for (TimeStamp ts : _skillReuseTimeStamps)
 		{
 			writeD(ts.getSkillId());
 			writeD(0);

@@ -29,6 +29,7 @@ import l2jorion.game.network.SystemMessageId;
 public class CreatureSay extends L2GameServerPacket
 {
 	private static final String _S__4A_CREATURESAY = "[S] 4A CreatureSay";
+	
 	private final int _objectId;
 	private final int _textType;
 	private String _charName = null;
@@ -78,6 +79,7 @@ public class CreatureSay extends L2GameServerPacket
 			writeD(_charId);
 		}
 		writeD(_npcString); // High Five NPCString ID
+		
 		if (_text != null)
 		{
 			writeS(_text);

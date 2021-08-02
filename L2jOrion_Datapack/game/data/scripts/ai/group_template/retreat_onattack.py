@@ -1,6 +1,6 @@
 import sys
 from l2jorion.game.ai import CtrlIntention
-from l2jorion.game.model import L2CharPosition
+from l2jorion.game.model import Location
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
 from l2jorion.game.network.serverpackets import CreatureSay
@@ -52,7 +52,7 @@ class retreat_onattack(JQuest) :
                 posY = posY + signY
                 npc.setIsAfraid(1)
                 npc.setRunning()
-                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO,L2CharPosition(posX,posY,posZ,0))
+                npc.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO,Location(posX,posY,posZ,0))
                 self.startQuestTimer("Retreat", 10000, npc, player)
         return
 

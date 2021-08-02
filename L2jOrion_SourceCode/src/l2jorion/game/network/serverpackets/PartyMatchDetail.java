@@ -19,17 +19,10 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author Gnacik
- */
 public class PartyMatchDetail extends L2GameServerPacket
 {
 	private final PartyMatchRoom _room;
 	
-	/**
-	 * @param player
-	 * @param room
-	 */
 	public PartyMatchDetail(final L2PcInstance player, final PartyMatchRoom room)
 	{
 		_room = room;

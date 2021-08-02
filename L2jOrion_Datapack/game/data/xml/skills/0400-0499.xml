@@ -146,12 +146,12 @@
   <table name="#chance">80 81 82 82 83 84 84 85 86 86 87 88 88 89 90 90 91 92 92 93 94 94 95 96 96 97 98 98 99 100</table>
   <table name="#mpConsume">50 53 55 58 59 61 63 65 67 68</table>
   <table name="#itemConsumeCount">5 6 7 7 8 8 9 9 10 10</table>
-  <table name="#lethal2">5 9 13 17 21 25 29 33 37 41</table>
+  <table name="#lethal2">5 9 13 17 21 28 35 40 45 60</table>
   <set name="itemConsumeId" val="1785"/>
   <set name="itemConsumeCount" val="#itemConsumeCount"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="reuseDelay" val="20000"/>
-  <set name="power" val="30" /> <!-- Base Land Rate -->
+  <set name="power" val="40" /> <!-- Base Land Rate -->
   <set name="hitTime" val="2000"/>
   <set name="target" val="TARGET_UNDEAD"/>
   <set name="skillRadius" val="150"/>
@@ -1019,14 +1019,14 @@
   <set name="itemConsumeId" val="1785"/>
   <set name="itemConsumeCount" val="#itemConsumeCount"/>
   <set name="mpConsume" val="#mpConsume"/>
-  <set name="power" val="30"/>
+  <set name="power" val="40"/>
   <set name="reuseDelay" val="20000"/>
   <set name="hitTime" val="2000"/>
   <set name="target" val="TARGET_ONE"/>
   <set name="skillType" val="FEAR"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="isDebuff" val="true"/>
-  <set name="lethal2" val="25"/>
+  <set name="lethal2" val="50"/>
   <set name="castRange" val="150"/>
   <set name="effectRange" val="650"/>
   <enchant1 name="mpConsume" val="#cost"/>
@@ -1052,12 +1052,14 @@
   <set name="skillType" val="CHARGE_EFFECT"/>
   <set name="isMagic" val="false"/>
   <for>
-    <effect name="Buff" time="15" count="1" val="0" stackOrder="#spd" stackType="SpeedUpS"> <!-- changed to 15s duration - retail info -->
+    <effect name="Buff" time="15" count="1" val="0" stackOrder="#spd" stackType="SpeedUpS">
       <add order="0x40" stat="runSpd" val="#spd"/>
     </effect>
   </for>
 </skill>
-<skill id="452" levels="5" name="Shock Stomp">
+<skill id="452" levels="5" name="Shock Stomp" enchantLevels1="30">
+  <table name="#enchantMagicLvl">76 76 76 77 77 77 78 78 78 79 79 79 80 80 80 81 81 81 82 82 82 82 83 83 83 84 84 85 85 85</table>
+  <table name="#ench1power">50 51 52 52 53 54 54 55 56 56 57 58 58 59 60 60 61 62 62 63 64 64 65 66 66 67 68 68 69 70</table>
   <table name="#magicLvl">55 60 64 68 72</table>
   <table name="#effectPower"> 40 50 60 70 80 </table>
   <set name="weaponsAllowed" val="64"/>
@@ -1071,8 +1073,10 @@
   <set name="hitTime" val="500"/>
   <set name="skillType" val="STUN"/>
   <set name="operateType" val="OP_ACTIVE"/>
+  <enchant1 name="power" val="#ench1power"/>
+  <enchant1 name="magicLvl" val="#enchantMagicLvl"/>
   <for>
-    <effect count="1" name="Stun" time="5" val="0"/> <!-- guessed -->
+    <effect count="1" name="Stun" time="9" val="0" stackOrder="2" stackType="stun"/>
     <effect count="1" name="RemoveTarget" time="1" val="0" effectPower="#effectPower" effectType="DEBUFF"/>
   </for>
 </skill>
@@ -1095,7 +1099,7 @@
   <set name="reuseDelay" val="3600000"/>
   <set name="skillRadius" val="180"/>
   <set name="staticReuse" val="true"/>
-  <set name="magicLvl" val="80"/>
+  <set name="magicLvl" val="78"/>
   <set name="effectNpcId" val="13018"/>
   <set name="effectId" val="5123"/>
   <set name="isMagic" val="false"/>
@@ -1104,7 +1108,7 @@
   <set name="itemConsumeCount" val="1"/>
   <set name="mpInitialConsume" val="36"/>
   <set name="mpConsume" val="44"/>
-  <cond msg="Symbol of Defense cannot be used due to unsuitable terms.">
+  <cond msg="Symbol of Noise cannot be used due to unsuitable terms.">
     <player battle_force="2"/> 
   </cond>
   <for>
@@ -1121,7 +1125,7 @@
   <set name="castRange" val="900"/>
   <set name="skillRadius" val="180"/>
   <set name="staticReuse" val="true"/>
-  <set name="magicLvl" val="80"/>
+  <set name="magicLvl" val="78"/>
   <set name="effectNpcId" val="13025"/>
   <set name="offensive" val="True"/>
   <set name="effectId" val="5124"/>
@@ -1148,7 +1152,7 @@
   <set name="reuseDelay" val="3600000"/>
   <set name="skillRadius" val="180"/>
   <set name="staticReuse" val="true"/>
-  <set name="magicLvl" val="80"/>
+  <set name="magicLvl" val="78"/>
   <set name="effectNpcId" val="13018"/>
   <set name="effectId" val="5125"/>
   <set name="isMagic" val="false"/>
@@ -1173,7 +1177,7 @@
   <set name="reuseDelay" val="3600000"/>
   <set name="skillRadius" val="180"/>
   <set name="staticReuse" val="true"/>
-  <set name="magicLvl" val="80"/>
+  <set name="magicLvl" val="78"/>
   <set name="effectNpcId" val="13018"/>
   <set name="effectId" val="5126"/>
   <set name="isMagic" val="false"/>
@@ -1198,7 +1202,7 @@
   <set name="reuseDelay" val="3600000"/>
   <set name="skillRadius" val="180"/>
   <set name="staticReuse" val="true"/>
-  <set name="magicLvl" val="80"/>
+  <set name="magicLvl" val="78"/>
   <set name="effectNpcId" val="13018"/>
   <set name="effectId" val="5127"/>
   <set name="isMagic" val="false"/>
@@ -1223,7 +1227,7 @@
   <set name="reuseDelay" val="3600000"/>
   <set name="skillRadius" val="180"/>
   <set name="staticReuse" val="true"/>
-  <set name="magicLvl" val="80"/>
+  <set name="magicLvl" val="78"/>
   <set name="effectNpcId" val="13018"/>
   <set name="effectId" val="5128"/>
   <set name="isMagic" val="false"/>
@@ -1248,7 +1252,7 @@
   <set name="reuseDelay" val="3600000"/>
   <set name="skillRadius" val="180"/>
   <set name="staticReuse" val="true"/>
-  <set name="magicLvl" val="80"/>
+  <set name="magicLvl" val="78"/>
   <set name="effectNpcId" val="13018"/>
   <set name="effectId" val="5129"/>
   <set name="isMagic" val="false"/>
@@ -1276,7 +1280,7 @@
   <set name="reuseDelay" val="4000"/>
   <set name="hitTime" val="3000"/>
   <set name="skillType" val="NEGATE"/>
-  <set name="negateSkillTypes" val="SLOW"/>
+  <set name="negateSkillTypes" val="ROOT SLOW"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="num_charges" val="#numcharge"/>
   </skill>

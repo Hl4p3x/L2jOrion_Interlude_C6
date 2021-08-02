@@ -24,18 +24,13 @@ import l2jorion.game.model.actor.instance.L2StaticObjectInstance;
 
 public class StaticObject extends L2GameServerPacket
 {
-	
 	private static final String _S__99_StaticObjectPacket = "[S] 99 StaticObjectPacket";
+	
 	private final L2StaticObjectInstance _staticObject;
 	
-	/**
-	 * [S]0x99 StaticObjectPacket dd
-	 * @param StaticObject
-	 */
-	public StaticObject(final L2StaticObjectInstance StaticObject)
+	public StaticObject(L2StaticObjectInstance StaticObject)
 	{
-		_staticObject = StaticObject; // staticObjectId
-		
+		_staticObject = StaticObject;
 	}
 	
 	@Override
@@ -43,15 +38,11 @@ public class StaticObject extends L2GameServerPacket
 	{
 		
 		writeC(0x99);
-		writeD(_staticObject.getStaticObjectId()); // staticObjectId
-		writeD(_staticObject.getObjectId()); // objectId
+		writeD(_staticObject.getStaticObjectId());
+		writeD(_staticObject.getObjectId());
 		
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

@@ -98,7 +98,9 @@ public class L2SkillSummon extends L2Skill
 				}
 				int mastery = player.getSkillLevel(SKILL_CUBIC_MASTERY);
 				if (mastery < 0)
+				{
 					mastery = 0;
+				}
 				
 				final int count = player.getCubics().size();
 				
@@ -111,7 +113,9 @@ public class L2SkillSummon extends L2Skill
 			else
 			{
 				if (player.inObserverMode())
+				{
 					return false;
+				}
 				
 				if (!player.isGM() && player.getPet() != null)
 				{
@@ -127,13 +131,17 @@ public class L2SkillSummon extends L2Skill
 	public void useSkill(final L2Character caster, final L2Object[] targets)
 	{
 		if (caster.isAlikeDead() || !(caster instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		final L2PcInstance activeChar = (L2PcInstance) caster;
 		
 		// Skill 2046 only used for animation
 		if (getId() == 2046)
+		{
 			return;
+		}
 		
 		if (_npcId == 0)
 		{
@@ -160,11 +168,15 @@ public class L2SkillSummon extends L2Skill
 				for (final L2Object obj : targets)
 				{
 					if (!(obj instanceof L2PcInstance))
+					{
 						continue;
+					}
 					final L2PcInstance player = ((L2PcInstance) obj);
 					int mastery = player.getSkillLevel(SKILL_CUBIC_MASTERY);
 					if (mastery < 0)
+					{
 						mastery = 0;
+					}
 					if (mastery == 0 && !player.getCubics().isEmpty())
 					{
 						// Player can have only 1 cubic - we shuld replace old cubic with new one
@@ -175,7 +187,7 @@ public class L2SkillSummon extends L2Skill
 						}
 						player.getCubics().clear();
 					}
-					// TODO: Should remove first cubic summoned and replace with new cubic
+					// XXX: Should remove first cubic summoned and replace with new cubic
 					if (player.getCubics().containsKey(_npcId))
 					{
 						final L2CubicInstance cubic = player.getCubic(_npcId);
@@ -183,13 +195,22 @@ public class L2SkillSummon extends L2Skill
 						cubic.cancelDisappear();
 						player.delCubic(_npcId);
 					}
+					
 					if (player.getCubics().size() > mastery)
+					{
 						continue;
+					}
+					
 					if (player == activeChar)
+					{
 						player.addCubic(_npcId, _cubicSkillLevel, getPower(), _activationtime, _activationchance, _summonTotalLifeTime, false);
+					}
 					else
+					{
 						// given by other player
 						player.addCubic(_npcId, _cubicSkillLevel, getPower(), _activationtime, _activationchance, _summonTotalLifeTime, true);
+					}
+					
 					player.broadcastUserInfo();
 				}
 				return;
@@ -197,7 +218,9 @@ public class L2SkillSummon extends L2Skill
 			
 			int mastery = activeChar.getSkillLevel(SKILL_CUBIC_MASTERY);
 			if (mastery < 0)
+			{
 				mastery = 0;
+			}
 			if (activeChar.getCubics().containsKey(_npcId))
 			{
 				final L2CubicInstance cubic = activeChar.getCubic(_npcId);
@@ -223,7 +246,9 @@ public class L2SkillSummon extends L2Skill
 		if (activeChar.getPet() != null || activeChar.isMounted())
 		{
 			if (Config.DEBUG)
-				LOG.debug("player has a pet already. ignore summon skill");
+			{
+				LOG.debug("player has a pet already. Ignore summon skill.");
+			}
 			return;
 		}
 		
@@ -232,15 +257,21 @@ public class L2SkillSummon extends L2Skill
 		if (summonTemplate == null)
 		{
 			LOG.warn("Summon attempt for nonexisting NPC ID:" + _npcId + ", skill ID:" + this.getId());
-			return; // npcID doesn't exist
+			return;
 		}
+		
 		if (summonTemplate.type.equalsIgnoreCase("L2SiegeSummon"))
+		{
 			summon = new L2SiegeSummonInstance(IdFactory.getInstance().getNextId(), summonTemplate, activeChar, this);
+		}
 		else
+		{
 			summon = new L2SummonInstance(IdFactory.getInstance().getNextId(), summonTemplate, activeChar, this);
+		}
 		
 		summon.setName(summonTemplate.name);
 		summon.setTitle(activeChar.getName());
+		
 		summon.setExpPenalty(_expPenalty);
 		if (summon.getLevel() >= ExperienceData.getInstance().getMaxLevel())
 		{
@@ -251,15 +282,16 @@ public class L2SkillSummon extends L2Skill
 		{
 			summon.getStat().setExp(ExperienceData.getInstance().getExpForLevel(summon.getLevel() % ExperienceData.getInstance().getMaxPetLevel()));
 		}
+		
 		summon.setCurrentHp(summon.getMaxHp());
 		summon.setCurrentMp(summon.getMaxMp());
 		summon.setHeading(activeChar.getHeading());
 		summon.setRunning();
+		
 		activeChar.setPet(summon);
 		
 		L2World.getInstance().storeObject(summon);
 		
-		// Check to see if we should do the decay right after the cast
 		if (getTargetType() == SkillTargetType.TARGET_CORPSE_MOB)
 		{
 			final L2Character target = (L2Character) targets[0];
@@ -275,8 +307,8 @@ public class L2SkillSummon extends L2Skill
 		}
 		
 		summon.setFollowStatus(true);
-		summon.setShowSummonAnimation(false); // addVisibleObject created the info packets with summon animation
-		// if someone comes into range now, the animation shouldnt show any more
+		summon.setShowSummonAnimation(false);
+		
 		activeChar.sendPacket(new PetInfo(summon));
 	}
 	
@@ -284,5 +316,4 @@ public class L2SkillSummon extends L2Skill
 	{
 		return _isCubic;
 	}
-	
 }

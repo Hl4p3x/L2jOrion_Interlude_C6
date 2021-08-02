@@ -23,22 +23,12 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2Skill;
 
-/**
- * Format: (ch) d [dd].
- * @author -Wooden-
- */
 public class PledgeSkillList extends L2GameServerPacket
 {
-	/** The Constant _S__FE_39_PLEDGESKILLLIST. */
 	private static final String _S__FE_39_PLEDGESKILLLIST = "[S] FE:39 PledgeSkillList";
 	
-	/** The _clan. */
 	private final L2Clan _clan;
 	
-	/**
-	 * Instantiates a new pledge skill list.
-	 * @param clan the clan
-	 */
 	public PledgeSkillList(final L2Clan clan)
 	{
 		_clan = clan;
@@ -59,10 +49,6 @@ public class PledgeSkillList extends L2GameServerPacket
 		}
 	}
 	
-	/**
-	 * Gets the type.
-	 * @return the type
-	 */
 	@Override
 	public String getType()
 	{

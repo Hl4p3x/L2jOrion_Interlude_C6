@@ -26,6 +26,7 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 public class GMViewItemList extends L2GameServerPacket
 {
 	private static final String _S__AD_GMVIEWITEMLIST = "[S] 94 GMViewItemList";
+	
 	private final L2ItemInstance[] _items;
 	private final L2PcInstance _cha;
 	private final String _playerName;

@@ -19,21 +19,17 @@ package l2jorion.game.model;
 import java.util.List;
 
 import javolution.util.FastList;
-import l2jorion.game.managers.TownManager;
+import l2jorion.game.datatables.csv.MapRegionTable;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExManagePartyRoomMember;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * @author Gnacik
- */
 public class PartyMatchRoom
 {
 	private final int _id;
 	private String _title;
 	private int _loot;
-	private int _location;
 	private int _minlvl;
 	private int _maxlvl;
 	private int _maxmem;
@@ -44,7 +40,6 @@ public class PartyMatchRoom
 		_id = id;
 		_title = title;
 		_loot = loot;
-		_location = TownManager.getClosestLocation(owner);
 		_minlvl = minlvl;
 		_maxlvl = maxlvl;
 		_maxmem = maxmem;
@@ -96,17 +91,25 @@ public class PartyMatchRoom
 		final L2PcInstance oldLeader = _members.get(0);
 		// Remove new leader
 		if (_members.contains(newLeader))
+		{
 			_members.remove(newLeader);
+		}
 		
 		// Move him to first position
 		if (!_members.isEmpty())
+		{
 			_members.set(0, newLeader);
+		}
 		else
+		{
 			_members.add(newLeader);
+		}
 		
 		// Add old leader as normal member
 		if (oldLeader != null && oldLeader != newLeader)
+		{
 			_members.add(oldLeader);
+		}
 		
 		// Broadcast change
 		for (final L2PcInstance member : getPartyMembers())
@@ -164,12 +167,7 @@ public class PartyMatchRoom
 	
 	public int getLocation()
 	{
-		return _location;
-	}
-	
-	public void setLocation(final int loc)
-	{
-		_location = loc;
+		return MapRegionTable.getInstance().getMapRegion(_members.get(0)).getBbs();
 	}
 	
 	public int getMaxMembers()

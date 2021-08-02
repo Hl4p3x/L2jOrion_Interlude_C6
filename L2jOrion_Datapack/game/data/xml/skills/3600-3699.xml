@@ -566,16 +566,15 @@ Lvl 9 - Increases Atk. Spd., and enables the character to attack multiple oppone
 </skill>
 <skill id="3633" levels="2" name="Residential Shock Immunity">
   <table name="#vuln">0.5 0</table>
-  <table name="#stack">50 100</table>
   <set name="target" val="TARGET_SELF"/>
   <set name="reuseDelay" val="1800000"/>
   <set name="hitTime" val="100"/> <!-- test -->
-  <set name="skillType" val="BUFF"/>
+  <set name="skillType" val="CONT"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="castRange" val="-1"/>
   <set name="effectRange" val="-1"/>
   <for>
-     <effect count="1" name="Buff" time="10" val="0" stackOrder="#stack" stackType="ShockVuln">
+     <effect count="1" name="Buff" time="10" val="0">
       <mul order="0x30" stat="stunVuln" val="#vuln"/>
     </effect>
   </for>

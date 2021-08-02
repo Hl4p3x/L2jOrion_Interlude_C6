@@ -25,6 +25,7 @@ import l2jorion.game.model.L2Character;
 public class StopMove extends L2GameServerPacket
 {
 	private static final String _S__59_STOPMOVE = "[S] 47 StopMove";
+	
 	private final int _objectId;
 	private final int _x;
 	private final int _y;

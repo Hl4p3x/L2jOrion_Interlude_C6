@@ -15,15 +15,6 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.datatables.sql.CharNameTable;
 import l2jorion.game.model.L2World;
 
-/**
- * Support for "Chat with Friends" dialog. <BR>
- * Inform player about friend online status change <BR>
- * Format: cdSd<BR>
- * d: Online/Offline<BR>
- * S: Friend Name <BR>
- * d: Player Object ID <BR>
- * @author JIV
- */
 public class FriendStatus extends L2GameServerPacket
 {
 	private final boolean _online;
@@ -45,10 +36,7 @@ public class FriendStatus extends L2GameServerPacket
 		writeS(_name);
 		writeD(_objid);
 	}
-
-	/* (non-Javadoc)
-	 * @see l2jorion.game.network.serverpackets.L2GameServerPacket#getType()
-	 */
+	
 	@Override
 	public String getType()
 	{

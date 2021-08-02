@@ -22,13 +22,6 @@ package l2jorion.crypt;
 
 import java.io.IOException;
 
-/**
- * This file is based on the Blowfish Engine that is part of the BouncyCastle JCE Copyright (c) 2000 The Legion Of The Bouncy Castle (http://www.bouncycastle.org) Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following
- * conditions: The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
 public class BlowfishEngine
 {
 	private final static int[] KP =
@@ -1131,13 +1124,19 @@ public class BlowfishEngine
 	public final int processBlock(final byte[] in, final int inOff, final byte[] out, final int outOff) throws IOException
 	{
 		if (workingKey == null)
+		{
 			throw new IllegalStateException("Blowfish not initialised");
+		}
 		
 		if (inOff + BLOCK_SIZE > in.length)
+		{
 			throw new IOException("input buffer too short");
+		}
 		
 		if (outOff + BLOCK_SIZE > out.length)
+		{
 			throw new IOException("output buffer too short");
+		}
 		
 		if (encrypting)
 		{
@@ -1160,9 +1159,6 @@ public class BlowfishEngine
 		return BLOCK_SIZE;
 	}
 	
-	// ==================================
-	// Private Implementation
-	// ==================================
 	private int func(final int x)
 	{
 		return (S0[(x >>> 24)] + S1[x >>> 16 & 0xff] ^ S2[x >>> 8 & 0xff]) + S3[x & 0xff];

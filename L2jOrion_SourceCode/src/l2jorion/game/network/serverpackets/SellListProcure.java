@@ -33,7 +33,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 public class SellListProcure extends L2GameServerPacket
 {
 	private static final String _S__E9_SELLLISTPROCURE = "[S] E9 SellListProcure";
-	// private static Logger LOG = LoggerFactory.getLogger(SellListProcure.class);
 	
 	private final L2PcInstance _activeChar;
 	private final int _money;

@@ -40,18 +40,13 @@ import l2jorion.game.model.spawn.L2Spawn;
 import l2jorion.game.model.spawn.SpawnListener;
 import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.util.random.Rnd;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * Auto Chat Handler Allows NPCs to automatically send messages to nearby players at a set time interval.
- * @author Tempy
- */
 public class AutoChatHandler implements SpawnListener
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(AutoChatHandler.class);
@@ -218,7 +213,9 @@ public class AutoChatHandler implements SpawnListener
 	public boolean removeChat(final AutoChatInstance chatInst)
 	{
 		if (chatInst == null)
+		{
 			return false;
+		}
 		
 		_registeredChats.remove(chatInst.getNPCId());
 		chatInst.setActive(false);
@@ -240,11 +237,17 @@ public class AutoChatHandler implements SpawnListener
 	public AutoChatInstance getAutoChatInstance(final int id, final boolean byObjectId)
 	{
 		if (!byObjectId)
+		{
 			return _registeredChats.get(id);
+		}
 		
 		for (final AutoChatInstance chatInst : _registeredChats.values())
+		{
 			if (chatInst.getChatDefinition(id) != null)
+			{
 				return chatInst;
+			}
+		}
 		
 		return null;
 	}
@@ -272,7 +275,9 @@ public class AutoChatHandler implements SpawnListener
 		synchronized (_registeredChats)
 		{
 			if (npc == null)
+			{
 				return;
+			}
 			
 			final int npcId = npc.getNpcId();
 			
@@ -382,7 +387,9 @@ public class AutoChatHandler implements SpawnListener
 		public boolean removeChatDefinition(final int objectId)
 		{
 			if (!_chatDefinitions.containsKey(objectId))
+			{
 				return false;
+			}
 			
 			AutoChatDefinition chatDefinition = _chatDefinitions.get(objectId);
 			chatDefinition.setActive(false);
@@ -429,7 +436,9 @@ public class AutoChatHandler implements SpawnListener
 		public boolean isRandomChat(final int objectId)
 		{
 			if (!_chatDefinitions.containsKey(objectId))
+			{
 				return false;
+			}
 			
 			return _chatDefinitions.get(objectId).isRandomChat();
 		}
@@ -555,7 +564,9 @@ public class AutoChatHandler implements SpawnListener
 		public void setActive(final boolean activeValue)
 		{
 			if (_isActive == activeValue)
+			{
 				return;
+			}
 			
 			_isActive = activeValue;
 			
@@ -630,14 +641,18 @@ public class AutoChatHandler implements SpawnListener
 			protected String[] getChatTexts()
 			{
 				if (_chatTexts != null)
+				{
 					return _chatTexts;
+				}
 				return _chatInstance.getDefaultTexts();
 			}
 			
 			private long getChatDelay()
 			{
 				if (_chatDelay > 0)
+				{
 					return _chatDelay;
+				}
 				return _chatInstance.getDefaultDelay();
 			}
 			
@@ -669,7 +684,9 @@ public class AutoChatHandler implements SpawnListener
 			void setActive(final boolean activeValue)
 			{
 				if (isActive() == activeValue)
+				{
 					return;
+				}
 				
 				if (activeValue)
 				{
@@ -793,7 +810,9 @@ public class AutoChatHandler implements SpawnListener
 						text = chatDef.getChatTexts()[lastIndex];
 						
 						if (text == null)
+						{
 							return;
+						}
 						
 						if (!nearbyPlayers.isEmpty())
 						{
@@ -846,10 +865,14 @@ public class AutoChatHandler implements SpawnListener
 						}
 						
 						if (text == null)
+						{
 							return;
+						}
 						
 						if (text.contains("%player_cabal_loser%") || text.contains("%player_cabal_winner%") || text.contains("%player_random%"))
+						{
 							return;
+						}
 						
 						CreatureSay cs = new CreatureSay(chatNpc.getObjectId(), 0, creatureName, text);
 						

@@ -14,17 +14,17 @@ import l2jorion.game.model.entity.event.DM;
 import l2jorion.game.model.entity.event.TvT;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.model.entity.siege.Fort;
+import l2jorion.game.model.zone.ZoneId;
+import l2jorion.game.network.serverpackets.ActionFailed;
+import l2jorion.game.network.serverpackets.RestartResponse;
 import l2jorion.game.network.serverpackets.Revive;
+import l2jorion.game.taskmanager.RandomZoneTaskManager;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.IllegalPlayerAction;
 import l2jorion.game.util.Util;
 
-/**
- * @author Damon - www.l2jorion.com
- */
 public final class RequestRestartPoint extends L2GameClientPacket
 {
-	//private static Logger LOG = LoggerFactory.getLogger(RequestRestartPoint.class);
 	protected int _requestedPointType;
 	protected boolean _continuation;
 	
@@ -51,6 +51,15 @@ public final class RequestRestartPoint extends L2GameClientPacket
 				activeChar.sendMessage("You can't restart in Event!");
 				return;
 			}
+			
+			if (activeChar.isInArenaEvent() || activeChar.isArenaProtection())
+			{
+				activeChar.sendMessage("You cannot restart while in Tournament Event!");
+				activeChar.sendPacket(ActionFailed.STATIC_PACKET);
+				sendPacket(RestartResponse.valueOf(false));
+				return;
+			}
+			
 			try
 			{
 				Location loc = null;
@@ -67,7 +76,9 @@ public final class RequestRestartPoint extends L2GameClientPacket
 				}
 				
 				if (activeChar.isPhoenixBlessed())
+				{
 					activeChar.stopPhoenixBlessing(null);
+				}
 				
 				switch (_requestedPointType)
 				{
@@ -128,9 +139,13 @@ public final class RequestRestartPoint extends L2GameClientPacket
 						}
 						
 						if (CastleManager.getInstance().getCastleByOwner(activeChar.getClan()) != null)
+						{
 							teleportWhere = MapRegionTable.TeleportWhereType.Castle;
+						}
 						else if (FortManager.getInstance().getFortByOwner(activeChar.getClan()) != null)
+						{
 							teleportWhere = MapRegionTable.TeleportWhereType.Fortress;
+						}
 						
 						loc = MapRegionTable.getInstance().getTeleToLocation(activeChar, teleportWhere);
 						break;
@@ -161,20 +176,29 @@ public final class RequestRestartPoint extends L2GameClientPacket
 						break;
 					
 					case 4: // Fixed or Player is a festival participant
-						if (!activeChar.isGM() && !activeChar.isFestivalParticipant())
+						if (!activeChar.isGM() && !activeChar.isFestivalParticipant() && !activeChar.isInsideZone(ZoneId.ZONE_RANDOM))
 						{
 							// cheater
-							activeChar.sendMessage("You may not use this respawn point!");
+							activeChar.sendMessage("You may not use this respawn point.");
 							Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " used respawn cheat.", IllegalPlayerAction.PUNISH_KICK);
 							return;
 						}
 						
-						loc = new Location(activeChar.getX(), activeChar.getY(), activeChar.getZ()); // spawn them where they died
+						if (!activeChar.isGM() && activeChar.isInsideZone(ZoneId.ZONE_RANDOM))
+						{
+							loc = RandomZoneTaskManager.getInstance().getCurrentZone().getLoc();
+						}
+						else
+						{
+							loc = new Location(activeChar.getX(), activeChar.getY(), activeChar.getZ());
+						}
 						break;
 					
 					case 27: // to jail
 						if (!activeChar.isInJail())
+						{
 							return;
+						}
 						loc = new Location(-114356, -249645, -2984);
 						break;
 					
@@ -184,10 +208,15 @@ public final class RequestRestartPoint extends L2GameClientPacket
 							loc = new Location(17836, 170178, -3507);// Floran Village
 							break;
 						}
+						
 						if (Config.CUSTOM_RESPAWN)
+						{
 							loc = new Location(Config.CSPAWN_X, Config.CSPAWN_Y, Config.CSPAWN_Z);
+						}
 						else
+						{
 							loc = MapRegionTable.getInstance().getTeleToLocation(activeChar, MapRegionTable.TeleportWhereType.Town);
+						}
 						break;
 				}
 				
@@ -199,7 +228,6 @@ public final class RequestRestartPoint extends L2GameClientPacket
 			catch (final Throwable e)
 			{
 				e.printStackTrace();
-				// LOG.error( "", e);
 			}
 		}
 	}
@@ -210,7 +238,9 @@ public final class RequestRestartPoint extends L2GameClientPacket
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		if (activeChar.isFakeDeath())
 		{
@@ -218,11 +248,6 @@ public final class RequestRestartPoint extends L2GameClientPacket
 			activeChar.broadcastPacket(new Revive(activeChar));
 			return;
 		}
-		/*else if (!activeChar.isAlikeDead())
-		{
-			LOG.warn("Living player [" + activeChar.getName() + "] called RestartPointPacket! Ban this player!");
-			return;
-		}*/
 		
 		final Castle castle = CastleManager.getInstance().getCastle(activeChar.getX(), activeChar.getY(), activeChar.getZ());
 		if (castle != null && castle.getSiege().getIsInProgress())

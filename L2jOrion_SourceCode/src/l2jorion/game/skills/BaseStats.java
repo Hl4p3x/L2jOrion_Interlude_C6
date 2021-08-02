@@ -19,8 +19,6 @@ import java.util.NoSuchElementException;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -32,6 +30,8 @@ import l2jorion.game.model.actor.instance.L2MonsterInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2RaidBossInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public enum BaseStats
 {
@@ -41,7 +41,7 @@ public enum BaseStats
 	WIT(new WIT()),
 	CON(new CON()),
 	MEN(new MEN()),
-	NULL(new NULL());
+	NONE(new NONE());
 	
 	protected static final Logger LOG = LoggerFactory.getLogger(BaseStats.class);
 	
@@ -69,7 +69,9 @@ public enum BaseStats
 	public final double calcBonus(L2Character actor)
 	{
 		if (actor != null)
+		{
 			return _stat.calcBonus(actor);
+		}
 		
 		return 1;
 	}
@@ -299,7 +301,7 @@ public enum BaseStats
 		}
 	}
 	
-	protected static final class NULL implements BaseStat
+	protected static final class NONE implements BaseStat
 	{
 		@Override
 		public final double calcBonus(L2Character actor)

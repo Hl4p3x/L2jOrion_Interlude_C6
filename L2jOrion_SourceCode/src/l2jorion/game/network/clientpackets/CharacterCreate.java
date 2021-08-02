@@ -23,9 +23,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.GameServer;
 import l2jorion.game.datatables.SkillTable;
@@ -52,6 +49,8 @@ import l2jorion.game.powerpack.PowerPackConfig;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.L2PcTemplate;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
@@ -88,14 +87,18 @@ public final class CharacterCreate extends L2GameClientPacket
 		if (_name.length() < 3 || _name.length() > 16 || !Util.isAlphaNumeric(_name) || !isValidName(_name))
 		{
 			if (Config.DEBUG)
+			{
 				LOG.debug("DEBUG " + getType() + ": charname: " + _name + " is invalid. creation failed.");
+			}
 			
 			sendPacket(new CharCreateFail(CharCreateFail.REASON_16_ENG_CHARS));
 			return;
 		}
 		
 		if (Config.DEBUG)
+		{
 			LOG.debug("DEBUG " + getType() + ": charname: " + _name + " classId: " + _classId);
+		}
 		
 		L2PcInstance newChar = null;
 		L2PcTemplate template = null;
@@ -106,7 +109,9 @@ public final class CharacterCreate extends L2GameClientPacket
 			if (CharNameTable.getInstance().accountCharNumber(getClient().getAccountName()) >= Config.MAX_CHARACTERS_NUMBER_PER_ACCOUNT && Config.MAX_CHARACTERS_NUMBER_PER_ACCOUNT != 0)
 			{
 				if (Config.DEBUG)
+				{
 					LOG.debug("DEBUG " + getType() + ": Max number of characters reached. Creation failed.");
+				}
 				
 				sendPacket(new CharCreateFail(CharCreateFail.REASON_TOO_MANY_CHARACTERS));
 				return;
@@ -114,7 +119,9 @@ public final class CharacterCreate extends L2GameClientPacket
 			else if (CharNameTable.getInstance().doesCharNameExist(_name))
 			{
 				if (Config.DEBUG)
+				{
 					LOG.debug("DEBUG " + getType() + ": charname: " + _name + " already exists. creation failed.");
+				}
 				
 				sendPacket(new CharCreateFail(CharCreateFail.REASON_NAME_ALREADY_EXISTS));
 				return;
@@ -122,7 +129,9 @@ public final class CharacterCreate extends L2GameClientPacket
 			else if (CharNameTable.getInstance().ipCharNumber(getClient().getConnection().getInetAddress().getHostName()) >= Config.MAX_CHARACTERS_NUMBER_PER_IP && Config.MAX_CHARACTERS_NUMBER_PER_IP != 0)
 			{
 				if (Config.DEBUG)
+				{
 					LOG.debug("DEBUG " + getType() + ": Max number of characters reached for IP. Creation failed.");
+				}
 				
 				sendPacket(new CharCreateFail(CharCreateFail.REASON_TOO_MANY_CHARACTERS));
 				return;
@@ -130,7 +139,9 @@ public final class CharacterCreate extends L2GameClientPacket
 			template = CharTemplateTable.getInstance().getTemplate(_classId);
 			
 			if (Config.DEBUG)
+			{
 				LOG.debug("DEBUG " + getType() + ": charname: " + _name + " classId: " + _classId + " template: " + template);
+			}
 			
 			if (template == null || template.classBaseLevel > 1)
 			{
@@ -147,15 +158,23 @@ public final class CharacterCreate extends L2GameClientPacket
 			newChar.setCurrentMp(newChar.getMaxMp());// L2Off like
 			// newChar.setMaxLoad(template.baseLoad);
 			if (Config.AUTO_LOOT)
+			{
 				newChar.setAutoLootEnabled(1);
+			}
 			else
+			{
 				newChar.setAutoLootEnabled(0);
+			}
 			
 			if (Config.AUTO_LOOT_HERBS)
+			{
 				newChar.setAutoLootHerbs(1);
+			}
 			else
+			{
 				newChar.setAutoLootHerbs(0);
-
+			}
+			
 			// send acknowledgement
 			sendPacket(new CharCreateOk()); // Success
 			initNewChar(getClient(), newChar);
@@ -175,7 +194,9 @@ public final class CharacterCreate extends L2GameClientPacket
 		catch (final PatternSyntaxException e) // case of illegal pattern
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("ERROR " + getType() + ": Character name pattern of config is wrong!");
 			pattern = Pattern.compile(".*");
@@ -183,7 +204,9 @@ public final class CharacterCreate extends L2GameClientPacket
 		
 		final Matcher regexp = pattern.matcher(test);
 		if (!regexp.matches())
+		{
 			result = false;
+		}
 		
 		return result;
 	}
@@ -191,17 +214,23 @@ public final class CharacterCreate extends L2GameClientPacket
 	private void initNewChar(final L2GameClient client, final L2PcInstance newChar)
 	{
 		if (Config.DEBUG)
+		{
 			LOG.debug("DEBUG " + getType() + ": Character init start");
+		}
 		
 		L2World.getInstance().storeObject(newChar);
 		final L2PcTemplate template = newChar.getTemplate();
 		
 		// Starting Items
 		if (Config.STARTING_ADENA > 0)
+		{
 			newChar.addAdena("Init", Config.STARTING_ADENA, null, false);
+		}
 		
 		if (Config.STARTING_AA > 0)
+		{
 			newChar.addAncientAdena("Init", Config.STARTING_AA, null, false);
+		}
 		
 		if (Config.CUSTOM_STARTER_ITEMS_ENABLED)
 		{
@@ -240,17 +269,17 @@ public final class CharacterCreate extends L2GameClientPacket
 				}
 			}
 			
-			//cp
+			// cp
 			if (newChar.getInventory().getItemByItemId(5592) != null && newChar.getInventory().getItemByItemId(5592).getCount() >= 1)
 			{
 				newChar.registerShortCut(new L2ShortCut(2, 1, 1, newChar.getInventory().getItemByItemId(5592).getObjectId(), -1, 1));
 			}
-			//hp
+			// hp
 			if (newChar.getInventory().getItemByItemId(1539) != null && newChar.getInventory().getItemByItemId(1539).getCount() >= 1)
 			{
 				newChar.registerShortCut(new L2ShortCut(1, 1, 1, newChar.getInventory().getItemByItemId(1539).getObjectId(), -1, 1));
 			}
-			//mp
+			// mp
 			if (newChar.getInventory().getItemByItemId(728) != null && newChar.getInventory().getItemByItemId(728).getCount() >= 1)
 			{
 				newChar.registerShortCut(new L2ShortCut(0, 1, 1, newChar.getInventory().getItemByItemId(728).getObjectId(), -1, 1));
@@ -269,21 +298,31 @@ public final class CharacterCreate extends L2GameClientPacket
 		}
 		
 		if (Config.SPAWN_CHAR)
+		{
 			newChar.setXYZInvisible(Config.SPAWN_X, Config.SPAWN_Y, Config.SPAWN_Z);
+		}
 		else
+		{
 			newChar.setXYZInvisible(template.spawnX, template.spawnY, template.spawnZ);
+		}
 		
 		if (Config.ALLOW_CREATE_LVL)
+		{
 			newChar.getStat().addExp(ExperienceData.getInstance().getExpForLevel(Config.CHAR_CREATE_LVL));
+		}
 		
 		if (Config.CHAR_TITLE)
+		{
 			newChar.setTitle(Config.ADD_CHAR_TITLE);
+		}
 		else
+		{
 			newChar.setTitle("");
+		}
 		
 		if (Config.CUSTOM_SHORTCUT_AND_MACRO)
 		{
-			//new macroses and shortcuts
+			// new macroses and shortcuts
 			if (PowerPackConfig.BUFFER_USECOMMAND)
 			{
 				InsertNewMacro(newChar, 1000, 0, "Buffer", "", "BUFF", "3,0,0,.buffs;");
@@ -302,13 +341,11 @@ public final class CharacterCreate extends L2GameClientPacket
 			InsertNewMacro(newChar, 1003, 3, "Menu", "", "MENU", "3,0,0,.menu;");
 			newChar.registerShortCut(new L2ShortCut(8, 1, 4, 1003, -1, 0));
 			
-			
 			InsertNewMacro(newChar, 1004, 4, "Bosses", "", "BOSS", "3,0,0,.boss;");
 			newChar.registerShortCut(new L2ShortCut(9, 1, 4, 1004, -1, 0));
 			
 			InsertNewMacro(newChar, 1005, 5, "Class Changer", "", "CLASS", "3,0,0,.class;");
 			newChar.registerShortCut(new L2ShortCut(10, 1, 4, 1005, -1, 0));
-			
 			
 			if (Config.CUSTOM_SUB_CLASS_COMMAND)
 			{
@@ -328,7 +365,7 @@ public final class CharacterCreate extends L2GameClientPacket
 			ArrayList<L2Skill> skills_to_buff = new ArrayList<>();
 			if (newChar.isMageClass())
 			{
-				for (int skillId:PowerPackConfig.MAGE_SKILL_LIST.keySet())
+				for (int skillId : PowerPackConfig.MAGE_SKILL_LIST.keySet())
 				{
 					L2Skill skill = SkillTable.getInstance().getInfo(skillId, PowerPackConfig.MAGE_SKILL_LIST.get(skillId));
 					if (skill != null)
@@ -339,7 +376,7 @@ public final class CharacterCreate extends L2GameClientPacket
 			}
 			else
 			{
-				for (int skillId:PowerPackConfig.FIGHTER_SKILL_LIST.keySet())
+				for (int skillId : PowerPackConfig.FIGHTER_SKILL_LIST.keySet())
 				{
 					L2Skill skill = SkillTable.getInstance().getInfo(skillId, PowerPackConfig.FIGHTER_SKILL_LIST.get(skillId));
 					if (skill != null)
@@ -350,7 +387,7 @@ public final class CharacterCreate extends L2GameClientPacket
 			}
 			for (L2Skill sk : skills_to_buff)
 			{
-				sk.getEffects(newChar,newChar,false,false,false);
+				sk.getEffects(newChar, newChar, false, false, false);
 			}
 		}
 		
@@ -389,10 +426,14 @@ public final class CharacterCreate extends L2GameClientPacket
 			newChar.addSkill(SkillTable.getInstance().getInfo(startSkill.getId(), startSkill.getLevel()), true);
 			
 			if (startSkill.getId() == 1001 || startSkill.getId() == 1177)
+			{
 				newChar.registerShortCut(new L2ShortCut(1, 0, 2, startSkill.getId(), 1, 1));
+			}
 			
 			if (startSkill.getId() == 1216)
+			{
 				newChar.registerShortCut(new L2ShortCut(10, 0, 2, startSkill.getId(), 1, 1));
+			}
 		}
 		
 		startTutorialQuest(newChar);
@@ -412,7 +453,9 @@ public final class CharacterCreate extends L2GameClientPacket
 		client.setCharSelection(cl.getCharInfo());
 		
 		if (Config.DEBUG)
+		{
 			LOG.debug("DEBUG " + getType() + ": Character init end");
+		}
 	}
 	
 	private void InsertNewMacro(L2PcInstance player, int id, int icon, String name, String descr, String acronym, String command)
@@ -453,7 +496,9 @@ public final class CharacterCreate extends L2GameClientPacket
 		}
 		
 		if (q != null)
+		{
 			q.newQuestState(player);
+		}
 	}
 	
 	@Override

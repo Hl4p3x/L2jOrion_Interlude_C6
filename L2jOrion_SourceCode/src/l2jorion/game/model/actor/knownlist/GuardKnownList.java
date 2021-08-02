@@ -19,9 +19,6 @@
  */
 package l2jorion.game.model.actor.knownlist;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.ai.L2CharacterAI;
@@ -29,6 +26,8 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2GuardInstance;
 import l2jorion.game.model.actor.instance.L2MonsterInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class GuardKnownList extends AttackableKnownList
 {

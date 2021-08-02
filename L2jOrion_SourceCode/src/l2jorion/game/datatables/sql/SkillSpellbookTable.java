@@ -27,12 +27,11 @@ import java.util.Map;
 
 import javolution.util.FastMap;
 import l2jorion.game.model.L2Skill;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author l2jserver

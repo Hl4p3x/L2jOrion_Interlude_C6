@@ -27,17 +27,18 @@ import java.util.List;
 import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.model.entity.Auction;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class AuctionManager
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(AuctionManager.class);
+	
 	private final List<Auction> _auctions = new FastList<>();
+	
 	private static final String[] ITEM_INIT_DATA =
 	{
 		"(23, 0, 'NPC', 'NPC Clan', 'ClanHall', 23, 0, 'Onyx Hall', 1, 20000000, 0, 1164841200000)",
@@ -122,12 +123,11 @@ public class AuctionManager
 	public static final AuctionManager getInstance()
 	{
 		return SingletonHolder._instance;
-		
 	}
 	
 	public AuctionManager()
 	{
-		LOG.info("Initializing AuctionManager");
+		//LOG.info("Initializing AuctionManager");
 		_auctions.clear();
 		load();
 	}
@@ -153,10 +153,8 @@ public class AuctionManager
 				_auctions.add(new Auction(rs.getInt("id")));
 			}
 			DatabaseUtils.close(statement);
-			statement = null;
 			rs.close();
-			rs = null;
-			LOG.info("Loaded: " + getAuctions().size() + " auction(s)");
+			LOG.info("AuctionManager: Loaded: " + getAuctions().size() + " auctions");
 		}
 		
 		catch (final Exception e)

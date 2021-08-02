@@ -90,8 +90,8 @@ class Quest (JQuest) :
     if st.getState() == STARTED :
       count = st.getQuestItemsCount(GEM_OF_SUBMISSION)
       if st.getInt("cond") == 1 and count < 300 :
-         st.giveItems(GEM_OF_SUBMISSION,1)  
-         if count == 299 :  
+         st.giveItems(GEM_OF_SUBMISSION,int(Config.RATE_DROP_QUEST))  
+         if count == 300 - int(Config.RATE_DROP_QUEST) :  
            st.playSound("ItemSound.quest_middle")  
            st.set("cond","2")  
          else:  
@@ -110,5 +110,6 @@ QUEST.addTalkId(31519)
 
 for mobs in range(21520,21541):
   QUEST.addKillId(mobs)
-
+  
+QUEST.addKillId(21658)
 STARTED.addQuestDrop(21520,GEM_OF_SUBMISSION,1)

@@ -120,20 +120,11 @@ public class BoatManager
 		return boat;
 	}
 	
-	/**
-	 * @param boatId
-	 * @return
-	 */
 	public L2BoatInstance getBoat(int boatId)
 	{
 		return _boats.get(boatId);
 	}
 	
-	/**
-	 * Lock/unlock dock so only one ship can be docked
-	 * @param h Dock Id
-	 * @param value True if dock is locked
-	 */
 	public void dockShip(int h, boolean value)
 	{
 		try
@@ -145,11 +136,6 @@ public class BoatManager
 		}
 	}
 	
-	/**
-	 * Check if dock is busy
-	 * @param h Dock Id
-	 * @return Trye if dock is locked
-	 */
 	public boolean dockBusy(int h)
 	{
 		try
@@ -162,12 +148,6 @@ public class BoatManager
 		}
 	}
 	
-	/**
-	 * Broadcast one packet in both path points
-	 * @param point1
-	 * @param point2
-	 * @param packet The packet to broadcast.
-	 */
 	public void broadcastPacket(VehiclePathPoint point1, VehiclePathPoint point2, L2GameServerPacket packet)
 	{
 		double dx, dy;
@@ -199,12 +179,6 @@ public class BoatManager
 		}
 	}
 	
-	/**
-	 * Broadcast several packets in both path points
-	 * @param point1
-	 * @param point2
-	 * @param packets The packets to broadcast.
-	 */
 	public void broadcastPackets(VehiclePathPoint point1, VehiclePathPoint point2, L2GameServerPacket... packets)
 	{
 		double dx, dy;

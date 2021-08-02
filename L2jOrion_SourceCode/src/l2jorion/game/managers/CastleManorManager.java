@@ -38,18 +38,13 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.log.Log;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.util.random.Rnd;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * Class For Castle Manor Manager Load manor data from DB Update/Reload/Delete Handles all schedule for manor
- * @author l3x
- */
 public class CastleManorManager
 {
 	protected static Logger LOG = LoggerFactory.getLogger(CastleManorManager.class);
@@ -76,7 +71,6 @@ public class CastleManorManager
 	{
 		if (_instance == null)
 		{
-			LOG.info("Initializing CastleManorManager");
 			_instance = new CastleManorManager();
 		}
 		return _instance;
@@ -238,8 +232,6 @@ public class CastleManorManager
 				}
 				DatabaseUtils.close(statement);
 				rs.close();
-				statement = null;
-				rs = null;
 				
 				castle.setSeedProduction(production, PERIOD_CURRENT);
 				castle.setSeedProduction(productionNext, PERIOD_NEXT);
@@ -267,29 +259,28 @@ public class CastleManorManager
 				}
 				DatabaseUtils.close(statement);
 				rs.close();
-				statement = null;
-				rs = null;
 				
 				castle.setCropProcure(procure, PERIOD_CURRENT);
 				castle.setCropProcure(procureNext, PERIOD_NEXT);
 				
 				if (!procure.isEmpty() || !procureNext.isEmpty() || !production.isEmpty() || !productionNext.isEmpty())
 				{
-					LOG.info(castle.getName() + ": Data loaded");
+					LOG.info("CastleManorManager: " + castle.getName() + ": data loaded");
 				}
 			}
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.info("Error restoring manor data: " + e.getMessage());
 		}
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
@@ -353,7 +344,7 @@ public class CastleManorManager
 				// adding bought crops to clan warehouse
 				if (crop.getStartAmount() > crop.getAmount())
 				{
-					final String text = "Manor System: Start Amount of Crop" + crop.getStartAmount() + "> Amount of currnt" + crop.getAmount();
+					final String text = "ManorManagers: Start Amount of Crop" + crop.getStartAmount() + "> Amount of currnt" + crop.getAmount();
 					Log.add(text, "Manor_system");
 					
 					int count = crop.getStartAmount() - crop.getAmount();
@@ -445,16 +436,20 @@ public class CastleManorManager
 					c.setSeedProduction(getNewSeedsList(c.getCastleId()), PERIOD_NEXT);
 					c.setCropProcure(getNewCropsList(c.getCastleId()), PERIOD_NEXT);
 					manor_cost = c.getManorCost(PERIOD_NEXT);
+					
 					if (manor_cost > 0)
 					{
 						LOG.info(c.getName() + "|" + -manor_cost + "|ManorManager Error@approveNextPeriod");
 					}
+					
 					final L2Clan clan = ClanTable.getInstance().getClan(c.getOwnerId());
 					L2PcInstance clanLeader = null;
+					
 					if (clan != null)
 					{
 						clanLeader = L2World.getInstance().getPlayer(clan.getLeader().getName());
 					}
+					
 					if (clanLeader != null)
 					{
 						clanLeader.sendPacket(SystemMessageId.THE_AMOUNT_IS_NOT_SUFFICIENT_AND_SO_THE_MANOR_IS_NOT_IN_OPERATION);
@@ -463,7 +458,7 @@ public class CastleManorManager
 				else
 				{
 					c.addToTreasuryNoTax(-manor_cost);
-					LOG.info(c.getName() + "|" + -manor_cost + "|ManorManager");
+					LOG.info("ManorManager: " + c.getName() + " " + -manor_cost);
 				}
 			}
 			c.setNextPeriodApproved(true);
@@ -545,7 +540,7 @@ public class CastleManorManager
 				{
 					APPROVE = 0;
 					setUnderMaintenance(true);
-					LOG.info("Manor System: Under maintenance mode started");
+					LOG.info("ManorManager: Under maintenance mode started");
 				}
 			}
 			else if (isUnderMaintenance()) // 20:00 - 20:06
@@ -553,9 +548,11 @@ public class CastleManorManager
 				if (H != MANOR_REFRESH || M >= MANOR_REFRESH_MIN + MAINTENANCE_PERIOD)
 				{
 					setUnderMaintenance(false);
-					LOG.info("Manor System: Next period started");
+					LOG.info("ManorManager: Next period started");
 					if (isDisabled())
+					{
 						return;
+					}
 					setNextPeriod();
 					try
 					{
@@ -564,9 +561,11 @@ public class CastleManorManager
 					catch (final Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 						
-						LOG.info("Manor System: Failed to save manor data: " + e);
+						LOG.info("ManorManager: Failed to save manor data: " + e);
 					}
 				}
 			}
@@ -578,7 +577,9 @@ public class CastleManorManager
 					APPROVE = 1;
 					LOG.info("Manor System: Next period approved");
 					if (isDisabled())
+					{
 						return;
+					}
 					approveNextPeriod();
 				}
 			}

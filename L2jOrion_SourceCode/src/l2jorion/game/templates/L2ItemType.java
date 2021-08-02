@@ -20,9 +20,6 @@
  */
 package l2jorion.game.templates;
 
-/**
- * @author programmos
- */
 public enum L2ItemType
 {
 	

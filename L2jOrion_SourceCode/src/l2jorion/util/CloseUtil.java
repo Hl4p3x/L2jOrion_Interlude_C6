@@ -25,84 +25,99 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-public final class CloseUtil 
+public final class CloseUtil
 {
 	private final static Logger LOG = LoggerFactory.getLogger(CloseUtil.class);
 	
 	public static void close(Connection con)
 	{
-		if (con != null) try
+		if (con != null)
 		{
-			con.close();
-		}
-		catch(Throwable e)
-		{
-			e.printStackTrace();
-			LOG.error(e.getMessage());
+			try
+			{
+				con.close();
+			}
+			catch (Throwable e)
+			{
+				e.printStackTrace();
+				LOG.error(e.getMessage());
+			}
 		}
 	}
 	
 	public static void close(Closeable closeable)
 	{
-		if (closeable != null) try
+		if (closeable != null)
 		{
-			closeable.close();
-		}
-		catch(Throwable e)
-		{
-			e.printStackTrace();
-			LOG.error(e.getMessage());
+			try
+			{
+				closeable.close();
+			}
+			catch (Throwable e)
+			{
+				e.printStackTrace();
+				LOG.error(e.getMessage());
+			}
 		}
 	}
 	
 	public static void C(Connection c)
 	{
 		if (c != null)
-		try
 		{
+			try
+			{
 				c.close();
+			}
+			catch (SQLException e)
+			{
+			}
 		}
-		catch (SQLException e)
-		{}
 	}
 	
 	public static void S(PreparedStatement s)
 	{
 		if (s != null)
-		try
 		{
-			s.close();
+			try
+			{
+				s.close();
+			}
+			catch (SQLException e)
+			{
+			}
 		}
-		catch (SQLException e)
-		{}
-		s = null;
 	}
 	
 	public static void S2(Statement s)
 	{
 		if (s != null)
-		try
 		{
+			try
+			{
 				s.close();
+			}
+			catch (SQLException e)
+			{
+			}
 		}
-		catch (SQLException e)
-		{}
-		s = null;
 	}
 	
 	public static void R(ResultSet r)
 	{
 		if (r != null)
-		try
 		{
-			r.close();
+			try
+			{
+				r.close();
+			}
+			catch (SQLException e)
+			{
+			}
 		}
-		catch (SQLException e)
-		{}
-		r = null;
 	}
 	
 	public static void CSR(Connection c, PreparedStatement s, ResultSet r)
@@ -122,5 +137,5 @@ public final class CloseUtil
 	{
 		S(s);
 		R(r);
- 	}
+	}
 }

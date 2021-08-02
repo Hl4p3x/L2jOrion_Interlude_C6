@@ -49,7 +49,7 @@ import l2jorion.game.model.entity.siege.Fort;
 public final class FortSiegeAttackerList extends L2GameServerPacket
 {
 	private static final String _S__CA_SiegeAttackerList = "[S] ca SiegeAttackerList";
-	// private static Logger LOG = LoggerFactory.getLogger(SiegeAttackerList.class);
+	
 	private final Fort _fort;
 	
 	public FortSiegeAttackerList(final Fort fort)
@@ -98,10 +98,6 @@ public final class FortSiegeAttackerList extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

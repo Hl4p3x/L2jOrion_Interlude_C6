@@ -29,9 +29,8 @@ package l2jorion.game.model;
 
 import java.awt.Polygon;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
 public class L2Territory

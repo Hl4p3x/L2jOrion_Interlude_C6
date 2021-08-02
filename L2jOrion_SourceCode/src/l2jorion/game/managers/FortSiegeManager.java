@@ -41,12 +41,11 @@ import l2jorion.game.model.entity.siege.Fort;
 import l2jorion.game.model.entity.siege.FortSiege;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class FortSiegeManager
 {
@@ -187,7 +186,7 @@ public class FortSiegeManager
 	// Method - Private
 	private final void load()
 	{
-		LOG.info("Initializing FortSiegeManager");
+		//LOG.info("Initializing FortSiegeManager");
 		InputStream is = null;
 		try
 		{

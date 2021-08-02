@@ -14,24 +14,23 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Party;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.model.entity.olympiad.Olympiad;
 import l2jorion.game.model.entity.sevensigns.SevenSignsFestival;
+import l2jorion.game.model.olympiad.OlympiadManager;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.taskmanager.AttackStanceTaskManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class Logout extends L2GameClientPacket
 {
-	private static Logger LOG = LoggerFactory.getLogger(Logout.class.getName());
+	private static Logger LOG = LoggerFactory.getLogger(Logout.class);
 	
 	@Override
 	protected void readImpl()
@@ -41,11 +40,11 @@ public final class Logout extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		// Dont allow leaving if player is fighting
 		L2PcInstance player = getClient().getActiveChar();
-		
 		if (player == null)
+		{
 			return;
+		}
 		
 		if (player.isInFunEvent() && !player.isGM())
 		{
@@ -54,19 +53,21 @@ public final class Logout extends L2GameClientPacket
 			return;
 		}
 		
-		/*if(player.isInsideZone(L2Character.ZONE_MULTIFUNCTION) && !L2MultiFunctionZone.logout_zone)
-			{
-				player.sendMessage("You cannot Logout while inside a PvP zone.");
-				player.sendPacket(ActionFailed.STATIC_PACKET);
-				return;
-			}*/
+		if (player.isInArenaEvent() || player.isArenaProtection())
+		{
+			player.sendMessage("You cannot logout while in Tournament Event!");
+			player.sendPacket(ActionFailed.STATIC_PACKET);
+			return;
+		}
 		
 		player.getInventory().updateDatabase();
 		
 		if (AttackStanceTaskManager.getInstance().getAttackStanceTask(player) && !(player.isGM() && Config.GM_RESTART_FIGHTING))
 		{
 			if (Config.DEBUG)
+			{
 				LOG.warn("DEBUG " + getType() + ": Player " + player.getName() + " tried to logout while Fighting");
+			}
 			
 			player.sendPacket(new SystemMessage(SystemMessageId.CANT_LOGOUT_WHILE_FIGHTING));
 			player.sendPacket(ActionFailed.STATIC_PACKET);
@@ -95,7 +96,7 @@ public final class Logout extends L2GameClientPacket
 			return;
 		}
 		
-		if (player.isInOlympiadMode() || Olympiad.getInstance().isRegistered(player))
+		if (player.isInOlympiadMode() || OlympiadManager.getInstance().isRegistered(player))
 		{
 			player.sendMessage("You can't Logout in Olympiad mode.");
 			return;
@@ -113,7 +114,9 @@ public final class Logout extends L2GameClientPacket
 			
 			L2Party playerParty = player.getParty();
 			if (playerParty != null)
+			{
 				player.getParty().broadcastToPartyMembers(SystemMessage.sendString(player.getName() + " has been removed from the upcoming Festival."));
+			}
 		}
 		
 		if (player.isFlying())

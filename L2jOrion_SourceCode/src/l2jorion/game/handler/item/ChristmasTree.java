@@ -37,16 +37,17 @@ import l2jorion.game.thread.ThreadPoolManager;
 
 public class ChristmasTree implements IItemHandler
 {
+	public static final int SPECIAL_TREE_ID = 13007;
+	
 	private static final int[] ITEM_IDS =
 	{
-		5560, /* x-mas tree */
+		5560,
 		5561
-	/* Special x-mas tree */
 	};
 	
 	private static final int[] NPC_IDS =
 	{
-		13006, /* Christmas tree w. flashing lights and snow */
+		13006,
 		13007
 	};
 	
@@ -68,7 +69,9 @@ public class ChristmasTree implements IItemHandler
 		}
 		
 		if (template1 == null)
+		{
 			return;
+		}
 		
 		L2Object target = activeChar.getTarget();
 		if (target == null)
@@ -91,24 +94,18 @@ public class ChristmasTree implements IItemHandler
 			activeChar.sendPacket(sm);
 			
 			ThreadPoolManager.getInstance().scheduleGeneral(new DeSpawn(result), 3600000);
-			
-			sm = null;
-			spawn = null;
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 			sm.addString("Target is not ingame.");
 			activeChar.sendPacket(sm);
-			sm = null;
 		}
-		
-		activeChar = null;
-		template1 = null;
-		target = null;
 	}
 	
 	public class DeSpawn implements Runnable

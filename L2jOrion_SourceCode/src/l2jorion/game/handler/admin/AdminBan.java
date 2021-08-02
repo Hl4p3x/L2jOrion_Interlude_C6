@@ -287,7 +287,9 @@ public class AdminBan implements IAdminCommandHandler
 				Announcements.getInstance().gameAnnounceToAll(text);
 				
 				if (targetPlayer.getParty() != null)
+				{
 					targetPlayer.getParty().removePartyMember(targetPlayer);
+				}
 			}
 			else
 			{

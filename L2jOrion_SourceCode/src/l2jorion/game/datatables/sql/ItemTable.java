@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import javolution.util.FastMap;
 import l2jorion.Config;
@@ -38,9 +39,9 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2GrandBossInstance;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
+import l2jorion.game.model.actor.instance.L2ItemInstance.ItemLocation;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2RaidBossInstance;
-import l2jorion.game.model.actor.instance.L2ItemInstance.ItemLocation;
 import l2jorion.game.skills.SkillsEngine;
 import l2jorion.game.templates.L2Armor;
 import l2jorion.game.templates.L2ArmorType;
@@ -54,7 +55,6 @@ import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-import java.util.logging.Logger;
 
 public class ItemTable
 {
@@ -100,6 +100,7 @@ public class ItemTable
 		_armorTypes.put("pet", L2ArmorType.PET);
 		
 		_slots.put("chest", L2Item.SLOT_CHEST);
+		_slots.put("alldress", L2Item.SLOT_ALLDRESS);
 		_slots.put("fullarmor", L2Item.SLOT_FULL_ARMOR);
 		_slots.put("head", L2Item.SLOT_HEAD);
 		_slots.put("hair", L2Item.SLOT_HAIR);
@@ -133,7 +134,8 @@ public class ItemTable
 		
 		"SELECT item_id, name, bodypart, crystallizable, armor_type, weight," + " crystal_type, avoid_modify, duration, p_def, m_def, mp_bonus," + " price, crystal_count, sellable, dropable, destroyable, tradeable, item_skill_id, item_skill_lvl FROM armor",
 		
-		"SELECT item_id, name, bodypart, crystallizable, weight, soulshots, spiritshots," + " crystal_type, p_dam, rnd_dam, weaponType, critical, hit_modify, avoid_modify," + " shield_def, shield_def_rate, atk_speed, mp_consume, m_dam, duration, price, crystal_count," + " sellable, dropable, destroyable, tradeable, item_skill_id, item_skill_lvl,enchant4_skill_id,enchant4_skill_lvl, onCast_skill_id, onCast_skill_lvl," + " onCast_skill_chance, onCrit_skill_id, onCrit_skill_lvl, onCrit_skill_chance FROM weapon"
+		"SELECT item_id, name, bodypart, crystallizable, weight, soulshots, spiritshots," + " crystal_type, p_dam, rnd_dam, weaponType, critical, hit_modify, avoid_modify," + " shield_def, shield_def_rate, atk_speed, mp_consume, m_dam, duration, price, crystal_count,"
+			+ " sellable, dropable, destroyable, tradeable, item_skill_id, item_skill_lvl,enchant4_skill_id,enchant4_skill_lvl, onCast_skill_id, onCast_skill_lvl," + " onCast_skill_chance, onCrit_skill_id, onCrit_skill_lvl, onCrit_skill_chance FROM weapon"
 	};
 	
 	private static final String[] SQL_CUSTOM_ITEM_SELECTS =
@@ -142,7 +144,8 @@ public class ItemTable
 		
 		"SELECT item_id, name, bodypart, crystallizable, armor_type, weight," + " crystal_type, avoid_modify, duration, p_def, m_def, mp_bonus," + " price, crystal_count, sellable, dropable, destroyable, tradeable, item_skill_id, item_skill_lvl FROM custom_armor",
 		
-		"SELECT item_id, name, bodypart, crystallizable, weight, soulshots, spiritshots," + " crystal_type, p_dam, rnd_dam, weaponType, critical, hit_modify, avoid_modify," + " shield_def, shield_def_rate, atk_speed, mp_consume, m_dam, duration, price, crystal_count," + " sellable, dropable, destroyable, tradeable, item_skill_id, item_skill_lvl,enchant4_skill_id,enchant4_skill_lvl, onCast_skill_id, onCast_skill_lvl," + " onCast_skill_chance, onCrit_skill_id, onCrit_skill_lvl, onCrit_skill_chance FROM custom_weapon"
+		"SELECT item_id, name, bodypart, crystallizable, weight, soulshots, spiritshots," + " crystal_type, p_dam, rnd_dam, weaponType, critical, hit_modify, avoid_modify," + " shield_def, shield_def_rate, atk_speed, mp_consume, m_dam, duration, price, crystal_count,"
+			+ " sellable, dropable, destroyable, tradeable, item_skill_id, item_skill_lvl,enchant4_skill_id,enchant4_skill_lvl, onCast_skill_id, onCast_skill_lvl," + " onCast_skill_chance, onCrit_skill_id, onCrit_skill_lvl, onCrit_skill_chance FROM custom_weapon"
 	};
 	
 	/** List of etcItem */
@@ -291,19 +294,19 @@ public class ItemTable
 		{
 			armors.put(armor.getItemId(), armor);
 		}
-		LOG.info("ItemTable: Loaded " + armors.size() + " Armors.");
+		LOG.info("ItemTable: Loaded " + armors.size() + " Armors");
 		
 		for (final L2EtcItem item : SkillsEngine.getInstance().loadItems(itemData))
 		{
 			etcItems.put(item.getItemId(), item);
 		}
-		LOG.info("ItemTable: Loaded " + etcItems.size() + " Items.");
+		LOG.info("ItemTable: Loaded " + etcItems.size() + " Items");
 		
 		for (final L2Weapon weapon : SkillsEngine.getInstance().loadWeapons(weaponData))
 		{
 			weapons.put(weapon.getItemId(), weapon);
 		}
-		LOG.info("ItemTable: Loaded " + weapons.size() + " Weapons.");
+		LOG.info("ItemTable: Loaded " + weapons.size() + " Weapons");
 		
 		// fillEtcItemsTable();
 		// fillArmorsTable();
@@ -511,7 +514,6 @@ public class ItemTable
 				break;
 			case "castle_guard":
 				item.type = L2EtcItemType.SCROLL; // dummy
-				
 				break;
 			case "pet_collar":
 				item.type = L2EtcItemType.PET_COLLAR;
@@ -552,7 +554,9 @@ public class ItemTable
 				break;
 			default:
 				if (Config.DEBUG)
+				{
 					LOG.info("Unknown etcitem type:" + itemType);
+				}
 				item.type = L2EtcItemType.OTHER;
 				break;
 		}
@@ -633,7 +637,7 @@ public class ItemTable
 		}
 		
 		// Create a FastLookUp Table called _allTemplates of size : value of the highest item ID
-		LOG.info("Highest item id used: " + highestId);
+		LOG.info("ItemTable: Highest item id " + highestId);
 		
 		_allTemplates = new L2Item[highestId + 1];
 		
@@ -676,7 +680,9 @@ public class ItemTable
 	 * <BR>
 	 * <B><U> Actions</U> :</B><BR>
 	 * <BR>
-	 * <li>Create and Init the L2ItemInstance corresponding to the Item Identifier and quantity</li> <li>Add the L2ItemInstance object to _allObjects of L2world</li> <li>Logs Item creation according to LOGGER settings</li><BR>
+	 * <li>Create and Init the L2ItemInstance corresponding to the Item Identifier and quantity</li>
+	 * <li>Add the L2ItemInstance object to _allObjects of L2world</li>
+	 * <li>Logs Item creation according to LOGGER settings</li><BR>
 	 * <BR>
 	 * @param process : String Identifier of process triggering this action
 	 * @param itemId : int Item Identifier of the item to be created
@@ -719,7 +725,9 @@ public class ItemTable
 		}
 		
 		if (Config.DEBUG)
+		{
 			LOG.info("ItemTable: Item created  oid: {} itemid: {}" + " " + item.getObjectId() + " " + itemId);
+		}
 		
 		// Add the L2ItemInstance object to _allObjects of L2world
 		L2World.getInstance().storeObject(item);
@@ -763,7 +771,9 @@ public class ItemTable
 		final L2Item item = getTemplate(itemId);
 		
 		if (item == null)
+		{
 			return null;
+		}
 		
 		L2ItemInstance temp = new L2ItemInstance(0, item);
 		
@@ -774,7 +784,9 @@ public class ItemTable
 		catch (final ArrayIndexOutOfBoundsException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			// this can happen if the item templates were not initialized
 		}
@@ -792,7 +804,9 @@ public class ItemTable
 	 * <BR>
 	 * <B><U> Actions</U> :</B><BR>
 	 * <BR>
-	 * <li>Sets L2ItemInstance parameters to be unusable</li> <li>Removes the L2ItemInstance object to _allObjects of L2world</li> <li>Logs Item delettion according to LOGGER settings</li><BR>
+	 * <li>Sets L2ItemInstance parameters to be unusable</li>
+	 * <li>Removes the L2ItemInstance object to _allObjects of L2world</li>
+	 * <li>Logs Item delettion according to LOGGER settings</li><BR>
 	 * <BR>
 	 * @param process : String Identifier of process triggering this action
 	 * @param item

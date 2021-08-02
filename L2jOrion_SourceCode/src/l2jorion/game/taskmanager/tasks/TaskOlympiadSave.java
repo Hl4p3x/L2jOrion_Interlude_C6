@@ -19,21 +19,16 @@
  */
 package l2jorion.game.taskmanager.tasks;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
-import l2jorion.game.model.entity.olympiad.Olympiad;
+import l2jorion.game.model.olympiad.Olympiad;
 import l2jorion.game.taskmanager.Task;
 import l2jorion.game.taskmanager.TaskManager;
-import l2jorion.game.taskmanager.TaskTypes;
 import l2jorion.game.taskmanager.TaskManager.ExecutedTask;
+import l2jorion.game.taskmanager.TaskTypes;
 import l2jorion.log.Log;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * Updates all data of Olympiad nobles in db
- * @author godson
- */
 public class TaskOlympiadSave extends Task
 {
 	private static final Logger LOG = LoggerFactory.getLogger(TaskOlympiadSave.class);
@@ -53,7 +48,7 @@ public class TaskOlympiadSave extends Task
 			if (Olympiad.getInstance().inCompPeriod())
 			{
 				Olympiad.getInstance().saveOlympiadStatus();
-				//LOG.info("[GlobalTask] Olympiad System save launched.");
+				// LOG.info("[GlobalTask] Olympiad System save launched.");
 				final String text = "Olympiad System save launched";
 				Log.add(text, "Global_Task");
 			}
@@ -61,7 +56,9 @@ public class TaskOlympiadSave extends Task
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("Olympiad System: Failed to save Olympiad configuration: " + e);
 		}

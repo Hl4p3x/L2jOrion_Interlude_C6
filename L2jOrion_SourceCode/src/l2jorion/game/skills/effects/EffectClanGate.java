@@ -24,9 +24,6 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.skills.Env;
 
-/**
- * @author ZaKaX (Ghost @ L2D)
- */
 public class EffectClanGate extends L2Effect
 {
 	public EffectClanGate(final Env env, final EffectTemplate template)
@@ -38,6 +35,7 @@ public class EffectClanGate extends L2Effect
 	public void onStart()
 	{
 		getEffected().startAbnormalEffect(L2Character.ABNORMAL_EFFECT_MAGIC_CIRCLE);
+		
 		if (getEffected() instanceof L2PcInstance)
 		{
 			final L2Clan clan = ((L2PcInstance) getEffected()).getClan();

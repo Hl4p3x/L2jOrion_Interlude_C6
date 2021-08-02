@@ -30,17 +30,12 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.Announcements;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * Auto Announcment Handler Automatically send announcment at a set time interval.
- * @author chief
- */
 public class AutoAnnouncementHandler
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(AutoAnnouncementHandler.class);
@@ -81,7 +76,7 @@ public class AutoAnnouncementHandler
 			statement = null;
 			rs = null;
 			
-			LOG.info("Announcements: Loaded " + numLoaded + " Auto Announcements.");
+			LOG.info("Announcements: Loaded " + numLoaded + " Auto Announcements");
 		}
 		catch (final Exception e)
 		{
@@ -91,7 +86,6 @@ public class AutoAnnouncementHandler
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 			
 		}
 	}
@@ -102,45 +96,19 @@ public class AutoAnnouncementHandler
 	public void listAutoAnnouncements(final L2PcInstance activeChar)
 	{
 		NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
-		
-		TextBuilder replyMSG = new TextBuilder("<html><body>");
-		replyMSG.append("<table width=260><tr>");
-		replyMSG.append("<td width=40></td>");
-		replyMSG.append("<button value=\"Main\" action=\"bypass -h admin_admin\" width=50 height=15 back=\"L2UI_ct1.button_df\" " + "fore=\"L2UI_ct1.button_df\"><br>");
-		
-		replyMSG.append("<td width=180><center>Auto Announcement Menu</center></td>");
-		replyMSG.append("<td width=40></td>");
-		replyMSG.append("</tr></table>");
-		replyMSG.append("<br><br>");
-		replyMSG.append("<center>Add new auto announcement:</center>");
-		replyMSG.append("<center><multiedit var=\"new_autoannouncement\" width=240 height=30></center><br>");
-		replyMSG.append("<br><br>");
-		replyMSG.append("<center>Delay: <edit var=\"delay\" width=70></center>");
-		replyMSG.append("<center>Note: Time in Seconds 60s = 1 min.</center>");
-		replyMSG.append("<center>Note2: Minimum Time is 30 Seconds.</center>");
-		replyMSG.append("<br><br>");
-		replyMSG.append("<center><table><tr><td>");
-		replyMSG.append("<button value=\"Add\" action=\"bypass -h admin_add_autoannouncement $delay $new_autoannouncement\" width=60 " + "height=15 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td><td>");
-		replyMSG.append("</td></tr></table></center>");
-		replyMSG.append("<br>");
+		adminReply.setFile("data/html/admin/auto_announce.htm");
+		TextBuilder replyMSG = new TextBuilder();
 		
 		for (final AutoAnnouncementInstance announcementInst : AutoAnnouncementHandler.getInstance().values())
 		{
-			replyMSG.append("<table width=260><tr><td width=220>[" + announcementInst.getDefaultDelay() + "s] " + announcementInst.getDefaultTexts().toString() + "</td><td width=40>");
-			replyMSG.append("<button value=\"Delete\" action=\"bypass -h admin_del_autoannouncement " + announcementInst.getDefaultId() + "\" width=60 height=15 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td></tr></table>");
+			replyMSG.append("<table width=300><tr><td width=280>[" + announcementInst.getDefaultDelay() / 1000 + "s] " + announcementInst.getDefaultTexts().toString() + "</td><td width=40>");
+			replyMSG.append("<button value=\"[X]\" action=\"bypass -h admin_del_autoannouncement " + announcementInst.getDefaultId() + "\" width=20 height=15 back=\"L2UI_ct1.button_df\" fore=\"L2UI_ct1.button_df\"></td></tr></table>");
 		}
 		
-		replyMSG.append("</body></html>");
-		
-		adminReply.setHtml(replyMSG.toString());
+		adminReply.replace("%autoann%", replyMSG.toString());
 		activeChar.sendPacket(adminReply);
-		adminReply = null;
-		replyMSG = null;
 	}
 	
-	/**
-	 * @return
-	 */
 	public static AutoAnnouncementHandler getInstance()
 	{
 		if (_instance == null)
@@ -151,9 +119,6 @@ public class AutoAnnouncementHandler
 		return _instance;
 	}
 	
-	/**
-	 * @return
-	 */
 	public int size()
 	{
 		return _registeredAnnouncements.size();
@@ -206,7 +171,9 @@ public class AutoAnnouncementHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("System: Could Not Insert Auto Announcment into DataBase: Reason: " + "Duplicate Id");
 		}
@@ -253,7 +220,9 @@ public class AutoAnnouncementHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		finally
 		{
@@ -323,7 +292,9 @@ public class AutoAnnouncementHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Could not Delete Auto Announcement in Database, Reason:", e);
 		}
@@ -345,7 +316,9 @@ public class AutoAnnouncementHandler
 	public boolean removeAnnouncement(final AutoAnnouncementInstance announcementInst)
 	{
 		if (announcementInst == null)
+		{
 			return false;
+		}
 		
 		_registeredAnnouncements.remove(announcementInst.getDefaultId());
 		announcementInst.setActive(false);
@@ -473,7 +446,9 @@ public class AutoAnnouncementHandler
 		public void setActive(final boolean activeValue)
 		{
 			if (_isActive == activeValue)
+			{
 				return;
+			}
 			
 			_isActive = activeValue;
 			
@@ -514,7 +489,9 @@ public class AutoAnnouncementHandler
 				text = announcementInst.getDefaultTexts();
 				
 				if (text == null)
+				{
 					return;
+				}
 				
 				Announcements.getInstance().AutoAnnounceToAll(text);
 			}

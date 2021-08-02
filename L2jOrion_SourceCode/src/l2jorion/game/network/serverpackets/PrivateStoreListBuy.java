@@ -24,6 +24,7 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 public class PrivateStoreListBuy extends L2GameServerPacket
 {
 	private static final String _S__D1_PRIVATESTORELISTBUY = "[S] b8 PrivateStoreListBuy";
+	
 	private L2PcInstance _storePlayer;
 	private L2PcInstance _activeChar;
 	private int _playerAdena;
@@ -34,14 +35,11 @@ public class PrivateStoreListBuy extends L2GameServerPacket
 	{
 		_storePlayer = storePlayer;
 		_activeChar = player;
-		
 		_playerAdena = _activeChar.getAdena();
-		// _storePlayer.getSellList().updateItems(); // Update SellList for case inventory content has changed
-		// this items must be the items available into the _activeChar (seller) inventory
 		_items = _storePlayer.getBuyList().getAvailableItems(_activeChar.getInventory());
 		
 	}
-
+	
 	@Override
 	protected final void writeImpl()
 	{
@@ -56,7 +54,7 @@ public class PrivateStoreListBuy extends L2GameServerPacket
 			writeD(item.getObjectId());
 			writeD(item.getItem().getItemId());
 			writeH(item.getEnchant());
-
+			
 			writeD(item.getCurCount());
 			writeD(item.getItem().getReferencePrice());
 			writeH(0);
@@ -67,7 +65,7 @@ public class PrivateStoreListBuy extends L2GameServerPacket
 			writeD(item.getCount());
 		}
 	}
-
+	
 	@Override
 	public String getType()
 	{

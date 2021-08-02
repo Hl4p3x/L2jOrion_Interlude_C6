@@ -23,9 +23,9 @@ import java.util.List;
 
 import l2jorion.Config;
 import l2jorion.game.datatables.csv.NpcWalkerRoutesTable;
-import l2jorion.game.model.L2CharPosition;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2NpcWalkerNode;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2NpcWalkerInstance;
 import l2jorion.game.thread.ThreadPoolManager;
 
@@ -37,35 +37,23 @@ public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 	
 	private boolean _walkingToNextPoint = false;
 	
-	/**
-	 * home points for xyz
-	 */
 	int _homeX, _homeY, _homeZ;
 	
-	/**
-	 * route of the current npc
-	 */
 	private List<L2NpcWalkerNode> _route;
 	
-	/**
-	 * current node
-	 */
 	private int _currentPos;
 	
-	/**
-	 * Constructor of L2CharacterAI.<BR>
-	 * <BR>
-	 * @param accessor The AI accessor of the L2Character
-	 */
-	public L2NpcWalkerAI(final L2Character.AIAccessor accessor)
+	public L2NpcWalkerAI(L2Character creature)
 	{
-		super(accessor);
+		super(creature);
 		
 		if (!Config.ALLOW_NPC_WALKERS)
+		{
 			return;
+		}
+		
 		_route = NpcWalkerRoutesTable.getInstance().getRouteForNpc(getActor().getNpcId());
-		// Do we really need 2 minutes delay before start?
-		// no we dont... :)
+		
 		ThreadPoolManager.getInstance().scheduleAiAtFixedRate(this, 1000, 1000);
 	}
 	
@@ -100,12 +88,14 @@ public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 	 * @param blocked_at_pos ignoring it
 	 */
 	@Override
-	protected void onEvtArrivedBlocked(final L2CharPosition blocked_at_pos)
+	protected void onEvtArrivedBlocked(final Location blocked_at_pos)
 	{
-		LOG.warn("NpcWalker ID: " + getActor().getNpcId() + ": Blocked at rote position [" + _currentPos + "], coords: " + blocked_at_pos.x + ", " + blocked_at_pos.y + ", " + blocked_at_pos.z + ". Teleporting to next point");
+		LOG.warn("NpcWalker ID: " + getActor().getNpcId() + ": Blocked at rote position [" + _currentPos + "], coords: " + blocked_at_pos.getX() + ", " + blocked_at_pos.getY() + ", " + blocked_at_pos.getZ() + ". Teleporting to next point");
 		
 		if (_route.size() <= _currentPos)
+		{
 			return;
+		}
 		
 		final int destinationX = _route.get(_currentPos).getMoveX();
 		final int destinationY = _route.get(_currentPos).getMoveY();
@@ -118,7 +108,9 @@ public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 	private void checkArrived()
 	{
 		if (_route.size() <= _currentPos)
+		{
 			return;
+		}
 		
 		final int destinationX = _route.get(_currentPos).getMoveX();
 		final int destinationY = _route.get(_currentPos).getMoveY();
@@ -137,7 +129,9 @@ public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 				catch (final ArrayIndexOutOfBoundsException e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					LOG.info("L2NpcWalkerInstance: Error, " + e);
 				}
@@ -174,7 +168,9 @@ public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 		}
 		
 		if (_route.size() <= _currentPos)
+		{
 			return;
+		}
 		
 		final boolean moveType = _route.get(_currentPos).getRunning();
 		
@@ -198,7 +194,7 @@ public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 		// notify AI of MOVE_TO
 		setWalkingToNextPoint(true);
 		
-		setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new L2CharPosition(destinationX, destinationY, destinationZ, 0));
+		setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new Location(destinationX, destinationY, destinationZ, 0));
 	}
 	
 	@Override

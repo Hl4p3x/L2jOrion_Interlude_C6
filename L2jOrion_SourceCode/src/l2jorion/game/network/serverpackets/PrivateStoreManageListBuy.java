@@ -24,13 +24,10 @@ import l2jorion.game.model.TradeList;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * This class ...
- * @version $Revision: 1.3.2.1.2.4 $ $Date: 2005/03/27 15:29:40 $
- */
 public class PrivateStoreManageListBuy extends L2GameServerPacket
 {
 	private static final String _S__D0_PRIVATESELLLISTBUY = "[S] b7 PrivateSellListBuy";
+	
 	private final L2PcInstance _activeChar;
 	private int _playerAdena;
 	private final L2ItemInstance[] _itemList;
@@ -40,7 +37,6 @@ public class PrivateStoreManageListBuy extends L2GameServerPacket
 	{
 		_activeChar = player;
 		_playerAdena = _activeChar.getAdena();
-		
 		_itemList = _activeChar.getInventory().getUniqueItems(false, true, true);
 		_buyList = _activeChar.getBuyList().getItems();
 	}
@@ -82,10 +78,6 @@ public class PrivateStoreManageListBuy extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

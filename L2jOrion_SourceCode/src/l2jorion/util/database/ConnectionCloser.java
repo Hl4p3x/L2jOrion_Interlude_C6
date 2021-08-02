@@ -23,8 +23,8 @@ package l2jorion.util.database;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class ConnectionCloser implements Runnable
 {

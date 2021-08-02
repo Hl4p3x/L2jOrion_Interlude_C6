@@ -23,14 +23,10 @@ import javolution.util.FastList;
 import l2jorion.game.managers.CastleManorManager.CropProcure;
 import l2jorion.game.model.L2Manor;
 
-/**
- * Format: ch cddd[ddddcdcdcd] c - id (0xFE) h - sub id (0x1D) c d - manor id d d - size [ d - crop id d - residual buy d - start buy d - buy price c - reward type d - seed level c - reward 1 items d - reward 1 item id c - reward 2 items d - reward 2 item id ]
- * @author l3x
- */
-
 public class ExShowCropInfo extends L2GameServerPacket
 {
 	private static final String _S__FE_1C_EXSHOWSEEDINFO = "[S] FE:1D ExShowCropInfo";
+	
 	private FastList<CropProcure> _crops;
 	private final int _manorId;
 	

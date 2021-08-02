@@ -3,6 +3,7 @@ package l2jorion.game.network.serverpackets;
 public final class NpcSay extends L2GameServerPacket
 {
 	private static final String _S__02_NPCSAY = "[S] 02 NpcSay";
+	
 	private final int _objectId;
 	private final int _textType;
 	private final int _npcId;

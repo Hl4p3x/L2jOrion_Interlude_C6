@@ -1,11 +1,9 @@
 package l2jorion.game.taskmanager;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javolution.util.FastSet;
 import l2jorion.Config;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
@@ -14,20 +12,19 @@ import l2jorion.game.model.L2WorldRegion;
 import l2jorion.game.model.actor.instance.L2MonsterInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class KnownListUpdateTaskManager
 {
-	protected static final Logger LOG = LoggerFactory.getLogger(DecayTaskManager.class);
+	protected static final Logger LOG = LoggerFactory.getLogger(KnownListUpdateTaskManager.class);
 	
 	private final static int FULL_UPDATE_TIMER = 100;
 	public static boolean updatePass = true;
-	public static int _fullUpdateTimer = FULL_UPDATE_TIMER;
-	public static final FastSet<L2WorldRegion> _failedRegions = new FastSet<>(1);
 	
-	public static KnownListUpdateTaskManager getInstance()
-	{
-		return SingletonHolder._instance;
-	}
+	public static int _fullUpdateTimer = FULL_UPDATE_TIMER;
+	
+	public static final Set<L2WorldRegion> _failedRegions = ConcurrentHashMap.newKeySet(1);
 	
 	public KnownListUpdateTaskManager()
 	{
@@ -73,9 +70,13 @@ public class KnownListUpdateTaskManager
 				updatePass = !updatePass;
 				
 				if (_fullUpdateTimer > 0)
+				{
 					_fullUpdateTimer--;
+				}
 				else
+				{
 					_fullUpdateTimer = FULL_UPDATE_TIMER;
+				}
 			}
 			catch (Exception e)
 			{
@@ -88,7 +89,7 @@ public class KnownListUpdateTaskManager
 	{
 		Collection<L2Object> vObj = region.getVisibleObjects().values();
 		for (L2Object object : vObj)
-		{	
+		{
 			if (object == null || !object.isVisible())
 			{
 				continue;
@@ -131,6 +132,11 @@ public class KnownListUpdateTaskManager
 				}
 			}
 		}
+	}
+	
+	public static KnownListUpdateTaskManager getInstance()
+	{
+		return SingletonHolder._instance;
 	}
 	
 	private static class SingletonHolder

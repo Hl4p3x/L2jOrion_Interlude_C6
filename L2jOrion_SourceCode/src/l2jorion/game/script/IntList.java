@@ -20,17 +20,18 @@
  */
 package l2jorion.game.script;
 
-/**
- * @author Luis Arias
- */
 public class IntList
 {
 	public static int[] parse(final String range)
 	{
 		if (range.contains("-"))
+		{
 			return getIntegerList(range.split("-"));
+		}
 		else if (range.contains(","))
+		{
 			return getIntegerList(range.split(","));
+		}
 		
 		final int[] list =
 		{

@@ -24,8 +24,6 @@ import java.util.List;
 
 import javolution.util.FastList;
 import l2jorion.Config;
-import l2jorion.crypt.nProtect;
-import l2jorion.crypt.nProtect.RestrictionType;
 import l2jorion.game.datatables.csv.MapRegionTable;
 import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.datatables.sql.NpcTable;
@@ -34,7 +32,6 @@ import l2jorion.game.managers.FortSiegeGuardManager;
 import l2jorion.game.managers.FortSiegeManager;
 import l2jorion.game.managers.MercTicketManager;
 import l2jorion.game.managers.FortSiegeManager.SiegeSpawn;
-import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2SiegeClan;
@@ -45,23 +42,19 @@ import l2jorion.game.model.actor.instance.L2CommanderInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.Announcements;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.FortressSiegeInfo;
 import l2jorion.game.network.serverpackets.RelationChanged;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.network.serverpackets.UserInfo;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * The Class FortSiege.
- * @author programmos
- */
 public class FortSiege
 {
 	
@@ -508,11 +501,7 @@ public class FortSiege
 			// Schedule a task to prepare auto siege end
 			_siegeEndDate = Calendar.getInstance();
 			_siegeEndDate.add(Calendar.MINUTE, FortSiegeManager.getInstance().getSiegeLength());
-			nProtect.getInstance().checkRestriction(null, RestrictionType.RESTRICT_EVENT, new Object[]
-			{
-				FortSiege.class,
-				this
-			});
+			
 			ThreadPoolManager.getInstance().scheduleGeneral(new ScheduleEndSiegeTask(getFort()), 1000); // Prepare auto end task
 			
 			announceToPlayer("The siege of " + getFort().getName() + " has started!", false);
@@ -855,7 +844,7 @@ public class FortSiege
 		for (final L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{
 			// quick check from player states, which don't include siege number however
-			if (!player.isInsideZone(L2Character.ZONE_SIEGE) || player.getSiegeState() != 0)
+			if (!player.isInsideZone(ZoneId.ZONE_SIEGE) || player.getSiegeState() != 0)
 			{
 				continue;
 			}

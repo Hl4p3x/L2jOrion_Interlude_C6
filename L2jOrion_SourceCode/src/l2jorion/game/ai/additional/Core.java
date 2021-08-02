@@ -40,51 +40,50 @@ import l2jorion.game.templates.StatsSet;
 import l2jorion.log.Log;
 import l2jorion.util.random.Rnd;
 
-/**
- * Core AI
- * @author Damon
- */
 public class Core extends Quest implements Runnable
 {
 	private static final int CORE = 29006;
 	private static final int DEATH_KNIGHT = 29007;
 	private static final int DOOM_WRAITH = 29008;
 	private static final int SUSCEPTOR = 29011;
-	//CORE Status Tracking :
-	private static final byte ALIVE = 0; //Core is spawned.
-	private static final byte DEAD = 1; //Core has been killed.
-
+	// CORE Status Tracking :
+	private static final byte ALIVE = 0; // Core is spawned.
+	private static final byte DEAD = 1; // Core has been killed.
+	
 	private static boolean _FirstAttacked;
 	protected long _respawnEnd;
 	private final SimpleDateFormat date = new SimpleDateFormat("H:mm:ss yyyy/MM/dd");
-
+	
 	List<L2Attackable> Minions = new FastList<>();
-
+	
 	public Core(int id, String name, String descr)
 	{
 		super(id, name, descr);
 		
 		int[] mobs =
 		{
-				CORE, DEATH_KNIGHT, DOOM_WRAITH, SUSCEPTOR
+			CORE,
+			DEATH_KNIGHT,
+			DOOM_WRAITH,
+			SUSCEPTOR
 		};
-
-		for(int mob : mobs)
+		
+		for (int mob : mobs)
 		{
 			addEventId(mob, Quest.QuestEventType.ON_KILL);
 			addEventId(mob, Quest.QuestEventType.ON_ATTACK);
 		}
-
+		
 		_FirstAttacked = false;
 		StatsSet info = GrandBossManager.getInstance().getStatsSet(CORE);
 		
 		Integer status = GrandBossManager.getInstance().getBossStatus(CORE);
 		
-		if(status == DEAD)
+		if (status == DEAD)
 		{
 			// load the unlock date and time for Core from DB
 			long temp = info.getLong("respawn_time") - Calendar.getInstance().getTimeInMillis();
-			if(temp > 0)
+			if (temp > 0)
 			{
 				startQuestTimer("core_unlock", temp, null, null);
 			}
@@ -92,21 +91,16 @@ public class Core extends Quest implements Runnable
 			{
 				// the time has already expired while the server was offline. Immediately spawn Core.
 				L2GrandBossInstance core = (L2GrandBossInstance) addSpawn(CORE, 17726, 108915, -6480, 0, false, 0);
-				if(Config.ANNOUNCE_TO_ALL_SPAWN_RB)
+				if (Config.ANNOUNCE_TO_ALL_SPAWN_RB)
 				{
-					Announcements.getInstance().announceRB("The Grand boss " + core.getName() + " spawned in world.");
+					Announcements.getInstance().announceWithServerName("The Grand boss " + core.getName() + " spawned in world.");
 				}
 				GrandBossManager.getInstance().setBossStatus(CORE, ALIVE);
 				spawnBoss(core);
-				String text = "Core spawned.";
-				Log.add(text, "GrandBossSpawns");
 				
 				if (Config.L2JMOD_CHAMPION_ENABLE)
 				{
-					if (Config.L2JMOD_CHAMP_RAID_BOSSES 
-							&& Config.L2JMOD_CHAMPION_FREQUENCY > 0 
-							&& core.getLevel() >= Config.L2JMOD_CHAMP_MIN_LVL 
-							&& core.getLevel() <= Config.L2JMOD_CHAMP_MAX_LVL)
+					if (Config.L2JMOD_CHAMP_RAID_BOSSES && Config.L2JMOD_CHAMPION_FREQUENCY > 0 && core.getLevel() >= Config.L2JMOD_CHAMP_MIN_LVL && core.getLevel() <= Config.L2JMOD_CHAMP_MAX_LVL)
 					{
 						core.setChampion(false);
 						int random = Rnd.get(100);
@@ -121,56 +115,58 @@ public class Core extends Quest implements Runnable
 		else
 		{
 			String test = loadGlobalQuestVar("Core_Attacked");
-			if(test.equalsIgnoreCase("true"))
+			if (test.equalsIgnoreCase("true"))
 			{
 				_FirstAttacked = true;
 			}
 			
 			L2GrandBossInstance core = (L2GrandBossInstance) addSpawn(CORE, 17726, 108915, -6480, 0, false, 0);
-			if(Config.ANNOUNCE_TO_ALL_SPAWN_RB)
+			if (Config.ANNOUNCE_TO_ALL_SPAWN_RB)
 			{
 				Announcements.getInstance().announceToAll("Raid boss " + core.getName() + " spawned in world.");
 			}
 			spawnBoss(core);
 		}
 	}
-
+	
 	@Override
 	public void saveGlobalData()
 	{
 		String val = "" + _FirstAttacked;
 		saveGlobalQuestVar("Core_Attacked", val);
 	}
-
+	
 	@Override
 	public String onAdvEvent(String event, L2NpcInstance npc, L2PcInstance player)
 	{
 		Integer status = GrandBossManager.getInstance().getBossStatus(CORE);
-			
-		if(event.equalsIgnoreCase("core_unlock"))
+		
+		if (event.equalsIgnoreCase("core_unlock"))
 		{
 			L2GrandBossInstance core = (L2GrandBossInstance) addSpawn(CORE, 17726, 108915, -6480, 0, false, 0);
-			if(Config.ANNOUNCE_TO_ALL_SPAWN_RB)
+			if (Config.ANNOUNCE_TO_ALL_SPAWN_RB)
 			{
 				Announcements.getInstance().announceToAll("Raid boss " + core.getName() + " spawned in world.");
 			}
 			GrandBossManager.getInstance().setBossStatus(CORE, ALIVE);
 			spawnBoss(core);
 		}
-		else if(status ==null){
+		else if (status == null)
+		{
 			
-			LOG.warn("GrandBoss with Id "+CORE+" has not valid status into GrandBossManager");
+			LOG.warn("GrandBoss with Id " + CORE + " has not valid status into GrandBossManager");
 			
-		}else if(event.equalsIgnoreCase("spawn_minion") && status == ALIVE)
+		}
+		else if (event.equalsIgnoreCase("spawn_minion") && status == ALIVE)
 		{
 			Minions.add((L2Attackable) addSpawn(npc.getNpcId(), npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), false, 0));
 		}
-		else if(event.equalsIgnoreCase("despawn_minions"))
+		else if (event.equalsIgnoreCase("despawn_minions"))
 		{
-			for(int i = 0; i < Minions.size(); i++)
+			for (int i = 0; i < Minions.size(); i++)
 			{
 				L2Attackable mob = Minions.get(i);
-				if(mob != null)
+				if (mob != null)
 				{
 					mob.decayMe();
 				}
@@ -179,15 +175,15 @@ public class Core extends Quest implements Runnable
 		}
 		return super.onAdvEvent(event, npc, player);
 	}
-
+	
 	@Override
 	public String onAttack(L2NpcInstance npc, L2PcInstance attacker, int damage, boolean isPet)
 	{
-		if(npc.getNpcId() == CORE)
+		if (npc.getNpcId() == CORE)
 		{
-			if(_FirstAttacked)
+			if (_FirstAttacked)
 			{
-				if(Rnd.get(100) == 0)
+				if (Rnd.get(100) == 0)
 				{
 					npc.broadcastPacket(new CreatureSay(npc.getObjectId(), 0, npc.getName(), "Removing intruders."));
 				}
@@ -201,7 +197,7 @@ public class Core extends Quest implements Runnable
 		}
 		return super.onAttack(npc, attacker, damage, isPet);
 	}
-
+	
 	@Override
 	public String onKill(L2NpcInstance npc, L2PcInstance killer, boolean isPet)
 	{
@@ -227,9 +223,9 @@ public class Core extends Quest implements Runnable
 				
 				Calendar time = Calendar.getInstance();
 				time.add(Calendar.HOUR, days);
-				time.set(Calendar.HOUR, Config.CORE_FIX_TIME_H);
-				time.set(Calendar.MINUTE, Rnd.get(0,Config.CORE_FIX_TIME_M));
-				time.set(Calendar.SECOND, Rnd.get(0,Config.CORE_FIX_TIME_S));
+				time.set(Calendar.HOUR_OF_DAY, Config.CORE_FIX_TIME_H);
+				time.set(Calendar.MINUTE, Rnd.get(0, Config.CORE_FIX_TIME_M));
+				time.set(Calendar.SECOND, Rnd.get(0, Config.CORE_FIX_TIME_S));
 				
 				long _respawnEnd = time.getTimeInMillis();
 				long _respawn = time.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
@@ -262,11 +258,13 @@ public class Core extends Quest implements Runnable
 			}
 			
 		}
-		else{
+		else
+		{
 			
 			Integer status = GrandBossManager.getInstance().getBossStatus(CORE);
 			
-			if(status == ALIVE && Minions.contains(npc)){
+			if (status == ALIVE && Minions.contains(npc))
+			{
 				Minions.remove(npc);
 				startQuestTimer("spawn_minion", Config.CORE_RESP_MINION * 1000, npc, null);
 			}
@@ -274,13 +272,13 @@ public class Core extends Quest implements Runnable
 		
 		return super.onKill(npc, killer, isPet);
 	}
-
+	
 	public void spawnBoss(L2GrandBossInstance npc)
 	{
 		GrandBossManager.getInstance().addBoss(npc);
 		npc.broadcastPacket(new PlaySound(1, "BS01_A", 1, npc.getObjectId(), npc.getX(), npc.getY(), npc.getZ()));
-		//Spawn minions
-		for(int i = 0; i < 5; i++)
+		// Spawn minions
+		for (int i = 0; i < 5; i++)
 		{
 			int x = 16800 + i * 360;
 			Minions.add((L2Attackable) addSpawn(DEATH_KNIGHT, x, 110000, npc.getZ(), 280 + Rnd.get(40), false, 0));
@@ -288,14 +286,15 @@ public class Core extends Quest implements Runnable
 			int x2 = 16800 + i * 600;
 			Minions.add((L2Attackable) addSpawn(DOOM_WRAITH, x2, 109300, npc.getZ(), 280 + Rnd.get(40), false, 0));
 		}
-		for(int i = 0; i < 4; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			int x = 16800 + i * 450;
 			Minions.add((L2Attackable) addSpawn(SUSCEPTOR, x, 110300, npc.getZ(), 280 + Rnd.get(40), false, 0));
 		}
 	}
-
+	
 	@Override
 	public void run()
-	{}
+	{
+	}
 }

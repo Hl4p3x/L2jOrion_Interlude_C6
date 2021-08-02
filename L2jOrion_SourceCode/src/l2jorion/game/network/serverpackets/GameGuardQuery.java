@@ -20,26 +20,17 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import l2jorion.crypt.nProtect;
-
-/**
- * @author zabbix Lets drink to code!
- */
 public class GameGuardQuery extends L2GameServerPacket
 {
 	private static final String _S__F9_GAMEGUARDQUERY = "[S] F9 GameGuardQuery";
 	
 	public GameGuardQuery()
 	{
-		
 	}
 	
 	@Override
 	public void runImpl()
 	{
-		// Lets make user as gg-unauthorized
-		// We will set him as ggOK after reply fromclient
-		// or kick
 		getClient().setGameGuardOk(false);
 	}
 	
@@ -47,7 +38,6 @@ public class GameGuardQuery extends L2GameServerPacket
 	public void writeImpl()
 	{
 		writeC(0xf9);
-		nProtect.getInstance().sendGameGuardQuery(this);
 	}
 	
 	@Override

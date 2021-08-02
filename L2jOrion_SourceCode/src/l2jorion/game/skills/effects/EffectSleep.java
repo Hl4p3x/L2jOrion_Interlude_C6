@@ -23,12 +23,8 @@ package l2jorion.game.skills.effects;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 final class EffectSleep extends L2Effect
 {
-	
 	public EffectSleep(final Env env, final EffectTemplate template)
 	{
 		super(env, template);
@@ -40,14 +36,12 @@ final class EffectSleep extends L2Effect
 		return EffectType.SLEEP;
 	}
 	
-	/** Notify started */
 	@Override
 	public void onStart()
 	{
 		getEffected().startSleeping();
 	}
 	
-	/** Notify exited */
 	@Override
 	public void onExit()
 	{
@@ -58,7 +52,6 @@ final class EffectSleep extends L2Effect
 	public boolean onActionTime()
 	{
 		getEffected().stopSleeping(this);
-		// just stop this effect
 		return false;
 	}
 }

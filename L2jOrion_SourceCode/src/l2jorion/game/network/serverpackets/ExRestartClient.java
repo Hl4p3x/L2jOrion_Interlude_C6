@@ -20,13 +20,8 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Format: (ch).
- * @author -Wooden-
- */
 public class ExRestartClient extends L2GameServerPacket
 {
-	/** The Constant _S__FE_47_EXRESTARTCLIENT. */
 	private static final String _S__FE_47_EXRESTARTCLIENT = "[S] FE:47 ExRestartClient";
 	
 	@Override
@@ -36,10 +31,6 @@ public class ExRestartClient extends L2GameServerPacket
 		writeH(0x47);
 	}
 	
-	/**
-	 * Gets the type.
-	 * @return the type
-	 */
 	@Override
 	public String getType()
 	{

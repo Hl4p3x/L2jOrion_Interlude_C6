@@ -20,8 +20,8 @@
  */
 package l2jorion.game.model.actor.instance;
 
-import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Skill;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.templates.L2NpcTemplate;
 
 public class L2SiegeSummonInstance extends L2SummonInstance
@@ -40,7 +40,7 @@ public class L2SiegeSummonInstance extends L2SummonInstance
 	{
 		super.onSpawn();
 		
-		if (!getOwner().isGM() && !isInsideZone(L2Character.ZONE_SIEGE))
+		if (!getOwner().isGM() && !isInsideZone(ZoneId.ZONE_SIEGE))
 		{
 			unSummon(getOwner());
 			getOwner().sendMessage("Summon was unsummoned because it exited siege zone");

@@ -31,6 +31,7 @@ import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.quest.Quest;
 import l2jorion.game.network.serverpackets.CreatureSay;
+import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.util.random.Rnd;
 
 public class Transform extends Quest implements Runnable
@@ -56,7 +57,7 @@ public class Transform extends Quest implements Runnable
 			_effect = effect;
 		}
 		
-		protected int getId()
+		protected int getNpcId()
 		{
 			return _id;
 		}
@@ -162,9 +163,9 @@ public class Transform extends Quest implements Runnable
 	{
 		final int npcObjId = npc.getObjectId();
 		
-		for (Transformer monster : _mobs)
+		for (Transformer monsterPoly : _mobs)
 		{
-			if (npc.getNpcId() == monster.getId())
+			if (npc.getNpcId() == monsterPoly.getNpcId())
 			{
 				if (!myTrackingSet.contains(npcObjId)) // this allows to handle multiple instances of npc
 				{
@@ -174,26 +175,23 @@ public class Transform extends Quest implements Runnable
 				
 				if (HasSpawned == npcObjId)
 				{
-					if (Rnd.get(100) <= monster.getChance() * Config.RATE_DROP_QUEST)
+					if (Rnd.get(100) <= monsterPoly.getChance() * Config.RATE_DROP_QUEST)
 					{
-						if (monster.getMessage() != 0)
+						if (monsterPoly.getMessage() != 0)
 						{
-							npc.broadcastPacket(new CreatureSay(npc.getObjectId(), 0, npc.getName(), Message[Rnd.get(monster.getMessage())]));
+							npc.broadcastPacket(new CreatureSay(npc.getObjectId(), 0, npc.getName(), Message[Rnd.get(monsterPoly.getMessage())]));
 						}
 						
-						if (monster.getChance() > 0)
+						if (monsterPoly.getChance() > 0)
 						{
 							HasSpawned = 0;
-							npc.Delete();
+							npc.onDecay();
 							
-							L2Attackable newNpc = (L2Attackable) addSpawn(monster.getIdPoly(), (npc.getX()), (npc.getY()), npc.getZ(), 0, false, 0);
+							L2Attackable newNpc = (L2Attackable) addSpawn(monsterPoly.getIdPoly(), npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), false, 0);
 							
-							if (monster.getEffect() > 0)
+							if (monsterPoly.getEffect() > 0)
 							{
-								// NPC Spawn Effect L2OFF
-								NPCSpawnTask spawnEffectTask = new NPCSpawnTask(newNpc, 4000, 800000);
-								Thread effectThread = new Thread(spawnEffectTask);
-								effectThread.start();
+								ThreadPoolManager.getInstance().executeTask(new NPCSpawnTask(newNpc, 4000, 800000));
 							}
 							
 							L2Character originalAttacker = isPet ? attacker.getPet() : attacker;
@@ -208,7 +206,6 @@ public class Transform extends Quest implements Runnable
 							newNpc.addDamageHate(originalAttacker, 0, 999);
 							newNpc.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, originalAttacker);
 							
-							// Like L2OFF auto target new mob (like an aggression)
 							originalAttacker.setTargetTrasformedNpc(newNpc);
 						}
 					}
@@ -223,14 +220,14 @@ public class Transform extends Quest implements Runnable
 	{
 		for (final Transformer monster : _mobs)
 		{
-			if (npc.getNpcId() == monster.getId())
+			if (npc.getNpcId() == monster.getNpcId())
 			{
 				if (monster.getMessage() != 0)
 				{
 					npc.broadcastPacket(new CreatureSay(npc.getObjectId(), 0, npc.getName(), Message[Rnd.get(monster.getMessage())]));
 				}
 				
-				final L2Attackable newNpc = (L2Attackable) this.addSpawn(monster.getIdPoly(), npc);
+				final L2Attackable newNpc = (L2Attackable) addSpawn(monster.getIdPoly(), npc);
 				final L2Character originalAttacker = isPet ? killer.getPet() : killer;
 				
 				if (npc.isChampion())
@@ -255,33 +252,31 @@ public class Transform extends Quest implements Runnable
 	
 	private class NPCSpawnTask implements Runnable
 	{
+		private final L2NpcInstance _newNpc;
+		private final long _spawnEffectTime;
+		private final int _spawnAbnormalEffect;
 		
-		private final L2NpcInstance spawn;
-		private final long spawnEffectTime;
-		private final int spawnAbnormalEffect;
-		
-		public NPCSpawnTask(L2NpcInstance spawn, long spawnEffectTime, int spawnAbnormalEffect)
+		public NPCSpawnTask(L2NpcInstance newNpc, long spawnEffectTime, int spawnAbnormalEffect)
 		{
-			super();
-			this.spawn = spawn;
-			this.spawnEffectTime = spawnEffectTime;
-			this.spawnAbnormalEffect = Integer.decode("0x" + spawnAbnormalEffect);
+			_newNpc = newNpc;
+			_spawnEffectTime = spawnEffectTime;
+			_spawnAbnormalEffect = Integer.decode("0x" + spawnAbnormalEffect);
 		}
 		
 		@Override
 		public void run()
 		{
-			spawn.startAbnormalEffect(spawnAbnormalEffect);
+			_newNpc.startAbnormalEffect(_spawnAbnormalEffect);
 			
 			try
 			{
-				Thread.sleep(spawnEffectTime);
+				Thread.sleep(_spawnEffectTime);
 			}
 			catch (final InterruptedException e)
 			{
 			}
 			
-			spawn.stopAbnormalEffect(spawnAbnormalEffect);
+			_newNpc.stopAbnormalEffect(_spawnAbnormalEffect);
 		}
 	}
 }

@@ -20,40 +20,39 @@ package l2jorion.game.network.clientpackets;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.managers.RaidBossPointsManager;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.ExGetBossRecord;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * Format: (ch) d
- * @author -Wooden-
- */
 public final class RequestGetBossRecord extends L2GameClientPacket
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestGetBossRecord.class);
 	private int _bossId;
-
+	
 	@Override
 	protected void readImpl()
 	{
 		_bossId = readD();
 	}
-
+	
 	@Override
 	protected void runImpl()
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
-
+		
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		// should be always 0, log it if isn't 0 for future research
 		if (_bossId != 0)
+		{
 			LOG.info("C5: RequestGetBossRecord: d: " + _bossId + " ActiveChar: " + activeChar);
-
+		}
+		
 		int points = RaidBossPointsManager.getPointsByOwnerId(activeChar.getObjectId());
 		int ranking = RaidBossPointsManager.calculateRanking(activeChar.getObjectId());
 		
@@ -62,11 +61,10 @@ public final class RequestGetBossRecord extends L2GameClientPacket
 		// trigger packet
 		activeChar.sendPacket(new ExGetBossRecord(ranking, points, list));
 	}
-
+	
 	@Override
 	public String getType()
 	{
 		return "[C] D0:18 RequestGetBossRecord";
 	}
-
 }

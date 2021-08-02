@@ -52,7 +52,7 @@ import l2jorion.game.util.Util;
 import l2jorion.log.Log;
 import l2jorion.util.random.Rnd;
 
-public class Baium  extends Quest implements Runnable
+public class Baium extends Quest implements Runnable
 {
 	private L2Character _actualVictim;
 	private L2PcInstance _waker;
@@ -112,7 +112,10 @@ public class Baium  extends Quest implements Runnable
 	{
 		super(questId, name, descr);
 		
-		int[] mob = {LIVE_BAIUM};
+		int[] mob =
+		{
+			LIVE_BAIUM
+		};
 		this.registerMobs(mob);
 		
 		// Quest NPC starter initialization
@@ -357,7 +360,7 @@ public class Baium  extends Quest implements Runnable
 					public void run()
 					{
 						baium.setIsInvul(false);
-						baium.getAttackByList().addAll(_Zone.getCharactersInside().values());
+						baium.getAttackByList().addAll(_Zone.getCharactersInside());
 						
 						// Start monitoring baium's inactivity and activate the AI
 						_LastAttackVsBaiumTime = System.currentTimeMillis();
@@ -392,11 +395,11 @@ public class Baium  extends Quest implements Runnable
 			}
 			if ((GrandBossManager.getInstance().getBossStatus(LIVE_BAIUM) == ASLEEP) && player.getQuestState("baium").getQuestItemsCount(4295) > 0) // bloody fabric
 			{
-				player.getQuestState("baium").takeItems(4295,1);
+				player.getQuestState("baium").takeItems(4295, 1);
 				// allow entry for the player for the next 30 secs (more than enough time for the TP to happen)
 				// Note: this just means 30secs to get in, no limits on how long it takes before we get out.
-				_Zone.allowPlayerEntry(player,30);
-				player.teleToLocation(113100,14500,10077);
+				_Zone.allowPlayerEntry(player, 30);
+				player.teleToLocation(113100, 14500, 10077);
 			}
 			else
 			{
@@ -411,7 +414,7 @@ public class Baium  extends Quest implements Runnable
 	{
 		if (!_Zone.isInsideZone(attacker))
 		{
-			attacker.reduceCurrentHp(attacker.getCurrentHp(),attacker,false);
+			attacker.reduceCurrentHp(attacker.getCurrentHp(), attacker, false);
 			return super.onAttack(npc, attacker, damage, isPet);
 		}
 		
@@ -450,16 +453,16 @@ public class Baium  extends Quest implements Runnable
 			{
 				GrandBossManager.getInstance().setBossStatus(LIVE_BAIUM, DEAD);
 				cancelQuestTimer("baium_despawn", npc, null);
-				addSpawn(29055,115203,16620,10078,0,false,900000);
+				addSpawn(29055, 115203, 16620, 10078, 0, false, 900000);
 				
 				long respawnTime = (Config.BAIUM_RESP_FIRST + Rnd.get(Config.BAIUM_RESP_SECOND)) * 3600000;
 				final int days = Config.BAIUM_FIX_TIME_D * 24;
 				
 				Calendar time = Calendar.getInstance();
 				time.add(Calendar.HOUR, days);
-				time.set(Calendar.HOUR, Config.BAIUM_FIX_TIME_H);
-				time.set(Calendar.MINUTE, Rnd.get(0,Config.BAIUM_FIX_TIME_M));
-				time.set(Calendar.SECOND, Rnd.get(0,Config.BAIUM_FIX_TIME_S));
+				time.set(Calendar.HOUR_OF_DAY, Config.BAIUM_FIX_TIME_H);
+				time.set(Calendar.MINUTE, Rnd.get(0, Config.BAIUM_FIX_TIME_M));
+				time.set(Calendar.SECOND, Rnd.get(0, Config.BAIUM_FIX_TIME_S));
 				
 				long _respawnEnd = time.getTimeInMillis();
 				long _respawn = time.getTimeInMillis() - Calendar.getInstance().getTimeInMillis();
@@ -487,7 +490,7 @@ public class Baium  extends Quest implements Runnable
 				info.set("killed_time", "" + date.format(new Date(System.currentTimeMillis())));
 				info.set("next_respawn", DateFormat.getDateTimeInstance().format(gc.getTime()));
 				
-				GrandBossManager.getInstance().setStatsSet(LIVE_BAIUM,info);
+				GrandBossManager.getInstance().setStatsSet(LIVE_BAIUM, info);
 				
 				// Unspawn angels.
 				synchronized (_Minions)
@@ -496,7 +499,7 @@ public class Baium  extends Quest implements Runnable
 					{
 						for (L2NpcInstance minion : _Minions)
 						{
-						
+							
 							minion.getSpawn().stopRespawn();
 							minion.deleteMe();
 						}
@@ -560,7 +563,7 @@ public class Baium  extends Quest implements Runnable
 				result.add((L2Character) obj);
 			}
 		}
-	
+		
 		// If there's no players available, Baium and Angels are hitting each other.
 		if (result.isEmpty())
 		{
@@ -604,7 +607,7 @@ public class Baium  extends Quest implements Runnable
 					}
 					
 					if ((((L2PcInstance) obj).getActiveWeaponInstance() == null))
-					{ 
+					{
 						continue;
 					}
 				}
@@ -617,6 +620,7 @@ public class Baium  extends Quest implements Runnable
 		}
 		return (result.isEmpty()) ? null : result.get(Rnd.get(result.size()));
 	}
+	
 	/**
 	 * That method checks if angels are near.
 	 * @param npc : baium.
@@ -691,8 +695,6 @@ public class Baium  extends Quest implements Runnable
 				npc.getAI().setIntention(CtrlIntention.AI_INTENTION_FOLLOW, _actualVictim, null);
 			}
 		}
-		
-		
 		
 	}
 	
@@ -809,5 +811,6 @@ public class Baium  extends Quest implements Runnable
 	
 	@Override
 	public void run()
-	{}
+	{
+	}
 }

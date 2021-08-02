@@ -47,13 +47,12 @@ import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.templates.StatsSet;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.log.Log;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.util.random.Rnd;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AutoSpawn
 {
@@ -238,7 +237,9 @@ public class AutoSpawn
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					LOG.warn("AutoSpawnHandler: Could not auto spawn for NPC ID " + spawnInst._npcId + " (Object ID = " + spawnInst._objectId + "): " + e);
 					
@@ -355,7 +356,9 @@ public class AutoSpawn
 			
 			final ScheduledFuture<?> future_task = _schedules.get(objectId);
 			if (future_task != null)
+			{
 				return future_task.getDelay(TimeUnit.MILLISECONDS);
+			}
 		}
 		
 		return -1;
@@ -668,12 +671,16 @@ public class AutoSpawn
 				AutoSpawnInstance mob = _Mobs.get(mobId);
 				
 				if (mob == null)
+				{
 					continue;
+				}
 				
 				StatsSet info = _storedInfo.get(mobId);
 				
 				if (info == null)
+				{
 					continue;
+				}
 				
 				PreparedStatement statement = con.prepareStatement("UPDATE random_spawn set respawn_time = ? where npcId = ?");
 				statement.setLong(1, info.getLong("respawnTime"));

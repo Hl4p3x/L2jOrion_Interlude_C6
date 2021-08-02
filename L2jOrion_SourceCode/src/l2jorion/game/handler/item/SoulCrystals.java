@@ -34,15 +34,9 @@ import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.thread.ThreadPoolManager;
 
-/**
- * This class ...
- * @version $Revision: 1.2.4 $ $Date: 2005/08/14 21:31:07 $
- */
 
 public class SoulCrystals implements IItemHandler
 {
-	// First line is for Red Soul Crystals, second is Green and third is Blue Soul Crystals,
-	// ordered by ascending level, from 0 to 13...
 	private static final int[] ITEM_IDS =
 	{
 		4629,

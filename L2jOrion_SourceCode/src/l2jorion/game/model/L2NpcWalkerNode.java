@@ -22,10 +22,6 @@ package l2jorion.game.model;
 
 import l2jorion.game.templates.StatsSet;
 
-/**
- * @author Rayan RPG
- * @since 927
- */
 public class L2NpcWalkerNode
 {
 	private int _routeId;

@@ -27,6 +27,7 @@ import javolution.util.FastList;
 public class ExEnchantSkillList extends L2GameServerPacket
 {
 	private static final String _S__FE_17_EXENCHANTSKILLLIST = "[S] FE:17 ExEnchantSkillList";
+	
 	private final List<Skill> _skills;
 	
 	class Skill
@@ -55,10 +56,6 @@ public class ExEnchantSkillList extends L2GameServerPacket
 		_skills = new FastList<>();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#writeImpl()
-	 */
 	@Override
 	protected void writeImpl()
 	{
@@ -76,10 +73,6 @@ public class ExEnchantSkillList extends L2GameServerPacket
 		
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.BasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

@@ -29,22 +29,16 @@ import l2jorion.Config;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.Wedding;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author evill33t
- */
 public class CoupleManager
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(CoupleManager.class);
 	
-	// =========================================================
-	// Data Field
 	private final FastList<Wedding> _couples = new FastList<>();
 	
 	public static final CoupleManager getInstance()
@@ -54,7 +48,7 @@ public class CoupleManager
 	
 	public CoupleManager()
 	{
-		LOG.info("Initializing Wedding Manager");
+		LOG.info("Wedding Manager - Enabled");
 		_couples.clear();
 		load();
 	}
@@ -65,8 +59,6 @@ public class CoupleManager
 		load();
 	}
 	
-	// =========================================================
-	// Method - Private
 	private final void load()
 	{
 		Connection con = null;
@@ -88,29 +80,33 @@ public class CoupleManager
 			DatabaseUtils.close(statement);
 			rs.close();
 			
-			LOG.info("Loaded: " + getCouples().size() + " couples");
+			if (getCouples().size() > 0)
+			{
+				LOG.info("Wedding Manager: Loaded " + getCouples().size() + " couples");
+			}
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Exception: CoupleManager.load(): " + e.getMessage(), e);
 		}
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
-	// =========================================================
-	// Property - Public
 	public final Wedding getCouple(final int coupleId)
 	{
 		final int index = getCoupleIndex(coupleId);
 		if (index >= 0)
+		{
 			return getCouples().get(index);
+		}
 		return null;
 	}
 	
@@ -129,8 +125,6 @@ public class CoupleManager
 				player2.setPartnerId(_player1id);
 				player1.setCoupleId(_new.getId());
 				player2.setCoupleId(_new.getId());
-				
-				_new = null;
 			}
 		}
 	}
@@ -160,10 +154,6 @@ public class CoupleManager
 			}
 			wedding.divorce();
 			getCouples().remove(index);
-			
-			player1 = null;
-			player2 = null;
-			wedding = null;
 		}
 	}
 	

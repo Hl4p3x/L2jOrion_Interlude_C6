@@ -20,18 +20,15 @@
 
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * @author zabbix Lets drink to code!
- */
 public final class RequestLinkHtml extends L2GameClientPacket
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestLinkHtml.class);
+	
 	private String _link;
 	
 	@Override
@@ -45,7 +42,9 @@ public final class RequestLinkHtml extends L2GameClientPacket
 	{
 		final L2PcInstance actor = getClient().getActiveChar();
 		if (actor == null)
+		{
 			return;
+		}
 		
 		if (_link.contains("..") || !_link.contains(".htm"))
 		{
@@ -54,7 +53,9 @@ public final class RequestLinkHtml extends L2GameClientPacket
 		}
 		
 		if (!actor.validateLink(_link))
+		{
 			return;
+		}
 		
 		final NpcHtmlMessage msg = new NpcHtmlMessage(0);
 		msg.setFile(_link);

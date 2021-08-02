@@ -22,6 +22,7 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.L2ZoneType;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.serverpackets.NpcInfo;
 
 public class L2WaterZone extends L2ZoneType
@@ -39,7 +40,7 @@ public class L2WaterZone extends L2ZoneType
 			// to avoid any possibility
 			return;
 		}
-		character.setInsideZone(L2Character.ZONE_WATER, true);
+		character.setInsideZone(ZoneId.ZONE_WATER, true);
 		
 		if (character instanceof L2PcInstance)
 		{
@@ -60,7 +61,7 @@ public class L2WaterZone extends L2ZoneType
 		{
 			if (((L2PcInstance) character).isGM())
 			{
-				((L2PcInstance)character).sendMessage("You entered water ID: "+getId());
+				((L2PcInstance)character).sendMessage("You entered water name: "+getName());
 			}
 		}
 	}
@@ -68,13 +69,13 @@ public class L2WaterZone extends L2ZoneType
 	@Override
 	protected void onExit(L2Character character)
 	{
-		character.setInsideZone(L2Character.ZONE_WATER, false);
+		character.setInsideZone(ZoneId.ZONE_WATER, false);
 		
 		 if (character instanceof L2PcInstance) 
 		 {
 			 if (((L2PcInstance) character).isGM())
 			 {
-				 ((L2PcInstance)character).sendMessage("You exited water ID:"+getId());
+				 ((L2PcInstance)character).sendMessage("You exited water name:"+getName());
 			 }
 		 }
 		if (character instanceof L2PcInstance)

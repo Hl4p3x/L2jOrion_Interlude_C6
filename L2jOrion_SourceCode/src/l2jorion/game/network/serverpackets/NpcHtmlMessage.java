@@ -20,35 +20,24 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.cache.HtmCache;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.clientpackets.RequestBypassToServer;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class NpcHtmlMessage extends L2GameServerPacket
 {
-	/** The Constant _S__1B_NPCHTMLMESSAGE. */
 	private static final String _S__1B_NPCHTMLMESSAGE = "[S] 0f NpcHtmlMessage";
 	
-	/** The LOG. */
 	private static Logger LOG = LoggerFactory.getLogger(RequestBypassToServer.class);
 	
-	/** The _npc obj id. */
 	private final int _npcObjId;
-	
-	/** The _html. */
 	private String _html;
+	private String _htmlUrl;
 	
-	/** The _validate. */
-	private final boolean _validate = true;
-	
-	/**
-	 * Instantiates a new npc html message.
-	 * @param html the text
-	 */
 	public NpcHtmlMessage(final String html)
 	{
 		_npcObjId = 0;
@@ -61,10 +50,6 @@ public class NpcHtmlMessage extends L2GameServerPacket
 		setHtml(text);
 	}
 	
-	/**
-	 * Instantiates a new npc html message.
-	 * @param npcObjId the npc obj id
-	 */
 	public NpcHtmlMessage(final int npcObjId)
 	{
 		_npcObjId = npcObjId;
@@ -73,50 +58,46 @@ public class NpcHtmlMessage extends L2GameServerPacket
 	@Override
 	public void runImpl()
 	{
-		if (Config.BYPASS_VALIDATION && _validate)
+		if (Config.BYPASS_VALIDATION)
 		{
 			buildBypassCache(getClient().getActiveChar());
 			buildLinksCache(getClient().getActiveChar());
 		}
 	}
 	
-	/**
-	 * Sets the html.
-	 * @param text the new html
-	 */
-	public void setHtml(final String text)
+	public void setHtml(String text)
+	{
+		setHtml(false, text);
+	}
+	
+	public void setHtml(boolean internal, String text)
 	{
 		if (text == null)
 		{
-			//LOG.warn("Html is null! this will crash the client!");
-			
 			_html = "<html><body>No data! Report it for an admin. Thank you.</body></html>";
 			return;
 		}
 		
-		if (text.length() > 8192)
+		if (text.length() > 10000) // 8192
 		{
-			LOG.warn("Html is too long! this will crash the client!");
+			LOG.warn("Html is too long! This will crash the client!");
 			_html = "<html><body>Html was too long</body></html>";
 			return;
 		}
 		
-		_html = text; // html code must not exceed 8192 bytes
+		_html = text;
 	}
 	
-	/**
-	 * Sets the file.
-	 * @param path the path
-	 * @return true, if successful
-	 */
 	public boolean setFile(final String path)
 	{
 		final String content = HtmCache.getInstance().getHtm(path);
 		
+		_htmlUrl = path;
+		
 		if (content == null)
 		{
-			setHtml("<html><body>My Text is missing:<br>" + path + "</body></html>");
-			LOG.warn("missing html page " + path);
+			setHtml("<html><body>Missing html page:<br>" + path + "</body></html>");
+			LOG.warn("Missing html page: " + path);
 			return false;
 		}
 		
@@ -124,14 +105,14 @@ public class NpcHtmlMessage extends L2GameServerPacket
 		return true;
 	}
 	
-	/**
-	 * Replace.
-	 * @param pattern the pattern
-	 * @param value the value
-	 */
-	public void replace(final String pattern, final String value)
+	public void replace(String pattern, String value)
 	{
 		_html = _html.replaceAll(pattern, value);
+	}
+	
+	public void replaceNM(String pattern, String value)
+	{
+		_html = _html.replaceAll(pattern, value.replaceAll("\\$", "\\\\\\$"));
 	}
 	
 	public void replace(final String pattern, final boolean val)
@@ -154,10 +135,6 @@ public class NpcHtmlMessage extends L2GameServerPacket
 		replace(pattern, String.valueOf(val));
 	}
 	
-	/**
-	 * Builds the bypass cache.
-	 * @param activeChar the active char
-	 */
 	private final void buildBypassCache(final L2PcInstance activeChar)
 	{
 		if (activeChar == null)
@@ -166,6 +143,7 @@ public class NpcHtmlMessage extends L2GameServerPacket
 		}
 		
 		activeChar.clearBypass();
+		
 		for (int i = 0; i < _html.length(); i++)
 		{
 			int start = _html.indexOf("\"bypass ", i);
@@ -186,6 +164,7 @@ public class NpcHtmlMessage extends L2GameServerPacket
 			
 			i = finish;
 			int finish2 = _html.indexOf("$", start);
+			
 			if ((finish2 < finish) && (finish2 > 0))
 			{
 				activeChar.addBypass2(_html.substring(start, finish2).trim());
@@ -197,16 +176,22 @@ public class NpcHtmlMessage extends L2GameServerPacket
 		}
 	}
 	
-	/**
-	 * Builds the links cache.
-	 * @param activeChar the active char
-	 */
 	private final void buildLinksCache(final L2PcInstance activeChar)
 	{
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		activeChar.clearLinks();
+		
+		if (activeChar.isGM() && _htmlUrl != null)
+		{
+			final SystemMessage sm1 = new SystemMessage(SystemMessageId.GM_S1);
+			sm1.addString("FILE: " + _htmlUrl);
+			activeChar.sendPacket(sm1);
+		}
+		
 		final int len = _html.length();
 		for (int i = 0; i < len; i++)
 		{
@@ -214,9 +199,12 @@ public class NpcHtmlMessage extends L2GameServerPacket
 			final int finish = _html.indexOf("\"", start);
 			
 			if (start < 0 || finish < 0)
+			{
 				break;
+			}
 			
 			i = start;
+			
 			activeChar.addLink(_html.substring(start + 5, finish).trim());
 		}
 	}
@@ -237,10 +225,6 @@ public class NpcHtmlMessage extends L2GameServerPacket
 		return _S__1B_NPCHTMLMESSAGE;
 	}
 	
-	/**
-	 * Gets the content.
-	 * @return the content
-	 */
 	public String getContent()
 	{
 		return _html;

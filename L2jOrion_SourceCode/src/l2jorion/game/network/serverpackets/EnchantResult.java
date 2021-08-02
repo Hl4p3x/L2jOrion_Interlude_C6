@@ -23,24 +23,27 @@ package l2jorion.game.network.serverpackets;
 public class EnchantResult extends L2GameServerPacket
 {
 	private static final String _S__81_ENCHANTRESULT = "[S] 81 EnchantResult";
-	private final int _unknown;
 	
-	public EnchantResult(final int unknown)
+	public static final EnchantResult SUCCESS = new EnchantResult(0);
+	public static final EnchantResult UNK_RESULT_1 = new EnchantResult(1);
+	public static final EnchantResult CANCELLED = new EnchantResult(2);
+	public static final EnchantResult UNSUCCESS = new EnchantResult(3);
+	public static final EnchantResult UNK_RESULT_4 = new EnchantResult(4);
+	
+	private final int _result;
+	
+	public EnchantResult(final int result)
 	{
-		_unknown = unknown;
+		_result = result;
 	}
 	
 	@Override
 	protected final void writeImpl()
 	{
 		writeC(0x81);
-		writeD(_unknown);
+		writeD(_result);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

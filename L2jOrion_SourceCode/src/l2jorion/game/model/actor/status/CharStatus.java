@@ -23,9 +23,6 @@ import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.managers.DuelManager;
@@ -39,78 +36,41 @@ import l2jorion.game.model.entity.Duel;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.skills.Formulas;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
-/**
- * The Class CharStatus.
- */
 public class CharStatus
 {
-	
-	/** The Constant LOG. */
 	protected static final Logger LOG = LoggerFactory.getLogger(CharStatus.class);
 	
-	// =========================================================
-	// Data Field
-	/** The _active char. */
 	private final L2Character _activeChar;
 	
-	/** The _current cp. */
 	private double _currentCp = 0; // Current CP of the L2Character
-	
-	/** The _current hp. */
 	private double _currentHp = 0; // Current HP of the L2Character
-	
-	/** The _current mp. */
 	private double _currentMp = 0; // Current MP of the L2Character
 	
-	/** Array containing all clients that need to be notified about hp/mp updates of the L2Character. */
 	private Set<L2Character> _StatusListener;
 	
-	/** The _reg task. */
 	private Future<?> _regTask;
 	
-	/** The _flags regen active. */
 	private byte _flagsRegenActive = 0;
 	
-	/** The Constant REGEN_FLAG_CP. */
 	private static final byte REGEN_FLAG_CP = 4;
-	
-	/** The Constant REGEN_FLAG_HP. */
 	private static final byte REGEN_FLAG_HP = 1;
-	
-	/** The Constant REGEN_FLAG_MP. */
 	private static final byte REGEN_FLAG_MP = 2;
 	
-	// =========================================================
-	// Constructor
-	/**
-	 * Instantiates a new char status.
-	 * @param activeChar the active char
-	 */
 	public CharStatus(final L2Character activeChar)
 	{
 		_activeChar = activeChar;
 	}
 	
-	/**
-	 * Add the object to the list of L2Character that must be informed of HP/MP updates of this L2Character.<BR>
-	 * <BR>
-	 * <B><U> Concept</U> :</B><BR>
-	 * <BR>
-	 * Each L2Character owns a list called <B>_statusListener</B> that contains all L2PcInstance to inform of HP/MP updates. Players who must be informed are players that target this L2Character. When a RegenTask is in progress sever just need to go through this list to send Server->Client packet
-	 * StatusUpdate.<BR>
-	 * <BR>
-	 * <B><U> Example of use </U> :</B><BR>
-	 * <BR>
-	 * <li>Target a PC or NPC</li><BR>
-	 * <BR>
-	 * @param object L2Character to add to the listener
-	 */
 	public final void addStatusListener(final L2Character object)
 	{
 		if (object == getActiveChar())
+		{
 			return;
+		}
 		
 		synchronized (getStatusListener())
 		{
@@ -118,53 +78,17 @@ public class CharStatus
 		}
 	}
 	
-	/**
-	 * Reduce cp.
-	 * @param value the value
-	 */
-	public final void reduceCp(final int value)
-	{
-		if (getCurrentCp() > value)
-		{
-			setCurrentCp(getCurrentCp() - value);
-		}
-		else
-		{
-			setCurrentCp(0);
-		}
-	}
-	
-	/**
-	 * Reduce the current HP of the L2Character and launch the doDie Task if necessary.<BR>
-	 * <BR>
-	 * <B><U> Overriden in </U> :</B><BR>
-	 * <BR>
-	 * <li>L2Attackable : Update the attacker AggroInfo of the L2Attackable _aggroList</li><BR>
-	 * <BR>
-	 * @param value the value
-	 * @param attacker The L2Character who attacks
-	 */
 	public void reduceHp(final double value, final L2Character attacker)
 	{
 		reduceHp(value, attacker, true);
 	}
 	
-	/**
-	 * Reduce hp.
-	 * @param value the value
-	 * @param attacker the attacker
-	 * @param awake the awake
-	 */
 	public void reduceHp(double value, final L2Character attacker, final boolean awake)
 	{
 		if (getActiveChar().isInvul())
-			return;
-		
-		/*if ((getActiveChar().isUnkillable()))
 		{
-			if (getActiveChar().getCurrentHp() > 0.6)
 			return;
-		}*/
+		}
 		
 		if (getActiveChar() instanceof L2PcInstance)
 		{
@@ -172,9 +96,13 @@ public class CharStatus
 			{
 				// the duel is finishing - players do not recive damage
 				if (((L2PcInstance) getActiveChar()).getDuelState() == Duel.DUELSTATE_DEAD)
+				{
 					return;
+				}
 				else if (((L2PcInstance) getActiveChar()).getDuelState() == Duel.DUELSTATE_WINNER)
+				{
 					return;
+				}
 				
 				// cancel duel if player got hit by another player, that is not part of the duel or a monster
 				if (!(attacker instanceof L2SummonInstance) && !(attacker instanceof L2PcInstance && ((L2PcInstance) attacker).getDuelId() == ((L2PcInstance) getActiveChar()).getDuelId()))
@@ -183,13 +111,17 @@ public class CharStatus
 				}
 			}
 			if (getActiveChar().isDead() && !getActiveChar().isFakeDeath())
+			{
 				return; // Disabled == null check so skills like Body to Mind work again untill another solution is found
+			}
 		}
 		else
 		{
 			if (getActiveChar().isDead())
+			{
 				return; // Disabled == null check so skills like Body to Mind work again untill another solution is found
-				
+			}
+			
 			if (attacker instanceof L2PcInstance && ((L2PcInstance) attacker).isInDuel() && !(getActiveChar() instanceof L2SummonInstance && ((L2SummonInstance) getActiveChar()).getOwner().getDuelId() == ((L2PcInstance) attacker).getDuelId())) // Duelling player attacks mob
 			{
 				((L2PcInstance) attacker).setDuelState(Duel.DUELSTATE_INTERRUPTED);
@@ -221,17 +153,10 @@ public class CharStatus
 		{
 			// If we're dealing with an L2Attackable Instance and the attacker hit it with an over-hit enabled skill, set the over-hit values.
 			// Anything else, clear the over-hit flag
-			if (getActiveChar() instanceof L2Attackable)
-			{
-				if (((L2Attackable) getActiveChar()).isOverhit())
-				{
-					((L2Attackable) getActiveChar()).setOverhitValues(attacker, value);
-				}
-				else
-				{
-					((L2Attackable) getActiveChar()).overhitEnabled(false);
-				}
-			}
+			/*
+			 * if (getActiveChar() instanceof L2Attackable) { Announcements _a = Announcements.getInstance(); _a.sys("6"); if (((L2Attackable) getActiveChar()).isOverhit()) { ((L2Attackable) getActiveChar()).setOverhitValues(attacker, value); } else { ((L2Attackable)
+			 * getActiveChar()).overhitEnabled(false); } }
+			 */
 			
 			value = getCurrentHp() - value; // Get diff of Hp vs value
 			
@@ -353,18 +278,14 @@ public class CharStatus
 	 * <BR>
 	 * <B><U> Actions</U> :</B><BR>
 	 * <BR>
-	 * <li>Calculate the regen task period</li> <li>Launch the HP/MP/CP Regeneration task with Medium priority</li><BR>
+	 * <li>Calculate the regen task period</li>
+	 * <li>Launch the HP/MP/CP Regeneration task with Medium priority</li><BR>
 	 * <BR>
 	 */
 	public synchronized final void startHpMpRegeneration()
 	{
 		if (_regTask == null && !getActiveChar().isDead())
 		{
-			if (Config.DEBUG)
-			{
-				LOG.debug("HP/MP/CP regen started");
-			}
-			
 			// Get the Regeneration periode
 			final int period = Formulas.getRegeneratePeriod(getActiveChar());
 			
@@ -378,18 +299,14 @@ public class CharStatus
 	 * <BR>
 	 * <B><U> Actions</U> :</B><BR>
 	 * <BR>
-	 * <li>Set the RegenActive flag to False</li> <li>Stop the HP/MP/CP Regeneration task</li><BR>
+	 * <li>Set the RegenActive flag to False</li>
+	 * <li>Stop the HP/MP/CP Regeneration task</li><BR>
 	 * <BR>
 	 */
 	public synchronized final void stopHpMpRegeneration()
 	{
 		if (_regTask != null)
 		{
-			if (Config.DEBUG)
-			{
-				LOG.debug("HP/MP/CP regen stop");
-			}
-			
 			// Stop the HP/MP/CP Regeneration task
 			_regTask.cancel(false);
 			_regTask = null;
@@ -458,6 +375,11 @@ public class CharStatus
 	 */
 	public final void setCurrentCp(double newCp, final boolean broadcastPacket, final boolean direct)
 	{
+		if (getActiveChar().isInvul())
+		{
+			return;
+		}
+		
 		synchronized (this)
 		{
 			// Get the Max CP of the L2Character
@@ -703,11 +625,6 @@ public class CharStatus
 	 */
 	class RegenTask implements Runnable
 	{
-		
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Runnable#run()
-		 */
 		@Override
 		public void run()
 		{
@@ -752,7 +669,9 @@ public class CharStatus
 			catch (final Throwable e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.error("RegenTask failed for " + getActiveChar().getName(), e);
 			}

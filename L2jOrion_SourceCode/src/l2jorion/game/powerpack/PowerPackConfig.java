@@ -30,17 +30,22 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.templates.L2Item;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class PowerPackConfig
 {
+	protected static final Logger LOG = LoggerFactory.getLogger(PowerPackConfig.class);
+	
 	private static String PP_CONFIG_FILE = "config/main/powerpack.ini";
-
+	
 	public static boolean BANK_SYSTEM;
 	public static int BANK_SYSTEM_DEPOSIT;
 	public static int BANK_SYSTEM_WITHDRAW;
 	public static int BANK_SYSTEM_WITHDRAW_COUNT;
 	
 	public static boolean RESPAWN_BOSS;
+	public static boolean RESPAWN_BOSS_ONLY_FOR_LORD;
 	public static String RAID_INFO_IDS;
 	public static FastList<Integer> RAID_INFO_IDS_LIST = new FastList<>();
 	
@@ -55,7 +60,7 @@ public class PowerPackConfig
 	public static boolean ENGRAVE_ALLOW_DESTROY;
 	public static ArrayList<Integer> ENGRAVE_EXCLUDED_ITEMS = new ArrayList<>();
 	public static ArrayList<Integer> ENGRAVE_ALLOW_GRADE = new ArrayList<>();
-
+	
 	public static int BUFFER_NPC;
 	public static boolean BUFFER_ENABLED;
 	public static List<String> BUFFER_EXCLUDE_ON = new FastList<>();
@@ -68,12 +73,12 @@ public class PowerPackConfig
 	
 	public static FastMap<Integer, Integer> FIGHTER_SKILL_LIST;
 	public static FastMap<Integer, Integer> MAGE_SKILL_LIST;
-
+	
 	public static int NPCBUFFER_MAX_SCHEMES;
 	public static int NPCBUFFER_MAX_SKILLS;
 	public static boolean NPCBUFFER_STORE_SCHEMES;
 	public static int NPCBUFFER_STATIC_BUFF_COST;
-
+	
 	public static List<String> GLOBALGK_EXCLUDE_ON;
 	public static boolean GLOBALGK_ENABDLED;
 	public static boolean GLOBALGK_USEBBS;
@@ -82,6 +87,7 @@ public class PowerPackConfig
 	public static int GLOBALGK_TIMEOUT;
 	public static String GLOBALGK_COMMAND;
 	public static boolean GLOBALGK_USECOMMAND;
+	public static int GLOBALGK_CUSTOM_ITEM_PRICE;
 	
 	public static int GMSHOP_NPC;
 	public static boolean GMSHOP_ENABLED;
@@ -114,6 +120,7 @@ public class PowerPackConfig
 			BANK_SYSTEM_WITHDRAW_COUNT = Integer.parseInt(p.getProperty("WithdrawItemCount", "1"));
 			
 			RESPAWN_BOSS = Boolean.parseBoolean(p.getProperty("BossRespawnCommand", "False"));
+			RESPAWN_BOSS_ONLY_FOR_LORD = Boolean.parseBoolean(p.getProperty("BossRespawnCommandOnlyForLord", "False"));
 			RAID_INFO_IDS = p.getProperty("GrandBossesList", "");
 			RAID_INFO_IDS_LIST = new FastList<>();
 			for (String id : RAID_INFO_IDS.split(","))
@@ -129,65 +136,65 @@ public class PowerPackConfig
 			MAX_ENGRAVED_ITEMS_PER_CHAR = Integer.parseInt(p.getProperty("EngraveMaxItemsPerChar", "0"));
 			
 			String str = p.getProperty("EngraveNpcLocation", "").trim();
-			if(str.length() > 0)
+			if (str.length() > 0)
 			{
 				StringTokenizer st = new StringTokenizer(str, " ");
-				if(st.hasMoreTokens())
+				if (st.hasMoreTokens())
 				{
 					ENGRAVER_X = Integer.parseInt(st.nextToken());
 				}
-				if(st.hasMoreTokens())
+				if (st.hasMoreTokens())
 				{
 					ENGRAVER_Y = Integer.parseInt(st.nextToken());
 				}
-				if(st.hasMoreTokens())
+				if (st.hasMoreTokens())
 				{
 					ENGRAVER_Z = Integer.parseInt(st.nextToken());
 				}
 			}
 			str = p.getProperty("EngraveExcludeItems", "").trim();
-			if(str.length() > 0)
+			if (str.length() > 0)
 			{
 				StringTokenizer st = new StringTokenizer(str, ",");
-				while(st.hasMoreTokens())
+				while (st.hasMoreTokens())
 				{
 					ENGRAVE_EXCLUDED_ITEMS.add(Integer.parseInt(st.nextToken().trim()));
 				}
 			}
 			str = p.getProperty("EngraveAllowGrades", "all").toLowerCase();
-			if(str.indexOf("none") != -1 || str.indexOf("all") != -1)
+			if (str.indexOf("none") != -1 || str.indexOf("all") != -1)
 			{
 				ENGRAVE_ALLOW_GRADE.add(L2Item.CRYSTAL_NONE);
 			}
-
-			if(str.indexOf("a") != -1 || str.indexOf("all") != -1)
+			
+			if (str.indexOf("a") != -1 || str.indexOf("all") != -1)
 			{
 				ENGRAVE_ALLOW_GRADE.add(L2Item.CRYSTAL_A);
 			}
-
-			if(str.indexOf("b") != -1 || str.indexOf("all") != -1)
+			
+			if (str.indexOf("b") != -1 || str.indexOf("all") != -1)
 			{
 				ENGRAVE_ALLOW_GRADE.add(L2Item.CRYSTAL_B);
 			}
-
-			if(str.indexOf("c") != -1 || str.indexOf("all") != -1)
+			
+			if (str.indexOf("c") != -1 || str.indexOf("all") != -1)
 			{
 				ENGRAVE_ALLOW_GRADE.add(L2Item.CRYSTAL_C);
 			}
-
-			if(str.indexOf("d") != -1 || str.indexOf("all") != -1)
+			
+			if (str.indexOf("d") != -1 || str.indexOf("all") != -1)
 			{
 				ENGRAVE_ALLOW_GRADE.add(L2Item.CRYSTAL_D);
 			}
-
-			if(str.indexOf("s") != -1 || str.indexOf("all") != -1)
+			
+			if (str.indexOf("s") != -1 || str.indexOf("all") != -1)
 			{
 				ENGRAVE_ALLOW_GRADE.add(L2Item.CRYSTAL_S);
 			}
-
+			
 			BUFFER_ENABLED = Boolean.parseBoolean(p.getProperty("BufferEnabled", "false"));
 			StringTokenizer st = new StringTokenizer(p.getProperty("BufferExcludeOn", ""), " ");
-			while(st.hasMoreTokens())
+			while (st.hasMoreTokens())
 			{
 				BUFFER_EXCLUDE_ON.add(st.nextToken());
 			}
@@ -198,22 +205,22 @@ public class PowerPackConfig
 			BUFFER_PRICE = Integer.parseInt(p.getProperty("BufferPrice", "-1"));
 			BUFFER_USEBBS = Boolean.parseBoolean(p.getProperty("BufferUseBBS", "false"));
 			BUFFER_USECOMMAND = Boolean.parseBoolean(p.getProperty("BufferUseCommand", "false"));
-
+			
 			FIGHTER_SKILL_LIST = new FastMap<>();
 			MAGE_SKILL_LIST = new FastMap<>();
-
+			
 			String[] fPropertySplit;
 			fPropertySplit = p.getProperty("FighterSkillList", "").split(";");
-
+			
 			String[] mPropertySplit;
 			mPropertySplit = p.getProperty("MageSkillList", "").split(";");
-
-			for(String skill : fPropertySplit)
+			
+			for (String skill : fPropertySplit)
 			{
 				String[] skillSplit = skill.split(",");
-				if(skillSplit.length != 2)
+				if (skillSplit.length != 2)
 				{
-					System.out.println("[FighterSkillList]: invalid config property -> FighterSkillList \"" + skill + "\"");
+					LOG.error("[FighterSkillList]: invalid config property -> FighterSkillList \"" + skill + "\"");
 				}
 				else
 				{
@@ -221,25 +228,27 @@ public class PowerPackConfig
 					{
 						FIGHTER_SKILL_LIST.put(Integer.parseInt(skillSplit[0]), Integer.parseInt(skillSplit[1]));
 					}
-					catch(NumberFormatException nfe)
+					catch (NumberFormatException nfe)
 					{
-						if(Config.ENABLE_ALL_EXCEPTIONS)
-							nfe.printStackTrace();
-						
-						if(!skill.equals(""))
+						if (Config.ENABLE_ALL_EXCEPTIONS)
 						{
-							System.out.println("[FighterSkillList]: invalid config property -> FighterSkillList \"" + skillSplit[0] + "\"" + skillSplit[1]);
+							nfe.printStackTrace();
+						}
+						
+						if (!skill.equals(""))
+						{
+							LOG.error("[FighterSkillList]: invalid config property -> FighterSkillList \"" + skillSplit[0] + "\"" + skillSplit[1]);
 						}
 					}
 				}
 			}
 			
-			for(String skill : mPropertySplit)
+			for (String skill : mPropertySplit)
 			{
 				String[] skillSplit = skill.split(",");
-				if(skillSplit.length != 2)
+				if (skillSplit.length != 2)
 				{
-					System.out.println("[MageSkillList]: invalid config property -> MageSkillList \"" + skill + "\"");
+					LOG.error("[MageSkillList]: invalid config property -> MageSkillList \"" + skill + "\"");
 				}
 				else
 				{
@@ -247,14 +256,16 @@ public class PowerPackConfig
 					{
 						MAGE_SKILL_LIST.put(Integer.parseInt(skillSplit[0]), Integer.parseInt(skillSplit[1]));
 					}
-					catch(NumberFormatException nfe)
+					catch (NumberFormatException nfe)
 					{
-						if(Config.ENABLE_ALL_EXCEPTIONS)
-							nfe.printStackTrace();
-						
-						if(!skill.equals(""))
+						if (Config.ENABLE_ALL_EXCEPTIONS)
 						{
-							System.out.println("[MageSkillList]: invalid config property -> MageSkillList \"" + skillSplit[0] + "\"" + skillSplit[1]);
+							nfe.printStackTrace();
+						}
+						
+						if (!skill.equals(""))
+						{
+							LOG.error("[MageSkillList]: invalid config property -> MageSkillList \"" + skillSplit[0] + "\"" + skillSplit[1]);
 						}
 					}
 				}
@@ -274,31 +285,32 @@ public class PowerPackConfig
 			GLOBALGK_USEBBS = Boolean.parseBoolean(p.getProperty("GKUseBBS", "true"));
 			GLOBALGK_EXCLUDE_ON = new FastList<>();
 			st = new StringTokenizer(p.getProperty("GKExcludeOn", ""), " ");
-			while(st.hasMoreTokens())
+			while (st.hasMoreTokens())
 			{
 				GLOBALGK_EXCLUDE_ON.add(st.nextToken().toUpperCase());
 			}
+			GLOBALGK_CUSTOM_ITEM_PRICE = Integer.parseInt(p.getProperty("CustomTeleportId", "6393"));
 			
 			GMSHOP_NPC = Integer.parseInt(p.getProperty("GMShopNpcId", "53"));
-			GMSHOP_ENABLED = Boolean.parseBoolean(p.getProperty("GMShopEnabled","false"));
+			GMSHOP_ENABLED = Boolean.parseBoolean(p.getProperty("GMShopEnabled", "false"));
 			GMSHOP_COMMAND = p.getProperty("GMShopCommand", "gmshop");
-			GMSHOP_USEBBS = Boolean.parseBoolean(p.getProperty("GMShopUseBBS","false"));
-			GMSHOP_USECOMMAND = Boolean.parseBoolean(p.getProperty("GMShopUseCommand","false"));
+			GMSHOP_USEBBS = Boolean.parseBoolean(p.getProperty("GMShopUseBBS", "false"));
+			GMSHOP_USECOMMAND = Boolean.parseBoolean(p.getProperty("GMShopUseCommand", "false"));
 			GMSHOP_EXCLUDE_ON = new FastList<>();
 			st = new StringTokenizer(p.getProperty("GMShopExcludeOn", ""), " ");
-			while(st.hasMoreTokens())
+			while (st.hasMoreTokens())
 			{
 				GMSHOP_EXCLUDE_ON.add(st.nextToken().toUpperCase());
 			}
 			
-			MARKET_ENABLED = Boolean.parseBoolean(p.getProperty("MarketEnabled","false"));
+			MARKET_ENABLED = Boolean.parseBoolean(p.getProperty("MarketEnabled", "false"));
 			MARKET_NPC = Integer.parseInt(p.getProperty("MarketNpcId", "5"));
-			MARKET_USEBBS = Boolean.parseBoolean(p.getProperty("MarketUseBBS","false"));
-			MARKET_USECOMMAND = Boolean.parseBoolean(p.getProperty("MarketUseCommand","false"));
+			MARKET_USEBBS = Boolean.parseBoolean(p.getProperty("MarketUseBBS", "false"));
+			MARKET_USECOMMAND = Boolean.parseBoolean(p.getProperty("MarketUseCommand", "false"));
 			MARKET_COMMAND = p.getProperty("MarketCommand", "market");
 			MARKET_EXCLUDE_ON = new FastList<>();
 			st = new StringTokenizer(p.getProperty("MarketExcludeOn", ""), " ");
-			while(st.hasMoreTokens())
+			while (st.hasMoreTokens())
 			{
 				MARKET_EXCLUDE_ON.add(st.nextToken().toUpperCase());
 			}
@@ -310,10 +322,12 @@ public class PowerPackConfig
 				LIST_PRICE_ITEMS.add(Integer.parseInt(id));
 			}
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			System.err.println("PowerPak: Unable to read  " + PP_CONFIG_FILE);
 		}

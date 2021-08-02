@@ -20,18 +20,15 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import l2jorion.util.Point3D;
+import l2jorion.game.model.Location;
 
-/**
- * @author Damon
- */
 public class GetOnVehicle extends L2GameServerPacket
 {
 	private final int _charObjId;
 	private final int _boatObjId;
-	private final Point3D _pos;
+	private final Location _pos;
 	
-	public GetOnVehicle(int charObjId, int boatObjId, Point3D point3d)
+	public GetOnVehicle(int charObjId, int boatObjId, Location point3d)
 	{
 		_charObjId = charObjId;
 		_boatObjId = boatObjId;

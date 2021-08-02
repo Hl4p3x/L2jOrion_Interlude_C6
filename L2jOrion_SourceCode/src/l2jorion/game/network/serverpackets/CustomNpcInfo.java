@@ -22,7 +22,7 @@ import l2jorion.game.model.actor.instance.L2NpcInstance;
 public class CustomNpcInfo extends L2GameServerPacket
 {
 	
-	private static final String _S__03_CUSTOMNPCINFO = "[S] 03 CustomNpcInfo [dddddsddd dddddddddddd dddddddd hhhh d hhhhhhhhhhhh d hhhh hhhhhhhhhhhhhhhh dddddd dddddddd ffff ddd s ddddd ccccccc h c d c h ddd cc d ccc ddddddddddd]";
+	private static final String _S__03_CUSTOMNPCINFO = "[S] 03 CustomNpcInfo";
 	private final L2NpcInstance _activeChar;
 	
 	/**

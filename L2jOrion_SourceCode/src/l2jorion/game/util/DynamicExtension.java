@@ -27,16 +27,10 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * extension loader for L2jOrion
- * @author galun
- * @version $Id: DynamicExtension.java,v 1.3 2006/05/14 17:19:39 galun Exp $
- */
 public class DynamicExtension
 {
 	private static Logger LOG = LoggerFactory.getLogger(DynamicExtension.class.getCanonicalName());
@@ -105,14 +99,18 @@ public class DynamicExtension
 		catch (final FileNotFoundException ex)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				ex.printStackTrace();
+			}
 			
 			LOG.info(ex.getMessage() + ": no extensions to load");
 		}
 		catch (final Exception ex)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				ex.printStackTrace();
+			}
 			
 			LOG.warn("could not load properties", ex);
 			
@@ -165,12 +163,14 @@ public class DynamicExtension
 		}
 		
 		if (_loadedExtensions.containsKey(className))
+		{
 			return "already loaded";
+		}
 		
 		try
 		{
 			final Class<?> extension = Class.forName(className, true, _classLoader);
-			final Object obj = extension.newInstance();
+			final Object obj = extension;
 			extension.getMethod("init", new Class[0]).invoke(obj, new Object[0]);
 			LOG.info("Extension " + className + " loaded.");
 			_loadedExtensions.put(className, obj);
@@ -178,7 +178,9 @@ public class DynamicExtension
 		catch (final Exception ex)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				ex.printStackTrace();
+			}
 			
 			LOG.warn(name, ex);
 			res = ex.toString();
@@ -249,7 +251,9 @@ public class DynamicExtension
 		catch (final Exception ex)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				ex.printStackTrace();
+			}
 			
 			LOG.warn("could not unload " + className, ex);
 			res = ex.toString();
@@ -308,7 +312,9 @@ public class DynamicExtension
 		final ExtensionFunction func = _getters.get(name);
 		
 		if (func != null)
+		{
 			return func.get(arg);
+		}
 		return "<none>";
 	}
 	

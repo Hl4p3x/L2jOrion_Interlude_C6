@@ -22,9 +22,6 @@ import java.util.Map;
 
 import l2jorion.game.model.L2Skill;
 
-/**
- * @author UnAfraid
- */
 public interface ISkillsHolder
 {
 	public Map<Integer, L2Skill> getSkills();

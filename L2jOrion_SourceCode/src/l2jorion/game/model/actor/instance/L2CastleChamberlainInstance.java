@@ -19,11 +19,9 @@
  */
 package l2jorion.game.model.actor.instance;
 
+import java.util.Calendar;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javolution.text.TextBuilder;
 import l2jorion.Config;
@@ -52,10 +50,9 @@ import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.util.Broadcast;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * Castle Chamberlains implementation used for: - tax rate control - regional manor system control - castle treasure control - ...
- */
 public class L2CastleChamberlainInstance extends L2FolkInstance
 {
 	private static Logger LOG = LoggerFactory.getLogger(L2CastleChamberlainInstance.class);
@@ -63,6 +60,9 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 	protected static final int COND_ALL_FALSE = 0;
 	protected static final int COND_BUSY_BECAUSE_OF_SIEGE = 1;
 	protected static final int COND_OWNER = 2;
+	protected static final int COND_CLAN_MEMBER = 3;
+	
+	private int _preHour = 6;
 	
 	public L2CastleChamberlainInstance(final int objectId, final L2NpcTemplate template)
 	{
@@ -73,7 +73,9 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 	public void onAction(final L2PcInstance player)
 	{
 		if (!canTarget(player))
+		{
 			return;
+		}
 		
 		player.setLastFolkNPC(this);
 		
@@ -118,17 +120,23 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 	{
 		// BypassValidation Exploit plug.
 		if (player.getLastFolkNPC().getObjectId() != getObjectId())
+		{
 			return;
+		}
 		
 		StringTokenizer st = new StringTokenizer(command, " ");
 		String actualCommand = st.nextToken(); // Get actual command
 		
 		final int condition = validateCondition(player);
 		if (condition <= COND_ALL_FALSE)
+		{
 			return;
+		}
 		
 		if (condition == COND_BUSY_BECAUSE_OF_SIEGE)
+		{
 			return;
+		}
 		else if (condition == COND_OWNER)
 		{
 			String val = "";
@@ -257,7 +265,9 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 				if ((player.getClanPrivileges() & L2Clan.CP_CS_USE_FUNCTIONS) == L2Clan.CP_CS_USE_FUNCTIONS)
 				{
 					if (val == "")
+					{
 						return;
+					}
 					
 					player.tempInvetoryDisable();
 					
@@ -321,7 +331,9 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 						catch (final NoSuchElementException e)
 						{
 							if (Config.ENABLE_ALL_EXCEPTIONS)
+							{
 								e.printStackTrace();
+							}
 						}
 						if (amount > 0 && (long) getCastle().getTreasury() + amount < Integer.MAX_VALUE)
 						{
@@ -344,7 +356,9 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 						catch (final NoSuchElementException e)
 						{
 							if (Config.ENABLE_ALL_EXCEPTIONS)
+							{
 								e.printStackTrace();
+							}
 						}
 						if (amount > 0)
 						{
@@ -396,7 +410,6 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 							case 0:
 								filename = "data/html/chamberlain/manor/manor.htm";
 								break;
-							// TODO: correct in html's to 1
 							case 4:
 								filename = "data/html/chamberlain/manor/manor_help00" + st.nextToken() + ".htm";
 								break;
@@ -500,8 +513,6 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 							}
 							break;
 					}
-					params = null;
-					str = null;
 				}
 				else
 				{
@@ -509,7 +520,6 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 					html.setFile("data/html/chamberlain/chamberlain-noprivs.htm");
 					html.replace("%objectId%", String.valueOf(getObjectId()));
 					player.sendPacket(html);
-					html = null;
 					return;
 				}
 			}
@@ -564,7 +574,6 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 					msg.append("</body></html>");
 					
 					sendHtmlMessage(player, msg.toString());
-					msg = null;
 				}
 				else
 				{
@@ -576,9 +585,234 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 				}
 				return;
 			}
+			else if (actualCommand.equalsIgnoreCase("return"))
+			{
+				sendFileMessage(player, "data/html/chamberlain/chamberlain.htm");
+			}
+			else if (actualCommand.equalsIgnoreCase("manage_functions"))
+			{
+				if (!validatePrivileges(player, L2Clan.CP_CS_SET_FUNCTIONS))
+				{
+					return;
+				}
+				sendFileMessage(player, "data/html/chamberlain/manage.htm");
+			}
+			else if (actualCommand.equalsIgnoreCase("castle_devices"))
+			{
+				if (!validatePrivileges(player, L2Clan.CP_CS_SET_FUNCTIONS))
+				{
+					return;
+				}
+				
+				sendFileMessage(player, "data/html/chamberlain/devices.htm");
+			}
+			else if (actualCommand.equalsIgnoreCase("doors_update"))
+			{
+				if (!validatePrivileges(player, L2Clan.CP_CS_SET_FUNCTIONS))
+				{
+					return;
+				}
+				
+				final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+				if (val.isEmpty())
+				{
+					html.setFile("data/html/chamberlain/" + getNpcId() + "-gu.htm");
+				}
+				else
+				{
+					html.setFile("data/html/chamberlain/doors-update.htm");
+					html.replace("%id%", val);
+					html.replace("%type%", st.nextToken());
+				}
+				html.replace("%objectId%", getObjectId());
+				player.sendPacket(html);
+			}
+			else if (actualCommand.equalsIgnoreCase("doors_choose_upgrade"))
+			{
+				if (!validatePrivileges(player, L2Clan.CP_CS_SET_FUNCTIONS))
+				{
+					return;
+				}
+				
+				final String id = val;
+				final String type = st.nextToken();
+				final String level = st.nextToken();
+				
+				final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+				html.setFile("data/html/chamberlain/doors-confirm.htm");
+				html.replace("%objectId%", getObjectId());
+				html.replace("%id%", id);
+				html.replace("%level%", level);
+				html.replace("%type%", type);
+				html.replace("%price%", getDoorCost(Integer.parseInt(type), Integer.parseInt(level)));
+				player.sendPacket(html);
+			}
+			else if (actualCommand.equalsIgnoreCase("doors_confirm_upgrade"))
+			{
+				if (!validatePrivileges(player, L2Clan.CP_CS_SET_FUNCTIONS))
+				{
+					return;
+				}
+				
+				final int type = Integer.parseInt(st.nextToken());
+				final int level = Integer.parseInt(st.nextToken());
+				final int price = getDoorCost(type, level);
+				
+				if (price == 0)
+				{
+					return;
+				}
+				
+				final int id = Integer.parseInt(val);
+				final L2DoorInstance door = getCastle().getDoor(id);
+				if (door == null)
+				{
+					return;
+				}
+				
+				final int currentHpRatio = door.getStat().getUpgradeHpRatio();
+				
+				final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+				
+				if (currentHpRatio >= level)
+				{
+					html.setFile("data/html/chamberlain/doors-already-updated.htm");
+					html.replace("%level%", currentHpRatio * 100);
+				}
+				else if (!player.reduceAdena("doors_upgrade", price, player, true))
+				{
+					html.setFile("data/html/chamberlain/not-enough-adena.htm");
+				}
+				else
+				{
+					getCastle().upgradeDoor(id, level, true);
+					
+					html.setFile("data/html/chamberlain/doors-success.htm");
+				}
+				html.replace("%objectId%", getObjectId());
+				player.sendPacket(html);
+			}
+			else if (actualCommand.equalsIgnoreCase("traps_update"))
+			{
+				if (!validatePrivileges(player, L2Clan.CP_CS_SET_FUNCTIONS))
+				{
+					return;
+				}
+				
+				final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+				if (val.isEmpty())
+				{
+					html.setFile("data/html/chamberlain/" + getNpcId() + "-tu.htm");
+				}
+				else
+				{
+					html.setFile("data/html/chamberlain/traps-update" + ((getCastle().getName().equalsIgnoreCase("aden")) ? "1" : "") + ".htm");
+					html.replace("%trapIndex%", val);
+				}
+				html.replace("%objectId%", getObjectId());
+				player.sendPacket(html);
+			}
+			else if (actualCommand.equalsIgnoreCase("traps_choose_upgrade"))
+			{
+				if (!validatePrivileges(player, L2Clan.CP_CS_SET_FUNCTIONS))
+				{
+					return;
+				}
+				
+				final String trapIndex = val;
+				final String level = st.nextToken();
+				
+				final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+				html.setFile("data/html/chamberlain/traps-confirm.htm");
+				html.replace("%objectId%", getObjectId());
+				html.replace("%trapIndex%", trapIndex);
+				html.replace("%level%", level);
+				html.replace("%price%", getTrapCost(Integer.parseInt(level)));
+				player.sendPacket(html);
+			}
+			else if (actualCommand.equalsIgnoreCase("traps_confirm_upgrade"))
+			{
+				if (!validatePrivileges(player, L2Clan.CP_CS_SET_FUNCTIONS))
+				{
+					return;
+				}
+				
+				final int level = Integer.parseInt(st.nextToken());
+				final int price = getTrapCost(level);
+				
+				if (price == 0)
+				{
+					return;
+				}
+				
+				final int trapIndex = Integer.parseInt(val);
+				final int currentLevel = getCastle().getTrapUpgradeLevel(trapIndex);
+				
+				final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+				
+				if (currentLevel >= level)
+				{
+					html.setFile("data/html/chamberlain/traps-already-updated.htm");
+					html.replace("%level%", currentLevel);
+				}
+				else if (!player.reduceAdena("traps_upgrade", price, player, true))
+				{
+					html.setFile("data/html/chamberlain/not-enough-adena.htm");
+				}
+				else
+				{
+					getCastle().setTrapUpgrade(trapIndex, level, true);
+					
+					html.setFile("data/html/chamberlain/traps-success.htm");
+				}
+				html.replace("%objectId%", getObjectId());
+				player.sendPacket(html);
+			}
+			else if (actualCommand.equalsIgnoreCase("siege_change")) // set siege time
+			{
+				if (!validatePrivileges(player, L2Clan.CP_CS_MANAGE_SIEGE))
+				{
+					return;
+				}
+				
+				if (getCastle().getSiege().getSiegeRegistrationEndDate() < Calendar.getInstance().getTimeInMillis())
+				{
+					sendFileMessage(player, "data/html/chamberlain/siegetime1.htm");
+				}
+				else if (getCastle().getSiege().isTimeRegistrationOver())
+				{
+					sendFileMessage(player, "data/html/chamberlain/siegetime2.htm");
+				}
+				else
+				{
+					sendFileMessage(player, "data/html/chamberlain/siegetime3.htm");
+				}
+			}
+			else if (actualCommand.equalsIgnoreCase("siege_time_set")) // set preDay
+			{
+				switch (Integer.parseInt(val))
+				{
+					case 1:
+						_preHour = Integer.parseInt(st.nextToken());
+						break;
+					
+					default:
+						break;
+				}
+				
+				if (_preHour != 6)
+				{
+					getCastle().getSiegeDate().set(Calendar.HOUR_OF_DAY, _preHour + 12);
+					
+					// now store the changed time and finished next Siege Time registration
+					getCastle().getSiege().endTimeRegistration(false);
+					sendFileMessage(player, "data/html/chamberlain/siegetime8.htm");
+					return;
+				}
+				
+				sendFileMessage(player, "data/html/chamberlain/siegetime6.htm");
+			}
 		}
-		st = null;
-		actualCommand = null;
 		super.onBypassFeedback(player, command);
 	}
 	
@@ -588,8 +822,19 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 		html.setHtml(htmlMessage);
 		html.replace("%objectId%", String.valueOf(getObjectId()));
 		html.replace("%npcname%", getName());
+		html.replace("%time%", getCastle().getSiegeDate().getTime().toString());
 		player.sendPacket(html);
-		html = null;
+	}
+	
+	private void sendFileMessage(L2PcInstance player, String htmlMessage)
+	{
+		final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+		html.setFile(htmlMessage);
+		html.replace("%objectId%", getObjectId());
+		html.replace("%npcId%", getNpcId());
+		html.replace("%npcname%", getName());
+		html.replace("%time%", getCastle().getSiegeDate().getTime().toString());
+		player.sendPacket(html);
 	}
 	
 	private void showMessageWindow(final L2PcInstance player)
@@ -616,27 +861,148 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 		html.replace("%npcId%", String.valueOf(getNpcId()));
 		html.replace("%npcname%", getName());
 		player.sendPacket(html);
-		filename = null;
-		html = null;
 	}
 	
-	/*
-	 * private void showVaultWindowDeposit(L2PcInstance player) { player.sendPacket(ActionFailed.STATIC_PACKET); player.setActiveWarehouse(player.getClan().getWarehouse()); player.sendPacket(new WareHouseDepositList(player, WareHouseDepositList.CLAN)); //Or Castle ?? } private void
-	 * showVaultWindowWithdraw(L2PcInstance player) { player.sendPacket(ActionFailed.STATIC_PACKET); player.setActiveWarehouse(player.getClan().getWarehouse()); player.sendPacket(new WareHouseWithdrawalList(player, WareHouseWithdrawalList.CLAN)); //Or Castle ?? }
-	 */
 	protected int validateCondition(final L2PcInstance player)
 	{
-		if (getCastle() != null && getCastle().getCastleId() > 0)
+		if (getCastle() != null && player.getClan() != null)
 		{
-			if (player.getClan() != null)
+			if (getCastle().getSiege().getIsInProgress())
 			{
-				if (getCastle().getSiege().getIsInProgress())
-					return COND_BUSY_BECAUSE_OF_SIEGE; // Busy because of siege
-				else if (getCastle().getOwnerId() == player.getClanId()) // Clan owns castle
-					return COND_OWNER; // Owner
+				return COND_BUSY_BECAUSE_OF_SIEGE;
+			}
+			
+			if (getCastle().getOwnerId() == player.getClanId())
+			{
+				if (player.isClanLeader())
+				{
+					return COND_OWNER;
+				}
+				
+				return COND_CLAN_MEMBER;
 			}
 		}
-		
 		return COND_ALL_FALSE;
+	}
+	
+	private boolean validatePrivileges(L2PcInstance player, int privilege)
+	{
+		if ((player.getClanPrivileges() & privilege) != privilege)
+		{
+			final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+			html.setFile("data/html/chamberlain/noprivs.htm");
+			player.sendPacket(html);
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 * Retrieve the price of the door, following its type, required level of upgrade and current Seven Signs state.
+	 * @param type : The type of doors (1: normal gates, 2: metallic gates, 3: walls).
+	 * @param level : The required level of upgrade (x2, x3 or x5 HPs).
+	 * @return The price modified by Seal of Strife state (-20% if Dawn is winning, x3 if Dusk is winning).
+	 */
+	private static int getDoorCost(int type, int level)
+	{
+		int price = 0;
+		
+		switch (type)
+		{
+			case 1:
+				switch (level)
+				{
+					case 2:
+						price = 300000;
+						break;
+					case 3:
+						price = 400000;
+						break;
+					case 5:
+						price = 500000;
+						break;
+				}
+				break;
+			
+			case 2:
+				switch (level)
+				{
+					case 2:
+						price = 750000;
+						break;
+					case 3:
+						price = 900000;
+						break;
+					case 5:
+						price = 1000000;
+						break;
+				}
+				break;
+			
+			case 3:
+				switch (level)
+				{
+					case 2:
+						price = 1600000;
+						break;
+					case 3:
+						price = 1800000;
+						break;
+					case 5:
+						price = 2000000;
+						break;
+				}
+				break;
+		}
+		
+		switch (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE))
+		{
+			case SevenSigns.CABAL_DUSK:
+				price *= 3;
+				break;
+			
+			case SevenSigns.CABAL_DAWN:
+				price *= 0.8;
+				break;
+		}
+		
+		return price;
+	}
+	
+	private static int getTrapCost(int level)
+	{
+		int price = 0;
+		
+		switch (level)
+		{
+			case 1:
+				price = 3000000;
+				break;
+			
+			case 2:
+				price = 4000000;
+				break;
+			
+			case 3:
+				price = 5000000;
+				break;
+			
+			case 4:
+				price = 6000000;
+				break;
+		}
+		
+		switch (SevenSigns.getInstance().getSealOwner(SevenSigns.SEAL_STRIFE))
+		{
+			case SevenSigns.CABAL_DUSK:
+				price *= 3;
+				break;
+			
+			case SevenSigns.CABAL_DAWN:
+				price *= 0.8;
+				break;
+		}
+		
+		return price;
 	}
 }

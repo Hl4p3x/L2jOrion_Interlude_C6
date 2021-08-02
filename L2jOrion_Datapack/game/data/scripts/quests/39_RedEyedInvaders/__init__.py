@@ -1,7 +1,3 @@
-# Made by disKret, as a part of the
-# Official L2J Datapack Project, please visit
-# http://forum.l2jdp.com to meet the community behind it, or
-# http://l2jdp.com/trac if you need to report a bug.
 import sys
 from l2jorion import Config 
 from l2jorion.game.model.quest import State
@@ -76,6 +72,7 @@ class Quest (JQuest) :
        htmltext = "You don't have required items"
     elif event == "30332-5.htm" :
      if st.getQuestItemsCount(INCENSE_POUCH) == st.getQuestItemsCount(GEM_OF_MAILLE) == 30 and cond == 5 :
+       st.addExpAndSp(62366,2783)
        st.takeItems(INCENSE_POUCH,30)
        st.takeItems(GEM_OF_MAILLE,30)  
        st.giveItems(GREEN_COLORED_LURE_HG,60)

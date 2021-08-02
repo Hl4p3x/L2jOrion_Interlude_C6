@@ -29,6 +29,7 @@ import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.L2World;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2EffectPointInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
@@ -39,18 +40,12 @@ import l2jorion.game.skills.Env;
 import l2jorion.game.skills.Formulas;
 import l2jorion.game.skills.l2skills.L2SkillSignetCasttime;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.util.Point3D;
 
-/**
- * @author Shyla
- */
 public final class EffectSignetMDam extends L2Effect
 {
 	private L2EffectPointInstance _actor;
 	private boolean bss;
 	private boolean sps;
-	
-	// private SigmetMDAMTask skill_task;
 	
 	public EffectSignetMDam(final Env env, final EffectTemplate template)
 	{
@@ -72,9 +67,12 @@ public final class EffectSignetMDam extends L2Effect
 			template = NpcTable.getInstance().getTemplate(((L2SkillSignetCasttime) getSkill())._effectNpcId);
 		}
 		else
+		{
 			return;
+		}
 		
 		final L2EffectPointInstance effectPoint = new L2EffectPointInstance(IdFactory.getInstance().getNextId(), template, getEffector());
+		
 		effectPoint.getStatus().setCurrentHp(effectPoint.getMaxHp());
 		effectPoint.getStatus().setCurrentMp(effectPoint.getMaxMp());
 		
@@ -86,7 +84,7 @@ public final class EffectSignetMDam extends L2Effect
 		
 		if (getEffector() instanceof L2PcInstance && getSkill().getTargetType() == L2Skill.SkillTargetType.TARGET_GROUND)
 		{
-			final Point3D wordPosition = ((L2PcInstance) getEffector()).getCurrentSkillWorldPosition();
+			final Location wordPosition = ((L2PcInstance) getEffector()).getCurrentSkillWorldPosition();
 			
 			if (wordPosition != null)
 			{
@@ -95,6 +93,7 @@ public final class EffectSignetMDam extends L2Effect
 				z = wordPosition.getZ();
 			}
 		}
+		
 		effectPoint.setIsInvul(true);
 		effectPoint.spawnMe(x, y, z);
 		
@@ -105,8 +104,10 @@ public final class EffectSignetMDam extends L2Effect
 	public boolean onActionTime()
 	{
 		if (getCount() >= getTotalCount() - 2)
+		{
 			return true; // do nothing first 2 times
-			
+		}
+		
 		final int mpConsume = getSkill().getMpConsume();
 		final L2PcInstance caster = (L2PcInstance) getEffector();
 		
@@ -172,6 +173,7 @@ public final class EffectSignetMDam extends L2Effect
 					caster.sendDamageMessage(target, mdam, mcrit, false, false);
 					target.reduceCurrentHp(mdam, caster);
 				}
+				
 				target.getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, caster);
 			}
 		}
@@ -196,6 +198,7 @@ public final class EffectSignetMDam extends L2Effect
 			{
 				caster.removeSps();
 			}
+			
 			_actor.deleteMe();
 		}
 	}

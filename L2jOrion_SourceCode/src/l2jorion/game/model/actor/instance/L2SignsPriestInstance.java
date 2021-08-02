@@ -22,9 +22,6 @@ package l2jorion.game.model.actor.instance;
 
 import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.text.TextBuilder;
 import l2jorion.Config;
 import l2jorion.game.cache.HtmCache;
@@ -37,11 +34,9 @@ import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * Dawn/Dusk Seven Signs Priest Instance
- * @author Damon
- */
 public class L2SignsPriestInstance extends L2FolkInstance
 {
 	private static Logger LOG = LoggerFactory.getLogger(L2SignsPriestInstance.class);
@@ -57,10 +52,12 @@ public class L2SignsPriestInstance extends L2FolkInstance
 		SystemMessage sm;
 		InventoryUpdate iu;
 		StatusUpdate su;
-
+		
 		if (player.getLastFolkNPC() == null || player.getLastFolkNPC().getObjectId() != getObjectId())
+		{
 			return;
-
+		}
+		
 		if (command.startsWith("SevenSignsDesc"))
 		{
 			final int val = Integer.parseInt(command.substring(15));
@@ -74,10 +71,12 @@ public class L2SignsPriestInstance extends L2FolkInstance
 			int stoneType = 0;
 			L2ItemInstance ancientAdena = player.getInventory().getItemByItemId(SevenSigns.ANCIENT_ADENA_ID);
 			final int ancientAdenaAmount = ancientAdena == null ? 0 : ancientAdena.getCount();
-
+			
 			int val = Integer.parseInt(command.substring(11, 12).trim());
 			if (command.length() > 12)
+			{
 				val = Integer.parseInt(command.substring(11, 13).trim());
+			}
 			
 			if (command.length() > 13)
 			{
@@ -106,7 +105,7 @@ public class L2SignsPriestInstance extends L2FolkInstance
 					}
 				}
 			}
-
+			
 			switch (val)
 			{
 				case 2: // Purchase Record of the Seven Signs
@@ -115,7 +114,7 @@ public class L2SignsPriestInstance extends L2FolkInstance
 						player.sendPacket(new SystemMessage(SystemMessageId.INVENTORY_VOLUME));
 						break;
 					}
-
+					
 					if (!player.reduceAdena("SevenSigns", SevenSigns.RECORD_SEVEN_SIGNS_COST, this, true))
 					{
 						final String filename = "data/html/seven_signs/noadena.htm";
@@ -338,17 +337,24 @@ public class L2SignsPriestInstance extends L2FolkInstance
 					
 					showChatWindow(player, 6, null, false);
 					break;
-				case 7: // Exchange Ancient Adena for Adena - SevenSigns 7 xxxxxxx
-					int ancientAdenaConvert = 0;
+				case 7: // Exchange Ancient Adena for Adena - SevenSigns 7
+					long ancientAdenaConvert = 0;
 					
 					try
 					{
-						ancientAdenaConvert = Integer.parseInt(command.substring(13).trim());
+						ancientAdenaConvert = Long.parseLong(command.substring(13).trim());
+						
+						if (ancientAdenaConvert > Integer.MAX_VALUE)
+						{
+							ancientAdenaConvert = Integer.MAX_VALUE;
+						}
 					}
 					catch (final NumberFormatException e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 						
 						showChatWindow(player, SevenSigns.SEVEN_SIGNS_HTML_PATH + "blkmrkt_3.htm");
 						break;
@@ -356,7 +362,9 @@ public class L2SignsPriestInstance extends L2FolkInstance
 					catch (final StringIndexOutOfBoundsException e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 						
 						showChatWindow(player, SevenSigns.SEVEN_SIGNS_HTML_PATH + "blkmrkt_3.htm");
 						break;
@@ -374,8 +382,8 @@ public class L2SignsPriestInstance extends L2FolkInstance
 						break;
 					}
 					
-					player.reduceAncientAdena("SevenSigns", ancientAdenaConvert, this, true);
-					player.addAdena("SevenSigns", ancientAdenaConvert, this, true);
+					player.reduceAncientAdena("SevenSigns", (int) ancientAdenaConvert, this, true);
+					player.addAdena("SevenSigns", (int) ancientAdenaConvert, this, true);
 					
 					iu = new InventoryUpdate();
 					iu.addModifiedItem(player.getInventory().getAncientAdenaInstance());
@@ -437,7 +445,9 @@ public class L2SignsPriestInstance extends L2FolkInstance
 					catch (final Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 						
 						LOG.warn("SevenSigns: Error occurred while teleporting player: " + e);
 					}
@@ -481,7 +491,7 @@ public class L2SignsPriestInstance extends L2FolkInstance
 							
 							if (ancientAdenaRewardAll == 0)
 							{
-								//showChatWindow(player, 18, "no_stones", false);
+								// showChatWindow(player, 18, "no_stones", false);
 								return;
 							}
 							
@@ -501,7 +511,6 @@ public class L2SignsPriestInstance extends L2FolkInstance
 							player.addAncientAdena("SevenSigns", ancientAdenaRewardAll, this, true);
 							return;
 					}
-					
 					
 					L2ItemInstance stoneInstance = player.getInventory().getItemByItemId(stoneId);
 					if (stoneInstance != null)
@@ -541,7 +550,9 @@ public class L2SignsPriestInstance extends L2FolkInstance
 					catch (final Exception NumberFormatException)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							NumberFormatException.printStackTrace();
+						}
 						
 						player.sendMessage("You must enter an integer amount.");
 						break;
@@ -647,7 +658,9 @@ public class L2SignsPriestInstance extends L2FolkInstance
 		
 		// The player is not in a clan, so return false.
 		if (playerClan == null)
+		{
 			return false;
+		}
 		
 		// If castle ownage check is clan-based rather than ally-based,
 		// check if the player's clan has a castle and return the result.
@@ -663,8 +676,12 @@ public class L2SignsPriestInstance extends L2FolkInstance
 				L2Clan[] clanList = ClanTable.getInstance().getClans();
 				
 				for (final L2Clan clan : clanList)
+				{
 					if (clan.getAllyId() == allyId && clan.getHasCastle() > 0)
+					{
 						return true;
+					}
+				}
 				
 				clanList = null;
 			}

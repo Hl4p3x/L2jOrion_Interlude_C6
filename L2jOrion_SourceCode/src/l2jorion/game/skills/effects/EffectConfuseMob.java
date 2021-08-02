@@ -31,12 +31,8 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.skills.Env;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author littlecrow Implementation of the Confusion Effect
- */
 final class EffectConfuseMob extends L2Effect
 {
-	
 	public EffectConfuseMob(final Env env, final EffectTemplate template)
 	{
 		super(env, template);
@@ -84,7 +80,9 @@ final class EffectConfuseMob extends L2Effect
 		}
 		// if there is no target, exit function
 		if (targetList.size() == 0)
+		{
 			return true;
+		}
 		
 		// Choosing randomly a new target
 		final int nextTargetIdx = Rnd.nextInt(targetList.size());

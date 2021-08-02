@@ -41,23 +41,19 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.MagicSkillUser;
-import l2jorion.game.network.serverpackets.UserInfo;
 import l2jorion.game.thread.ThreadPoolManager;
 
-/**
- * This class ...
- * @version $Revision: 1.2 $ $Date: 2004/06/27 08:12:59 $
- */
 public class AdminTest implements IAdminCommandHandler
 {
 	private static final String[] ADMIN_COMMANDS =
 	{
 		"admin_test",
 		"admin_stats",
+		"admin_stats_stp",
+		"admin_stats_tp",
 		"admin_mcrit",
 		"admin_addbufftest",
 		"admin_skill_test",
-		"admin_st",
 		"admin_mp",
 		"admin_known",
 		"admin_oly_obs_mode",
@@ -70,6 +66,20 @@ public class AdminTest implements IAdminCommandHandler
 		if (command.equals("admin_stats"))
 		{
 			for (final String line : ThreadPoolManager.getInstance().getStats())
+			{
+				activeChar.sendMessage(line);
+			}
+		}
+		if (command.equals("admin_stats_stp"))
+		{
+			for (final String line : ThreadPoolManager.getInstance().getStatsSTP())
+			{
+				activeChar.sendMessage(line);
+			}
+		}
+		if (command.equals("admin_stats_tp"))
+		{
+			for (final String line : ThreadPoolManager.getInstance().getStatsTP())
 			{
 				activeChar.sendMessage(line);
 			}
@@ -101,7 +111,9 @@ public class AdminTest implements IAdminCommandHandler
 				for (int i = 0; i < 100;)
 				{
 					if (activeChar.isCastingNow())
+					{
 						continue;
+					}
 					
 					activeChar.sendMessage("Casting " + i);
 					activeChar.useMagic(skill, false, false);
@@ -109,7 +121,7 @@ public class AdminTest implements IAdminCommandHandler
 				}
 			}
 		}
-		else if (command.startsWith("admin_skill_test") || command.startsWith("admin_st"))
+		else if (command.startsWith("admin_skill_test"))
 		{
 			try
 			{
@@ -125,7 +137,9 @@ public class AdminTest implements IAdminCommandHandler
 			catch (NumberFormatException | NoSuchElementException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Command format is //skill_test <ID>");
 			}
@@ -175,17 +189,16 @@ public class AdminTest implements IAdminCommandHandler
 				
 			}
 			
-			final UserInfo ui = new UserInfo(activeChar);
-			ui._critical_test = true;
-			
-			activeChar.sendPacket(ui);
+			// final UserInfo ui = new UserInfo(activeChar);
+			/// ui._critical_test = true;
+			// activeChar.sendPacket(ui);
 			
 		}
 		else if (command.startsWith("admin_oly_obs_mode"))
 		{
 			if (!activeChar.inObserverMode())
 			{
-				activeChar.enterOlympiadObserverMode(activeChar.getX(), activeChar.getY(), activeChar.getZ(), -1);
+				activeChar.enterOlympiadObserverMode(-1);
 			}
 			else
 			{
@@ -206,10 +219,6 @@ public class AdminTest implements IAdminCommandHandler
 		return true;
 	}
 	
-	/**
-	 * @param activeChar
-	 * @param id
-	 */
 	private void adminTestSkill(final L2PcInstance activeChar, final int id)
 	{
 		L2Character player;
@@ -225,15 +234,8 @@ public class AdminTest implements IAdminCommandHandler
 		}
 		
 		player.broadcastPacket(new MagicSkillUser(activeChar, player, id, 1, 1, 1));
-		
-		target = null;
-		player = null;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.handler.IAdminCommandHandler#getAdminCommandList()
-	 */
 	@Override
 	public String[] getAdminCommandList()
 	{

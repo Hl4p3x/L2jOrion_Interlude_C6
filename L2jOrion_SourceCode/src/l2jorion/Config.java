@@ -46,17 +46,17 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 import l2jorion.game.model.L2World;
 import l2jorion.game.util.FloodProtectorConfig;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.login.LoginController;
 import l2jorion.util.PropertiesParser;
 import l2jorion.util.StringUtil;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public final class Config
 {
-	public static final String EOL = System.lineSeparator();
 	private static final Logger LOG = LoggerFactory.getLogger(Config.class);
+	
+	public static final String EOL = System.lineSeparator();
 	
 	public static boolean EVERYBODY_HAS_ADMIN_RIGHTS;
 	public static boolean SHOW_GM_LOGIN;
@@ -212,7 +212,7 @@ public final class Config
 			{
 				LIST_PROTECTED_ITEMS.add(Integer.parseInt(id));
 			}
-
+			
 			DESTROY_DROPPED_PLAYER_ITEM = Boolean.valueOf(optionsSettings.getProperty("DestroyPlayerDroppedItem", "false"));
 			DESTROY_EQUIPABLE_PLAYER_ITEM = Boolean.valueOf(optionsSettings.getProperty("DestroyEquipableItem", "false"));
 			SAVE_DROPPED_ITEM = Boolean.valueOf(optionsSettings.getProperty("SaveDroppedItem", "false"));
@@ -356,7 +356,7 @@ public final class Config
 			LOGINSERVER_DB = serverSettings.getProperty("LoginserverDB", "loginserver_beta");
 			
 			String DATABASE_URL_BASE = serverSettings.getProperty("URL", "jdbc:mysql://localhost/");
-			DATABASE_URL = DATABASE_URL_BASE + GAMESERVER_DB+"?useUnicode=yes&characterEncoding=utf8";
+			DATABASE_URL = DATABASE_URL_BASE + GAMESERVER_DB + "?useUnicode=yes&characterEncoding=utf8";
 			
 			DATABASE_LOGIN = serverSettings.getProperty("Login", "root");
 			DATABASE_PASSWORD = serverSettings.getProperty("Password", "");
@@ -523,7 +523,6 @@ public final class Config
 		}
 	}
 	
-	
 	public static int MAX_ITEM_IN_PACKET;
 	public static boolean JAIL_IS_PVP;
 	public static boolean JAIL_DISABLE_CHAT;
@@ -642,8 +641,10 @@ public final class Config
 			
 			RAID_HP_REGEN_MULTIPLIER = Double.parseDouble(otherSettings.getProperty("RaidHpRegenMultiplier", "100")) / 100;
 			RAID_MP_REGEN_MULTIPLIER = Double.parseDouble(otherSettings.getProperty("RaidMpRegenMultiplier", "100")) / 100;
+			
 			RAID_P_DEFENCE_MULTIPLIER = Double.parseDouble(otherSettings.getProperty("RaidPhysicalDefenceMultiplier", "1")) / 100;
 			RAID_M_DEFENCE_MULTIPLIER = Double.parseDouble(otherSettings.getProperty("RaidMagicalDefenceMultiplier", "1")) / 100;
+			
 			RAID_MINION_RESPAWN_TIMER = Integer.parseInt(otherSettings.getProperty("RaidMinionRespawnTime", "300000"));
 			RAID_MIN_RESPAWN_MULTIPLIER = Float.parseFloat(otherSettings.getProperty("RaidMinRespawnMultiplier", "1.0"));
 			RAID_MAX_RESPAWN_MULTIPLIER = Float.parseFloat(otherSettings.getProperty("RaidMaxRespawnMultiplier", "1.0"));
@@ -660,7 +661,9 @@ public final class Config
 				{
 					String[] rewardSplit = reward.split(",");
 					if (rewardSplit.length != 2)
+					{
 						LOG.warn("StartingCustomItemsMage[Config.load()]: invalid config property -> StartingCustomItemsMage \"" + reward + "\"");
+					}
 					else
 					{
 						try
@@ -674,9 +677,13 @@ public final class Config
 						catch (NumberFormatException nfe)
 						{
 							if (Config.ENABLE_ALL_EXCEPTIONS)
+							{
 								nfe.printStackTrace();
+							}
 							if (!reward.isEmpty())
+							{
 								LOG.warn("StartingCustomItemsMage[Config.load()]: invalid config property -> StartingCustomItemsMage \"" + reward + "\"");
+							}
 						}
 					}
 				}
@@ -687,7 +694,9 @@ public final class Config
 				{
 					String[] rewardSplit = reward.split(",");
 					if (rewardSplit.length != 2)
+					{
 						LOG.warn("StartingCustomItemsFighter[Config.load()]: invalid config property -> StartingCustomItemsFighter \"" + reward + "\"");
+					}
 					else
 					{
 						try
@@ -701,10 +710,14 @@ public final class Config
 						catch (NumberFormatException nfe)
 						{
 							if (Config.ENABLE_ALL_EXCEPTIONS)
+							{
 								nfe.printStackTrace();
+							}
 							
 							if (!reward.isEmpty())
+							{
 								LOG.warn("StartingCustomItemsFighter[Config.load()]: invalid config property -> StartingCustomItemsFighter \"" + reward + "\"");
+							}
 						}
 					}
 				}
@@ -769,7 +782,7 @@ public final class Config
 					String[] skillSplit = skill.split(",");
 					if (skillSplit.length != 2)
 					{
-						System.out.println("[SkillDurationList]: invalid config property -> SkillDurationList \"" + skill + "\"");
+						LOG.error("[SkillDurationList]: invalid config property -> SkillDurationList \"" + skill + "\"");
 					}
 					else
 					{
@@ -780,11 +793,13 @@ public final class Config
 						catch (NumberFormatException nfe)
 						{
 							if (Config.ENABLE_ALL_EXCEPTIONS)
+							{
 								nfe.printStackTrace();
+							}
 							
 							if (!skill.equals(""))
 							{
-								System.out.println("[SkillDurationList]: invalid config property -> SkillList \"" + skillSplit[0] + "\"" + skillSplit[1]);
+								LOG.error("[SkillDurationList]: invalid config property -> SkillList \"" + skillSplit[0] + "\"" + skillSplit[1]);
 							}
 						}
 					}
@@ -960,6 +975,7 @@ public final class Config
 	public static double ALT_WEIGHT_LIMIT;
 	public static boolean ALT_GAME_SKILL_LEARN;
 	public static boolean AUTO_LEARN_SKILLS;
+	public static int AUTO_LEARN_SKILLS_LVL;
 	public static boolean ALT_GAME_CANCEL_BOW;
 	public static boolean ALT_GAME_CANCEL_CAST;
 	public static boolean ALT_GAME_TIREDNESS;
@@ -971,6 +987,7 @@ public final class Config
 	public static boolean ALT_MOB_AGRO_IN_PEACEZONE;
 	public static boolean ALT_GAME_FREIGHTS;
 	public static int ALT_GAME_FREIGHT_PRICE;
+	public static int ALT_WAREHOUSE_DEPOSIT_PRICE;
 	public static float ALT_GAME_SKILL_HIT_RATE;
 	public static boolean ALT_GAME_DELEVEL;
 	public static boolean ALT_GAME_MAGICFAILURES;
@@ -1052,7 +1069,7 @@ public final class Config
 	public static boolean DONT_DESTROY_ARROWS;
 	public static int MAX_LEVEL_NEWBIE;
 	public static int MAX_LEVEL_NEWBIE_STATUS;
-	public static int STANDARD_RESPAWN_DELAY;
+	// public static int STANDARD_RESPAWN_DELAY;
 	public static int ALT_RECOMMENDATIONS_NUMBER;
 	public static int RAID_RANKING_1ST;
 	public static int RAID_RANKING_2ND;
@@ -1081,7 +1098,7 @@ public final class Config
 	public static boolean DISABLE_ATTACK_NPC_TYPE;
 	public static String ALLOWED_NPC_TYPES;
 	public static FastList<String> LIST_ALLOWED_NPC_TYPES = new FastList<>();
-
+	
 	public static int ALLOWED_SUBCLASS;
 	public static byte BASE_SUBCLASS_LEVEL;
 	public static byte MAX_SUBCLASS_LEVEL;
@@ -1112,6 +1129,7 @@ public final class Config
 			ALT_WEIGHT_LIMIT = Double.parseDouble(altSettings.getProperty("AltWeightLimit", "1"));
 			ALT_GAME_SKILL_LEARN = Boolean.parseBoolean(altSettings.getProperty("AltGameSkillLearn", "false"));
 			AUTO_LEARN_SKILLS = Boolean.parseBoolean(altSettings.getProperty("AutoLearnSkills", "false"));
+			AUTO_LEARN_SKILLS_LVL = Integer.parseInt(altSettings.getProperty("AutoLearnSkillsLvl", "80"));
 			ALT_GAME_CANCEL_BOW = altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("bow") || altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("all");
 			ALT_GAME_CANCEL_CAST = altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("cast") || altSettings.getProperty("AltGameCancelByHit", "Cast").equalsIgnoreCase("all");
 			ALT_GAME_SHIELD_BLOCKS = Boolean.parseBoolean(altSettings.getProperty("AltShieldBlocks", "false"));
@@ -1136,6 +1154,7 @@ public final class Config
 			
 			ALT_GAME_FREIGHTS = Boolean.parseBoolean(altSettings.getProperty("AltGameFreights", "false"));
 			ALT_GAME_FREIGHT_PRICE = Integer.parseInt(altSettings.getProperty("AltGameFreightPrice", "1000"));
+			ALT_WAREHOUSE_DEPOSIT_PRICE = Integer.parseInt(altSettings.getProperty("WarehouseDepositPrice", "30"));
 			ALT_PARTY_RANGE = Integer.parseInt(altSettings.getProperty("AltPartyRange", "1600"));
 			ALT_PARTY_RANGE2 = Integer.parseInt(altSettings.getProperty("AltPartyRange2", "1400"));
 			REMOVE_CASTLE_CIRCLETS = Boolean.parseBoolean(altSettings.getProperty("RemoveCastleCirclets", "true"));
@@ -1202,7 +1221,6 @@ public final class Config
 			MAX_LEVEL_NEWBIE = Integer.parseInt(altSettings.getProperty("MaxLevelNewbie", "20"));
 			MAX_LEVEL_NEWBIE_STATUS = Integer.parseInt(altSettings.getProperty("MaxLevelNewbieStatus", "40"));
 			
-			STANDARD_RESPAWN_DELAY = Integer.parseInt(altSettings.getProperty("StandardRespawnDelay", "180"));
 			ALT_RECOMMENDATIONS_NUMBER = Integer.parseInt(altSettings.getProperty("AltMaxRecommendationNumber", "255"));
 			
 			RAID_RANKING_1ST = Integer.parseInt(altSettings.getProperty("1stRaidRankingPoints", "1250"));
@@ -1240,16 +1258,22 @@ public final class Config
 					int a1 = Integer.parseInt(t2.split("-")[0]);
 					int a2 = Integer.parseInt(t2.split("-")[1]);
 					for (int i = a1; i <= a2; i++)
+					{
 						INVUL_NPC_LIST.add(Integer.valueOf(i));
+					}
 				}
 				else
+				{
 					INVUL_NPC_LIST.add(Integer.valueOf(Integer.parseInt(t2)));
+				}
 			}
 			DISABLE_ATTACK_NPC_TYPE = Boolean.parseBoolean(altSettings.getProperty("DisableAttackToNpcs", "False"));
 			ALLOWED_NPC_TYPES = altSettings.getProperty("AllowedNPCTypes");
 			LIST_ALLOWED_NPC_TYPES = new FastList<>();
 			for (String npc_type : ALLOWED_NPC_TYPES.split(","))
+			{
 				LIST_ALLOWED_NPC_TYPES.add(npc_type);
+			}
 			NPC_ATTACKABLE = Boolean.parseBoolean(altSettings.getProperty("NpcAttackable", "False"));
 			
 			ALLOWED_SUBCLASS = Integer.parseInt(altSettings.getProperty("AllowedSubclass", "3"));
@@ -1268,7 +1292,6 @@ public final class Config
 		}
 	}
 	
-	
 	public static boolean ALT_GAME_REQUIRE_CASTLE_DAWN;
 	public static boolean ALT_GAME_REQUIRE_CLAN_CASTLE;
 	public static boolean ALT_REQUIRE_WIN_7S;
@@ -1283,7 +1306,6 @@ public final class Config
 	public static long ALT_FESTIVAL_SECOND_SWARM;
 	public static long ALT_FESTIVAL_CHEST_SPAWN;
 	public static boolean ALT_SEVENSIGNS_LAZY_UPDATE;
-	
 	
 	public static void load7sConfig()
 	{
@@ -1369,7 +1391,6 @@ public final class Config
 	public static int CH_FRONT1_FEE;
 	public static int CH_FRONT2_FEE;
 	
-	
 	public static void loadCHConfig()
 	{
 		final String CLANHALL = ConfigLoader.CLANHALL_CONFIG_FILE;
@@ -1438,38 +1459,6 @@ public final class Config
 		}
 	}
 	
-	public static int DEVASTATED_DAY;
-	public static int DEVASTATED_HOUR;
-	public static int DEVASTATED_MINUTES;
-	public static int PARTISAN_DAY;
-	public static int PARTISAN_HOUR;
-	public static int PARTISAN_MINUTES;
-	
-	public static void loadElitCHConfig()
-	{
-		final String ELIT_CH = ConfigLoader.ELIT_CLANHALL_CONFIG_FILE;
-		
-		try
-		{
-			Properties elitchSettings = new Properties();
-			InputStream is = new FileInputStream(new File(ELIT_CH));
-			elitchSettings.load(is);
-			is.close();
-			
-			DEVASTATED_DAY = Integer.valueOf(elitchSettings.getProperty("DevastatedDay", "1"));
-			DEVASTATED_HOUR = Integer.valueOf(elitchSettings.getProperty("DevastatedHour", "18"));
-			DEVASTATED_MINUTES = Integer.valueOf(elitchSettings.getProperty("DevastatedMinutes", "0"));
-			PARTISAN_DAY = Integer.valueOf(elitchSettings.getProperty("PartisanDay", "5"));
-			PARTISAN_HOUR = Integer.valueOf(elitchSettings.getProperty("PartisanHour", "21"));
-			PARTISAN_MINUTES = Integer.valueOf(elitchSettings.getProperty("PartisanMinutes", "0"));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			throw new Error("Failed to Load " + ELIT_CH + " File.");
-		}
-	}
-	
 	public static boolean L2JMOD_CHAMPION_ENABLE;
 	public static int L2JMOD_CHAMPION_FREQUENCY;
 	public static int L2JMOD_CHAMP_MIN_LVL;
@@ -1487,7 +1476,6 @@ public final class Config
 	public static String L2JMOD_CHAMP_TITLE;
 	public static int L2JMOD_CHAMP_AURA;
 	public static boolean L2JMOD_CHAMP_RAID_BOSSES;
-	
 	
 	public static void loadChampionConfig()
 	{
@@ -1518,7 +1506,9 @@ public final class Config
 			L2JMOD_CHAMP_AURA = Integer.parseInt(ChampionSettings.getProperty("ChampionAura", "0"));
 			int AuraChamp = L2JMOD_CHAMP_AURA;
 			if (AuraChamp != 0 && AuraChamp != 1 && AuraChamp != 2)
+			{
 				AuraChamp = 0;
+			}
 			L2JMOD_CHAMP_RAID_BOSSES = Boolean.parseBoolean(ChampionSettings.getProperty("ChampionRaidBosses", "false"));
 		}
 		catch (Exception e)
@@ -1527,7 +1517,6 @@ public final class Config
 			throw new Error("Failed to Load " + EVENT_CHAMPION + " File.");
 		}
 	}
-	
 	
 	public static boolean L2JMOD_ALLOW_WEDDING;
 	public static int L2JMOD_WEDDING_PRICE;
@@ -1544,7 +1533,6 @@ public final class Config
 	public static int L2JMOD_WEDDING_DIVORCE_COSTS;
 	public static boolean WEDDING_GIVE_CUPID_BOW;
 	public static boolean ANNOUNCE_WEDDING;
-	
 	
 	public static void loadWeddingConfig()
 	{
@@ -1581,7 +1569,6 @@ public final class Config
 		}
 	}
 	
-	
 	public static String TVT_EVEN_TEAMS;
 	public static boolean TVT_ALLOW_INTERFERENCE;
 	public static boolean TVT_ALLOW_POTIONS;
@@ -1603,7 +1590,6 @@ public final class Config
 	public static int TVT_TOP_KILLER_QTY;
 	public static boolean TVT_AURA;
 	public static boolean TVT_STATS_LOGGER;
-	
 	
 	public static void loadTVTConfig()
 	{
@@ -1630,7 +1616,9 @@ public final class Config
 			TVT_COMMAND = Boolean.parseBoolean(TVTSettings.getProperty("TvTCommand", "True"));
 			TVT_REVIVE_DELAY = Long.parseLong(TVTSettings.getProperty("TvTReviveDelay", "20000"));
 			if (TVT_REVIVE_DELAY < 1000)
+			{
 				TVT_REVIVE_DELAY = 1000; // can't be set less then 1 second
+			}
 			TVT_OPEN_FORT_DOORS = Boolean.parseBoolean(TVTSettings.getProperty("TvTOpenFortDoors", "False"));
 			TVT_CLOSE_FORT_DOORS = Boolean.parseBoolean(TVTSettings.getProperty("TvTCloseFortDoors", "False"));
 			TVT_OPEN_ADEN_COLOSSEUM_DOORS = Boolean.parseBoolean(TVTSettings.getProperty("TvTOpenAdenColosseumDoors", "False"));
@@ -1647,7 +1635,6 @@ public final class Config
 		}
 	}
 	
-	
 	public static int TW_TOWN_ID;
 	public static boolean TW_ALL_TOWNS;
 	public static int TW_ITEM_ID;
@@ -1655,7 +1642,6 @@ public final class Config
 	public static boolean TW_ALLOW_KARMA;
 	public static boolean TW_DISABLE_GK;
 	public static boolean TW_RESS_ON_DIE;
-	
 	
 	public static void loadTWConfig()
 	{
@@ -1680,6 +1666,111 @@ public final class Config
 		{
 			e.printStackTrace();
 			throw new Error("Failed to Load " + EVENT_TW + " File.");
+		}
+	}
+	
+	public static boolean ARENA_EVENT_ENABLED_2X2;
+	public static boolean ARENA_EVENT_ENABLED_4X4;
+	public static boolean ARENA_EVENT_ENABLED_9X9;
+	public static int ARENA_EVENT_COUNT_2X2;
+	public static int ARENA_EVENT_COUNT_4X4;
+	public static int ARENA_EVENT_COUNT_9X9;
+	public static int ARENA_REWARD_ID_2X2;
+	public static int ARENA_REWARD_ID_4X4;
+	public static int ARENA_REWARD_ID_9X9;
+	public static int ARENA_REWARD_COUNT_2X2;
+	public static int ARENA_REWARD_COUNT_4X4;
+	public static int ARENA_REWARD_COUNT_9X9;
+	public static int ARENA_WAIT_INTERVAL_2X2;
+	public static int ARENA_WAIT_INTERVAL_4X4;
+	public static int ARENA_WAIT_INTERVAL_9X9;
+	public static int ARENA_CHECK_INTERVAL_2X2;
+	public static int ARENA_CHECK_INTERVAL_4X4;
+	public static int ARENA_CHECK_INTERVAL_9X9;
+	public static int ARENA_CALL_INTERVAL_2X2;
+	public static int ARENA_CALL_INTERVAL_4X4;
+	public static int ARENA_CALL_INTERVAL_9X9;
+	
+	public static int[][] ARENA_EVENT_LOCS_2X2;
+	public static int[][] ARENA_EVENT_LOCS_4X4;
+	public static int[][] ARENA_EVENT_LOCS_9X9;
+	
+	public static void loadTournamentConfig()
+	{
+		final String EVENT_TOURNAMENT = ConfigLoader.EVENT_TNM_FILE;
+		
+		try
+		{
+			Properties TournamentSettings = new Properties();
+			InputStream is = new FileInputStream(new File(EVENT_TOURNAMENT));
+			TournamentSettings.load(is);
+			is.close();
+			
+			ARENA_EVENT_ENABLED_2X2 = Boolean.parseBoolean(TournamentSettings.getProperty("2X2ArenaEventEnabled", "False"));
+			ARENA_EVENT_ENABLED_4X4 = Boolean.parseBoolean(TournamentSettings.getProperty("4X4ArenaEventEnabled", "False"));
+			ARENA_EVENT_ENABLED_9X9 = Boolean.parseBoolean(TournamentSettings.getProperty("9X9ArenaEventEnabled", "False"));
+			ARENA_EVENT_COUNT_2X2 = Integer.parseInt(TournamentSettings.getProperty("2X2NumberOfArenas", "2"));
+			ARENA_EVENT_COUNT_4X4 = Integer.parseInt(TournamentSettings.getProperty("4X4NumberOfArenas", "2"));
+			ARENA_EVENT_COUNT_9X9 = Integer.parseInt(TournamentSettings.getProperty("4X4NumberOfArenas", "2"));
+			ARENA_REWARD_ID_2X2 = Integer.parseInt(TournamentSettings.getProperty("2X2ArenaRewardId", "57"));
+			ARENA_REWARD_ID_4X4 = Integer.parseInt(TournamentSettings.getProperty("4X4ArenaRewardId", "57"));
+			ARENA_REWARD_ID_9X9 = Integer.parseInt(TournamentSettings.getProperty("9X9ArenaRewardId", "57"));
+			ARENA_REWARD_COUNT_2X2 = Integer.parseInt(TournamentSettings.getProperty("2X2ArenaRewardCount", "1"));
+			ARENA_REWARD_COUNT_4X4 = Integer.parseInt(TournamentSettings.getProperty("4X4ArenaRewardCount", "1"));
+			ARENA_REWARD_COUNT_9X9 = Integer.parseInt(TournamentSettings.getProperty("9X9ArenaRewardCount", "1"));
+			ARENA_WAIT_INTERVAL_2X2 = Integer.parseInt(TournamentSettings.getProperty("2X2ArenaBattleWaitInterval", "20")) * 1000;
+			ARENA_WAIT_INTERVAL_4X4 = Integer.parseInt(TournamentSettings.getProperty("4X4ArenaBattleWaitInterval", "20")) * 1000;
+			ARENA_WAIT_INTERVAL_9X9 = Integer.parseInt(TournamentSettings.getProperty("9X9ArenaBattleWaitInterval", "20")) * 1000;
+			ARENA_CHECK_INTERVAL_2X2 = Integer.parseInt(TournamentSettings.getProperty("2X2ArenaBattleCheckInterval", "15")) * 1000;
+			ARENA_CHECK_INTERVAL_4X4 = Integer.parseInt(TournamentSettings.getProperty("4X4ArenaBattleCheckInterval", "15")) * 1000;
+			ARENA_CHECK_INTERVAL_9X9 = Integer.parseInt(TournamentSettings.getProperty("9X9ArenaBattleCheckInterval", "15")) * 1000;
+			ARENA_CALL_INTERVAL_2X2 = Integer.parseInt(TournamentSettings.getProperty("2X2ArenaBattleCallInterval", "60")) * 1000;
+			ARENA_CALL_INTERVAL_4X4 = Integer.parseInt(TournamentSettings.getProperty("4X4ArenaBattleCallInterval", "60")) * 1000;
+			ARENA_CALL_INTERVAL_9X9 = Integer.parseInt(TournamentSettings.getProperty("9X9ArenaBattleCallInterval", "60")) * 1000;
+			
+			String[] arenaLocs2x2 = TournamentSettings.getProperty("2X2ArenasLoc", "").split(";");
+			String[] locSplit2x2 = null;
+			ARENA_EVENT_COUNT_2X2 = arenaLocs2x2.length;
+			ARENA_EVENT_LOCS_2X2 = new int[ARENA_EVENT_COUNT_2X2][3];
+			for (int i = 0; i < ARENA_EVENT_COUNT_2X2; i++)
+			{
+				locSplit2x2 = arenaLocs2x2[i].split(",");
+				for (int j = 0; j < 3; j++)
+				{
+					ARENA_EVENT_LOCS_2X2[i][j] = Integer.parseInt(locSplit2x2[j].trim());
+				}
+			}
+			
+			String[] arenaLocs4x4 = TournamentSettings.getProperty("4X4ArenasLoc", "").split(";");
+			String[] locSplit4x4 = null;
+			ARENA_EVENT_COUNT_4X4 = arenaLocs4x4.length;
+			ARENA_EVENT_LOCS_4X4 = new int[ARENA_EVENT_COUNT_4X4][3];
+			for (int i = 0; i < ARENA_EVENT_COUNT_4X4; i++)
+			{
+				locSplit4x4 = arenaLocs4x4[i].split(",");
+				for (int j = 0; j < 3; j++)
+				{
+					ARENA_EVENT_LOCS_4X4[i][j] = Integer.parseInt(locSplit4x4[j].trim());
+				}
+			}
+			
+			String[] arenaLocs9x9 = TournamentSettings.getProperty("9X9ArenasLoc", "").split(";");
+			String[] locSplit9x9 = null;
+			ARENA_EVENT_COUNT_9X9 = arenaLocs9x9.length;
+			ARENA_EVENT_LOCS_9X9 = new int[ARENA_EVENT_COUNT_9X9][3];
+			for (int i = 0; i < ARENA_EVENT_COUNT_9X9; i++)
+			{
+				locSplit9x9 = arenaLocs9x9[i].split(",");
+				for (int j = 0; j < 3; j++)
+				{
+					ARENA_EVENT_LOCS_9X9[i][j] = Integer.parseInt(locSplit9x9[j].trim());
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new Error("Failed to Load " + EVENT_TOURNAMENT + " File.");
 		}
 	}
 	
@@ -1718,14 +1809,12 @@ public final class Config
 		}
 	}
 	
-	
 	public static boolean PCB_ENABLE;
 	public static int PCB_MIN_LEVEL;
 	public static int PCB_POINT_MIN;
 	public static int PCB_POINT_MAX;
 	public static int PCB_CHANCE_DUAL_POINT;
 	public static int PCB_INTERVAL;
-	
 	
 	public static void loadPCBPointConfig()
 	{
@@ -1758,20 +1847,23 @@ public final class Config
 		}
 	}
 	
-	
 	public static boolean ALT_DEV_NO_QUESTS;
 	public static boolean ALT_DEV_NO_SPAWNS;
 	public static boolean ALT_DEV_NO_SCRIPT;
 	public static boolean ALT_DEV_NO_RB;
 	public static boolean ALT_DEV_NO_AI;
 	
-	// TODO admin additional custom
+	// XXX admin additional custom
 	public static boolean ANNOUNCE_NEW_STYLE;
 	public static boolean MENU_NEW_STYLE;
 	public static boolean SHOW_TIME_IN_CHAT;
 	public static boolean L2JGUARD_PROTECTION;
+	public static boolean ORION_PROTECTION = false;
+	public static boolean STRIX_PROTECTION;
 	
 	public static boolean EXPLLOSIVE_CUSTOM;
+	public static boolean GGAMES_EU_CUSTOM;
+	public static boolean TOMASZ_B_CUSTOM;
 	
 	public static boolean SKILLSDEBUG;
 	public static boolean DEBUG;
@@ -1808,15 +1900,15 @@ public final class Config
 	// Threads
 	public static int THREAD_P_EFFECTS;
 	public static int THREAD_P_GENERAL;
-	public static int THREAD_E_EVENTS;
+	public static int AI_MAX_THREAD;
+	
 	public static int GENERAL_PACKET_THREAD_CORE_SIZE;
 	public static int IO_PACKET_THREAD_CORE_SIZE;
 	public static int GENERAL_THREAD_CORE_SIZE;
-	public static int AI_MAX_THREAD;
-	public static int EVENT_MAX_THREAD;
+	
+	// ---------------------------------------------
 	public static boolean LAZY_CACHE;
 	public static boolean ENABLE_CACHE_INFO = false;
-	
 	
 	public static void loadDevConfig()
 	{
@@ -1852,10 +1944,11 @@ public final class Config
 			MENU_NEW_STYLE = Boolean.parseBoolean(devSettings.getProperty("MenuNewStyle", "False"));
 			SHOW_TIME_IN_CHAT = Boolean.parseBoolean(devSettings.getProperty("ShowTimeInChat", "False"));
 			L2JGUARD_PROTECTION = Boolean.parseBoolean(devSettings.getProperty("L2jGuardProtection", "False"));
+			STRIX_PROTECTION = Boolean.parseBoolean(devSettings.getProperty("StrixGuardProtection", "False"));
 			
 			EXPLLOSIVE_CUSTOM = Boolean.parseBoolean(devSettings.getProperty("eXPllosiveCustom", "False"));
-			
-			ENABLE_OLYMPIAD_DISCONNECTION_DEBUG = Boolean.parseBoolean(devSettings.getProperty("EnableOlympiadDisconnectionDebug"));
+			GGAMES_EU_CUSTOM = Boolean.parseBoolean(devSettings.getProperty("GGamesEuCustom", "False"));
+			TOMASZ_B_CUSTOM = Boolean.parseBoolean(devSettings.getProperty("TomaszBCustom", "False"));
 			
 			REQUEST_ID = Integer.parseInt(devSettings.getProperty("RequestServerID", "0"));
 			ACCEPT_ALTERNATE_ID = Boolean.parseBoolean(devSettings.getProperty("AcceptAlternateID", "True"));
@@ -1882,10 +1975,12 @@ public final class Config
 			LOG_ITEMS = Boolean.valueOf(devSettings.getProperty("LogItems", "False"));
 			LOG_HIGH_DAMAGES = Boolean.valueOf(devSettings.getProperty("LogHighDamages", "False"));
 			GAMEGUARD_L2NET_CHECK = Boolean.valueOf(devSettings.getProperty("GameGuardL2NetCheck", "False"));
+			
 			THREAD_P_EFFECTS = Integer.parseInt(devSettings.getProperty("ThreadPoolSizeEffects", "6"));
 			THREAD_P_GENERAL = Integer.parseInt(devSettings.getProperty("ThreadPoolSizeGeneral", "15"));
 			GENERAL_PACKET_THREAD_CORE_SIZE = Integer.parseInt(devSettings.getProperty("GeneralPacketThreadCoreSize", "4"));
 			IO_PACKET_THREAD_CORE_SIZE = Integer.parseInt(devSettings.getProperty("UrgentPacketThreadCoreSize", "2"));
+			GENERAL_THREAD_CORE_SIZE = Integer.parseInt(devSettings.getProperty("GeneralThreadCoreSize", "2"));
 			AI_MAX_THREAD = Integer.parseInt(devSettings.getProperty("AiMaxThread", "10"));
 			
 			LAZY_CACHE = Boolean.valueOf(devSettings.getProperty("LazyCache", "False"));
@@ -1897,7 +1992,6 @@ public final class Config
 		}
 	}
 	
-	
 	public static boolean IS_CRAFTING_ENABLED;
 	public static int DWARF_RECIPE_LIMIT;
 	public static int COMMON_RECIPE_LIMIT;
@@ -1906,7 +2000,6 @@ public final class Config
 	public static double ALT_GAME_CREATION_XP_RATE;
 	public static double ALT_GAME_CREATION_SP_RATE;
 	public static boolean ALT_BLACKSMITH_USE_RECIPES;
-	
 	
 	public static void loadCraftConfig()
 	{
@@ -1935,7 +2028,6 @@ public final class Config
 		}
 	}
 	
-	
 	public static boolean OFFLINE_TRADE_ENABLE;
 	public static boolean OFFLINE_CRAFT_ENABLE;
 	public static boolean OFFLINE_SET_NAME_COLOR;
@@ -1949,7 +2041,6 @@ public final class Config
 	public static boolean RESTORE_OFFLINERS;
 	public static int OFFLINE_MAX_DAYS;
 	public static boolean OFFLINE_DISCONNECT_FINISHED;
-	
 	
 	public static void loadOfflineConfig()
 	{
@@ -1984,6 +2075,27 @@ public final class Config
 		}
 	}
 	
+	public static boolean ALLOW_RANDOM_PVP_ZONE;
+	public static boolean PROHIBIT_HEALER_CLASS;
+	
+	public static void loadRandomPvpZoneConfig()
+	{
+		final PropertiesParser randomPvpZ = new PropertiesParser(ConfigLoader.RANDOM_PVP_ZONE_FILE);
+		
+		ALLOW_RANDOM_PVP_ZONE = randomPvpZ.getBoolean("AllowRandomPvpZone", false);
+		PROHIBIT_HEALER_CLASS = randomPvpZ.getBoolean("ProhibitHealerClass", false);
+	}
+	
+	public static boolean ACHIEVEMENT_ENABLE;
+	public static int PAGE_LIMIT;
+	
+	public static void loadAchievementConfig()
+	{
+		final PropertiesParser ach = new PropertiesParser(ConfigLoader.ACHIEVEMENT_FILE);
+		
+		ACHIEVEMENT_ENABLE = ach.getBoolean("AchievementEnable", false);
+		PAGE_LIMIT = ach.getInt("PageLimit", 7);
+	}
 	
 	public static boolean DM_ALLOW_INTERFERENCE;
 	public static boolean DM_ALLOW_POTIONS;
@@ -2002,7 +2114,6 @@ public final class Config
 	public static boolean DM_STATS_LOGGER;
 	public static boolean DM_ALLOW_HEALER_CLASSES;
 	public static boolean DM_REMOVE_BUFFS_ON_DIE;
-	
 	
 	public static void loadDMConfig()
 	{
@@ -2051,7 +2162,6 @@ public final class Config
 		}
 	}
 	
-	
 	public static String CTF_EVEN_TEAMS;
 	public static boolean CTF_ALLOW_INTERFERENCE;
 	public static boolean CTF_ALLOW_POTIONS;
@@ -2066,7 +2176,6 @@ public final class Config
 	public static boolean CTF_AURA;
 	public static boolean CTF_STATS_LOGGER;
 	public static int CTF_SPAWN_OFFSET;
-	
 	
 	public static void loadCTFConfig()
 	{
@@ -2104,8 +2213,13 @@ public final class Config
 		}
 	}
 	
+	public static boolean FAKE_ARMORS;
+	public static String FAKE_ARMOR_ITEMS;
+	public static FastList<Integer> LIST_FAKE_ARMOR_ITEMS = new FastList<>();
+	
 	public static int FREE_TELEPORT_UNTIL;
 	public static boolean ALLOW_FREIGHT_AUGMENTED;
+	public static boolean REMOVAL_AUGMENTATION_FREE;
 	public static boolean ANNOUNCE_BOSS_UNDER_ATTACK;
 	public static boolean LIVE_CASTING_CHECK;
 	public static int LIVE_CASTING_CHECK_TIME;
@@ -2137,6 +2251,8 @@ public final class Config
 	public static String VOTE_TOPZONE_APIKEY;
 	public static String VOTE_HOPZONE_APIKEY;
 	public static String VOTE_L2JBRASIL_NAME;
+	public static String VOTE_L2TOPGR_NAME;
+	public static String VOTE_L2TOPONLINE_ID;
 	public static int CUSTOM_ITEM_ID;
 	public static String ALT_SERVER_CUSTOM_ITEM_NAME;
 	public static int PREM_TITLE_COLOR;
@@ -2179,8 +2295,9 @@ public final class Config
 	public static boolean CUSTOM_TELEPORT_TABLE = true;
 	public static boolean CUSTOM_DROPLIST_TABLE = true;
 	public static boolean CUSTOM_MERCHANT_TABLES = true;
-	public static boolean ALLOW_ONLINE_VIEW;
 	public static boolean ALLOW_COMMAND_LEVEL_UP;
+	public static boolean ALLOW_ONLINE_VIEW;
+	public static boolean ALLOW_ONLINE_VIEW_ONLY_FOR_GM;
 	public static int FAKE_ONLINE;
 	public static boolean WELCOME_HTM;
 	public static boolean LOAD_TUTORIAL;
@@ -2208,11 +2325,8 @@ public final class Config
 	public static boolean ALLOW_CREATE_LVL;
 	public static int CHAR_CREATE_LVL;
 	public static boolean SPAWN_CHAR;
-	/** X Coordinate of the SPAWN_CHAR setting. */
 	public static int SPAWN_X;
-	/** Y Coordinate of the SPAWN_CHAR setting. */
 	public static int SPAWN_Y;
-	/** Z Coordinate of the SPAWN_CHAR setting. */
 	public static int SPAWN_Z;
 	public static boolean ALLOW_HERO_SUBSKILL;
 	public static int HERO_COUNT;
@@ -2233,7 +2347,6 @@ public final class Config
 	public static int CLAN_LEADER_COLORED;
 	public static boolean SAVE_RAIDBOSS_STATUS_INTO_DB;
 	public static boolean DISABLE_WEIGHT_PENALTY;
-	public static int DIFFERENT_Z_CHANGE_OBJECT;
 	public static int DIFFERENT_Z_NEW_MOVIE;
 	public static int HERO_CUSTOM_ITEM_ID;
 	public static int NOOBLE_CUSTOM_ITEM_ID;
@@ -2248,7 +2361,6 @@ public final class Config
 	public static String PM_TEXT1;
 	public static String PM_TEXT2;
 	public static boolean NEW_PLAYER_EFFECT;
-	
 	
 	public static void loadL2jOrionConfig()
 	{
@@ -2265,7 +2377,16 @@ public final class Config
 			L2jOrionSettings.load(lnr);
 			lnr.close();
 			
+			FAKE_ARMORS = Boolean.parseBoolean(L2jOrionSettings.getProperty("FakeArmors", "False"));
+			FAKE_ARMOR_ITEMS = L2jOrionSettings.getProperty("ListOfFakeArmorIds", "1");
+			LIST_FAKE_ARMOR_ITEMS = new FastList<>();
+			for (String id : FAKE_ARMOR_ITEMS.split(","))
+			{
+				LIST_FAKE_ARMOR_ITEMS.add(Integer.parseInt(id));
+			}
+			
 			FREE_TELEPORT_UNTIL = Integer.parseInt(L2jOrionSettings.getProperty("FreeTeleportUntil", "1"));
+			REMOVAL_AUGMENTATION_FREE = Boolean.parseBoolean(L2jOrionSettings.getProperty("RemovalAugmentationFree", "False"));
 			ALLOW_FREIGHT_AUGMENTED = Boolean.parseBoolean(L2jOrionSettings.getProperty("AllowFreightAugmentedItem", "False"));
 			ANNOUNCE_BOSS_UNDER_ATTACK = Boolean.parseBoolean(L2jOrionSettings.getProperty("AnnounceBossUnderAttack", "False"));
 			LIVE_CASTING_CHECK = Boolean.parseBoolean(L2jOrionSettings.getProperty("LiveCastingCheck", "False"));
@@ -2298,12 +2419,15 @@ public final class Config
 			{
 				RAID_FLAG_LIST.add(Integer.parseInt(id));
 			}
-			VOTE_NETWORK_NAME = L2jOrionSettings.getProperty("VoteNetworkName", "");
-			VOTE_TOPZONE_APIKEY = L2jOrionSettings.getProperty("VoteTopzoneApiKey", "");
-			VOTE_HOPZONE_APIKEY = L2jOrionSettings.getProperty("VoteHopzoneApiKey", "");
-			VOTE_L2JBRASIL_NAME = L2jOrionSettings.getProperty("VoteL2jBrasilName", "");
+			VOTE_NETWORK_NAME = L2jOrionSettings.getProperty("VoteNetworkName", "None");
+			VOTE_TOPZONE_APIKEY = L2jOrionSettings.getProperty("VoteTopzoneApiKey", "None");
+			VOTE_HOPZONE_APIKEY = L2jOrionSettings.getProperty("VoteHopzoneApiKey", "None");
+			VOTE_L2JBRASIL_NAME = L2jOrionSettings.getProperty("VoteL2jBrasilName", "None");
+			VOTE_L2TOPGR_NAME = L2jOrionSettings.getProperty("VoteL2TopGrVoteUser", "None");
+			VOTE_L2TOPONLINE_ID = L2jOrionSettings.getProperty("VoteL2TopOnlineVoteId", "None");
 			
 			PROTECTED_START_ITEMS_LVL = Integer.parseInt(L2jOrionSettings.getProperty("ProtectedLevelsUntil", "20"));
+			
 			PROTECTED_START_ITEMS = L2jOrionSettings.getProperty("ListOfProtectedStartItems");
 			LIST_PROTECTED_START_ITEMS = new FastList<>();
 			for (String id : PROTECTED_START_ITEMS.split(","))
@@ -2363,10 +2487,10 @@ public final class Config
 			ANNOUNCE_RB_KILLER_INFO = Boolean.parseBoolean(L2jOrionSettings.getProperty("AnnounceRbKillerInfo", "false"));
 			ALLOW_PIN_CODE_CHECK = Boolean.parseBoolean(L2jOrionSettings.getProperty("AllowPinCodeCheck", "false"));
 			ALT_Server_Menu_Name = String.valueOf(L2jOrionSettings.getProperty("ServerCfgMenuName"));
-			DIFFERENT_Z_CHANGE_OBJECT = Integer.parseInt(L2jOrionSettings.getProperty("DifferentZchangeObject", "650"));
 			DIFFERENT_Z_NEW_MOVIE = Integer.parseInt(L2jOrionSettings.getProperty("DifferentZnewmovie", "1000"));
 			
 			ALLOW_ONLINE_VIEW = Boolean.valueOf(L2jOrionSettings.getProperty("AllowOnlineView", "False"));
+			ALLOW_ONLINE_VIEW_ONLY_FOR_GM = Boolean.valueOf(L2jOrionSettings.getProperty("AllowOnlineViewOnlyForGM", "False"));
 			ALLOW_COMMAND_LEVEL_UP = Boolean.valueOf(L2jOrionSettings.getProperty("AllowLevelUpCommand", "False"));
 			FAKE_ONLINE = Integer.parseInt(L2jOrionSettings.getProperty("FakeOnline", "0"));
 			
@@ -2445,7 +2569,8 @@ public final class Config
 	public static float PREMIUM_ADENA_RATE;
 	public static float PREMIUM_DROP_RATE;
 	public static float PREMIUM_SPOIL_RATE;
-	
+	public static float PREMIUM_SS_RATE;
+	public static float PREMIUM_BUFF_MULTIPLIER;
 	
 	public static void loadPremiumConfig()
 	{
@@ -2470,11 +2595,39 @@ public final class Config
 			PREMIUM_ADENA_RATE = Float.parseFloat(PremiumSettings.getProperty("PremiumAdenaRate", "1.5"));
 			PREMIUM_DROP_RATE = Float.parseFloat(PremiumSettings.getProperty("PremiumDropRate", "1.5"));
 			PREMIUM_SPOIL_RATE = Float.parseFloat(PremiumSettings.getProperty("PremiumSpoilRate", "1.5"));
+			PREMIUM_SS_RATE = Float.parseFloat(PremiumSettings.getProperty("PremiumDropSealStones", "1.0"));
+			PREMIUM_BUFF_MULTIPLIER = Float.parseFloat(PremiumSettings.getProperty("PremiumBuffTimeMultiplier", "1.0"));
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 			throw new Error("Failed to Load " + PREMIUM + " File.");
+		}
+	}
+	
+	// ==========================SUBSCRIPTION==================================
+	public static boolean USE_SUBSCRIPTION;
+	public static int SUBSCRIPTION_DC_TIME;
+	
+	public static void loadSubscriptionConfig()
+	{
+		final String SUBSCRIPTION = ConfigLoader.SUBSCRIPTION_CONFIG_FILE;
+		
+		try
+		{
+			Properties SubscriptionSettings = new Properties();
+			InputStream is = new FileInputStream(new File(SUBSCRIPTION));
+			SubscriptionSettings.load(is);
+			is.close();
+			
+			USE_SUBSCRIPTION = Boolean.parseBoolean(SubscriptionSettings.getProperty("UseSubscription", "False"));
+			SUBSCRIPTION_DC_TIME = Integer.parseInt(SubscriptionSettings.getProperty("DisconnectionTime", "0"));
+			
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			throw new Error("Failed to Load " + SUBSCRIPTION + " File.");
 		}
 	}
 	
@@ -2553,7 +2706,6 @@ public final class Config
 	public static boolean ANTI_FARM_PARTY_ENABLED;
 	public static boolean ANTI_FARM_IP_ENABLED;
 	public static boolean ANTI_FARM_SUMMON;
-	
 	
 	public static void loadPvpConfig()
 	{
@@ -2679,15 +2831,9 @@ public final class Config
 		}
 	}
 	
-	
-	
-	public static int ALT_OLY_NUMBER_HEROS_EACH_CLASS;
-	public static boolean ALT_OLY_LOG_FIGHTS;
-	public static boolean ALT_OLY_SHOW_MONTHLY_WINNERS;
 	public static boolean ALT_OLY_ANNOUNCE_GAMES;
 	public static List<Integer> LIST_OLY_RESTRICTED_SKILLS = new FastList<>();
 	public static boolean ALT_OLY_AUGMENT_ALLOW;
-	public static int ALT_OLY_TELEPORT_COUNTDOWN;
 	
 	public static int ALT_OLY_START_TIME;
 	public static int ALT_OLY_MIN;
@@ -2696,25 +2842,45 @@ public final class Config
 	
 	public static long ALT_OLY_WPERIOD;
 	public static long ALT_OLY_VPERIOD;
+	
+	public static int ALT_OLY_WAIT_TIME;
+	public static int ALT_OLY_WAIT_BATTLE;
+	public static int ALT_OLY_WAIT_END;
+	
+	public static int ALT_OLY_START_POINTS;
+	public static int ALT_OLY_WEEKLY_POINTS;
+	
+	public static int ALT_OLY_MIN_MATCHES;
+	
 	public static int ALT_OLY_CLASSED;
 	public static int ALT_OLY_NONCLASSED;
-	public static int ALT_OLY_BATTLE_REWARD_ITEM;
-	public static int ALT_OLY_CLASSED_RITEM_C;
-	public static int ALT_OLY_NONCLASSED_RITEM_C;
+	
+	public static int[][] ALT_OLY_CLASSED_REWARD;
+	public static int[][] ALT_OLY_NONCLASSED_REWARD;
 	
 	public static int ALT_OLY_GP_PER_POINT;
-	public static int ALT_OLY_MIN_POINT_FOR_EXCH;
 	public static int ALT_OLY_HERO_POINTS;
+	
+	public static int ALT_OLY_RANK1_POINTS;
+	public static int ALT_OLY_RANK2_POINTS;
+	public static int ALT_OLY_RANK3_POINTS;
+	public static int ALT_OLY_RANK4_POINTS;
+	public static int ALT_OLY_RANK5_POINTS;
+	
+	public static int ALT_OLY_MAX_POINTS;
+	public static int ALT_OLY_DIVIDER_CLASSED;
+	public static int ALT_OLY_DIVIDER_NON_CLASSED;
+	
 	public static String ALT_OLY_RESTRICTED_ITEMS;
 	
 	public static List<Integer> LIST_OLY_RESTRICTED_ITEMS = new FastList<>();
+	
 	public static boolean ALLOW_EVENTS_DURING_OLY;
 	public static boolean ALT_OLY_RECHARGE_SKILLS;
 	
 	public static int ALT_OLY_COMP_RITEM;
 	public static boolean REMOVE_CUBIC_OLYMPIAD;
 	public static boolean RETAIL_OLYMPIAD;
-	
 	
 	public static void loadOlympConfig()
 	{
@@ -2726,21 +2892,42 @@ public final class Config
 			InputStream is = new FileInputStream(new File(OLYMPC));
 			OLYMPSetting.load(is);
 			is.close();
+			
 			ALT_OLY_START_TIME = Integer.parseInt(OLYMPSetting.getProperty("AltOlyStartTime", "18"));
 			ALT_OLY_MIN = Integer.parseInt(OLYMPSetting.getProperty("AltOlyMin", "00"));
 			ALT_OLY_CPERIOD = Long.parseLong(OLYMPSetting.getProperty("AltOlyCPeriod", "21600000"));
 			ALT_OLY_BATTLE = Long.parseLong(OLYMPSetting.getProperty("AltOlyBattle", "360000"));
 			ALT_OLY_WPERIOD = Long.parseLong(OLYMPSetting.getProperty("AltOlyWPeriod", "604800000"));
 			ALT_OLY_VPERIOD = Long.parseLong(OLYMPSetting.getProperty("AltOlyVPeriod", "86400000"));
+			
+			ALT_OLY_WAIT_TIME = Integer.parseInt(OLYMPSetting.getProperty("AltOlyWaitTime", "30"));
+			ALT_OLY_WAIT_BATTLE = Integer.parseInt(OLYMPSetting.getProperty("AltOlyWaitBattle", "60"));
+			ALT_OLY_WAIT_END = Integer.parseInt(OLYMPSetting.getProperty("AltOlyWaitEnd", "40"));
+			
+			ALT_OLY_START_POINTS = Integer.parseInt(OLYMPSetting.getProperty("AltOlyStartPoints", "18"));
+			ALT_OLY_WEEKLY_POINTS = Integer.parseInt(OLYMPSetting.getProperty("AltOlyWeeklyPoints", "3"));
+			
+			ALT_OLY_MIN_MATCHES = Integer.parseInt(OLYMPSetting.getProperty("AltOlyMinMatchesToBeClassed", "9"));
 			ALT_OLY_CLASSED = Integer.parseInt(OLYMPSetting.getProperty("AltOlyClassedParticipants", "1"));
 			ALT_OLY_NONCLASSED = Integer.parseInt(OLYMPSetting.getProperty("AltOlyNonClassedParticipants", "1"));
-			ALT_OLY_BATTLE_REWARD_ITEM = Integer.parseInt(OLYMPSetting.getProperty("AltOlyBattleRewItem", "6651"));
-			ALT_OLY_CLASSED_RITEM_C = Integer.parseInt(OLYMPSetting.getProperty("AltOlyClassedRewItemCount", "50"));
-			ALT_OLY_NONCLASSED_RITEM_C = Integer.parseInt(OLYMPSetting.getProperty("AltOlyNonClassedRewItemCount", "30"));
+			
+			ALT_OLY_CLASSED_REWARD = parseItemsList(OLYMPSetting.getProperty("AltOlyClassedReward", "6651,50"));
+			ALT_OLY_NONCLASSED_REWARD = parseItemsList(OLYMPSetting.getProperty("AltOlyNonClassedReward", "6651,30"));
+			
 			ALT_OLY_COMP_RITEM = Integer.parseInt(OLYMPSetting.getProperty("AltOlyCompRewItem", "6651"));
 			ALT_OLY_GP_PER_POINT = Integer.parseInt(OLYMPSetting.getProperty("AltOlyGPPerPoint", "1000"));
-			ALT_OLY_MIN_POINT_FOR_EXCH = Integer.parseInt(OLYMPSetting.getProperty("AltOlyMinPointForExchange", "50"));
 			ALT_OLY_HERO_POINTS = Integer.parseInt(OLYMPSetting.getProperty("AltOlyHeroPoints", "100"));
+			
+			ALT_OLY_RANK1_POINTS = Integer.parseInt(OLYMPSetting.getProperty("AltOlyRank1Points", "100"));
+			ALT_OLY_RANK2_POINTS = Integer.parseInt(OLYMPSetting.getProperty("AltOlyRank2Points", "75"));
+			ALT_OLY_RANK3_POINTS = Integer.parseInt(OLYMPSetting.getProperty("AltOlyRank3Points", "55"));
+			ALT_OLY_RANK4_POINTS = Integer.parseInt(OLYMPSetting.getProperty("AltOlyRank4Points", "40"));
+			ALT_OLY_RANK5_POINTS = Integer.parseInt(OLYMPSetting.getProperty("AltOlyRank5Points", "30"));
+			
+			ALT_OLY_MAX_POINTS = Integer.parseInt(OLYMPSetting.getProperty("AltOlyMaxPoints", "10"));
+			ALT_OLY_DIVIDER_CLASSED = Integer.parseInt(OLYMPSetting.getProperty("AltOlyDividerClassed", "3"));
+			ALT_OLY_DIVIDER_NON_CLASSED = Integer.parseInt(OLYMPSetting.getProperty("AltOlyDividerNonClassed", "3"));
+			
 			ALT_OLY_RESTRICTED_ITEMS = OLYMPSetting.getProperty("AltOlyRestrictedItems", "0");
 			LIST_OLY_RESTRICTED_ITEMS = new FastList<>();
 			for (String id : ALT_OLY_RESTRICTED_ITEMS.split(","))
@@ -2754,9 +2941,6 @@ public final class Config
 			/* Remove cubic at the enter of olympiad */
 			REMOVE_CUBIC_OLYMPIAD = Boolean.parseBoolean(OLYMPSetting.getProperty("RemoveCubicOlympiad", "False"));
 			
-			ALT_OLY_NUMBER_HEROS_EACH_CLASS = Integer.parseInt(OLYMPSetting.getProperty("AltOlyNumberHerosEachClass", "1"));
-			ALT_OLY_LOG_FIGHTS = Boolean.parseBoolean(OLYMPSetting.getProperty("AlyOlyLogFights", "false"));
-			ALT_OLY_SHOW_MONTHLY_WINNERS = Boolean.parseBoolean(OLYMPSetting.getProperty("AltOlyShowMonthlyWinners", "true"));
 			ALT_OLY_ANNOUNCE_GAMES = Boolean.parseBoolean(OLYMPSetting.getProperty("AltOlyAnnounceGames", "true"));
 			LIST_OLY_RESTRICTED_SKILLS = new FastList<>();
 			for (String id : OLYMPSetting.getProperty("AltOlyRestrictedSkills", "0").split(","))
@@ -2764,7 +2948,6 @@ public final class Config
 				LIST_OLY_RESTRICTED_SKILLS.add(Integer.parseInt(id));
 			}
 			ALT_OLY_AUGMENT_ALLOW = Boolean.parseBoolean(OLYMPSetting.getProperty("AltOlyAugmentAllow", "true"));
-			ALT_OLY_TELEPORT_COUNTDOWN = Integer.parseInt(OLYMPSetting.getProperty("AltOlyTeleportCountDown", "120"));
 			RETAIL_OLYMPIAD = Boolean.parseBoolean(OLYMPSetting.getProperty("RetailOlympiad", "False"));
 		}
 		catch (Exception e)
@@ -2773,7 +2956,6 @@ public final class Config
 			throw new Error("Failed to Load " + OLYMPC + " File.");
 		}
 	}
-	
 	
 	// Enchant map
 	public static FastMap<Integer, Integer> NORMAL_WEAPON_ENCHANT_LEVEL = new FastMap<>();
@@ -2793,9 +2975,23 @@ public final class Config
 	public static int ENCHANT_WEAPON_MAX;
 	public static int ENCHANT_ARMOR_MAX;
 	public static int ENCHANT_JEWELRY_MAX;
+	public static boolean PROTECT_NORMAL_SCROLLS;
 	
 	public static int CRYSTAL_ENCHANT_MAX;
 	public static int CRYSTAL_ENCHANT_MIN;
+	
+	public static boolean CUSTOM_ENCHANT_GRADES_SYSTEM;
+	public static int ENCHANT_MAX_D;
+	public static int ENCHANT_MAX_C;
+	public static int ENCHANT_MAX_B;
+	public static int ENCHANT_MAX_A;
+	public static int ENCHANT_MAX_S;
+	
+	public static int BLESSED_ENCHANT_MAX_D;
+	public static int BLESSED_ENCHANT_MAX_C;
+	public static int BLESSED_ENCHANT_MAX_B;
+	public static int BLESSED_ENCHANT_MAX_A;
+	public static int BLESSED_ENCHANT_MAX_S;
 	
 	// Dwarf bonus
 	public static boolean ENABLE_DWARF_ENCHANT_BONUS;
@@ -2832,7 +3028,6 @@ public final class Config
 	public static int GM_OVER_ENCHANT;
 	public static int MAX_ITEM_ENCHANT_KICK;
 	
-	
 	public static void loadEnchantConfig()
 	{
 		final String ENCHANTC = ConfigLoader.ENCHANT_CONFIG_FILE;
@@ -2850,7 +3045,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if (writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					LOG.error("invalid config property");
 				}
 				else
 				{
@@ -2861,10 +3056,12 @@ public final class Config
 					catch (NumberFormatException nfe)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							nfe.printStackTrace();
+						}
 						if (!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							LOG.error("invalid config property");
 						}
 					}
 				}
@@ -2876,7 +3073,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if (writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					LOG.error("invalid config property");
 				}
 				else
 				{
@@ -2887,10 +3084,12 @@ public final class Config
 					catch (NumberFormatException nfe)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							nfe.printStackTrace();
+						}
 						if (!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							LOG.error("invalid config property");
 						}
 					}
 				}
@@ -2902,7 +3101,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if (writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					LOG.error("invalid config property");
 				}
 				else
 				{
@@ -2913,10 +3112,12 @@ public final class Config
 					catch (NumberFormatException nfe)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							nfe.printStackTrace();
+						}
 						if (!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							LOG.error("invalid config property");
 						}
 					}
 				}
@@ -2928,7 +3129,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if (writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					LOG.error("invalid config property");
 				}
 				else
 				{
@@ -2939,10 +3140,12 @@ public final class Config
 					catch (NumberFormatException nfe)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							nfe.printStackTrace();
+						}
 						if (!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							LOG.error("invalid config property");
 						}
 					}
 				}
@@ -2954,7 +3157,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if (writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					LOG.error("invalid config property");
 				}
 				else
 				{
@@ -2965,10 +3168,12 @@ public final class Config
 					catch (NumberFormatException nfe)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							nfe.printStackTrace();
+						}
 						if (!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							LOG.error("invalid config property");
 						}
 					}
 				}
@@ -2980,7 +3185,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if (writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					LOG.error("invalid config property");
 				}
 				else
 				{
@@ -2991,10 +3196,12 @@ public final class Config
 					catch (NumberFormatException nfe)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							nfe.printStackTrace();
+						}
 						if (!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							LOG.error("invalid config property");
 						}
 					}
 				}
@@ -3006,7 +3213,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if (writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					LOG.error("invalid config property");
 				}
 				else
 				{
@@ -3017,11 +3224,13 @@ public final class Config
 					catch (NumberFormatException nfe)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							nfe.printStackTrace();
+						}
 						
 						if (!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							LOG.error("invalid config property");
 						}
 					}
 				}
@@ -3033,7 +3242,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if (writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					LOG.error("invalid config property");
 				}
 				else
 				{
@@ -3044,11 +3253,13 @@ public final class Config
 					catch (NumberFormatException nfe)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							nfe.printStackTrace();
+						}
 						
 						if (!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							LOG.error("invalid config property");
 						}
 					}
 				}
@@ -3060,7 +3271,7 @@ public final class Config
 				String[] writeData = readData.split(",");
 				if (writeData.length != 2)
 				{
-					System.out.println("invalid config property");
+					LOG.error("invalid config property");
 				}
 				else
 				{
@@ -3071,11 +3282,13 @@ public final class Config
 					catch (NumberFormatException nfe)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							nfe.printStackTrace();
+						}
 						
 						if (!readData.equals(""))
 						{
-							System.out.println("invalid config property");
+							LOG.error("invalid config property");
 						}
 					}
 				}
@@ -3091,10 +3304,24 @@ public final class Config
 			ENCHANT_WEAPON_MAX = Integer.parseInt(ENCHANTSetting.getProperty("EnchantWeaponMax", "25"));
 			ENCHANT_ARMOR_MAX = Integer.parseInt(ENCHANTSetting.getProperty("EnchantArmorMax", "25"));
 			ENCHANT_JEWELRY_MAX = Integer.parseInt(ENCHANTSetting.getProperty("EnchantJewelryMax", "25"));
+			PROTECT_NORMAL_SCROLLS = Boolean.parseBoolean(ENCHANTSetting.getProperty("ProtectNormalScrolls", "False"));
 			
 			/** CRYSTAL SCROLL enchant limits **/
 			CRYSTAL_ENCHANT_MIN = Integer.parseInt(ENCHANTSetting.getProperty("CrystalEnchantMin", "20"));
 			CRYSTAL_ENCHANT_MAX = Integer.parseInt(ENCHANTSetting.getProperty("CrystalEnchantMax", "0"));
+			
+			CUSTOM_ENCHANT_GRADES_SYSTEM = Boolean.parseBoolean(ENCHANTSetting.getProperty("EnchantGradesSystem", "False"));
+			ENCHANT_MAX_D = Integer.parseInt(ENCHANTSetting.getProperty("EnchantMaxD", "0"));
+			ENCHANT_MAX_C = Integer.parseInt(ENCHANTSetting.getProperty("EnchantMaxC", "0"));
+			ENCHANT_MAX_B = Integer.parseInt(ENCHANTSetting.getProperty("EnchantMaxB", "0"));
+			ENCHANT_MAX_A = Integer.parseInt(ENCHANTSetting.getProperty("EnchantMaxA", "0"));
+			ENCHANT_MAX_S = Integer.parseInt(ENCHANTSetting.getProperty("EnchantMaxS", "0"));
+			
+			BLESSED_ENCHANT_MAX_D = Integer.parseInt(ENCHANTSetting.getProperty("BlessedEnchantMaxD", "0"));
+			BLESSED_ENCHANT_MAX_C = Integer.parseInt(ENCHANTSetting.getProperty("BlessedEnchantMaxC", "0"));
+			BLESSED_ENCHANT_MAX_B = Integer.parseInt(ENCHANTSetting.getProperty("BlessedEnchantMaxB", "0"));
+			BLESSED_ENCHANT_MAX_A = Integer.parseInt(ENCHANTSetting.getProperty("BlessedEnchantMaxA", "0"));
+			BLESSED_ENCHANT_MAX_S = Integer.parseInt(ENCHANTSetting.getProperty("BlessedEnchantMaxS", "0"));
 			
 			/** bonus for dwarf **/
 			ENABLE_DWARF_ENCHANT_BONUS = Boolean.parseBoolean(ENCHANTSetting.getProperty("EnableDwarfEnchantBonus", "False"));
@@ -3169,7 +3396,6 @@ public final class Config
 	public static FloodProtectorConfig FLOOD_PROTECTOR_GENERIC_ACTION;
 	public static FloodProtectorConfig FLOOD_PROTECTOR_MACRO;
 	public static FloodProtectorConfig FLOOD_PROTECTOR_POTION;
-	
 	
 	public static void loadFloodConfig()
 	{
@@ -3292,7 +3518,6 @@ public final class Config
 	public static boolean ALLOW_DUALBOX_OLY;
 	public static boolean ALLOW_DUALBOX_EVENT;
 	
-	
 	public static void loadPOtherConfig()
 	{
 		final String PROTECT_OTHER_CONFIG = ConfigLoader.PROTECT_OTHER_CONFIG_FILE;
@@ -3325,7 +3550,7 @@ public final class Config
 			
 			BOT_PROTECTOR = Boolean.parseBoolean(POtherSetting.getProperty("BotProtect", "False"));
 			StringTokenizer st = new StringTokenizer(POtherSetting.getProperty("BotProtectIncludeOn", ""), " ");
-			while(st.hasMoreTokens())
+			while (st.hasMoreTokens())
 			{
 				BOT_PROTECTOR_INCLUDE_ON.add(st.nextToken());
 			}
@@ -3340,6 +3565,7 @@ public final class Config
 			throw new Error("Failed to Load " + PROTECT_OTHER_CONFIG + " File.");
 		}
 	}
+	
 	public static boolean CUSTOM_SUMMON_LIFE;
 	public static int CUSTOM_SUMMON_LIFE_TIME;
 	public static int BLOW_ATTACK_FRONT;
@@ -3356,9 +3582,6 @@ public final class Config
 	public static int MAX_PCRIT_RATE;
 	public static int MAX_MCRIT_RATE;
 	public static float MCRIT_RATE_MUL;
-	
-	public static int MINIMUM_SKILL_CHANCE;
-	public static int MINIMUM_SKILL_EFFECT_CHANCE;
 	
 	public static int RUN_SPD_BOOST;
 	public static int MAX_RUN_SPEED;
@@ -3452,9 +3675,6 @@ public final class Config
 			MAX_MCRIT_RATE = Integer.parseInt(PHYSICSSetting.getProperty("MaxMCritRate", "300"));
 			MCRIT_RATE_MUL = Float.parseFloat(PHYSICSSetting.getProperty("McritMulDif", "1"));
 			
-			MINIMUM_SKILL_CHANCE = Integer.parseInt(PHYSICSSetting.getProperty("MinimumSkillCance", "0"));
-			MINIMUM_SKILL_EFFECT_CHANCE = Integer.parseInt(PHYSICSSetting.getProperty("MinimuSkillEffectChance", "0"));
-			
 			MAGIC_CRITICAL_POWER = Float.parseFloat(PHYSICSSetting.getProperty("MagicCriticalPower", "3.0"));
 			
 			STUN_CHANCE_MODIFIER = Float.parseFloat(PHYSICSSetting.getProperty("StunChanceModifier", "1.0"));
@@ -3507,7 +3727,9 @@ public final class Config
 			for (String class_id : DISABLE_BOW_CLASSES_STRING.split(","))
 			{
 				if (!class_id.equals(""))
+				{
 					DISABLE_BOW_CLASSES.add(Integer.parseInt(class_id));
+				}
 			}
 			
 			LEAVE_BUFFS_ON_DIE = Boolean.parseBoolean(PHYSICSSetting.getProperty("LeaveBuffsOnDie", "True"));
@@ -3520,8 +3742,20 @@ public final class Config
 		}
 	}
 	
-	public static int GEODATA;
-	public static File PATHNODE_DIR;
+	public static int CHS_CLAN_MINLEVEL;
+	public static int CHS_MAX_ATTACKERS;
+	public static int CHS_MAX_FLAGS_PER_CLAN;
+	
+	public static void clanHallSiegeConfig()
+	{
+		final PropertiesParser ClanHallSiege = new PropertiesParser(ConfigLoader.CH_SIEGE_FILE);
+		
+		CHS_MAX_ATTACKERS = ClanHallSiege.getInt("MaxAttackers", 500);
+		CHS_CLAN_MINLEVEL = ClanHallSiege.getInt("MinClanLevel", 4);
+		CHS_MAX_FLAGS_PER_CLAN = ClanHallSiege.getInt("MaxFlagsPerClan", 1);
+	}
+	
+	public static boolean GEODATA;
 	public static String PATHFIND_BUFFERS;
 	public static int GEO_BUFFER_SIZE;
 	public static float LOW_WEIGHT;
@@ -3536,13 +3770,6 @@ public final class Config
 	public static boolean MOVE_BASED_KNOWNLIST;
 	public static long KNOWNLIST_UPDATE_INTERVAL;
 	
-	public static int WORLD_SIZE_MIN_X;
-	public static int WORLD_SIZE_MAX_X;
-	public static int WORLD_SIZE_MIN_Y;
-	public static int WORLD_SIZE_MAX_Y;
-	public static int WORLD_SIZE_MIN_Z;
-	public static int WORLD_SIZE_MAX_Z;
-	
 	public static int COORD_SYNCHRONIZE;
 	public static Path GEODATA_PATH;
 	public static boolean TRY_LOAD_UNSPECIFIED_REGIONS;
@@ -3551,22 +3778,11 @@ public final class Config
 	public static boolean FALL_DAMAGE;
 	public static boolean ALLOW_WATER;
 	
-	
 	public static void loadgeodataConfig()
 	{
 		final PropertiesParser geoData = new PropertiesParser(ConfigLoader.GEODATA_CONFIG_FILE);
 		
-		try
-		{
-			PATHNODE_DIR = new File(geoData.getString("PathnodeDirectory", "data/pathnode").replaceAll("\\\\", "/")).getCanonicalFile();
-		}
-		catch (IOException e)
-		{
-			LOG.warn("Error setting pathnode directory!", e);
-			PATHNODE_DIR = new File("data/pathnode");
-		}
-		
-		GEODATA = geoData.getInt("GeoData", 0);
+		GEODATA = geoData.getBoolean("GeoData", true);
 		PATHFIND_BUFFERS = geoData.getString("PathFindBuffers", "100x6;128x6;192x6;256x4;320x4;384x4;500x2");
 		GEO_BUFFER_SIZE = geoData.getInt("GeoBufferSize", 100);
 		LOW_WEIGHT = geoData.getFloat("LowWeight", 0.5f);
@@ -3581,9 +3797,10 @@ public final class Config
 		MOVE_BASED_KNOWNLIST = geoData.getBoolean("MoveBasedKnownlist", true);
 		KNOWNLIST_UPDATE_INTERVAL = geoData.getInt("KnownListUpdateInterval", 1250);
 		
-		COORD_SYNCHRONIZE = geoData.getInt("CoordSynchronize", -1);
+		COORD_SYNCHRONIZE = geoData.getInt("CoordSynchronize", 3);
 		GEODATA_PATH = Paths.get(geoData.getString("GeoDataPath", "./data/geodata"));
 		TRY_LOAD_UNSPECIFIED_REGIONS = geoData.getBoolean("TryLoadUnspecifiedRegions", true);
+		
 		GEODATA_REGIONS = new HashMap<>();
 		for (int regionX = L2World.TILE_X_MIN; regionX <= L2World.TILE_X_MAX; regionX++)
 		{
@@ -3600,7 +3817,6 @@ public final class Config
 		FALL_DAMAGE = geoData.getBoolean("FallDamage", false);
 		ALLOW_WATER = geoData.getBoolean("AllowWater", false);
 	}
-	
 	
 	public static boolean BETA_BOSS;
 	public static int BETA_BOSS_TIME;
@@ -3875,12 +4091,9 @@ public final class Config
 		}
 	}
 	
-	
 	public static boolean SCRIPT_DEBUG;
 	public static boolean SCRIPT_ALLOW_COMPILATION;
-	public static boolean SCRIPT_CACHE;
 	public static boolean SCRIPT_ERROR_LOG;
-	
 	
 	public static void loadScriptConfig()
 	{
@@ -3895,7 +4108,6 @@ public final class Config
 			
 			SCRIPT_DEBUG = Boolean.valueOf(scriptSetting.getProperty("EnableScriptDebug", "False"));
 			SCRIPT_ALLOW_COMPILATION = Boolean.valueOf(scriptSetting.getProperty("AllowCompilation", "True"));
-			SCRIPT_CACHE = Boolean.valueOf(scriptSetting.getProperty("UseCache", "True"));
 			SCRIPT_ERROR_LOG = Boolean.valueOf(scriptSetting.getProperty("EnableScriptErrorLog", "True"));
 		}
 		catch (Exception e)
@@ -3923,15 +4135,15 @@ public final class Config
 		catch (Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("Failed to load " + POWERPAK + " file");
 		}
 	}
 	
-	
 	public static Map<String, List<String>> EXTENDERS;
-	
 	
 	public static void loadExtendersConfig()
 	{
@@ -3978,7 +4190,9 @@ public final class Config
 			catch (Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.warn("Failed to Load " + EXTENDER_FILE + " File.");
 			}
@@ -3999,7 +4213,6 @@ public final class Config
 		}
 	}
 	
-	
 	public static long AUTOSAVE_INITIAL_TIME;
 	public static long AUTOSAVE_DELAY_TIME;
 	
@@ -4014,7 +4227,6 @@ public final class Config
 	public static boolean DEADLOCK_DETECTOR;
 	public static int DEADLOCK_CHECK_INTERVAL;
 	public static boolean RESTART_ON_DEADLOCK;
-	
 	
 	public static void loadDaemonsConf()
 	{
@@ -4045,7 +4257,9 @@ public final class Config
 		catch (Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("Failed to load " + DAEMONS + " file.");
 		}
@@ -4078,13 +4292,13 @@ public final class Config
 			
 			if (!FILTER_LIST.isEmpty() && FILTER_LIST.size() > 1)
 			{
-				LOG.info("Loaded: " + FILTER_LIST.size() + " filter words.");
+				LOG.info("Loaded: " + FILTER_LIST.size() + " filter words");
 			}
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			throw new Error("Failed to Load " + FILTER_FILE + " File.");
+			throw new Error("Failed to Load " + FILTER_FILE + " File");
 		}
 		finally
 		{
@@ -4101,7 +4315,6 @@ public final class Config
 			}
 		}
 	}
-	
 	
 	public static ArrayList<String> QUESTION_LIST = new ArrayList<>();
 	
@@ -4121,12 +4334,12 @@ public final class Config
 				}
 				QUESTION_LIST.add(line.trim());
 			}
-			LOG.info("Loaded " + QUESTION_LIST.size() + " Question Words.");
+			LOG.info("Loaded " + QUESTION_LIST.size() + " Question Words");
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
-			throw new Error("Failed to Load " + QUESTION_FILE + " File.");
+			throw new Error("Failed to Load " + QUESTION_FILE + " File");
 		}
 		finally
 		{
@@ -4154,6 +4367,8 @@ public final class Config
 	public static int MMO_HELPER_BUFFER_COUNT;
 	public static boolean MMO_TCP_NODELAY;
 	
+	public static boolean CLIENT_FLOOD_PROTECTION;
+	
 	public static int CLIENT_PACKET_QUEUE_SIZE;
 	public static int CLIENT_PACKET_QUEUE_MAX_BURST_SIZE;
 	public static int CLIENT_PACKET_QUEUE_MAX_PACKETS_PER_SECOND;
@@ -4177,8 +4392,9 @@ public final class Config
 			MMO_MAX_SEND_PER_PASS = Integer.parseInt(MMOSettings.getProperty("MaxSendPerPass", "12"));
 			MMO_MAX_READ_PER_PASS = Integer.parseInt(MMOSettings.getProperty("MaxReadPerPass", "12"));
 			MMO_HELPER_BUFFER_COUNT = Integer.parseInt(MMOSettings.getProperty("HelperBufferCount", "20"));
-			
 			MMO_TCP_NODELAY = Boolean.parseBoolean(MMOSettings.getProperty("TcpNoDelay", "False"));
+			
+			CLIENT_FLOOD_PROTECTION = Boolean.parseBoolean(MMOSettings.getProperty("ClientFloodProtection", "True"));
 			
 			CLIENT_PACKET_QUEUE_SIZE = Integer.parseInt(MMOSettings.getProperty("ClientPacketQueueSize", "0"));
 			
@@ -4204,18 +4420,17 @@ public final class Config
 		catch (Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("Could not load mmo file (" + MMOCORE + ").");
 		}
 	}
 	
-	
 	private static final String HEXID_FILE = ConfigLoader.HEXID_FILE;
-	public static boolean ENABLE_OLYMPIAD_DISCONNECTION_DEBUG = false;
 	public static int SERVER_ID;
 	public static byte[] HEX_ID;
-	
 	
 	public static void loadHexed()
 	{
@@ -4232,12 +4447,13 @@ public final class Config
 		catch (Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("Could not load HexID file (" + HEXID_FILE + "). Hopefully login will give us one.");
 		}
 	}
-	
 	
 	public static int PORT_LOGIN;
 	public static String LOGIN_BIND_ADDRESS;
@@ -4261,7 +4477,6 @@ public final class Config
 	public static String NETWORK_IP_LIST;
 	public static long SESSION_TTL;
 	public static int MAX_LOGINSESSIONS;
-	
 	
 	public static void loadLoginStartConfig()
 	{
@@ -4290,7 +4505,7 @@ public final class Config
 			DATABASE_DRIVER = serverSettings.getProperty("Driver", "com.mysql.jdbc.Driver");
 			
 			String DATABASE_URL_BASE = serverSettings.getProperty("URL", "jdbc:mysql://localhost/l2jdb");
-			DATABASE_URL = DATABASE_URL_BASE +"?useUnicode=yes&characterEncoding=utf8";
+			DATABASE_URL = DATABASE_URL_BASE + "?useUnicode=yes&characterEncoding=utf8";
 			
 			DATABASE_LOGIN = serverSettings.getProperty("Login", "root");
 			DATABASE_PASSWORD = serverSettings.getProperty("Password", "");
@@ -4394,7 +4609,7 @@ public final class Config
 					LOG.warn("Error while reading the bans file (" + conf_file.getName() + "). Details: " + e.getMessage(), e);
 				}
 				
-				LOG.info("Loaded " + LoginController.getInstance().getBannedIps().size() + " IP Bans.");
+				LOG.info("Loaded " + LoginController.getInstance().getBannedIps().size() + " IP Bans");
 				
 			}
 			catch (FileNotFoundException e)
@@ -4403,8 +4618,8 @@ public final class Config
 			}
 			finally
 			{
-				
 				if (fis != null)
+				{
 					try
 					{
 						fis.close();
@@ -4413,6 +4628,7 @@ public final class Config
 					{
 						e.printStackTrace();
 					}
+				}
 			}
 			
 		}
@@ -4493,6 +4709,109 @@ public final class Config
 		}
 	}
 	
+	public static boolean ALLOW_DRESS_ME_SYSTEM;
+	public static boolean ALLOW_DRESS_ME_FOR_ITEM;
+	public static int DRESS_ME_ITEM_ID;
+	public static int DRESS_ME_ITEM_COUNT;
+	public static boolean ALLOW_DRESS_ME_FOR_PREMIUM;
+	public static Map<String, Integer> DRESS_ME_CHESTS = new HashMap<>();
+	public static Map<String, Integer> DRESS_ME_LEGS = new HashMap<>();
+	public static Map<String, Integer> DRESS_ME_BOOTS = new HashMap<>();
+	public static Map<String, Integer> DRESS_ME_GLOVES = new HashMap<>();
+	public static Map<String, Integer> DRESS_ME_WEAPONS = new HashMap<>();
+	
+	public static void loadDressMeConfig()
+	{
+		final PropertiesParser dressMe = new PropertiesParser(ConfigLoader.DRESSME_CONFIG_FILE);
+		
+		ALLOW_DRESS_ME_SYSTEM = dressMe.getBoolean("AllowDressMeSystem", false);
+		ALLOW_DRESS_ME_FOR_ITEM = dressMe.getBoolean("DressMeForItem", false);
+		DRESS_ME_ITEM_ID = dressMe.getInt("DressMeItemId", 57);
+		DRESS_ME_ITEM_COUNT = dressMe.getInt("DressMeItemCount", 1);
+		ALLOW_DRESS_ME_FOR_PREMIUM = dressMe.getBoolean("AllowDressMeForPremiumOnly", false);
+		
+		String temp = dressMe.getString("DressMeChests", "");
+		String[] temp2 = temp.split(";");
+		for (String s : temp2)
+		{
+			String[] t = s.split(",");
+			DRESS_ME_CHESTS.put(t[0], Integer.parseInt(t[1]));
+		}
+		
+		temp = dressMe.getString("DressMeLegs", "");
+		temp2 = temp.split(";");
+		for (String s : temp2)
+		{
+			String[] t = s.split(",");
+			DRESS_ME_LEGS.put(t[0], Integer.parseInt(t[1]));
+		}
+		
+		temp = dressMe.getString("DressMeBoots", "");
+		temp2 = temp.split(";");
+		for (String s : temp2)
+		{
+			String[] t = s.split(",");
+			DRESS_ME_BOOTS.put(t[0], Integer.parseInt(t[1]));
+		}
+		
+		temp = dressMe.getString("DressMeGloves", "");
+		temp2 = temp.split(";");
+		for (String s : temp2)
+		{
+			String[] t = s.split(",");
+			DRESS_ME_GLOVES.put(t[0], Integer.parseInt(t[1]));
+		}
+		
+		temp = dressMe.getString("DressMeWeapons", "");
+		temp2 = temp.split(";");
+		for (String s : temp2)
+		{
+			String[] t = s.split(",");
+			DRESS_ME_WEAPONS.put(t[0], Integer.parseInt(t[1]));
+		}
+		
+		temp = dressMe.getString("DressMeChests", "");
+		temp2 = temp.split(";");
+		for (String s : temp2)
+		{
+			String[] t = s.split(",");
+			DRESS_ME_CHESTS.put(t[0], Integer.parseInt(t[1]));
+		}
+		
+		temp = dressMe.getString("DressMeLegs", "");
+		temp2 = temp.split(";");
+		for (String s : temp2)
+		{
+			String[] t = s.split(",");
+			DRESS_ME_LEGS.put(t[0], Integer.parseInt(t[1]));
+		}
+		
+		temp = dressMe.getString("DressMeBoots", "");
+		temp2 = temp.split(";");
+		for (String s : temp2)
+		{
+			String[] t = s.split(",");
+			DRESS_ME_BOOTS.put(t[0], Integer.parseInt(t[1]));
+		}
+		
+		temp = dressMe.getString("DressMeGloves", "");
+		temp2 = temp.split(";");
+		for (String s : temp2)
+		{
+			String[] t = s.split(",");
+			DRESS_ME_GLOVES.put(t[0], Integer.parseInt(t[1]));
+		}
+		
+		temp = dressMe.getString("DressMeWeapons", "");
+		temp2 = temp.split(";");
+		for (String s : temp2)
+		{
+			String[] t = s.split(",");
+			DRESS_ME_WEAPONS.put(t[0], Integer.parseInt(t[1]));
+		}
+		
+	}
+	
 	/** Enumeration for type of ID Factory */
 	public static enum IdFactoryType
 	{
@@ -4523,6 +4842,7 @@ public final class Config
 			
 			loadUserConfig();
 			loadSellBuffConfig();
+			loadDressMeConfig();
 			
 			// Load network
 			loadServerConfig();
@@ -4540,7 +4860,6 @@ public final class Config
 			loadAltConfig();
 			load7sConfig();
 			loadCHConfig();
-			loadElitCHConfig();
 			loadOlympConfig();
 			loadEnchantConfig();
 			loadBossConfig();
@@ -4550,6 +4869,12 @@ public final class Config
 			loadPHYSICSConfig();
 			loadAccessConfig();
 			loadPremiumConfig();
+			
+			if (GGAMES_EU_CUSTOM)
+			{
+				loadSubscriptionConfig();
+			}
+			
 			loadPvpConfig();
 			loadCraftConfig();
 			
@@ -4559,11 +4884,14 @@ public final class Config
 			loadTVTConfig();
 			loadTWConfig();
 			
+			loadTournamentConfig();
+			
 			// Protect
 			loadFloodConfig();
 			loadPOtherConfig();
 			loaMMO();
 			
+			clanHallSiegeConfig();
 			// Geo&path
 			loadgeodataConfig();
 			
@@ -4573,12 +4901,15 @@ public final class Config
 			loadREBIRTHConfig();
 			loadPCBPointConfig();
 			
-			if (Config.ENABLE_PHANTOMS)
+			if (ENABLE_PHANTOMS)
 			{
 				loadPhantomConfig();
 			}
 			
 			loadOfflineConfig();
+			loadRandomPvpZoneConfig();
+			loadAchievementConfig();
+			loadScriptConfig();
 			loadPowerPak();
 			
 			// Other
@@ -5512,7 +5843,9 @@ public final class Config
 			DM_REVIVE_DELAY = Long.parseLong(pValue);
 		}
 		else
+		{
 			return false;
+		}
 		return true;
 	}
 	
@@ -5545,6 +5878,7 @@ public final class Config
 		{
 			
 			if (out != null)
+			{
 				try
 				{
 					out.close();
@@ -5553,13 +5887,51 @@ public final class Config
 				{
 					e.printStackTrace();
 				}
+			}
 			
 		}
 	}
 	
+	private static final int[][] parseItemsList(String line)
+	{
+		final String[] propertySplit = line.split(";");
+		if (propertySplit.length == 0)
+		{
+			return null;
+		}
+		
+		int i = 0;
+		String[] valueSplit;
+		final int[][] result = new int[propertySplit.length][];
+		for (String value : propertySplit)
+		{
+			valueSplit = value.split(",");
+			if (valueSplit.length != 2)
+			{
+				LOG.warn("Error parsing entry '{}', it should be itemId,itemNumber.", valueSplit[0]);
+				return null;
+			}
+			
+			result[i] = new int[2];
+			try
+			{
+				result[i][0] = Integer.parseInt(valueSplit[0]);
+				result[i][1] = Integer.parseInt(valueSplit[1]);
+			}
+			catch (Exception e)
+			{
+				LOG.error("Error parsing entry '{}', one of the value isn't a number.", valueSplit[0]);
+				return null;
+			}
+			
+			i++;
+		}
+		return result;
+	}
+	
 	public static void unallocateFilterBuffer()
 	{
-		LOG.info("Cleaning Chat Filter..");
+		LOG.info("Cleaning Chat Filter...");
 		FILTER_LIST.clear();
 	}
 }

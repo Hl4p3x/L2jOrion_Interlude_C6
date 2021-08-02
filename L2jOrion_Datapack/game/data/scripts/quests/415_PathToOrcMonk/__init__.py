@@ -142,6 +142,7 @@ class Quest (JQuest) :
         st.takeItems(SCROLL_IRON_WILL,1)
         st.takeItems(SCROLL_FIERY_SPIRIT,1)
         st.takeItems(TORUKUS_LETTER,1)
+        st.addExpAndSp(16000,5650)
         st.giveItems(KHAVATARI_TOTEM,1)
         st.set("cond","0")
         st.set("onlyone","1")

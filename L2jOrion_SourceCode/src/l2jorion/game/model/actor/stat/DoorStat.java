@@ -23,26 +23,17 @@ import l2jorion.game.model.actor.instance.L2DoorInstance;
 
 public class DoorStat extends CharStat
 {
-	// =========================================================
-	// Data Field
+	private int _upgradeHpRatio;
 	
-	// =========================================================
-	// Constructor
 	public DoorStat(final L2DoorInstance activeChar)
 	{
 		super(activeChar);
 		
 		setLevel((byte) 1);
+		
+		_upgradeHpRatio = 1;
 	}
 	
-	// =========================================================
-	// Method - Public
-	
-	// =========================================================
-	// Method - Private
-	
-	// =========================================================
-	// Property - Public
 	@Override
 	public L2DoorInstance getActiveChar()
 	{
@@ -53,5 +44,15 @@ public class DoorStat extends CharStat
 	public final int getLevel()
 	{
 		return 1;
+	}
+	
+	public final void setUpgradeHpRatio(int hpRatio)
+	{
+		_upgradeHpRatio = hpRatio;
+	}
+	
+	public final int getUpgradeHpRatio()
+	{
+		return _upgradeHpRatio;
 	}
 }

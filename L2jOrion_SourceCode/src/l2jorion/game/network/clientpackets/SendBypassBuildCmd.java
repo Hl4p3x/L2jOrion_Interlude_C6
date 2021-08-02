@@ -20,9 +20,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.datatables.sql.AdminCommandAccessRights;
@@ -31,10 +28,9 @@ import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.util.GMAudit;
 import l2jorion.log.Log;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * This class handles all GM commands triggered by //command
- */
 public final class SendBypassBuildCmd extends L2GameClientPacket
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(SendBypassBuildCmd.class);
@@ -54,7 +50,9 @@ public final class SendBypassBuildCmd extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		// Checks The Access and notify requester if requester access it not allowed for that command
 		if (!AdminCommandAccessRights.getInstance().hasAccess(_command, activeChar.getAccessLevel()))
@@ -81,7 +79,7 @@ public final class SendBypassBuildCmd extends L2GameClientPacket
 		else
 		{
 			activeChar.sendMessage("The command " + _command + " doesn't exists!");
-			//LOG.warn("No handler registered for admin command '" + _command + "'");
+			// LOG.warn("No handler registered for admin command '" + _command + "'");
 			String text = "No handler registered for admin command '" + _command + "'";
 			Log.add(text, "Wrong_admin_commands");
 			return;

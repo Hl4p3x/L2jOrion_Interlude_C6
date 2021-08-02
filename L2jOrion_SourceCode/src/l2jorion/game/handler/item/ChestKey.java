@@ -34,8 +34,6 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 
 public class ChestKey implements IItemHandler
 {
-	public static final int INTERACTION_DISTANCE = 100;
-	
 	private static final int[] ITEM_IDS =
 	{
 		6665,
@@ -46,40 +44,29 @@ public class ChestKey implements IItemHandler
 		6670,
 		6671,
 		6672
-	// deluxe key
 	};
 	
 	@Override
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		final int itemId = item.getItemId();
 		L2Skill skill = SkillTable.getInstance().getInfo(2229, itemId - 6664);// box key skill
 		final L2Character target = (L2Character) activeChar.getTarget();
 		
-		if (!(target instanceof L2ChestInstance )|| target.isDead() || ((L2ChestInstance) target).isInteracted())
+		if (!(target instanceof L2ChestInstance) || target.isDead() || ((L2ChestInstance) target).isInteracted())
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.INCORRECT_TARGET));
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-		}
-		else
-		{
-			L2ChestInstance chest = (L2ChestInstance) target;
-			if (chest.isDead() || chest.isInteracted())
-			{
-				activeChar.sendMessage("The chest is empty.");
-				activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-				return;
-			}
-			activeChar.useMagic(skill, false, false);
-			chest = null;
+			return;
 		}
 		
-		activeChar = null;
-		skill = null;
+		activeChar.useMagic(skill, false, false);
 	}
 	
 	@Override
@@ -87,5 +74,4 @@ public class ChestKey implements IItemHandler
 	{
 		return ITEM_IDS;
 	}
-	
 }

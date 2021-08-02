@@ -20,10 +20,6 @@
  */
 package l2jorion.game.templates;
 
-/**
- * Description of EtcItem Type
- */
-
 public enum L2EtcItemType
 {
 	ARROW(0, "Arrow"),

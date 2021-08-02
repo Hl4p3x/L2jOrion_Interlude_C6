@@ -20,11 +20,9 @@ package l2jorion.game.geodriver;
 
 public interface IRegion
 {
-	/** Blocks in a region on the x axis */
 	public static final int REGION_BLOCKS_X = 256;
-	/** Blocks in a region on the y axis */
 	public static final int REGION_BLOCKS_Y = 256;
-	/** Blocks in a region */
+	
 	public static final int REGION_BLOCKS = REGION_BLOCKS_X * REGION_BLOCKS_Y;
 	
 	/** Cells in a region on the x axis */

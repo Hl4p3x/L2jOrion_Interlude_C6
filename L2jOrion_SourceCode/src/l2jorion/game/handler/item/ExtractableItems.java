@@ -20,9 +20,6 @@
  */
 package l2jorion.game.handler.item;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.cache.HtmCache;
 import l2jorion.game.datatables.csv.ExtractableItemsData;
 import l2jorion.game.datatables.sql.ItemTable;
@@ -35,6 +32,8 @@ import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
 /**

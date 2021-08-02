@@ -14,17 +14,12 @@
  */
 package l2jorion.game.handler.admin;
 
+import l2jguard.HwidConfig;
+import l2jguard.hwidmanager.HWIDBan;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-import l2jguard.HwidConfig;
-import l2jguard.hwidmanager.HWIDBan;
-
-/**
- * @author L2JGuard
- *
- */
 public class AdminBanHwid implements IAdminCommandHandler
 {
 	private static final String[] ADMIN_COMMANDS =
@@ -56,7 +51,7 @@ public class AdminBanHwid implements IAdminCommandHandler
 			}
 			
 			HWIDBan.addHWIDBan(target.getClient());
-			activeChar.sendMessage(target.getName()+" banned in HWID");
+			activeChar.sendMessage(target.getName() + " banned in HWID");
 		}
 		return true;
 	}

@@ -19,13 +19,8 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Format: ch Trigger packet.
- * @author KenM
- */
 public class ExRequestHackShield extends L2GameServerPacket
 {
-	/** The Constant _S__FE_48_EXREQUESTHACKSHIELD. */
 	private static final String _S__FE_48_EXREQUESTHACKSHIELD = "[S] FE:48 ExRequestHackShield";
 	
 	@Override
@@ -35,10 +30,6 @@ public class ExRequestHackShield extends L2GameServerPacket
 		writeH(0x48);
 	}
 	
-	/**
-	 * Gets the type.
-	 * @return the type
-	 */
 	@Override
 	public String getType()
 	{

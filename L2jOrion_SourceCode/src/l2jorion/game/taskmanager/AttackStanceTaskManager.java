@@ -30,9 +30,8 @@ import l2jorion.game.model.actor.instance.L2CubicInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.AutoAttackStop;
 import l2jorion.game.thread.ThreadPoolManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class AttackStanceTaskManager
 {
@@ -40,7 +39,7 @@ public class AttackStanceTaskManager
 	
 	protected Map<L2Character, Long> _attackStanceTasks = new FastMap<L2Character, Long>().shared();
 	
-	private AttackStanceTaskManager()
+	protected AttackStanceTaskManager()
 	{
 		ThreadPoolManager.getInstance().scheduleAiAtFixedRate(new FightModeScheduler(), 0, 1000);
 	}
@@ -57,13 +56,19 @@ public class AttackStanceTaskManager
 			final L2Summon summon = (L2Summon) actor;
 			actor = summon.getOwner();
 		}
+		
 		if (actor instanceof L2PcInstance)
 		{
 			final L2PcInstance player = (L2PcInstance) actor;
 			for (final L2CubicInstance cubic : player.getCubics().values())
+			{
 				if (cubic.getId() != L2CubicInstance.LIFE_CUBIC)
+				{
 					cubic.doAction();
+				}
+			}
 		}
+		
 		_attackStanceTasks.put(actor, System.currentTimeMillis());
 	}
 	
@@ -74,6 +79,7 @@ public class AttackStanceTaskManager
 			final L2Summon summon = (L2Summon) actor;
 			actor = summon.getOwner();
 		}
+		
 		_attackStanceTasks.remove(actor);
 	}
 	
@@ -84,6 +90,7 @@ public class AttackStanceTaskManager
 			final L2Summon summon = (L2Summon) actor;
 			actor = summon.getOwner();
 		}
+		
 		return _attackStanceTasks.containsKey(actor);
 	}
 	
@@ -101,6 +108,7 @@ public class AttackStanceTaskManager
 			try
 			{
 				if (_attackStanceTasks != null)
+				{
 					synchronized (this)
 					{
 						for (final L2Character actor : _attackStanceTasks.keySet())
@@ -109,24 +117,24 @@ public class AttackStanceTaskManager
 							{
 								actor.broadcastPacket(new AutoAttackStop(actor.getObjectId()));
 								if (actor instanceof L2PcInstance && ((L2PcInstance) actor).getPet() != null)
+								{
 									((L2PcInstance) actor).getPet().broadcastPacket(new AutoAttackStop(((L2PcInstance) actor).getPet().getObjectId()));
+								}
 								
 								actor.getAI().setAutoAttacking(false);
 								_attackStanceTasks.remove(actor);
 							}
 						}
 					}
+				}
 			}
 			catch (final Exception e)
 			{
-				// TODO: Find out the reason for exception. Unless caught here,
-				// players remain in attack positions.
 				LOG.warn("Error in FightModeScheduler: " + e.getMessage(), e);
 			}
 		}
 	}
 	
-	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder
 	{
 		protected static final AttackStanceTaskManager _instance = new AttackStanceTaskManager();

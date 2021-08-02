@@ -22,12 +22,8 @@ package l2jorion.game.skills.effects;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.skills.Env;
 
-/**
- * @author -Nemesiss-
- */
 public class EffectPsychicalMute extends L2Effect
 {
-	
 	public EffectPsychicalMute(final Env env, final EffectTemplate template)
 	{
 		super(env, template);
@@ -48,7 +44,6 @@ public class EffectPsychicalMute extends L2Effect
 	@Override
 	public boolean onActionTime()
 	{
-		// Simply stop the effect
 		getEffected().stopPsychicalMuted(this);
 		return false;
 	}

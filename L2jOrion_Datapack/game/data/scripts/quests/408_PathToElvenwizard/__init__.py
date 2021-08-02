@@ -167,6 +167,7 @@ class Quest (JQuest) :
         st.set("cond","0")
         st.setState(COMPLETED)
         st.playSound("ItemSound.quest_finish")
+        st.addExpAndSp(16000,5650)
         if st.getQuestItemsCount(ETERNITY_DIAMOND) == 0 :
           st.giveItems(ETERNITY_DIAMOND,1)
         htmltext = "30414-24.htm"

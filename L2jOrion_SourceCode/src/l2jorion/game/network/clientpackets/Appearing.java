@@ -20,9 +20,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.UserInfo;
 
-/**
- * Appearing Packet Handler
- */
 public final class Appearing extends L2GameClientPacket
 {
 	@Override
@@ -42,7 +39,9 @@ public final class Appearing extends L2GameClientPacket
 		}
 		
 		if (activeChar.isTeleporting())
+		{
 			activeChar.onTeleported();
+		}
 		
 		sendPacket(new UserInfo(activeChar));
 	}

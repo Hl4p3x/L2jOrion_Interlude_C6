@@ -32,9 +32,6 @@ import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author chris
- */
 public class PaganKeys implements IItemHandler
 {
 	private static final int[] ITEM_IDS =
@@ -52,7 +49,9 @@ public class PaganKeys implements IItemHandler
 		final int itemId = item.getItemId();
 		
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		L2Object target = activeChar.getTarget();
@@ -84,18 +83,19 @@ public class PaganKeys implements IItemHandler
 		final int openChance = 35;
 		
 		if (!playable.destroyItem("Consume", item.getObjectId(), 1, null, false))
+		{
 			return;
+		}
 		
 		switch (itemId)
 		{
 			case 8273: // AnteroomKey
-				if (door.getDoorName().startsWith("Anteroom"))
+				if (door.getDoorId() == 19160002 || door.getDoorId() == 19160003 || door.getDoorId() == 19160004 || door.getDoorId() == 19160005 || door.getDoorId() == 19160006 || door.getDoorId() == 19160007 || door.getDoorId() == 19160008 || door.getDoorId() == 19160009)
 				{
 					if (openChance > 0 && Rnd.get(100) < openChance)
 					{
 						activeChar.sendMessage("You opened Anterooms Door.");
 						door.openMe();
-						door.onOpen(); // Closes the door after 60sec
 						activeChar.broadcastPacket(new SocialAction(activeChar.getObjectId(), 3));
 					}
 					else
@@ -113,13 +113,12 @@ public class PaganKeys implements IItemHandler
 				}
 				break;
 			case 8274: // Chapelkey, Capel Door has a Gatekeeper?? I use this key for Altar Entrance and Chapel_Door
-				if (door.getDoorName().startsWith("Altar_Entrance") || door.getDoorName().startsWith("Chapel_Door"))
+				if (door.getDoorId() == 19160010 || door.getDoorId() == 19160011 || door.getDoorId() == 19160014 || door.getDoorId() == 19160015 || door.getDoorId() == 19160016 || door.getDoorId() == 19160017)
 				{
 					if (openChance > 0 && Rnd.get(100) < openChance)
 					{
 						activeChar.sendMessage("You opened Altar Entrance.");
 						door.openMe();
-						door.onOpen();
 						activeChar.broadcastPacket(new SocialAction(activeChar.getObjectId(), 3));
 					}
 					else
@@ -136,13 +135,12 @@ public class PaganKeys implements IItemHandler
 				}
 				break;
 			case 8275: // Key of Darkness
-				if (door.getDoorName().startsWith("Door_of_Darkness"))
+				if (door.getDoorId() == 19160012 || door.getDoorId() == 19160013)
 				{
 					if (openChance > 0 && Rnd.get(100) < openChance)
 					{
 						activeChar.sendMessage("You opened Door of Darkness.");
 						door.openMe();
-						door.onOpen();
 						activeChar.broadcastPacket(new SocialAction(activeChar.getObjectId(), 3));
 					}
 					else
@@ -159,7 +157,6 @@ public class PaganKeys implements IItemHandler
 				}
 				break;
 		}
-		activeChar = null;
 	}
 	
 	@Override

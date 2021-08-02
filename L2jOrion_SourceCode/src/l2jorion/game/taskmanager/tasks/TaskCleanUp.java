@@ -21,16 +21,12 @@ package l2jorion.game.taskmanager.tasks;
 
 import l2jorion.game.taskmanager.Task;
 import l2jorion.game.taskmanager.TaskManager;
-import l2jorion.game.taskmanager.TaskTypes;
 import l2jorion.game.taskmanager.TaskManager.ExecutedTask;
+import l2jorion.game.taskmanager.TaskTypes;
 import l2jorion.log.Log;
 
-/**
- * @author Tempy
- */
 public final class TaskCleanUp extends Task
 {
-	//private static final Logger LOG = LoggerFactory.getLogger(TaskCleanUp.class);
 	public static final String NAME = "cleanup";
 	
 	@Override
@@ -52,6 +48,6 @@ public final class TaskCleanUp extends Task
 	public void initializate()
 	{
 		super.initializate();
-		TaskManager.addUniqueTask(NAME, TaskTypes.TYPE_FIXED_SHEDULED, "86400000", "86400000", ""); // 86400000 = 24 hours
+		TaskManager.addUniqueTask(NAME, TaskTypes.TYPE_FIXED_SHEDULED, "86400000", "86400000", "");
 	}
 }

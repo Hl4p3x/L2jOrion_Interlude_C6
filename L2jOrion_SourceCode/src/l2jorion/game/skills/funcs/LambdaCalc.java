@@ -22,12 +22,8 @@ package l2jorion.game.skills.funcs;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public final class LambdaCalc extends Lambda
 {
-	
 	public Func[] funcs;
 	
 	public LambdaCalc()
@@ -65,5 +61,4 @@ public final class LambdaCalc extends Lambda
 		tmp[len] = f;
 		funcs = tmp;
 	}
-	
 }

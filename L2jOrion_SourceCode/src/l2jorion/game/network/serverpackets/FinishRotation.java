@@ -22,13 +22,10 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
 
-/**
- * format dd
- * @version $Revision: 1.3.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class FinishRotation extends L2GameServerPacket
 {
 	private static final String _S__78_FINISHROTATION = "[S] 63 FinishRotation";
+	
 	private final int _heading;
 	private final int _charObjId;
 	
@@ -46,10 +43,6 @@ public class FinishRotation extends L2GameServerPacket
 		writeD(_heading);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

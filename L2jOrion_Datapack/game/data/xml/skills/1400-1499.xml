@@ -8,7 +8,7 @@
   <table name="#ench2MpConsume">68 67 66 65 63 62 62 61 60 58 57 55 55 55 53 52 51 50 48 47 47 46 44 43 42 41 40 40 48 47</table>
   <table name="#mpConsume">52 54 55 58 60 62 64 65 67 69</table>
   <table name="#itemConsumeCount">3 3 4 4 4 4 5 5 5 5</table>
-  <set name="power" val="30"/>
+  <set name="power" val="40"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="itemConsumeId" val="3031"/>
   <set name="itemConsumeCount" val="#itemConsumeCount"/>
@@ -207,7 +207,7 @@
   <set name="castRange" val="600"/>
   <set name="effectRange" val="900"/>
   <set name="negateSkillTypes" val="BLEED DEBUFF FEAR MUTE PARALYZE ROOT SLEEP STUN POISON WEAKNESS PDAM MDAM DRAIN DOT GLOOM SLOW SURRENDER HEX"/>
-  <set name="negateEffectTypes" val="DEBUFF STUN"/>
+  <set name="negateEffectTypes" val="DEBUFF STUN PARALYZE"/>
   <set name="negatePower" val="9"/> <!-- Guessing -->
 </skill>
 <skill id="1410" levels="1" name="Salvation">
@@ -225,7 +225,7 @@
   <set name="castRange" val="400"/>
   <set name="effectRange" val="900"/>
   <for>
-	<effect count="1" name="PhoenixBless" time="3600" val="0"/>
+	<effect count="1" name="PhoenixBless" time="3600" val="0" stackOrder="2" stackType="noblebless"/>
   </for>
 </skill>
 <skill id="1411" levels="1" name="Mystic Immunity">

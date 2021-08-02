@@ -23,6 +23,7 @@ package l2jorion.game.network.serverpackets;
 public final class ActionFailed extends L2GameServerPacket
 {
 	public static final String _S__25_ACTIONFAILED = "[S] 25 ActionFailed";
+	
 	public static final ActionFailed STATIC_PACKET = new ActionFailed();
 	
 	public ActionFailed()

@@ -23,11 +23,6 @@ package l2jorion.game.model;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.StatsSet;
 
-/**
- * This class ...
- * @author luisantonioa
- * @version $Revision: 1.2 $ $Date: 2004/06/27 08:12:59 $
- */
 public class Item
 {
 	public int id;

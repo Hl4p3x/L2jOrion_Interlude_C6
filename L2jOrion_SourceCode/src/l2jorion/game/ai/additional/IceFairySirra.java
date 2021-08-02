@@ -16,10 +16,8 @@
  */
 package l2jorion.game.ai.additional;
 
-import java.util.concurrent.Future;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import javolution.util.FastList;
 import l2jorion.Config;
@@ -38,29 +36,35 @@ import l2jorion.game.model.zone.type.L2BossZone;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ExShowScreenMessage;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
+import l2jorion.game.network.serverpackets.PlaySound;
 import l2jorion.game.templates.L2NpcTemplate;
-
-/**
- * Ice Fairy Sirra AI
- * @author Kerberos
- */
+import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
+import l2jorion.util.random.Rnd;
 
 public class IceFairySirra extends Quest implements Runnable
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(Antharas.class);
+	
 	private static final int STEWARD = 32029;
+	private static final int ICE_QUEEN = 29056;
+	
 	private static final int SILVER_HEMOCYTE = 8057;
 	private static L2BossZone _freyasZone;
 	private static L2PcInstance _player = null;
+	protected ScheduledFuture<?> _checkZoneTask = null;
+	
 	protected FastList<L2NpcInstance> _allMobs = new FastList<>();
-	protected Future<?> _onDeadEventTask = null;
 	
 	public IceFairySirra(final int id, final String name, final String descr)
 	{
 		super(id, name, descr);
+		
 		final int[] mobs =
 		{
 			STEWARD,
+			ICE_QUEEN,
 			22100,
 			22102,
 			22104
@@ -68,69 +72,126 @@ public class IceFairySirra extends Quest implements Runnable
 		
 		for (final int mob : mobs)
 		{
-			// TODO:
+			addEventId(mob, Quest.QuestEventType.ON_KILL);
 			addEventId(mob, Quest.QuestEventType.QUEST_START);
 			addEventId(mob, Quest.QuestEventType.QUEST_TALK);
-			addEventId(mob, Quest.QuestEventType.NPC_FIRST_TALK);
+			//addEventId(mob, Quest.QuestEventType.NPC_FIRST_TALK);
+		}
+		
+		String bossData = loadGlobalQuestVar("IceFairySirra");
+		if (bossData.isEmpty())
+		{
+			String val = "" + 0;
+			saveGlobalQuestVar("IceFairySirra", val);
 		}
 		
 		init();
 	}
 	
-	@Override
-	public String onFirstTalk(final L2NpcInstance npc, final L2PcInstance player)
+	/*public String onFirstTalk(final L2NpcInstance npc, final L2PcInstance player)
 	{
 		if (player.getQuestState("IceFairySirra") == null)
 		{
+			_a.sys("newQuestState");
 			newQuestState(player);
 		}
+		
 		player.setLastQuestNpcObject(npc.getObjectId());
+		
 		String filename = "";
 		if (npc.isBusy())
 		{
-			filename = getHtmlPath(10);
+			filename = getHtmlPath(4);
 		}
 		else
 		{
 			filename = getHtmlPath(0);
 		}
+		
 		sendHtml(npc, player, filename);
+		
 		return null;
+	}*/
+	
+	@Override
+	public String onTalk(L2NpcInstance npc, L2PcInstance player)
+	{
+		String filename;
+		
+		if (npc.isBusy())
+		{
+			filename = getHtmlPath(4);
+		}
+		else
+		{
+			String bossData = loadGlobalQuestVar("IceFairySirra");
+			long respawnTime = 0;
+			long remainingTime = 0;
+			
+			if (Long.parseLong(bossData) > 0)
+			{
+				respawnTime = Long.parseLong(loadGlobalQuestVar("IceFairySirra"));
+				remainingTime = respawnTime - System.currentTimeMillis();
+			}
+			
+			if (remainingTime <= 0)
+			{
+					if (player.isInParty() && player.getParty().getPartyLeaderOID() == player.getObjectId())
+					{
+						if (checkItems(player))
+						{
+							startQuestTimer("start", 1000, null, player);
+							_player = player;
+							destroyItems(player);
+							player.getInventory().addItem("Scroll", 8379, 3, player, null);
+							npc.setBusy(true);
+							screenMessage(player, "Steward: Please wait a moment.", 1000);
+							filename = getHtmlPath(5);
+						}
+						else
+						{
+							filename = getHtmlPath(2);
+						}
+					}
+					else
+					{
+						filename = getHtmlPath(1);
+					}
+			}
+			else
+			{
+				filename = getHtmlPath(3);
+			}
+			
+		}
+		
+		sendHtml(npc, player, filename);
+		
+		return null;
+	}
+	
+	@Override
+	public String onKill(L2NpcInstance npc, L2PcInstance killer, boolean isPet)
+	{
+		if (npc.getNpcId() == ICE_QUEEN)
+		{
+			npc.broadcastPacket(new PlaySound(1, "BS01_D", 1, npc.getObjectId(), npc.getX(), npc.getY(), npc.getZ()));
+			
+			int respawnMinDelay = 86400000 * (int) Config.RAID_MIN_RESPAWN_MULTIPLIER;
+			int respawnMaxDelay = 90000000 * (int) Config.RAID_MAX_RESPAWN_MULTIPLIER;
+			long respawn_delay = Rnd.get(respawnMinDelay,respawnMaxDelay);
+			
+			long time = System.currentTimeMillis() + respawn_delay;
+			
+			saveGlobalQuestVar("IceFairySirra", ""+time);
+		}
+		return super.onKill(npc, killer, isPet);
 	}
 	
 	@Override
 	public String onAdvEvent(final String event, final L2NpcInstance npc, final L2PcInstance player)
 	{
-		if (event.equalsIgnoreCase("check_condition"))
-		{
-			if (npc.isBusy())// should never happen
-				return super.onAdvEvent(event, npc, player);
-			
-			String filename = "";
-			if (player.isInParty() && player.getParty().getPartyLeaderOID() == player.getObjectId())
-			{
-				if (checkItems(player))
-				{
-					startQuestTimer("start", 100000, null, player);
-					_player = player;
-					destroyItems(player);
-					player.getInventory().addItem("Scroll", 8379, 3, player, null);
-					npc.setBusy(true);
-					screenMessage(player, "Steward: Please wait a moment.", 100000);
-					filename = getHtmlPath(3);
-				}
-				else
-				{
-					filename = getHtmlPath(2);
-				}
-			}
-			else
-			{
-				filename = getHtmlPath(1);
-			}
-			sendHtml(npc, player, filename);
-		}
-		else if (event.equalsIgnoreCase("start"))
+		if (event.equalsIgnoreCase("start"))
 		{
 			if (_freyasZone == null)
 			{
@@ -138,9 +199,12 @@ public class IceFairySirra extends Quest implements Runnable
 				cleanUp();
 				return super.onAdvEvent(event, npc, player);
 			}
+			
 			_freyasZone.setZoneEnabled(true);
+			
 			closeGates();
 			doSpawns();
+			checkZone(npc);
 			startQuestTimer("Party_Port", 2000, null, player);
 			startQuestTimer("End", 1802000, null, player);
 		}
@@ -181,17 +245,25 @@ public class IceFairySirra extends Quest implements Runnable
 			return;
 		}
 		_freyasZone.setZoneEnabled(false);
+		
 		final L2NpcInstance steward = findTemplate(STEWARD);
 		if (steward != null)
 		{
 			steward.setBusy(false);
 		}
+		
+		if (_checkZoneTask != null)
+		{
+			_checkZoneTask.cancel(true);
+		}
+		
 		openGates();
 	}
 	
 	public void cleanUp()
 	{
 		init();
+		
 		cancelQuestTimer("30MinutesRemaining", null, _player);
 		cancelQuestTimer("20MinutesRemaining", null, _player);
 		cancelQuestTimer("10MinutesRemaining", null, _player);
@@ -288,11 +360,16 @@ public class IceFairySirra extends Quest implements Runnable
 			{
 				final L2ItemInstance i = pc.getInventory().getItemByItemId(SILVER_HEMOCYTE);
 				if (i == null || i.getCount() < 10)
+				{
 					return false;
+				}
 			}
 		}
 		else
+		{
 			return false;
+		}
+		
 		return true;
 	}
 	
@@ -435,12 +512,16 @@ public class IceFairySirra extends Quest implements Runnable
 		{
 			// If not running lazy cache the file must be in the cache or it doesnt exist
 			if (HtmCache.getInstance().contains(temp))
+			{
 				return temp;
+			}
 		}
 		else
 		{
 			if (HtmCache.getInstance().isLoadable(temp))
+			{
 				return temp;
+			}
 		}
 		
 		// If the file is not found, the standard message "I have nothing to say to you" is returned
@@ -452,8 +533,30 @@ public class IceFairySirra extends Quest implements Runnable
 		final NpcHtmlMessage html = new NpcHtmlMessage(npc.getObjectId());
 		html.setFile(filename);
 		html.replace("%objectId%", String.valueOf(npc.getObjectId()));
+		
+		if (_checkZoneTask != null)
+		{
+			html.replace("%time%", _checkZoneTask.getDelay(TimeUnit.MINUTES));
+		}
 		player.sendPacket(html);
 		player.sendPacket(ActionFailed.STATIC_PACKET);
+	}
+	
+	protected void checkZone(L2NpcInstance npc)
+	{
+		if (_checkZoneTask == null)
+		{
+			_checkZoneTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(() ->
+			{
+				npc.setBusy(false);
+				
+				if (_checkZoneTask != null)
+				{
+					_checkZoneTask.cancel(true);
+				}
+				
+			}, 1802000, 100);
+		}
 	}
 	
 	@Override

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
+	<!-- Clan Hall HQ Zones -->
+	<zone name="devastated_castle_headquarter_territory" type="HqZone" shape="NPoly" minZ="-2405" maxZ="595">
+		<stat name="clanHallId" val="34" />
+		<!-- headquarter_territory -->
+		<node X="176740" Y="-13838" />
+		<node X="180040" Y="-13838" />
+		<node X="180040" Y="-13188" />
+		<node X="176740" Y="-13188" />
+	</zone>
+	<zone name="fortress_of_restless_headquarter_territory" type="HqZone" shape="NPoly" minZ="-147" maxZ="1853">
+		<stat name="clanHallId" val="64" />
+		<!-- headquarter_territory -->
+		<node X="57502" Y="-31651" />
+		<node X="58431" Y="-31607" />
+		<node X="59638" Y="-30984" />
+		<node X="56685" Y="-30983" />
+	</zone>
+</list>

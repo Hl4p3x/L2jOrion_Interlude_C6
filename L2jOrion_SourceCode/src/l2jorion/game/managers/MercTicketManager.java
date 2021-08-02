@@ -35,26 +35,16 @@ import l2jorion.game.model.actor.instance.L2SiegeGuardInstance;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author yellowperil & Fulminus This class is similar to the SiegeGuardManager, except it handles the loading of the mercenary tickets that are dropped on castle floors by the castle lords. These tickets (aka badges) need to be readded after each server reboot except when the server crashed in the
- *         middle of an ongoig siege. In addition, this class keeps track of the added tickets, in order to properly limit the number of mercenaries in each castle and the number of mercenaries from each mercenary type. Finally, we provide auxilary functions to identify the castle in which each item
- *         (and its corresponding NPC) belong to, in order to help avoid mixing them up.
- */
 public class MercTicketManager
 {
 	protected static Logger LOG = LoggerFactory.getLogger(MercTicketManager.class);
 	
-	// =========================================================
-	
-	// =========================================================
-	// Data Field
 	private final List<L2ItemInstance> _droppedTickets = new FastList<>();
 	
 	public static final MercTicketManager getInstance()
@@ -64,7 +54,7 @@ public class MercTicketManager
 	
 	public MercTicketManager()
 	{
-		LOG.info("Initializing MercTicketManager");
+		//LOG.info("Initializing MercTicketManager");
 		_droppedTickets.clear();
 		load();
 	}
@@ -731,11 +721,11 @@ public class MercTicketManager
 				castle = null;
 			}
 			DatabaseUtils.close(statement);
-			statement = null;
-			rs.close();
-			rs = null;
 			
-			LOG.info("Loaded: " + getDroppedTickets().size() + " Mercenary Tickets");
+			if (getDroppedTickets().size() > 0)
+			{
+				LOG.info("MercTicketManager: Loaded: " + getDroppedTickets().size() + " mercenary tickets");
+			}
 		}
 		catch (final Exception e)
 		{
@@ -835,7 +825,9 @@ public class MercTicketManager
 		
 		Castle castle = CastleManager.getInstance().getCastle(activeChar);
 		if (castle == null) // this should never happen at this point
+		{
 			return -1;
+		}
 		
 		// check if this item can be added here
 		for (int i = 0; i < ITEM_IDS.length; i++)
@@ -847,21 +839,18 @@ public class MercTicketManager
 				// Hire merc for this caslte. NpcId is at the same index as the item used.
 				castle.getSiege().getSiegeGuardManager().hireMerc(x, y, z, heading, NPC_IDS[i]);
 				
-				// create the ticket in the gameworld
+				// create the ticket in the game world
 				L2ItemInstance dropticket = new L2ItemInstance(IdFactory.getInstance().getNextId(), itemId);
-				dropticket.setLocation(L2ItemInstance.ItemLocation.INVENTORY);
-				dropticket.dropMe(null, x, y, z);
+				dropticket.setLocation(L2ItemInstance.ItemLocation.VOID);
+				dropticket.dropMe(activeChar, x, y, z);
 				dropticket.setDropTime(0); // avoids it from beeing removed by the auto item destroyer
 				L2World.getInstance().storeObject(dropticket); // add to the world
 				// and keep track of this ticket in the list
 				_droppedTickets.add(dropticket);
 				
-				dropticket = null;
-				
 				return NPC_IDS[i];
 			}
 		}
-		castle = null;
 		return -1;
 	}
 	
@@ -892,7 +881,6 @@ public class MercTicketManager
 				}, despawnDelay);
 			}
 		}
-		template = null;
 	}
 	
 	/**

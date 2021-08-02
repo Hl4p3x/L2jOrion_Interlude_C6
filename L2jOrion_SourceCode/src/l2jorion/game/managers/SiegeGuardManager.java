@@ -31,12 +31,11 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.model.spawn.L2Spawn;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SiegeGuardManager
 {
@@ -66,7 +65,9 @@ public class SiegeGuardManager
 	public void addSiegeGuard(final L2PcInstance activeChar, final int npcId)
 	{
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		addSiegeGuard(activeChar.getX(), activeChar.getY(), activeChar.getZ(), activeChar.getHeading(), npcId);
 	}
@@ -94,7 +95,9 @@ public class SiegeGuardManager
 	public void hireMerc(final L2PcInstance activeChar, final int npcId)
 	{
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		hireMerc(activeChar.getX(), activeChar.getY(), activeChar.getZ(), activeChar.getHeading(), npcId);
 	}
@@ -138,7 +141,9 @@ public class SiegeGuardManager
 		catch (final Exception e1)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e1.printStackTrace();
+			}
 			
 			LOG.warn("Error deleting hired siege guard at " + x + ',' + y + ',' + z + ":" + e1);
 		}
@@ -168,7 +173,9 @@ public class SiegeGuardManager
 		catch (final Exception e1)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e1.printStackTrace();
+			}
 			
 			LOG.warn("Error deleting hired siege guard for castle " + getCastle().getName() + ":" + e1);
 		}
@@ -187,10 +194,12 @@ public class SiegeGuardManager
 	{
 		loadSiegeGuard();
 		for (final L2Spawn spawn : getSiegeGuardSpawn())
+		{
 			if (spawn != null)
 			{
 				spawn.init();
 			}
+		}
 	}
 	
 	/**
@@ -271,7 +280,9 @@ public class SiegeGuardManager
 		catch (final Exception e1)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e1.printStackTrace();
+			}
 			
 			LOG.warn("Error loading siege guard for castle " + getCastle().getName() + ":" + e1);
 		}
@@ -321,7 +332,9 @@ public class SiegeGuardManager
 		catch (final Exception e1)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e1.printStackTrace();
+			}
 			
 			LOG.warn("Error adding siege guard for castle " + getCastle().getName() + ":" + e1);
 		}

@@ -46,19 +46,16 @@ import l2jorion.game.model.actor.instance.L2RiftInvaderInstance;
 import l2jorion.game.model.actor.instance.L2SiegeGuardInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-/**
- * @author Micht
- */
 public class CursedWeaponsManager
 {
 	private static final Logger LOG = LoggerFactory.getLogger(CursedWeaponsManager.class);
@@ -73,25 +70,29 @@ public class CursedWeaponsManager
 	public CursedWeaponsManager()
 	{
 		if (!Config.ALLOW_CURSED_WEAPONS)
+		{
 			return;
+		}
 		
 		load();
 		restore();
 		controlPlayers();
 		
-		LOG.info("Loaded: " + _cursedWeapons.size() + " cursed weapon(s).");
+		LOG.info("CursedWeaponsManager: Loaded: " + _cursedWeapons.size() + " cursed weapons");
 	}
 	
-	// =========================================================
-	// Method - Private
 	public final void reload()
 	{
 		if (!Config.ALLOW_CURSED_WEAPONS)
+		{
 			return;
+		}
 
 		// Drop existing CWs.
 		for (CursedWeapon cw : _cursedWeapons.values())
+		{
 			cw.endOfLife();
+		}
 		
 		_cursedWeapons.clear();
 		load();
@@ -103,7 +104,7 @@ public class CursedWeaponsManager
 	
 	private final void load()
 	{
-		LOG.info("Initializing CursedWeaponsManager");
+		//LOG.info("Initializing CursedWeaponsManager");
 		if (Config.DEBUG)
 		{
 			LOG.info("Loading data: ");

@@ -16,9 +16,9 @@
  */
 package l2jorion.game.network.clientpackets;
 
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.StopMoveInVehicle;
-import l2jorion.util.Point3D;
 
 /**
  * @author Damon
@@ -51,7 +51,7 @@ public final class CannotMoveAnymoreInVehicle extends L2GameClientPacket
 		{
 			if (player.getBoat().getObjectId() == _boatId)
 			{
-				player.setInVehiclePosition(new Point3D(_x, _y, _z));
+				player.setInVehiclePosition(new Location(_x, _y, _z));
 				player.getPosition().setHeading(_heading);
 				player.broadcastPacket(new StopMoveInVehicle(player, _boatId));
 			}

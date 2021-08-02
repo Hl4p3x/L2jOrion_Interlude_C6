@@ -16,15 +16,11 @@
  */
 package l2jorion.game.skills.effects;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.skills.Env;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * @author programmos
- */
 public class EffectImmobileUntilAttacked extends L2Effect
 {
 	static final Logger LOG = LoggerFactory.getLogger(EffectImmobileUntilAttacked.class);
@@ -48,16 +44,12 @@ public class EffectImmobileUntilAttacked extends L2Effect
 		return false;
 	}
 	
-	/** Notify exited */
-	
 	@Override
 	public void onExit()
 	{
 		super.onExit();
 		getEffected().stopImmobileUntilAttacked(this);
 	}
-	
-	/** Notify started */
 	
 	@Override
 	public void onStart()

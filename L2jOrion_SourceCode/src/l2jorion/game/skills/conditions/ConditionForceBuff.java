@@ -25,9 +25,6 @@ import l2jorion.game.skills.Env;
 import l2jorion.game.skills.effects.EffectBattleForce;
 import l2jorion.game.skills.effects.EffectSpellForce;
 
-/**
- * @author kombat
- */
 public class ConditionForceBuff extends Condition
 {
 	private static int BATTLE_FORCE = 5104;
@@ -56,14 +53,18 @@ public class ConditionForceBuff extends Condition
 		{
 			final L2Effect battleForce = env.player.getFirstEffect(BATTLE_FORCE);
 			if (!(battleForce instanceof EffectBattleForce) || ((EffectBattleForce) battleForce).forces < neededBattle)
+			{
 				return false;
+			}
 		}
 		final int neededSpell = _spellForces;
 		if (neededSpell > 0)
 		{
 			final L2Effect spellForce = env.player.getFirstEffect(SPELL_FORCE);
 			if (!(spellForce instanceof EffectSpellForce) || ((EffectSpellForce) spellForce).forces < neededSpell)
+			{
 				return false;
+			}
 		}
 		return true;
 	}

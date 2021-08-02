@@ -19,9 +19,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Format: (ch)ddddd
- */
 public class ExConfirmVariationRefiner extends L2GameServerPacket
 {
 	private static final String _S__FE_53_EXCONFIRMVARIATIONREFINER = "[S] FE:53 ExConfirmVariationRefiner";

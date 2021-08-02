@@ -20,18 +20,11 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class ...
- * @version $Revision: 1.3.3 $ $Date: 2009/05/12 19:06:39 $
- */
 public class LeaveWorld extends L2GameServerPacket
 {
 	private static final String _S__96_LEAVEWORLD = "[S] 7e LeaveWorld";
-	public static final LeaveWorld STATIC_PACKET = new LeaveWorld();
 	
-	/*
-	 * private LeaveWorld() { //null }
-	 */
+	public static final LeaveWorld STATIC_PACKET = new LeaveWorld();
 	
 	@Override
 	protected final void writeImpl()
@@ -39,10 +32,6 @@ public class LeaveWorld extends L2GameServerPacket
 		writeC(0x7e);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

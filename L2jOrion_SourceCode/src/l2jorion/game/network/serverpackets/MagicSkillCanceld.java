@@ -20,10 +20,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class ...
- * @version $Revision: 1.2.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class MagicSkillCanceld extends L2GameServerPacket
 {
 	private static final String _S__5B_MAGICSKILLCANCELD = "[S] 49 MagicSkillCanceld";

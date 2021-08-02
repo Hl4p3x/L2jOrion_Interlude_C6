@@ -22,10 +22,6 @@ import l2jorion.game.model.base.Race;
 import l2jorion.game.templates.L2WeaponType;
 import l2jorion.util.random.Rnd;
 
-/**
- * This class manages Npc Polymorph into player instances, they look like regular players. This effect will show up on all clients.
- * @author Darki699
- */
 public final class L2CustomNpcInstance
 {
 	
@@ -48,9 +44,13 @@ public final class L2CustomNpcInstance
 	{
 		_NpcInstance = myNpc;
 		if (_NpcInstance == null)
+		{
 			return;
+		}
 		else if (_NpcInstance.getSpawn() == null)
+		{
 			return;
+		}
 		else
 		{
 			initialize();

@@ -2,13 +2,12 @@ package l2jorion.game.handler.admin;
 
 import java.util.StringTokenizer;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class AdminFakeOnline implements IAdminCommandHandler
 {

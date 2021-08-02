@@ -26,6 +26,7 @@ import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.PetInfo;
+import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.skills.Stats;
@@ -37,16 +38,39 @@ public class PetStat extends SummonStat
 		super(activeChar);
 	}
 	
-	public boolean addExp(final int value)
+	@Override
+	public boolean addExp(long value)
 	{
-		if (!super.addExp(value))
-			return false;
+		if ((getExp() + value) < 0 || (value > 0 && getExp() == getExpForLevel(getMaxPetLevel()) - 1))
+		{
+			return true;
+		}
 		
-		/*
-		 * Micht : Use of PetInfo for C5 StatusUpdate su = new StatusUpdate(getActiveChar().getObjectId()); su.addAttribute(StatusUpdate.EXP, getExp()); getActiveChar().broadcastPacket(su);
-		 */
+		if (getExp() + value >= getExpForLevel(getMaxPetLevel()))
+		{
+			value = getExpForLevel(getMaxPetLevel()) - 1 - getExp();
+		}
+		
+		setExp(getExp() + value);
+		
+		byte level = 1;
+		
+		for (level = 1; level <= getMaxPetLevel(); level++)
+		{
+			if (getExp() >= getExpForLevel(level))
+			{
+				continue;
+			}
+			--level;
+			break;
+		}
+		
+		if (level != getLevel())
+		{
+			addLevel((byte) (level - getLevel()));
+		}
+		
 		getActiveChar().broadcastPacket(new PetInfo(getActiveChar()));
-		// The PetInfo packet wipes the PartySpelled (list of active spells' icons). Re-add them
 		getActiveChar().updateEffectIcons(true);
 		
 		return true;
@@ -56,24 +80,36 @@ public class PetStat extends SummonStat
 	public boolean addExpAndSp(final long addToExp, final int addToSp)
 	{
 		if (!super.addExpAndSp(addToExp, addToSp))
+		{
 			return false;
+		}
 		
 		SystemMessage sm = new SystemMessage(SystemMessageId.PET_EARNED_S1_EXP);
 		sm.addNumber((int) addToExp);
 		
 		getActiveChar().getOwner().sendPacket(sm);
-		sm = null;
 		
 		return true;
 	}
 	
 	@Override
-	public final boolean addLevel(final byte value)
+	public final boolean addLevel(byte value)
 	{
-		if (getLevel() + value > ExperienceData.getInstance().getMaxLevel() - 1)
-			return false;
+		if (getLevel() + value > getMaxPetLevel() - 1)
+		{
+			if (getLevel() < getMaxPetLevel() - 1)
+			{
+				value = (byte) (getMaxPetLevel() - 1 - getLevel());
+			}
+			else
+			{
+				return false;
+			}
+		}
 		
-		final boolean levelIncreased = super.addLevel(value);
+		final boolean levelIncreased = getLevel() + value > getLevel();
+		value += getLevel();
+		setLevel(value);
 		
 		// Sync up exp with current level
 		if (getExp() > getExpForLevel(getLevel() + 1) || getExp() < getExpForLevel(getLevel()))
@@ -84,6 +120,7 @@ public class PetStat extends SummonStat
 		if (levelIncreased)
 		{
 			getActiveChar().getOwner().sendMessage("Your pet has increased it's level.");
+			getActiveChar().broadcastPacket(new SocialAction(getActiveChar().getObjectId(), 15));
 		}
 		
 		StatusUpdate su = new StatusUpdate(getActiveChar().getObjectId());
@@ -91,7 +128,6 @@ public class PetStat extends SummonStat
 		su.addAttribute(StatusUpdate.MAX_HP, getMaxHp());
 		su.addAttribute(StatusUpdate.MAX_MP, getMaxMp());
 		getActiveChar().broadcastPacket(su);
-		su = null;
 		
 		// Send a Server->Client packet PetInfo to the L2PcInstance
 		getActiveChar().getOwner().sendPacket(new PetInfo(getActiveChar()));
@@ -220,8 +256,6 @@ public class PetStat extends SummonStat
 			attack += skill.getPower();
 		}
 		
-		stat = null;
-		
 		return (int) calcStat(Stats.MAGIC_ATTACK, attack, target, skill);
 	}
 	
@@ -279,5 +313,15 @@ public class PetStat extends SummonStat
 	public int getMAtkSpd()
 	{
 		return (int) calcStat(Stats.MAGIC_ATTACK_SPEED, getActiveChar().getPetData().getPetCastSpeed(), null, null);
+	}
+	
+	public int getMaxPetLevel()
+	{
+		int maxLevel = ExperienceData.getInstance().getMaxPetLevel();
+		if (getActiveChar().getNpcId() == 12564)
+		{
+			return maxLevel + 1;
+		}
+		return maxLevel;
 	}
 }

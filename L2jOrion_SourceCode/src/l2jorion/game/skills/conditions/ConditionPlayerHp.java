@@ -22,9 +22,6 @@ package l2jorion.game.skills.conditions;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author mr
- */
 public class ConditionPlayerHp extends Condition
 {
 	

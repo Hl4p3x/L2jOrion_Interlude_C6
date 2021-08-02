@@ -41,7 +41,9 @@ public class CommunityBoard
 	{
 		final L2PcInstance player = client.getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		
 		if (Config.COMMUNITY_TYPE.equals("off"))
 		{
@@ -95,7 +97,9 @@ public class CommunityBoard
 	{
 		final L2PcInstance player = client.getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		
 		if (Config.COMMUNITY_TYPE.equals("off"))
 		{

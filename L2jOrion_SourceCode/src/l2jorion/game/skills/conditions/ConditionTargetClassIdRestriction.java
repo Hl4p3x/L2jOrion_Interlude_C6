@@ -26,7 +26,6 @@ import l2jorion.game.skills.Env;
 
 public class ConditionTargetClassIdRestriction extends Condition
 {
-	
 	private final FastList<Integer> _classIds;
 	
 	public ConditionTargetClassIdRestriction(final FastList<Integer> classId)
@@ -38,7 +37,9 @@ public class ConditionTargetClassIdRestriction extends Condition
 	public boolean testImpl(final Env env)
 	{
 		if (!(env.target instanceof L2PcInstance))
+		{
 			return true;
+		}
 		return !_classIds.contains(((L2PcInstance) env.target).getClassId().getId());
 	}
 }

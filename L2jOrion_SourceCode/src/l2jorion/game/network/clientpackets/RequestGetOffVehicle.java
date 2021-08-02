@@ -20,7 +20,7 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import l2jorion.game.model.L2CharPosition;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.GetOffVehicle;
@@ -31,7 +31,7 @@ import l2jorion.game.network.serverpackets.StopMoveInVehicle;
  */
 public final class RequestGetOffVehicle extends L2GameClientPacket
 {
-private int _boatId, _x, _y, _z;
+	private int _boatId, _x, _y, _z;
 	
 	@Override
 	protected void readImpl()
@@ -62,7 +62,7 @@ private int _boatId, _x, _y, _z;
 		activeChar.setInVehiclePosition(null);
 		sendPacket(ActionFailed.STATIC_PACKET);
 		activeChar.broadcastPacket(new GetOffVehicle(activeChar.getObjectId(), _boatId, _x, _y, _z));
-		activeChar.stopMove(new L2CharPosition(_x, _y, _z, activeChar.getHeading()));
+		activeChar.stopMove(new Location(_x, _y, _z, activeChar.getHeading()));
 	}
 	
 	@Override

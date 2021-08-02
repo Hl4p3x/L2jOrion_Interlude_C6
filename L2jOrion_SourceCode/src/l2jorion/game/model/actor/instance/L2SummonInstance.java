@@ -22,20 +22,18 @@ package l2jorion.game.model.actor.instance;
 
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Summon;
-import l2jorion.game.model.entity.olympiad.Olympiad;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SetSummonRemainTime;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class L2SummonInstance extends L2Summon
 {
@@ -134,7 +132,7 @@ public class L2SummonInstance extends L2Summon
 	@Override
 	public final String getLevels()
 	{
-		return ""+1;
+		return "" + 1;
 	}
 	
 	@Override
@@ -235,7 +233,9 @@ public class L2SummonInstance extends L2Summon
 	public boolean doDie(final L2Character killer)
 	{
 		if (!super.doDie(killer))
+		{
 			return false;
+		}
 		
 		if (Config.DEBUG)
 		{
@@ -297,10 +297,7 @@ public class L2SummonInstance extends L2Summon
 					_summon.decNextItemConsumeTime(maxTime / (_summon.getItemConsumeSteps() + 1));
 					
 					// check if owner has enought itemConsume, if requested
-					if (_summon.getItemConsumeCount() > 0 
-						&& _summon.getItemConsumeId() != 0 
-						&& !_summon.isDead() 
-						&& !_summon.destroyItemByItemId("Consume", _summon.getItemConsumeId(), _summon.getItemConsumeCount(), _activeChar, true))
+					if (_summon.getItemConsumeCount() > 0 && _summon.getItemConsumeId() != 0 && !_summon.isDead() && !_summon.destroyItemByItemId("Consume", _summon.getItemConsumeId(), _summon.getItemConsumeCount(), _activeChar, true))
 					{
 						_summon.unSummon(_activeChar);
 					}
@@ -313,10 +310,12 @@ public class L2SummonInstance extends L2Summon
 					_summon.lastShowntimeRemaining = (int) newTimeRemaining;
 				}
 			}
-			catch (final Throwable e)
+			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				if (Config.DEBUG)
 				{
@@ -364,30 +363,5 @@ public class L2SummonInstance extends L2Summon
 		}
 		
 		return getOwner().destroyItemByItemId(process, itemId, count, reference, sendMessage);
-	}
-	
-	@Override
-	public final void sendDamageMessage(final L2Character target, final int damage, final boolean mcrit, final boolean pcrit, final boolean miss)
-	{
-		if (miss)
-			return;
-		
-		// Prevents the double spam of system messages, if the target is the owning player.
-		if (target.getObjectId() != getOwner().getObjectId())
-		{
-			if (pcrit || mcrit)
-			{
-				getOwner().sendPacket(new SystemMessage(SystemMessageId.CRITICAL_HIT_BY_SUMMONED_MOB));
-			}
-			
-			if (getOwner().isInOlympiadMode() && target instanceof L2PcInstance && ((L2PcInstance) target).isInOlympiadMode() && ((L2PcInstance) target).getOlympiadGameId() == getOwner().getOlympiadGameId())
-			{
-				Olympiad.getInstance().notifyCompetitorDamage(getOwner(), damage, getOwner().getOlympiadGameId());
-			}
-			
-			SystemMessage sm = new SystemMessage(SystemMessageId.SUMMON_GAVE_DAMAGE_S1);
-			sm.addNumber(damage);
-			getOwner().sendPacket(sm);
-		}
 	}
 }

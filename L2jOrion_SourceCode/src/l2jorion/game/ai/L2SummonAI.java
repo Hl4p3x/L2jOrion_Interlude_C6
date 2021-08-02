@@ -27,26 +27,33 @@ import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_IDLE;
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_INTERACT;
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_PICK_UP;
 
+import l2jorion.game.geo.GeoData;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
+import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Summon;
-import l2jorion.game.model.L2Character.AIAccessor;
+import l2jorion.util.random.Rnd;
 
 public class L2SummonAI extends L2CharacterAI
 {
+	private static final int AVOID_RADIUS = 70;
 	
-	private boolean _thinking; // to prevent recursive thinking
-	private L2Summon summon;
+	private boolean _thinking;
+	private volatile boolean _startFollow = ((L2Summon) _actor).getFollowStatus();
+	private L2Character _lastAttack = null;
 	
-	public L2SummonAI(final AIAccessor accessor)
+	private volatile boolean _startAvoid = false;
+	
+	public L2SummonAI(L2Summon creature)
 	{
-		super(accessor);
+		super(creature);
 	}
 	
 	@Override
 	protected void onIntentionIdle()
 	{
 		stopFollow();
+		_startFollow = false;
 		onIntentionActive();
 	}
 	
@@ -55,7 +62,7 @@ public class L2SummonAI extends L2CharacterAI
 	{
 		L2Summon summon = (L2Summon) _actor;
 		
-		if (summon.getFollowStatus())
+		if (_startFollow)
 		{
 			setIntention(AI_INTENTION_FOLLOW, summon.getOwner());
 		}
@@ -63,20 +70,10 @@ public class L2SummonAI extends L2CharacterAI
 		{
 			super.onIntentionActive();
 		}
-		
-		summon = null;
 	}
 	
 	private void thinkAttack()
 	{
-		summon = (L2Summon) _actor;
-		L2Object target = null;
-		target = summon.getTarget();
-		
-		// Like L2OFF if the target is dead the summon must go back to his owner
-		if (target != null && summon != null && ((L2Character) target).isDead())
-			summon.setFollowStatus(true);
-		
 		if (checkTargetLostOrDead(getAttackTarget()))
 		{
 			setAttackTarget(null);
@@ -84,10 +81,14 @@ public class L2SummonAI extends L2CharacterAI
 		}
 		
 		if (maybeMoveToPawn(getAttackTarget(), _actor.getPhysicalAttackRange()))
+		{
 			return;
+		}
 		
 		clientStopMoving(null);
-		_accessor.doAttack(getAttackTarget());
+		
+		_actor.doAttack(getAttackTarget());
+		
 		return;
 	}
 	
@@ -102,31 +103,41 @@ public class L2SummonAI extends L2CharacterAI
 			return;
 		}
 		
+		boolean val = _startFollow;
 		if (maybeMoveToPawn(target, _actor.getMagicalAttackRange(_skill)))
+		{
 			return;
+		}
 		
 		clientStopMoving(null);
-		summon.setFollowStatus(false);
-		
 		setIntention(AI_INTENTION_IDLE);
-		_accessor.doCast(_skill);
+		summon.setFollowStatus(false);
+		_startFollow = val;
+		_actor.doCast(_skill);
 	}
 	
 	private void thinkPickUp()
 	{
 		if (_actor.isAllSkillsDisabled())
+		{
 			return;
+		}
 		
 		final L2Object target = getTarget();
 		
 		if (checkTargetLost(target))
+		{
 			return;
+		}
 		
 		if (maybeMoveToPawn(target, 36))
+		{
 			return;
+		}
 		
 		setIntention(AI_INTENTION_IDLE);
-		((L2Summon.AIAccessor) _accessor).doPickupItem(target);
+		
+		((L2Summon) _actor).doPickupItem(target);
 		
 		return;
 	}
@@ -134,15 +145,21 @@ public class L2SummonAI extends L2CharacterAI
 	private void thinkInteract()
 	{
 		if (_actor.isAllSkillsDisabled())
+		{
 			return;
+		}
 		
 		final L2Object target = getTarget();
 		
 		if (checkTargetLost(target))
+		{
 			return;
+		}
 		
 		if (maybeMoveToPawn(target, 36))
+		{
 			return;
+		}
 		
 		setIntention(AI_INTENTION_IDLE);
 		
@@ -187,19 +204,90 @@ public class L2SummonAI extends L2CharacterAI
 	@Override
 	protected void onEvtFinishCasting()
 	{
-		final L2Summon summon = (L2Summon) _actor;
-		L2Object target = null;
-		target = summon.getTarget();
+		if (_lastAttack == null)
+		{
+			((L2Summon) _actor).setFollowStatus(_startFollow);
+		}
+		else
+		{
+			setIntention(CtrlIntention.AI_INTENTION_ATTACK, _lastAttack);
+			_lastAttack = null;
+		}
+	}
+	
+	@Override
+	protected void onEvtAttacked(L2Character attacker)
+	{
+		super.onEvtAttacked(attacker);
 		
-		if (target == null)
-			return;
+		avoidAttack(attacker);
+	}
+	
+	private void avoidAttack(L2Character attacker)
+	{
+		_startAvoid = true;
 		
-		if (summon.getAI().getIntention() != AI_INTENTION_ATTACK)
-			summon.setFollowStatus(true);
+		if (!checkCondition())
+		{
+			_startAvoid = false;
+		}
 		
-		else if (((L2Character) target).isDead())
-			summon.setFollowStatus(true);
+		if (_startAvoid)
+		{
+			final int ownerX = ((L2Summon) _actor).getOwner().getX();
+			final int ownerY = ((L2Summon) _actor).getOwner().getY();
+			final double angle = Math.toRadians(Rnd.get(-90, 90)) + Math.atan2(ownerY - _actor.getY(), ownerX - _actor.getX());
+			
+			final int targetX = ownerX + (int) (AVOID_RADIUS * Math.cos(angle));
+			final int targetY = ownerY + (int) (AVOID_RADIUS * Math.sin(angle));
+			if (GeoData.getInstance().canMove(_actor.getX(), _actor.getY(), _actor.getZ(), targetX, targetY, _actor.getZ(), _actor.getInstanceId()))
+			{
+				moveTo(targetX, targetY, _actor.getZ());
+			}
+		}
+	}
+	
+	private boolean checkCondition()
+	{
+		if (_clientMoving || _actor.isDead() || _actor.isMovementDisabled() || _actor.isCastingNow() || _actor.isAttackingNow())
+		{
+			return false;
+		}
 		
-		super.onEvtFinishCasting();
+		return true;
+	}
+	
+	@Override
+	protected void onIntentionCast(L2Skill skill, L2Object target)
+	{
+		if (getIntention() == AI_INTENTION_ATTACK)
+		{
+			_lastAttack = getAttackTarget();
+		}
+		else
+		{
+			_lastAttack = null;
+		}
+		
+		super.onIntentionCast(skill, target);
+	}
+	
+	public void notifyFollowStatusChange()
+	{
+		_startFollow = !_startFollow;
+		switch (getIntention())
+		{
+			case AI_INTENTION_ACTIVE:
+			case AI_INTENTION_FOLLOW:
+			case AI_INTENTION_IDLE:
+			case AI_INTENTION_MOVE_TO:
+			case AI_INTENTION_PICK_UP:
+				((L2Summon) _actor).setFollowStatus(_startFollow);
+		}
+	}
+	
+	public void setStartFollowController(boolean val)
+	{
+		_startFollow = val;
 	}
 }

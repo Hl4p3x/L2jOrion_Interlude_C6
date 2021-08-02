@@ -23,6 +23,7 @@ package l2jorion.game.network.serverpackets;
 public class SpecialCamera extends L2GameServerPacket
 {
 	private static final String _S__C7_SPECIALCAMERA = "[S] C7 SpecialCamera";
+	
 	private final int _id;
 	private final int _dist;
 	private final int _yaw;

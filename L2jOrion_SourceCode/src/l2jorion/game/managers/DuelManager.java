@@ -25,14 +25,10 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.Duel;
 import l2jorion.game.network.serverpackets.L2GameServerPacket;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class DuelManager
 {
-	private static final Logger LOG = LoggerFactory.getLogger(DuelManager.class);
+	//private static final Logger LOG = LoggerFactory.getLogger(DuelManager.class);
 	
-	// =========================================================
 	private static DuelManager _instance;
 	
 	public static final DuelManager getInstance()
@@ -44,21 +40,15 @@ public class DuelManager
 		return _instance;
 	}
 	
-	// =========================================================
 	// Data Field
 	private final FastList<Duel> _duels;
 	private int _currentDuelId = 0x90;
 	
-	// =========================================================
-	// Constructor
 	private DuelManager()
 	{
-		LOG.info("Initializing DuelManager");
+		//LOG.info("Initializing DuelManager");
 		_duels = new FastList<>();
 	}
-	
-	// =========================================================
-	// Method - Private
 	
 	private int getNextDuelId()
 	{
@@ -77,13 +67,12 @@ public class DuelManager
 		for (FastList.Node<Duel> e = _duels.head(), end = _duels.tail(); (e = e.getNext()) != end;)
 		{
 			if (e.getValue().getId() == duelId)
+			{
 				return e.getValue();
+			}
 		}
 		return null;
 	}
-	
-	// =========================================================
-	// Method - Public
 	
 	public void addDuel(final L2PcInstance playerA, final L2PcInstance playerB, final int partyDuel)
 	{
@@ -167,13 +156,14 @@ public class DuelManager
 	public void onPlayerDefeat(final L2PcInstance player)
 	{
 		if (player == null || !player.isInDuel())
+		{
 			return;
+		}
 		Duel duel = getDuel(player.getDuelId());
 		if (duel != null)
 		{
 			duel.onPlayerDefeat(player);
 		}
-		duel = null;
 	}
 	
 	/**
@@ -184,13 +174,14 @@ public class DuelManager
 	public void onBuff(final L2PcInstance player, final L2Effect buff)
 	{
 		if (player == null || !player.isInDuel() || buff == null)
+		{
 			return;
+		}
 		Duel duel = getDuel(player.getDuelId());
 		if (duel != null)
 		{
 			duel.onBuff(player, buff);
 		}
-		duel = null;
 	}
 	
 	/**
@@ -200,13 +191,14 @@ public class DuelManager
 	public void onRemoveFromParty(final L2PcInstance player)
 	{
 		if (player == null || !player.isInDuel())
+		{
 			return;
+		}
 		Duel duel = getDuel(player.getDuelId());
 		if (duel != null)
 		{
 			duel.onRemoveFromParty(player);
 		}
-		duel = null;
 	}
 	
 	/**
@@ -217,13 +209,19 @@ public class DuelManager
 	public void broadcastToOppositTeam(final L2PcInstance player, final L2GameServerPacket packet)
 	{
 		if (player == null || !player.isInDuel())
+		{
 			return;
+		}
 		Duel duel = getDuel(player.getDuelId());
 		
 		if (duel == null)
+		{
 			return;
+		}
 		if (duel.getPlayerA() == null || duel.getPlayerB() == null)
+		{
 			return;
+		}
 		
 		if (duel.getPlayerA() == player)
 		{
@@ -244,6 +242,5 @@ public class DuelManager
 				duel.broadcastToTeam1(packet);
 			}
 		}
-		duel = null;
 	}
 }

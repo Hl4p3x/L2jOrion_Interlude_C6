@@ -26,6 +26,7 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 public class CharSelected extends L2GameServerPacket
 {
 	private static final String _S__21_CHARSELECTED = "[S] 15 CharSelected";
+	
 	private final L2PcInstance _activeChar;
 	private final int _sessionId;
 	
@@ -45,11 +46,15 @@ public class CharSelected extends L2GameServerPacket
 		writeS(_activeChar.getTitle());
 		writeD(_sessionId);
 		writeD(_activeChar.getClanId());
-		writeD(0x00); // ??
+		
+		writeD(0x00); // unknown
+		
 		writeD(_activeChar.getAppearance().getSex() ? 1 : 0);
 		writeD(_activeChar.getRace().ordinal());
 		writeD(_activeChar.getClassId().getId());
-		writeD(0x01); // active ??
+		
+		writeD(0x01);
+		
 		writeD(_activeChar.getX());
 		writeD(_activeChar.getY());
 		writeD(_activeChar.getZ());
@@ -59,21 +64,19 @@ public class CharSelected extends L2GameServerPacket
 		writeD(_activeChar.getSp());
 		writeQ(_activeChar.getExp());
 		writeD(_activeChar.getLevel());
-		writeD(_activeChar.getKarma()); // thx evill33t
-		writeD(0x0); // ?
+		writeD(_activeChar.getKarma());
+		writeD(_activeChar.getPkKills());
 		writeD(_activeChar.getINT());
 		writeD(_activeChar.getSTR());
 		writeD(_activeChar.getCON());
 		writeD(_activeChar.getMEN());
 		writeD(_activeChar.getDEX());
 		writeD(_activeChar.getWIT());
+		
 		for (int i = 0; i < 30; i++)
 		{
 			writeD(0x00);
 		}
-		// writeD(0); //c3
-		// writeD(0); //c3
-		// writeD(0); //c3
 		
 		writeD(0x00); // c3 work
 		writeD(0x00); // c3 work
@@ -83,27 +86,14 @@ public class CharSelected extends L2GameServerPacket
 		
 		writeD(0x00); //
 		
-		writeD(0x00); // c3
+		writeD(_activeChar.getClassId().getId());
 		
 		writeD(0x00); // c3 InspectorBin
 		writeD(0x00); // c3
 		writeD(0x00); // c3
 		writeD(0x00); // c3
-		
-		writeD(0x00); // c3 InspectorBin for 528 client
-		writeD(0x00); // c3
-		writeD(0x00); // c3
-		writeD(0x00); // c3
-		writeD(0x00); // c3
-		writeD(0x00); // c3
-		writeD(0x00); // c3
-		writeD(0x00); // c3
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

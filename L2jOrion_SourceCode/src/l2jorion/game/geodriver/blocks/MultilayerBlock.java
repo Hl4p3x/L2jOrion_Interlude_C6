@@ -26,10 +26,6 @@ public class MultilayerBlock implements IBlock
 {
 	private final byte[] _data;
 	
-	/**
-	 * Initializes a new instance of this block reading the specified buffer.
-	 * @param bb the buffer
-	 */
 	public MultilayerBlock(ByteBuffer bb)
 	{
 		int start = bb.position();

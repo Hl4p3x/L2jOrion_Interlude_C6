@@ -24,13 +24,10 @@ import l2jorion.Config;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 
-/**
- * sample 0000: 8e d8 a8 10 48 10 04 00 00 01 00 00 00 01 00 00 ....H........... 0010: 00 d8 a8 10 48 ....H format ddddd d
- * @version $Revision: 1.4.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class MagicSkillLaunched extends L2GameServerPacket
 {
 	private static final String _S__8E_MAGICSKILLLAUNCHED = "[S] 8E MagicSkillLaunched";
+	
 	private final int _charObjId;
 	private final int _skillId;
 	private final int _skillLevel;
@@ -94,7 +91,9 @@ public class MagicSkillLaunched extends L2GameServerPacket
 				catch (final NullPointerException e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					writeD(0); // untested
 				}
@@ -102,10 +101,6 @@ public class MagicSkillLaunched extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

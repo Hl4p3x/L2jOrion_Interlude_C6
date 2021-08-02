@@ -40,7 +40,6 @@ class EffectRelax extends L2Effect
 		return EffectType.RELAXING;
 	}
 	
-	/** Notify started */
 	@Override
 	public void onStart()
 	{
@@ -57,10 +56,6 @@ class EffectRelax extends L2Effect
 		super.onStart();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Effect#onExit()
-	 */
 	@Override
 	public void onExit()
 	{
@@ -92,8 +87,6 @@ class EffectRelax extends L2Effect
 				final SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 				sm.addString("Fully rested. Effect of " + getSkill().getName() + " has been removed.");
 				getEffected().sendPacket(sm);
-				// if (getEffected() instanceof L2PcInstance)
-				// ((L2PcInstance)getEffected()).standUp();
 				retval = false;
 			}
 		}
@@ -106,8 +99,6 @@ class EffectRelax extends L2Effect
 			{
 				final SystemMessage sm = new SystemMessage(SystemMessageId.SKILL_REMOVED_DUE_LACK_MP);
 				getEffected().sendPacket(sm);
-				// if (getEffected() instanceof L2PcInstance)
-				// ((L2PcInstance)getEffected()).standUp();
 				retval = false;
 			}
 		}

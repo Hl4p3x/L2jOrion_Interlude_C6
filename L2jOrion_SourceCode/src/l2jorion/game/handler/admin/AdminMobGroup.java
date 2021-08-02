@@ -32,7 +32,6 @@ import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.SetupGauge;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.game.util.Broadcast;
 
 /**
  * @author littlecrow Admin commands handler for controllable mobs
@@ -64,11 +63,6 @@ public class AdminMobGroup implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		if (command.equals("admin_mobmenu"))
 		{
 			showMainPage(activeChar, command);
@@ -183,7 +177,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Incorrect command arguments.");
 			return;
@@ -213,7 +209,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Incorrect command arguments.");
 			return;
@@ -243,7 +241,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Incorrect command arguments.");
 			return;
@@ -273,7 +273,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Incorrect command arguments.");
 			return;
@@ -303,7 +305,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Incorrect command arguments.");
 			return;
@@ -339,7 +343,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Usage: //mobgroup_create <group> <npcid> <count>");
 			return;
@@ -379,7 +385,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Usage: //mobgroup_remove <groupId>");
 			return;
@@ -429,7 +437,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 			{
 				// no position given
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 			}
 			
@@ -438,7 +448,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Usage: //mobgroup_spawn <group> [ x y z ]");
 			return;
@@ -479,7 +491,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Usage: //mobgroup_unspawn <groupId>");
 			return;
@@ -512,7 +526,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Usage: //mobgroup_kill <groupId>");
 			return;
@@ -543,7 +559,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Usage: //mobgroup_casting <groupId>");
 			return;
@@ -576,7 +594,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Usage: //mobgroup_nomove <groupId> <on|off>");
 			return;
@@ -608,7 +628,7 @@ public class AdminMobGroup implements IAdminCommandHandler
 	
 	private void doAnimation(final L2PcInstance activeChar)
 	{
-		Broadcast.toSelfAndKnownPlayersInRadius(activeChar, new MagicSkillUser(activeChar, 1008, 1, 4000, 0), 2250000/* 1500 */);
+		activeChar.broadcastPacket(new MagicSkillUser(activeChar, 1008, 1, 4000, 0), 2250000);
 		activeChar.sendPacket(new SetupGauge(0, 4000));
 	}
 	
@@ -625,7 +645,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Usage: //mobgroup_attackgrp <groupId> <TargetGroupId>");
 			return;
@@ -667,7 +689,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Usage: //mobgroup_invul <groupId> <on|off>");
 			return;
@@ -722,7 +746,9 @@ public class AdminMobGroup implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			activeChar.sendMessage("Usage: //mobgroup_teleport <groupId> [playerName]");
 			return;

@@ -49,8 +49,10 @@ public final class EffectSignetNoise extends L2Effect
 	public boolean onActionTime()
 	{
 		if (getCount() == getTotalCount() - 1)
+		{
 			return true; // do nothing first time
-			
+		}
+		
 		for (final L2Character target : _actor.getKnownList().getKnownCharactersInRadius(getSkill().getSkillRadius()))
 		{
 			if (target == null)
@@ -68,7 +70,6 @@ public final class EffectSignetNoise extends L2Effect
 						effect.exit(true);
 					}
 				}
-				// there doesn't seem to be a visible effect?
 			}
 		}
 		return true;

@@ -22,21 +22,14 @@ package l2jorion.game.model;
 
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * This class ...
- * @version $Revision: 1.2.2.1.2.5 $ $Date: 2005/03/27 15:29:30 $
- */
 public class L2Potion extends L2Object
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(L2Character.class);
-	
-	// private L2Character _target;
 	
 	private Future<?> _potionhpRegTask;
 	private Future<?> _potionmpRegTask;

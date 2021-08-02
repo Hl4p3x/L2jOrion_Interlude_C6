@@ -30,7 +30,7 @@ public class QuestList extends L2GameServerPacket
 	
 	private Quest[] _quests;
 	private L2PcInstance _activeChar;
-
+	
 	@Override
 	public void runImpl()
 	{
@@ -40,39 +40,38 @@ public class QuestList extends L2GameServerPacket
 			_quests = _activeChar.getAllActiveQuests();
 		}
 	}
-
+	
 	@Override
 	protected final void writeImpl()
 	{
 		writeC(0x80);
-		if (_quests != null)
+		
+		writeH(_quests.length);
+		
+		for (Quest q : _quests)
 		{
-			writeH(_quests.length);
-			for (Quest q : _quests)
+			writeD(q.getQuestIntId());
+			
+			QuestState qs = _activeChar.getQuestState(q.getName());
+			if (qs == null)
 			{
-				writeD(q.getQuestIntId());
-				QuestState qs = _activeChar.getQuestState(q.getName());
-				if(qs == null)
-				{
-					writeD(0);
-					continue;
-				}
-				
-				int states = qs.getInt("__compltdStateFlags");
-				if (states != 0 )
-					writeD(states);
-				else
-					writeD(qs.getInt("cond"));
-		    }
+				writeD(0);
+				continue;
+			}
+			
+			int states = qs.getInt("__compltdStateFlags");
+			
+			if (states != 0)
+			{
+				writeD(states);
+			}
+			else
+			{
+				writeD(qs.getInt("cond"));
+			}
 		}
-		else
-		{
-			// write empty size
-			writeH(0x00);
-		}
-		writeB(new byte[128]);
 	}
-
+	
 	@Override
 	public String getType()
 	{

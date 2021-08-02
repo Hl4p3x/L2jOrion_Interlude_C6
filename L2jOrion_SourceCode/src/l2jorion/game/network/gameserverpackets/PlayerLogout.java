@@ -20,9 +20,6 @@
  */
 package l2jorion.game.network.gameserverpackets;
 
-/**
- * @author -Wooden-
- */
 public class PlayerLogout extends GameServerBasePacket
 {
 	public PlayerLogout(final String player)
@@ -31,10 +28,6 @@ public class PlayerLogout extends GameServerBasePacket
 		writeS(player);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.gameserverpackets.GameServerBasePacket#getContent()
-	 */
 	@Override
 	public byte[] getContent()
 	{

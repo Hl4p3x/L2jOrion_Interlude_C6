@@ -25,10 +25,6 @@ import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * format SdSS dddddddd d (Sddddd)
- * @version $Revision: 1.1.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class GMViewPledgeInfo extends L2GameServerPacket
 {
 	private static final String _S__A9_GMVIEWPLEDGEINFO = "[S] 90 GMViewPledgeInfo";

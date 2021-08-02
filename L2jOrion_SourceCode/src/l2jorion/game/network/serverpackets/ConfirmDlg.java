@@ -20,13 +20,10 @@ import java.util.Vector;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-
-/**
- * @author kombat Format: cd d[d s/d/dd/ddd]
- */
 public class ConfirmDlg extends L2GameServerPacket
 {
 	private static final String _S__ED_CONFIRMDLG = "[S] ed ConfirmDlg";
+	
 	private final int _messageId;
 	private int _skillLvL = 1;
 	private static final int TYPE_ZONE_NAME = 7;
@@ -47,15 +44,15 @@ public class ConfirmDlg extends L2GameServerPacket
 	
 	public ConfirmDlg addString(final String text)
 	{
-		_types.add(new Integer(TYPE_TEXT));
+		_types.add(Integer.valueOf(TYPE_TEXT));
 		_values.add(text);
 		return this;
 	}
 	
 	public ConfirmDlg addNumber(final int number)
 	{
-		_types.add(new Integer(TYPE_NUMBER));
-		_values.add(new Integer(number));
+		_types.add(Integer.valueOf(TYPE_NUMBER));
+		_values.add(Integer.valueOf(number));
 		return this;
 	}
 	
@@ -66,21 +63,21 @@ public class ConfirmDlg extends L2GameServerPacket
 	
 	public ConfirmDlg addNpcName(final int id)
 	{
-		_types.add(new Integer(TYPE_NPC_NAME));
-		_values.add(new Integer(1000000 + id));
+		_types.add(Integer.valueOf(TYPE_NPC_NAME));
+		_values.add(Integer.valueOf(1000000 + id));
 		return this;
 	}
 	
 	public ConfirmDlg addItemName(final int id)
 	{
-		_types.add(new Integer(TYPE_ITEM_NAME));
-		_values.add(new Integer(id));
+		_types.add(Integer.valueOf(TYPE_ITEM_NAME));
+		_values.add(Integer.valueOf(id));
 		return this;
 	}
 	
 	public ConfirmDlg addZoneName(final int x, final int y, final int z)
 	{
-		_types.add(new Integer(TYPE_ZONE_NAME));
+		_types.add(Integer.valueOf(TYPE_ZONE_NAME));
 		final int[] coord =
 		{
 			x,
@@ -98,8 +95,8 @@ public class ConfirmDlg extends L2GameServerPacket
 	
 	public ConfirmDlg addSkillName(final int id, final int lvl)
 	{
-		_types.add(new Integer(TYPE_SKILL_NAME));
-		_values.add(new Integer(id));
+		_types.add(Integer.valueOf(TYPE_SKILL_NAME));
+		_values.add(Integer.valueOf(id));
 		_skillLvL = lvl;
 		return this;
 	}
@@ -164,12 +161,18 @@ public class ConfirmDlg extends L2GameServerPacket
 			}
 			// timed dialog (Summon Friend skill request)
 			if (_time != 0)
+			{
 				writeD(_time);
+			}
 			if (_requesterId != 0)
+			{
 				writeD(_requesterId);
+			}
 			
 			if (_time > 0)
+			{
 				getClient().getActiveChar().addConfirmDlgRequestTime(_requesterId, _time);
+			}
 		}
 		else
 		{
@@ -179,10 +182,6 @@ public class ConfirmDlg extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.network.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

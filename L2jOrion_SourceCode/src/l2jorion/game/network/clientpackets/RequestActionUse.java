@@ -24,33 +24,34 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
+import l2jorion.game.ai.L2SummonAI;
 import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.model.Inventory;
-import l2jorion.game.model.L2CharPosition;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2ManufactureList;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Summon;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2DoorInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2SiegeSummonInstance;
 import l2jorion.game.model.actor.instance.L2StaticObjectInstance;
 import l2jorion.game.model.actor.instance.L2SummonInstance;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ChairSit;
 import l2jorion.game.network.serverpackets.RecipeShopManageList;
 import l2jorion.game.network.serverpackets.Ride;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class RequestActionUse extends L2GameClientPacket
 {
@@ -88,11 +89,8 @@ public final class RequestActionUse extends L2GameClientPacket
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		
 		if (activeChar == null)
-			return;
-		
-		if (Config.DEBUG)
 		{
-			LOG.debug(activeChar.getName() + " request Action use: id " + _actionId + " 2:" + _ctrlPressed + " 3:" + _shiftPressed);
+			return;
 		}
 		
 		// dont do anything if player is dead
@@ -104,7 +102,7 @@ public final class RequestActionUse extends L2GameClientPacket
 		
 		if (_actionId == 1099)
 		{
-			activeChar.sendMessage("If you see this message - report it to an admin.");
+			// activeChar.sendMessage("If you see this message - report it to an admin.");
 			getClient().sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
@@ -146,7 +144,8 @@ public final class RequestActionUse extends L2GameClientPacket
 					break;
 				}
 				
-				if (target != null && !activeChar.isSitting() && target instanceof L2StaticObjectInstance && ((L2StaticObjectInstance) target).getType() == 1 && CastleManager.getInstance().getCastle(target) != null && activeChar.isInsideRadius(target, L2StaticObjectInstance.INTERACTION_DISTANCE, false, false))
+				if (target != null && !activeChar.isSitting() && target instanceof L2StaticObjectInstance && ((L2StaticObjectInstance) target).getType() == 1 && CastleManager.getInstance().getCastle(target) != null
+					&& activeChar.isInsideRadius(target, L2StaticObjectInstance.INTERACTION_DISTANCE, false, false))
 				{
 					final ChairSit cs = new ChairSit(activeChar, ((L2StaticObjectInstance) target).getStaticObjectId());
 					activeChar.sendPacket(cs);
@@ -164,11 +163,6 @@ public final class RequestActionUse extends L2GameClientPacket
 					activeChar.sitDown();
 				}
 				
-				if (Config.DEBUG)
-				{
-					LOG.debug("new wait type: " + (activeChar.isSitting() ? "SITTING" : "STANDING"));
-				}
-				
 				break;
 			case 1:
 				if (activeChar.isRunning())
@@ -179,19 +173,19 @@ public final class RequestActionUse extends L2GameClientPacket
 				{
 					activeChar.setRunning();
 				}
-				
-				if (Config.DEBUG)
-				{
-					LOG.debug("new move type: " + (activeChar.isRunning() ? "RUNNING" : "WALKIN"));
-				}
 				break;
 			case 15:
 			case 21: // pet follow/stop
-				if (pet != null && !pet.isMovementDisabled() && !activeChar.isBetrayed())
+				if (pet != null && pet.isOutOfControl())
 				{
-					pet.setFollowStatus(!pet.getFollowStatus());
+					activeChar.sendPacket(SystemMessageId.PET_REFUSING_ORDER);
+					return;
 				}
 				
+				if (pet != null)
+				{
+					((L2SummonAI) pet.getAI()).notifyFollowStatusChange();
+				}
 				break;
 			case 16:
 			case 22: // pet attack
@@ -200,9 +194,13 @@ public final class RequestActionUse extends L2GameClientPacket
 					if (pet.isAttackingDisabled())
 					{
 						if (pet.getAttackEndTime() > GameTimeController.getInstance().getGameTicks())
+						{
 							pet.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, target);
+						}
 						else
+						{
 							return;
+						}
 					}
 					
 					if (activeChar.isInOlympiadMode() && !activeChar.isOlympiadStart())
@@ -337,10 +335,14 @@ public final class RequestActionUse extends L2GameClientPacket
 					else if (!pet.isDead() && !activeChar.isMounted())
 					{
 						if (!activeChar.disarmWeapons())
+						{
 							return;
+						}
 						
 						if (!activeChar.getFloodProtectors().getItemPetSummon().tryPerformAction("mount"))
+						{
 							return;
+						}
 						
 						final Ride mount = new Ride(activeChar.getObjectId(), Ride.ACTION_MOUNT, pet.getTemplate().npcId);
 						activeChar.broadcastPacket(mount);
@@ -431,7 +433,9 @@ public final class RequestActionUse extends L2GameClientPacket
 					activeChar.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_NONE);
 					
 					if (activeChar.isSitting())
+					{
 						activeChar.standUp();
+					}
 				}
 				
 				if (activeChar.getCreateList() == null)
@@ -503,7 +507,9 @@ public final class RequestActionUse extends L2GameClientPacket
 					activeChar.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_NONE);
 					
 					if (activeChar.isSitting())
+					{
 						activeChar.standUp();
+					}
 				}
 				
 				if (activeChar.getCreateList() == null)
@@ -533,13 +539,13 @@ public final class RequestActionUse extends L2GameClientPacket
 			case 53: // move to target
 				if (target != null && pet != null && pet != target && !pet.isMovementDisabled())
 				{
-					pet.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new L2CharPosition(target.getX(), target.getY(), target.getZ(), 0));
+					pet.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new Location(target.getX(), target.getY(), target.getZ(), 0));
 				}
 				break;
 			case 54: // move to target hatch/strider
 				if (target != null && pet != null && pet != target && !pet.isMovementDisabled())
 				{
-					pet.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new L2CharPosition(target.getX(), target.getY(), target.getZ(), 0));
+					pet.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new Location(target.getX(), target.getY(), target.getZ(), 0));
 				}
 				break;
 			case 96: // Quit Party Command Channel
@@ -652,13 +658,15 @@ public final class RequestActionUse extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		final L2Summon activeSummon = activeChar.getPet();
 		
 		if (activeChar.getPrivateStoreType() != 0)
 		{
-			activeChar.sendMessage("Cannot use skills while trading");
+			activeChar.sendMessage("Cannot use skills while trading.");
 			return;
 		}
 		
@@ -689,7 +697,7 @@ public final class RequestActionUse extends L2GameClientPacket
 			
 			if (target instanceof L2Character)
 			{
-				if (activeSummon.isInsideZone(L2Character.ZONE_PVP) && ((L2Character) target).isInsideZone(L2Character.ZONE_PVP))
+				if (activeSummon.isInsideZone(ZoneId.ZONE_PVP) && ((L2Character) target).isInsideZone(ZoneId.ZONE_PVP))
 				{
 					force = true;
 				}
@@ -706,7 +714,9 @@ public final class RequestActionUse extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		useSkill(skillId, activeChar.getTarget());
 	}

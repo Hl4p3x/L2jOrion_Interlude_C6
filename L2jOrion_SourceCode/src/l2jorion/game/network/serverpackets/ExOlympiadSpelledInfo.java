@@ -20,22 +20,17 @@
  */
 package l2jorion.game.network.serverpackets;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javolution.util.FastList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * This class ...
- * @version $Revision: 1.4.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- * @author godson
- */
 public class ExOlympiadSpelledInfo extends L2GameServerPacket
 {
-	// chdd(dhd)
 	private static final String _S__FE_2A_OLYMPIADSPELLEDINFO = "[S] FE:2A ExOlympiadSpelledInfo";
+	
 	private final L2PcInstance _player;
-	private final List<Effect> _effects;
+	private final List<Effect> _effects = new ArrayList<>();
 	
 	private class Effect
 	{
@@ -53,7 +48,6 @@ public class ExOlympiadSpelledInfo extends L2GameServerPacket
 	
 	public ExOlympiadSpelledInfo(final L2PcInstance player)
 	{
-		_effects = new FastList<>();
 		_player = player;
 	}
 	
@@ -65,24 +59,18 @@ public class ExOlympiadSpelledInfo extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
-		if (_player == null)
-			return;
 		writeC(0xfe);
 		writeH(0x2a);
 		writeD(_player.getObjectId());
 		writeD(_effects.size());
-		for (final Effect temp : _effects)
+		for (Effect effect : _effects)
 		{
-			writeD(temp._skillId);
-			writeH(temp._level);
-			writeD(temp._duration / 1000);
+			writeD(effect._skillId);
+			writeH(effect._level);
+			writeD(effect._duration / 1000);
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see net.sf.l2j.gameserver.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

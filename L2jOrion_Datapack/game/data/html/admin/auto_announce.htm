@@ -1,0 +1,26 @@
+<html>
+<title>Auto Announcements</title>
+<body>
+<table width=275><tr>
+<td width=40><button value="Main" action="bypass -h admin_admin" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td width=180></td>
+<td width=40><button value="Back" action="bypass -h admin_admin" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td></tr>
+</table><br>
+
+<center>Add new auto announcement:</center>
+<center><multiedit var="new_autoannouncement" width=275 height=50></center><br>
+<center>Delay:</center>
+<center><edit var="delay" width=70></center><br1>
+
+<center>
+Note: Time in Seconds 60s = 1 min.<br1>
+Note2: Minimum Time is 30 Seconds.<br>
+
+<button value="Add" action="bypass -h admin_add_autoannouncement $delay $new_autoannouncement" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2">
+
+%autoann%
+
+</center>
+
+</body>
+</html>

@@ -23,9 +23,6 @@ package l2jorion.game.skills.conditions;
 import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public class ConditionGameTime extends Condition
 {
 	

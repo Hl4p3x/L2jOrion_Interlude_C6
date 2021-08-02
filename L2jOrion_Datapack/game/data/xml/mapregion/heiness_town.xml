@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- TODO: Remove "castle" attributes from here, it should be loaded from TaxZones -->
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/MapRegion.xsd">
+	<!-- Heiness Town -->
+	<region name="heiness_town" town="Heine Town" castle="6" locId="926" bbs="12">
+		<respawnPoint X="107568" Y="218256" Z="-3624" />
+		<respawnPoint X="107920" Y="218240" Z="-3624" />
+		<respawnPoint X="107808" Y="217856" Z="-3624" />
+		<respawnPoint X="108032" Y="218048" Z="-3624" />
+		<respawnPoint X="107552" Y="218000" Z="-3624" />
+		<respawnPoint X="110912" Y="219584" Z="-3624" />
+		<respawnPoint X="110768" Y="219824" Z="-3624" />
+		<respawnPoint X="110688" Y="220576" Z="-3624" />
+		<respawnPoint X="110896" Y="220768" Z="-3624" />
+		<respawnPoint X="111856" Y="220752" Z="-3624" />
+		<respawnPoint X="112112" Y="220576" Z="-3624" />
+		<respawnPoint X="112064" Y="219792" Z="-3624" />
+		<respawnPoint X="111888" Y="219584" Z="-3624" />
+		<respawnPoint X="117872" Y="225536" Z="-3200" isChaotic="true" />
+		<respawnPoint X="118064" Y="225648" Z="-3200" isChaotic="true" />
+		<respawnPoint X="101696" Y="221808" Z="-3520" isChaotic="true" />
+		<respawnPoint X="101552" Y="221568" Z="-3520" isChaotic="true" />
+		<respawnPoint X="100784" Y="218272" Z="-3420" isChaotic="true" />
+		<respawnPoint X="100928" Y="218560" Z="-3420" isChaotic="true" />
+		<map X="22" Y="23" />
+		<map X="22" Y="24" />
+		<map X="22" Y="25" />
+		<map X="23" Y="23" />
+		<map X="23" Y="24" />
+		<map X="23" Y="25" />
+		<map X="24" Y="23" />
+	</region>
+</list>

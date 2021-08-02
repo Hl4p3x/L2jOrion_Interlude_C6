@@ -24,10 +24,9 @@ import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_ATTACK;
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_IDLE;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.geo.GeoData;
@@ -44,11 +43,15 @@ import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.model.actor.instance.L2SiegeGuardInstance;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
 public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(L2SiegeGuardAI.class);
+	
+	private final List<Integer> _allied = new ArrayList<>();
 	
 	private static final int MAX_ATTACK_TIMEOUT = 300;
 	private Future<?> _aiTask;
@@ -58,9 +61,9 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 	private boolean _thinking;
 	private final int _attackRange;
 	
-	public L2SiegeGuardAI(L2Character.AIAccessor accessor)
+	public L2SiegeGuardAI(L2Character creature)
 	{
-		super(accessor);
+		super(creature);
 		
 		_selfAnalysis.init();
 		_attackTimeout = Integer.MAX_VALUE;
@@ -73,6 +76,11 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 	{
 		// Launch actions corresponding to the Event Think
 		onEvtThink();
+	}
+	
+	public List<Integer> getAlly()
+	{
+		return _allied;
 	}
 	
 	/**
@@ -109,7 +117,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 	 * @param target The targeted L2Object
 	 * @return True if the target is autoattackable (depends on the actor type).
 	 */
-	private boolean autoAttackCondition(L2Character target)
+	protected boolean autoAttackCondition(L2Character target)
 	{
 		// Check if the target isn't another guard, folk or a door
 		if ((target == null) || target.isAlikeDead() || (target instanceof L2SiegeGuardInstance) || (target instanceof L2NpcInstance) || (target instanceof L2DoorInstance))
@@ -142,6 +150,11 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 					target = player;
 				}
 			}
+		}
+		
+		if (_allied.contains(target.getObjectId()))
+		{
+			return false;
 		}
 		
 		// Los Check Here
@@ -406,7 +419,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 							L2Object OldTarget = _actor.getTarget();
 							_actor.setTarget(cha);
 							clientStopMoving(null);
-							_accessor.doCast(sk);
+							_actor.doCast(sk);
 							_actor.setTarget(OldTarget);
 							return;
 						}
@@ -462,7 +475,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 					L2Object OldTarget = _actor.getTarget();
 					_actor.setTarget(npc);
 					clientStopMoving(null);
-					_accessor.doCast(sk);
+					_actor.doCast(sk);
 					_actor.setTarget(OldTarget);
 					return;
 				}
@@ -632,7 +645,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 			// Finally, do the physical attack itself
 			if (!_selfAnalysis.isHealer)
 			{
-				_accessor.doAttack(attackTarget);
+				_actor.doAttack(attackTarget);
 			}
 		}
 	}
@@ -677,7 +690,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 					}
 					
 					clientStopMoving(null);
-					_accessor.doCast(sk);
+					_actor.doCast(sk);
 					_actor.setTarget(oldTarget);
 					return;
 				}
@@ -854,7 +867,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 			_aiTask.cancel(false);
 			_aiTask = null;
 		}
-		_accessor.detachAI();
+		_actor.detachAI();
 		super.stopAITask();
 	}
 }

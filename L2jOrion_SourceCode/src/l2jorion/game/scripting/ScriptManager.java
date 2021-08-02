@@ -20,10 +20,6 @@
  */
 package l2jorion.game.scripting;
 
-/**
- * @author KenM
- * @param <S>
- */
 public abstract class ScriptManager<S extends ManagedScript>
 {
 	public abstract Iterable<S> getAllManagedScripts();

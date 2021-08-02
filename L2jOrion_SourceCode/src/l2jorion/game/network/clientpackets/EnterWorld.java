@@ -23,10 +23,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import l2jguard.Protection;
+import l2jguard.HwidConfig;
+import l2jguard.hwidmanager.HwidManager;
 import l2jorion.Config;
 import l2jorion.game.GameServer;
 import l2jorion.game.community.manager.MailBBSManager;
@@ -38,7 +36,7 @@ import l2jorion.game.datatables.sql.AdminCommandAccessRights;
 import l2jorion.game.datatables.sql.CharNameTable;
 import l2jorion.game.handler.custom.CustomWorldHandler;
 import l2jorion.game.handler.item.Potions;
-import l2jorion.game.handler.voiced.Vote;
+import l2jorion.game.handler.voice.Vote;
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.ClanHallManager;
 import l2jorion.game.managers.CoupleManager;
@@ -66,13 +64,14 @@ import l2jorion.game.model.entity.event.CTF;
 import l2jorion.game.model.entity.event.DM;
 import l2jorion.game.model.entity.event.L2Event;
 import l2jorion.game.model.entity.event.TvT;
-import l2jorion.game.model.entity.olympiad.Olympiad;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.model.entity.siege.FortSiege;
 import l2jorion.game.model.entity.siege.Siege;
+import l2jorion.game.model.olympiad.Olympiad;
 import l2jorion.game.model.quest.Quest;
 import l2jorion.game.model.quest.QuestState;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.L2GameClient.GameClientState;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
@@ -108,6 +107,8 @@ import l2jorion.game.powerpack.PowerPackConfig;
 import l2jorion.game.powerpack.buffer.BuffTable;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
@@ -149,11 +150,7 @@ public class EnterWorld extends L2GameClientPacket
 		
 		if (Config.L2JGUARD_PROTECTION)
 		{
-			Protection.enterlog(activeChar, getClient());
-			/*if (Protection.isProtectionOn())
-			{
-				HwidManager.getInstance().validBox(activeChar, HwidConfig.PROTECT_WINDOWS_COUNT + 1, L2World.getInstance().getAllPlayers().values(), true);
-			}*/
+			HwidManager.getInstance().validBox(activeChar, HwidConfig.PROTECT_WINDOWS_COUNT, L2World.getInstance().getAllPlayers().values(), true);
 		}
 		
 		activeChar.broadcastPacket(new ValidateLocation(activeChar));
@@ -163,7 +160,7 @@ public class EnterWorld extends L2GameClientPacket
 		{
 			if (Config.DEBUG)
 			{
-				LOG.warn("DEBUG "+getType()+": User already exist in OID map! User " + activeChar.getName() + " is character clone.");
+				LOG.warn("DEBUG " + getType() + ": User already exist in OID map! User " + activeChar.getName() + " is character clone.");
 			}
 		}
 		
@@ -199,7 +196,7 @@ public class EnterWorld extends L2GameClientPacket
 		
 		if (SevenSigns.getInstance().isSealValidationPeriod())
 		{
-			sendPacket(new SignsSky());
+			sendPacket(SignsSky.Sky());
 		}
 		
 		// Buff and Status icons
@@ -231,9 +228,9 @@ public class EnterWorld extends L2GameClientPacket
 			for (L2ItemInstance i : activeChar.getInventory().getItems())
 			{
 				if (!activeChar.isGM())
-				{	
+				{
 					if (i.isEquipable())
-					{	
+					{
 						if (i.getEnchantLevel() > Config.MAX_ITEM_ENCHANT_KICK)
 						{
 							activeChar.getInventory().destroyItem(null, i, activeChar, null);
@@ -242,7 +239,7 @@ public class EnterWorld extends L2GameClientPacket
 							sendPacket(new ExShowScreenMessage(" You have an over enchanted item, you will be kicked from server! ", 6000));
 							Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " has Overenchanted  item! Kicked! ", Config.DEFAULT_PUNISH);
 							LOG.info("#### ATTENTION ####");
-							LOG.info(i+" item has been removed from "+activeChar);
+							LOG.info(i + " item has been removed from " + activeChar);
 						}
 					}
 				}
@@ -383,11 +380,11 @@ public class EnterWorld extends L2GameClientPacket
 			}
 		}
 		
-		if (!activeChar.isGM() && activeChar.getSiegeState() < 2 && activeChar.isInsideZone(L2Character.ZONE_SIEGE))
+		if (!activeChar.isGM() && activeChar.getSiegeState() < 2 && activeChar.isInsideZone(ZoneId.ZONE_SIEGE))
 		{
 			// Attacker or spectator logging in to a siege zone. Actually should be checked for inside castle only?
 			activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
-			activeChar.sendMessage("You have been teleported to the nearest town due to you being in siege zone");
+			activeChar.sendMessage("You have been teleported to the nearest town due to you being in siege zone.");
 		}
 		
 		if (Config.REBIRTH_ENABLE)
@@ -428,19 +425,19 @@ public class EnterWorld extends L2GameClientPacket
 		if (Config.ALLOW_CLASS_MASTERS && Config.ALLOW_REMOTE_CLASS_MASTERS)
 		{
 			final L2ClassMasterInstance master_instance = L2ClassMasterInstance.getInstance();
-			if(master_instance != null)
+			if (master_instance != null)
 			{
 				ClassLevel lvlnow = PlayerClass.values()[activeChar.getClassId().getId()].getLevel();
 				
-				if(activeChar.getLevel() >= 20 && lvlnow == ClassLevel.First)
+				if (activeChar.getLevel() >= 20 && lvlnow == ClassLevel.First)
 				{
 					L2ClassMasterInstance.getInstance().onTable(activeChar);
 				}
-				else if(activeChar.getLevel() >= 40 && lvlnow == ClassLevel.Second)
+				else if (activeChar.getLevel() >= 40 && lvlnow == ClassLevel.Second)
 				{
 					L2ClassMasterInstance.getInstance().onTable(activeChar);
 				}
-				else if(activeChar.getLevel() >= 76 && lvlnow == ClassLevel.Third)
+				else if (activeChar.getLevel() >= 76 && lvlnow == ClassLevel.Third)
 				{
 					L2ClassMasterInstance.getInstance().onTable(activeChar);
 				}
@@ -489,6 +486,15 @@ public class EnterWorld extends L2GameClientPacket
 			activeChar.removeSkill(3628, true);
 		}
 		
+		if (Config.TOMASZ_B_CUSTOM)
+		{
+			L2ItemInstance cloak = activeChar.getInventory().getPaperdollItem(Inventory.PAPERDOLL_UNDER);
+			if (cloak != null && cloak.getItemId() == 10107)
+			{
+				activeChar.startAbnormalEffect(L2Character.ABNORMAL_EFFECT_FLAME);
+			}
+		}
+		
 		// Apply death penalty
 		activeChar.restoreDeathPenaltyBuffLevel();
 		
@@ -503,13 +509,6 @@ public class EnterWorld extends L2GameClientPacket
 		ColorSystem(activeChar);
 		
 		activeChar.updatePunishState();
-		
-		//long sentMillis = System.currentTimeMillis();
-		//long receivedMillis = System.currentTimeMillis();
-		//long ping = receivedMillis - sentMillis;
-		//Announcements _a = Announcements.getInstance();
-		//_a.sys("Ping: "+ping);
-		
 		// Custom status
 		activeChar.restoreCustomStatus();
 		
@@ -521,7 +520,7 @@ public class EnterWorld extends L2GameClientPacket
 		activeChar.sendPacket(new EtcStatusUpdate(activeChar));
 		
 		// Send all skills to char
-		activeChar.sendSkillList(); 
+		activeChar.sendSkillList();
 		
 		// Reload inventory to give SA skill
 		activeChar.getInventory().reloadEquippedItems();
@@ -541,55 +540,73 @@ public class EnterWorld extends L2GameClientPacket
 		boolean result = true;
 		String test = text;
 		Pattern pattern;
-
+		
 		try
 		{
 			pattern = Pattern.compile(Config.CNAME_TEMPLATE);
 		}
 		catch (PatternSyntaxException e) // case of illegal pattern
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
-
-			LOG.warn("ERROR "+getType()+": Character name pattern of config is wrong!");
+			}
+			
+			LOG.warn(getType() + ": character name pattern of config is wrong.");
 			pattern = Pattern.compile(".*");
 		}
-
+		
 		Matcher regexp = pattern.matcher(test);
 		if (!regexp.matches())
+		{
 			result = false;
+		}
 		
 		return result;
 	}
-
+	
 	private void EnterGM(L2PcInstance activeChar)
 	{
 		if (activeChar.isGM())
 		{
 			if (Config.GM_SPECIAL_EFFECT)
+			{
 				activeChar.broadcastPacket(new Earthquake(activeChar.getX(), activeChar.getY(), activeChar.getZ(), 50, 4));
-
+			}
+			
 			if (Config.SHOW_GM_LOGIN)
+			{
 				Announcements.getInstance().announceToAll("GM " + activeChar.getName() + " has logged on.");
-
+			}
+			
 			if (Config.GM_STARTUP_INVULNERABLE && AdminCommandAccessRights.getInstance().hasAccess("admin_invul", activeChar.getAccessLevel()))
+			{
 				activeChar.setIsInvul(true);
-
+			}
+			
 			if (Config.GM_STARTUP_INVISIBLE && AdminCommandAccessRights.getInstance().hasAccess("admin_invisible", activeChar.getAccessLevel()))
+			{
 				activeChar.getAppearance().setInvisible();
-
+			}
+			
 			if (Config.GM_STARTUP_SILENCE && AdminCommandAccessRights.getInstance().hasAccess("admin_silence", activeChar.getAccessLevel()))
+			{
 				activeChar.setMessageRefusal(0);
-
+			}
+			
 			if (Config.GM_STARTUP_AUTO_LIST && AdminCommandAccessRights.getInstance().hasAccess("admin_gmliston", activeChar.getAccessLevel()))
+			{
 				GmListTable.getInstance().addGm(activeChar, false);
+			}
 			else
+			{
 				GmListTable.getInstance().addGm(activeChar, true);
+			}
 			
 			activeChar.updateGmNameTitleColor();
 		}
 	}
-
+	
 	private void enterInstance(L2PcInstance activeChar)
 	{
 		if (Config.ALT_SERVER_NAME_ENABLED)
@@ -601,7 +618,7 @@ public class EnterWorld extends L2GameClientPacket
 		{
 			if (Config.NEW_PLAYER_EFFECT)
 			{
-				L2Skill skill = SkillTable.getInstance().getInfo(2025,1);
+				L2Skill skill = SkillTable.getInstance().getInfo(2025, 1);
 				if (skill != null)
 				{
 					MagicSkillUser MSU = new MagicSkillUser(activeChar, activeChar, 2025, 1, 1, 0);
@@ -615,14 +632,14 @@ public class EnterWorld extends L2GameClientPacket
 			activeChar.getStatus().setCurrentHpMp(activeChar.getMaxHp(), activeChar.getMaxMp());
 			activeChar.getStatus().setCurrentCp(activeChar.getMaxCp());
 			
-			if (activeChar.getInventory().getItemByItemId(1835) != null/* && activeChar.getInventory().getItemByItemId(1835).getCount() >= 1*/)
+			if (activeChar.getInventory().getItemByItemId(1835) != null)
 			{
 				activeChar.addAutoSoulShot(1835);
 				activeChar.rechargeAutoSoulShot(true, true, false);
 				activeChar.sendPacket(new ExAutoSoulShot(1835, 1));
 			}
 			
-			if (activeChar.getInventory().getItemByItemId(3947) != null/* && activeChar.getInventory().getItemByItemId(3947).getCount() >= 1*/)
+			if (activeChar.getInventory().getItemByItemId(3947) != null)
 			{
 				activeChar.addAutoSoulShot(3947);
 				activeChar.rechargeAutoSoulShot(true, true, false);
@@ -633,17 +650,17 @@ public class EnterWorld extends L2GameClientPacket
 			if (activeChar.getInventory().getItemByItemId(5592) != null)
 			{
 				activeChar.sendPacket(new ExAutoSoulShot(5592, 1));
-				activeChar.setAutoPot(5592, ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoPot(5592, activeChar, Float.parseFloat("0.95")), 1000, CP_POT_CD*1000), true);
+				activeChar.setAutoPot(5592, ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoPot(5592, activeChar, Float.parseFloat("0.95")), 1000, CP_POT_CD * 1000), true);
 			}
 			if (activeChar.getInventory().getItemByItemId(1539) != null)
 			{
 				activeChar.sendPacket(new ExAutoSoulShot(1539, 1));
-				activeChar.setAutoPot(1539, ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoPot(1539, activeChar, Float.parseFloat("0.95")), 1000, HEALING_POT_CD*1000), true);
+				activeChar.setAutoPot(1539, ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoPot(1539, activeChar, Float.parseFloat("0.95")), 1000, HEALING_POT_CD * 1000), true);
 			}
 			if (activeChar.getInventory().getItemByItemId(728) != null)
 			{
 				activeChar.sendPacket(new ExAutoSoulShot(728, 1));
-				activeChar.setAutoPot(728, ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoPot(728, activeChar, Float.parseFloat("0.70")), 1000, MANA_POT_CD*1000), true);
+				activeChar.setAutoPot(728, ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoPot(728, activeChar, Float.parseFloat("0.70")), 1000, MANA_POT_CD * 1000), true);
 			}
 			
 			activeChar.setFirstLog(false);
@@ -679,8 +696,8 @@ public class EnterWorld extends L2GameClientPacket
 		
 		if (Config.PM_MESSAGE_ON_START)
 		{
-			activeChar.sendPacket(new CreatureSay(2, Say2.HERO_VOICE,Config.PM_TEXT1,Config.PM_SERVER_NAME));
-			activeChar.sendPacket(new CreatureSay(15, Say2.PARTYROOM_COMMANDER,activeChar.getName(),Config.PM_TEXT2));
+			activeChar.sendPacket(new CreatureSay(2, Say2.HERO_VOICE, Config.PM_TEXT1, Config.PM_SERVER_NAME));
+			activeChar.sendPacket(new CreatureSay(15, Say2.PARTYROOM_COMMANDER, activeChar.getName(), Config.PM_TEXT2));
 		}
 		
 		if (Config.SERVER_TIME_ON_START)
@@ -688,7 +705,7 @@ public class EnterWorld extends L2GameClientPacket
 			int t = GameTimeController.getInstance().getGameTime();
 			String h = "" + t / 60 % 24;
 			String m;
-			if(t % 60 < 10)
+			if (t % 60 < 10)
 			{
 				m = "0" + t % 60;
 			}
@@ -700,9 +717,9 @@ public class EnterWorld extends L2GameClientPacket
 			activeChar.sendMessage("--------------------------------------------------------------------------------");
 			activeChar.sendMessage("Server date: " + df.format(new Date(System.currentTimeMillis())));
 			activeChar.sendMessage("Server time: " + fmt.format(new Date(System.currentTimeMillis())));
-			activeChar.sendMessage("Server re-started: "+ GameServer.dateTimeServerRestarted + "");
+			activeChar.sendMessage("Server re-started: " + GameServer.dateTimeServerRestarted + "");
 			activeChar.sendMessage("");
-			activeChar.sendMessage(GameTimeController.getInstance().isNight() ? "Game time: "+ h +":"+m+" in the night." : "Game time: "+ h +":"+m+" in the day.");
+			activeChar.sendMessage(GameTimeController.getInstance().isNight() ? "Game time: " + h + ":" + m + " in the night." : "Game time: " + h + ":" + m + " in the day.");
 			activeChar.sendMessage("--------------------------------------------------------------------------------");
 		}
 		
@@ -719,11 +736,11 @@ public class EnterWorld extends L2GameClientPacket
 			{
 				activeChar.setPremiumService(1);
 				updateDatabase(activeChar, Config.HOW_MANY_DAYS * 24L * 60L * 60L * 1000L);
-				if(Config.PREMIUM_NAME_COLOR_ENABLED && activeChar.getPremiumService() == 1)
+				if (Config.PREMIUM_NAME_COLOR_ENABLED && activeChar.getPremiumService() == 1)
 				{
 					activeChar.getAppearance().setTitleColor(Config.PREMIUM_TITLE_COLOR);
 				}
-				activeChar.sendMessage("Congratulations! Now you have The Premium Account.");
+				activeChar.sendMessage("Congratulations! You're The Premium account now.");
 			}
 		}
 		
@@ -756,8 +773,7 @@ public class EnterWorld extends L2GameClientPacket
 			}
 			catch (Exception e)
 			{
-				
-				LOG.warn("EnterWorld: Could not restore vote data for player: "+activeChar.getName()+ " IP: " + activeChar.getClient().getConnection().getInetAddress().getHostAddress() + "." + e);
+				LOG.warn("EnterWorld: Could not restore vote data for player: " + activeChar.getName() + " IP: " + activeChar.getClient().getConnection().getInetAddress().getHostAddress() + "." + e);
 			}
 			
 			if (activeChar.eligibleToVoteHop() || activeChar.eligibleToVoteTop() || activeChar.eligibleToVoteNet() || activeChar.eligibleToVoteBra())
@@ -774,7 +790,7 @@ public class EnterWorld extends L2GameClientPacket
 		
 		if (Config.ONLINE_PLAYERS_ON_LOGIN)
 		{
-			activeChar.sendPacket(new ExShowScreenMessage(1, 11111, 3, false, 0, 0, 0, true, 6000, false, " Players online: "+ L2World.getInstance().getAllPlayersCount()));
+			activeChar.sendPacket(new ExShowScreenMessage(1, 11111, 3, false, 0, 0, 0, true, 6000, false, " Players online: " + L2World.getInstance().getAllPlayersCount()));
 			activeChar.sendMessage("--------------------------------------------------------------------------------");
 			activeChar.sendMessage("Players online: " + L2World.getInstance().getAllPlayersCount());
 			activeChar.sendMessage("--------------------------------------------------------------------------------");
@@ -787,7 +803,9 @@ public class EnterWorld extends L2GameClientPacket
 		try
 		{
 			if (player == null)
+			{
 				return;
+			}
 			
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement stmt = con.prepareStatement("REPLACE INTO account_premium (account_name, premium_service, enddate) VALUES (?,?,?)");
@@ -797,12 +815,13 @@ public class EnterWorld extends L2GameClientPacket
 			stmt.setLong(3, premiumTime == 0 ? 0 : System.currentTimeMillis() + premiumTime);
 			stmt.execute();
 			stmt.close();
-			stmt = null;
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("Error: could not update database: ", e);
 		}
@@ -811,43 +830,67 @@ public class EnterWorld extends L2GameClientPacket
 			CloseUtil.close(con);
 		}
 	}
-
+	
 	private void ColorSystem(L2PcInstance activeChar)
 	{
 		if (activeChar.getPvpKills() >= Config.PVP_AMOUNT1 && Config.PVP_COLOR_SYSTEM_ENABLED)
+		{
 			activeChar.updatePvPColor(activeChar.getPvpKills());
+		}
 		if (activeChar.getPkKills() >= Config.PK_AMOUNT1 && Config.PK_COLOR_SYSTEM_ENABLED)
+		{
 			activeChar.updatePkColor(activeChar.getPkKills());
+		}
 		
 		if (activeChar.getPvpKills() >= Config.PVP_AMOUNT2 && Config.PVP_COLOR_SYSTEM_ENABLED)
+		{
 			activeChar.updatePvPColor(activeChar.getPvpKills());
+		}
 		if (activeChar.getPkKills() >= Config.PK_AMOUNT2 && Config.PK_COLOR_SYSTEM_ENABLED)
+		{
 			activeChar.updatePkColor(activeChar.getPkKills());
+		}
 		
 		if (activeChar.getPvpKills() >= Config.PVP_AMOUNT3 && Config.PVP_COLOR_SYSTEM_ENABLED)
+		{
 			activeChar.updatePvPColor(activeChar.getPvpKills());
+		}
 		if (activeChar.getPkKills() >= Config.PK_AMOUNT3 && Config.PK_COLOR_SYSTEM_ENABLED)
+		{
 			activeChar.updatePkColor(activeChar.getPkKills());
+		}
 		
 		if (activeChar.getPvpKills() >= Config.PVP_AMOUNT4 && Config.PVP_COLOR_SYSTEM_ENABLED)
+		{
 			activeChar.updatePvPColor(activeChar.getPvpKills());
+		}
 		if (activeChar.getPkKills() >= Config.PK_AMOUNT4 && Config.PK_COLOR_SYSTEM_ENABLED)
+		{
 			activeChar.updatePkColor(activeChar.getPkKills());
+		}
 		
 		if (activeChar.getPvpKills() >= Config.PVP_AMOUNT5 && Config.PVP_COLOR_SYSTEM_ENABLED)
+		{
 			activeChar.updatePvPColor(activeChar.getPvpKills());
+		}
 		if (activeChar.getPkKills() >= Config.PK_AMOUNT5 && Config.PK_COLOR_SYSTEM_ENABLED)
+		{
 			activeChar.updatePkColor(activeChar.getPkKills());
+		}
 		
-		// Apply color settings to clan leader when entering  
+		// Apply color settings to clan leader when entering
 		if (activeChar.getClan() != null && activeChar.isClanLeader() && Config.CLAN_LEADER_COLOR_ENABLED && activeChar.getClan().getLevel() >= Config.CLAN_LEADER_COLOR_CLAN_LEVEL)
 		{
 			if (Config.CLAN_LEADER_COLORED == 1)
+			{
 				activeChar.getAppearance().setNameColor(Config.CLAN_LEADER_COLOR);
+			}
 			else
+			{
 				activeChar.getAppearance().setTitleColor(Config.CLAN_LEADER_COLOR);
+			}
 		}
-
+		
 		activeChar.updateNameTitleColor();
 	}
 	
@@ -867,10 +910,14 @@ public class EnterWorld extends L2GameClientPacket
 				
 				cha.setCoupleId(cl.getId());
 				
-				if(cl.getPlayer1Id() == _chaid)
+				if (cl.getPlayer1Id() == _chaid)
+				{
 					cha.setPartnerId(cl.getPlayer2Id());
+				}
 				else
+				{
 					cha.setPartnerId(cl.getPlayer1Id());
+				}
 			}
 		}
 	}
@@ -882,10 +929,14 @@ public class EnterWorld extends L2GameClientPacket
 			L2PcInstance partner = null;
 			
 			if (L2World.getInstance().findObject(cha.getPartnerId()) instanceof L2PcInstance)
+			{
 				partner = (L2PcInstance) L2World.getInstance().findObject(cha.getPartnerId());
+			}
 			
 			if (partner != null)
-				partner.sendMessage("Your partner has logged in");
+			{
+				partner.sendMessage("Your partner has logged in.");
+			}
 		}
 	}
 	
@@ -906,13 +957,17 @@ public class EnterWorld extends L2GameClientPacket
 		{
 			L2PcInstance sponsor = (L2PcInstance) L2World.getInstance().findObject(activeChar.getSponsor());
 			if (sponsor != null)
+			{
 				sponsor.sendPacket(new SystemMessage(SystemMessageId.YOUR_APPRENTICE_S1_HAS_LOGGED_IN).addString(activeChar.getName()));
+			}
 		}
 		else if (activeChar.getApprentice() != 0)
 		{
 			L2PcInstance apprentice = (L2PcInstance) L2World.getInstance().findObject(activeChar.getApprentice());
 			if (apprentice != null)
+			{
 				apprentice.sendPacket(new SystemMessage(SystemMessageId.YOUR_SPONSOR_S1_HAS_LOGGED_IN).addString(activeChar.getName()));
+			}
 		}
 	}
 	
@@ -930,13 +985,19 @@ public class EnterWorld extends L2GameClientPacket
 		int pledgeClass = 0;
 		
 		if (activeChar.getClan() != null)
+		{
 			pledgeClass = activeChar.getClan().getClanMember(activeChar.getObjectId()).calculatePledgeClass(activeChar);
+		}
 		
 		if (activeChar.isNoble() && pledgeClass < 5)
+		{
 			pledgeClass = 5;
+		}
 		
 		if (activeChar.isHero())
+		{
 			pledgeClass = 8;
+		}
 		
 		activeChar.setPledgeClass(pledgeClass);
 	}
@@ -950,7 +1011,9 @@ public class EnterWorld extends L2GameClientPacket
 			{
 				Castle castle = CastleManager.getInstance().getCastleById(clan.getHasCastle());
 				if ((castle != null) && (activeChar.getObjectId() == clan.getLeaderId()))
-					Announcements.getInstance().announceToAll("Lord " + activeChar.getName() + " Ruler Of " + castle.getName() + " Castle is now Online!");
+				{
+					Announcements.getInstance().announceToAll("Lord " + activeChar.getName() + " Ruler Of " + castle.getName() + " Castle has logged in.");
+				}
 			}
 		}
 	}
@@ -983,7 +1046,9 @@ public class EnterWorld extends L2GameClientPacket
 			catch (Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 			
 			switch (_id)
@@ -1039,7 +1104,9 @@ public class EnterWorld extends L2GameClientPacket
 			catch (Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 	}

@@ -22,13 +22,10 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * This class ...
- * @version $Revision: 1.2.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class PrivateStoreMsgSell extends L2GameServerPacket
 {
 	private static final String _S__B5_PRIVATESTOREMSGSELL = "[S] 9c PrivateStoreMsgSell";
+	
 	private final L2PcInstance _activeChar;
 	private String _storeMsg;
 	
@@ -49,10 +46,6 @@ public class PrivateStoreMsgSell extends L2GameServerPacket
 		writeS(_storeMsg);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

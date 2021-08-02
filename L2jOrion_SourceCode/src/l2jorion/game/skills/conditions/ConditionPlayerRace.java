@@ -24,9 +24,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.base.Race;
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public class ConditionPlayerRace extends Condition
 {
 	
@@ -41,7 +38,9 @@ public class ConditionPlayerRace extends Condition
 	public boolean testImpl(final Env env)
 	{
 		if (!(env.player instanceof L2PcInstance))
+		{
 			return false;
+		}
 		return ((L2PcInstance) env.player).getRace() == _race;
 	}
 }

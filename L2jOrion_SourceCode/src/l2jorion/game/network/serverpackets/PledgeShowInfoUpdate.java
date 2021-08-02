@@ -23,13 +23,10 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
 
-/**
- * This class ...
- * @version $Revision: 1.2.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public class PledgeShowInfoUpdate extends L2GameServerPacket
 {
 	private static final String _S__A1_PLEDGESHOWINFOUPDATE = "[S] 88 PledgeShowInfoUpdate";
+	
 	private final L2Clan _clan;
 	
 	public PledgeShowInfoUpdate(final L2Clan clan)
@@ -41,9 +38,9 @@ public class PledgeShowInfoUpdate extends L2GameServerPacket
 	protected final void writeImpl()
 	{
 		final int TOP = ClanTable.getInstance().getTopRate(_clan.getClanId());
-		// ddddddddddSdd
+		
 		writeC(0x88);
-		// sending empty data so client will ask all the info in response ;)
+		
 		writeD(_clan.getClanId());
 		writeD(_clan.getCrestId());
 		writeD(_clan.getLevel()); // clan level
@@ -59,10 +56,6 @@ public class PledgeShowInfoUpdate extends L2GameServerPacket
 		writeD(_clan.isAtWar());
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

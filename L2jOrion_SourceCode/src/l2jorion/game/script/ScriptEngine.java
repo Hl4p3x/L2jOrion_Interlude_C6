@@ -25,9 +25,6 @@ import java.util.Hashtable;
 import l2jorion.Config;
 import l2jorion.game.script.faenor.FaenorInterface;
 
-/**
- * @author Luis Arias
- */
 public class ScriptEngine
 {
 	protected EngineInterface _utils = FaenorInterface.getInstance();
@@ -45,15 +42,18 @@ public class ScriptEngine
 				// have been executed if the shape was found.
 				// the shape is expected to have put its factory
 				// in the hashtable.
-				
 				s = parserFactories.get(name);
 				if (s == null)
+				{
 					throw new ParserNotCreatedException();
+				}
 			}
 			catch (final ClassNotFoundException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				// We'll throw an exception to indicate that
 				// the shape could not be created

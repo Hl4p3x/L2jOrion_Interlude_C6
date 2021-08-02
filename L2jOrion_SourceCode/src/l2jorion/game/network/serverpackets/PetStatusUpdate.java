@@ -24,10 +24,6 @@ import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2SummonInstance;
 
-/**
- * This class ...
- * @version $Revision: 1.5.2.3.2.5 $ $Date: 2005/03/29 23:15:10 $
- */
 public class PetStatusUpdate extends L2GameServerPacket
 {
 	private static final String _S__CE_PETSTATUSSHOW = "[S] B5 PetStatusUpdate";

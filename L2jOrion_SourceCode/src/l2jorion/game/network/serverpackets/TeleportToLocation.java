@@ -25,11 +25,11 @@ import l2jorion.game.model.L2Object;
 public class TeleportToLocation extends L2GameServerPacket
 {
 	private static final String _S__38_TELEPORTTOLOCATION = "[S] 28 TeleportToLocation";
+	
 	private final int _targetObjId;
 	private final int _x;
 	private final int _y;
 	private final int _z;
-	private final int _heading;
 	private boolean _isFastTeleport;
 	
 	public TeleportToLocation(L2Object obj, int x, int y, int z, int heading, boolean isFastTeleport)
@@ -38,7 +38,6 @@ public class TeleportToLocation extends L2GameServerPacket
 		_x = x;
 		_y = y;
 		_z = z;
-		_heading = heading;
 		_isFastTeleport = isFastTeleport;
 	}
 	
@@ -46,12 +45,12 @@ public class TeleportToLocation extends L2GameServerPacket
 	protected final void writeImpl()
 	{
 		writeC(0x28);
+		
 		writeD(_targetObjId);
 		writeD(_x);
 		writeD(_y);
 		writeD(_z);
-		writeD(_isFastTeleport ? 1 : 0); // 0 - with black screen, 1 - fast teleport (for correcting position)
-		writeD(_heading);
+		writeD(_isFastTeleport ? 1 : 0); // 0 - black screen, 1 - no black screen
 	}
 	
 	@Override

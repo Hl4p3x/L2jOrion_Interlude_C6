@@ -29,10 +29,9 @@ import javolution.util.FastList;
 import l2jorion.ConfigLoader;
 import l2jorion.ServerType;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Status extends Thread
 {

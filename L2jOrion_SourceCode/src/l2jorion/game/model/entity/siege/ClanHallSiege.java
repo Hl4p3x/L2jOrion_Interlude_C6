@@ -24,19 +24,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-/**
- * @author MHard
- */
 public abstract class ClanHallSiege
 {
 	private static Logger LOG = LoggerFactory.getLogger(ClanHallSiege.class);
+	
 	private Calendar _siegeDate;
 	public Calendar _siegeEndDate;
 	private boolean _isInProgress = false;

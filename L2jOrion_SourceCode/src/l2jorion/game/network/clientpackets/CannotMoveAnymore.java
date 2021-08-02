@@ -17,8 +17,8 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.ai.CtrlEvent;
-import l2jorion.game.model.L2CharPosition;
 import l2jorion.game.model.L2Character;
+import l2jorion.game.model.Location;
 
 public final class CannotMoveAnymore extends L2GameClientPacket
 {
@@ -45,7 +45,7 @@ public final class CannotMoveAnymore extends L2GameClientPacket
 		
 		if (player.getAI() != null)
 		{
-			player.getAI().notifyEvent(CtrlEvent.EVT_ARRIVED_BLOCKED, new L2CharPosition(_x, _y, _z, _heading));
+			player.getAI().notifyEvent(CtrlEvent.EVT_ARRIVED_BLOCKED, new Location(_x, _y, _z, _heading));
 		}
 	}
 	

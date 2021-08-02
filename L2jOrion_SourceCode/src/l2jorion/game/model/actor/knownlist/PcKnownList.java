@@ -45,7 +45,6 @@ public class PcKnownList extends PlayableKnownList
 			
 			if (object instanceof L2Character)
 			{
-				// Update the state of the L2Character object client side by sending Server->Client packet MoveToPawn/MoveToLocation and AutoAttackStart to the L2PcInstance
 				L2Character obj = (L2Character) object;
 				if (obj.hasAI())
 				{
@@ -89,6 +88,11 @@ public class PcKnownList extends PlayableKnownList
 	@Override
 	public int getDistanceToForgetObject(L2Object object)
 	{
+		if (object instanceof L2Vehicle)
+		{
+			return 8000;
+		}
+		
 		final int knownlistSize = getKnownObjects().size();
 		if (knownlistSize <= 25)
 		{
@@ -121,7 +125,7 @@ public class PcKnownList extends PlayableKnownList
 		{
 			return 4200; // empty field
 		}
-			
+		
 		if (knownlistSize <= 35)
 		{
 			return 3600;

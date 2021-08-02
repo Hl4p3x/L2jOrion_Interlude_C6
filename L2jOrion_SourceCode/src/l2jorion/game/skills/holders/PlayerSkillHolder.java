@@ -23,9 +23,6 @@ import java.util.Map;
 
 import l2jorion.game.model.L2Skill;
 
-/**
- * @author UnAfraid
- */
 public class PlayerSkillHolder implements ISkillsHolder
 {
 	private final Map<Integer, L2Skill> _skills = new HashMap<>();
@@ -35,30 +32,18 @@ public class PlayerSkillHolder implements ISkillsHolder
 		_skills.putAll(map);
 	}
 	
-	/**
-	 * @return the map containing this character skills.
-	 */
 	@Override
 	public Map<Integer, L2Skill> getSkills()
 	{
 		return _skills;
 	}
 	
-	/**
-	 * Add a skill to the skills map.<br>
-	 * @param skill
-	 */
 	@Override
 	public L2Skill addSkill(L2Skill skill)
 	{
 		return _skills.put(skill.getId(), skill);
 	}
 	
-	/**
-	 * Return the level of a skill owned by the L2Character.
-	 * @param skillId The identifier of the L2Skill whose level must be returned
-	 * @return The level of the L2Skill identified by skillId
-	 */
 	@Override
 	public int getSkillLevel(int skillId)
 	{
@@ -66,10 +51,6 @@ public class PlayerSkillHolder implements ISkillsHolder
 		return (skill == null) ? -1 : skill.getLevel();
 	}
 	
-	/**
-	 * @param skillId The identifier of the L2Skill to check the knowledge
-	 * @return the skill from the known skill.
-	 */
 	@Override
 	public L2Skill getKnownSkill(int skillId)
 	{

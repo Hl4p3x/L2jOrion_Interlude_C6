@@ -22,27 +22,13 @@ package l2jorion.game.model.actor.instance;
 
 import l2jorion.game.templates.L2NpcTemplate;
 
-/**
- * This class ...
- * @version $Revision: 1.5.4.8 $ $Date: 2005/04/02 15:57:52 $
- */
 public final class L2TrainerInstance extends L2FolkInstance
 {
-	
-	/**
-	 * Instantiates a new l2 trainer instance.
-	 * @param objectId the object id
-	 * @param template the template
-	 */
 	public L2TrainerInstance(final int objectId, final L2NpcTemplate template)
 	{
 		super(objectId, template);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.instance.L2NpcInstance#getHtmlPath(int, int)
-	 */
 	@Override
 	public String getHtmlPath(L2PcInstance player, final int npcId, final int val)
 	{

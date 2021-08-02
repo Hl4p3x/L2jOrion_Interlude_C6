@@ -22,9 +22,6 @@ package l2jorion.game.skills.conditions;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public final class ConditionItemId extends Condition
 {
 	
@@ -39,7 +36,9 @@ public final class ConditionItemId extends Condition
 	public boolean testImpl(final Env env)
 	{
 		if (env.item == null)
+		{
 			return false;
+		}
 		return env.item.getItemId() == _itemId;
 	}
 }

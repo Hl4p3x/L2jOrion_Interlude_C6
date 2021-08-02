@@ -22,9 +22,8 @@ package l2jorion.game.managers;
 import javolution.util.FastList;
 import l2jorion.game.model.zone.type.L2FishingZone;
 import l2jorion.game.model.zone.type.L2WaterZone;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class FishingZoneManager
 {

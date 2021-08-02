@@ -1,4 +1,3 @@
-# Rewritten by RayzoR
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState

@@ -20,22 +20,14 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * sample format d
- * @version $Revision: 1.1.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public class ShowTownMap extends L2GameServerPacket
 {
 	private static final String _S__DE_ShowTownMap = "[S] DE ShowTownMap";
+	
 	private final String _texture;
 	private final int _x;
 	private final int _y;
 	
-	/**
-	 * @param texture
-	 * @param x
-	 * @param y
-	 */
 	public ShowTownMap(final String texture, final int x, final int y)
 	{
 		_texture = texture;
@@ -52,10 +44,6 @@ public class ShowTownMap extends L2GameServerPacket
 		writeD(_y);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

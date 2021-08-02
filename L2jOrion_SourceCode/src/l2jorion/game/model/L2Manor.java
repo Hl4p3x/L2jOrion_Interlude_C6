@@ -31,9 +31,8 @@ import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.ItemTable;
 import l2jorion.game.templates.L2Item;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 /**
  * Service class for manor
@@ -67,10 +66,12 @@ public class L2Manor
 		final FastList<Integer> crops = new FastList<>();
 		
 		for (final SeedData seed : _seeds.values())
+		{
 			if (!crops.contains(seed.getCrop()) && seed.getCrop() != 0 && !crops.contains(seed.getCrop()))
 			{
 				crops.add(seed.getCrop());
 			}
+		}
 		
 		return crops;
 	}
@@ -80,7 +81,9 @@ public class L2Manor
 		final L2Item seedItem = ItemTable.getInstance().getTemplate(seedId);
 		
 		if (seedItem != null)
+		{
 			return seedItem.getReferencePrice();
+		}
 		return 0;
 	}
 	
@@ -89,7 +92,9 @@ public class L2Manor
 		for (final SeedData seed : _seeds.values())
 		{
 			if (seed.getCrop() == cropId)
+			{
 				return getSeedBasicPrice(seed.getId());
+			}
 		}
 		
 		return 0;
@@ -100,7 +105,9 @@ public class L2Manor
 		final L2Item cropItem = ItemTable.getInstance().getTemplate(cropId);
 		
 		if (cropItem != null)
+		{
 			return cropItem.getReferencePrice();
+		}
 		return 0;
 	}
 	
@@ -109,7 +116,9 @@ public class L2Manor
 		for (final SeedData seed : _seeds.values())
 		{
 			if (seed.getCrop() == cropId)
+			{
 				return seed.getMature();
+			}
 		}
 		return 0;
 	}
@@ -131,7 +140,9 @@ public class L2Manor
 		final SeedData seed = _seeds.get(seedId);
 		
 		if (seed != null)
+		{
 			return seed.getLevel() - 5;
+		}
 		return -1;
 	}
 	
@@ -140,7 +151,9 @@ public class L2Manor
 		final SeedData seed = _seeds.get(seedId);
 		
 		if (seed != null)
+		{
 			return seed.getLevel() + 5;
+		}
 		return -1;
 	}
 	
@@ -149,7 +162,9 @@ public class L2Manor
 		for (final SeedData seed : _seeds.values())
 		{
 			if (seed.getCrop() == cropId)
+			{
 				return seed.getLevel();
+			}
 		}
 		return 0;
 	}
@@ -159,7 +174,9 @@ public class L2Manor
 		final SeedData seed = _seeds.get(seedId);
 		
 		if (seed != null)
+		{
 			return seed.getLevel();
+		}
 		return -1;
 	}
 	
@@ -168,7 +185,9 @@ public class L2Manor
 		for (final SeedData seed : _seeds.values())
 		{
 			if (seed.getId() == seedId)
+			{
 				return seed.isAlternative();
+			}
 		}
 		return false;
 	}
@@ -178,7 +197,9 @@ public class L2Manor
 		final SeedData seed = _seeds.get(seedId);
 		
 		if (seed != null)
+		{
 			return seed.getCrop();
+		}
 		return -1;
 	}
 	
@@ -187,11 +208,13 @@ public class L2Manor
 		for (final SeedData seed : _seeds.values())
 		{
 			if (seed.getCrop() == cropId)
+			{
 				return seed.getReward(type);
-			// there can be several
-			// seeds with same crop, but
-			// reward should be the same for
-			// all
+				// there can be several
+				// seeds with same crop, but
+				// reward should be the same for
+				// all
+			}
 		}
 		return -1;
 	}
@@ -201,7 +224,9 @@ public class L2Manor
 		final SeedData seed = _seeds.get(seedId);
 		
 		if (seed != null)
+		{
 			return seed.getReward(type);
+		}
 		return 0;
 	}
 	
@@ -254,7 +279,9 @@ public class L2Manor
 	{
 		final SeedData seed = _seeds.get(seedId);
 		if (seed != null)
+		{
 			return seed.getManorId();
+		}
 		return 0;
 	}
 	
@@ -263,7 +290,9 @@ public class L2Manor
 		final SeedData seed = _seeds.get(seedId);
 		
 		if (seed != null)
+		{
 			return seed.getSeedLimit();
+		}
 		return 0;
 	}
 	
@@ -272,7 +301,9 @@ public class L2Manor
 		for (final SeedData seed : _seeds.values())
 		{
 			if (seed.getCrop() == cropId)
+			{
 				return seed.getCropLimit();
+			}
 		}
 		return 0;
 	}
@@ -395,6 +426,7 @@ public class L2Manor
 		finally
 		{
 			if (lnr != null)
+			{
 				try
 				{
 					lnr.close();
@@ -403,8 +435,10 @@ public class L2Manor
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 			if (buff != null)
+			{
 				try
 				{
 					buff.close();
@@ -413,8 +447,10 @@ public class L2Manor
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 			if (reader != null)
+			{
 				try
 				{
 					reader.close();
@@ -423,6 +459,7 @@ public class L2Manor
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 		}
 	}

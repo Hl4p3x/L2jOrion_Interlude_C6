@@ -31,7 +31,6 @@ import l2jorion.game.templates.StatsSet;
 
 public class L2SkillCharge extends L2Skill
 {
-	
 	public L2SkillCharge(final StatsSet set)
 	{
 		super(set);
@@ -59,7 +58,9 @@ public class L2SkillCharge extends L2Skill
 	public void useSkill(final L2Character caster, final L2Object[] targets)
 	{
 		if (caster.isAlikeDead())
+		{
 			return;
+		}
 		
 		// get the effect
 		EffectCharge effect = null;
@@ -93,17 +94,6 @@ public class L2SkillCharge extends L2Skill
 			return;
 		}
 		getEffects(caster, caster, false, false, false);
-		
-		// effect self :]
-		// L2Effect seffect = caster.getEffect(getId());
-		// TODO ?? this is always null due to a return in the if block above!
-		// if (effect != null && seffect.isSelfEffect())
-		// {
-		// Replace old effect with new one.
-		// seffect.exit();
-		// }
-		// cast self effect if any
 		getEffectsSelf(caster);
 	}
-	
 }

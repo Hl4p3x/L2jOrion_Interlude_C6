@@ -20,14 +20,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * sample
- * <p>
- * 4b c1 b2 e0 4a 00 00 00 00
- * <p>
- * format cdd
- * @version $Revision: 1.1.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class AskJoinParty extends L2GameServerPacket
 {
 	private static final String _S__4B_ASKJOINPARTY_0X4B = "[S] 39 AskJoinParty 0x4b";
@@ -35,10 +27,6 @@ public class AskJoinParty extends L2GameServerPacket
 	private final String _requestorName;
 	private final int _itemDistribution;
 	
-	/**
-	 * @param requestorName
-	 * @param itemDistribution
-	 */
 	public AskJoinParty(final String requestorName, final int itemDistribution)
 	{
 		_requestorName = requestorName;
@@ -53,10 +41,6 @@ public class AskJoinParty extends L2GameServerPacket
 		writeD(_itemDistribution);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

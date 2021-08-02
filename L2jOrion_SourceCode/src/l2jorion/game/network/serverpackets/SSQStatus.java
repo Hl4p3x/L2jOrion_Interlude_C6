@@ -20,25 +20,21 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.model.entity.sevensigns.SevenSignsFestival;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.templates.StatsSet;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * Seven Signs Record Update packet type id 0xf5 format: c cc (Page Num = 1 -> 4, period) 1: [ddd cc dd ddd c ddd c] 2: [hc [cd (dc (S))] 3: [ccc (cccc)] 4: [(cchh)]
- * @author Tempy
- */
 public class SSQStatus extends L2GameServerPacket
 {
 	private static Logger LOG = LoggerFactory.getLogger(SSQStatus.class);
 	
 	private static final String _S__F5_SSQStatus = "[S] F5 RecordUpdate";
+	
 	private final L2PcInstance _activevChar;
 	private final int _page;
 	
@@ -415,10 +411,6 @@ public class SSQStatus extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

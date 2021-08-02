@@ -21,40 +21,17 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * Format: ch ddcdc.
- * @author KenM
- * @author ProGramMoS
- */
-
 public class ExPCCafePointInfo extends L2GameServerPacket
 {
-	/** The Constant _S__FE_31_EXPCCAFEPOINTINFO. */
 	private static final String _S__FE_31_EXPCCAFEPOINTINFO = "[S] FE:31 ExPCCafePointInfo";
 	
-	/** The _character. */
 	private final L2PcInstance _character;
 	
-	/** The m_ add point. */
 	private final int m_AddPoint;
-	
-	/** The m_ period type. */
 	private int m_PeriodType;
-	
-	/** The Remain time. */
 	private final int RemainTime;
-	
-	/** The Point type. */
 	private int PointType;
 	
-	/**
-	 * Instantiates a new ex pc cafe point info.
-	 * @param user the user
-	 * @param modify the modify
-	 * @param add the add
-	 * @param hour the hour
-	 * @param _double the _double
-	 */
 	public ExPCCafePointInfo(final L2PcInstance user, final int modify, final boolean add, final int hour, final boolean _double)
 	{
 		_character = user;
@@ -94,10 +71,6 @@ public class ExPCCafePointInfo extends L2GameServerPacket
 		writeC(PointType);
 	}
 	
-	/**
-	 * Gets the type.
-	 * @return the type
-	 */
 	@Override
 	public String getType()
 	{

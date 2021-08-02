@@ -56,17 +56,14 @@ public class AdminCache implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		final StringTokenizer st = new StringTokenizer(command, " ");
 		
 		final CommandEnum comm = CommandEnum.valueOf(st.nextToken());
 		
 		if (comm == null)
+		{
 			return false;
+		}
 		
 		switch (comm)
 		{
@@ -75,7 +72,7 @@ public class AdminCache implements IAdminCommandHandler
 				HtmCache.getInstance().reload(Config.DATAPACK_ROOT);
 				activeChar.sendMessage("HTML Cache: " + HtmCache.getInstance().getMemoryUsage() + " MB on " + HtmCache.getInstance().getLoadedFiles() + " file(s) loaded.");
 				return true;
-				
+			
 			case admin_cache_reload_path:
 				if (st.hasMoreTokens())
 				{
@@ -106,13 +103,13 @@ public class AdminCache implements IAdminCommandHandler
 				}
 				activeChar.sendMessage("Usage: //cache_reload_file <relative_path/file>");
 				return false;
-				
+			
 			case admin_cache_crest_rebuild:
 			case admin_cache_crest_reload:
 				CrestCache.getInstance().reload();
 				activeChar.sendMessage("Crests have been reloaded.");
 				return true;
-				
+			
 			default:
 			{
 				return false;

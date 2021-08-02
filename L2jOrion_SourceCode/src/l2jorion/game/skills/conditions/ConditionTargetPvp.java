@@ -24,9 +24,6 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.skills.Env;
 
-/**
- * @author eX1steam L2jOrion
- */
 public class ConditionTargetPvp extends Condition
 {
 	
@@ -42,7 +39,9 @@ public class ConditionTargetPvp extends Condition
 	{
 		final L2Character target = env.target;
 		if (target instanceof L2PcInstance && ((L2PcInstance) target).getPvpFlag() != 0)
+		{
 			return ((L2PcInstance) target).getPvpFlag() == _pvp;
+		}
 		return false;
 	}
 }

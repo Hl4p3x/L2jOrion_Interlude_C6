@@ -20,16 +20,17 @@
  */
 package l2jorion.game.network.serverpackets;
 
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.util.Point3D;
 
 public class ValidateLocationInVehicle extends L2GameServerPacket
 {
 	private static final String _S__73_ValidateLocationInVehicle = "[S] 73 ValidateLocationInVehicle";
+	
 	private final int _charObjId;
 	private final int _boatObjId;
 	private final int _heading;
-	private final Point3D _pos;
+	private final Location _pos;
 	
 	public ValidateLocationInVehicle(L2PcInstance player)
 	{

@@ -16,19 +16,15 @@
  */
 package l2jorion.game.managers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.datatables.CrownTable;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.siege.Castle;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * @author evill33t Reworked by NB4L1
- */
 public class CrownManager
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(CrownManager.class);
@@ -45,7 +41,7 @@ public class CrownManager
 	
 	public CrownManager()
 	{
-		LOG.info("CrownManager: initialized");
+		//LOG.info("CrownManager: initialized");
 	}
 	
 	public void checkCrowns(final L2Clan clan)

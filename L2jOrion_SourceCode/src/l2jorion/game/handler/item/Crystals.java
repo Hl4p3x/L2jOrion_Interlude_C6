@@ -21,9 +21,6 @@
 
 package l2jorion.game.handler.item;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.handler.IItemHandler;
 import l2jorion.game.model.L2Skill;
@@ -34,6 +31,8 @@ import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class Crystals implements IItemHandler
 {

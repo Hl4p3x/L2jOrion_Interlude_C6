@@ -23,17 +23,10 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.TradeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * 3 section to this packet 1)playerinfo which is always sent dd 2)list of items which can be added to sell d(hhddddhhhd) 3)list of items which have already been setup for sell in previous sell private store sell manageent d(hhddddhhhdd) *
- * @version $Revision: 1.3.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
-
-/*
- * In memory of our friend Vadim 03/11/2014
- */
 public class PrivateStoreManageListSell extends L2GameServerPacket
 {
 	private static final String _S__B3_PRIVATESELLLISTSELL = "[S] 9a PrivateSellListSell";
+	
 	private final int _objId;
 	private int _playerAdena;
 	private final boolean _packageSale;
@@ -43,18 +36,13 @@ public class PrivateStoreManageListSell extends L2GameServerPacket
 	public PrivateStoreManageListSell(L2PcInstance player)
 	{
 		_objId = player.getObjectId();
-		
 		_playerAdena = player.getAdena();
-		
 		player.getSellList().updateItems();
 		_packageSale = player.getSellList().isPackaged();
 		_itemList = player.getInventory().getAvailableItems(player.getSellList());
 		_sellList = player.getSellList().getItems();
 	}
 	
-	/**
-	 * During store set no packets will be received from client just when store definition is finished.
-	 */
 	@Override
 	protected final void writeImpl()
 	{
@@ -94,10 +82,7 @@ public class PrivateStoreManageListSell extends L2GameServerPacket
 			writeD(item.getItem().getReferencePrice()); // store price
 		}
 	}
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
+	
 	@Override
 	public String getType()
 	{

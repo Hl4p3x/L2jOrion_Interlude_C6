@@ -19,7 +19,6 @@
  */
 package l2jorion.game.skills.l2skills;
 
-import l2jorion.Config;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.L2Object;
@@ -35,7 +34,6 @@ import l2jorion.game.templates.StatsSet;
 
 public class L2SkillDrain extends L2Skill
 {
-	
 	private final float _absorbPart;
 	private final int _absorbAbs;
 	
@@ -51,7 +49,9 @@ public class L2SkillDrain extends L2Skill
 	public void useSkill(final L2Character activeChar, final L2Object[] targets)
 	{
 		if (activeChar.isAlikeDead())
+		{
 			return;
+		}
 		
 		final boolean sps = activeChar.checkSps();
 		final boolean bss = activeChar.checkBss();
@@ -70,12 +70,6 @@ public class L2SkillDrain extends L2Skill
 				continue; // No effect on invulnerable chars unless they cast it themselves.
 			}
 			
-			/*
-			 * L2ItemInstance weaponInst = activeChar.getActiveWeaponInstance(); if(weaponInst != null) { if(weaponInst.getChargedSpiritshot() == L2ItemInstance.CHARGED_BLESSED_SPIRITSHOT) { bss = true; weaponInst.setChargedSpiritshot(L2ItemInstance.CHARGED_NONE); } else
-			 * if(weaponInst.getChargedSpiritshot() == L2ItemInstance.CHARGED_SPIRITSHOT) { ss = true; weaponInst.setChargedSpiritshot(L2ItemInstance.CHARGED_NONE); } } // If there is no weapon equipped, check for an active summon. else if(activeChar instanceof L2Summon) { L2Summon activeSummon =
-			 * (L2Summon) activeChar; if(activeSummon.getChargedSpiritShot() == L2ItemInstance.CHARGED_BLESSED_SPIRITSHOT) { bss = true; activeSummon.setChargedSpiritShot(L2ItemInstance.CHARGED_NONE); } else if(activeSummon.getChargedSpiritShot() == L2ItemInstance.CHARGED_SPIRITSHOT) { ss = true;
-			 * activeSummon.setChargedSpiritShot(L2ItemInstance.CHARGED_NONE); } }
-			 */
 			final boolean mcrit = Formulas.calcMCrit(activeChar.getMCriticalHit(target, this));
 			final int damage = (int) Formulas.calcMagicDam(activeChar, target, this, sps, bss, mcrit);
 			
@@ -184,20 +178,16 @@ public class L2SkillDrain extends L2Skill
 	
 	public void useCubicSkill(final L2CubicInstance activeCubic, final L2Object[] targets)
 	{
-		if (Config.DEBUG)
-			LOG.info("L2SkillDrain: useCubicSkill()");
-		
 		for (final L2Character target : (L2Character[]) targets)
 		{
 			if (target.isAlikeDead() && getTargetType() != SkillTargetType.TARGET_CORPSE_MOB)
+			{
 				continue;
+			}
 			
 			final boolean mcrit = Formulas.calcMCrit(activeCubic.getMCriticalHit(target, this));
 			
 			final int damage = (int) Formulas.calcMagicDam(activeCubic, target, this, mcrit);
-			if (Config.DEBUG)
-				LOG.info("L2SkillDrain: useCubicSkill() -> damage = " + damage);
-			
 			final double hpAdd = _absorbAbs + _absorbPart * damage;
 			final L2PcInstance owner = activeCubic.getOwner();
 			final double hp = ((owner.getCurrentHp() + hpAdd) > owner.getMaxHp() ? owner.getMaxHp() : (owner.getCurrentHp() + hpAdd));

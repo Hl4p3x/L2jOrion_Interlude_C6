@@ -109,8 +109,8 @@ class Quest (JQuest) :
           st.takeItems(POISON_SPIDER_LEG2,st.getQuestItemsCount(POISON_SPIDER_LEG2))
           st.takeItems(RUSTED_BRONZE_SWORD3,1)
           st.giveItems(MEDALLION_OF_WARRIOR,1)
-          st.giveItems(57,81900)
-          st.addExpAndSp(295862,16814)
+          #st.giveItems(57,81900)
+          st.addExpAndSp(16000,5650)
           htmltext = "30010-13.htm"
           st.set("cond","0")
           st.setState(COMPLETED)

@@ -112,14 +112,9 @@ public final class SendStatus extends L2GameServerPacket
 			
 			writeD(0x00);
 			writeD(0x02);
-			
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

@@ -24,12 +24,9 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * @author Luis Arias
- */
 public class DateRange
 {
 	private static Logger LOG = LoggerFactory.getLogger(DateRange.class);

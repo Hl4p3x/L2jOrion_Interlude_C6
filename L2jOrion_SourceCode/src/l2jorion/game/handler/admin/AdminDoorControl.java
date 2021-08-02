@@ -28,28 +28,10 @@ import l2jorion.game.model.actor.instance.L2DoorInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.siege.Castle;
 
-/**
- * This class handles following admin commands:<br>
- * - open1 = open coloseum door 24190001<br>
- * - open2 = open coloseum door 24190002<br>
- * - open3 = open coloseum door 24190003<br>
- * - open4 = open coloseum door 24190004<br>
- * - openall = open all coloseum door<br>
- * - close1 = close coloseum door 24190001<br>
- * - close2 = close coloseum door 24190002<br>
- * - close3 = close coloseum door 24190003<br>
- * - close4 = close coloseum door 24190004<br>
- * - closeall = close all coloseum door<br>
- * <br>
- * - open = open selected door<br>
- * - close = close selected door<br>
- * @version $Revision: 1.3 $
- * @author ProGramMoS
- */
 public class AdminDoorControl implements IAdminCommandHandler
 {
-	// private static Logger LOG = LoggerFactory.getLogger(AdminDoorControl.class);
 	private static DoorTable _doorTable;
+	
 	private static final String[] ADMIN_COMMANDS =
 	{
 		"admin_open",
@@ -58,16 +40,9 @@ public class AdminDoorControl implements IAdminCommandHandler
 		"admin_closeall"
 	};
 	
-	// private static final Map<String, Integer> doorMap = new FastMap<String, Integer>(); //FIXME: should we jute remove this?
-	
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		_doorTable = DoorTable.getInstance();
 		
 		L2Object target2 = null;
@@ -110,8 +85,6 @@ public class AdminDoorControl implements IAdminCommandHandler
 			{
 				activeChar.sendMessage("Incorrect target.");
 			}
-			
-			target2 = null;
 		}
 		else if (command.startsWith("admin_open ")) // id
 		{
@@ -126,10 +99,12 @@ public class AdminDoorControl implements IAdminCommandHandler
 				else
 				{
 					for (final Castle castle : CastleManager.getInstance().getCastles())
+					{
 						if (castle.getDoor(doorId) != null)
 						{
 							castle.getDoor(doorId).openMe();
 						}
+					}
 				}
 			}
 			catch (final Exception e)
@@ -155,8 +130,6 @@ public class AdminDoorControl implements IAdminCommandHandler
 			target2 = null;
 		}
 		
-		// need optimize cycle
-		// set limits on the ID doors that do not cycle to close doors
 		else if (command.equals("admin_closeall"))
 		{
 			try
@@ -182,8 +155,6 @@ public class AdminDoorControl implements IAdminCommandHandler
 		}
 		else if (command.equals("admin_openall"))
 		{
-			// need optimize cycle
-			// set limits on the PH door to do a cycle of opening doors.
 			try
 			{
 				for (final L2DoorInstance door : _doorTable.getDoors())

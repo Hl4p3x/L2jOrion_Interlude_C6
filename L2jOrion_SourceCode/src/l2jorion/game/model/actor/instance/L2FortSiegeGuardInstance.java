@@ -16,17 +16,14 @@
  */
 package l2jorion.game.model.actor.instance;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.ai.L2CharacterAI;
 import l2jorion.game.ai.L2FortSiegeGuardAI;
 import l2jorion.game.model.L2Attackable;
-import l2jorion.game.model.L2CharPosition;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Summon;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.knownlist.FortSiegeGuardKnownList;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToPawn;
@@ -35,10 +32,13 @@ import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.util.Broadcast;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class L2FortSiegeGuardInstance extends L2Attackable
 {
 	private static Logger LOG = LoggerFactory.getLogger(L2FortSiegeGuardInstance.class);
+	
 	public L2FortSiegeGuardInstance(final int objectId, final L2NpcTemplate template)
 	{
 		super(objectId, template);
@@ -56,21 +56,9 @@ public class L2FortSiegeGuardInstance extends L2Attackable
 	}
 	
 	@Override
-	public L2CharacterAI getAI()
+	protected L2CharacterAI initAI()
 	{
-		final L2CharacterAI ai = _ai; // copy handle
-		if (ai == null)
-		{
-			synchronized (this)
-			{
-				if (_ai == null)
-				{
-					_ai = new L2FortSiegeGuardAI(new AIAccessor());
-				}
-				return _ai;
-			}
-		}
-		return ai;
+		return new L2FortSiegeGuardAI(this);
 	}
 	
 	/**
@@ -82,7 +70,9 @@ public class L2FortSiegeGuardInstance extends L2Attackable
 	public boolean isAutoAttackable(final L2Character attacker)
 	{
 		if (!(attacker instanceof L2PlayableInstance))
+		{
 			return false;
+		}
 		
 		boolean isFort = false;
 		if (attacker instanceof L2PcInstance)
@@ -111,7 +101,9 @@ public class L2FortSiegeGuardInstance extends L2Attackable
 	public void returnHome()
 	{
 		if (getWalkSpeed() <= 0)
+		{
 			return;
+		}
 		if (!isInsideRadius(getSpawn().getLocx(), getSpawn().getLocy(), 40, false))
 		{
 			if (Config.DEBUG)
@@ -123,7 +115,7 @@ public class L2FortSiegeGuardInstance extends L2Attackable
 			
 			if (hasAI())
 			{
-				getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new L2CharPosition(getSpawn().getLocx(), getSpawn().getLocy(), getSpawn().getLocz(), 0));
+				getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new Location(getSpawn().getLocx(), getSpawn().getLocy(), getSpawn().getLocz(), 0));
 			}
 		}
 	}
@@ -199,7 +191,9 @@ public class L2FortSiegeGuardInstance extends L2Attackable
 	public void addDamageHate(final L2Character attacker, final int damage, final int aggro)
 	{
 		if (attacker == null)
+		{
 			return;
+		}
 		
 		if (!(attacker instanceof L2FortSiegeGuardInstance))
 		{
@@ -215,7 +209,9 @@ public class L2FortSiegeGuardInstance extends L2Attackable
 					player = ((L2Summon) attacker).getOwner();
 				}
 				if (player != null && player.getClan() != null && player.getClan().getHasFort() == getFort().getFortId())
+				{
 					return;
+				}
 			}
 			super.addDamageHate(attacker, damage, aggro);
 		}

@@ -21,11 +21,8 @@ package l2jorion.game.model.zone.type;
 
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.model.zone.ZoneId;
 
-/**
- * The Monster Derby Track Zone
- * @author durgus
- */
 public class L2DerbyTrackZone extends L2PeaceZone
 {
 	public L2DerbyTrackZone(final int id)
@@ -38,7 +35,7 @@ public class L2DerbyTrackZone extends L2PeaceZone
 	{
 		if (character instanceof L2PcInstance)
 		{
-			character.setInsideZone(L2Character.ZONE_MONSTERTRACK, true);
+			character.setInsideZone(ZoneId.ZONE_MONSTERTRACK, true);
 		}
 		super.onEnter(character);
 	}
@@ -48,7 +45,7 @@ public class L2DerbyTrackZone extends L2PeaceZone
 	{
 		if (character instanceof L2PcInstance)
 		{
-			character.setInsideZone(L2Character.ZONE_MONSTERTRACK, false);
+			character.setInsideZone(ZoneId.ZONE_MONSTERTRACK, false);
 		}
 		super.onExit(character);
 	}

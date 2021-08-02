@@ -4,19 +4,10 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.skills.Env;
 import l2jorion.game.skills.Stats;
 
-/**
- * The Class ConditionPlayerWeight.
- * @author Kerberos
- */
 public class ConditionPlayerWeight extends Condition
 {
-	
 	private final int _weight;
 	
-	/**
-	 * Instantiates a new condition player weight.
-	 * @param weight the weight
-	 */
 	public ConditionPlayerWeight(final int weight)
 	{
 		_weight = weight;

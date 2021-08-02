@@ -21,12 +21,12 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.model.entity.olympiad.Olympiad;
+import l2jorion.game.model.olympiad.Olympiad;
+import l2jorion.game.model.olympiad.OlympiadGameManager;
+import l2jorion.game.model.olympiad.OlympiadGameTask;
+import l2jorion.game.network.serverpackets.NpcHtmlMessage;
+import l2jorion.util.StringUtil;
 
-/**
- * format ch c: (id) 0xD0 h: (subid) 0x13
- * @author -Wooden-
- */
 public final class RequestOlympiadMatchList extends L2GameClientPacket
 {
 	private static final String _C__D0_13_REQUESTOLYMPIADMATCHLIST = "[C] D0:13 RequestOlympiadMatchList";
@@ -34,17 +34,53 @@ public final class RequestOlympiadMatchList extends L2GameClientPacket
 	@Override
 	protected void readImpl()
 	{
-		// trigger packet
 	}
 	
 	@Override
 	protected void runImpl()
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
-		if (activeChar == null)
+		if (activeChar == null || !activeChar.inObserverMode())
+		{
 			return;
-		if (activeChar.inObserverMode())
-			Olympiad.sendMatchList(activeChar);
+		}
+		
+		int i = 0;
+		
+		final StringBuilder sb = new StringBuilder(1500);
+		for (OlympiadGameTask task : OlympiadGameManager.getInstance().getOlympiadTasks())
+		{
+			StringUtil.append(sb, "<tr><td fixwidth=15><a action=\"bypass arenachange ", i, "\">", ++i, "</a></td><td fixwidth=80>");
+			
+			if (task.isGameStarted())
+			{
+				if (task.isInTimerTime())
+				{
+					StringUtil.append(sb, "&$907;"); // Counting In Progress
+				}
+				else if (task.isBattleStarted())
+				{
+					StringUtil.append(sb, "&$829;"); // In Progress
+				}
+				else
+				{
+					StringUtil.append(sb, "&$908;"); // Terminate
+				}
+				
+				StringUtil.append(sb, "</td><td>", task.getGame().getPlayerNames()[0], "&nbsp; / &nbsp;", task.getGame().getPlayerNames()[1]);
+			}
+			else
+			{
+				StringUtil.append(sb, "&$906;", "</td><td>&nbsp;"); // Initial State
+			}
+			
+			StringUtil.append(sb, "</td><td><font color=\"aaccff\"></font></td></tr>");
+		}
+		
+		final NpcHtmlMessage html = new NpcHtmlMessage(0);
+		html.setFile(Olympiad.OLYMPIAD_HTML_PATH + "olympiad_arena_observe_list.htm");
+		html.replaceNM("%list%", sb.toString());
+		activeChar.sendPacket(html);
 	}
 	
 	@Override
@@ -52,5 +88,4 @@ public final class RequestOlympiadMatchList extends L2GameClientPacket
 	{
 		return _C__D0_13_REQUESTOLYMPIADMATCHLIST;
 	}
-	
 }

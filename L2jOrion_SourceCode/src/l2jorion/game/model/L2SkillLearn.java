@@ -20,10 +20,6 @@
  */
 package l2jorion.game.model;
 
-/**
- * This class ...
- * @version $Revision: 1.2.4.2 $ $Date: 2005/03/27 15:29:33 $
- */
 public final class L2SkillLearn
 {
 	// these two build the primary key
@@ -49,41 +45,26 @@ public final class L2SkillLearn
 		_costcount = costcount;
 	}
 	
-	/**
-	 * @return Returns the id.
-	 */
 	public int getId()
 	{
 		return _id;
 	}
 	
-	/**
-	 * @return Returns the level.
-	 */
 	public int getLevel()
 	{
 		return _level;
 	}
 	
-	/**
-	 * @return Returns the minLevel.
-	 */
 	public int getMinLevel()
 	{
 		return _minLevel;
 	}
 	
-	/**
-	 * @return Returns the name.
-	 */
 	public String getName()
 	{
 		return _name;
 	}
 	
-	/**
-	 * @return Returns the spCost.
-	 */
 	public int getSpCost()
 	{
 		return _spCost;

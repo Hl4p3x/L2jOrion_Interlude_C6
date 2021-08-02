@@ -27,7 +27,6 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
-import l2jorion.game.util.GeoUtils;
 
 public class AdminGeodata implements IAdminCommandHandler
 {
@@ -36,8 +35,7 @@ public class AdminGeodata implements IAdminCommandHandler
 		"admin_geo_pos",
 		"admin_geo_spawn_pos",
 		"admin_geo_can_move",
-		"admin_geo_can_see",
-		"admin_geogrid",
+		"admin_geo_can_see"
 	};
 	
 	@Override
@@ -121,11 +119,6 @@ public class AdminGeodata implements IAdminCommandHandler
 				{
 					activeChar.sendPacket(SystemMessageId.INCORRECT_TARGET);
 				}
-				break;
-			}
-			case "admin_geogrid":
-			{
-				GeoUtils.debugGrid(activeChar);
 				break;
 			}
 		}

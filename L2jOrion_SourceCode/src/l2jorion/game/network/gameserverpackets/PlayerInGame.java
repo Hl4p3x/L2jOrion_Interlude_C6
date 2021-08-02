@@ -22,9 +22,6 @@ package l2jorion.game.network.gameserverpackets;
 
 import javolution.util.FastList;
 
-/**
- * @author -Wooden-
- */
 public class PlayerInGame extends GameServerBasePacket
 {
 	public PlayerInGame(final String player)
@@ -44,10 +41,6 @@ public class PlayerInGame extends GameServerBasePacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.gameserverpackets.GameServerBasePacket#getContent()
-	 */
 	@Override
 	public byte[] getContent()
 	{

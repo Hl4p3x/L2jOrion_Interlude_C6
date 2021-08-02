@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
+<!-- Arenas -->
+	<zone name="dion_monster_pvp" type="ArenaZone" shape="NPoly" minZ="-3596" maxZ="0"> <!-- [20_23] -->
+		<node X="11947" Y="183019" />
+		<node X="12937" Y="183019" />
+		<node X="12943" Y="184010" />
+		<node X="11941" Y="184010" />
+	</zone>
+	<zone name="gludin_pvp" type="ArenaZone" shape="NPoly" minZ="-3752" maxZ="-352"> <!-- [17_22] -->
+		<node X="-88411" Y="141732" />
+		<node X="-87429" Y="141733" />
+		<node X="-87429" Y="142708" />
+		<node X="-88408" Y="142708" />
+	</zone>
+	<zone name="giran_pvp_battle" type="ArenaZone" shape="NPoly" minZ="-3850" maxZ="-350"> <!-- [22_22] -->
+		<node X="72493" Y="142263" />
+		<node X="73493" Y="142264" />
+		<node X="73493" Y="143261" />
+		<node X="72495" Y="143258" />
+	</zone>
+	<zone name="Coliseum" id="11012" type="ArenaZone" shape="NPoly" minZ="-3587" maxZ="-3387"> <!-- [24_19] -->
+	</zone>
+</list>

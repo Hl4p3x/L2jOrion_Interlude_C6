@@ -43,14 +43,10 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * This class manages AI of L2Attackable.
- */
 public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(L2FortSiegeGuardAI.class);
@@ -68,32 +64,16 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 	
 	private static final int MAX_ATTACK_TIMEOUT = 300; // int ticks, i.e. 30 seconds
 	
-	/** The L2Attackable AI task executed every 1s (call onEvtThink method) */
 	private Future<?> _aiTask;
-	
-	/** For attack AI, analysis of mob and its targets */
-	// private SelfAnalysis _selfAnalysis = new SelfAnalysis();
-	
-	/** The delay after which the attacked is stopped */
 	private int _attackTimeout;
-	
-	/** The L2Attackable aggro counter */
 	private int _globalAggro;
-	
-	/** The flag used to indicate that a thinking action is in progress */
 	private boolean _thinking; // to prevent recursive thinking
-	
 	private final int _attackRange;
 	
-	/**
-	 * Constructor of L2AttackableAI.<BR>
-	 * <BR>
-	 * @param accessor The AI accessor of the L2Character
-	 */
-	public L2FortSiegeGuardAI(final L2Character.AIAccessor accessor)
+	public L2FortSiegeGuardAI(L2Character creature)
 	{
-		super(accessor);
-		// _selfAnalysis.init();
+		super(creature);
+		
 		_attackTimeout = Integer.MAX_VALUE;
 		_globalAggro = -10; // 10 seconds timeout of ATTACK after respawn
 		_attackRange = ((L2Attackable) _actor).getPhysicalAttackRange();
@@ -102,7 +82,6 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 	@Override
 	public void run()
 	{
-		// Launch actions corresponding to the Event Think
 		onEvtThink();
 	}
 	
@@ -223,7 +202,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 				}
 				
 				// Cancel the AI
-				_accessor.detachAI();
+				_actor.detachAI();
 				
 				return;
 			}
@@ -499,7 +478,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 							final L2Object OldTarget = _actor.getTarget();
 							_actor.setTarget(cha);
 							clientStopMoving(null);
-							_accessor.doCast(sk);
+							_actor.doCast(sk);
 							_actor.setTarget(OldTarget);
 							return;
 						}
@@ -559,7 +538,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 						final L2Object OldTarget = _actor.getTarget();
 						_actor.setTarget(npc);
 						clientStopMoving(null);
-						_accessor.doCast(sk);
+						_actor.doCast(sk);
 						_actor.setTarget(OldTarget);
 						return;
 					}
@@ -660,7 +639,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 					}
 					
 					clientStopMoving(null);
-					_accessor.doCast(sk);
+					_actor.doCast(sk);
 					_actor.setTarget(OldTarget);
 					return;
 				}
@@ -803,14 +782,14 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 						}
 						
 						clientStopMoving(null);
-						_accessor.doCast(sk);
+						_actor.doCast(sk);
 						_actor.setTarget(OldTarget);
 						return;
 					}
 				}
 			}
 			// Finally, do the physical attack itself
-			_accessor.doAttack(attackTarget);
+			_actor.doAttack(attackTarget);
 		}
 	}
 	
@@ -990,7 +969,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 			_aiTask.cancel(false);
 			_aiTask = null;
 		}
-		_accessor.detachAI();
+		_actor.detachAI();
 	}
 	
 }

@@ -26,9 +26,6 @@ import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.skills.Env;
 
-/**
- * @author decad
- */
 final class EffectBetray extends L2Effect
 {
 	public EffectBetray(final Env env, final EffectTemplate template)
@@ -42,7 +39,6 @@ final class EffectBetray extends L2Effect
 		return EffectType.BETRAY;
 	}
 	
-	/** Notify started */
 	@Override
 	public void onStart()
 	{
@@ -56,7 +52,6 @@ final class EffectBetray extends L2Effect
 		}
 	}
 	
-	/** Notify exited */
 	@Override
 	public void onExit()
 	{

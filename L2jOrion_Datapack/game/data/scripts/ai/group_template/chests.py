@@ -1,9 +1,6 @@
-# # # # # # # # # # #
-# Chest AI implementation.
-# Written by Fulminus
-# # # # # # # # # # #
 import sys
 from l2jorion.game.ai import CtrlIntention
+from l2jorion.game.enums import AchType
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
 from l2jorion.util.random import Rnd
 
@@ -17,8 +14,6 @@ LEVEL_DECREASE = 40
 
 # Chance for a chest to actually be a BOX (as opposed to being a mimic).
 IS_BOX = 40
-
-#print "Chests"
 
 class chests(JQuest) :
 
@@ -67,6 +62,7 @@ class chests(JQuest) :
                         npc.setMustRewardExpSp(False)
                         npc.setSpecialDrop();
                         npc.reduceCurrentHp(99999999, player)
+                        player.getAchievement().increase(AchType.OPEN_CHEST);
                         return
                 # used a skill other than chest-key, or used a chest-key but failed to open: disappear with no rewards    
                 npc.onDecay()

@@ -24,13 +24,10 @@ import l2jorion.Config;
 import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * This class ...
- * @version $Revision: 1.3.2.1.2.4 $ $Date: 2005/03/27 15:29:39 $
- */
 public class PledgeShowMemberListAdd extends L2GameServerPacket
 {
 	private static final String _S__55_PLEDGESHOWMEMBERLISTADD = "[S] 55 PledgeShowMemberListAdd";
+	
 	private String _name;
 	private int _lvl;
 	private int _classId;
@@ -59,7 +56,9 @@ public class PledgeShowMemberListAdd extends L2GameServerPacket
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -76,10 +75,6 @@ public class PledgeShowMemberListAdd extends L2GameServerPacket
 		writeD(_pledgeType);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

@@ -47,7 +47,7 @@ import l2jorion.log.Log;
 import l2jorion.util.random.Rnd;
 
 public class Pdam implements ISkillHandler
-{	
+{
 	private static final SkillType[] SKILL_IDS =
 	{
 		SkillType.PDAM,
@@ -58,9 +58,12 @@ public class Pdam implements ISkillHandler
 	public void useSkill(L2Character activeChar, L2Skill skill, L2Object[] targets)
 	{
 		if (activeChar.isAlikeDead())
+		{
 			return;
+		}
 		
 		int damage = 0;
+		
 		// Calculate targets based on vegeance
 		List<L2Object> target_s = new ArrayList<>();
 		for (L2Object _target : targets)
@@ -89,10 +92,11 @@ public class Pdam implements ISkillHandler
 				target.stopFakeDeath(null);
 			}
 			else if (target.isAlikeDead())
+			{
 				continue;
+			}
 			
 			// Calculate skill evasion
-			// Formulas.getInstance();
 			if (Formulas.calcPhysicalSkillEvasion(target, skill))
 			{
 				activeChar.sendPacket(new SystemMessage(SystemMessageId.ATTACK_FAILED));
@@ -104,29 +108,45 @@ public class Pdam implements ISkillHandler
 			// PDAM critical chance not affected by buffs, only by STR. Only some skills are meant to crit.
 			boolean crit = false;
 			if (skill.getBaseCritRate() > 0)
+			{
 				crit = Formulas.calcCrit(skill.getBaseCritRate() * 10 * BaseStats.STR.calcBonus(activeChar));
+			}
 			
 			boolean soul = false;
 			if (weapon != null)
+			{
 				soul = (ss && weapon.getItemType() != L2WeaponType.DAGGER);
+			}
 			
 			if (!crit && (skill.getCondition() & L2Skill.COND_CRIT) != 0)
+			{
 				damage = 0;
+			}
 			else
+			{
 				damage = (int) Formulas.calcPhysDam(activeChar, target, skill, shld, false, dual, soul);
+			}
 			
 			if (crit)
+			{
 				damage *= 2; // PDAM Critical damage always 2x and not affected by buffs
-				
+			}
+			
 			if (damage > 5000 && Config.LOG_HIGH_DAMAGES && activeChar instanceof L2PcInstance)
 			{
 				String name = "";
 				if (target instanceof L2RaidBossInstance)
+				{
 					name = "RaidBoss ";
+				}
 				if (target instanceof L2NpcInstance)
+				{
 					name += target.getName() + "(" + ((L2NpcInstance) target).getTemplate().npcId + ")";
+				}
 				if (target instanceof L2PcInstance)
+				{
 					name = target.getName() + "(" + target.getObjectId() + ") ";
+				}
 				name += target.getLevel() + " lvl";
 				Log.add(activeChar.getName() + "(" + activeChar.getObjectId() + ") " + activeChar.getLevel() + " lvl did damage " + damage + " with skill " + skill.getName() + "(" + skill.getId() + ") to " + name, "damage_pdam");
 			}
@@ -153,12 +173,10 @@ public class Pdam implements ISkillHandler
 						if (target.reflectSkill(skill))
 						{
 							activeChar.stopSkillEffects(skill.getId());
-							
-							skill.getEffects(null, activeChar, ss, sps, bss);
+							skill.getEffects(target, activeChar, ss, sps, bss);
 							SystemMessage sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
 							sm.addSkillName(skill.getId());
 							activeChar.sendPacket(sm);
-							sm = null;
 						}
 						else
 						{
@@ -171,7 +189,6 @@ public class Pdam implements ISkillHandler
 								SystemMessage sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
 								sm.addSkillName(skill.getId());
 								target.sendPacket(sm);
-								sm = null;
 							}
 							else
 							{
@@ -179,7 +196,6 @@ public class Pdam implements ISkillHandler
 								sm.addString(target.getName());
 								sm.addSkillName(skill.getDisplayId());
 								activeChar.sendPacket(sm);
-								sm = null;
 							}
 						}
 					}
@@ -214,7 +230,9 @@ public class Pdam implements ISkillHandler
 					{
 						// If is a monster damage is (CurrentHp - 1) so HP = 1
 						if (target instanceof L2NpcInstance)
+						{
 							target.reduceCurrentHp(target.getCurrentHp() - 1, activeChar);
+						}
 						else if (target instanceof L2PcInstance) // If is a active player set his HP and CP to 1
 						{
 							L2PcInstance player = (L2PcInstance) target;
@@ -242,7 +260,9 @@ public class Pdam implements ISkillHandler
 								if (damage >= player.getCurrentHp())
 								{
 									if (player.isInDuel())
+									{
 										player.setCurrentHp(1);
+									}
 									else
 									{
 										player.setCurrentHp(0);
@@ -253,11 +273,15 @@ public class Pdam implements ISkillHandler
 											player.getStatus().stopHpMpRegeneration();
 										}
 										else
+										{
 											player.doDie(activeChar);
+										}
 									}
 								}
 								else
+								{
 									player.setCurrentHp(player.getCurrentHp() - damage);
+								}
 							}
 							if (player.getScreentxt())
 							{
@@ -265,8 +289,6 @@ public class Pdam implements ISkillHandler
 								smsg.addString(activeChar.getName());
 								smsg.addNumber(damage);
 								player.sendPacket(smsg);
-								player = null;
-								smsg = null;
 							}
 							else
 							{
@@ -274,12 +296,12 @@ public class Pdam implements ISkillHandler
 								smsg.addString(activeChar.getName());
 								smsg.addNumber(damage);
 								player.sendPacket(smsg);
-								player = null;
-								smsg = null;
 							}
 						}
 						else
+						{
 							target.reduceCurrentHp(damage, activeChar);
+						}
 					}
 					else
 					{
@@ -304,10 +326,14 @@ public class Pdam implements ISkillHandler
 							}
 							
 							if (hp_damage > 0)
+							{
 								player.reduceCurrentHp(damage, activeChar);
+							}
 						}
 						else
+						{
 							target.reduceCurrentHp(damage, activeChar);
+						}
 					}
 				}
 			}
@@ -370,13 +396,17 @@ public class Pdam implements ISkillHandler
 		if (skill.isMagic())
 		{
 			if (bss)
+			{
 				activeChar.removeBss();
+			}
 			else if (sps)
-				activeChar.removeSps();		
+			{
+				activeChar.removeSps();
+			}
 		}
 		else
-		{		
-			activeChar.removeSs();			
+		{
+			activeChar.removeSs();
 		}
 		
 		if (skill.isSuicideAttack())

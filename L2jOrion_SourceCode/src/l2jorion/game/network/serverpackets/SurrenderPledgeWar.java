@@ -23,6 +23,7 @@ package l2jorion.game.network.serverpackets;
 public class SurrenderPledgeWar extends L2GameServerPacket
 {
 	private static final String _S__81_SURRENDERPLEDGEWAR = "[S] 69 SurrenderPledgeWar";
+	
 	private final String _pledgeName;
 	private final String _playerName;
 	

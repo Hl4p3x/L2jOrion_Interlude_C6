@@ -25,16 +25,11 @@ import javolution.util.FastList;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.entity.siege.Fort;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author programmos, scoria dev
- */
 
 public class FortManager
 {
@@ -45,21 +40,14 @@ public class FortManager
 		return SingletonHolder._instance;
 	}
 	
-	// =========================================================
-	// Data Field
 	private final List<Fort> _forts = new FastList<>();
 	
-	// =========================================================
-	// Constructor
 	public FortManager()
 	{
-		LOG.info("Initializing FortManager");
+		//LOG.info("Initializing FortManager");
 		_forts.clear();
 		load();
 	}
-	
-	// =========================================================
-	// Method - Public
 	
 	public final int findNearestFortIndex(final L2Object obj)
 	{
@@ -83,13 +71,10 @@ public class FortManager
 					index = i;
 				}
 			}
-			fort = null;
 		}
 		return index;
 	}
 	
-	// =========================================================
-	// Method - Private
 	private final void load()
 	{
 		Connection con = null;
@@ -111,7 +96,7 @@ public class FortManager
 			rs.close();
 			DatabaseUtils.close(statement);
 			
-			LOG.info("Loaded: " + getForts().size() + " fortress");
+			LOG.info("FortManager: Loaded " + getForts().size() + " fortress");
 		}
 		catch (final Exception e)
 		{
@@ -122,12 +107,9 @@ public class FortManager
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
-	// =========================================================
-	// Property - Public
 	public final Fort getFortById(final int fortId)
 	{
 		for (final Fort f : getForts())

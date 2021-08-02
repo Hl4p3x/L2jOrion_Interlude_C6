@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
+	<!-- olympiad Stadium Zones -->
+	<zone name="olympiad_stadium_01" type="OlympiadStadiumZone" shape="NPoly" minZ="-3100" maxZ="-2825"><!-- olympiad_stadium_01 -->
+		<node X="-21680" Y="-20140" />
+		<node X="-21965" Y="-20500" />
+		<node X="-21965" Y="-21530" />
+		<node X="-21680" Y="-21870" />
+		<node X="-19953" Y="-21870" />
+		<node X="-19670" Y="-21530" />
+		<node X="-19670" Y="-20500" />
+		<node X="-19953" Y="-20142" />
+		<!-- point1 -->
+		<spawn X="-21680" Y="-21028" Z="-3022" />
+		<!-- point2 -->
+		<spawn X="-19953" Y="-21028" Z="-3022" />
+		<!-- spectator -->
+		<spawn X="-20816" Y="-21028" Z="-3022" />
+	</zone>
+	<zone name="olympiad_stadium_02" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_02 -->
+		<node X="-119418" Y="-225869" />
+		<node X="-119133" Y="-225519" />
+		<node X="-119133" Y="-224488" />
+		<node X="-119418" Y="-224138" />
+		<node X="-121143" Y="-224138" />
+		<node X="-121428" Y="-224488" />
+		<node X="-121428" Y="-225519" />
+		<node X="-121143" Y="-225869" />
+		<!-- point1 -->
+		<spawn X="-119418" Y="-225003" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-121143" Y="-225003" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-120280" Y="-225003" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_03" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_03 -->
+		<node X="-101625" Y="-209870" />
+		<node X="-101340" Y="-209520" />
+		<node X="-101340" Y="-208489" />
+		<node X="-101625" Y="-208139" />
+		<node X="-103350" Y="-208139" />
+		<node X="-103635" Y="-208489" />
+		<node X="-103635" Y="-209520" />
+		<node X="-103350" Y="-209870" />
+		<!-- point1 -->
+		<spawn X="-101625" Y="-209004" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-103350" Y="-209004" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-102487" Y="-209004" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_04" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_04 -->
+		<node X="-119385" Y="-208237" />
+		<node X="-119100" Y="-207887" />
+		<node X="-119100" Y="-206856" />
+		<node X="-119385" Y="-206506" />
+		<node X="-121110" Y="-206506" />
+		<node X="-121395" Y="-206856" />
+		<node X="-121395" Y="-207887" />
+		<node X="-121110" Y="-208237" />
+		<!-- point1 -->
+		<spawn X="-119385" Y="-207371" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-121110" Y="-207371" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-120247" Y="-207371" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_05" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_05 -->
+		<node X="-86650" Y="-225853" />
+		<node X="-86365" Y="-225503" />
+		<node X="-86365" Y="-224472" />
+		<node X="-86650" Y="-224122" />
+		<node X="-88375" Y="-224122" />
+		<node X="-88660" Y="-224472" />
+		<node X="-88660" Y="-225503" />
+		<node X="-88375" Y="-225853" />
+		<!-- point1 -->
+		<spawn X="-86650" Y="-224987" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-88375" Y="-224987" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-87512" Y="-224987" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_06" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_06 -->
+		<node X="-80875" Y="-214077" />
+		<node X="-80590" Y="-213727" />
+		<node X="-80590" Y="-212696" />
+		<node X="-80875" Y="-212346" />
+		<node X="-82600" Y="-212346" />
+		<node X="-82885" Y="-212696" />
+		<node X="-82885" Y="-213727" />
+		<node X="-82600" Y="-214077" />
+		<!-- point1 -->
+		<spawn X="-80875" Y="-213211" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-82600" Y="-213211" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-81737" Y="-213211" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_07" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_07 -->
+		<node X="-86610" Y="-208240" />
+		<node X="-86325" Y="-207890" />
+		<node X="-86325" Y="-206860" />
+		<node X="-86610" Y="-206510" />
+		<node X="-88335" Y="-206510" />
+		<node X="-88620" Y="-206860" />
+		<node X="-88620" Y="-207890" />
+		<node X="-88335" Y="-208240" />
+		<!-- point1 -->
+		<spawn X="-86610" Y="-207354" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-88335" Y="-207354" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-87472" Y="-207354" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_08" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_08 -->
+		<node X="-92940" Y="-219120" />
+		<node X="-92655" Y="-218770" />
+		<node X="-92655" Y="-217740" />
+		<node X="-92940" Y="-217390" />
+		<node X="-94665" Y="-217390" />
+		<node X="-94950" Y="-217740" />
+		<node X="-94950" Y="-218770" />
+		<node X="-94665" Y="-219120" />
+		<!-- point1 -->
+		<spawn X="-92940" Y="-218254" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-94665" Y="-218254" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-93802" Y="-218254" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_09" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_09 -->
+		<node X="-76250" Y="-219566" />
+		<node X="-75965" Y="-219216" />
+		<node X="-75965" Y="-218185" />
+		<node X="-76250" Y="-217835" />
+		<node X="-77975" Y="-217835" />
+		<node X="-78260" Y="-218185" />
+		<node X="-78260" Y="-219216" />
+		<node X="-77975" Y="-219566" />
+		<!-- point1 -->
+		<spawn X="-76250" Y="-218700" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-77975" Y="-218700" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-77112" Y="-218700" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_10" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_10 -->
+		<node X="-68857" Y="-209900" />
+		<node X="-68572" Y="-209550" />
+		<node X="-68572" Y="-208519" />
+		<node X="-68857" Y="-208169" />
+		<node X="-70582" Y="-208169" />
+		<node X="-70867" Y="-208519" />
+		<node X="-70867" Y="-209550" />
+		<node X="-70582" Y="-209900" />
+		<!-- point1 -->
+		<spawn X="-68857" Y="-209034" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-70582" Y="-209034" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-69719" Y="-209034" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_11" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_11 -->
+		<node X="-75962" Y="-202092" />
+		<node X="-75677" Y="-201742" />
+		<node X="-75677" Y="-200711" />
+		<node X="-75962" Y="-200361" />
+		<node X="-77687" Y="-200361" />
+		<node X="-77972" Y="-200711" />
+		<node X="-77972" Y="-201742" />
+		<node X="-77687" Y="-202092" />
+		<!-- point1 -->
+		<spawn X="-75962" Y="-201226" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-77687" Y="-201226" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-76824" Y="-201226" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_12" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_12 -->
+		<node X="-109018" Y="-219565" />
+		<node X="-108733" Y="-219215" />
+		<node X="-108733" Y="-218184" />
+		<node X="-109018" Y="-217834" />
+		<node X="-110743" Y="-217834" />
+		<node X="-111028" Y="-218184" />
+		<node X="-111028" Y="-219215" />
+		<node X="-110743" Y="-219565" />
+		<!-- point1 -->
+		<spawn X="-109018" Y="-218699" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-110743" Y="-218699" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-109880" Y="-218699" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_13" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_13 -->
+		<node X="-125722" Y="-219117" />
+		<node X="-125437" Y="-218767" />
+		<node X="-125437" Y="-217736" />
+		<node X="-125722" Y="-217386" />
+		<node X="-127447" Y="-217386" />
+		<node X="-127732" Y="-217736" />
+		<node X="-127732" Y="-218767" />
+		<node X="-127447" Y="-219117" />
+		<!-- point1 -->
+		<spawn X="-125722" Y="-218251" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-127447" Y="-218251" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-126584" Y="-218251" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_14" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_14 -->
+		<node X="-108730" Y="-202093" />
+		<node X="-108445" Y="-201743" />
+		<node X="-108445" Y="-200712" />
+		<node X="-108730" Y="-200362" />
+		<node X="-110455" Y="-200362" />
+		<node X="-110740" Y="-200712" />
+		<node X="-110740" Y="-201743" />
+		<node X="-110455" Y="-202093" />
+		<!-- point1 -->
+		<spawn X="-108730" Y="-201227" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-110455" Y="-201227" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-109592" Y="-201227" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_15" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_15 -->
+		<node X="-86618" Y="-241008" />
+		<node X="-86333" Y="-240658" />
+		<node X="-86333" Y="-239627" />
+		<node X="-86618" Y="-239277" />
+		<node X="-88343" Y="-239277" />
+		<node X="-88628" Y="-239627" />
+		<node X="-88628" Y="-240658" />
+		<node X="-88343" Y="-241008" />
+		<!-- point1 -->
+		<spawn X="-86618" Y="-240142" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-88343" Y="-240142" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-87480" Y="-240142" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_16" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_16 -->
+		<node X="-80890" Y="-246830" />
+		<node X="-80605" Y="-246480" />
+		<node X="-80605" Y="-245449" />
+		<node X="-80890" Y="-245099" />
+		<node X="-82615" Y="-245099" />
+		<node X="-82900" Y="-245449" />
+		<node X="-82900" Y="-246480" />
+		<node X="-82615" Y="-246830" />
+		<!-- point1 -->
+		<spawn X="-80890" Y="-245964" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-82615" Y="-245964" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-81752" Y="-245964" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_17" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_17 -->
+		<node X="-76249" Y="-252348" />
+		<node X="-75964" Y="-251998" />
+		<node X="-75964" Y="-250967" />
+		<node X="-76249" Y="-250617" />
+		<node X="-77974" Y="-250617" />
+		<node X="-78259" Y="-250967" />
+		<node X="-78259" Y="-251998" />
+		<node X="-77974" Y="-252348" />
+		<!-- point1 -->
+		<spawn X="-76249" Y="-251482" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-77974" Y="-251482" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-77111" Y="-251482" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_18" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_18 -->
+		<node X="-68857" Y="-242637" />
+		<node X="-68572" Y="-242287" />
+		<node X="-68572" Y="-241256" />
+		<node X="-68857" Y="-240906" />
+		<node X="-70582" Y="-240906" />
+		<node X="-70867" Y="-241256" />
+		<node X="-70867" Y="-242287" />
+		<node X="-70582" Y="-242637" />
+		<!-- point1 -->
+		<spawn X="-68857" Y="-241771" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-70582" Y="-241771" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-69719" Y="-241771" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_19" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_19 -->
+		<node X="-75961" Y="-234861" />
+		<node X="-75676" Y="-234511" />
+		<node X="-75676" Y="-233480" />
+		<node X="-75961" Y="-233130" />
+		<node X="-77686" Y="-233130" />
+		<node X="-77971" Y="-233480" />
+		<node X="-77971" Y="-234511" />
+		<node X="-77686" Y="-234861" />
+		<!-- point1 -->
+		<spawn X="-75961" Y="-233995" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-77686" Y="-233995" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-76823" Y="-233995" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_20" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_20 -->
+		<node X="-92953" Y="-251900" />
+		<node X="-92668" Y="-251550" />
+		<node X="-92668" Y="-250519" />
+		<node X="-92953" Y="-250169" />
+		<node X="-94678" Y="-250169" />
+		<node X="-94963" Y="-250519" />
+		<node X="-94963" Y="-251550" />
+		<node X="-94678" Y="-251900" />
+		<!-- point1 -->
+		<spawn X="-92953" Y="-251034" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-94678" Y="-251034" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-93815" Y="-251034" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_21" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_21 -->
+		<node X="-86650" Y="-258653" />
+		<node X="-86365" Y="-258303" />
+		<node X="-86365" Y="-257272" />
+		<node X="-86650" Y="-256922" />
+		<node X="-88375" Y="-256922" />
+		<node X="-88660" Y="-257272" />
+		<node X="-88660" Y="-258303" />
+		<node X="-88375" Y="-258653" />
+		<!-- point1 -->
+		<spawn X="-86650" Y="-257787" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-88375" Y="-257787" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-87512" Y="-257787" Z="-3327" />
+	</zone>
+	<zone name="olympiad_stadium_22" type="OlympiadStadiumZone" shape="NPoly" minZ="-3400" maxZ="-3125"><!-- olympiad_stadium_22 -->
+		<node X="-113674" Y="-214060" />
+		<node X="-113389" Y="-213710" />
+		<node X="-113389" Y="-212679" />
+		<node X="-113674" Y="-212329" />
+		<node X="-115399" Y="-212329" />
+		<node X="-115684" Y="-212679" />
+		<node X="-115684" Y="-213710" />
+		<node X="-115399" Y="-214060" />
+		<!-- point1 -->
+		<spawn X="-113674" Y="-213194" Z="-3327" />
+		<!-- point2 -->
+		<spawn X="-115399" Y="-213194" Z="-3327" />
+		<!-- spectator -->
+		<spawn X="-114536" Y="-213194" Z="-3327" />
+	</zone>
+</list>

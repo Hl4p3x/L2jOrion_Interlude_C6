@@ -28,6 +28,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
@@ -60,7 +61,6 @@ import l2jorion.game.util.Util;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-import java.util.logging.Logger;
 
 public final class L2ItemInstance extends L2Object
 {
@@ -71,32 +71,14 @@ public final class L2ItemInstance extends L2Object
 	
 	public static enum ItemLocation
 	{
-		
-		/** The VOID. */
 		VOID,
-		
-		/** The INVENTORY. */
 		INVENTORY,
-		
-		/** The PAPERDOLL. */
 		PAPERDOLL,
-		
-		/** The WAREHOUSE. */
 		WAREHOUSE,
-		
-		/** The CLANWH. */
 		CLANWH,
-		
-		/** The PET. */
 		PET,
-		
-		/** The PE t_ equip. */
 		PET_EQUIP,
-		
-		/** The LEASE. */
 		LEASE,
-		
-		/** The FREIGHT. */
 		FREIGHT
 	}
 	
@@ -234,7 +216,9 @@ public final class L2ItemInstance extends L2Object
 		super(objectId);
 		
 		if (item == null)
+		{
 			throw new IllegalArgumentException();
+		}
 		
 		super.setKnownList(new NullKnownList(this));
 		
@@ -287,7 +271,9 @@ public final class L2ItemInstance extends L2Object
 	public void setOwnerId(final int owner_id)
 	{
 		if (owner_id == _ownerId)
+		{
 			return;
+		}
 		
 		_ownerId = owner_id;
 		_storedInDb = false;
@@ -321,7 +307,10 @@ public final class L2ItemInstance extends L2Object
 	public void setLocation(final ItemLocation loc, final int loc_data)
 	{
 		if (loc == _loc && loc_data == _locData)
+		{
 			return;
+		}
+		
 		_loc = loc;
 		_locData = loc_data;
 		_storedInDb = false;
@@ -362,17 +351,25 @@ public final class L2ItemInstance extends L2Object
 	public void changeCount(final String process, final int count, final L2PcInstance creator, final L2Object reference)
 	{
 		if (count == 0)
+		{
 			return;
+		}
 		
 		long old = getCount();
 		
 		if (count > 0 && _count > Integer.MAX_VALUE - count)
+		{
 			_count = Integer.MAX_VALUE;
+		}
 		else
+		{
 			_count += count;
+		}
 		
 		if (_count < 0)
+		{
 			_count = 0;
+		}
 		
 		_storedInDb = false;
 		
@@ -394,7 +391,6 @@ public final class L2ItemInstance extends L2Object
 		}
 	}
 	
-	// No logging (function designed for shots only)
 	/**
 	 * Change count without trace.
 	 * @param process the process
@@ -405,13 +401,21 @@ public final class L2ItemInstance extends L2Object
 	public void changeCountWithoutTrace(final String process, final int count, final L2PcInstance creator, final L2Object reference)
 	{
 		if (count == 0)
+		{
 			return;
+		}
 		if (count > 0 && _count > Integer.MAX_VALUE - count)
+		{
 			_count = Integer.MAX_VALUE;
+		}
 		else
+		{
 			_count += count;
+		}
 		if (_count < 0)
+		{
 			_count = 0;
+		}
 		
 		_storedInDb = false;
 	}
@@ -424,12 +428,10 @@ public final class L2ItemInstance extends L2Object
 	 */
 	public void setCount(final int count)
 	{
-		//if (_count == count)
-			//return;
-	if (getCount() == count) 
-	{
-		return;
-	}
+		if (getCount() == count)
+		{
+			return;
+		}
 		
 		_count = count >= -1 ? count : 0;
 		_storedInDb = false;
@@ -441,7 +443,6 @@ public final class L2ItemInstance extends L2Object
 	 */
 	public boolean isEquipable()
 	{
-		//return !(_item.getBodyPart() == 0 || _item instanceof L2EtcItem);
 		return !(_item instanceof L2EtcItem);
 	}
 	
@@ -461,7 +462,9 @@ public final class L2ItemInstance extends L2Object
 	public int getEquipSlot()
 	{
 		if (Config.ASSERT)
+		{
 			assert _loc == ItemLocation.PAPERDOLL || _loc == ItemLocation.PET_EQUIP || _loc == ItemLocation.FREIGHT;
+		}
 		
 		return _locData;
 	}
@@ -537,7 +540,9 @@ public final class L2ItemInstance extends L2Object
 	public boolean isCupidBow()
 	{
 		if (getItemId() == 9140 || getItemId() == 9141)
+		{
 			return true;
+		}
 		return false;
 	}
 	
@@ -719,17 +724,16 @@ public final class L2ItemInstance extends L2Object
 	 */
 	public boolean isAvailable(final L2PcInstance player, final boolean allowAdena, final boolean allowEquipped)
 	{
-		return (!isEquipped() || allowEquipped) && getItem().getType2() != L2Item.TYPE2_QUEST && (getItem().getType2() != L2Item.TYPE2_MONEY || getItem().getType1() != L2Item.TYPE1_SHIELD_ARMOR)
-			&& (player.getPet() == null || getObjectId() != player.getPet().getControlItemId()) // Not Control item of currently summoned pet
+		return (!isEquipped() || allowEquipped) // Not equipped
+			&& (getObjectId() != player.getFakeArmorObjectId()) // Equipped this Fake Armor
+			&& getItem().getType2() != L2Item.TYPE2_QUEST && (getItem().getType2() != L2Item.TYPE2_MONEY || getItem().getType1() != L2Item.TYPE1_SHIELD_ARMOR) && (player.getPet() == null || getObjectId() != player.getPet().getControlItemId()) // Not Control item
 			&& player.getActiveEnchantItem() != this && (allowAdena || getItemId() != 57) && (player.getCurrentSkill() == null || player.getCurrentSkill().getSkill().getItemConsumeId() != getItemId()) && isTradeable();
 	}
 	
 	public boolean isAvailableItemForPackage(final L2PcInstance player, final boolean allowAdena, final boolean allowEquipped)
 	{
-		return (!isEquipped() || allowEquipped) && getItem().getType2() != L2Item.TYPE2_QUEST && (getItem().getType2() != L2Item.TYPE2_MONEY || getItem().getType1() != L2Item.TYPE1_SHIELD_ARMOR)
-			&& (player.getPet() == null || getObjectId() != player.getPet().getControlItemId()) // Not Control item of currently summoned pet
-			&& player.getActiveEnchantItem() != this && (allowAdena || getItemId() != 57) && (player.getCurrentSkill() == null || player.getCurrentSkill().getSkill().getItemConsumeId() != getItemId()) 
-			&& (isTradeable() ? true : Config.UNTRADABLE_FOR_WAREHOUSE);
+		return (!isEquipped() || allowEquipped) && getItem().getType2() != L2Item.TYPE2_QUEST && (getItem().getType2() != L2Item.TYPE2_MONEY || getItem().getType1() != L2Item.TYPE1_SHIELD_ARMOR) && (player.getPet() == null || getObjectId() != player.getPet().getControlItemId()) // Not Control item
+			&& player.getActiveEnchantItem() != this && (allowAdena || getItemId() != 57) && (player.getCurrentSkill() == null || player.getCurrentSkill().getSkill().getItemConsumeId() != getItemId()) && (isTradeable() ? true : Config.UNTRADABLE_FOR_WAREHOUSE);
 	}
 	
 	@Override
@@ -737,12 +741,18 @@ public final class L2ItemInstance extends L2Object
 	{
 		// this causes the validate position handler to do the pickup if the location is reached.
 		// mercenary tickets can only be picked up by the castle owner and GMs.
-		if ((!player.isGM()) && (_itemId >= 3960 && _itemId <= 4021 && player.isInParty() || _itemId >= 3960 && _itemId <= 3969 && !player.isCastleLord(1) || _itemId >= 3973 && _itemId <= 3982 && !player.isCastleLord(2) || _itemId >= 3986 && _itemId <= 3995 && !player.isCastleLord(3) || _itemId >= 3999 && _itemId <= 4008 && !player.isCastleLord(4) || _itemId >= 4012 && _itemId <= 4021 && !player.isCastleLord(5) || _itemId >= 5205 && _itemId <= 5214 && !player.isCastleLord(6) || _itemId >= 6779 && _itemId <= 6788 && !player.isCastleLord(7) || _itemId >= 7973 && _itemId <= 7982 && !player.isCastleLord(8) || _itemId >= 7918 && _itemId <= 7927 && !player.isCastleLord(9)))
+		if ((!player.isGM()) && (_itemId >= 3960 && _itemId <= 4021 && player.isInParty() || _itemId >= 3960 && _itemId <= 3969 && !player.isCastleLord(1) || _itemId >= 3973 && _itemId <= 3982 && !player.isCastleLord(2) || _itemId >= 3986 && _itemId <= 3995 && !player.isCastleLord(3)
+			|| _itemId >= 3999 && _itemId <= 4008 && !player.isCastleLord(4) || _itemId >= 4012 && _itemId <= 4021 && !player.isCastleLord(5) || _itemId >= 5205 && _itemId <= 5214 && !player.isCastleLord(6) || _itemId >= 6779 && _itemId <= 6788 && !player.isCastleLord(7)
+			|| _itemId >= 7973 && _itemId <= 7982 && !player.isCastleLord(8) || _itemId >= 7918 && _itemId <= 7927 && !player.isCastleLord(9)))
 		{
 			if (player.isInParty())
+			{
 				player.sendMessage("You cannot pickup mercenaries while in a party.");
+			}
 			else
+			{
 				player.sendMessage("Only the castle lord can pickup mercenaries.");
+			}
 			
 			player.setTarget(this);
 			player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
@@ -783,7 +793,10 @@ public final class L2ItemInstance extends L2Object
 	public void setEnchantLevel(final int enchantLevel)
 	{
 		if (_enchantLevel == enchantLevel)
+		{
 			return;
+		}
+		
 		_enchantLevel = enchantLevel;
 		_storedInDb = false;
 	}
@@ -795,7 +808,9 @@ public final class L2ItemInstance extends L2Object
 	public int getPDef()
 	{
 		if (_item instanceof L2Armor)
+		{
 			return ((L2Armor) _item).getPDef();
+		}
 		return 0;
 	}
 	
@@ -825,7 +840,9 @@ public final class L2ItemInstance extends L2Object
 	public boolean setAugmentation(final L2Augmentation augmentation)
 	{
 		if (_augmentation != null)
+		{
 			return false;
+		}
 		
 		_augmentation = augmentation;
 		return true;
@@ -837,7 +854,9 @@ public final class L2ItemInstance extends L2Object
 	public void removeAugmentation()
 	{
 		if (_augmentation == null)
+		{
 			return;
+		}
 		_augmentation.deleteAugmentationData();
 		_augmentation = null;
 	}
@@ -878,7 +897,9 @@ public final class L2ItemInstance extends L2Object
 			catch (final Throwable t)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					t.printStackTrace();
+				}
 			}
 		}
 	}
@@ -917,15 +938,23 @@ public final class L2ItemInstance extends L2Object
 	public void decreaseMana(final boolean resetConsumingMana)
 	{
 		if (!isShadowItem())
+		{
 			return;
+		}
 		
 		if (_mana > 0)
+		{
 			_mana--;
+		}
 		
 		if (_storedInDb)
+		{
 			_storedInDb = false;
+		}
 		if (resetConsumingMana)
+		{
 			_consumingMana = false;
+		}
 		
 		L2PcInstance player = (L2PcInstance) L2World.getInstance().findObject(getOwnerId());
 		if (player != null)
@@ -1002,7 +1031,9 @@ public final class L2ItemInstance extends L2Object
 			{
 				// Reschedule if still equipped
 				if (!_consumingMana && isEquipped())
+				{
 					scheduleConsumeManaTask();
+				}
 				
 				if (getLocation() != ItemLocation.WAREHOUSE)
 				{
@@ -1119,8 +1150,6 @@ public final class L2ItemInstance extends L2Object
 	 */
 	public void updateDatabase()
 	{
-		// LOG.info("Item: "+getItemId()+" Loc: "+_loc.name()+" ExistInDb: "+_existsInDb+" owner: "+_ownerId);
-		
 		if (isWear())
 		{
 			return;
@@ -1129,17 +1158,25 @@ public final class L2ItemInstance extends L2Object
 		if (_existsInDb)
 		{
 			if (_ownerId == 0 || _loc == ItemLocation.VOID || _count == 0 && _loc != ItemLocation.LEASE)
+			{
 				removeFromDb();
+			}
 			else
+			{
 				updateInDb();
+			}
 		}
 		else
 		{
 			if (_count == 0 && _loc != ItemLocation.LEASE)
+			{
 				return;
+			}
 			
 			if (_loc == ItemLocation.VOID || _ownerId == 0)
+			{
 				return;
+			}
 			
 			insertIntoDb();
 		}
@@ -1207,7 +1244,9 @@ public final class L2ItemInstance extends L2Object
 				
 				// consume 1 mana
 				if (inst._mana > 0 && inst.getLocation() == ItemLocation.PAPERDOLL)
+				{
 					inst.decreaseMana(false);
+				}
 				
 				// if mana left is 0 delete this item
 				if (inst._mana == 0)
@@ -1248,7 +1287,9 @@ public final class L2ItemInstance extends L2Object
 			rs = statement.executeQuery();
 			
 			if (rs.next())
+			{
 				inst._augmentation = new L2Augmentation(inst, rs.getInt("attributes"), rs.getInt("skill"), rs.getInt("level"), false);
+			}
 			
 			rs.close();
 			DatabaseUtils.close(statement);
@@ -1266,9 +1307,12 @@ public final class L2ItemInstance extends L2Object
 		}
 		
 		if (inst != null)
-			inst.fireEvent(EventType.LOAD.name, new Object[] {
-			// con
+		{
+			inst.fireEvent(EventType.LOAD.name, new Object[]
+			{
+				// con
 			});
+		}
 		
 		return inst;
 	}
@@ -1278,7 +1322,9 @@ public final class L2ItemInstance extends L2Object
 	 * <BR>
 	 * <B><U> Actions</U> :</B><BR>
 	 * <BR>
-	 * <li>Set the x,y,z position of the L2ItemInstance dropped and update its _worldregion</li> <li>Add the L2ItemInstance dropped to _visibleObjects of its L2WorldRegion</li> <li>Add the L2ItemInstance dropped in the world as a <B>visible</B> object</li><BR>
+	 * <li>Set the x,y,z position of the L2ItemInstance dropped and update its _worldregion</li>
+	 * <li>Add the L2ItemInstance dropped to _visibleObjects of its L2WorldRegion</li>
+	 * <li>Add the L2ItemInstance dropped in the world as a <B>visible</B> object</li><BR>
 	 * <BR>
 	 * <FONT COLOR=#FF0000><B> <U>Caution</U> : This method DOESN'T ADD the object to _allObjects of L2World </B></FONT><BR>
 	 * <BR>
@@ -1288,7 +1334,8 @@ public final class L2ItemInstance extends L2Object
 	 * <BR>
 	 * <B><U> Example of use </U> :</B><BR>
 	 * <BR>
-	 * <li>Drop item</li> <li>Call Pet</li><BR>
+	 * <li>Drop item</li>
+	 * <li>Call Pet</li><BR>
 	 * @param dropper the dropper
 	 * @param x the x
 	 * @param y the y
@@ -1319,7 +1366,7 @@ public final class L2ItemInstance extends L2Object
 		{
 			assert _itm.getPosition().getWorldRegion() == null;
 			
-			if ((Config.GEODATA > 0) && (_dropper != null))
+			if ((Config.GEODATA) && (_dropper != null))
 			{
 				Location dropDest = GeoData.getInstance().moveCheck(_dropper.getX(), _dropper.getY(), _dropper.getZ(), _x, _y, _z, _dropper.getInstanceId());
 				_x = dropDest.getX();
@@ -1357,13 +1404,19 @@ public final class L2ItemInstance extends L2Object
 	private void updateInDb()
 	{
 		if (Config.ASSERT)
+		{
 			assert _existsInDb;
+		}
 		
 		if (_wear)
+		{
 			return;
+		}
 		
 		if (_storedInDb)
+		{
 			return;
+		}
 		
 		Connection con = null;
 		try
@@ -1385,13 +1438,14 @@ public final class L2ItemInstance extends L2Object
 			_existsInDb = true;
 			_storedInDb = true;
 			DatabaseUtils.close(statement);
-			statement = null;
 			
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.log(Level.SEVERE, "Could not update item " + getObjectId() + " in DB: Reason: ");
 			e.printStackTrace();
@@ -1404,7 +1458,9 @@ public final class L2ItemInstance extends L2Object
 		}
 		
 		if (_existsInDb)
+		{
 			fireEvent(EventType.STORE.name, (Object[]) null);
+		}
 	}
 	
 	/**
@@ -1470,14 +1526,20 @@ public final class L2ItemInstance extends L2Object
 	private void removeFromDb()
 	{
 		if (_wear)
+		{
 			return;
+		}
 		
 		if (Config.ASSERT)
+		{
 			assert _existsInDb;
+		}
 		
 		// delete augmentation data
 		if (isAugmented())
+		{
 			_augmentation.deleteAugmentationData();
+		}
 		
 		Connection con = null;
 		try
@@ -1489,7 +1551,6 @@ public final class L2ItemInstance extends L2Object
 			_existsInDb = false;
 			_storedInDb = false;
 			DatabaseUtils.close(statement);
-			statement = null;
 			
 		}
 		catch (final Exception e)
@@ -1503,7 +1564,9 @@ public final class L2ItemInstance extends L2Object
 		}
 		
 		if (!_existsInDb)
+		{
 			fireEvent(EventType.DELETE.name, (Object[]) null);
+		}
 	}
 	
 	/**
@@ -1615,7 +1678,9 @@ public final class L2ItemInstance extends L2Object
 	public void restoreInitCount()
 	{
 		if (_decrease)
+		{
 			_count = _initCount;
+		}
 	}
 	
 	/**
@@ -1625,9 +1690,13 @@ public final class L2ItemInstance extends L2Object
 	public void setTime(final int time)
 	{
 		if (time > 0)
+		{
 			_time = time;
+		}
 		else
+		{
 			_time = 0;
+		}
 	}
 	
 	/**
@@ -1646,7 +1715,9 @@ public final class L2ItemInstance extends L2Object
 	public int getLocationSlot()
 	{
 		if (Config.ASSERT)
+		{
 			assert _loc == ItemLocation.PAPERDOLL || _loc == ItemLocation.PET_EQUIP || _loc == ItemLocation.FREIGHT || _loc == ItemLocation.INVENTORY;
+		}
 		
 		return _locData;
 	}
@@ -1696,7 +1767,9 @@ public final class L2ItemInstance extends L2Object
 	public boolean checkOlympCondition()
 	{
 		if (isHeroItem() || isOlyRestrictedItem() || isWear() || (!Config.ALT_OLY_AUGMENT_ALLOW && isAugmented()))
+		{
 			return false;
+		}
 		return true;
 	}
 	
@@ -1714,6 +1787,12 @@ public final class L2ItemInstance extends L2Object
 		_dropperObjectId = id;
 	}
 	
+	public int getSharedReuseGroup()
+	{
+		// return _item.getSharedReuseGroup();
+		return -1;
+	}
+	
 	@Override
 	public void sendInfo(L2PcInstance activeChar)
 	{
@@ -1727,4 +1806,13 @@ public final class L2ItemInstance extends L2Object
 		}
 	}
 	
+	public boolean isFakeArmor()
+	{
+		return _item.isFakeArmor();
+	}
+	
+	public boolean isFakeWeapon()
+	{
+		return _item.isFakeWeapon();
+	}
 }

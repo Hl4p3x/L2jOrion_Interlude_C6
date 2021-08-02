@@ -20,21 +20,15 @@
  */
 package l2jorion.game.model.actor.instance;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.managers.RaidBossSpawnManager;
 import l2jorion.game.model.spawn.L2Spawn;
 import l2jorion.game.network.serverpackets.ExQuestInfo;
 import l2jorion.game.network.serverpackets.RadarControl;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * This class ...
- * @version $Revision: $ $Date: $
- * @author LBaldi
- */
 public class L2AdventurerInstance extends L2FolkInstance
 {
 	private static Logger LOG = LoggerFactory.getLogger(L2AdventurerInstance.class);
@@ -68,7 +62,9 @@ public class L2AdventurerInstance extends L2FolkInstance
 			catch (final NumberFormatException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.warn("Invalid Bypass to Server command parameter.");
 			}

@@ -25,20 +25,18 @@ import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author ProGramMoS, eX1steam, L2jOrion An Env object is just a class to pass parameters to a calculator such as L2PcInstance, L2ItemInstance, Initial value.
- */
-
 public final class Env
 {
-	
 	public L2Character player;
 	public L2Character target;
 	public L2ItemInstance item;
 	public L2Skill skill;
+	
 	public double value;
 	public double baseValue;
+	
 	public boolean skillMastery = false;
+	
 	private L2Character character;
 	private L2Character _target;
 	

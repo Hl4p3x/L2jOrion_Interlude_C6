@@ -22,9 +22,6 @@ package l2jorion.game.model.actor.instance;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.PcFreight;
@@ -36,6 +33,8 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.network.serverpackets.WareHouseDepositList;
 import l2jorion.game.network.serverpackets.WareHouseWithdrawalList;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 /**
  * This class ...

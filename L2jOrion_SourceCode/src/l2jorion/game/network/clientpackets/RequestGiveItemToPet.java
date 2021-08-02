@@ -20,9 +20,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
@@ -31,6 +28,8 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.util.IllegalPlayerAction;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class RequestGiveItemToPet extends L2GameClientPacket
 {
@@ -51,7 +50,9 @@ public final class RequestGiveItemToPet extends L2GameClientPacket
 	{
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null || !(player.getPet() instanceof L2PetInstance))
+		{
 			return;
+		}
 		
 		if (!getClient().getFloodProtectors().getTransaction().tryPerformAction("giveitemtopet"))
 		{
@@ -61,7 +62,9 @@ public final class RequestGiveItemToPet extends L2GameClientPacket
 		
 		// Alt game - Karma punishment
 		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_TRADE && player.getKarma() > 0)
+		{
 			return;
+		}
 		
 		if (player.getPrivateStoreType() != 0)
 		{
@@ -83,14 +86,24 @@ public final class RequestGiveItemToPet extends L2GameClientPacket
 		final L2ItemInstance item = player.getInventory().getItemByObjectId(_objectId);
 		
 		if (item == null)
+		{
 			return;
+		}
 		
 		if (item.isAugmented())
+		{
 			return;
+		}
 		
 		if (!item.isDropable() || !item.isDestroyable() || !item.isTradeable())
 		{
 			sendPacket(new SystemMessage(SystemMessageId.ITEM_NOT_FOR_PETS));
+			return;
+		}
+		
+		if (player.getLevel() < Config.PROTECTED_START_ITEMS_LVL && Config.LIST_PROTECTED_START_ITEMS.contains(item.getItemId()))
+		{
+			player.sendPacket(new SystemMessage(SystemMessageId.ITEM_NOT_FOR_PETS));
 			return;
 		}
 		
@@ -103,7 +116,9 @@ public final class RequestGiveItemToPet extends L2GameClientPacket
 		}
 		
 		if (_amount < 0)
+		{
 			return;
+		}
 		
 		if (player.transferItem("Transfer", _objectId, _amount, pet.getInventory(), pet) == null)
 		{

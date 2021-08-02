@@ -19,9 +19,6 @@
  */
 package l2jorion.game.handler.skill;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.handler.ISkillHandler;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
@@ -29,13 +26,8 @@ import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Skill.SkillType;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author Julian
- */
 public class DeluxeKey implements ISkillHandler
 {
-	private static Logger LOG = LoggerFactory.getLogger(BeastFeed.class);
-	
 	private static final SkillType[] SKILL_IDS =
 	{
 		SkillType.DELUXE_KEY_UNLOCK
@@ -45,7 +37,9 @@ public class DeluxeKey implements ISkillHandler
 	public void useSkill(final L2Character activeChar, final L2Skill skill, final L2Object[] targets)
 	{
 		if (!(activeChar instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2Object[] targetList = skill.getTargetList(activeChar);
 		
@@ -53,13 +47,6 @@ public class DeluxeKey implements ISkillHandler
 		{
 			return;
 		}
-		
-		targetList = null;
-		
-		LOG.debug("Delux key casting succeded.");
-		
-		// This is just a dummy skill handler for the golden food and crystal food skills,
-		// since the AI responce onSkillUse handles the rest.
 	}
 	
 	@Override

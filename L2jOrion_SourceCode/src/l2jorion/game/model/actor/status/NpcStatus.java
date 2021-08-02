@@ -24,31 +24,25 @@ import l2jorion.game.model.actor.instance.L2NpcInstance;
 
 public class NpcStatus extends CharStatus
 {
-	// =========================================================
-	// Data Field
-	
-	// =========================================================
-	// Constructor
 	public NpcStatus(final L2NpcInstance activeChar)
 	{
 		super(activeChar);
 	}
 	
-	// =========================================================
-	// Method - Public
 	@Override
-	public final void reduceHp(final double value, final L2Character attacker)
+	public void reduceHp(final double value, final L2Character attacker)
 	{
 		reduceHp(value, attacker, true);
 	}
 	
 	@Override
-	public final void reduceHp(final double value, final L2Character attacker, final boolean awake)
+	public void reduceHp(final double value, final L2Character attacker, final boolean awake)
 	{
 		if (getActiveChar().isDead())
+		{
 			return;
+		}
 		
-		// Add attackers to npc's attacker list
 		if (attacker != null)
 		{
 			getActiveChar().addAttackerToAttackByList(attacker);
@@ -57,11 +51,6 @@ public class NpcStatus extends CharStatus
 		super.reduceHp(value, attacker, awake);
 	}
 	
-	// =========================================================
-	// Method - Private
-	
-	// =========================================================
-	// Property - Public
 	@Override
 	public L2NpcInstance getActiveChar()
 	{

@@ -23,9 +23,6 @@ package l2jorion.game.skills.effects;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.skills.Env;
 
-/**
- * @author ProGramMoS, L2jOrion
- */
 final class EffectBuff extends L2Effect
 {
 	
@@ -43,7 +40,6 @@ final class EffectBuff extends L2Effect
 	@Override
 	public boolean onActionTime()
 	{
-		// just stop this effect
 		return false;
 	}
 }

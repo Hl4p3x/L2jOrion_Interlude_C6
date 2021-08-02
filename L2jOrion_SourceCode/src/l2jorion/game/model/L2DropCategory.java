@@ -71,7 +71,9 @@ public class L2DropCategory
 	public int getCategoryChance()
 	{
 		if (getCategoryType() >= 0)
+		{
 			return _categoryChance;
+		}
 		
 		return L2DropData.MAX_CHANCE;
 	}
@@ -79,7 +81,9 @@ public class L2DropCategory
 	public int getCategoryBalancedChance()
 	{
 		if (getCategoryType() >= 0)
+		{
 			return _categoryBalancedChance;
+		}
 		
 		return L2DropData.MAX_CHANCE;
 	}
@@ -117,7 +121,6 @@ public class L2DropCategory
 			if (sum > randomIndex) // drop this item and exit the function
 			{
 				drops.clear();
-				drops = null;
 				return drop;
 			}
 		}
@@ -145,8 +148,10 @@ public class L2DropCategory
 		{
 			sum += Math.min((drop.getChance() * (raid ? Config.ITEMS_RAID : Config.RATE_DROP_ITEMS)), L2DropData.MAX_CHANCE);
 			
-			if (sum >= randomIndex) // drop this item and exit the function
+			if (sum >= randomIndex)
+			{
 				return drop;
+			}
 		}
 		
 		return null;

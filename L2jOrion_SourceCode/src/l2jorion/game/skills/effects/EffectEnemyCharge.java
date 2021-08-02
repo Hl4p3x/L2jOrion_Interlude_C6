@@ -21,8 +21,8 @@ import l2jorion.game.geo.GeoData;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.Location;
 import l2jorion.game.network.serverpackets.FlyToLocation;
-import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.network.serverpackets.FlyToLocation.FlyType;
+import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.skills.Env;
 
 public class EffectEnemyCharge extends L2Effect
@@ -57,7 +57,7 @@ public class EffectEnemyCharge extends L2Effect
 		double distance = Math.sqrt(dx * dx + dy * dy);
 		if (distance > 2000)
 		{
-			_log.info("EffectEnemyCharge was going to use invalid coordinates for characters, getEffector: "+curX+","+curY+" and getEffected: "+getEffected().getX()+","+getEffected().getY());
+			_log.info("EffectEnemyCharge was going to use invalid coordinates for characters, getEffector: " + curX + "," + curY + " and getEffected: " + getEffected().getX() + "," + getEffected().getY());
 			return;
 		}
 		int offset = Math.max((int) distance - getSkill().getFlyRadius(), 30);
@@ -69,11 +69,15 @@ public class EffectEnemyCharge extends L2Effect
 		// TODO: handle Z axis movement better
 		offset -= Math.abs(dz);
 		if (offset < 5)
+		{
 			offset = 5;
+		}
 		
 		// If no distance
 		if (distance < 1 || distance - offset <= 0)
+		{
 			return;
+		}
 		
 		// Calculate movement angles needed
 		sin = dy / distance;
@@ -84,7 +88,7 @@ public class EffectEnemyCharge extends L2Effect
 		_y = curY + (int) ((distance - offset) * sin);
 		_z = getEffected().getZ();
 		
-		if (Config.GEODATA > 0)
+		if (Config.GEODATA)
 		{
 			Location destiny = GeoData.getInstance().moveCheck(getEffector().getX(), getEffector().getY(), getEffector().getZ(), _x, _y, _z, getEffector().getInstanceId());
 			_x = destiny.getX();

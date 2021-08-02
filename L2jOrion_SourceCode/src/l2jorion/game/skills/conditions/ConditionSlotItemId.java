@@ -25,18 +25,15 @@ import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public final class ConditionSlotItemId extends ConditionInventory
 {
-	
 	private final int _itemId;
 	private final int _enchantLevel;
 	
 	public ConditionSlotItemId(final int slot, final int itemId, final int enchantLevel)
 	{
 		super(slot);
+		
 		_itemId = itemId;
 		_enchantLevel = enchantLevel;
 	}
@@ -45,11 +42,19 @@ public final class ConditionSlotItemId extends ConditionInventory
 	public boolean testImpl(final Env env)
 	{
 		if (!(env.player instanceof L2PcInstance))
+		{
 			return false;
+		}
+		
 		final Inventory inv = ((L2PcInstance) env.player).getInventory();
+		
 		final L2ItemInstance item = inv.getPaperdollItem(_slot);
+		
 		if (item == null)
+		{
 			return _itemId == 0;
+		}
+		
 		return item.getItemId() == _itemId && item.getEnchantLevel() >= _enchantLevel;
 	}
 }

@@ -19,9 +19,6 @@
  */
 package l2jorion.game.model.actor.instance;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.text.TextBuilder;
 import l2jorion.Config;
 import l2jorion.game.datatables.SkillTable;
@@ -38,20 +35,10 @@ import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2NpcTemplate;
 
-/**
- * The Class L2FolkInstance.
- */
 public class L2FolkInstance extends L2NpcInstance
 {
-	private static Logger LOG = LoggerFactory.getLogger(L2FolkInstance.class);
-	/** The _classes to teach. */
 	private final ClassId[] _classesToTeach;
 	
-	/**
-	 * Instantiates a new l2 folk instance.
-	 * @param objectId the object id
-	 * @param template the template
-	 */
 	public L2FolkInstance(final int objectId, final L2NpcTemplate template)
 	{
 		super(objectId, template);
@@ -65,18 +52,8 @@ public class L2FolkInstance extends L2NpcInstance
 		super.onAction(player);
 	}
 	
-	/**
-	 * this displays SkillList to the player.
-	 * @param player the player
-	 * @param classId the class id
-	 */
 	public void showSkillList(final L2PcInstance player, final ClassId classId)
 	{
-		if (Config.DEBUG)
-		{
-			LOG.debug("SkillList activated on: " + getObjectId());
-		}
-		
 		final int npcId = getTemplate().npcId;
 		
 		if (_classesToTeach == null)
@@ -90,8 +67,6 @@ public class L2FolkInstance extends L2NpcInstance
 				sb.append("</body></html>");
 				html.setHtml(sb.toString());
 				player.sendPacket(html);
-				html = null;
-				sb = null;
 				return;
 			}
 			
@@ -108,8 +83,6 @@ public class L2FolkInstance extends L2NpcInstance
 			sb.append("</body></html>");
 			html.setHtml(sb.toString());
 			player.sendPacket(html);
-			html = null;
-			sb = null;
 			return;
 		}
 		
@@ -141,37 +114,22 @@ public class L2FolkInstance extends L2NpcInstance
 				SystemMessage sm = new SystemMessage(SystemMessageId.DO_NOT_HAVE_FURTHER_SKILLS_TO_LEARN);
 				sm.addNumber(minlevel);
 				player.sendPacket(sm);
-				sm = null;
 			}
 			else
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.NO_MORE_SKILLS_TO_LEARN);
 				player.sendPacket(sm);
-				sm = null;
 			}
 		}
 		else
 		{
 			player.sendPacket(asl);
 		}
-		skills = null;
-		asl = null;
-		
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
-	/**
-	 * this displays EnchantSkillList to the player.
-	 * @param player the player
-	 * @param classId the class id
-	 */
 	public void showEnchantSkillList(final L2PcInstance player, final ClassId classId)
 	{
-		if (Config.DEBUG)
-		{
-			LOG.debug("EnchantSkillList activated on: " + getObjectId());
-		}
-		
 		final int npcId = getTemplate().npcId;
 		
 		if (_classesToTeach == null)
@@ -185,8 +143,6 @@ public class L2FolkInstance extends L2NpcInstance
 				sb.append("</body></html>");
 				html.setHtml(sb.toString());
 				player.sendPacket(html);
-				html = null;
-				sb = null;
 				return;
 			}
 			
@@ -203,8 +159,6 @@ public class L2FolkInstance extends L2NpcInstance
 			sb.append("</body></html>");
 			html.setHtml(sb.toString());
 			player.sendPacket(html);
-			html = null;
-			sb = null;
 			return;
 		}
 		if (player.getClassId().getId() < 88)
@@ -216,8 +170,6 @@ public class L2FolkInstance extends L2NpcInstance
 			sb.append("</body></html>");
 			html.setHtml(sb.toString());
 			player.sendPacket(html);
-			html = null;
-			sb = null;
 			return;
 		}
 		
@@ -235,6 +187,7 @@ public class L2FolkInstance extends L2NpcInstance
 			counts++;
 			esl.addSkill(s.getId(), s.getLevel(), s.getSpCost(), s.getExp());
 		}
+		
 		if (counts == 0)
 		{
 			player.sendPacket(new SystemMessage(SystemMessageId.THERE_IS_NO_SKILL_THAT_ENABLES_ENCHANT));
@@ -255,24 +208,16 @@ public class L2FolkInstance extends L2NpcInstance
 				sb.append("</body></html>");
 				html.setHtml(sb.toString());
 				player.sendPacket(html);
-				html = null;
-				sb = null;
 			}
 		}
 		else
 		{
 			player.sendPacket(esl);
 		}
-		skills = null;
-		esl = null;
 		
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.instance.L2NpcInstance#onBypassFeedback(l2jorion.game.model.actor.instance.L2PcInstance, java.lang.String)
-	 */
 	@Override
 	public void onBypassFeedback(final L2PcInstance player, final String command)
 	{
@@ -344,7 +289,6 @@ public class L2FolkInstance extends L2NpcInstance
 					
 					insertObjectIdAndShowChatWindow(player, text);
 					player.sendPacket(ActionFailed.STATIC_PACKET);
-					text = null;
 				}
 			}
 			else
@@ -359,9 +303,6 @@ public class L2FolkInstance extends L2NpcInstance
 		}
 		else
 		{
-			// this class dont know any other commands, let forward
-			// the command to the parent class
-			
 			super.onBypassFeedback(player, command);
 		}
 	}

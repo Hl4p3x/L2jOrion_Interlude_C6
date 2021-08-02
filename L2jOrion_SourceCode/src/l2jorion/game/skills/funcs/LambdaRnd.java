@@ -23,9 +23,6 @@ package l2jorion.game.skills.funcs;
 import l2jorion.game.skills.Env;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author mkizub
- */
 public final class LambdaRnd extends Lambda
 {
 	
@@ -42,7 +39,9 @@ public final class LambdaRnd extends Lambda
 	public double calc(final Env env)
 	{
 		if (_linear)
+		{
 			return _max.calc(env) * Rnd.nextDouble();
+		}
 		return _max.calc(env) * Rnd.nextGaussian();
 	}
 	

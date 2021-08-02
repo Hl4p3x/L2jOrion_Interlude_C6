@@ -33,9 +33,6 @@ import java.util.Map;
 
 import javax.crypto.Cipher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.util.FastCollection.Record;
 import l2jorion.Config;
 import l2jorion.crypt.Base64;
@@ -45,6 +42,8 @@ import l2jorion.game.datatables.GameServerTable.GameServerInfo;
 import l2jorion.login.network.gameserverpackets.ServerStatus;
 import l2jorion.login.network.serverpackets.LoginFail.LoginFailReason;
 import l2jorion.log.Log;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.Util;
 import l2jorion.util.database.L2DatabaseFactory;
@@ -700,6 +699,7 @@ public class LoginController
 					con = null;
 					return false;
 				}
+				
 				LOG.warn("Account missing for user "+user+" IP: "+address.getHostAddress());
 				CloseUtil.close(con);
 				con = null;

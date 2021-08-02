@@ -26,48 +26,21 @@ import l2jorion.game.model.L2World;
 import l2jorion.game.model.L2WorldRegion;
 import l2jorion.game.templates.L2NpcTemplate;
 
-/**
- * This class manages all Minions. In a group mob, there are one master called RaidBoss and several slaves called Minions.
- * @version $Revision: 1.20.4.6 $ $Date: 2005/04/06 16:13:39 $
- */
 public final class L2MinionInstance extends L2MonsterInstance
 {
-	// private static Logger LOG = LoggerFactory.getLogger(L2RaidMinionInstance.class);
-	
-	/** The master L2Character whose depends this L2MinionInstance on. */
 	private L2MonsterInstance _master;
 	
-	/**
-	 * Constructor of L2MinionInstance (use L2Character and L2NpcInstance constructor).<BR>
-	 * <BR>
-	 * <B><U> Actions</U> :</B><BR>
-	 * <BR>
-	 * <li>Call the L2Character constructor to set the _template of the L2MinionInstance (copy skills from template to object and link _calculators to NPC_STD_CALCULATOR)</li> <li>Set the name of the L2MinionInstance</li> <li>Create a RandomAnimation Task that will be launched after the calculated
-	 * delay if the server allow it</li><BR>
-	 * <BR>
-	 * @param objectId Identifier of the object to initialized
-	 * @param template the template
-	 */
 	public L2MinionInstance(final int objectId, final L2NpcTemplate template)
 	{
 		super(objectId, template);
 	}
 	
-	/**
-	 * Return the master of this L2MinionInstance.<BR>
-	 * <BR>
-	 * @return the leader
-	 */
 	@Override
 	public L2MonsterInstance getLeader()
 	{
 		return _master;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.instance.L2MonsterInstance#onSpawn()
-	 */
 	@Override
 	public void onSpawn()
 	{
@@ -109,7 +82,9 @@ public final class L2MinionInstance extends L2MonsterInstance
 	public boolean doDie(final L2Character killer)
 	{
 		if (!super.doDie(killer))
+		{
 			return false;
+		}
 		
 		_master.notifyMinionDied(this);
 		return true;

@@ -22,10 +22,6 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
 
-/**
- * Format (ch)dddcc
- * @author -Wooden-
- */
 public class ExFishingStartCombat extends L2GameServerPacket
 {
 	private static final String _S__FE_15_EXFISHINGSTARTCOMBAT = "[S] FE:15 ExFishingStartCombat";
@@ -43,10 +39,6 @@ public class ExFishingStartCombat extends L2GameServerPacket
 		_deceptiveMode = deceptiveMode;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#writeImpl()
-	 */
 	@Override
 	protected void writeImpl()
 	{
@@ -61,10 +53,6 @@ public class ExFishingStartCombat extends L2GameServerPacket
 		writeC(_deceptiveMode); // Fish Deceptive Mode: 0 = no, 1 = yes
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.BasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

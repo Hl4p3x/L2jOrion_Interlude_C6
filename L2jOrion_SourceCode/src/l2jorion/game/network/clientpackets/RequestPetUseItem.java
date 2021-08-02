@@ -19,9 +19,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.L2PetDataTable;
 import l2jorion.game.handler.IItemHandler;
@@ -33,6 +30,8 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.PetInfo;
 import l2jorion.game.network.serverpackets.PetItemList;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class RequestPetUseItem extends L2GameClientPacket
 {

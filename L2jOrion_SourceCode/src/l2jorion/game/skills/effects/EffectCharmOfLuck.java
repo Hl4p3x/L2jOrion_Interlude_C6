@@ -23,9 +23,6 @@ import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.skills.Env;
 
-/**
- * @author kerberos_20
- */
 public class EffectCharmOfLuck extends L2Effect
 {
 	public EffectCharmOfLuck(final Env env, final EffectTemplate template)

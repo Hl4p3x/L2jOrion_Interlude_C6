@@ -6,14 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.util.FastMap;
 import javolution.util.FastMap.Entry;
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.powerpack.PowerPackConfig;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
@@ -108,7 +107,7 @@ public class BuffTable
 			}
 			rs.close();
 			stm.close();
-			LOG.info("Loaded " + _buffs.size() + " buff templates.");
+			LOG.info("Buffer: Loaded " + _buffs.size() + " buff templates");
 		}
 		catch(Exception e)
 		{

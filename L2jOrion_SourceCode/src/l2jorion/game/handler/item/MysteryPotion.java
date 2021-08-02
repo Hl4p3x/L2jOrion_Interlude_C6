@@ -52,7 +52,6 @@ public class MysteryPotion implements IItemHandler
 			return;
 		
 		L2PcInstance activeChar = (L2PcInstance) playable;
-		// item.getItem().getEffects(item, activeChar);
 		
 		// Use a summon skill effect for fun ;)
 		MagicSkillUser MSU = new MagicSkillUser(playable, playable, 2103, 1, 0, 0);
@@ -68,13 +67,8 @@ public class MysteryPotion implements IItemHandler
 		sm.addSkillName(MYSTERY_POTION_SKILL);
 		activeChar.sendPacket(sm);
 		
-		sm = null;
-		activeChar = null;
-		
 		MysteryPotionStop mp = new MysteryPotionStop(playable);
 		ThreadPoolManager.getInstance().scheduleEffect(mp, EFFECT_DURATION);
-		
-		mp = null;
 	}
 	
 	public class MysteryPotionStop implements Runnable

@@ -52,7 +52,7 @@ public class ForumsBBSManager extends BaseBBSManager
 			forum.vload();
 		}
 		
-		LOG.info("Loaded {} forums.", _forums.size());
+		LOG.info("ForumsBBSManager: Loaded {} forums", _forums.size());
 	}
 	
 	public void addForum(Forum forum)

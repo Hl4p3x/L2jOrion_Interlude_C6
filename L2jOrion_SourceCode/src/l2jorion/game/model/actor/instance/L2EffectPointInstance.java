@@ -30,6 +30,7 @@ public class L2EffectPointInstance extends L2NpcInstance
 	public L2EffectPointInstance(final int objectId, final L2NpcTemplate template, final L2Character owner)
 	{
 		super(objectId, template);
+		
 		_owner = owner;
 	}
 	
@@ -38,14 +39,9 @@ public class L2EffectPointInstance extends L2NpcInstance
 		return _owner;
 	}
 	
-	/**
-	 * this is called when a player interacts with this NPC
-	 * @param player
-	 */
 	@Override
 	public void onAction(final L2PcInstance player)
 	{
-		// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	

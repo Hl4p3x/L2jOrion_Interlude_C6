@@ -25,9 +25,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.concurrent.Future;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.datatables.sql.L2PetDataTable;
@@ -44,7 +41,6 @@ import l2jorion.game.model.L2World;
 import l2jorion.game.model.PcInventory;
 import l2jorion.game.model.PetInventory;
 import l2jorion.game.model.actor.stat.PetStat;
-import l2jorion.game.model.entity.olympiad.Olympiad;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
@@ -61,92 +57,45 @@ import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.templates.L2Weapon;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-/**
- * This class ...
- * @version $Revision: 1.15.2.10.2.16 $ $Date: 2009/04/13 09:18:40 $
- */
 public class L2PetInstance extends L2Summon
 {
-	
-	/** The Constant _logPet. */
 	protected static final Logger LOG = LoggerFactory.getLogger(L2PetInstance.class);
 	
-	// private byte _pvpFlag;
-	/** The _cur fed. */
 	private int _curFed;
-	
-	/** The _inventory. */
 	private final PetInventory _inventory;
-	
-	/** The _control item id. */
 	private final int _controlItemId;
-	
-	/** The _respawned. */
 	private boolean _respawned;
-	
-	/** The _mountable. */
 	private final boolean _mountable;
-	
-	/** The _feed task. */
 	private Future<?> _feedTask;
-	
-	/** The _feed time. */
 	private int _feedTime;
-	
-	/** The _feed mode. */
 	protected boolean _feedMode;
-	
-	/** The _data. */
 	private L2PetData _data;
-	
-	/** The Experience before the last Death Penalty. */
 	private long _expBeforeDeath = 0;
-	
-	/** The Constant FOOD_ITEM_CONSUME_COUNT. */
 	private static final int FOOD_ITEM_CONSUME_COUNT = 5;
 	
-	/**
-	 * Gets the pet data.
-	 * @return the pet data
-	 */
 	public final L2PetData getPetData()
 	{
 		if (_data == null)
 		{
-			_data = L2PetDataTable.getInstance().getPetData(getTemplate().npcId, getStat().getLevel());
+			_data = L2PetDataTable.getInstance().getPetData(getTemplate().getNpcId(), getStat().getLevel());
 		}
 		
 		return _data;
 	}
 	
-	/**
-	 * Sets the pet data.
-	 * @param value the new pet data
-	 */
-	public final void setPetData(final L2PetData value)
+	public final void setPetData(L2PetData value)
 	{
 		_data = value;
 	}
 	
-	/**
-	 * Manage Feeding Task.<BR>
-	 * <BR>
-	 * <B><U> Actions</U> :</B><BR>
-	 * <li>Feed or kill the pet depending on hunger level</li> <li>If pet has food in inventory and feed level drops below 55% then consume food from inventory</li> <li>Send a broadcastStatusUpdate packet for this L2PetInstance</li> <BR>
-	 * <BR>
-	 */
-	
 	class FeedTask implements Runnable
 	{
-		
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Runnable#run()
-		 */
 		@Override
 		public void run()
 		{
@@ -154,6 +103,7 @@ public class L2PetInstance extends L2Summon
 			{
 				// if pet is attacking
 				if (isAttackingNow())
+				{
 					// if its not already on battleFeed mode
 					if (!_feedMode)
 					{
@@ -165,6 +115,7 @@ public class L2PetInstance extends L2Summon
 					{
 						startFeed(false); // normal feed
 					}
+				}
 				
 				if (getCurrentFed() > FOOD_ITEM_CONSUME_COUNT)
 				{
@@ -182,7 +133,9 @@ public class L2PetInstance extends L2Summon
 				
 				final int foodId = L2PetDataTable.getFoodItemId(getTemplate().npcId);
 				if (foodId == 0)
+				{
 					return;
+				}
 				
 				L2ItemInstance food = null;
 				food = getInventory().getItemByItemId(foodId);
@@ -209,7 +162,9 @@ public class L2PetInstance extends L2Summon
 			catch (final Throwable e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				if (Config.DEBUG)
 				{
@@ -229,8 +184,10 @@ public class L2PetInstance extends L2Summon
 	public synchronized static L2PetInstance spawnPet(final L2NpcTemplate template, final L2PcInstance owner, final L2ItemInstance control)
 	{
 		if (L2World.getInstance().getPet(owner.getObjectId()) != null)
+		{
 			return null; // owner has a pet listed in world
-			
+		}
+		
 		final L2PetInstance pet = restore(control, template, owner);
 		// add the pet instance to world
 		if (pet != null)
@@ -278,10 +235,6 @@ public class L2PetInstance extends L2Summon
 		_mountable = L2PetDataTable.isMountable(npcId);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Summon#getStat()
-	 */
 	@Override
 	public PetStat getStat()
 	{
@@ -412,8 +365,12 @@ public class L2PetInstance extends L2Summon
 	public L2ItemInstance getActiveWeaponInstance()
 	{
 		for (final L2ItemInstance item : getInventory().getItems())
+		{
 			if (item.getLocation() == L2ItemInstance.ItemLocation.PET_EQUIP && item.getItem().getBodyPart() == L2Item.SLOT_R_HAND)
+			{
 				return item;
+			}
+		}
 		
 		return null;
 	}
@@ -428,7 +385,9 @@ public class L2PetInstance extends L2Summon
 		final L2ItemInstance weapon = getActiveWeaponInstance();
 		
 		if (weapon == null)
+		{
 			return null;
+		}
 		
 		return (L2Weapon) weapon.getItem();
 	}
@@ -538,6 +497,7 @@ public class L2PetInstance extends L2Summon
 		}
 		return true;
 	}
+	
 	/**
 	 * Destroy item from inventory by using its <B>itemId</B> and send a Server->Client InventoryUpdate packet to the L2PcInstance.
 	 * @param process : String Identifier of process triggering this action
@@ -580,12 +540,8 @@ public class L2PetInstance extends L2Summon
 		return true;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Summon#doPickupItem(l2jorion.game.model.L2Object)
-	 */
 	@Override
-	protected void doPickupItem(final L2Object object)
+	public void doPickupItem(final L2Object object)
 	{
 		getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
 		StopMove sm = new StopMove(getObjectId(), getX(), getY(), getZ(), getHeading());
@@ -717,7 +673,9 @@ public class L2PetInstance extends L2Summon
 	public boolean doDie(final L2Character killer)
 	{
 		if (!super.doDie(killer, true))
+		{
 			return false;
+		}
 		
 		stopFeed();
 		getOwner().sendPacket(SystemMessageId.MAKE_SURE_YOU_RESSURECT_YOUR_PET_WITHIN_20_MINUTES);
@@ -776,7 +734,9 @@ public class L2PetInstance extends L2Summon
 		final L2ItemInstance newItem = getInventory().transferItem(process, objectId, count, target, actor, reference);
 		
 		if (newItem == null)
+		{
 			return null;
+		}
 		
 		// Send inventory update packet
 		PetInventoryUpdate petIU = new PetInventoryUpdate();
@@ -883,9 +843,6 @@ public class L2PetInstance extends L2Summon
 			petiu.addRemovedItem(item);
 			getOwner().sendPacket(petiu);
 			getOwner().sendPacket(PlayerUI);
-			
-			petiu = null;
-			PlayerUI = null;
 		}
 		catch (final Exception e)
 		{
@@ -996,36 +953,15 @@ public class L2PetInstance extends L2Summon
 		{
 			
 			if (protect)
+			{
 				dropit.getDropProtection().protect(getOwner());
+			}
 			
 			LOG.debug("Item id to drop: " + dropit.getItemId() + " amount: " + dropit.getCount());
 			dropit.dropMe(this, getX(), getY(), getZ() + 100);
 		}
 	}
 	
-	// public void startAttack(L2Character target)
-	// {
-	// if (!knownsObject(target))
-	// {
-	// target.addKnownObject(this);
-	// this.addKnownObject(target);
-	// }
-	// if (!target.knownsObject(this))
-	// {
-	// target.addKnownObject(this);
-	// this.addKnownObject(target);
-	// }
-	//
-	// if (!isRunning())
-	// {
-	// setRunning(true);
-	// ChangeMoveType move = new ChangeMoveType(this, ChangeMoveType.RUN);
-	// broadcastPacket(move);
-	// }
-	//
-	// super.startAttack(target);
-	// }
-	//
 	/**
 	 * Checks if is mountable.
 	 * @return Returns the mountable.
@@ -1120,8 +1056,10 @@ public class L2PetInstance extends L2Summon
 	public void store()
 	{
 		if (getControlItemId() == 0)
+		{
 			// this is a summon, not a pet, don't store anything
 			return;
+		}
 		
 		String req;
 		if (!isRespawned())
@@ -1218,10 +1156,6 @@ public class L2PetInstance extends L2Summon
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Summon#unSummon(l2jorion.game.model.actor.instance.L2PcInstance)
-	 */
 	@Override
 	public synchronized void unSummon(final L2PcInstance owner)
 	{
@@ -1255,8 +1189,6 @@ public class L2PetInstance extends L2Summon
 	 */
 	private void deathPenalty()
 	{
-		// TODO Need Correct Penalty
-		
 		final int lvl = getStat().getLevel();
 		final double percentLost = -0.07 * lvl + 6.5;
 		
@@ -1270,10 +1202,6 @@ public class L2PetInstance extends L2Summon
 		getStat().addExp(-lostExp);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#addExpAndSp(long, int)
-	 */
 	@Override
 	public void addExpAndSp(final long addToExp, final int addToSp)
 	{
@@ -1287,30 +1215,18 @@ public class L2PetInstance extends L2Summon
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Summon#getExpForThisLevel()
-	 */
 	@Override
 	public long getExpForThisLevel()
 	{
 		return getStat().getExpForLevel(getLevel());
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Summon#getExpForNextLevel()
-	 */
 	@Override
 	public long getExpForNextLevel()
 	{
 		return getStat().getExpForLevel(getLevel() + 1);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#getLevel()
-	 */
 	@Override
 	public final int getLevel()
 	{
@@ -1320,7 +1236,7 @@ public class L2PetInstance extends L2Summon
 	@Override
 	public final String getLevels()
 	{
-		return ""+getStat().getLevel();
+		return "" + getStat().getLevel();
 	}
 	
 	/**
@@ -1332,115 +1248,73 @@ public class L2PetInstance extends L2Summon
 		return getStat().getMaxFeed();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#getAccuracy()
-	 */
 	@Override
 	public int getAccuracy()
 	{
 		return getStat().getAccuracy();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#getCriticalHit(l2jorion.game.model.L2Character, l2jorion.game.model.L2Skill)
-	 */
 	@Override
 	public int getCriticalHit(final L2Character target, final L2Skill skill)
 	{
 		return getStat().getCriticalHit(target, skill);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#getEvasionRate(l2jorion.game.model.L2Character)
-	 */
 	@Override
 	public int getEvasionRate(final L2Character target)
 	{
 		return getStat().getEvasionRate(target);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#getRunSpeed()
-	 */
 	@Override
 	public int getRunSpeed()
 	{
 		return getStat().getRunSpeed();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#getPAtkSpd()
-	 */
 	@Override
 	public int getPAtkSpd()
 	{
 		return getStat().getPAtkSpd();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#getMAtkSpd()
-	 */
 	@Override
 	public int getMAtkSpd()
 	{
 		return getStat().getMAtkSpd();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#getMAtk(l2jorion.game.model.L2Character, l2jorion.game.model.L2Skill)
-	 */
 	@Override
 	public int getMAtk(final L2Character target, final L2Skill skill)
 	{
 		return getStat().getMAtk(target, skill);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#getMDef(l2jorion.game.model.L2Character, l2jorion.game.model.L2Skill)
-	 */
 	@Override
 	public int getMDef(final L2Character target, final L2Skill skill)
 	{
 		return getStat().getMDef(target, skill);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#getPAtk(l2jorion.game.model.L2Character)
-	 */
 	@Override
 	public int getPAtk(final L2Character target)
 	{
 		return getStat().getPAtk(target);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#getPDef(l2jorion.game.model.L2Character)
-	 */
 	@Override
 	public int getPDef(final L2Character target)
 	{
 		return getStat().getPDef(target);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#getSkillLevel(int)
-	 */
 	@Override
 	public final int getSkillLevel(final int skillId)
 	{
 		if (_skills == null || _skills.get(skillId) == null)
+		{
 			return -1;
+		}
 		final int lvl = getLevel();
 		return lvl > 70 ? 7 + (lvl - 70) / 5 : lvl / 10;
 	}
@@ -1457,30 +1331,4 @@ public class L2PetInstance extends L2Summon
 		L2World.getInstance().removePet(oldOwnerId);
 		L2World.getInstance().addPet(oldOwnerId, this);
 	}
-	
-	@Override
-	public final void sendDamageMessage(final L2Character target, final int damage, final boolean mcrit, final boolean pcrit, final boolean miss)
-	{
-		if (miss)
-			return;
-		
-		// Prevents the double spam of system messages, if the target is the owning player.
-		if (target.getObjectId() != getOwner().getObjectId())
-		{
-			if (pcrit || mcrit)
-			{
-				getOwner().sendPacket(new SystemMessage(SystemMessageId.CRITICAL_HIT_BY_SUMMONED_MOB));
-			}
-			
-			if (getOwner().isInOlympiadMode() && target instanceof L2PcInstance && ((L2PcInstance) target).isInOlympiadMode() && ((L2PcInstance) target).getOlympiadGameId() == getOwner().getOlympiadGameId())
-			{
-				Olympiad.getInstance().notifyCompetitorDamage(getOwner(), damage, getOwner().getOlympiadGameId());
-			}
-			
-			SystemMessage sm = new SystemMessage(SystemMessageId.SUMMON_GAVE_DAMAGE_S1);
-			sm.addNumber(damage);
-			getOwner().sendPacket(sm);
-		}
-	}
-
 }

@@ -30,6 +30,8 @@ public class L2DropData
 	private int _minDrop;
 	private int _maxDrop;
 	private int _chance;
+	private int _enchantMin;
+	private int _enchantMax;
 	private String _questID = null;
 	private String[] _stateID = null;
 	
@@ -78,6 +80,16 @@ public class L2DropData
 		return _chance;
 	}
 	
+	public int getMinEnchant()
+	{
+		return _enchantMin;
+	}
+	
+	public int getMaxEnchant()
+	{
+		return _enchantMax;
+	}
+	
 	/**
 	 * Sets the value for minimal quantity of dropped items
 	 * @param mindrop : int designating the quantity
@@ -103,6 +115,16 @@ public class L2DropData
 	public void setChance(final int chance)
 	{
 		_chance = chance;
+	}
+	
+	public void setMinEnchant(final int minEnchant)
+	{
+		_enchantMin = minEnchant;
+	}
+	
+	public void setMaxEnchant(final int maxEnchant)
+	{
+		_enchantMax = maxEnchant;
 	}
 	
 	/**

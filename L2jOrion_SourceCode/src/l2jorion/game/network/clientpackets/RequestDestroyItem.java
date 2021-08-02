@@ -20,8 +20,6 @@ package l2jorion.game.network.clientpackets;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.L2PetDataTable;
@@ -35,6 +33,8 @@ import l2jorion.game.network.serverpackets.ItemList;
 import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
@@ -57,13 +57,17 @@ public final class RequestDestroyItem extends L2GameClientPacket
 	{
 		L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
+		
 		if (activeChar.isSubmitingPin())
 		{
 			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		if (_count <= 0)
 		{
 			if (_count < 0)
@@ -91,7 +95,9 @@ public final class RequestDestroyItem extends L2GameClientPacket
 		
 		// if we cant find requested item, its actualy a cheat!
 		if (itemToRemove == null)
+		{
 			return;
+		}
 		if (itemToRemove.fireEvent("DESTROY", (Object[]) null) != null && !activeChar.isGM())
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.CANNOT_DISCARD_THIS_ITEM));
@@ -109,6 +115,12 @@ public final class RequestDestroyItem extends L2GameClientPacket
 		}
 		
 		int itemId = itemToRemove.getItemId();
+		
+		if (activeChar.getFakeArmorObjectId() == _objectId)
+		{
+			activeChar.sendPacket(SystemMessageId.CANNOT_DISCARD_THIS_ITEM);
+			return;
+		}
 		
 		if (itemToRemove.isWear() || !itemToRemove.isDestroyable() || CursedWeaponsManager.getInstance().isCursed(itemId))
 		{
@@ -168,7 +180,9 @@ public final class RequestDestroyItem extends L2GameClientPacket
 			catch (Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.warn("could not delete pet objectid: ", e);
 			}
@@ -182,7 +196,9 @@ public final class RequestDestroyItem extends L2GameClientPacket
 		L2ItemInstance removedItem = activeChar.getInventory().destroyItem("Destroy", _objectId, count, activeChar, null);
 		
 		if (removedItem == null)
+		{
 			return;
+		}
 		
 		if (!Config.FORCE_INVENTORY_UPDATE)
 		{
@@ -196,7 +212,6 @@ public final class RequestDestroyItem extends L2GameClientPacket
 				iu.addModifiedItem(removedItem);
 			}
 			
-			// client.getConnection().sendPacket(iu);
 			activeChar.sendPacket(iu);
 		}
 		else
@@ -207,9 +222,6 @@ public final class RequestDestroyItem extends L2GameClientPacket
 		StatusUpdate su = new StatusUpdate(activeChar.getObjectId());
 		su.addAttribute(StatusUpdate.CUR_LOAD, activeChar.getCurrentLoad());
 		activeChar.sendPacket(su);
-		
-		// L2World world = L2World.getInstance();
-		// world.removeObject(removedItem);
 	}
 	
 	@Override

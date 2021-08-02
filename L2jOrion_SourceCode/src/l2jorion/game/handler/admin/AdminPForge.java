@@ -28,13 +28,8 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.AdminForgePacket;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 
-/**
- * This class handles commands for gm to forge packets
- * @author Maktakien
- */
 public class AdminPForge implements IAdminCommandHandler
 {
-	// private static Logger LOG = LoggerFactory.getLogger(AdminKick.class);
 	private static final String[] ADMIN_COMMANDS =
 	{
 		"admin_forge",
@@ -45,11 +40,6 @@ public class AdminPForge implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		if (command.equals("admin_forge"))
 		{
 			showMainPage(activeChar);

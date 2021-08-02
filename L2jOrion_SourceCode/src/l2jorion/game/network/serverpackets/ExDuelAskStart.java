@@ -19,27 +19,14 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Format: ch Sd.
- * @author KenM
- */
 public class ExDuelAskStart extends L2GameServerPacket
 {
-	
-	/** The Constant _S__FE_4B_EXDUELASKSTART. */
 	private static final String _S__FE_4B_EXDUELASKSTART = "[S] FE:4B ExDuelAskStart";
 	
-	/** The _requestor name. */
 	private final String _requestorName;
 	
-	/** The _party duel. */
 	private final int _partyDuel;
 	
-	/**
-	 * Instantiates a new ex duel ask start.
-	 * @param requestor the requestor
-	 * @param partyDuel the party duel
-	 */
 	public ExDuelAskStart(final String requestor, final int partyDuel)
 	{
 		_requestorName = requestor;
@@ -56,10 +43,6 @@ public class ExDuelAskStart extends L2GameServerPacket
 		writeD(_partyDuel);
 	}
 	
-	/**
-	 * Gets the type.
-	 * @return the type
-	 */
 	@Override
 	public String getType()
 	{

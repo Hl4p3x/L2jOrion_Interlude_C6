@@ -20,9 +20,6 @@
  */
 package l2jorion.game.handler.admin;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.controllers.TradeController;
 import l2jorion.game.handler.IAdminCommandHandler;
@@ -30,6 +27,8 @@ import l2jorion.game.model.L2TradeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.BuyList;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 /**
  * This class handles following admin commands: - gmshop = shows menu - buy id = shows shop with respective id

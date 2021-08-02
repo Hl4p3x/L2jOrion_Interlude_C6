@@ -24,13 +24,12 @@ import java.util.Calendar;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.ai.additional.Zaken;
 import l2jorion.game.managers.DayNightSpawnManager;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class GameTimeController extends Thread
 {
@@ -91,19 +90,11 @@ public class GameTimeController extends Thread
 		return getGameHour() < 6;
 	}
 	
-	/**
-	 * The true GameTime tick. Directly taken from current time. This represents the tick of the time.
-	 * @return
-	 */
 	public final int getGameTicks()
 	{
 		return (int) ((System.currentTimeMillis() - _referenceTime) / MILLIS_IN_TICK);
 	}
 	
-	/**
-	 * Add a L2Character to movingObjects of GameTimeController.
-	 * @param cha The L2Character to add to movingObjects of GameTimeController
-	 */
 	public final void registerMovingObject(final L2Character cha)
 	{
 		if (cha == null)
@@ -114,17 +105,6 @@ public class GameTimeController extends Thread
 		_movingObjects.add(cha);
 	}
 	
-	/**
-	 * Move all L2Characters contained in movingObjects of GameTimeController.<BR>
-	 * <B><U> Concept</U> :</B><BR>
-	 * All L2Character in movement are identified in <B>movingObjects</B> of GameTimeController.<BR>
-	 * <B><U> Actions</U> :</B><BR>
-	 * <ul>
-	 * <li>Update the position of each L2Character</li>
-	 * <li>If movement is finished, the L2Character is removed from movingObjects</li>
-	 * <li>Create a task to update the _knownObject and _knowPlayers of each L2Character that finished its movement and of their already known L2Object then notify AI with EVT_ARRIVED</li>
-	 * </ul>
-	 */
 	private final void moveObjects()
 	{
 		_movingObjects.removeIf(L2Character::updatePosition);
@@ -138,8 +118,6 @@ public class GameTimeController extends Thread
 	@Override
 	public final void run()
 	{
-		LOG.debug("{}: Started.");
-		
 		long nextTickTime, sleepTime;
 		boolean isNight = isNight();
 		
@@ -158,7 +136,7 @@ public class GameTimeController extends Thread
 			}
 			catch (final Throwable e)
 			{
-				LOG.warn("Unable to move objects!", e);
+				LOG.warn("Unable to move objects:", e);
 			}
 			
 			sleepTime = nextTickTime - System.currentTimeMillis();
@@ -170,7 +148,7 @@ public class GameTimeController extends Thread
 				}
 				catch (final InterruptedException e)
 				{
-					
+					LOG.warn("InterruptedException:", e);
 				}
 			}
 			

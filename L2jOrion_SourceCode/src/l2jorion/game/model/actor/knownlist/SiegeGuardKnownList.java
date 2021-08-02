@@ -24,6 +24,7 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2SiegeGuardInstance;
+import l2jorion.game.model.entity.siege.hallsiege.SiegableHall;
 
 public class SiegeGuardKnownList extends AttackableKnownList
 {
@@ -36,14 +37,26 @@ public class SiegeGuardKnownList extends AttackableKnownList
 	public boolean addKnownObject(L2Object object)
 	{
 		if (!super.addKnownObject(object))
+		{
 			return false;
+		}
 		
 		if (getActiveChar().getHomeX() == 0)
 		{
 			getActiveChar().getHomeLocation();
 		}
 		
-		// Check if siege is in progress
+		if (getActiveChar().getClanHall() != null)
+		{
+			if (getActiveChar().getClanHall().isSiegableHall() && ((SiegableHall) getActiveChar().getClanHall()).isInSiege())
+			{
+				if (getActiveChar().getAI().getIntention() == CtrlIntention.AI_INTENTION_IDLE)
+				{
+					getActiveChar().getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null);
+				}
+			}
+		}
+		
 		if (getActiveChar().getCastle() != null && getActiveChar().getCastle().getSiege().getIsInProgress())
 		{
 			L2PcInstance player = null;
@@ -57,28 +70,18 @@ public class SiegeGuardKnownList extends AttackableKnownList
 				player = ((L2Summon) object).getOwner();
 			}
 			
-			// Check if player is not the defender
 			if (player != null && (player.getClan() == null || getActiveChar().getCastle().getSiege().getAttackerClan(player.getClan()) != null))
 			{
-				// if (Config.DEBUG) LOG.fine(getObjectId()+": PK "+player.getObjectId()+" entered scan range");
 				if (getActiveChar().getAI().getIntention() == CtrlIntention.AI_INTENTION_IDLE)
 				{
-					getActiveChar().getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null);// (L2Character)object);
+					getActiveChar().getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null);
 				}
 			}
-			
-			player = null;
-			
 		}
 		
 		return true;
 	}
 	
-	// =========================================================
-	// Method - Private
-	
-	// =========================================================
-	// Property - Public
 	@Override
 	public final L2SiegeGuardInstance getActiveChar()
 	{

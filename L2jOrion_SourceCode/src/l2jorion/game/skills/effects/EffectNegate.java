@@ -16,18 +16,13 @@
  */
 package l2jorion.game.skills.effects;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import l2jorion.Config;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Skill.SkillType;
 import l2jorion.game.skills.Env;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * @author Gnat
- */
 public class EffectNegate extends L2Effect
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(EffectNegate.class);
@@ -49,17 +44,13 @@ public class EffectNegate extends L2Effect
 		
 		final L2Skill skill = getSkill();
 		
-		if (Config.DEBUG)
-			LOG.debug("effectNegate on " + getEffected().getName() + " with skill " + skill.getId());
-		
 		if (skill.getNegateId() != 0)
+		{
 			getEffected().stopSkillEffects(skill.getNegateId());
+		}
 		
 		for (final String negateSkillType : skill.getNegateSkillTypes())
 		{
-			if (Config.DEBUG)
-				LOG.debug("effectNegate on Type " + negateSkillType + " with power " + skill.getPower());
-			
 			SkillType type = null;
 			try
 			{
@@ -71,14 +62,13 @@ public class EffectNegate extends L2Effect
 			}
 			
 			if (type != null)
+			{
 				getEffected().stopSkillEffects(type, skill.getPower());
+			}
 		}
 		
 		for (final String negateEffectType : skill.getNegateEffectTypes())
 		{
-			if (Config.DEBUG)
-				LOG.debug("effectNegate on Effect Type " + negateEffectType + " with power " + skill.getPower());
-			
 			EffectType type = null;
 			try
 			{
@@ -86,11 +76,12 @@ public class EffectNegate extends L2Effect
 			}
 			catch (final Exception e)
 			{
-				//
 			}
 			
 			if (type != null)
+			{
 				getEffected().stopEffects(type);
+			}
 		}
 		
 	}

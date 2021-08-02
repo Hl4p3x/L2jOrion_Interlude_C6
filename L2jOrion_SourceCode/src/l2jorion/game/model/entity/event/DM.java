@@ -39,8 +39,9 @@ import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.base.ClassId;
 import l2jorion.game.model.entity.Announcements;
 import l2jorion.game.model.entity.event.manager.EventTask;
-import l2jorion.game.model.entity.olympiad.Olympiad;
 import l2jorion.game.model.entity.siege.Castle;
+import l2jorion.game.model.olympiad.Olympiad;
+import l2jorion.game.model.olympiad.OlympiadManager;
 import l2jorion.game.model.spawn.L2Spawn;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MagicSkillUser;
@@ -49,13 +50,12 @@ import l2jorion.game.network.serverpackets.Ride;
 import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.util.random.Rnd;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The Class DM.
@@ -521,7 +521,9 @@ public class DM implements EventTask
 	public static boolean checkMaxLevel(final int maxlvl)
 	{
 		if (_minlvl >= maxlvl)
+		{
 			return false;
+		}
 		
 		return true;
 	}
@@ -534,7 +536,9 @@ public class DM implements EventTask
 	public static boolean checkMinLevel(final int minlvl)
 	{
 		if (_maxlvl <= minlvl)
+		{
 			return false;
+		}
 		
 		return true;
 	}
@@ -547,7 +551,9 @@ public class DM implements EventTask
 	public static boolean checkMinPlayers(final int players)
 	{
 		if (_minPlayers <= players)
+		{
 			return true;
+		}
 		
 		return false;
 	}
@@ -560,7 +566,9 @@ public class DM implements EventTask
 	public static boolean checkMaxPlayers(final int players)
 	{
 		if (_maxPlayers > players)
+		{
 			return true;
+		}
 		
 		return false;
 	}
@@ -572,30 +580,42 @@ public class DM implements EventTask
 	public static boolean checkStartJoinOk()
 	{
 		if (_started || _teleport || _joining || _eventName.equals("") || _joiningLocationName.equals("") || _eventDesc.equals("") || _npcId == 0 || _npcX == 0 || _npcY == 0 || _npcZ == 0 || _rewardId == 0 || _rewardAmount == 0)
+		{
 			return false;
+		}
 		
 		if (_teamEvent)
 		{
 			if (!checkStartJoinTeamInfo())
+			{
 				return false;
+			}
 		}
 		else
 		{
 			if (!checkStartJoinPlayerInfo())
+			{
 				return false;
+			}
 		}
 		
 		if (!Config.ALLOW_EVENTS_DURING_OLY && Olympiad.getInstance().inCompPeriod())
+		{
 			return false;
+		}
 		
 		for (final Castle castle : CastleManager.getInstance().getCastles())
 		{
 			if (castle != null && castle.getSiege() != null && castle.getSiege().getIsInProgress())
+			{
 				return false;
+			}
 		}
 		
 		if (!checkOptionalEventStartJoinOk())
+		{
 			return false;
+		}
 		
 		return true;
 	}
@@ -693,7 +713,9 @@ public class DM implements EventTask
 		catch (Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn(_eventName + " Engine[spawnEventNpc(exception: " + e.getMessage());
 		}
@@ -705,7 +727,9 @@ public class DM implements EventTask
 	private static void unspawnEventNpc()
 	{
 		if (_npcSpawn == null || _npcSpawn.getLastSpawn() == null)
+		{
 			return;
+		}
 		
 		_npcSpawn.getLastSpawn().deleteMe();
 		_npcSpawn.stopRespawn();
@@ -721,25 +745,33 @@ public class DM implements EventTask
 		if (!checkStartJoinOk())
 		{
 			if (Config.DEBUG)
+			{
 				LOG.warn(_eventName + " Engine[startJoin]: startJoinOk() = false");
+			}
 			return false;
 		}
 		
 		_inProgress = true;
 		_joining = true;
 		spawnEventNpc();
-		Announcements.getInstance().gameAnnounceToAll(_eventName + ": "+_eventDesc);
+		Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + _eventDesc);
 		
 		if (Config.DM_ANNOUNCE_REWARD && ItemTable.getInstance().getTemplate(_rewardId) != null)
-			Announcements.getInstance().gameAnnounceToAll(_eventName + ": Prize: " + ItemTable.getInstance().getTemplate(_rewardId).getName() + " (" + _rewardAmount +")");
+		{
+			Announcements.getInstance().gameAnnounceToAll(_eventName + ": Prize: " + ItemTable.getInstance().getTemplate(_rewardId).getName() + " (" + _rewardAmount + ")");
+		}
 		
 		Announcements.getInstance().gameAnnounceToAll(_eventName + ": Recruiting levels: " + _minlvl + "-" + _maxlvl);
 		
 		if (!Config.TVT_COMMAND)
+		{
 			Announcements.getInstance().gameAnnounceToAll(_eventName + ": Joinable in " + _joiningLocationName);
+		}
 		
 		if (Config.DM_COMMAND)
+		{
 			Announcements.getInstance().gameAnnounceToAll(_eventName + ": Commands .dmjoin .dmleave .dminfo");
+		}
 		
 		return true;
 	}
@@ -751,7 +783,9 @@ public class DM implements EventTask
 	public static boolean startTeleport()
 	{
 		if (!_joining || _started || _teleport)
+		{
 			return false;
+		}
 		
 		removeOfflinePlayers();
 		
@@ -807,15 +841,17 @@ public class DM implements EventTask
 									summon.stopAllEffects();
 									
 									if (summon instanceof L2PetInstance)
+									{
 										summon.unSummon(player);
+									}
 								}
 							}
 							
 							if (Config.DM_ON_START_REMOVE_ALL_EFFECTS)
 							{
 								player.stopAllEffects();
-								//custom buff
-								//ww
+								// custom buff
+								// ww
 								L2Skill skill;
 								skill = SkillTable.getInstance().getInfo(1204, 2);
 								skill.getEffects(player, player);
@@ -823,7 +859,7 @@ public class DM implements EventTask
 								
 								if (player.isMageClass())
 								{
-									//acumen
+									// acumen
 									L2Skill skill2;
 									skill2 = SkillTable.getInstance().getInfo(1085, 1);
 									skill2.getEffects(player, player);
@@ -831,13 +867,13 @@ public class DM implements EventTask
 								}
 								else
 								{
-									//haste
+									// haste
 									L2Skill skill1;
 									skill1 = SkillTable.getInstance().getInfo(1086, 2);
 									skill1.getEffects(player, player);
 									player.broadcastPacket(new MagicSkillUser(player, player, skill1.getId(), 2, skill1.getHitTime(), 0));
 								}
-								//custom buff end
+								// custom buff end
 							}
 							
 							// Remove player from his party
@@ -890,7 +926,9 @@ public class DM implements EventTask
 		if (!startEventOk())
 		{
 			if (Config.DEBUG)
+			{
 				LOG.warn(_eventName + " Engine[startEvent()]: startEventOk() = false");
+			}
 			return false;
 		}
 		
@@ -954,9 +992,13 @@ public class DM implements EventTask
 		try
 		{
 			if (!_aborted)
+			{
 				autoEvent(); // start a new event
+			}
 			else
+			{
 				Announcements.getInstance().gameAnnounceToAll(_eventName + ": next event aborted!");
+			}
 		}
 		catch (final Exception e)
 		{
@@ -973,7 +1015,9 @@ public class DM implements EventTask
 		if (!finishEventOk())
 		{
 			if (Config.DEBUG)
+			{
 				LOG.warn(_eventName + " Engine[finishEvent]: finishEventOk() = false");
+			}
 			return;
 		}
 		
@@ -1012,7 +1056,9 @@ public class DM implements EventTask
 				
 				Announcements.getInstance().gameAnnounceToAll(_eventName + ": No players win the match(nobody killed).");
 				if (Config.DM_STATS_LOGGER)
+				{
 					LOG.info(_eventName + ": No players win the match(nobody killed).");
+				}
 			}
 		}
 		
@@ -1033,7 +1079,9 @@ public class DM implements EventTask
 	public static void abortEvent()
 	{
 		if (!_joining && !_teleport && !_started)
+		{
 			return;
+		}
 		
 		if (_joining && !_teleport && !_started)
 		{
@@ -1088,7 +1136,9 @@ public class DM implements EventTask
 						if (player != null)
 						{
 							if (player.isOnline() != 0)
+							{
 								player.teleToLocation(_npcX, _npcY, _npcZ, false);
+							}
 							else
 							{
 								java.sql.Connection con = null;
@@ -1107,7 +1157,9 @@ public class DM implements EventTask
 								catch (final Exception e)
 								{
 									if (Config.ENABLE_ALL_EXCEPTIONS)
+									{
 										e.printStackTrace();
+									}
 									
 									LOG.error(e.getMessage(), e);
 								}
@@ -1138,7 +1190,9 @@ public class DM implements EventTask
 		if (checkAutoEventStartJoinOk() && startJoin() && !_aborted)
 		{
 			if (_joinTime > 0)
+			{
 				waiter(_joinTime * 60 * 1000); // minutes for join event
+			}
 			else if (_joinTime <= 0)
 			{
 				LOG.info(_eventName + ": join time <=0 aborting event.");
@@ -1159,24 +1213,10 @@ public class DM implements EventTask
 					waiter(60000);// just a give a delay delay for final messages
 					sendFinalMessages();
 					
-					/*if (!_started && !_aborted)
-					{ // if is not already started and it's not aborted
-					
-						LOG.info(_eventName + ": waiting.....delay for restart event  " + _intervalBetweenMatchs + " minutes.");
-						waiter(60000);// just a give a delay to next restart
-						
-						try
-						{
-							if (!_aborted)
-								restartEvent();
-						}
-						catch (final Exception e)
-						{
-							LOG.error("Error while tying to Restart Event", e);
-							e.printStackTrace();
-						}
-						
-					}*/
+					/*
+					 * if (!_started && !_aborted) { // if is not already started and it's not aborted LOG.info(_eventName + ": waiting.....delay for restart event  " + _intervalBetweenMatchs + " minutes."); waiter(60000);// just a give a delay to next restart try { if (!_aborted) restartEvent(); }
+					 * catch (final Exception e) { LOG.error("Error while tying to Restart Event", e); e.printStackTrace(); } }
+					 */
 					
 				}
 			}
@@ -1184,7 +1224,7 @@ public class DM implements EventTask
 			{
 				
 				abortEvent();
-				//restartEvent();
+				// restartEvent();
 				
 			}
 		}
@@ -1199,7 +1239,9 @@ public class DM implements EventTask
 		if (startJoin() && !_aborted)
 		{
 			if (_joinTime > 0)
+			{
 				waiter(_joinTime * 60 * 1000); // minutes for join event
+			}
 			else if (_joinTime <= 0)
 			{
 				abortEvent();
@@ -1247,7 +1289,9 @@ public class DM implements EventTask
 							Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + seconds / 60 / 60 + " hour(s) till registration close!");
 						}
 						else if (_started)
+						{
 							Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + seconds / 60 / 60 + " hour(s) till event finish!");
+						}
 						
 						break;
 					case 1800: // 30 minutes left
@@ -1266,7 +1310,9 @@ public class DM implements EventTask
 							Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + seconds / 60 + " minutes till registration close!");
 						}
 						else if (_started)
+						{
 							Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + seconds / 60 + " minutes till event finish!");
+						}
 						
 						break;
 					case 60: // 1 minute left
@@ -1280,7 +1326,9 @@ public class DM implements EventTask
 							Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + seconds / 60 + " minute till registration close!");
 						}
 						else if (_started)
+						{
 							Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + seconds / 60 + " minute till event finish!");
+						}
 						
 						break;
 					case 30: // 30 seconds left
@@ -1290,20 +1338,32 @@ public class DM implements EventTask
 					case 3: // 3 seconds left
 					case 2: // 2 seconds left
 						if (_joining)
+						{
 							Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + seconds + " seconds till registration close!");
+						}
 						else if (_teleport)
+						{
 							Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + seconds + " seconds till start fight!");
+						}
 						else if (_started)
+						{
 							Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + seconds + " seconds till event finish!");
+						}
 						break;
 					case 1: // 1 seconds left
 						
 						if (_joining)
+						{
 							Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + seconds + " second till registration close!");
+						}
 						else if (_teleport)
+						{
 							Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + seconds + " second till start fight!");
+						}
 						else if (_started)
+						{
 							Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + seconds + " second till event finish!");
+						}
 						break;
 				}
 			}
@@ -1320,7 +1380,9 @@ public class DM implements EventTask
 				catch (final InterruptedException ie)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						ie.printStackTrace();
+					}
 				}
 			}
 		}
@@ -1332,9 +1394,13 @@ public class DM implements EventTask
 	public static void sit()
 	{
 		if (_sitForced)
+		{
 			_sitForced = false;
+		}
 		else
+		{
 			_sitForced = true;
+		}
 		
 		// final Vector<L2PcInstance> players = getPlayers();
 		synchronized (_players)
@@ -1351,12 +1417,16 @@ public class DM implements EventTask
 						player.abortCast();
 						
 						if (!player.isSitting())
+						{
 							player.sitDown();
+						}
 					}
 					else
 					{
 						if (player.isSitting())
+						{
 							player.standUp();
+						}
 					}
 				}
 			}
@@ -1377,14 +1447,18 @@ public class DM implements EventTask
 			{
 				
 				if (_players == null || _players.isEmpty())
+				{
 					return;
+				}
 				
 				final List<L2PcInstance> toBeRemoved = new ArrayList<>();
 				
 				for (final L2PcInstance player : _players)
 				{
 					if (player == null)
+					{
 						continue;
+					}
 					else if (player._inEventDM && player.isOnline() == 0 || player.isInJail() || player.isInOfflineMode())
 					{
 						
@@ -1419,7 +1493,9 @@ public class DM implements EventTask
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error(e.getMessage(), e);
 			return;
@@ -1433,7 +1509,9 @@ public class DM implements EventTask
 	private static boolean startEventOk()
 	{
 		if (_joining || !_teleport || _started)
+		{
 			return false;
+		}
 		
 		return true;
 	}
@@ -1445,7 +1523,9 @@ public class DM implements EventTask
 	private static boolean finishEventOk()
 	{
 		if (!_started)
+		{
 			return false;
+		}
 		
 		return true;
 	}
@@ -1469,7 +1549,7 @@ public class DM implements EventTask
 			return false;
 		}
 		
-		if (Olympiad.getInstance().isRegistered(eventPlayer) || eventPlayer.isInOlympiadMode())
+		if (OlympiadManager.getInstance().isRegistered(eventPlayer) || eventPlayer.isInOlympiadMode())
 		{
 			eventPlayer.sendMessage("You already participated in Olympiad!");
 			return false;
@@ -1480,6 +1560,7 @@ public class DM implements EventTask
 			final List<String> players_in_boxes = eventPlayer.active_boxes_characters;
 			
 			if (players_in_boxes != null && players_in_boxes.size() > 1)
+			{
 				for (final String character_name : players_in_boxes)
 				{
 					final L2PcInstance player = L2World.getInstance().getPlayer(character_name);
@@ -1490,10 +1571,7 @@ public class DM implements EventTask
 						return false;
 					}
 				}
-			
-			/*
-			 * eventPlayer.sendMessage("Dual Box not allowed in Events"); return false;
-			 */
+			}
 		}
 		
 		if (!Config.DM_ALLOW_HEALER_CLASSES && (eventPlayer.getClassId() == ClassId.cardinal || eventPlayer.getClassId() == ClassId.evaSaint || eventPlayer.getClassId() == ClassId.shillienSaint))
@@ -1502,7 +1580,6 @@ public class DM implements EventTask
 			return false;
 		}
 		
-		// final Vector<L2PcInstance> players = getPlayers();
 		synchronized (_players)
 		{
 			if (_players.contains(eventPlayer))
@@ -1620,7 +1697,9 @@ public class DM implements EventTask
 			for (final L2PcInstance player : _players)
 			{
 				if (player != null)
+				{
 					LOG.info("Name: " + player.getName() + " kills :" + player._countDMkills);
+				}
 			}
 		}
 		
@@ -1630,7 +1709,9 @@ public class DM implements EventTask
 		LOG.info("################################");
 		
 		for (final String player : _savePlayers)
+		{
 			LOG.info("Name: " + player);
+		}
 		
 		LOG.info("");
 		LOG.info("");
@@ -1730,7 +1811,9 @@ public class DM implements EventTask
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			LOG.error("Exception: DM.loadData(): " + e.getMessage());
 		}
 		finally
@@ -1783,7 +1866,9 @@ public class DM implements EventTask
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Exception: DM.saveData(): " + e.getMessage());
 		}
@@ -1817,7 +1902,9 @@ public class DM implements EventTask
 			{
 				
 				if (!_started && !_joining)
+				{
 					replyMSG.append("<center>Wait till the admin/gm start the participation.</center>");
+				}
 				else if (!checkMaxPlayers(_players.size()))
 				{
 					if (!_started)
@@ -1855,7 +1942,9 @@ public class DM implements EventTask
 					}
 				}
 				else if (_started && !_joining)
+				{
 					replyMSG.append("<center>" + _eventName + " match is in progress.</center>");
+				}
 				else if (eventPlayer.getLevel() < _minlvl || eventPlayer.getLevel() > _maxlvl)
 				{
 					replyMSG.append("Your lvl: <font color=\"00FF00\">" + eventPlayer.getLevel() + "</font><br>");
@@ -1876,7 +1965,9 @@ public class DM implements EventTask
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error(_eventName + " Engine[showEventHtlm(" + eventPlayer.getName() + ", " + objectId + ")]: exception" + e.getMessage());
 		}
@@ -1904,7 +1995,9 @@ public class DM implements EventTask
 	public static void addPlayer(final L2PcInstance player)
 	{
 		if (!addPlayerOk(player))
+		{
 			return;
+		}
 		
 		synchronized (_players)
 		{
@@ -1994,7 +2087,9 @@ public class DM implements EventTask
 					}
 					
 					if (_savePlayers.contains(player.getName()))
+					{
 						_savePlayers.remove(player.getName());
+					}
 					player._inEventDM = false;
 				}
 			}
@@ -2051,8 +2146,8 @@ public class DM implements EventTask
 				if (Config.DM_ON_START_REMOVE_ALL_EFFECTS)
 				{
 					player.stopAllEffects();
-					//custom buff
-					//ww
+					// custom buff
+					// ww
 					L2Skill skill;
 					skill = SkillTable.getInstance().getInfo(1204, 2);
 					skill.getEffects(player, player);
@@ -2060,7 +2155,7 @@ public class DM implements EventTask
 					
 					if (player.isMageClass())
 					{
-						//acumen
+						// acumen
 						L2Skill skill2;
 						skill2 = SkillTable.getInstance().getInfo(1085, 1);
 						skill2.getEffects(player, player);
@@ -2068,13 +2163,13 @@ public class DM implements EventTask
 					}
 					else
 					{
-						//haste
+						// haste
 						L2Skill skill1;
 						skill1 = SkillTable.getInstance().getInfo(1086, 2);
 						skill1.getEffects(player, player);
 						player.broadcastPacket(new MagicSkillUser(player, player, skill1.getId(), 2, skill1.getHitTime(), 0));
 					}
-					//custom buff end
+					// custom buff end
 				}
 				
 				_players.add(player);
@@ -2176,7 +2271,9 @@ public class DM implements EventTask
 				else if (player._countDMkills == _topKills)
 				{
 					if (!_topPlayers.contains(player))
+					{
 						_topPlayers.add(player);
+					}
 				}
 			}
 		}
@@ -2247,7 +2344,9 @@ public class DM implements EventTask
 	public static void sendFinalMessages()
 	{
 		if (!_started && !_aborted)
+		{
 			Announcements.getInstance().gameAnnounceToAll(_eventName + ": Thank you For participating!");
+		}
 	}
 	
 	/**

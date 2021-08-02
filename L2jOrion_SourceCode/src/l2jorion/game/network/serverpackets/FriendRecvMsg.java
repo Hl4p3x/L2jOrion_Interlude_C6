@@ -20,10 +20,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Send Private (Friend) Message Format: c dSSS d: Unknown S: Sending Player S: Receiving Player S: Message
- * @author Tempy
- */
 public class FriendRecvMsg extends L2GameServerPacket
 {
 	private static final String _S__FD_FRIENDRECVMSG = "[S] FD FriendRecvMsg";
@@ -43,7 +39,7 @@ public class FriendRecvMsg extends L2GameServerPacket
 	{
 		writeC(0xfd);
 		
-		writeD(0); // ??
+		writeD(0);
 		writeS(_receiver);
 		writeS(_sender);
 		writeS(_message);

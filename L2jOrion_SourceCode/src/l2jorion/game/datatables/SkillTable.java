@@ -20,6 +20,7 @@
  */
 package l2jorion.game.datatables;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javolution.util.FastMap;
@@ -27,17 +28,12 @@ import l2jorion.game.model.L2Skill;
 import l2jorion.game.skills.SkillsEngine;
 import l2jorion.game.templates.L2WeaponType;
 
-/**
- * This class ...
- * @author ProGramMoS, scoria dev
- * @version $Revision: 1.8.2.6.2.18 $ $Date: 2009/04/09 12:06 $
- */
 public class SkillTable
 {
-	// private static Logger LOG = LoggerFactory.getLogger(SkillTable.class);
 	private static SkillTable _instance;
 	
 	private final Map<Integer, L2Skill> _skills;
+	private static final Map<Integer, Integer> _skillsMaxLevel = new HashMap<>();
 	private final boolean _initialized = true;
 	
 	public static SkillTable getInstance()
@@ -53,11 +49,31 @@ public class SkillTable
 	private SkillTable()
 	{
 		_skills = new FastMap<>();
+		_skills.clear();
 		SkillsEngine.getInstance().loadAllSkills(_skills);
+		
+		for (final L2Skill skill : _skills.values())
+		{
+			// Only non-enchanted skills
+			final int skillLvl = skill.getLevel();
+			if (skillLvl < 99)
+			{
+				final int skillId = skill.getId();
+				final int maxLvl = getMaxLevel(skillId);
+				
+				if (skillLvl > maxLvl)
+				{
+					_skillsMaxLevel.put(skillId, skillLvl);
+				}
+			}
+		}
 	}
 	
 	public void reload()
 	{
+		_skills.clear();
+		_skillsMaxLevel.clear();
+		
 		_instance = new SkillTable();
 	}
 	
@@ -102,10 +118,18 @@ public class SkillTable
 			temp = _skills.get(SkillTable.getSkillHashCode(magicId, level));
 			
 			if (temp == null)
+			{
 				return level - 1;
+			}
 		}
 		
 		return level;
+	}
+	
+	public int getMaxLevel(int skillId)
+	{
+		final Integer maxLevel = _skillsMaxLevel.get(skillId);
+		return (maxLevel != null) ? maxLevel : 0;
 	}
 	
 	private static final L2WeaponType[] weaponDbMasks =
@@ -126,16 +150,19 @@ public class SkillTable
 	public int calcWeaponsAllowed(final int mask)
 	{
 		if (mask == 0)
+		{
 			return 0;
+		}
 		
 		int weaponsAllowed = 0;
 		
 		for (int i = 0; i < weaponDbMasks.length; i++)
+		{
 			if ((mask & 1 << i) != 0)
 			{
 				weaponsAllowed |= weaponDbMasks[i].mask();
 			}
-		
+		}
 		return weaponsAllowed;
 	}
 }

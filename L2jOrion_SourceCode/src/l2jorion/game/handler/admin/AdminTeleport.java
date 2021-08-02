@@ -30,7 +30,6 @@ import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.datatables.sql.SpawnTable;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.managers.GrandBossManager;
-import l2jorion.game.model.L2CharPosition;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.Location;
@@ -42,14 +41,9 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * This class handles following admin commands: - show_moves - show_teleport - teleport_to_character - move_to - teleport_character
- * @version $Revision: 1.3.2.6.2.4 $ $Date: 2005/04/11 10:06:06 $
- */
 public class AdminTeleport implements IAdminCommandHandler
 {
 	private static final Logger LOG = LoggerFactory.getLogger(AdminTeleport.class);
@@ -134,14 +128,18 @@ public class AdminTeleport implements IAdminCommandHandler
 					player.teleToLocation(loc, true);
 				}
 				else
+				{
 					activeChar.sendMessage("User is not online.");
+				}
 			}
 			catch (final StringIndexOutOfBoundsException e)
 			{
 			}
 		}
 		else if (comm == null)
+		{
 			return false;
+		}
 		
 		switch (comm)
 		{
@@ -411,7 +409,7 @@ public class AdminTeleport implements IAdminCommandHandler
 				L2BossZone _Zone = GrandBossManager.getInstance().getZone(activeChar.getX(), activeChar.getY(), activeChar.getZ());
 				if (_Zone != null)
 				{
-					_Zone.allowPlayerEntry(player,30);
+					_Zone.allowPlayerEntry(player, 30);
 				}
 				teleportTo(player, activeChar.getX(), activeChar.getY(), activeChar.getZ());
 				return true;
@@ -458,7 +456,7 @@ public class AdminTeleport implements IAdminCommandHandler
 					return false;
 				}
 				
-				final L2CharPosition pos = new L2CharPosition(x, y, z, 0);
+				final Location pos = new Location(x, y, z, 0);
 				activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, pos);
 				return true;
 				
@@ -512,7 +510,7 @@ public class AdminTeleport implements IAdminCommandHandler
 							break;
 					}
 					
-					activeChar.teleToLocation(x, y, z, heading, false);
+					activeChar.teleToLocation(x, y, z, heading, false, false);
 					showTeleportWindow(activeChar);
 					
 					return true;
@@ -636,9 +634,9 @@ public class AdminTeleport implements IAdminCommandHandler
 		if (target != null && target instanceof L2PcInstance)
 		{
 			player = (L2PcInstance) target;
-		}/*
-		 * else if(target != null && target instanceof L2NpcInstance){ npc = (L2NpcInstance) target; }
-		 */
+		} /*
+			 * else if(target != null && target instanceof L2NpcInstance){ npc = (L2NpcInstance) target; }
+			 */
 		else
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.INCORRECT_TARGET));
@@ -659,9 +657,9 @@ public class AdminTeleport implements IAdminCommandHandler
 			activeChar.teleToLocation(x, y, z, true);
 			
 			activeChar.sendMessage("You have teleported to character " + player.getName() + ".");
-		}/*
-		 * else if(npc!=null) { int x = npc.getX(); int y = npc.getY(); int z = npc.getZ(); activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE); activeChar.teleToLocation(x, y, z, true); activeChar.sendMessage("You have teleported to npc " + npc.getName() + "."); }
-		 */
+		} /*
+			 * else if(npc!=null) { int x = npc.getX(); int y = npc.getY(); int z = npc.getZ(); activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE); activeChar.teleToLocation(x, y, z, true); activeChar.sendMessage("You have teleported to npc " + npc.getName() + "."); }
+			 */
 	}
 	
 	private void recallNPC(final L2PcInstance activeChar)
@@ -733,7 +731,9 @@ public class AdminTeleport implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Target is not in game.");
 			}

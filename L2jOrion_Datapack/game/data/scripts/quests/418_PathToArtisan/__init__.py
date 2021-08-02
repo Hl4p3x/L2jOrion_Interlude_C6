@@ -76,6 +76,7 @@ class Quest (JQuest) :
           st.takeItems(PASS_1ST,1)
           st.takeItems(PASS_2ND,1)
           st.takeItems(SECRET_BOX2,1)
+          st.addExpAndSp(16000,5650)
           st.giveItems(PASS_FINAL,1)
           st.set("cond","0")
           st.setState(COMPLETED)

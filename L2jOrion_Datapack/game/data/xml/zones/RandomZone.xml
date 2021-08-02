@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
+<!-- Random Zones -->
+	<zone name="Gludin Arena" type="RandomZone" shape="Cuboid" minZ="-3752" maxZ="-352">
+		<stat name="id" val="1" />
+		<stat name="time" val="30" /> <!-- time in seconds -->
+		<stat name="autoPvpFlag" val="true"/>
+		<stat name="locs" val="-88339,141802,-3649;-87894,142231,-3649" /> <!-- spawn / respawn  locations -->
+		<node X="-88411" Y="141732" />
+		<node X="-87429" Y="142708" />
+	</zone>
+	<zone name="Giran Arena" type="RandomZone" shape="Cuboid" minZ="-3850" maxZ="-350">
+		<stat name="id" val="2" />
+		<stat name="time" val="30" /> <!-- time in seconds -->
+		<stat name="autoPvpFlag" val="true"/>
+		<stat name="locs" val="73306,142440,-3775;72646,142403,-3775" /> <!-- spawn / respawn  locations -->
+		<node X="72493" Y="142263" />
+		<node X="73493" Y="143261" />
+	</zone>
+</list>

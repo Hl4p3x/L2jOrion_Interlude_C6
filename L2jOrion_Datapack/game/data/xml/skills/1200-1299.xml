@@ -196,7 +196,7 @@
   <set name="mpConsume" val="#mpConsume"/>
   <set name="magicLvl" val="#magicLvl"/>
   <set name="target" val="TARGET_AURA"/>
-  <set name="power" val="40" /> <!-- Base Land Rate -->
+  <set name="power" val="40" />
   <set name="skillRadius" val="200"/>
   <set name="reuseDelay" val="20000"/>
   <set name="hitTime" val="4000"/>
@@ -832,7 +832,7 @@
   <set name="reuseDelay" val="8000"/>
   <set name="hitTime" val="3100"/>
   <set name="coolTime" val="200"/>
-  <set name="skillType" val="SLOW"/>
+  <set name="skillType" val="MDAM"/>
   <set name="isMagic" val="true"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="castRange" val="900"/>
@@ -1697,19 +1697,19 @@
   </enchant1for>
 </skill>
 <skill id="1262" levels="5" name="Transfer Pain">
-  <table name="#mpConsume_Init">7 9 11 12 13</table>
-  <table name="#power">10 20 30 40 50</table>
-  <set name="mpInitialConsume" val="#mpConsume_Init"/>
-  <set name="target" val="TARGET_SELF"/>
-  <set name="skillType" val="CONT"/>
-  <set name="operateType" val="OP_TOGGLE"/>
-  <set name="castRange" val="-1"/>
-  <set name="effectRange" val="-1"/>
-  <for>
-    <effect count="0x7fffffff" name="ManaDamOverTime" time="1" val="#mpConsume_Init">
-      <add order="0x40" stat="transDam" val="#power"/>
-    </effect>
-  </for>
+<table name="#mpConsume_Init">7 9 11 12 13</table>
+<table name="#power">10 20 30 40 50</table>
+<set name="mpInitialConsume" val="#mpConsume_Init"/>
+<set name="target" val="TARGET_SELF"/>
+<set name="skillType" val="CONT"/>
+<set name="operateType" val="OP_TOGGLE"/>
+<set name="castRange" val="-1"/>
+<set name="effectRange" val="-1"/>
+<for>
+<effect count="0x7fffffff" name="ManaDamOverTime" time="3" val="#mpConsume_Init">
+<add order="0x40" stat="transDam" val="#power"/>
+</effect>
+</for>
 </skill>
 <skill id="1263" levels="13" name="Curse Gloom" enchantLevels1="30" enchantLevels2="30">
   <table name="#enchantMagicLvl">76 76 76 77 77 77 78 78 78 79 79 79 80 80 80 81 81 81 82 82 82 82 83 83 83 84 84 85 85 85</table>
@@ -2650,7 +2650,7 @@
   <table name="#ench1time">30 31 32 32 33 34 35 35 36 37 38 38 39 40 41 41 42 43 43 44 45 46 46 47 48 49 49 50 51 52</table>
   <table name="#mpConsume_Init">10 13</table>
   <table name="#mpConsume">38 52</table>
-  <table name="#aggro">495 635</table>
+  <!--<table name="#aggro">495 635</table> Servitor Skills can't generate aggro by L2OFF -->
   <set name="mpInitialConsume" val="#mpConsume_Init"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="target" val="TARGET_PET"/>
@@ -2661,7 +2661,7 @@
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="castRange" val="400"/>
   <set name="effectRange" val="900"/>
-  <set name="aggroPoints" val="#aggro"/>
+  <!--<set name="aggroPoints" val="#aggro"/> Servitor Skills can't generate aggro by L2OFF -->
   <enchant2 name="reuseDelay" val="#ench2reuseDelay"/>
   <for>
     <effect count="1" name="ImobilePetBuff" time="30" val="0" stackOrder="1" stackType="pDefSpec">

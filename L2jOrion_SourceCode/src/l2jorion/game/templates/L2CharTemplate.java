@@ -20,109 +20,119 @@
  */
 package l2jorion.game.templates;
 
+import java.util.Collections;
+import java.util.Map;
+
+import l2jorion.game.model.L2Skill;
+
 public class L2CharTemplate
 {
 	// BaseStats
-	public final int baseSTR;
-	public final int baseCON;
-	public final int baseDEX;
-	public final int baseINT;
-	public final int baseWIT;
-	public final int baseMEN;
-	public final float baseHpMax;
-	public final float baseCpMax;
-	public final float baseMpMax;
+	public int baseSTR;
+	public int baseCON;
+	public int baseDEX;
+	public int baseINT;
+	public int baseWIT;
+	public int baseMEN;
+	public float baseHpMax;
+	public float baseCpMax;
+	public float baseMpMax;
 	
 	/** HP Regen base */
-	public final float baseHpReg;
+	public float baseHpReg;
 	
 	/** MP Regen base */
-	public final float baseMpReg;
+	public float baseMpReg;
 	
-	public final int basePAtk;
-	public final int baseMAtk;
-	public final int basePDef;
-	public final int baseMDef;
-	public final int basePAtkSpd;
-	public final int baseMAtkSpd;
-	public final float baseMReuseRate;
-	public final int baseShldDef;
-	public final int baseAtkRange;
-	public final int baseShldRate;
-	public final int baseCritRate;
-	public final int baseMCritRate;
-	public final int baseWalkSpd;
-	public final int baseRunSpd;
+	public int basePAtk;
+	public int baseMAtk;
+	public int basePDef;
+	public int baseMDef;
+	public int basePAtkSpd;
+	public int baseMAtkSpd;
+	public float baseMReuseRate;
+	public int baseShldDef;
+	public int baseAtkRange;
+	public int baseShldRate;
+	public int baseCritRate;
+	public int baseMCritRate;
+	public int baseWalkSpd;
+	public int baseRunSpd;
 	
 	// SpecialStats
-	public final int baseBreath;
-	public final int baseAggression;
-	public final int baseBleed;
-	public final int basePoison;
-	public final int baseStun;
-	public final int baseRoot;
-	public final int baseMovement;
-	public final int baseConfusion;
-	public final int baseSleep;
-	public final int baseFire;
-	public final int baseWind;
-	public final int baseWater;
-	public final int baseEarth;
-	public final int baseHoly;
-	public final int baseDark;
-	public final double baseAggressionVuln;
-	public final double baseBleedVuln;
-	public final double basePoisonVuln;
-	public final double baseStunVuln;
-	public final double baseRootVuln;
-	public final double baseMovementVuln;
-	public final double baseConfusionVuln;
-	public final double baseSleepVuln;
-	public final double baseFireVuln;
-	public final double baseWindVuln;
-	public final double baseWaterVuln;
-	public final double baseEarthVuln;
-	public final double baseHolyVuln;
-	public final double baseDarkVuln;
-	public final double baseCritVuln;
+	public int baseBreath;
+	public int baseAggression;
+	public int baseBleed;
+	public int basePoison;
+	public int baseStun;
+	public int baseRoot;
+	public int baseMovement;
+	public int baseConfusion;
+	public int baseSleep;
+	public int baseFire;
+	public int baseWind;
+	public int baseWater;
+	public int baseEarth;
+	public int baseHoly;
+	public int baseDark;
+	public double baseAggressionVuln;
+	public double baseBleedVuln;
+	public double basePoisonVuln;
+	public double baseStunVuln;
+	public double baseRootVuln;
+	public double baseMovementVuln;
+	public double baseConfusionVuln;
+	public double baseSleepVuln;
+	public double baseFireVuln;
+	public double baseWindVuln;
+	public double baseWaterVuln;
+	public double baseEarthVuln;
+	public double baseHolyVuln;
+	public double baseDarkVuln;
+	public double baseCritVuln;
 	
-	public final boolean isUndead;
+	public boolean isUndead;
 	
 	// C4 Stats
-	public final int baseMpConsumeRate;
-	public final int baseHpConsumeRate;
+	public int baseMpConsumeRate;
+	public int baseHpConsumeRate;
 	
-	public final int collisionRadius;
-	public final int collisionHeight;
+	public int collisionRadius;
+	public int collisionHeight;
 	
-	public L2CharTemplate(final StatsSet set)
+	public L2CharTemplate(StatsSet set)
+	{
+		set(set);
+	}
+	
+	public void set(StatsSet set)
 	{
 		// Base stats
-		baseSTR = set.getInteger("baseSTR");
-		baseCON = set.getInteger("baseCON");
-		baseDEX = set.getInteger("baseDEX");
-		baseINT = set.getInteger("baseINT");
-		baseWIT = set.getInteger("baseWIT");
-		baseMEN = set.getInteger("baseMEN");
-		baseHpMax = set.getFloat("baseHpMax");
-		baseCpMax = set.getFloat("baseCpMax");
-		baseMpMax = set.getFloat("baseMpMax");
-		baseHpReg = set.getFloat("baseHpReg");
-		baseMpReg = set.getFloat("baseMpReg");
-		basePAtk = set.getInteger("basePAtk");
-		baseMAtk = set.getInteger("baseMAtk");
-		basePDef = set.getInteger("basePDef");
-		baseMDef = set.getInteger("baseMDef");
-		basePAtkSpd = set.getInteger("basePAtkSpd");
-		baseMAtkSpd = set.getInteger("baseMAtkSpd");
+		baseSTR = set.getInteger("baseSTR", 0);
+		baseCON = set.getInteger("baseCON", 0);
+		baseDEX = set.getInteger("baseDEX", 0);
+		baseINT = set.getInteger("baseINT", 0);
+		baseWIT = set.getInteger("baseWIT", 0);
+		baseMEN = set.getInteger("baseMEN", 0);
+		baseHpMax = set.getFloat("baseHpMax", 0);
+		baseCpMax = set.getFloat("baseCpMax", 0);
+		baseMpMax = set.getFloat("baseMpMax", 0);
+		baseHpReg = set.getFloat("baseHpReg", 0);
+		baseMpReg = set.getFloat("baseMpReg", 0);
+		basePAtk = set.getInteger("basePAtk", 0);
+		baseMAtk = set.getInteger("baseMAtk", 0);
+		basePDef = set.getInteger("basePDef", 0);
+		baseMDef = set.getInteger("baseMDef", 0);
+		basePAtkSpd = set.getInteger("basePAtkSpd", 0);
+		baseMAtkSpd = set.getInteger("baseMAtkSpd", 0);
 		baseMReuseRate = set.getFloat("baseMReuseDelay", 1.f);
-		baseShldDef = set.getInteger("baseShldDef");
-		baseAtkRange = set.getInteger("baseAtkRange");
-		baseShldRate = set.getInteger("baseShldRate");
-		baseCritRate = set.getInteger("baseCritRate");
+		baseShldDef = set.getInteger("baseShldDef", 0);
+		baseAtkRange = set.getInteger("baseAtkRange", 0);
+		baseShldRate = set.getInteger("baseShldRate", 0);
+		baseCritRate = set.getInteger("baseCritRate", 4);
 		baseMCritRate = set.getInteger("baseMCritRate", 8);
-		baseWalkSpd = set.getInteger("baseWalkSpd");
-		baseRunSpd = set.getInteger("baseRunSpd");
+		baseWalkSpd = set.getInteger("baseWalkSpd", 0);
+		baseRunSpd = set.getInteger("baseRunSpd", 0);
 		
 		// SpecialStats
 		baseBreath = set.getInteger("baseBreath", 100);
@@ -134,12 +144,14 @@ public class L2CharTemplate
 		baseMovement = set.getInteger("baseMovement", 0);
 		baseConfusion = set.getInteger("baseConfusion", 0);
 		baseSleep = set.getInteger("baseSleep", 0);
+		
 		baseFire = set.getInteger("baseFire", 0);
 		baseWind = set.getInteger("baseWind", 0);
 		baseWater = set.getInteger("baseWater", 0);
 		baseEarth = set.getInteger("baseEarth", 0);
 		baseHoly = set.getInteger("baseHoly", 0);
 		baseDark = set.getInteger("baseDark", 0);
+		
 		baseAggressionVuln = set.getInteger("baseAaggressionVuln", 1);
 		baseBleedVuln = set.getInteger("baseBleedVuln", 1);
 		basePoisonVuln = set.getInteger("basePoisonVuln", 1);
@@ -163,8 +175,8 @@ public class L2CharTemplate
 		baseHpConsumeRate = set.getInteger("baseHpConsumeRate", 0);
 		
 		// Geometry
-		collisionRadius = set.getInteger("collision_radius");
-		collisionHeight = set.getInteger("collision_height");
+		collisionRadius = set.getInteger("collision_radius", 0);
+		collisionHeight = set.getInteger("collision_height", 0);
 		
 	}
 	
@@ -176,5 +188,15 @@ public class L2CharTemplate
 	public int getCollisionHeight()
 	{
 		return collisionHeight;
+	}
+	
+	public float getBaseHpMax()
+	{
+		return baseMpMax;
+	}
+	
+	public Map<Integer, L2Skill> getSkills()
+	{
+		return Collections.emptyMap();
 	}
 }

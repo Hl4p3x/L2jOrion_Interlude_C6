@@ -20,9 +20,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.ItemRequest;
 import l2jorion.game.model.L2Object;
@@ -35,6 +32,8 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class RequestPrivateStoreBuy extends L2GameClientPacket
 {
@@ -92,7 +91,9 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket
 	{
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		if (player.isSubmitingPin())
 		{
 			player.sendMessage("Unable to do any action while PIN is not submitted");
@@ -107,15 +108,19 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket
 		
 		final L2Object object = L2World.getInstance().findObject(_storePlayerId);
 		if (object == null || !(object instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		final L2PcInstance storePlayer = (L2PcInstance) object;
 		if (!(storePlayer.getPrivateStoreType() == L2PcInstance.STORE_PRIVATE_SELL || storePlayer.getPrivateStoreType() == L2PcInstance.STORE_PRIVATE_PACKAGE_SELL))
+		{
 			return;
+		}
 		
 		if (!player.getAccessLevel().allowTransaction())
 		{
-			player.sendMessage("Unsufficient privileges.");
+			player.sendPacket(SystemMessageId.YOU_ARE_NOT_AUTHORIZED_TO_DO_THAT);
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
@@ -123,7 +128,9 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket
 		final TradeList storeList = storePlayer.getSellList();
 		
 		if (storeList == null)
+		{
 			return;
+		}
 		
 		// Check if player didn't choose any items
 		if (_items == null || _items.length == 0)
@@ -213,13 +220,6 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket
 			storePlayer.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_NONE);
 			storePlayer.broadcastUserInfo();
 		}
-		
-		/*
-		 * Lease holders are currently not implemented else if (_seller != null) { // lease shop sell L2MerchantInstance seller = (L2MerchantInstance)_seller; L2ItemInstance ladena = seller.getLeaseAdena(); for (TradeItem ti : buyerlist) { L2ItemInstance li =
-		 * seller.getLeaseItemByObjectId(ti.getObjectId()); if (li == null) { if (ti.getObjectId() == ladena.getObjectId()) { buyer.addAdena(ti.getCount()); ladena.setCount(ladena.getCount()-ti.getCount()); ladena.updateDatabase(); } continue; } int cnt = li.getCount(); if (cnt < ti.getCount())
-		 * ti.setCount(cnt); if (ti.getCount() <= 0) continue; L2ItemInstance inst = ItemTable.getInstance().createItem(li.getItemId()); inst.setCount(ti.getCount()); inst.setEnchantLevel(li.getEnchantLevel()); buyer.getInventory().addItem(inst); li.setCount(li.getCount()-ti.getCount());
-		 * li.updateDatabase(); ladena.setCount(ladena.getCount()+ti.getCount()*ti.getOwnersPrice()); ladena.updateDatabase(); } }
-		 */
 	}
 	
 	@Override

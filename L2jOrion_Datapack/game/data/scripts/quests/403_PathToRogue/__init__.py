@@ -96,6 +96,7 @@ class Quest (JQuest) :
    elif npcId == 30379 and st.getInt("cond") :
         if st.getQuestItemsCount(HORSESHOE_OF_LIGHT) == 0 and HaveAllStolenItems(st) :
           htmltext = "30379-09.htm"
+          st.addExpAndSp(16000,5650)
           st.giveItems(BEZIQUES_RECOMMENDATION,1)
           st.takeItems(NETIS_BOW,1)
           st.takeItems(NETIS_DAGGER,1)

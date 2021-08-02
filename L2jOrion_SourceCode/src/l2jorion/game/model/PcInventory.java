@@ -27,8 +27,8 @@ import java.util.List;
 import javolution.util.FastList;
 import l2jorion.game.model.TradeList.TradeItem;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
-import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2ItemInstance.ItemLocation;
+import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.templates.L2EtcItemType;
 import l2jorion.game.templates.L2Item;
 import l2jorion.util.CloseUtil;
@@ -165,11 +165,13 @@ public class PcInventory extends Inventory
 			boolean isDuplicate = false;
 			
 			for (final L2ItemInstance litem : list)
+			{
 				if (litem.getItemId() == item.getItemId() && litem.getEnchantLevel() == item.getEnchantLevel())
 				{
 					isDuplicate = true;
 					break;
 				}
+			}
 			
 			if (!isDuplicate && (!onlyAvailable || item.getItem().isSellable() && item.isAvailable(getOwner(), false, allowEquipped)))
 			{
@@ -231,10 +233,12 @@ public class PcInventory extends Inventory
 		final List<L2ItemInstance> list = new FastList<>();
 		
 		for (final L2ItemInstance item : _items)
+		{
 			if (item != null && item.isAvailable(getOwner(), allowAdena, false))
 			{
 				list.add(item);
 			}
+		}
 		
 		return list.toArray(new L2ItemInstance[list.size()]);
 	}
@@ -244,10 +248,12 @@ public class PcInventory extends Inventory
 		final List<L2ItemInstance> list = new FastList<>();
 		
 		for (final L2ItemInstance item : _items)
+		{
 			if (item != null && item.isAvailableItemForPackage(getOwner(), allowAdena, false))
 			{
 				list.add(item);
 			}
+		}
 		
 		return list.toArray(new L2ItemInstance[list.size()]);
 	}
@@ -261,10 +267,12 @@ public class PcInventory extends Inventory
 		final List<L2ItemInstance> list = new FastList<>();
 		
 		for (final L2ItemInstance item : _items)
+		{
 			if (item != null && item.isAugmented())
 			{
 				list.add(item);
 			}
+		}
 		
 		return list.toArray(new L2ItemInstance[list.size()]);
 	}
@@ -279,14 +287,21 @@ public class PcInventory extends Inventory
 		final List<TradeList.TradeItem> list = new FastList<>();
 		
 		for (final L2ItemInstance item : _items)
-			if (item.isAvailable(getOwner(), false, false))
+		{
+			if (item != null && item.isAvailable(getOwner(), false, false))
 			{
+				if (_owner.getFakeArmorObjectId() == item.getObjectId())
+				{
+					continue;
+				}
+				
 				final TradeList.TradeItem adjItem = tradeList.adjustAvailableItem(item);
 				if (adjItem != null)
 				{
 					list.add(adjItem);
 				}
 			}
+		}
 		
 		return list.toArray(new TradeList.TradeItem[list.size()]);
 	}
@@ -309,7 +324,9 @@ public class PcInventory extends Inventory
 					item.setObjectId(adjItem.getObjectId());
 					
 					if (adjItem.getCount() < item.getCount())
+					{
 						item.setCurCount(adjItem.getCount());
+					}
 					else
 					{
 						item.setCurCount(item.getCount());
@@ -343,7 +360,9 @@ public class PcInventory extends Inventory
 					
 					item.setObjectId(adjItem.getObjectId());
 					if (adjItem.getCount() < item.getCount())
+					{
 						item.setCurCount(adjItem.getCount());
+					}
 					else
 					{
 						item.setCurCount(item.getCount());
@@ -378,7 +397,6 @@ public class PcInventory extends Inventory
 			addItem(process, 6393, count, actor, reference);
 		}
 	}
-	
 	
 	public void addLA(final String process, final int count, final L2PcInstance actor, final L2Object reference)
 	{
@@ -791,10 +809,12 @@ public class PcInventory extends Inventory
 		int slots = 0;
 		
 		for (final L2ItemInstance item : items)
+		{
 			if (!(item.isStackable() && getItemByItemId(item.getItemId()) != null))
 			{
 				slots++;
 			}
+		}
 		
 		return validateCapacity(slots);
 	}
@@ -848,31 +868,28 @@ public class PcInventory extends Inventory
 		}
 		
 		return validateCapacity(slots);
-		
 	}
 	
 	public boolean checkIfEquipped(final int item_id)
 	{
-		
 		final L2ItemInstance[] items = getAllItemsByItemId(item_id);
 		
 		if (items == null || items.length == 0)
 		{
-			
 			return false;
-			
 		}
 		
 		for (final L2ItemInstance item : items)
 		{
 			
 			if (item.isEquipped())
+			{
 				return true;
+			}
 			
 		}
 		
 		return false;
-		
 	}
 	
 	public int checkHowManyEquipped(final int item_id)
@@ -882,22 +899,18 @@ public class PcInventory extends Inventory
 		
 		if (items == null || items.length == 0)
 		{
-			
 			return 0;
-			
 		}
 		
 		int count = 0;
 		for (final L2ItemInstance item : items)
 		{
-			
 			if (item.isEquipped())
+			{
 				count++;
-			
+			}
 		}
 		
 		return count;
-		
 	}
-	
 }

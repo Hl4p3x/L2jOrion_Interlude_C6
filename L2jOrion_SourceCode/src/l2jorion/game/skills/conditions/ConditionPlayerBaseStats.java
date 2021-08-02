@@ -24,9 +24,6 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 public class ConditionPlayerBaseStats extends Condition
 {
 	
@@ -44,7 +41,9 @@ public class ConditionPlayerBaseStats extends Condition
 	public boolean testImpl(final Env env)
 	{
 		if (!(env.player instanceof L2PcInstance))
+		{
 			return false;
+		}
 		final L2PcInstance player = (L2PcInstance) env.player;
 		switch (_stat)
 		{

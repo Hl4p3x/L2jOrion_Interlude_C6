@@ -23,9 +23,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2ManufactureItem;
@@ -37,6 +34,8 @@ import l2jorion.game.network.L2GameClient;
 import l2jorion.game.network.L2GameClient.GameClientState;
 import l2jorion.game.thread.LoginServerThread;
 import l2jorion.log.Log;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
@@ -75,10 +74,10 @@ public class OfflineTradeTable
 				{
 					if ((pc.getPrivateStoreType() != L2PcInstance.STORE_PRIVATE_NONE))
 					{
-						stm.setInt(1, pc.getObjectId()); //Char Id
-						stm.setString(2, pc.getName()); //char name
+						stm.setInt(1, pc.getObjectId()); // Char Id
+						stm.setString(2, pc.getName()); // char name
 						stm.setLong(3, pc.getOfflineStartTime());
-						stm.setInt(4, pc.getPrivateStoreType()); //store type
+						stm.setInt(4, pc.getPrivateStoreType()); // store type
 						String title = null;
 						
 						switch (pc.getPrivateStoreType())
@@ -148,8 +147,10 @@ public class OfflineTradeTable
 				}
 				catch (Exception e)
 				{
-					if(Config.ENABLE_ALL_EXCEPTIONS)
+					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					LOG.warn("OfflineTradersTable[storeTradeItems()]: Error while saving offline trader: " + pc.getObjectId() + " " + e, e);
 				}
@@ -159,17 +160,19 @@ public class OfflineTradeTable
 		}
 		catch (Exception e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
-			LOG.warn("OfflineTradersTable[storeTradeItems()]: Error while saving offline traders: " + e,e);
+			LOG.warn("OfflineTradersTable[storeTradeItems()]: Error while saving offline traders: " + e, e);
 		}
 		finally
 		{
 			CloseUtil.close(con);
 		}
 	}
-
+	
 	public static void restoreOfflineTraders()
 	{
 		Connection con = null;
@@ -189,7 +192,7 @@ public class OfflineTradeTable
 					cal.add(Calendar.DAY_OF_YEAR, Config.OFFLINE_MAX_DAYS);
 					if (cal.getTimeInMillis() <= System.currentTimeMillis())
 					{
-						LOG.info("Offline trader with id "+rs.getInt("charId")+" reached limit of offline time, kicked.");
+						LOG.info("Offline trader with id " + rs.getInt("charId") + " reached limit of offline time, kicked.");
 						continue;
 					}
 				}
@@ -206,13 +209,19 @@ public class OfflineTradeTable
 				{
 					L2GameClient client = new L2GameClient(null);
 					player = L2PcInstance.load(rs.getInt("charId"));
+					L2World.getInstance().addPlayerToWorld(player);
+					
 					client.setActiveChar(player);
 					client.setAccountName(player.getAccountName());
+					
 					client.setState(GameClientState.IN_GAME);
-					player.setClient(client);
+					
+					// player.setClient(client);
+					
 					player.setOfflineMode(true);
 					player.setOnlineStatus(false);
 					player.setOfflineStartTime(time);
+					
 					player.spawnMe(player.getX(), player.getY(), player.getZ());
 					
 					LoginServerThread.getInstance().addGameServerLogin(player.getAccountName(), client);
@@ -248,7 +257,7 @@ public class OfflineTradeTable
 							player.getCreateList().setStoreName(rs.getString("title"));
 							break;
 						default:
-							LOG.info("Offline trader "+player.getName()+" finished to sell his items");
+							LOG.info("Offline trader " + player.getName() + " finished to sell his items");
 					}
 					items.close();
 					stm_items.close();
@@ -281,8 +290,7 @@ public class OfflineTradeTable
 						e.printStackTrace();
 					}
 					
-					
-					LOG.warn("OfflineTradersTable[loadOffliners()]: Error loading trader: ",e);
+					LOG.warn("OfflineTradersTable[loadOffliners()]: Error loading trader: ", e);
 					if (player != null)
 					{
 						player.logout();
@@ -291,16 +299,17 @@ public class OfflineTradeTable
 			}
 			rs.close();
 			stm.close();
-			LOG.info("Loaded: " +nTraders+ " offline traders.");
-		
+			LOG.info("OfflineTradeTable: Loaded " + nTraders + " offline traders");
+			
 		}
 		catch (Exception e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
-			
-			LOG.warn("OfflineTradersTable[loadOffliners()]: Error while loading offline traders: ",e);
+			LOG.warn("OfflineTradersTable[loadOffliners()]: Error while loading offline traders: ", e);
 		}
 		finally
 		{
@@ -311,7 +320,9 @@ public class OfflineTradeTable
 	public static void storeOffliner(L2PcInstance pc)
 	{
 		if ((pc.getPrivateStoreType() == L2PcInstance.STORE_PRIVATE_NONE) || (!pc.isInOfflineMode()))
+		{
 			return;
+		}
 		
 		Connection con = null;
 		try
@@ -327,27 +338,29 @@ public class OfflineTradeTable
 			stm.execute();
 			stm.clearParameters();
 			stm.close();
-
+			
 			con.setAutoCommit(false); // avoid halfway done
 			stm = con.prepareStatement(SAVE_OFFLINE_STATUS);
 			PreparedStatement stm_items = con.prepareStatement(SAVE_ITEMS);
-
+			
 			boolean save = true;
 			
 			try
 			{
 				
-				stm.setInt(1, pc.getObjectId()); //Char Id
-				stm.setString(2, pc.getName()); //char name
+				stm.setInt(1, pc.getObjectId()); // Char Id
+				stm.setString(2, pc.getName()); // char name
 				stm.setLong(3, pc.getOfflineStartTime());
-				stm.setInt(4, pc.getPrivateStoreType()); //store type
+				stm.setInt(4, pc.getPrivateStoreType()); // store type
 				String title = null;
-
+				
 				switch (pc.getPrivateStoreType())
 				{
 					case L2PcInstance.STORE_PRIVATE_BUY:
 						if (!Config.OFFLINE_TRADE_ENABLE)
+						{
 							break;
+						}
 						title = pc.getBuyList().getTitle();
 						for (TradeItem i : pc.getBuyList().getItems())
 						{
@@ -363,7 +376,9 @@ public class OfflineTradeTable
 					case L2PcInstance.STORE_PRIVATE_SELL:
 					case L2PcInstance.STORE_PRIVATE_PACKAGE_SELL:
 						if (!Config.OFFLINE_TRADE_ENABLE)
+						{
 							break;
+						}
 						title = pc.getSellList().getTitle();
 						pc.getSellList().updateItems();
 						for (TradeItem i : pc.getSellList().getItems())
@@ -380,7 +395,9 @@ public class OfflineTradeTable
 					case L2PcInstance.STORE_PRIVATE_MANUFACTURE:
 						
 						if (!Config.OFFLINE_CRAFT_ENABLE)
+						{
 							break;
+						}
 						title = pc.getCreateList().getStoreName();
 						for (L2ManufactureItem i : pc.getCreateList().getList())
 						{
@@ -394,12 +411,13 @@ public class OfflineTradeTable
 						}
 						break;
 					default:
-						//LOG.info( "OfflineTradersTable[storeOffliner()]: Error while saving offline trader: " + pc.getObjectId() + ", store type: "+pc.getPrivateStoreType());
-						//no save for this kind of shop
+						// LOG.info( "OfflineTradersTable[storeOffliner()]: Error while saving offline trader: " + pc.getObjectId() + ", store type: "+pc.getPrivateStoreType());
+						// no save for this kind of shop
 						save = false;
 				}
 				
-				if(save){
+				if (save)
+				{
 					stm.setString(5, title);
 					stm.executeUpdate();
 					stm.clearParameters();
@@ -408,28 +426,32 @@ public class OfflineTradeTable
 			}
 			catch (Exception e)
 			{
-				if(Config.ENABLE_ALL_EXCEPTIONS)
+				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.warn("OfflineTradersTable[storeOffliner()]: Error while saving offline trader: " + pc.getObjectId() + " " + e, e);
 			}
 			
 			stm.close();
 			stm_items.close();
-			String text = "Offline trader "+pc.getName()+" stored.";
+			String text = "Offline trader " + pc.getName() + " stored.";
 			Log.add(text, "Offline_trader");
 		}
 		catch (Exception e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
-			LOG.warn("OfflineTradersTable[storeOffliner()]: Error while saving offline traders: " + e,e);
+			LOG.warn("OfflineTradersTable[storeOffliner()]: Error while saving offline traders: " + e, e);
 		}
 		finally
 		{
 			CloseUtil.close(con);
 		}
 	}
-
+	
 }

@@ -9,7 +9,6 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.EtcStatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
 public class AdminLevel implements IAdminCommandHandler
@@ -45,7 +44,9 @@ public class AdminLevel implements IAdminCommandHandler
 			catch (final NumberFormatException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Wrong Number Format");
 			}
@@ -92,21 +93,26 @@ public class AdminLevel implements IAdminCommandHandler
 				
 				if (targetChar instanceof L2PcInstance)
 				{
-					((L2PcInstance) targetChar).sendPacket(new EtcStatusUpdate(activeChar));
-					if (Config.CHECK_SKILLS_ON_ENTER && !Config.ALT_GAME_SKILL_LEARN)
-						((L2PcInstance) targetChar).checkAllowedSkills();
+					// ((L2PcInstance) targetChar).sendPacket(new EtcStatusUpdate(activeChar));
 					
-					((L2PcInstance) targetChar).broadcastUserInfo();
+					if (Config.CHECK_SKILLS_ON_ENTER && !Config.ALT_GAME_SKILL_LEARN)
+					{
+						((L2PcInstance) targetChar).checkAllowedSkills();
+					}
+					
 					((L2PcInstance) targetChar).refreshOverloaded();
 					((L2PcInstance) targetChar).refreshExpertisePenalty();
 					((L2PcInstance) targetChar).refreshMasteryPenality();
 					((L2PcInstance) targetChar).refreshMasteryWeapPenality();
+					((L2PcInstance) targetChar).broadcastUserInfo();
 				}
 			}
 			catch (final NumberFormatException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("You must specify level between 1 and " + ExperienceData.getInstance().getMaxLevel() + ".");
 				return false;

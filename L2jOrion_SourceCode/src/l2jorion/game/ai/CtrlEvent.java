@@ -20,20 +20,12 @@
  */
 package l2jorion.game.ai;
 
-/**
- * This class contains an enum of each possibles evenements that can happen on an AI character.
- */
-
 public enum CtrlEvent
 {
-	/**
-	 * Something has changed, usually a previous step has being completed or maybe was completed, the AI must thing on next action
-	 */
+	/** Something has changed, usually a previous step has being completed or maybe was completed, the AI must thing on next action */
 	EVT_THINK,
 	
-	/**
-	 * The actor was attacked. This event comes each time a physical or magical attack was done on the actor. NPC may start attack in responce, or ignore this event if they already attack someone, or change target and so on.
-	 */
+	/** The actor was attacked. This event comes each time a physical or magical attack was done on the actor. NPC may start attack in responce, or ignore this event if they already attack someone, or change target and so on. */
 	EVT_ATTACKED,
 	
 	/** Increase/decrease aggression towards a target, or reduce global aggression if target is null */

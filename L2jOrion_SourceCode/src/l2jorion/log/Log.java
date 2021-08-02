@@ -31,10 +31,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class Log
 {
@@ -43,7 +42,7 @@ public class Log
 	public static final void add(String text, String cat)
 	{
 		String date = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date());
-
+		
 		new File("log/game").mkdirs();
 		File file = new File("log/game/" + cat + ".txt");
 		FileWriter save = null;
@@ -54,9 +53,9 @@ public class Log
 			save.write(out);
 			save.flush();
 		}
-		catch(IOException e)
+		catch (IOException e)
 		{
-			LOG.warn("saving chat log failed: " + e);
+			LOG.warn("saving log failed: " + e);
 			e.printStackTrace();
 		}
 		finally
@@ -68,7 +67,74 @@ public class Log
 				{
 					save.close();
 				}
-				catch(IOException e)
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public static final void addOlyLog(String text, String cat)
+	{
+		String date = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(new Date());
+		
+		new File("log/olympiad").mkdirs();
+		File file = new File("log/olympiad/" + cat + ".txt");
+		FileWriter save = null;
+		try
+		{
+			save = new FileWriter(file, true);
+			String out = "[" + date + "]    :    " + text + "\n";
+			save.write(out);
+			save.flush();
+		}
+		catch (IOException e)
+		{
+			LOG.warn("saving log failed: " + e);
+			e.printStackTrace();
+		}
+		finally
+		{
+			
+			if (save != null)
+			{
+				try
+				{
+					save.close();
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public static final void addLocLog(String text, String cat)
+	{
+		File file = new File(cat + ".xml");
+		FileWriter save = null;
+		try
+		{
+			save = new FileWriter(file, true);
+			String out = text + "\n";
+			save.write(out);
+			save.flush();
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			if (save != null)
+			{
+				try
+				{
+					save.close();
+				}
+				catch (IOException e)
 				{
 					e.printStackTrace();
 				}
@@ -79,7 +145,9 @@ public class Log
 	public static final void Assert(boolean exp, String cmt)
 	{
 		if (exp || !Config.ASSERT)
+		{
 			return;
+		}
 		
 		LOG.info("Assertion error [" + cmt + "]");
 		Thread.dumpStack();

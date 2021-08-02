@@ -27,24 +27,11 @@ import l2jorion.game.model.actor.instance.L2SiegeGuardInstance;
 
 public class DoorKnownList extends CharKnownList
 {
-	// =========================================================
-	// Data Field
-	
-	// =========================================================
-	// Constructor
 	public DoorKnownList(final L2DoorInstance activeChar)
 	{
 		super(activeChar);
 	}
 	
-	// =========================================================
-	// Method - Public
-	
-	// =========================================================
-	// Method - Private
-	
-	// =========================================================
-	// Property - Public
 	@Override
 	public final L2DoorInstance getActiveChar()
 	{
@@ -55,23 +42,31 @@ public class DoorKnownList extends CharKnownList
 	public int getDistanceToForgetObject(final L2Object object)
 	{
 		if (object instanceof L2SiegeGuardInstance || object instanceof L2FortSiegeGuardInstance)
+		{
 			return 800;
+		}
 		
 		if (!(object instanceof L2PcInstance))
+		{
 			return 0;
+		}
 		
-		return 4000;
+		return 20000;
 	}
 	
 	@Override
 	public int getDistanceToWatchObject(final L2Object object)
 	{
 		if (object instanceof L2SiegeGuardInstance || object instanceof L2FortSiegeGuardInstance)
+		{
 			return 600;
+		}
 		
 		if (!(object instanceof L2PcInstance))
+		{
 			return 0;
+		}
 		
-		return 2000;
+		return 20000;
 	}
 }

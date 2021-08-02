@@ -18,8 +18,10 @@ package l2jorion.game.network.clientpackets;
 
 import java.nio.BufferUnderflowException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.strixplatform.StrixPlatform;
+import org.strixplatform.managers.ClientGameSessionManager;
+import org.strixplatform.managers.ClientProtocolDataManager;
+import org.strixplatform.utils.StrixClientData;
 
 import l2jguard.HwidConfig;
 import l2jguard.Protection;
@@ -28,6 +30,8 @@ import l2jorion.game.network.serverpackets.KeyPacket;
 import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.SendStatus;
 import l2jorion.log.Log;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class ProtocolVersion extends L2GameClientPacket
 {
@@ -36,9 +40,13 @@ public final class ProtocolVersion extends L2GameClientPacket
 	private int _version;
 	
 	private byte _data[];
+	
 	private String _hwidHdd = "NoHWID-HD";
 	private String _hwidMac = "NoHWID-MAC";
 	private String _hwidCPU = "NoHWID-CPU";
+	
+	private byte[] data;
+	private int dataChecksum;
 	
 	@Override
 	protected void readImpl()
@@ -47,35 +55,48 @@ public final class ProtocolVersion extends L2GameClientPacket
 		{
 			_version = readD();
 		}
-		catch(BufferUnderflowException e)
+		catch (BufferUnderflowException e)
 		{
-			LOG.warn("Catching error... version: "+_version);
-			
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				e.printStackTrace();
-			}
 		}
 		
 		if (Config.L2JGUARD_PROTECTION)
 		{
 			if (Protection.isProtectionOn())
 			{
-				if (_buf.remaining() > 260) 
-				{ 
-					_data = new byte[260]; 
+				if (_buf.remaining() > 260)
+				{
+					_data = new byte[260];
 					readB(_data);
-					if (Protection.isProtectionOn())
-					{
-						_hwidHdd = readS();
-						_hwidMac = readS();
-						_hwidCPU = readS();
-					}
+					_hwidHdd = readS();
+					_hwidMac = readS();
+					_hwidCPU = readS();
 				}
 			}
-			else if (Protection.isProtectionOn())
+			// else if (Protection.isProtectionOn())
+			// {
+			// getClient().close(new KeyPacket(getClient().enableCrypt()));
+			// }
+		}
+		
+		if (Config.STRIX_PROTECTION)
+		{
+			if (StrixPlatform.getInstance().isPlatformEnabled())
 			{
-				getClient().close(new KeyPacket(getClient().enableCrypt()));
+				try
+				{
+					if (_buf.remaining() >= StrixPlatform.getInstance().getProtocolVersionDataSize())
+					{
+						data = new byte[StrixPlatform.getInstance().getClientDataSize()];
+						readB(data);
+						dataChecksum = readD();
+					}
+				}
+				catch (final Exception e)
+				{
+					getClient().close(new KeyPacket(null));
+					LOG.error("Client [IP=" + toString() + "] used unprotected client. Disconnect...");
+					return;
+				}
 			}
 		}
 	}
@@ -83,23 +104,12 @@ public final class ProtocolVersion extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		// this packet is never encrypted
 		if (_version == 65534 || _version == -2) // Ping
 		{
-			if (Config.DEBUG)
-			{
-				LOG.info("DEBUG " + getType() + ": Ping received");
-			}
-			
 			getClient().close((L2GameServerPacket) null);
 		}
 		else if (_version == 65533 || _version == -3) // RWHO
 		{
-			if (Config.RWHO_LOG)
-			{
-				LOG.info(getClient().toString() + " RWHO received");
-			}
-			
 			getClient().close(new SendStatus());
 		}
 		else if (_version < Config.MIN_PROTOCOL_REVISION || _version > Config.MAX_PROTOCOL_REVISION)
@@ -113,11 +123,6 @@ public final class ProtocolVersion extends L2GameClientPacket
 		}
 		else
 		{
-			if (Config.DEBUG)
-			{
-				LOG.debug(getType() + ": Client Protocol Revision is ok: " + _version);
-			}
-			
 			if (Config.L2JGUARD_PROTECTION)
 			{
 				getClient().setRevision(_version);
@@ -144,8 +149,38 @@ public final class ProtocolVersion extends L2GameClientPacket
 				}
 			}
 			
-			final KeyPacket pk = new KeyPacket(getClient().enableCrypt());
-			getClient().sendPacket(pk);
+			if (Config.STRIX_PROTECTION)
+			{
+				if (data == null)
+				{
+					// getClient().close(new KeyPacket(null));
+					getClient().close((L2GameServerPacket) null);
+					LOG.error("Client [IP=" + getClient().toString() + "] used unprotected client. Disconnect...");
+					return;
+				}
+				
+				final StrixClientData clientData = ClientProtocolDataManager.getInstance().getDecodedData(data, dataChecksum);
+				if (clientData != null)
+				{
+					if (!ClientGameSessionManager.getInstance().checkServerResponse(clientData))
+					{
+						getClient().close(new KeyPacket(null, clientData));
+						return;
+					}
+					
+					getClient().setStrixClientData(clientData);
+					getClient().setRevision(_version);
+					sendPacket(new KeyPacket(getClient().enableCrypt()));
+					return;
+				}
+				
+				LOG.error("Decode client data failed. See Strix-Platform log file. Disconnected client " + getClient().toString());
+				// getClient().close(new KeyPacket(null));
+				getClient().close((L2GameServerPacket) null);
+				return;
+			}
+			
+			getClient().sendPacket(new KeyPacket(getClient().enableCrypt()));
 		}
 	}
 	

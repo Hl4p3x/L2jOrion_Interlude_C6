@@ -104,15 +104,15 @@ SEAL_ANGEL_1: [29,BLOODED_FABRIC,10,25,WHITE_FABRIC_1],
 SEAL_ANGEL_2: [29,BLOODED_FABRIC,10,25,WHITE_FABRIC_1],
 }
 
-#mob: cond, giveItem, amount, chance%, takeItem (assumed to take only 1 of it)
+#mob: cond, giveItem, amount, chance (x / 1000) (Retail 5/1000), takeItem (assumed to take only 1 of it)
 ATTACK_DROPS_24 = {
-PLATINUM_TRIBE_SHAMAN: [24,BLOODED_FABRIC,1,2,WHITE_FABRIC_1],
-PLATINUM_TRIBE_OVERLORD: [24,BLOODED_FABRIC,1,2,WHITE_FABRIC_1],
+PLATINUM_TRIBE_SHAMAN: [24,BLOODED_FABRIC,1,5,WHITE_FABRIC_1],
+PLATINUM_TRIBE_OVERLORD: [24,BLOODED_FABRIC,1,5,WHITE_FABRIC_1],
 }
 
 ATTACK_DROPS_25 = {
-PLATINUM_TRIBE_SHAMAN: [25,BLOODED_FABRIC,1,2,WHITE_FABRIC_1],
-PLATINUM_TRIBE_OVERLORD: [25,BLOODED_FABRIC,1,2,WHITE_FABRIC_1],
+PLATINUM_TRIBE_SHAMAN: [25,BLOODED_FABRIC,1,5,WHITE_FABRIC_1],
+PLATINUM_TRIBE_OVERLORD: [25,BLOODED_FABRIC,1,5,WHITE_FABRIC_1],
 }
 
 """
@@ -353,7 +353,7 @@ class Quest (JQuest) :
      if st.getState() != STARTED : return
    
      npcId = npc.getNpcId()
-     if npcId in ATTACK_DROPS_24.keys() :
+     if st.getInt("cond") == 24 and npcId in ATTACK_DROPS_24.keys() :
          cond = ATTACK_DROPS_24[npcId][0]
          chance =  ATTACK_DROPS_24[npcId][3]
          if st.getInt("cond") == cond and st.getRandom(1000) < ATTACK_DROPS_24[npcId][3] and st.getQuestItemsCount(ATTACK_DROPS_24[npcId][4]) > 0 :  # Attack drops are low chance
@@ -363,7 +363,7 @@ class Quest (JQuest) :
              if cond == 24:
                  st.playSound("ItemSound.quest_finish")
                  st.exitQuest(1)
-     elif npcId in ATTACK_DROPS_25.keys() :
+     elif st.getInt("cond") == 25 and npcId in ATTACK_DROPS_25.keys() :
          cond = ATTACK_DROPS_25[npcId][0]
          chance =  ATTACK_DROPS_25[npcId][3]
          if st.getInt("cond") == cond and st.getRandom(1000) < ATTACK_DROPS_25[npcId][3] and st.getQuestItemsCount(ATTACK_DROPS_25[npcId][4]) > 0 :  # Attack drops are low chance

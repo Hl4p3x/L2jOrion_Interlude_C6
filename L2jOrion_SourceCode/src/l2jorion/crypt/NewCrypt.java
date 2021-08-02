@@ -22,18 +22,16 @@ package l2jorion.crypt;
 
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class NewCrypt
 {
 	protected static Logger LOG = LoggerFactory.getLogger(NewCrypt.class);
+	
 	BlowfishEngine _crypt;
 	BlowfishEngine _decrypt;
 	
-	/**
-	 * @param blowfishKey
-	 */
 	public NewCrypt(final byte[] blowfishKey)
 	{
 		_crypt = new BlowfishEngine();
@@ -56,7 +54,9 @@ public class NewCrypt
 	{
 		// check if size is multiple of 4 and if there is more then only the checksum
 		if ((size & 3) != 0 || size <= 4)
+		{
 			return false;
+		}
 		
 		long chksum = 0;
 		final int count = size - 4;
@@ -183,7 +183,7 @@ public class NewCrypt
 		{
 			_decrypt.processBlock(raw, offset + i * 8, result, i * 8);
 		}
-		// TODO can the crypt and decrypt go direct to the array
+		// XXX can the crypt and decrypt go direct to the array
 		System.arraycopy(result, 0, raw, offset, size);
 	}
 	

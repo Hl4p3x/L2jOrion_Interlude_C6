@@ -36,35 +36,36 @@ public class ClanWarsList implements IUserCommandHandler
 {
 	private static final int[] COMMAND_IDS =
 	{
-			88, 89, 90
+		88,
+		89,
+		90
 	};
-
-	/* (non-Javadoc)
-	 * @see l2jorion.game.handler.IUserCommandHandler#useUserCommand(int, l2jorion.game.model.L2PcInstance)
-	 */
+	
 	@Override
 	public boolean useUserCommand(int id, L2PcInstance activeChar)
 	{
-		if(id != COMMAND_IDS[0] && id != COMMAND_IDS[1] && id != COMMAND_IDS[2])
+		if (id != COMMAND_IDS[0] && id != COMMAND_IDS[1] && id != COMMAND_IDS[2])
+		{
 			return false;
-
+		}
+		
 		L2Clan clan = activeChar.getClan();
-
-		if(clan == null)
+		
+		if (clan == null)
 		{
 			activeChar.sendMessage("You are not in a clan.");
 			return false;
 		}
-
+		
 		SystemMessage sm;
 		Connection con = null;
-
+		
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement statement;
-
-			if(id == 88)
+			
+			if (id == 88)
 			{
 				// Attack List
 				activeChar.sendPacket(new SystemMessage(SystemMessageId.CLANS_YOU_DECLARED_WAR_ON));
@@ -72,7 +73,7 @@ public class ClanWarsList implements IUserCommandHandler
 				statement.setInt(1, clan.getClanId());
 				statement.setInt(2, clan.getClanId());
 			}
-			else if(id == 89)
+			else if (id == 89)
 			{
 				// Under Attack List
 				activeChar.sendPacket(new SystemMessage(SystemMessageId.CLANS_THAT_HAVE_DECLARED_WAR_ON_YOU));
@@ -89,14 +90,14 @@ public class ClanWarsList implements IUserCommandHandler
 				statement.setInt(1, clan.getClanId());
 				statement.setInt(2, clan.getClanId());
 			}
-
+			
 			ResultSet rset = statement.executeQuery();
-			while(rset.next())
+			while (rset.next())
 			{
 				String clanName = rset.getString("clan_name");
 				int ally_id = rset.getInt("ally_id");
-
-				if(ally_id > 0)
+				
+				if (ally_id > 0)
 				{
 					// Target With Ally
 					sm = new SystemMessage(SystemMessageId.S1_S2_ALLIANCE);
@@ -109,37 +110,29 @@ public class ClanWarsList implements IUserCommandHandler
 					sm = new SystemMessage(SystemMessageId.S1_NO_ALLI_EXISTS);
 					sm.addString(clanName);
 				}
-
+				
 				activeChar.sendPacket(sm);
 			}
-
+			
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.FRIEND_LIST_FOOT));
-
+			
 			rset.close();
-			rset = null;
 			statement.close();
-			statement = null;
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
-
-		sm = null;
-		clan = null;
-
 		return true;
 	}
-
-	/* (non-Javadoc)
-	 * @see l2jorion.game.handler.IUserCommandHandler#getUserCommandList()
-	 */
+	
 	@Override
 	public int[] getUserCommandList()
 	{

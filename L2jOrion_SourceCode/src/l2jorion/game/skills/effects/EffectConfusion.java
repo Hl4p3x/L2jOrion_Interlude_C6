@@ -30,9 +30,6 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.skills.Env;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author littlecrow Implementation of the Confusion Effect
- */
 final class EffectConfusion extends L2Effect
 {
 	
@@ -47,7 +44,6 @@ final class EffectConfusion extends L2Effect
 		return EffectType.CONFUSION;
 	}
 	
-	/** Notify started */
 	@Override
 	public void onStart()
 	{
@@ -55,7 +51,6 @@ final class EffectConfusion extends L2Effect
 		onActionTime();
 	}
 	
-	/** Notify exited */
 	@Override
 	public void onExit()
 	{
@@ -68,7 +63,6 @@ final class EffectConfusion extends L2Effect
 		final List<L2Character> targetList = new FastList<>();
 		
 		// Getting the possible targets
-		
 		for (final L2Object obj : getEffected().getKnownList().getKnownObjects().values())
 		{
 			if (obj == null)
@@ -83,7 +77,9 @@ final class EffectConfusion extends L2Effect
 		}
 		// if there is no target, exit function
 		if (targetList.size() == 0)
+		{
 			return true;
+		}
 		
 		// Choosing randomly a new target
 		final int nextTargetIdx = Rnd.nextInt(targetList.size());

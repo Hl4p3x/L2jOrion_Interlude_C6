@@ -28,12 +28,8 @@ import l2jorion.game.skills.Env;
 import l2jorion.game.skills.Stats;
 import l2jorion.game.skills.conditions.Condition;
 
-/**
- * @author mkizub
- */
 public final class FuncTemplate
 {
-	
 	public Condition attachCond;
 	public Condition applayCond;
 	public final Class<?> func;
@@ -56,7 +52,9 @@ public final class FuncTemplate
 		catch (final ClassNotFoundException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			throw new RuntimeException(e);
 		}
@@ -68,7 +66,7 @@ public final class FuncTemplate
 				Integer.TYPE, // order of execution
 				Object.class, // owner
 				Lambda.class
-			// value for function
+				// value for function
 			});
 		}
 		catch (final NoSuchMethodException e)
@@ -80,7 +78,9 @@ public final class FuncTemplate
 	public Func getFunc(final Env env, final Object owner)
 	{
 		if (attachCond != null && !attachCond.test(env))
+		{
 			return null;
+		}
 		try
 		{
 			final Func f = (Func) constructor.newInstance(stat, order, owner, lambda);

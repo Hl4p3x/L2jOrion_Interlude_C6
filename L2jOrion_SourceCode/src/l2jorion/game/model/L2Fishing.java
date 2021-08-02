@@ -22,6 +22,7 @@ package l2jorion.game.model;
 import java.util.concurrent.Future;
 
 import l2jorion.game.datatables.sql.NpcTable;
+import l2jorion.game.enums.AchType;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PenaltyMonsterInstance;
 import l2jorion.game.model.spawn.L2Spawn;
@@ -36,8 +37,6 @@ import l2jorion.util.random.Rnd;
 
 public class L2Fishing implements Runnable
 {
-	// =========================================================
-	// Data Field
 	private L2PcInstance _fisher;
 	private int _time;
 	private int _stop = 0;
@@ -59,7 +58,9 @@ public class L2Fishing implements Runnable
 	public void run()
 	{
 		if (_fisher == null)
+		{
 			return;
+		}
 		
 		if (_fishCurHp >= _fishMaxHp * 2)
 		{
@@ -79,7 +80,6 @@ public class L2Fishing implements Runnable
 		}
 	}
 	
-	// =========================================================
 	public L2Fishing(final L2PcInstance Fisher, final FishData fish, final boolean isNoob, final boolean isUpperGrade)
 	{
 		_fisher = Fisher;
@@ -113,8 +113,6 @@ public class L2Fishing implements Runnable
 		{
 			_fishAiTask = ThreadPoolManager.getInstance().scheduleEffectAtFixedRate(this, 1000, 1000);
 		}
-		
-		efsc = null;
 	}
 	
 	public void changeHp(final int hp, final int pen)
@@ -152,7 +150,9 @@ public class L2Fishing implements Runnable
 		}
 		
 		if (_fisher == null)
+		{
 			return;
+		}
 		
 		if (win)
 		{
@@ -165,6 +165,7 @@ public class L2Fishing implements Runnable
 			{
 				_fisher.sendPacket(new SystemMessage(SystemMessageId.YOU_CAUGHT_SOMETHING));
 				_fisher.addItem("Fishing", _fishId, 1, null, true);
+				_fisher.getAchievement().increase(AchType.FISHING);
 			}
 		}
 		_fisher.EndFishing(win);
@@ -174,7 +175,9 @@ public class L2Fishing implements Runnable
 	protected void aiTask()
 	{
 		if (_thinking)
+		{
 			return;
+		}
 		
 		_thinking = true;
 		_time--;
@@ -248,7 +251,9 @@ public class L2Fishing implements Runnable
 		}
 		
 		if (_fisher == null)
+		{
 			return;
+		}
 		
 		if (_mode == 1)
 		{
@@ -331,7 +336,9 @@ public class L2Fishing implements Runnable
 		}
 		
 		if (_fisher == null)
+		{
 			return;
+		}
 		
 		if (_mode == 0)
 		{

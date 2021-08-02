@@ -20,13 +20,10 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Format: (ch) ddd b d: ? d: crest ID d: crest size b: raw data
- * @author -Wooden-
- */
 public class ExPledgeCrestLarge extends L2GameServerPacket
 {
 	private static final String _S__FE_28_EXPLEDGECRESTLARGE = "[S] FE:28 ExPledgeCrestLarge";
+	
 	private final int _crestId;
 	private final byte[] _data;
 	
@@ -36,17 +33,13 @@ public class ExPledgeCrestLarge extends L2GameServerPacket
 		_data = data;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#writeImpl()
-	 */
 	@Override
 	protected void writeImpl()
 	{
 		writeC(0xfe);
 		writeH(0x28);
 		
-		writeD(0x00); // ???
+		writeD(0x00);
 		writeD(_crestId);
 		writeD(_data.length);
 		
@@ -54,10 +47,6 @@ public class ExPledgeCrestLarge extends L2GameServerPacket
 		
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.BasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

@@ -35,12 +35,11 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.controllers.TradeController;
 import l2jorion.game.model.L2Territory;
 import l2jorion.game.model.Location;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
@@ -48,6 +47,7 @@ import l2jorion.util.database.L2DatabaseFactory;
 public class TerritoryTable
 {
 	private final static Logger LOG = LoggerFactory.getLogger(TradeController.class);
+	
 	private static final Map<Integer, L2Territory> _territory = new HashMap<>();
 	
 	public static TerritoryTable getInstance()
@@ -85,7 +85,6 @@ public class TerritoryTable
 			
 			while (rset.next())
 			{
-				// final String terr = "sql_terr_" + rset.getString("loc_id");
 				final int terr = rset.getInt("loc_id");
 				
 				if (_territory.get(terr) == null)

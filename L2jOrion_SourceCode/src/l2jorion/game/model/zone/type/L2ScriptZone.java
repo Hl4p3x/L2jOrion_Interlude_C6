@@ -22,10 +22,6 @@ package l2jorion.game.model.zone.type;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.zone.L2ZoneType;
 
-/**
- * A scripted zone... Creation of such a zone should require somekind of jython script reference which can handle onEnter() / onExit()
- * @author durgus
- */
 public class L2ScriptZone extends L2ZoneType
 {
 	public L2ScriptZone(final int id)

@@ -43,6 +43,7 @@ import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.CrownManager;
 import l2jorion.game.managers.SiegeManager;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ItemList;
@@ -56,12 +57,11 @@ import l2jorion.game.network.serverpackets.PledgeSkillListAdd;
 import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.network.serverpackets.UserInfo;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class L2Clan
 {
@@ -75,9 +75,11 @@ public class L2Clan
 	private String _allyName;
 	private int _allyId = 0;
 	private int _level;
+	
 	private int _hasCastle;
 	private int _hasFort;
 	private int _hasHideout;
+	
 	private boolean _hasCrest;
 	private int _hiredGuards;
 	private int _crestId;
@@ -288,32 +290,29 @@ public class L2Clan
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		if (!getLeader().isOnline())
+		{
 			return;
+		}
 		
 		if (member == null)
+		{
 			return;
+		}
 		
 		if (!member.isOnline())
+		{
 			return;
+		}
 		
-		// L2PcInstance exLeader = getLeader().getPlayerInstance();
 		if (setLeader(member))
 		{
 			
 			SystemMessage sm = new SystemMessage(SystemMessageId.CLAN_LEADER_PRIVILEGES_HAVE_BEEN_TRANSFERRED_TO_S1);
 			sm.addString(member.getName());
 			broadcastToOnlineMembers(sm);
-			sm = null;
-			
 		}
-		
-		// SiegeManager.getInstance().removeSiegeSkills(exLeader);
-		
-		/*
-		 * if(getLevel() >= 4) { SiegeManager.getInstance().addSiegeSkills(newLeader); }
-		 */
-		
 	}
 	
 	/**
@@ -363,8 +362,6 @@ public class L2Clan
 	{
 		L2ClanMember member = new L2ClanMember(player);
 		addClanMember(member);
-		
-		member = null;
 	}
 	
 	public L2ClanMember getClanMember(final String name)
@@ -377,7 +374,9 @@ public class L2Clan
 		for (final L2ClanMember temp : _members.values())
 		{
 			if (temp.getObjectId() == objectID)
+			{
 				return temp;
+			}
 		}
 		
 		return null;
@@ -420,8 +419,6 @@ public class L2Clan
 				
 				apprentice.saveApprenticeAndSponsor(0, 0);
 			}
-			
-			apprentice = null;
 		}
 		
 		if (exMember.getSponsor() != 0)
@@ -478,15 +475,11 @@ public class L2Clan
 			player.broadcastUserInfo();
 			// disable clan tab
 			player.sendPacket(new PledgeShowMemberListDeleteAll());
-			
-			player = null;
 		}
 		else
 		{
 			removeMemberInDatabase(exMember, clanJoinExpiryTime, getLeaderName().equalsIgnoreCase(name) ? System.currentTimeMillis() + Config.ALT_CLAN_CREATE_DAYS * 86400000L : 0);
 		}
-		
-		exMember = null;
 	}
 	
 	public L2ClanMember[] getMembers()
@@ -920,16 +913,15 @@ public class L2Clan
 			statement.setInt(10, getAllyCrestId());
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 			
 			if (Config.DEBUG)
 			{
-				LOG.debug("New clan saved in db: " + getClanId());
+				LOG.debug("New clan saved in DB: " + getClanId());
 			}
 		}
 		catch (final Exception e)
 		{
-			LOG.warn("error while saving new clan to db " + e);
+			LOG.warn("error while saving new clan to DB: " + e);
 		}
 		finally
 		{
@@ -1149,7 +1141,9 @@ public class L2Clan
 	public final L2Skill[] getAllSkills()
 	{
 		if (_skills == null)
+		{
 			return new L2Skill[0];
+		}
 		
 		return _skills.values().toArray(new L2Skill[_skills.values().size()]);
 	}
@@ -1278,7 +1272,9 @@ public class L2Clan
 	public void addSkillEffects(final L2PcInstance cm)
 	{
 		if (cm == null)
+		{
 			return;
+		}
 		
 		for (final L2Skill skill : _skills.values())
 		{
@@ -1293,13 +1289,29 @@ public class L2Clan
 	public void broadcastToOnlineAllyMembers(final L2GameServerPacket packet)
 	{
 		if (getAllyId() == 0)
+		{
 			return;
+		}
 		
 		for (final L2Clan clan : ClanTable.getInstance().getClans())
 		{
 			if (clan.getAllyId() == getAllyId())
 			{
 				clan.broadcastToOnlineMembers(packet);
+			}
+		}
+	}
+	
+	public void broadcastToOnlineMembers(L2GameServerPacket... packets)
+	{
+		for (final L2ClanMember member : _members.values())
+		{
+			if (member != null && member.isOnline())
+			{
+				for (L2GameServerPacket packet : packets)
+				{
+					member.getPlayerInstance().sendPacket(packet);
+				}
 			}
 		}
 	}
@@ -1342,10 +1354,6 @@ public class L2Clan
 		}
 	}
 	
-	/*
-	 * @Override public String toString() { return getName(); }
-	 */
-	
 	/**
 	 * @return
 	 */
@@ -1377,8 +1385,12 @@ public class L2Clan
 	public boolean isAtWarWith(final Integer id)
 	{
 		if (_atWarWith != null && _atWarWith.size() > 0)
+		{
 			if (_atWarWith.contains(id))
+			{
 				return true;
+			}
+		}
 		
 		return false;
 	}
@@ -1386,8 +1398,12 @@ public class L2Clan
 	public boolean isAtWarAttacker(final Integer id)
 	{
 		if (_atWarAttackers != null && _atWarAttackers.size() > 0)
+		{
 			if (_atWarAttackers.contains(id))
+			{
 				return true;
+			}
+		}
 		
 		return false;
 	}
@@ -1447,7 +1463,9 @@ public class L2Clan
 	public int isAtWar()
 	{
 		if (_atWarWith != null && _atWarWith.size() > 0)
+		{
 			return 1;
+		}
 		
 		return 0;
 	}
@@ -1543,7 +1561,7 @@ public class L2Clan
 	public class RankPrivs
 	{
 		private final int _rankId;
-		private final int _party;//
+		private final int _party;
 		private int _rankPrivs;
 		
 		public RankPrivs(final int rank, final int party, final int privs)
@@ -1624,7 +1642,9 @@ public class L2Clan
 	public final SubPledge getSubPledge(final int pledgeType)
 	{
 		if (_subPledges == null)
+		{
 			return null;
+		}
 		
 		return _subPledges.get(pledgeType);
 	}
@@ -1637,12 +1657,16 @@ public class L2Clan
 	public final SubPledge getSubPledge(final String pledgeName)
 	{
 		if (_subPledges == null)
+		{
 			return null;
+		}
 		
 		for (final SubPledge sp : _subPledges.values())
 		{
 			if (sp.getName().equalsIgnoreCase(pledgeName))
+			{
 				return sp;
+			}
 		}
 		return null;
 	}
@@ -1654,7 +1678,9 @@ public class L2Clan
 	public final SubPledge[] getAllSubPledges()
 	{
 		if (_subPledges == null)
+		{
 			return new SubPledge[0];
+		}
 		
 		return _subPledges.values().toArray(new SubPledge[_subPledges.values().size()]);
 	}
@@ -1854,14 +1880,14 @@ public class L2Clan
 			privs = new RankPrivs(i, 0, CP_NOTHING);
 			_privs.put(i, privs);
 		}
-		
-		privs = null;
 	}
 	
 	public int getRankPrivs(final int rank)
 	{
 		if (_privs.get(rank) != null)
+		{
 			return _privs.get(rank).getPrivs();
+		}
 		return CP_NOTHING;
 	}
 	
@@ -1875,8 +1901,6 @@ public class L2Clan
 			
 			try
 			{
-				// LOG.warn("requested store clan privs in db for rank: "+rank+", privs: "+privs);
-				// Retrieve all skills of this L2PcInstance from the database
 				con = L2DatabaseFactory.getInstance().getConnection();
 				PreparedStatement statement = con.prepareStatement("INSERT INTO clan_privs (clan_id,rank,party,privs) VALUES (?,?,?,?) ON DUPLICATE KEY UPDATE privs = ?");
 				statement.setInt(1, getClanId());
@@ -1884,10 +1908,8 @@ public class L2Clan
 				statement.setInt(3, 0);
 				statement.setInt(4, privs);
 				statement.setInt(5, privs);
-				
 				statement.execute();
 				DatabaseUtils.close(statement);
-				statement = null;
 			}
 			catch (final Exception e)
 			{
@@ -1901,12 +1923,16 @@ public class L2Clan
 			for (final L2ClanMember cm : getMembers())
 			{
 				if (cm.isOnline())
+				{
 					if (cm.getPowerGrade() == rank)
+					{
 						if (cm.getPlayerInstance() != null)
 						{
 							cm.getPlayerInstance().setClanPrivileges(privs);
 							cm.getPlayerInstance().sendPacket(new UserInfo(cm.getPlayerInstance()));
 						}
+					}
+				}
 			}
 			
 			broadcastClanStatus();
@@ -1946,7 +1972,9 @@ public class L2Clan
 	public final RankPrivs[] getAllRankPrivs()
 	{
 		if (_privs == null)
+		{
 			return new RankPrivs[0];
+		}
 		
 		return _privs.values().toArray(new RankPrivs[_privs.values().size()]);
 	}
@@ -1987,8 +2015,6 @@ public class L2Clan
 					}
 				}
 			}
-			
-			skills = null;
 		}
 		else if (_reputationScore < 0 && value >= 0)
 		{
@@ -2032,6 +2058,11 @@ public class L2Clan
 	public int getReputationScore()
 	{
 		return _reputationScore;
+	}
+	
+	public synchronized void addReputationScore(int value)
+	{
+		setReputationScore(_reputationScore + value, true);
 	}
 	
 	public void setRank(final int rank)
@@ -2087,7 +2118,9 @@ public class L2Clan
 	public boolean checkClanJoinCondition(final L2PcInstance activeChar, final L2PcInstance target, final int pledgeType)
 	{
 		if (activeChar == null)
+		{
 			return false;
+		}
 		
 		if ((activeChar.getClanPrivileges() & L2Clan.CP_CL_JOIN_CLAN) != L2Clan.CP_CL_JOIN_CLAN)
 		{
@@ -2172,7 +2205,9 @@ public class L2Clan
 	public boolean checkAllyJoinCondition(final L2PcInstance activeChar, final L2PcInstance target)
 	{
 		if (activeChar == null)
+		{
 			return false;
+		}
 		
 		if (activeChar.getAllyId() == 0 || !activeChar.isClanLeader() || activeChar.getClanId() != activeChar.getAllyId())
 		{
@@ -2248,7 +2283,7 @@ public class L2Clan
 			}
 		}
 		
-		if (activeChar.isInsideZone(L2Character.ZONE_SIEGE) && target.isInsideZone(L2Character.ZONE_SIEGE))
+		if (activeChar.isInsideZone(ZoneId.ZONE_SIEGE) && target.isInsideZone(ZoneId.ZONE_SIEGE))
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.OPPOSING_CLAN_IS_PARTICIPATING_IN_SIEGE));
 			return false;
@@ -2321,7 +2356,9 @@ public class L2Clan
 	public void createAlly(final L2PcInstance player, final String allyName)
 	{
 		if (null == player)
+		{
 			return;
+		}
 		
 		if (Config.DEBUG)
 		{
@@ -2417,7 +2454,7 @@ public class L2Clan
 			return;
 		}
 		
-		if (player.isInsideZone(L2Character.ZONE_SIEGE))
+		if (player.isInsideZone(ZoneId.ZONE_SIEGE))
 		{
 			player.sendPacket(new SystemMessage(SystemMessageId.CANNOT_DISSOLVE_ALLY_WHILE_IN_SIEGE));
 			return;
@@ -2629,11 +2666,9 @@ public class L2Clan
 		StatusUpdate su = new StatusUpdate(player.getObjectId());
 		su.addAttribute(StatusUpdate.SP, player.getSp());
 		player.sendPacket(su);
-		su = null;
 		
 		ItemList il = new ItemList(player, false);
 		player.sendPacket(il);
-		il = null;
 		
 		changeLevel(getLevel() + 1);
 	}
@@ -2690,7 +2725,10 @@ public class L2Clan
 	@Override
 	public String toString()
 	{
-		return "L2Clan [_name=" + _name + ", _clanId=" + _clanId + ", _leader=" + _leader + ", _members=" + _members + ", _allyName=" + _allyName + ", _allyId=" + _allyId + ", _level=" + _level + ", _hasCastle=" + _hasCastle + ", _hasFort=" + _hasFort + ", _hasHideout=" + _hasHideout + ", _hasCrest=" + _hasCrest + ", _hiredGuards=" + _hiredGuards + ", _crestId=" + _crestId + ", _crestLargeId=" + _crestLargeId + ", _allyCrestId=" + _allyCrestId + ", _auctionBiddedAt=" + _auctionBiddedAt + ", _allyPenaltyExpiryTime=" + _allyPenaltyExpiryTime + ", _allyPenaltyType=" + _allyPenaltyType + ", _charPenaltyExpiryTime=" + _charPenaltyExpiryTime + ", _dissolvingExpiryTime=" + _dissolvingExpiryTime + ", _warehouse=" + _warehouse + ", _atWarWith=" + _atWarWith + ", _atWarAttackers=" + _atWarAttackers + ", _hasCrestLarge=" + _hasCrestLarge + ", _forum=" + _forum + ", _skillList=" + _skillList + ", _notice=" + _notice + ", _noticeEnabled=" + _noticeEnabled + ", _skills=" + _skills + ", _privs=" + _privs + ", _subPledges=" + _subPledges + ", _reputationScore=" + _reputationScore + ", _rank=" + _rank + "]";
+		return "L2Clan [_name=" + _name + ", _clanId=" + _clanId + ", _leader=" + _leader + ", _members=" + _members + ", _allyName=" + _allyName + ", _allyId=" + _allyId + ", _level=" + _level + ", _hasCastle=" + _hasCastle + ", _hasFort=" + _hasFort + ", _hasHideout=" + _hasHideout
+			+ ", _hasCrest=" + _hasCrest + ", _hiredGuards=" + _hiredGuards + ", _crestId=" + _crestId + ", _crestLargeId=" + _crestLargeId + ", _allyCrestId=" + _allyCrestId + ", _auctionBiddedAt=" + _auctionBiddedAt + ", _allyPenaltyExpiryTime=" + _allyPenaltyExpiryTime + ", _allyPenaltyType="
+			+ _allyPenaltyType + ", _charPenaltyExpiryTime=" + _charPenaltyExpiryTime + ", _dissolvingExpiryTime=" + _dissolvingExpiryTime + ", _warehouse=" + _warehouse + ", _atWarWith=" + _atWarWith + ", _atWarAttackers=" + _atWarAttackers + ", _hasCrestLarge=" + _hasCrestLarge + ", _forum="
+			+ _forum + ", _skillList=" + _skillList + ", _notice=" + _notice + ", _noticeEnabled=" + _noticeEnabled + ", _skills=" + _skills + ", _privs=" + _privs + ", _subPledges=" + _subPledges + ", _reputationScore=" + _reputationScore + ", _rank=" + _rank + "]";
 	}
 	
 	/**
@@ -2750,7 +2788,9 @@ public class L2Clan
 		if (!onlyThisClan)
 		{
 			if (crestId == 0)
+			{
 				CrestCache.getInstance().removeCrest(CrestType.ALLY, _allyCrestId);
+			}
 			
 			sqlStatement = "UPDATE clan_data SET ally_crest_id = ? WHERE ally_id = ?";
 			allyId = _allyId;

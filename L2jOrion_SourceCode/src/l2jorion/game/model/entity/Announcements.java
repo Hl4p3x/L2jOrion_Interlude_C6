@@ -26,8 +26,6 @@ import java.io.LineNumberReader;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javolution.text.TextBuilder;
 import javolution.util.FastList;
@@ -41,40 +39,38 @@ import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.script.DateRange;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * @author ProGramMoS
- * @version 1.6
- */
 public class Announcements
 {
 	private static Logger LOG = LoggerFactory.getLogger(Announcements.class.getName());
-
+	
 	private static Announcements _instance;
 	private List<String> _announcements = new FastList<>();
 	private List<List<Object>> _eventAnnouncements = new FastList<>();
-
+	
 	public Announcements()
 	{
 		loadAnnouncements();
 	}
-
+	
 	public static Announcements getInstance()
 	{
-		if(_instance == null)
+		if (_instance == null)
 		{
 			_instance = new Announcements();
 		}
-
+		
 		return _instance;
 	}
-
+	
 	public void loadAnnouncements()
 	{
 		_announcements.clear();
 		File file = new File(Config.DATAPACK_ROOT, "config/announcements.txt");
-
-		if(file.exists())
+		
+		if (file.exists())
 		{
 			readFromDisk(file);
 		}
@@ -82,12 +78,11 @@ public class Announcements
 		{
 			LOG.error("config/announcements.txt doesn't exist");
 		}
-
 	}
 	
 	public void showAnnouncementsNewStyle(L2PcInstance activeChar)
 	{
-		for(int i = 0; i < _announcements.size(); i++)
+		for (int i = 0; i < _announcements.size(); i++)
 		{
 			CreatureSay cs = new CreatureSay(0, Say2.CRITICAL_ANNOUNCE, activeChar.getName(), _announcements.get(i).replace("%name%", activeChar.getName()));
 			activeChar.sendPacket(cs);
@@ -105,7 +100,7 @@ public class Announcements
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 				
-				for(String element : msg)
+				for (String element : msg)
 				{
 					sm.addString(element);
 				}
@@ -113,10 +108,10 @@ public class Announcements
 			}
 		}
 	}
-
+	
 	public void showAnnouncements(L2PcInstance activeChar)
 	{
-		for(int i = 0; i < _announcements.size(); i++)
+		for (int i = 0; i < _announcements.size(); i++)
 		{
 			CreatureSay cs = new CreatureSay(0, Say2.ANNOUNCEMENT, activeChar.getName(), _announcements.get(i).replace("%name%", activeChar.getName()));
 			activeChar.sendPacket(cs);
@@ -135,7 +130,7 @@ public class Announcements
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 				
-				for(String element : msg)
+				for (String element : msg)
 				{
 					sm.addString(element);
 				}
@@ -151,40 +146,36 @@ public class Announcements
 		entry.add(msg);
 		_eventAnnouncements.add(entry);
 	}
-
+	
 	public void listAnnouncements(L2PcInstance activeChar)
 	{
 		String content = HtmCache.getInstance().getHtmForce("data/html/admin/announce.htm");
 		NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 		adminReply.setHtml(content);
 		TextBuilder replyMSG = new TextBuilder("<br>");
-
-		for(int i = 0; i < _announcements.size(); i++)
+		
+		for (int i = 0; i < _announcements.size(); i++)
 		{
 			replyMSG.append("<table width=275><tr><td width=255>" + _announcements.get(i) + "</td><td width=20>");
 			replyMSG.append("<button value=\"[X]\" action=\"bypass -h admin_del_announcement " + i + "\" width=20 height=20 back=\"sek.cbui94\" fore=\"sek.cbui92\"></td></tr></table>");
 		}
-
+		
 		adminReply.replace("%announces%", replyMSG.toString());
 		activeChar.sendPacket(adminReply);
-
-		content = null;
-		adminReply = null;
-		replyMSG = null;
 	}
-
+	
 	public void addAnnouncement(String text)
 	{
 		_announcements.add(text);
 		saveToDisk();
 	}
-
+	
 	public void delAnnouncement(int line)
 	{
 		_announcements.remove(line);
 		saveToDisk();
 	}
-
+	
 	private void readFromDisk(File file)
 	{
 		LineNumberReader lnr = null;
@@ -192,121 +183,138 @@ public class Announcements
 		try
 		{
 			int i = 0;
-
+			
 			String line = null;
 			reader = new FileReader(file);
 			lnr = new LineNumberReader(reader);
-
-			while((line = lnr.readLine()) != null)
+			
+			while ((line = lnr.readLine()) != null)
 			{
 				StringTokenizer st = new StringTokenizer(line, "\n\r");
-				if(st.hasMoreTokens())
+				if (st.hasMoreTokens())
 				{
 					String announcement = st.nextToken();
 					_announcements.add(announcement);
-
 					i++;
 				}
 			}
-			LOG.info("Announcements: Loaded " + i + " Announcements.");
+			LOG.info("Announcements: Loaded " + i + " Announcements");
 		}
-		catch(IOException e1)
+		catch (IOException e1)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e1.printStackTrace();
+			}
 			
 			LOG.error("Error reading announcements", e1);
 		}
 		finally
 		{
-			if(lnr != null)
+			if (lnr != null)
+			{
 				try
 				{
 					lnr.close();
 				}
-				catch(Exception e1)
+				catch (Exception e1)
 				{
 					e1.printStackTrace();
 				}
+			}
 			
-			if(reader != null)
+			if (reader != null)
+			{
 				try
 				{
 					reader.close();
 				}
-				catch(Exception e1)
+				catch (Exception e1)
 				{
 					e1.printStackTrace();
 				}
+			}
 		}
 	}
-
+	
 	private void saveToDisk()
 	{
 		File file = new File("config/announcements.txt");
 		FileWriter save = null;
-
+		
 		try
 		{
 			save = new FileWriter(file);
-			for(int i = 0; i < _announcements.size(); i++)
+			for (int i = 0; i < _announcements.size(); i++)
 			{
 				save.write(_announcements.get(i));
 				save.write("\r\n");
 			}
 			save.flush();
 		}
-		catch(IOException e)
+		catch (IOException e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("saving the announcements file has failed: " + e);
-		}finally{
-			
-			if(save != null)
+		}
+		finally
+		{
+			if (save != null)
+			{
 				try
 				{
 					save.close();
 				}
-				catch(IOException e)
+				catch (IOException e)
 				{
 					e.printStackTrace();
 				}
+			}
 		}
-
 	}
-
+	
 	public void announceToAll(String text)
 	{
 		CreatureSay cs = new CreatureSay(0, Say2.ANNOUNCEMENT, "", text);
-
-		for(L2PcInstance player : L2World.getInstance().getAllPlayers().values())
+		
+		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{
-			if(player != null)
-				if(player.isOnline()!=0)
+			if (player != null)
+			{
+				if (player.isOnline() != 0)
+				{
 					player.sendPacket(cs);
+				}
+			}
 		}
 	}
 	
 	public void AutoAnnounceToAll(String text)
 	{
 		CreatureSay cs = new CreatureSay(0, Say2.ANNOUNCEMENT, "", text);
-
-		for(L2PcInstance player : L2World.getInstance().getAllPlayers().values())
+		
+		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{
-			if(player != null)
-				if(player.isOnline()!=0)
+			if (player != null)
+			{
+				if (player.isOnline() != 0)
+				{
 					player.sendPacket(cs);
+				}
+			}
 		}
 	}
 	
 	public void sys(String text)
 	{
-		CreatureSay cs = new CreatureSay(0, 18, "", "SYS: "+text);
-		for(L2PcInstance player : L2World.getInstance().getAllPlayers().values())
+		CreatureSay cs = new CreatureSay(0, 18, "", "SYS: " + text);
+		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{
-			if( player != null && player.isOnline() == 1  && player.isGM())
+			if (player != null && player.isOnline() == 1 && player.isGM())
 			{
 				player.sendPacket(cs);
 			}
@@ -316,35 +324,47 @@ public class Announcements
 	// Colored Announcements 8D
 	public void gameAnnounceToAll(String text)
 	{
-		CreatureSay cs = new CreatureSay(0, 18, "", ""+text);
-		for(L2PcInstance player : L2World.getInstance().getAllPlayers().values())
+		CreatureSay cs = new CreatureSay(0, 18, "", "" + text);
+		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{
-			if(player != null)
-				if(player.isOnline()!=0)
+			if (player != null)
+			{
+				if (player.isOnline() != 0)
+				{
 					player.sendPacket(cs);
+				}
+			}
 		}
 	}
 	
 	public void pvpAnnounceToAll(String text)
 	{
-		CreatureSay cs = new CreatureSay(0, 18, "", "Announcements: "+text);
-		for(L2PcInstance player : L2World.getInstance().getAllPlayers().values())
+		CreatureSay cs = new CreatureSay(0, 18, "", "Announcements: " + text);
+		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{
-			if(player != null)
-				if(player.isOnline()!=0)
+			if (player != null)
+			{
+				if (player.isOnline() != 0)
+				{
 					player.sendPacket(cs);
+				}
+			}
 		}
 	}
 	
 	public void gameAnnounceToAll2(String text)
 	{
-		CreatureSay cs = new CreatureSay(0, 18, "", ""+text);
-
-		for(L2PcInstance player : L2World.getInstance().getAllPlayers().values())
+		CreatureSay cs = new CreatureSay(0, 18, "", "" + text);
+		
+		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{
-			if(player != null)
-				if(player.isOnline()!=0)
+			if (player != null)
+			{
+				if (player.isOnline() != 0)
+				{
 					player.sendPacket(cs);
+				}
+			}
 		}
 	}
 	
@@ -352,69 +372,73 @@ public class Announcements
 	{
 		CreatureSay cs = new CreatureSay(0, 18, "", activeChar.getName() + ": " + text);
 		
-		for(L2PcInstance player : L2World.getInstance().getAllPlayers().values())
+		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{
-			if(player != null)
-				if(player.isOnline()!=0)
+			if (player != null)
+			{
+				if (player.isOnline() != 0)
+				{
 					player.sendPacket(cs);
+				}
+			}
 		}
 	}
 	
-	public void announceRB(String text)
+	public void announceWithServerName(String text)
 	{
 		CreatureSay cs = new CreatureSay(0, 18, "", Config.ALT_Server_Menu_Name + ": " + text);
-
-		for(L2PcInstance player : L2World.getInstance().getAllPlayers().values())
+		
+		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{
-			if(player != null)
-				if(player.isOnline()!=0)
+			if (player != null)
+			{
+				if (player.isOnline() != 0)
+				{
 					player.sendPacket(cs);
+				}
+			}
 		}
 	}
-
+	
 	public void announceToAll(SystemMessage sm)
 	{
-		for(L2PcInstance player : L2World.getInstance().getAllPlayers().values())
+		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{
 			player.sendPacket(sm);
 		}
 	}
-
-	// Method fo handling announcements from admin
+	
 	public void handleAnnounce(String command, int lengthToTrim)
 	{
 		try
 		{
-			// Announce string to everyone on server
 			String text = command.substring(lengthToTrim);
 			Announcements.getInstance().gameAnnounceToAll(text);
-			text = null;
 		}
-
-		// No body cares!
-		catch(StringIndexOutOfBoundsException e)
+		
+		catch (StringIndexOutOfBoundsException e)
 		{
-			// empty message.. ignore
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 	}
+	
 	public void handleAnnounce2(String command, int lengthToTrim)
 	{
 		try
 		{
-			// Announce string to everyone on server
 			String text = command.substring(lengthToTrim);
 			Announcements.getInstance().gameAnnounceToAll2(text);
-			text = null;
 		}
-
-		// No body cares!
-		catch(StringIndexOutOfBoundsException e)
+		
+		catch (StringIndexOutOfBoundsException e)
 		{
-			// empty message.. ignore
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 	}
 }

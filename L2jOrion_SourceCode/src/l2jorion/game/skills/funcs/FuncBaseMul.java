@@ -23,10 +23,6 @@ package l2jorion.game.skills.funcs;
 import l2jorion.game.skills.Env;
 import l2jorion.game.skills.Stats;
 
-/**
- * @author ProGramMoS
- */
-
 public class FuncBaseMul extends Func
 {
 	private final Lambda _lambda;

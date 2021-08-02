@@ -21,15 +21,11 @@ package l2jorion.game.taskmanager;
 
 import java.util.concurrent.ScheduledFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.taskmanager.TaskManager.ExecutedTask;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * @author Layane
- */
 public abstract class Task
 {
 	private static Logger LOG = LoggerFactory.getLogger(Task.class);

@@ -28,13 +28,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.datatables.SkillTable;
+import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2EnchantSkillLearn;
 import l2jorion.game.model.L2PledgeSkillLearn;
 import l2jorion.game.model.L2Skill;
@@ -43,6 +41,8 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.base.ClassId;
 import l2jorion.game.skills.holders.ISkillsHolder;
 import l2jorion.game.skills.holders.PlayerSkillHolder;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
@@ -298,7 +298,9 @@ public class SkillTreeTable
 	public int getExpertiseLevel(final int grade)
 	{
 		if (grade <= 0)
+		{
 			return 0;
+		}
 		
 		// since expertise comes at same level for all classes we use paladin for now
 		final Map<Integer, L2SkillLearn> learnMap = getSkillTrees().get(ClassId.paladin);
@@ -306,7 +308,9 @@ public class SkillTreeTable
 		final int skillHashCode = SkillTable.getSkillHashCode(239, grade);
 		
 		if (learnMap.containsKey(skillHashCode))
+		{
 			return learnMap.get(skillHashCode).getMinLevel();
+		}
 		
 		return 0;
 	}
@@ -325,7 +329,9 @@ public class SkillTreeTable
 		final int skillHashCode = SkillTable.getSkillHashCode(skillId, skillLvl);
 		
 		if (map.containsKey(skillHashCode))
+		{
 			return map.get(skillHashCode).getMinLevel();
+		}
 		
 		return 0;
 	}
@@ -339,7 +345,9 @@ public class SkillTreeTable
 		{
 			// checks if the current class has this skill
 			if (map.containsKey(skillHashCode))
+			{
 				return map.get(skillHashCode).getMinLevel();
+			}
 		}
 		
 		return 0;
@@ -446,41 +454,27 @@ public class SkillTreeTable
 		return result.toArray(new L2SkillLearn[result.size()]);
 	}
 	
-	public L2EnchantSkillLearn[] getAvailableEnchantSkills(final L2PcInstance cha)
+	public L2EnchantSkillLearn[] getAvailableEnchantSkills(final L2Character player)
 	{
 		final List<L2EnchantSkillLearn> result = new FastList<>();
 		final List<L2EnchantSkillLearn> skills = new FastList<>();
 		
 		skills.addAll(_enchantSkillTrees);
 		
-		final L2Skill[] oldSkills = cha.getAllSkills();
-		
-		if (cha.getLevel() < 76)
+		if (player.getLevel() < 76)
 		{
 			return result.toArray(new L2EnchantSkillLearn[result.size()]);
 		}
 		
 		for (final L2EnchantSkillLearn skillLearn : skills)
 		{
-			boolean isKnownSkill = false;
-			
-			for (final L2Skill skill : oldSkills)
+			final L2Skill skill = player.getKnownSkill(skillLearn.getId());
+			if (skill != null && ((skill.getLevel() == SkillTable.getInstance().getMaxLevel(skill.getId()) && (skillLearn.getLevel() == 101 || skillLearn.getLevel() == 141)) || (skill.getLevel() == skillLearn.getLevel() - 1)))
 			{
-				if (isKnownSkill)
-				{
-					continue;
-				}
-				if (skill.getId() == skillLearn.getId())
-				{
-					isKnownSkill = true;
-					if (skill.getLevel() == skillLearn.getMinSkillLevel())
-					{
-						// this is the next level of a skill that we know
-						result.add(skillLearn);
-					}
-				}
+				result.add(skillLearn);
 			}
 		}
+		
 		return result.toArray(new L2EnchantSkillLearn[result.size()]);
 	}
 	
@@ -498,30 +492,30 @@ public class SkillTreeTable
 		
 		final L2Skill[] oldSkills = cha.getClan().getAllSkills();
 		
-		for (final L2PledgeSkillLearn temp : skills)
+		for (final L2PledgeSkillLearn clanSkill : skills)
 		{
-			if (temp.getBaseLevel() <= cha.getClan().getLevel())
+			if (clanSkill.getBaseLevel() <= cha.getClan().getLevel())
 			{
 				boolean knownSkill = false;
 				
 				for (int j = 0; j < oldSkills.length && !knownSkill; j++)
 				{
-					if (oldSkills[j].getId() == temp.getId())
+					if (oldSkills[j].getId() == clanSkill.getId())
 					{
 						knownSkill = true;
 						
-						if (oldSkills[j].getLevel() == temp.getLevel() - 1)
+						if (oldSkills[j].getLevel() == clanSkill.getLevel() - 1)
 						{
 							// this is the next level of a skill that we know
-							result.add(temp);
+							result.add(clanSkill);
 						}
 					}
 				}
 				
-				if (!knownSkill && temp.getLevel() == 1)
+				if (!knownSkill && clanSkill.getLevel() == 1)
 				{
 					// this is a new skill
-					result.add(temp);
+					result.add(clanSkill);
 				}
 			}
 		}
@@ -547,10 +541,12 @@ public class SkillTreeTable
 		for (final L2SkillLearn temp : skills)
 		{
 			if (temp.getMinLevel() > cha.getLevel() && temp.getSpCost() != 0)
+			{
 				if (minLevel == 0 || temp.getMinLevel() < minLevel)
 				{
 					minLevel = temp.getMinLevel();
 				}
+			}
 		}
 		
 		return minLevel;
@@ -571,10 +567,12 @@ public class SkillTreeTable
 		for (final L2SkillLearn s : skills)
 		{
 			if (s.getMinLevel() > cha.getLevel())
+			{
 				if (minLevel == 0 || s.getMinLevel() < minLevel)
 				{
 					minLevel = s.getMinLevel();
 				}
+			}
 		}
 		
 		return minLevel;
@@ -595,7 +593,9 @@ public class SkillTreeTable
 				if (!player.getClassId().equalsOrChildOf(classId))
 				{
 					if (skill.getCrossLearnAdd() < 0)
+					{
 						return skillCost;
+					}
 					
 					skillCost += skill.getCrossLearnAdd();
 					skillCost *= skill.getCrossLearnMul();

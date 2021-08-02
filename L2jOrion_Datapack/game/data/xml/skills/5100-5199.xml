@@ -363,12 +363,12 @@
   </for>
 </skill>
 <skill id="5123" levels="1" name="Maximum Defense">
-  <set name="magicLvl" val="80" />
+  <set name="magicLvl" val="78" />
   <set name="target" val="TARGET_ONE"/>
   <set name="skillType" val="CONT"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <for>
-    <effect name="Buff" time="5" val="0">
+    <effect name="Buff" time="5" val="0" stackOrder="1" stackType="combination">
       <add order="0x40" stat="pDef" val="500"/>
       <add order="0x40" stat="mDef" val="300"/>
 	  <mul order="0x30" stat="sDef" val="1.5"/>
@@ -376,18 +376,18 @@
   </for>
 </skill>
 <skill id="5124" levels="1" name="Anti-Music">
-  <set name="magicLvl" val="80" />
+  <set name="magicLvl" val="78" />
   <set name="target" val="TARGET_ONE"/>
   <set name="skillType" val="CONT"/>
   <set name="operateType" val="OP_ACTIVE"/>
 </skill>
 <skill id="5125" levels="1" name="Maximum Resist Status">
-  <set name="magicLvl" val="80" />
+  <set name="magicLvl" val="78" />
   <set name="target" val="TARGET_ONE"/>
   <set name="skillType" val="CONT"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <for>
-    <effect name="Buff" time="8" val="0">
+    <effect name="Buff" time="5" val="0" stackOrder="1" stackType="combination">
       <mul order="0x30" stat="cancelVuln" val="0.8"/>
       <mul order="0x30" stat="rootVuln" val="0.8"/>
       <mul order="0x30" stat="sleepVuln" val="0.8"/>
@@ -400,23 +400,25 @@
   </for>
 </skill>
 <skill id="5126" levels="1" name="Maximum Recovery">
+  <set name="magicLvl" val="78" />
   <set name="target" val="TARGET_ONE"/>
   <set name="skillType" val="CONT"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <for>
-    <effect name="Buff" time="8" val="0">
+    <effect name="Buff" time="5" val="0" stackOrder="1" stackType="combination">
       <mul order="0x30" stat="regHp" val="1.2"/>
       <mul order="0x30" stat="regCp" val="1.2"/>
     </effect>
   </for>
 </skill>
 <skill id="5127" levels="1" name="Recover Force">
+  <set name="magicLvl" val="78" />
   <set name="target" val="TARGET_ONE"/>
   <set name="skillType" val="CONT"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <for>
-    <effect name="Buff" time="8" val="0">
-      <mul order="0x30" stat="pAtk" val="1.1"/> <!-- Guessed -->
+    <effect name="Buff" time="5" val="0" stackOrder="1" stackType="combination">
+      <mul order="0x30" stat="pAtk" val="1.1"/>
     </effect>
   </for>
 </skill>
@@ -426,7 +428,7 @@
     <set name="skillType" val="CONT" />
     <set name="operateType" val="OP_ACTIVE" />
     <for>
-        <effect name="Buff" time="7" val="0" stackOrder="1" stackType="combination">
+        <effect name="Buff" time="5" val="0" stackOrder="1" stackType="combination">
             <add order="0x40" stat="pAtk" val="124">
                 <using kind="Bow" />
             </add>
@@ -443,12 +445,12 @@
   </for>
 </skill>
 <skill id="5129" levels="1" name="Smokescreen">
-  <set name="magicLvl" val="80" />
+  <set name="magicLvl" val="78" />
   <set name="target" val="TARGET_ONE"/>
   <set name="skillType" val="CONT"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <for>
-    <effect name="Buff" time="8" val="0">
+    <effect name="Buff" time="5" val="0" stackOrder="1" stackType="combination">
       <add order="0x40" stat="rEvas" val="15"/>
       <mul order="0x30" stat="blowRate" val="1.2"/>
     </effect>
@@ -539,7 +541,7 @@
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="castRange" val="40"/>
   <set name="levelModifier" val="1"/>
-  <set name="nextActionAttack" val="true" />
+  <set name="nextActionAttack" val="false" />
   <set name="reuseDelay" val="30000"/>
   <for>
  	<effect count="1" name="Stun" stackOrder="-1" stackType="Stun" time="9" val="0" effectPower="60" effectType="STUN"/>
@@ -549,10 +551,9 @@
   <set name="castRange" val="900" />
   <set name="effectRange" val="1400" />
   <set name="overHit" val="true" />
-  <set name="power" val="81"/>
+  <set name="power" val="228"/>
   <set name="mpInitialConsume" val="64"/>
   <set name="mpConsume" val="258"/>
-  <set name="effectPoint" val="950"/>
   <set name="magiclvl" val="80"/>
   <set name="target" val="TARGET_AREA"/>
   <set name="element" val="3"/> <!-- Water -->
@@ -565,7 +566,6 @@
 </skill>
 <skill id="5140" levels="1" name="Force Curse">
   <set name="mpConsume" val="117"/>
-  <set name="effectPoint" val="672"/>
   <set name="magiclvl" val="80"/>
   <set name="activateRate" val="35"/>
   <set name="saveVs" val="MEN"/>

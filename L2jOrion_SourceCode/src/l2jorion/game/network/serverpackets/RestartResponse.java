@@ -20,27 +20,23 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class ...
- * @version $Revision: 1.3.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class RestartResponse extends L2GameServerPacket
 {
 	private static final String _S__74_RESTARTRESPONSE = "[S] 74 RestartResponse";
+	
 	private static final RestartResponse STATIC_PACKET_TRUE = new RestartResponse(true);
 	private static final RestartResponse STATIC_PACKET_FALSE = new RestartResponse(false);
-	private final String _message;
-	private final boolean _result;
 	
-	public static final RestartResponse valueOf(final boolean result)
+	public static final RestartResponse valueOf(boolean result)
 	{
 		return result ? STATIC_PACKET_TRUE : STATIC_PACKET_FALSE;
 	}
 	
-	public RestartResponse(final boolean result)
+	private final boolean _result;
+	
+	public RestartResponse(boolean result)
 	{
 		_result = result;
-		_message = "ok merong~ khaha"; // Message like L2OFF
 	}
 	
 	@Override
@@ -48,13 +44,8 @@ public class RestartResponse extends L2GameServerPacket
 	{
 		writeC(0x5f);
 		writeD(_result ? 1 : 0);
-		writeS(_message);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

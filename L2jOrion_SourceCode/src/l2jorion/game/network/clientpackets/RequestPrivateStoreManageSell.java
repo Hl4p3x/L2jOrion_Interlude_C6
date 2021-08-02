@@ -20,14 +20,13 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.PrivateStoreManageListSell;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class RequestPrivateStoreManageSell extends L2GameClientPacket
 {
@@ -43,7 +42,9 @@ public final class RequestPrivateStoreManageSell extends L2GameClientPacket
 	{
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		
 		// Fix for privatestore exploit during login
 		if (!player.isVisible() || player.isLocked())
@@ -101,7 +102,9 @@ public final class RequestPrivateStoreManageSell extends L2GameClientPacket
 		}
 		
 		if (player.getMountType() != 0)
+		{
 			return;
+		}
 		
 		if (player.getPrivateStoreType() == L2PcInstance.STORE_PRIVATE_SELL || player.getPrivateStoreType() == L2PcInstance.STORE_PRIVATE_SELL + 1 || player.getPrivateStoreType() == L2PcInstance.STORE_PRIVATE_PACKAGE_SELL)
 		{
@@ -114,7 +117,7 @@ public final class RequestPrivateStoreManageSell extends L2GameClientPacket
 			{
 				player.standUp();
 			}
-
+			
 			player.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_SELL + 1);
 			player.sendPacket(new PrivateStoreManageListSell(player));
 		}

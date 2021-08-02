@@ -20,12 +20,16 @@
 
 package l2jorion.game.network.clientpackets;
 
+import l2jorion.game.managers.CHSiegeManager;
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.FortManager;
+import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.model.entity.siege.Fort;
+import l2jorion.game.model.entity.siege.hallsiege.SiegableHall;
 import l2jorion.game.network.SystemMessageId;
+import l2jorion.game.network.serverpackets.SiegeInfo;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
 /**
@@ -51,17 +55,29 @@ public final class RequestJoinSiege extends L2GameClientPacket
 		final L2PcInstance player = getClient().getActiveChar();
 		
 		if (player == null)
+		{
 			return;
+		}
 		
 		if (!player.isClanLeader())
+		{
 			return;
+		}
+		
+		L2Clan clan = player.getClan();
+		if (clan == null)
+		{
+			return;
+		}
 		
 		if (_castleId < 100)
 		{
 			final Castle castle = CastleManager.getInstance().getCastleById(_castleId);
 			
 			if (castle == null)
+			{
 				return;
+			}
 			
 			if (_isJoining == 1)
 			{
@@ -87,13 +103,29 @@ public final class RequestJoinSiege extends L2GameClientPacket
 			
 			castle.getSiege().listRegisterClan(player);
 		}
-		else
+		
+		SiegableHall hall = CHSiegeManager.getInstance().getSiegableHall(_castleId);
+		if (hall != null)
 		{
-			final Fort fort = FortManager.getInstance().getFortById(_castleId);
-			
-			if (fort == null)
-				return;
-			
+			if (_isJoining == 1)
+			{
+				if (System.currentTimeMillis() < clan.getDissolvingExpiryTime())
+				{
+					player.sendPacket(SystemMessageId.CANT_PARTICIPATE_IN_SIEGE_WHILE_DISSOLUTION_IN_PROGRESS);
+					return;
+				}
+				CHSiegeManager.getInstance().registerClan(clan, hall, player);
+			}
+			else
+			{
+				CHSiegeManager.getInstance().unRegisterClan(clan, hall, player);
+			}
+			player.sendPacket(new SiegeInfo(hall));
+		}
+		
+		final Fort fort = FortManager.getInstance().getFortById(_castleId);
+		if (fort != null)
+		{
 			if (_isJoining == 1)
 			{
 				if (System.currentTimeMillis() < player.getClan().getDissolvingExpiryTime())

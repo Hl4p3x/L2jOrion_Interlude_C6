@@ -27,8 +27,6 @@ import java.io.InputStream;
 
 import javax.script.ScriptContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Node;
 
 import l2jorion.Config;
@@ -37,11 +35,13 @@ import l2jorion.game.script.Parser;
 import l2jorion.game.script.ParserNotCreatedException;
 import l2jorion.game.script.ScriptDocument;
 import l2jorion.game.script.ScriptEngine;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class FaenorScriptEngine extends ScriptEngine
 {
 	static Logger LOG = LoggerFactory.getLogger(FaenorScriptEngine.class);
-
+	
 	public static final String PACKAGE_DIRECTORY = "data/faenor/";
 	
 	protected FaenorScriptEngine()
@@ -88,7 +88,7 @@ public class FaenorScriptEngine extends ScriptEngine
 		try
 		{
 			parser.parseScript(node, context);
-			LOG.info(getClass().getSimpleName() + ": Loaded  " + script.getName() + " successfully.");
+			LOG.info(getClass().getSimpleName() + ": Loaded  " + script.getName() + " successfully");
 		}
 		catch (Exception e)
 		{

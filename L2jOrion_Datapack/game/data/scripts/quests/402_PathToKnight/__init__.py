@@ -150,6 +150,7 @@ class Quest (JQuest) :
            for item in range(1162,1180) :
                st.takeItems(item,-1)
            st.takeItems(MARK_OF_ESQUIRE,-1)
+           st.addExpAndSp(16000,5650)
            st.giveItems(SWORD_OF_RITUAL,1)
            st.set("cond","0")
            st.setState(COMPLETED)

@@ -22,22 +22,13 @@ package l2jorion.game.network.serverpackets;
 
 import java.util.Vector;
 
+import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * 01 // Packet Identifier <BR>
- * c6 37 50 40 // ObjectId <BR>
- * <BR>
- * 01 00 // Number of Attribute Trame of the Packet <BR>
- * <BR>
- * c6 37 50 40 // Attribute Identifier : 01-Level, 02-Experience, 03-STR, 04-DEX, 05-CON, 06-INT, 07-WIT, 08-MEN, 09-Current HP, 0a, Max HP...<BR>
- * cd 09 00 00 // Attribute Value <BR>
- * format d d(dd)
- * @version $Revision: 1.3.2.1.2.5 $ $Date: 2005/03/27 15:29:39 $
- */
 public class StatusUpdate extends L2GameServerPacket
 {
 	private static final String _S__1A_STATUSUPDATE = "[S] 0e StatusUpdate";
+	
 	public static final int LEVEL = 0x01;
 	public static final int EXP = 0x02;
 	public static final int STR = 0x03;
@@ -78,8 +69,6 @@ public class StatusUpdate extends L2GameServerPacket
 	
 	class Attribute
 	{
-		
-		// id values 09 - current health 0a - max health 0b - current mana 0c - max mana
 		public int id;
 		public int value;
 		
@@ -88,6 +77,16 @@ public class StatusUpdate extends L2GameServerPacket
 			id = pId;
 			value = pValue;
 		}
+	}
+	
+	public StatusUpdate(L2Object object)
+	{
+		_objectId = object.getObjectId();
+	}
+	
+	public boolean hasAttributes()
+	{
+		return !_attributes.isEmpty();
 	}
 	
 	public StatusUpdate(final L2PcInstance actor)
@@ -175,11 +174,9 @@ public class StatusUpdate extends L2GameServerPacket
 			writeD((int) _actor.getCurrentCp());
 			writeD(MAX_CP);
 			writeD(_actor.getMaxCp());
-			
 		}
 		else
 		{
-			
 			writeD(_objectId);
 			writeD(_attributes.size());
 			
@@ -194,10 +191,6 @@ public class StatusUpdate extends L2GameServerPacket
 		
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

@@ -45,8 +45,7 @@ public abstract class ReceivablePacket<T extends MMOClient<?>> extends AbstractP
 	
 	/**
 	 * Reads <B>byte[]</B> from the buffer. <BR>
-	 * Reads as many bytes as the given length (len). Starts to fill the
-	 * byte array from the given offset to <B>offset</B> + <B>len</B>.
+	 * Reads as many bytes as the given length (len). Starts to fill the byte array from the given offset to <B>offset</B> + <B>len</B>.
 	 * @param dst : the byte array which will be filled with the data.
 	 * @param offset : starts to fill the byte array from the given offset.
 	 * @param len : the given length of bytes to be read.

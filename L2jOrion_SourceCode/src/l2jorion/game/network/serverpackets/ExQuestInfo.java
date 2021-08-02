@@ -20,19 +20,10 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class ...
- * @version $Revision: $ $Date: $
- * @author Luca Baldi
- */
 public class ExQuestInfo extends L2GameServerPacket
 {
 	private static final String _S__FE_19_EXQUESTINFO = "[S] FE:19 EXQUESTINFO";
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#writeImpl()
-	 */
 	@Override
 	protected void writeImpl()
 	{
@@ -40,10 +31,6 @@ public class ExQuestInfo extends L2GameServerPacket
 		writeH(0x19);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.BasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

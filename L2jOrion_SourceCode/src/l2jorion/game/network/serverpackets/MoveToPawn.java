@@ -25,6 +25,7 @@ import l2jorion.game.model.L2Character;
 public class MoveToPawn extends L2GameServerPacket
 {
 	private static final String _S__75_MOVETOPAWN = "[S] 60 MoveToPawn";
+	
 	private int _charObjId;
 	private int _targetId;
 	private int _distance;

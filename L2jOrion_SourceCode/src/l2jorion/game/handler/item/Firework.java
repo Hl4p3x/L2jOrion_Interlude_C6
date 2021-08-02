@@ -29,30 +29,26 @@ import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * This class ...
- * 
- * @version $Revision: 1.0.0.0.0.0 $ $Date: 2005/09/02 19:41:13 $
- */
-
 public class Firework implements IItemHandler
 {
-	//Modified by Baghak (Prograsso): Added Firework support
 	private static final int[] ITEM_IDS =
 	{
-			6403, 6406, 6407
+		6403,
+		6406,
+		6407
 	};
-
+	
 	@Override
 	public void useItem(L2PlayableInstance playable, L2ItemInstance item)
 	{
-		if(!(playable instanceof L2PcInstance))
+		if (!(playable instanceof L2PcInstance))
+		{
 			return; // prevent Class cast exception
-
+		}
+		
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		int itemId = item.getItemId();
-
-
+		
 		if (!activeChar.getFloodProtectors().getFirework().tryPerformAction("firework"))
 		{
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_CANNOT_BE_USED);
@@ -60,59 +56,59 @@ public class Firework implements IItemHandler
 			activeChar.sendPacket(sm);
 			return;
 		}
-
-		if(activeChar.isCastingNow())
+		
+		if (activeChar.isCastingNow())
 		{
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
-		if(activeChar.isInOlympiadMode())
+		
+		if (activeChar.isInOlympiadMode())
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.THIS_ITEM_IS_NOT_AVAILABLE_FOR_THE_OLYMPIAD_EVENT));
 			return;
 		}
-
-		if(activeChar.inObserverMode())
+		
+		if (activeChar.inObserverMode())
 		{
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
-		if(activeChar.isSitting())
+		
+		if (activeChar.isSitting())
 		{
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
-		if(activeChar.isConfused())
+		
+		if (activeChar.isConfused())
 		{
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
-		if(activeChar.isStunned())
+		
+		if (activeChar.isStunned())
 		{
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
-		if(activeChar.isDead())
+		
+		if (activeChar.isDead())
 		{
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
-		if(activeChar.isAlikeDead())
+		
+		if (activeChar.isAlikeDead())
 		{
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
+		
 		/*
 		 * Elven Firecracker
 		 */
-		if(itemId == 6403) // elven_firecracker, xml: 2023
+		if (itemId == 6403) // elven_firecracker, xml: 2023
 		{
 			MagicSkillUser MSU = new MagicSkillUser(playable, activeChar, 2023, 1, 1, 0);
 			activeChar.sendPacket(MSU);
@@ -124,7 +120,7 @@ public class Firework implements IItemHandler
 		/*
 		 * Firework
 		 */
-		else if(itemId == 6406) // firework, xml: 2024
+		else if (itemId == 6406) // firework, xml: 2024
 		{
 			MagicSkillUser MSU = new MagicSkillUser(playable, activeChar, 2024, 1, 1, 0);
 			activeChar.sendPacket(MSU);
@@ -136,7 +132,7 @@ public class Firework implements IItemHandler
 		/*
 		 * Lage Firework
 		 */
-		else if(itemId == 6407) // large_firework, xml: 2025
+		else if (itemId == 6407) // large_firework, xml: 2025
 		{
 			MagicSkillUser MSU = new MagicSkillUser(playable, activeChar, 2025, 1, 1, 0);
 			activeChar.sendPacket(MSU);
@@ -145,20 +141,20 @@ public class Firework implements IItemHandler
 			useFw(activeChar, 2025, 1);
 			playable.destroyItem("Consume", item.getObjectId(), 1, null, false);
 		}
-
+		
 		activeChar = null;
 	}
-
+	
 	public void useFw(L2PcInstance activeChar, int magicId, int level)
 	{
 		L2Skill skill = SkillTable.getInstance().getInfo(magicId, level);
-		if(skill != null)
+		if (skill != null)
 		{
 			activeChar.useMagic(skill, false, false);
 		}
 		skill = null;
 	}
-
+	
 	@Override
 	public int[] getItemIds()
 	{

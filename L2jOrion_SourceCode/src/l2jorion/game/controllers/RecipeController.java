@@ -29,6 +29,7 @@ import java.util.WeakHashMap;
 import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.datatables.csv.RecipeTable;
+import l2jorion.game.enums.AchType;
 import l2jorion.game.model.Inventory;
 import l2jorion.game.model.L2ManufactureItem;
 import l2jorion.game.model.L2RecipeList;
@@ -49,10 +50,9 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.skills.Stats;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RecipeController
 {
@@ -79,21 +79,18 @@ public class RecipeController
 			RecipeBookItemList response = new RecipeBookItemList(isDwarvenCraft, player.getMaxMp());
 			response.addRecipes(isDwarvenCraft ? player.getDwarvenRecipeBook() : player.getCommonRecipeBook());
 			player.sendPacket(response);
-			response = null;
 			return;
 		}
 		
 		SystemMessage sm = new SystemMessage(SystemMessageId.CANT_ALTER_RECIPEBOOK_WHILE_CRAFTING);
 		player.sendPacket(sm);
-		maker = null;
-		sm = null;
 		
 		return;
 	}
 	
 	public synchronized void requestMakeItemAbort(final L2PcInstance player)
 	{
-		_activeMakers.remove(player); // TODO: anything else here?
+		_activeMakers.remove(player);
 	}
 	
 	public synchronized void requestManufactureItem(final L2PcInstance manufacturer, final int recipeListId, final L2PcInstance player)
@@ -101,7 +98,9 @@ public class RecipeController
 		L2RecipeList recipeList = getValidRecipeList(player, recipeListId);
 		
 		if (recipeList == null)
+		{
 			return;
+		}
 		
 		List<L2RecipeList> dwarfRecipes = Arrays.asList(manufacturer.getDwarvenRecipeBook());
 		List<L2RecipeList> commonRecipes = Arrays.asList(manufacturer.getCommonRecipeBook());
@@ -109,8 +108,6 @@ public class RecipeController
 		if (!dwarfRecipes.contains(recipeList) && !commonRecipes.contains(recipeList))
 		{
 			Util.handleIllegalPlayerAction(player, " Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " sent a false recipe id.", Config.DEFAULT_PUNISH);
-			commonRecipes = null;
-			dwarfRecipes = null;
 			return;
 		}
 		
@@ -135,8 +132,6 @@ public class RecipeController
 				maker.run();
 			}
 		}
-		maker = null;
-		recipeList = null;
 	}
 	
 	public synchronized void requestMakeItem(final L2PcInstance player, final int recipeListId)
@@ -150,7 +145,9 @@ public class RecipeController
 		L2RecipeList recipeList = getValidRecipeList(player, recipeListId);
 		
 		if (recipeList == null)
+		{
 			return;
+		}
 		
 		List<L2RecipeList> dwarfRecipes = Arrays.asList(player.getDwarvenRecipeBook());
 		List<L2RecipeList> commonRecipes = Arrays.asList(player.getCommonRecipeBook());
@@ -158,14 +155,11 @@ public class RecipeController
 		if (!dwarfRecipes.contains(recipeList) && !commonRecipes.contains(recipeList))
 		{
 			Util.handleIllegalPlayerAction(player, " Warning! Character " + player.getName() + " of account " + player.getAccountName() + " sent a false recipe id.", Config.DEFAULT_PUNISH);
-			dwarfRecipes = null;
-			commonRecipes = null;
 			return;
 		}
 		
 		RecipeItemMaker maker;
 		
-		// check if already busy (possible in alt mode only)
 		if (Config.ALT_GAME_CREATION && (maker = _activeMakers.get(player)) != null)
 		{
 			final SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
@@ -188,8 +182,6 @@ public class RecipeController
 				maker.run();
 			}
 		}
-		maker = null;
-		recipeList = null;
 	}
 	
 	private class RecipeItemMaker implements Runnable
@@ -280,6 +272,7 @@ public class RecipeController
 			if (_player != _target)
 			{
 				for (final L2ManufactureItem temp : _player.getCreateList().getList())
+				{
 					if (temp.getRecipeId() == _recipeList.getId()) // find recipe for item we want manufactured
 					{
 						_price = temp.getCost();
@@ -291,6 +284,7 @@ public class RecipeController
 						}
 						break;
 					}
+				}
 			}
 			
 			// make temporary items
@@ -347,12 +341,9 @@ public class RecipeController
 				return;
 			}
 			
-			/*if (_player.isOnline() == 0 || _target.isOnline() == 0)
-			{
-				LOG.warn("player or target is not online, aborting " + _target + _player);
-				abort();
-				return;
-			}*/
+			/*
+			 * if (_player.isOnline() == 0 || _target.isOnline() == 0) { LOG.warn("player or target is not online, aborting " + _target + _player); abort(); return; }
+			 */
 			
 			if (Config.ALT_GAME_CREATION && _activeMakers.get(_player) == null)
 			{
@@ -375,7 +366,9 @@ public class RecipeController
 				
 				// check mana
 				if (!validateMp())
+				{
 					return;
+				}
 				// use some mp
 				_player.reduceCurrentMp(_manaRequired);
 				// update craft window mp bar
@@ -390,10 +383,8 @@ public class RecipeController
 					// divided by RATE_CONSUMABLES_COST to remove craft time increase on higher consumables rates
 					_delay = (int) (Config.ALT_GAME_CREATION_SPEED * _player.getMReuseRate(_skill) * GameTimeController.TICKS_PER_SECOND / Config.RATE_CONSUMABLE_COST) * GameTimeController.MILLIS_IN_TICK;
 					
-					// FIXME: please fix this packet to show crafting animation (somebody)
 					MagicSkillUser msk = new MagicSkillUser(_player, _skillId, _skillLevel, _delay, 0);
 					_player.broadcastPacket(msk);
-					msk = null;
 					
 					_player.sendPacket(new SetupGauge(0, _delay));
 					ThreadPoolManager.getInstance().scheduleGeneral(this, 100 + _delay);
@@ -410,7 +401,9 @@ public class RecipeController
 					catch (final InterruptedException e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 					}
 					finally
 					{
@@ -457,6 +450,7 @@ public class RecipeController
 			{
 				rewardPlayer(); // and immediately puts created item in its place
 				updateMakeInfo(true);
+				_player.getAchievement().increase(AchType.RECIPE_SUCCESS);
 			}
 			else
 			{
@@ -467,6 +461,7 @@ public class RecipeController
 				}
 				
 				updateMakeInfo(false);
+				_player.getAchievement().increase(AchType.RECIPE_FAIL);
 			}
 			// update load and mana bar of craft window
 			updateCurMp();
@@ -621,12 +616,8 @@ public class RecipeController
 			_activeMakers.remove(_player);
 		}
 		
-		/**
-		 * FIXME: This class should be in some other file, but I don't know where Class explanation: For item counting or checking purposes. When you don't want to modify inventory class contains itemId, quantity, ownerId, referencePrice, but not objectId
-		 */
 		private class TempItem
 		{
-			// no object id stored, this will be only "list" of items with it's owner
 			private final int _itemId;
 			private int _quantity;
 			private final String _itemName;

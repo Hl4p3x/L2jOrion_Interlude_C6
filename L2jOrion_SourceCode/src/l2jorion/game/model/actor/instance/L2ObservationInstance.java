@@ -23,25 +23,15 @@ package l2jorion.game.model.actor.instance;
 import java.util.StringTokenizer;
 
 import l2jorion.game.managers.SiegeManager;
-import l2jorion.game.model.entity.olympiad.Olympiad;
+import l2jorion.game.model.olympiad.OlympiadManager;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ItemList;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2NpcTemplate;
 
-/**
- * The Class L2ObservationInstance.
- * @author NightMarez
- * @version $Revision: 1.3.2.2.2.5 $ $Date: 2005/03/27 15:29:32 $
- */
 public final class L2ObservationInstance extends L2FolkInstance
 {
-	/**
-	 * Instantiates a new l2 observation instance.
-	 * @param objectId the object id
-	 * @param template the template
-	 */
 	public L2ObservationInstance(int objectId, L2NpcTemplate template)
 	{
 		super(objectId, template);
@@ -56,7 +46,7 @@ public final class L2ObservationInstance extends L2FolkInstance
 			StringTokenizer st = new StringTokenizer(val);
 			st.nextToken();
 			
-			if (Olympiad.getInstance().isRegistered(player) || player.isInOlympiadMode())
+			if (OlympiadManager.getInstance().isRegistered(player) || player.isInOlympiadMode())
 			{
 				player.sendMessage("You already participated in Olympiad!");
 				return;
@@ -85,7 +75,7 @@ public final class L2ObservationInstance extends L2FolkInstance
 		}
 		else if (command.startsWith("observe"))
 		{
-			if (Olympiad.getInstance().isRegistered(player) || player.isInOlympiadMode())
+			if (OlympiadManager.getInstance().isRegistered(player) || player.isInOlympiadMode())
 			{
 				player.sendMessage("You already participated in Olympiad!");
 				return;

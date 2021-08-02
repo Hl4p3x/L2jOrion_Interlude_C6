@@ -20,37 +20,17 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * sample
- * <p>
- * 4c 01 00 00 00
- * <p>
- * format cd.
- * @version $Revision: 1.1.2.1.2.3 $ $Date: 2005/03/27 15:29:39 $
- */
 public final class JoinParty extends L2GameServerPacket
 {
-	
-	/** The Constant _S__4C_JOINPARTY. */
 	private static final String _S__4C_JOINPARTY = "[S] 3a JoinParty";
-	// private static Logger LOG = LoggerFactory.getLogger(JoinParty.class);
 	
-	/** The _response. */
 	private final int _response;
 	
-	/**
-	 * Instantiates a new join party.
-	 * @param response the response
-	 */
 	public JoinParty(final int response)
 	{
 		_response = response;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.network.serverpackets.L2GameServerPacket#writeImpl()
-	 */
 	@Override
 	protected final void writeImpl()
 	{
@@ -59,10 +39,6 @@ public final class JoinParty extends L2GameServerPacket
 		writeD(_response);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

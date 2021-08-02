@@ -32,7 +32,6 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.MobGroup;
-import l2jorion.game.model.L2Character.AIAccessor;
 import l2jorion.game.model.actor.instance.L2ControllableMobInstance;
 import l2jorion.game.model.actor.instance.L2DoorInstance;
 import l2jorion.game.model.actor.instance.L2FolkInstance;
@@ -41,9 +40,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.util.Util;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author littlecrow AI for controllable mobs
- */
 public class L2ControllableMobAI extends L2AttackableAI
 {
 	public static final int AI_IDLE = 1;
@@ -146,7 +142,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 			{
 				if (Util.checkIfInRange(sk.getCastRange(), _actor, getAttackTarget(), true) && !_actor.isSkillDisabled(sk) && _actor.getCurrentMp() > _actor.getStat().getMpConsume(sk))
 				{
-					_accessor.doCast(sk);
+					_actor.doCast(sk);
 					return;
 				}
 				max_range = Math.max(max_range, sk.getCastRange());
@@ -192,7 +188,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 				final int castRange = sk.getCastRange();
 				if (castRange * castRange >= dist2 && !_actor.isSkillDisabled(sk) && _actor.getCurrentMp() > _actor.getStat().getMpConsume(sk))
 				{
-					_accessor.doCast(sk);
+					_actor.doCast(sk);
 					return;
 				}
 				max_range = Math.max(max_range, castRange);
@@ -204,7 +200,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 			}
 			return;
 		}
-		_accessor.doAttack(target);
+		_actor.doAttack(target);
 	}
 	
 	protected void thinkForceAttack()
@@ -231,7 +227,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 				
 				if (castRange * castRange >= dist2 && !_actor.isSkillDisabled(sk) && _actor.getCurrentMp() > _actor.getStat().getMpConsume(sk))
 				{
-					_accessor.doCast(sk);
+					_actor.doCast(sk);
 					return;
 				}
 				max_range = Math.max(max_range, castRange);
@@ -243,7 +239,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 			}
 			return;
 		}
-		_accessor.doAttack(getForcedTarget());
+		_actor.doAttack(getForcedTarget());
 	}
 	
 	protected void thinkAttack()
@@ -301,7 +297,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 					final int castRange = sk.getCastRange();
 					if (castRange * castRange >= dist2 && !_actor.isSkillDisabled(sk) && _actor.getCurrentMp() > _actor.getStat().getMpConsume(sk))
 					{
-						_accessor.doCast(sk);
+						_actor.doCast(sk);
 						return;
 					}
 					max_range = Math.max(max_range, castRange);
@@ -340,12 +336,12 @@ public class L2ControllableMobAI extends L2AttackableAI
 					
 					if (castRange * castRange >= dist2 && !_actor.isSkillDisabled(sk) && _actor.getCurrentMp() < _actor.getStat().getMpConsume(sk))
 					{
-						_accessor.doCast(sk);
+						_actor.doCast(sk);
 						return;
 					}
 				}
 			}
-			_accessor.doAttack(getAttackTarget());
+			_actor.doAttack(getAttackTarget());
 		}
 	}
 	
@@ -454,9 +450,9 @@ public class L2ControllableMobAI extends L2AttackableAI
 		return getGroupTarget().getRandomMob();
 	}
 	
-	public L2ControllableMobAI(final AIAccessor accessor)
+	public L2ControllableMobAI(L2ControllableMobInstance creature)
 	{
-		super(accessor);
+		super(creature);
 		setAlternateAI(AI_IDLE);
 	}
 	

@@ -54,6 +54,7 @@ public class ClientStats
 	public ClientStats()
 	{
 		BUFFER_SIZE = Config.CLIENT_PACKET_QUEUE_MEASURE_INTERVAL;
+		
 		_packetsInSecond = new int[BUFFER_SIZE];
 		_head = BUFFER_SIZE - 1;
 	}
@@ -71,19 +72,17 @@ public class ClientStats
 		return result;
 	}
 	
-	/**
-	 * Later during flood returns true (and send ActionFailed) once per second.
-	 * @param queueSize
-	 * @return true if flood detected first and ActionFailed packet need to be sent.
-	 */
 	protected final boolean countPacket(int queueSize)
 	{
 		processedPackets++;
+		
 		totalQueueSize += queueSize;
+		
 		if (maxQueueSize < queueSize)
 		{
 			maxQueueSize = queueSize;
 		}
+		
 		if (_queueOverflowDetected && (queueSize < 2))
 		{
 			_queueOverflowDetected = false;
@@ -190,6 +189,7 @@ public class ClientStats
 	private final synchronized boolean countPacket()
 	{
 		_totalCount++;
+		
 		final long tick = System.currentTimeMillis();
 		if ((tick - _packetCountStartTick) > 1000)
 		{
@@ -206,6 +206,7 @@ public class ClientStats
 			{
 				_head = BUFFER_SIZE;
 			}
+			
 			_head--;
 			
 			_totalCount -= _packetsInSecond[_head];
@@ -214,6 +215,7 @@ public class ClientStats
 		}
 		
 		final int count = ++_packetsInSecond[_head];
+		
 		if (!_floodDetected)
 		{
 			if (count > Config.CLIENT_PACKET_QUEUE_MAX_PACKETS_PER_SECOND)

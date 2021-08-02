@@ -23,9 +23,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.controllers.GameTimeController;
@@ -38,6 +35,7 @@ import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.actor.instance.L2GrandBossInstance;
+import l2jorion.game.model.actor.instance.L2MonsterInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.quest.Quest;
@@ -46,6 +44,8 @@ import l2jorion.game.network.serverpackets.PlaySound;
 import l2jorion.game.templates.StatsSet;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.log.Log;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
 public class Zaken extends Quest implements Runnable
@@ -156,6 +156,7 @@ public class Zaken extends Quest implements Runnable
 			pirates_zombie_captain_b,
 			pirates_zombie_b
 		};
+		
 		registerMobs(mobs);
 		
 		_Zone = GrandBossManager.getInstance().getZone(55312, 219168, -3223);
@@ -957,6 +958,22 @@ public class Zaken extends Quest implements Runnable
 	}
 	
 	@Override
+	public String onSpawn(L2NpcInstance npc)
+	{
+		final L2MonsterInstance mob = (L2MonsterInstance) npc;
+		switch (npc.getNpcId())
+		{
+			case doll_blader_b:
+			case vale_master_b:
+			case pirates_zombie_captain_b:
+			case pirates_zombie_b:
+				mob.setIsRaidMinion(true);
+				break;
+		}
+		return super.onSpawn(npc);
+	}
+	
+	@Override
 	public String onKill(L2NpcInstance npc, L2PcInstance killer, boolean isPet)
 	{
 		int npcId = npc.getNpcId();
@@ -972,7 +989,7 @@ public class Zaken extends Quest implements Runnable
 				
 				Calendar time = Calendar.getInstance();
 				time.add(Calendar.HOUR, days);
-				time.set(Calendar.HOUR, Config.ZAKEN_FIX_TIME_H);
+				time.set(Calendar.HOUR_OF_DAY, Config.ZAKEN_FIX_TIME_H);
 				time.set(Calendar.MINUTE, Rnd.get(0,Config.ZAKEN_FIX_TIME_M));
 				time.set(Calendar.SECOND, Rnd.get(0,Config.ZAKEN_FIX_TIME_S));
 				
@@ -1124,8 +1141,7 @@ public class Zaken extends Quest implements Runnable
 		int npcId = npc.getNpcId();
 		if (npcId == ZAKEN)
 		{
-			if (_Zone.isInsideZone(npc) 
-					&& player != null)
+			if (_Zone.isInsideZone(npc) && player != null)
 			{
 				L2Character target = isPet ? player.getPet() : player;
 				((L2Attackable) npc).addDamageHate(target, 0, 200);
@@ -1206,6 +1222,7 @@ public class Zaken extends Quest implements Runnable
 				}
 			}
 		}
+		
 		return super.onAggroRangeEnter(npc, player, isPet);
 	}
 	

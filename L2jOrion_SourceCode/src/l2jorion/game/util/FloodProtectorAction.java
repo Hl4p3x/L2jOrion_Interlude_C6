@@ -17,13 +17,12 @@ package l2jorion.game.util;
 import java.util.Hashtable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance.PunishLevel;
 import l2jorion.game.network.L2GameClient;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.StringUtil;
 
 /**

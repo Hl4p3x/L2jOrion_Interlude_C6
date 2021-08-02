@@ -22,12 +22,10 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
 
-/**
- * @author -Wooden-
- */
 public class PledgeReceiveWarList extends L2GameServerPacket
 {
 	private static final String _S__FE_3E_PLEDGERECEIVEWARELIST = "[S] FE:3E PledgeReceiveWarList";
+	
 	private final L2Clan _clan;
 	private final int _tab;
 	

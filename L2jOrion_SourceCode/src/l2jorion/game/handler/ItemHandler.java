@@ -20,11 +20,10 @@ package l2jorion.game.handler;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import l2jorion.game.GameServer;
 import l2jorion.game.handler.item.AccessLevelCustomItem;
+import l2jorion.game.handler.item.AugmentItem;
 import l2jorion.game.handler.item.BeastSoulShot;
 import l2jorion.game.handler.item.BeastSpice;
 import l2jorion.game.handler.item.BeastSpiritShot;
@@ -46,6 +45,7 @@ import l2jorion.game.handler.item.Firework;
 import l2jorion.game.handler.item.FishShots;
 import l2jorion.game.handler.item.Harvester;
 import l2jorion.game.handler.item.HeroCustomItem;
+import l2jorion.game.handler.item.HsItems;
 import l2jorion.game.handler.item.JackpotSeed;
 import l2jorion.game.handler.item.MOSKey;
 import l2jorion.game.handler.item.MapForestOfTheDead;
@@ -70,6 +70,8 @@ import l2jorion.game.handler.item.SoulShots;
 import l2jorion.game.handler.item.SpecialXMas;
 import l2jorion.game.handler.item.SpiritShot;
 import l2jorion.game.handler.item.SummonItems;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class ItemHandler
 {
@@ -84,6 +86,7 @@ public class ItemHandler
 	
 	protected ItemHandler()
 	{
+		registerItemHandler(new AugmentItem());
 		registerItemHandler(new AccessLevelCustomItem());
 		registerItemHandler(new ScrollOfEscape());
 		registerItemHandler(new ScrollOfResurrection());
@@ -130,8 +133,9 @@ public class ItemHandler
 		registerItemHandler(new BreakingArrow());
 		registerItemHandler(new ChristmasTree());
 		registerItemHandler(new Crystals());
+		registerItemHandler(new HsItems());
 		
-		LOG.info("ItemHandler: Loaded " + _datatable.size() + " handlers.");
+		LOG.info("ItemHandler: Loaded " + _datatable.size() + " handlers");
 	}
 	
 	public void registerItemHandler(IItemHandler handler)
@@ -140,13 +144,13 @@ public class ItemHandler
 		
 		for (int id : ids)
 		{
-			_datatable.put(new Integer(id), handler);
+			_datatable.put(Integer.valueOf(id), handler);
 		}
 	}
 	
 	public IItemHandler getItemHandler(int itemId)
 	{
-		return _datatable.get(new Integer(itemId));
+		return _datatable.get(Integer.valueOf(itemId));
 	}
 	
 	public int size()

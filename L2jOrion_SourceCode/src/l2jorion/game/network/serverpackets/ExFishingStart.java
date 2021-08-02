@@ -21,17 +21,15 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
-/**
- * @author Damon
- */
+
 public class ExFishingStart extends L2GameServerPacket
 {
 	private static final String _S__FE_13_EXFISHINGSTART = "[S] FE:13 ExFishingStart";
 	private L2Character _activeChar;
-	private int _x,_y,_z, _fishType;
+	private int _x, _y, _z, _fishType;
 	private boolean _isNightLure;
 	
-	public ExFishingStart(L2Character character, int fishType, int x, int y,int z, boolean isNightLure)
+	public ExFishingStart(L2Character character, int fishType, int x, int y, int z, boolean isNightLure)
 	{
 		_activeChar = character;
 		_fishType = fishType;

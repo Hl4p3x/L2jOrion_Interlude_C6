@@ -25,20 +25,13 @@ import java.security.interfaces.RSAPublicKey;
 
 import javax.crypto.Cipher;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * @author -Wooden-
- */
 public class BlowFishKey extends GameServerBasePacket
 {
 	private static Logger LOG = LoggerFactory.getLogger(BlowFishKey.class);
 	
-	/**
-	 * @param blowfishKey
-	 * @param publicKey
-	 */
 	public BlowFishKey(final byte[] blowfishKey, final RSAPublicKey publicKey)
 	{
 		writeC(0x00);

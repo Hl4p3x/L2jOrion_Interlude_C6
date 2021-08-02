@@ -19,6 +19,9 @@
  */
 package l2jorion.game.skills.l2skills;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.L2Object;
@@ -36,7 +39,6 @@ import l2jorion.game.templates.StatsSet;
 
 public class L2SkillChargeDmg extends L2Skill
 {
-	
 	final int chargeSkillId;
 	
 	public L2SkillChargeDmg(final StatsSet set)
@@ -67,7 +69,9 @@ public class L2SkillChargeDmg extends L2Skill
 	public void useSkill(final L2Character caster, final L2Object[] targets)
 	{
 		if (caster.isAlikeDead())
+		{
 			return;
+		}
 		
 		// get the effect
 		final EffectCharge effect = (EffectCharge) caster.getFirstEffect(chargeSkillId);
@@ -83,42 +87,66 @@ public class L2SkillChargeDmg extends L2Skill
 		modifier = (effect.getLevel() - getNumCharges()) * 0.33;
 		
 		if (getTargetType() != SkillTargetType.TARGET_AREA && getTargetType() != SkillTargetType.TARGET_MULTIFACE)
+		{
 			effect.numCharges -= getNumCharges();
+		}
 		
 		if (caster instanceof L2PcInstance)
+		{
 			caster.sendPacket(new EtcStatusUpdate((L2PcInstance) caster));
+		}
 		
 		if (effect.numCharges == 0)
+		{
 			effect.exit(false);
+		}
+		
+		// Calculate targets based on vegeance
+		List<L2Object> target_s = new ArrayList<>();
+		for (L2Object _target : targets)
+		{
+			target_s.add(_target);
+			L2Character target = (L2Character) _target;
+			
+			if (target.vengeanceSkill(this))
+			{
+				target_s.add(caster);
+			}
+		}
 		
 		final boolean ss = caster.checkSs();
 		
-		for (final L2Object target2 : targets)
+		for (final L2Object target2 : target_s)
 		{
 			final L2ItemInstance weapon = caster.getActiveWeaponInstance();
 			final L2Character target = (L2Character) target2;
 			
 			if (target.isAlikeDead())
+			{
 				continue;
+			}
 			
 			// TODO: should we use dual or not?
 			// because if so, damage are lowered but we dont do anything special with dual then
 			// like in doAttackHitByDual which in fact does the calcPhysDam call twice
-			
 			// boolean dual = caster.isUsingDualWeapon();
 			final boolean shld = Formulas.calcShldUse(caster, target);
 			final boolean soul = (weapon != null && weapon.getChargedSoulshot() == L2ItemInstance.CHARGED_SOULSHOT && weapon.getItemType() != L2WeaponType.DAGGER);
 			boolean crit = false;
 			
 			if (this.getBaseCritRate() > 0)
+			{
 				crit = Formulas.calcCrit(this.getBaseCritRate() * 10 * BaseStats.STR.calcBonus(caster));
+			}
 			
 			// damage calculation
 			int damage = (int) Formulas.calcPhysDam(caster, target, this, shld, false, false, soul);
 			
 			// Like L2OFF damage calculation crit is static 2x
 			if (crit)
+			{
 				damage *= 2;
+			}
 			
 			if (damage > 0)
 			{
@@ -134,7 +162,9 @@ public class L2SkillChargeDmg extends L2Skill
 		}
 		
 		if (ss)
+		{
 			caster.removeSs();
+		}
 		
 		// effect self :]
 		final L2Effect seffect = caster.getFirstEffect(getId());

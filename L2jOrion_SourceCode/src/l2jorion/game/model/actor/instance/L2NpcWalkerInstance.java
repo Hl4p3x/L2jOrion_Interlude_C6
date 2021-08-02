@@ -21,23 +21,15 @@ package l2jorion.game.model.actor.instance;
 
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.ai.L2CharacterAI;
 import l2jorion.game.ai.L2NpcWalkerAI;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * This class manages some npcs can walk in the city. <br>
- * It inherits all methods from L2NpcInstance. <br>
- * <br>
- * @original author Rayan RPG
- * @since 819
- */
 public class L2NpcWalkerInstance extends L2NpcInstance
 {
 	private static Logger LOG = LoggerFactory.getLogger(L2NpcWalkerInstance.class);
@@ -51,7 +43,7 @@ public class L2NpcWalkerInstance extends L2NpcInstance
 	public L2NpcWalkerInstance(final int objectId, final L2NpcTemplate template)
 	{
 		super(objectId, template);
-		setAI(new L2NpcWalkerAI(new L2NpcWalkerAIAccessor()));
+		setAI(new L2NpcWalkerAI(this));
 	}
 	
 	/**
@@ -107,8 +99,6 @@ public class L2NpcWalkerInstance extends L2NpcInstance
 				// finally send packet :D
 				players.sendPacket(cs);
 			}
-			
-			cs = null;
 		}
 	}
 	
@@ -134,27 +124,9 @@ public class L2NpcWalkerInstance extends L2NpcInstance
 		return false;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.L2Character#getAI()
-	 */
 	@Override
 	public L2CharacterAI getAI()
 	{
 		return super.getAI();
-	}
-	
-	/**
-	 * The Class L2NpcWalkerAIAccessor.
-	 */
-	protected class L2NpcWalkerAIAccessor extends L2Character.AIAccessor
-	{
-		/**
-		 * AI can't be deattached.
-		 */
-		@Override
-		public void detachAI()
-		{
-		}
 	}
 }

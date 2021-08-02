@@ -19,9 +19,6 @@
  */
 package l2jorion.game.taskmanager;
 
-/**
- * @author Layane
- */
 public enum TaskTypes
 {
 	TYPE_NONE,

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<list>
+	<!-- Augment: Active Skills -->
+	<scroll id="9422" skill="3123" level="10" /><!-- Item Skill:  Heal Lv 10 (Active) -->
+	<scroll id="9423" skill="3124" level="10" /><!-- Item Skill:  Bless the Body Lv 10 (Active) -->
+	<scroll id="9424" skill="3125" level="10" /><!-- Item Skill:  Battle Roar Lv 10 (Active) -->
+	<scroll id="9425" skill="3126" level="10" /><!-- Item Skill:  Prayer Lv 10 (Active) -->
+	<scroll id="9426" skill="3127" level="10" /><!-- Item Skill:  Recharge Lv 10 (Active) -->
+	<scroll id="9427" skill="3128" level="10" /><!-- Item Skill:  Bless The Soul Lv 10 (Active) -->
+	<scroll id="9428" skill="3129" level="10" /><!-- Item Skill:  Mana Gain Lv 10 (Active) -->
+	<scroll id="9429" skill="3130" level="10" /><!-- Item Skill:  Ritual Lv 10 (Active) -->
+	<scroll id="9430" skill="3132" level="10" /><!-- Item Skill:  Might Lv 10 (Active) -->
+	<scroll id="9431" skill="3133" level="10" /><!-- Item Skill:  Empower Lv 10 (Active) -->
+	<scroll id="9432" skill="3134" level="10" /><!-- Item Skill:  Duel Might Lv 10 (Active) -->
+	<scroll id="9433" skill="3135" level="10" /><!-- Item Skill:  Shield Lv 10 (Active) -->
+	<scroll id="9434" skill="3136" level="10" /><!-- Item Skill:  Magic Barrier Lv 10 (Active) -->
+	<scroll id="9435" skill="3138" level="10" /><!-- Item Skill:  Heal Empower Lv 10 (Active) -->
+	<scroll id="9436" skill="3139" level="10" /><!-- Item Skill:  Agility Lv 10 (Active) -->
+	<scroll id="9437" skill="3140" level="10" /><!-- Item Skill:  Guidance Lv 10 (Active) -->
+	<scroll id="9438" skill="3141" level="10" /><!-- Item Skill:  Focus Lv 10 (Active) -->
+	<scroll id="9439" skill="3142" level="10" /><!-- Item Skill:  Wild Magic Lv 10 (Active) -->
+	<scroll id="9440" skill="3147" level="2" /><!-- Item Skill:  Return Lv 2 (Active) -->
+	<scroll id="9441" skill="3148" level="10" /><!-- Item Skill:  Vampiric Rage Lv 10 (Active) -->
+	<scroll id="9442" skill="3153" level="10" /><!-- Item Skill:  Vampiric Touch Lv 10 (Active) -->
+	<scroll id="9443" skill="3154" level="10" /><!-- Item Skill:  Mana Burn Lv 10 (Active) -->
+	<scroll id="9444" skill="3155" level="10" /><!-- Item Skill:  Unlock Lv 10 (Active) -->
+	<scroll id="9445" skill="3158" level="1" /><!-- Item Skill:  Celestial Shield Lv 1 (Active) -->
+	<scroll id="9446" skill="3160" level="9" /><!-- Item Skill:  Ressurection Lv 9 (Active) -->
+	<scroll id="9447" skill="3165" level="10" /><!-- Item Skill:  Prominence Lv 10 (Active) -->
+	<scroll id="9448" skill="3167" level="10" /><!-- Item Skill:  Hydro Blast Lv 10 (Active) -->
+	<scroll id="9449" skill="3168" level="10" /><!-- Item Skill:  Hurricane Lv 10 (Active) -->
+	<scroll id="9450" skill="3169" level="10" /><!-- Item Skill:  Stone Lv 10 (Active) -->
+	<scroll id="9451" skill="3170" level="10" /><!-- Item Skill:  Solar Flare Lv 10 (Active) -->
+	<scroll id="9452" skill="3171" level="10" /><!-- Item Skill:  Shadow Flare Lv 10 (Active) -->
+	<scroll id="9453" skill="3172" level="10" /><!-- Item Skill:  Aura Flare Lv 10 (Active) -->
+	<scroll id="9454" skill="3187" level="10" /><!-- Item Skill:  Slow Lv 10 (Active) -->
+	<scroll id="9455" skill="3189" level="10" /><!-- Item Skill:  Stun Lv 10 (Active) -->
+	<scroll id="9456" skill="3190" level="10" /><!-- Item Skill:  Hold Lv 10 (Active) -->
+	<scroll id="9457" skill="3191" level="10" /><!-- Item Skill:  Sleep Lv 10 (Active) -->
+	<scroll id="9458" skill="3192" level="10" /><!-- Item Skill:  Paralyze Lv 10 (Active) -->
+	<scroll id="9459" skill="3194" level="10" /><!-- Item Skill:  Fear Lv 10 (Active) -->
+	<scroll id="9460" skill="3196" level="10" /><!-- Item Skill:  Bleed Lv 10 (Active) -->
+	<scroll id="9461" skill="3197" level="10" /><!-- Item Skill:  Silence Lv 10 (Active) -->
+	<scroll id="9462" skill="3198" level="10" /><!-- Item Skill:  Doom Lv 10 (Active) -->
+	<scroll id="9463" skill="3199" level="3" /><!-- Item Skill:  Skill Refresh Lv 3 (Active) -->
+	<scroll id="9464" skill="3204" level="3" /><!-- Item Skill:  Reflect Damage Lv 3 (Active) -->
+	<scroll id="9465" skill="3205" level="2" /><!-- Item Skill:  Party Recall Lv 2 (Active) -->
+	<scroll id="9466" skill="3200" level="3" /><!-- Item Skill: Spell Refresh Lv.3 (Active) -->
+	<scroll id="9467" skill="3202" level="3" /><!-- Item Skill: Refresh Lv.3 (Active) -->
+	<!-- Augment: Passive Skills -->
+	<scroll id="9468" skill="3238" level="10" /><!-- Item Skill:  Prayer Lv 10 (Passive) -->
+	<scroll id="9469" skill="3239" level="10" /><!-- Item Skill:  Mana Gain Lv 10 (Passive) -->
+	<scroll id="9470" skill="3240" level="10" /><!-- Item Skill:  Might Lv 10 (Passive) -->
+	<scroll id="9471" skill="3241" level="10" /><!-- Item Skill:  Empower Lv 10 (Passive) -->
+	<scroll id="9472" skill="3243" level="10" /><!-- Item Skill:  Duel Might Lv 10 (Passive) -->
+	<scroll id="9473" skill="3244" level="10" /><!-- Item Skill:  Shield Lv 10 (Passive) -->
+	<scroll id="9474" skill="3245" level="10" /><!-- Item Skill:  Magic Barrier Lv 10 (Passive) -->
+	<scroll id="9475" skill="3246" level="10" /><!-- Item Skill:  Heal Empower Lv 10 (Passive) -->
+	<scroll id="9476" skill="3247" level="10" /><!-- Item Skill:  Agility Lv 10 (Passive) -->
+	<scroll id="9477" skill="3248" level="10" /><!-- Item Skill:  Guidance Lv 10 (Passive) -->
+	<scroll id="9478" skill="3249" level="10" /><!-- Item Skill:  Focus Lv 10 (Passive) -->
+	<scroll id="9479" skill="3250" level="10" /><!-- Item Skill:  Wild Magic Lv 10 (Passive) -->
+	<scroll id="9480" skill="3259" level="3" /><!-- Item Skill:  Reflect Damage Lv 3 (Passive) -->
+</list>

@@ -33,7 +33,6 @@ import l2jorion.game.network.serverpackets.ExAutoSoulShot;
 import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Weapon;
-import l2jorion.game.util.Broadcast;
 
 public class BeastSpiritShot implements IItemHandler
 {
@@ -48,7 +47,9 @@ public class BeastSpiritShot implements IItemHandler
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		if (playable == null)
+		{
 			return;
+		}
 		
 		L2PcInstance activeOwner = null;
 		
@@ -64,7 +65,9 @@ public class BeastSpiritShot implements IItemHandler
 		}
 		
 		if (activeOwner == null)
+		{
 			return;
+		}
 		
 		L2Summon activePet = activeOwner.getPet();
 		if (activePet == null)
@@ -98,8 +101,10 @@ public class BeastSpiritShot implements IItemHandler
 			}
 			
 			if (weaponInst.getChargedSpiritshot() != L2ItemInstance.CHARGED_NONE)
+			{
 				// SpiritShots are already active.
 				return;
+			}
 			
 			final int shotCount = item.getCount();
 			shotConsumption = weaponItem.getSpiritShotCount();
@@ -131,7 +136,9 @@ public class BeastSpiritShot implements IItemHandler
 		else
 		{
 			if (activePet.getChargedSpiritShot() != L2ItemInstance.CHARGED_NONE)
+			{
 				return;
+			}
 			
 			if (isBlessed)
 			{
@@ -143,7 +150,6 @@ public class BeastSpiritShot implements IItemHandler
 			}
 		}
 		
-		// TODO: test ss
 		if (!Config.DONT_DESTROY_SS)
 		{
 			if (!activeOwner.destroyItemWithoutTrace("Consume", item.getObjectId(), shotConsumption, null, false))
@@ -155,8 +161,6 @@ public class BeastSpiritShot implements IItemHandler
 					SystemMessage sm = new SystemMessage(SystemMessageId.AUTO_USE_OF_S1_CANCELLED);
 					sm.addString(item.getItem().getName());
 					activeOwner.sendPacket(sm);
-					sm = null;
-					
 					return;
 				}
 				
@@ -169,7 +173,7 @@ public class BeastSpiritShot implements IItemHandler
 		activeOwner.sendPacket(new SystemMessage(SystemMessageId.PET_USE_THE_POWER_OF_SPIRIT));
 		if (!activeOwner.getEffects())
 		{
-			Broadcast.toSelfAndKnownPlayersInRadius(activeOwner, new MagicSkillUser(activePet, activePet, isBlessed ? 2009 : 2008, 1, 0, 0), 360000);
+			activeOwner.broadcastPacket(new MagicSkillUser(activePet, activePet, isBlessed ? 2009 : 2008, 1, 0, 0), 500);
 		}
 	}
 	

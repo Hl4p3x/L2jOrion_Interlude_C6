@@ -20,10 +20,6 @@
  */
 package l2jorion.game.handler.skill;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.handler.ISkillHandler;
 import l2jorion.game.model.L2Character;
@@ -38,11 +34,10 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.PlaySound;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author l3x
- */
 public class Sow implements ISkillHandler
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(Sow.class);
@@ -68,9 +63,6 @@ public class Sow implements ISkillHandler
 		{
 			return;
 		}
-		
-		if (Config.DEBUG)
-			LOG.info("Casting sow");
 		
 		for (int index = 0; index < targetList.length; index++)
 		{
@@ -144,7 +136,9 @@ public class Sow implements ISkillHandler
 	private boolean calcSuccess()
 	{
 		if (_activeChar == null || _target == null)
+		{
 			return false;
+		}
 		
 		// TODO: check all the chances
 		int basicSuccess = (L2Manor.getInstance().isAlternative(_seedId) ? 20 : 90);
@@ -159,22 +153,32 @@ public class Sow implements ISkillHandler
 		// 5% decrease in chance if player level
 		// is more then +/- 5 levels to _seed's_ level
 		if (levelTarget < minlevelSeed)
+		{
 			basicSuccess -= 5;
+		}
 		if (levelTarget > maxlevelSeed)
+		{
 			basicSuccess -= 5;
+		}
 		
 		// 5% decrease in chance if player level
 		// is more than +/- 5 levels to _target's_ level
 		int diff = (levelPlayer - levelTarget);
 		if (diff < 0)
+		{
 			diff = -diff;
+		}
 		
 		if (diff > 5)
+		{
 			basicSuccess -= 5 * (diff - 5);
+		}
 		
 		// chance can't be less than 1%
 		if (basicSuccess < 1)
+		{
 			basicSuccess = 1;
+		}
 		
 		final int rate = Rnd.nextInt(99);
 		

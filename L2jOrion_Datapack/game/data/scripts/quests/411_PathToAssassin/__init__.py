@@ -78,6 +78,7 @@ class Quest (JQuest) :
         if st.getQuestItemsCount(ARKENIAS_LETTER) == 0 and st.getQuestItemsCount(LEIKANS_NOTE) == 0 and st.getQuestItemsCount(SHILENS_TEARS) == 0 and st.getQuestItemsCount(ARKENIA_RECOMMEND) == 1 and st.getQuestItemsCount(IRON_HEART) == 0 :
           htmltext = "30416-06.htm"
           st.takeItems(ARKENIA_RECOMMEND,1)
+          st.addExpAndSp(16000,5650)
           st.giveItems(IRON_HEART,1)
           st.set("cond","0")
           st.setState(COMPLETED)

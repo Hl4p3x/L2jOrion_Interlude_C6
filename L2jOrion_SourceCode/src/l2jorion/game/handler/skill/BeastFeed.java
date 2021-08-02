@@ -20,19 +20,15 @@
  */
 package l2jorion.game.handler.skill;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.handler.ISkillHandler;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Skill.SkillType;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * @author _drunk_ TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code Templates
- */
 public class BeastFeed implements ISkillHandler
 {
 	private static Logger LOG = LoggerFactory.getLogger(BeastFeed.class);
@@ -46,7 +42,9 @@ public class BeastFeed implements ISkillHandler
 	public void useSkill(final L2Character activeChar, final L2Skill skill, final L2Object[] targets)
 	{
 		if (!(activeChar instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2Object[] targetList = skill.getTargetList(activeChar);
 		
@@ -56,10 +54,7 @@ public class BeastFeed implements ISkillHandler
 		}
 		
 		LOG.debug("Beast Feed casting succeded.");
-		
-		targetList = null;
-		// This is just a dummy skill handler for the golden food and crystal food skills,
-		// since the AI responce onSkillUse handles the rest.
+
 	}
 	
 	@Override

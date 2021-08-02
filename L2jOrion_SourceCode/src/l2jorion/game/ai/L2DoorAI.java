@@ -20,24 +20,21 @@
  */
 package l2jorion.game.ai;
 
-import l2jorion.game.model.L2CharPosition;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2DoorInstance;
 import l2jorion.game.model.actor.instance.L2FortSiegeGuardInstance;
 import l2jorion.game.model.actor.instance.L2SiegeGuardInstance;
 import l2jorion.game.thread.ThreadPoolManager;
 
-/**
- * @author mkizub TODO To change the template for this generated type comment go to Window - Preferences - Java - Code Style - Code Templates
- */
 public class L2DoorAI extends L2CharacterAI
 {
 	
-	public L2DoorAI(final L2DoorInstance.AIAccessor accessor)
+	public L2DoorAI(final L2DoorInstance creature)
 	{
-		super(accessor);
+		super(creature);
 	}
 	
 	@Override
@@ -71,7 +68,7 @@ public class L2DoorAI extends L2CharacterAI
 	}
 	
 	@Override
-	protected void onIntentionMoveTo(final L2CharPosition destination)
+	protected void onIntentionMoveTo(final Location destination)
 	{
 		// null;
 	}
@@ -156,7 +153,7 @@ public class L2DoorAI extends L2CharacterAI
 	}
 	
 	@Override
-	protected void onEvtArrivedBlocked(final L2CharPosition blocked_at_pos)
+	protected void onEvtArrivedBlocked(final Location blocked_at_pos)
 	{
 		// null;
 	}
@@ -193,8 +190,6 @@ public class L2DoorAI extends L2CharacterAI
 		@Override
 		public void run()
 		{
-			//_door.getKnownList().updateKnownObjects();
-			
 			for (final L2SiegeGuardInstance guard : _door.getKnownSiegeGuards())
 			{
 				if (guard != null && guard.getAI() != null && _actor.isInsideRadius(guard, guard.getFactionRange(), false, true) && Math.abs(_attacker.getZ() - guard.getZ()) < 200)

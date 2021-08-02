@@ -82,19 +82,25 @@ public class ScrollOfEscape implements IItemHandler
 		7558,
 		7559,
 		7618,
-		7619
+		7619,
+		9760,
+		10015
 	};
 	
 	@Override
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		
 		if (checkConditions(activeChar))
+		{
 			return;
+		}
 		
 		// Check to see if player is sitting
 		if (activeChar.isSitting())
@@ -145,7 +151,7 @@ public class ScrollOfEscape implements IItemHandler
 		
 		if (!Config.ALLOW_SOE_IN_PVP && activeChar.getPvpFlag() != 0)
 		{
-			activeChar.sendMessage("You Can't Use SOE In PvP!");
+			activeChar.sendMessage("You can't use SOE in PvP.");
 			return;
 		}
 		
@@ -193,8 +199,13 @@ public class ScrollOfEscape implements IItemHandler
 		
 		final int escapeSkill = itemId == 1538 || itemId == 5858 || itemId == 5859 || itemId == 3958 || itemId == 10130 ? 2036 : 2013;
 		
-		if (!activeChar.destroyItem("Consume", item.getObjectId(), 1, null, false))
-			return;
+		if (itemId != 9760 && itemId != 10015) // customer's item
+		{
+			if (!activeChar.destroyItem("Consume", item.getObjectId(), 1, null, false))
+			{
+				return;
+			}
+		}
 		
 		activeChar.disableAllSkills();
 		
@@ -208,23 +219,18 @@ public class ScrollOfEscape implements IItemHandler
 		activeChar.setTarget(oldtarget);
 		SetupGauge sg = new SetupGauge(0, skill.getHitTime());
 		activeChar.sendPacket(sg);
-		oldtarget = null;
-		sg = null;
+		
 		// End SoE Animation section
 		activeChar.setTarget(null);
 		
 		SystemMessage sm = new SystemMessage(SystemMessageId.S1_DISAPPEARED);
 		sm.addItemName(itemId);
 		activeChar.sendPacket(sm);
-		sm = null;
 		
 		EscapeFinalizer ef = new EscapeFinalizer(activeChar, itemId);
 		// continue execution later
 		activeChar.setSkillCast(ThreadPoolManager.getInstance().scheduleEffect(ef, skill.getHitTime()));
 		activeChar.setSkillCastEndTime(10 + GameTimeController.getInstance().getGameTicks() + skill.getHitTime() / GameTimeController.MILLIS_IN_TICK);
-		
-		ef = null;
-		activeChar = null;
 	}
 	
 	static class EscapeFinalizer implements Runnable
@@ -242,7 +248,9 @@ public class ScrollOfEscape implements IItemHandler
 		public void run()
 		{
 			if (_activeChar.isDead())
+			{
 				return;
+			}
 			
 			_activeChar.enableAllSkills();
 			
@@ -250,24 +258,39 @@ public class ScrollOfEscape implements IItemHandler
 			
 			try
 			{
-				
+				if (_itemId == 10015)
+				{
+					_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+				}
+				else if (_itemId == 9760)
+				{
+					_activeChar.teleToLocation(-52307, 141567, -2922, true); // custom place
+				}
 				// escape to castle if own's one
-				if ((_itemId == 1830 || _itemId == 5859))
+				else if ((_itemId == 1830 || _itemId == 5859))
 				{
 					if (CastleManager.getInstance().getCastleByOwner(_activeChar.getClan()) != null)
+					{
 						_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Castle);
+					}
 					else
+					{
 						_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+					}
 				}
 				// escape to fortress if own's one if own's one
 				else if ((_itemId == 1830 || _itemId == 5859))
 				{
 					if (FortManager.getInstance().getFortByOwner(_activeChar.getClan()) != null)
+					{
 						_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Fortress);
+					}
 					else
+					{
 						_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+					}
 				}
-				else if ((_itemId == 1829 || _itemId == 5858) && _activeChar.getClan() != null && ClanHallManager.getInstance().getClanHallByOwner(_activeChar.getClan()) != null) // escape to clan hall if own's one
+				else if ((_itemId == 1829 || _itemId == 5858) && _activeChar.getClan() != null && ClanHallManager.getInstance().getAbstractHallByOwner(_activeChar.getClan()) != null) // escape to clan hall if own's one
 				{
 					_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.ClanHall);
 				}
@@ -382,7 +405,9 @@ public class ScrollOfEscape implements IItemHandler
 			catch (final Throwable e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 	}

@@ -25,9 +25,6 @@ import l2jorion.game.model.actor.instance.L2GrandBossInstance;
 import l2jorion.game.model.actor.instance.L2RaidBossInstance;
 import l2jorion.game.skills.Env;
 
-/**
- * @author programmos, L2jOrion
- */
 public class EffectRemoveTarget extends L2Effect
 {
 	public EffectRemoveTarget(final Env env, final EffectTemplate template)
@@ -44,13 +41,8 @@ public class EffectRemoveTarget extends L2Effect
 	@Override
 	public boolean onActionTime()
 	{
-		// nothing
 		return false;
 	}
-	
-	/**
-	 * @see l2jorion.game.model.L2Effect#onExit()
-	 */
 	
 	@Override
 	public void onExit()
@@ -66,15 +58,14 @@ public class EffectRemoveTarget extends L2Effect
 		}
 	}
 	
-	/**
-	 * @see l2jorion.game.model.L2Effect#onStart()
-	 */
 	@Override
 	public void onStart()
 	{
 		// RaidBoss and GrandBoss are immune to RemoveTarget effect
 		if (getEffected() instanceof L2RaidBossInstance || getEffected() instanceof L2GrandBossInstance)
+		{
 			return;
+		}
 		
 		try
 		{

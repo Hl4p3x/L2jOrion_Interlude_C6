@@ -20,9 +20,6 @@
  */
 package l2jorion.game.network.gameserverpackets;
 
-/**
- * @author -Wooden-
- */
 public class ChangeAccessLevel extends GameServerBasePacket
 {
 	public ChangeAccessLevel(final String player, final int access)
@@ -32,10 +29,6 @@ public class ChangeAccessLevel extends GameServerBasePacket
 		writeS(player);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.gameserverpackets.GameServerBasePacket#getContent()
-	 */
 	@Override
 	public byte[] getContent()
 	{

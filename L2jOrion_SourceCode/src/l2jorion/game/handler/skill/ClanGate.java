@@ -11,6 +11,7 @@ import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Skill.SkillType;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.siege.Castle;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.thread.ThreadPoolManager;
@@ -27,11 +28,15 @@ public class ClanGate implements ISkillHandler
 	{
 		L2PcInstance player = null;
 		if (activeChar instanceof L2PcInstance)
+		{
 			player = (L2PcInstance) activeChar;
+		}
 		else
+		{
 			return;
+		}
 		// need more checking...
-		if (player.isInFunEvent() || player.isInsideZone(L2Character.ZONE_NOLANDING) || player.isInOlympiadMode() || player.isInsideZone(L2Character.ZONE_PVP) || GrandBossManager.getInstance().getZone(player) != null)
+		if (player.isInFunEvent() || player.isInsideZone(ZoneId.ZONE_NOLANDING) || player.isInOlympiadMode() || player.isInsideZone(ZoneId.ZONE_PVP) || GrandBossManager.getInstance().getZone(player) != null)
 		{
 			player.sendMessage("Cannot open the portal here.");
 			return;
@@ -45,23 +50,21 @@ public class ClanGate implements ISkillHandler
 				Castle castle = CastleManager.getInstance().getCastleByOwner(clan);
 				if (player.isCastleLord(castle.getCastleId()))
 				{
-					// please note clan gate expires in two minutes WHATEVER happens to the clan leader.
 					ThreadPoolManager.getInstance().scheduleGeneral(new RemoveClanGate(castle.getCastleId(), player), skill.getTotalLifeTime());
 					castle.createClanGate(player.getX(), player.getY(), player.getZ() + 20);
 					player.getClan().broadcastToOnlineMembers(new SystemMessage(SystemMessageId.THE_PORTAL_HAS_BEEN_CREATED));
 					player.setIsParalyzed(true);
 				}
-				castle = null;
 			}
 		}
 		
 		final L2Effect effect = player.getFirstEffect(skill.getId());
 		if (effect != null && effect.isSelfEffect())
+		{
 			effect.exit(false);
-		skill.getEffectsSelf(player);
+		}
 		
-		player = null;
-		clan = null;
+		skill.getEffectsSelf(player);
 	}
 	
 	private class RemoveClanGate implements Runnable

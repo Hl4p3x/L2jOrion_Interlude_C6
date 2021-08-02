@@ -24,12 +24,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
-import l2jorion.util.Util;
 import l2jorion.util.database.L2DatabaseFactory;
 
 public abstract class IdFactory
@@ -132,9 +130,9 @@ public abstract class IdFactory
 		{
 			con2 = L2DatabaseFactory.getInstance().getConnection();
 			final Statement s2 = con2.createStatement();
-			s2.executeUpdate("update characters set online=0");
-			Util.printSection("Characters status");
-			LOG.info("Updated characters online status.");
+			s2.executeUpdate("update characters set online = 0");
+			
+			LOG.info("Updated characters online status");
 			
 			s2.close();
 		}
@@ -152,7 +150,6 @@ public abstract class IdFactory
 	 */
 	private void cleanUpDB()
 	{
-		Util.printSection("Clean up");
 		java.sql.Connection conn = null;
 		try
 		{
@@ -170,8 +167,8 @@ public abstract class IdFactory
 			cleanCount += stmt.executeUpdate("DELETE FROM character_skills_save WHERE character_skills_save.char_obj_id NOT IN (SELECT obj_Id FROM characters);");
 			cleanCount += stmt.executeUpdate("DELETE FROM character_subclasses WHERE character_subclasses.char_obj_id NOT IN (SELECT obj_Id FROM characters);");
 			cleanCount += stmt.executeUpdate("DELETE FROM cursed_weapons WHERE cursed_weapons.playerId NOT IN (SELECT obj_Id FROM characters);");
-			cleanCount += stmt.executeUpdate("DELETE FROM heroes WHERE heroes.charId NOT IN (SELECT obj_Id FROM characters);");
-			cleanCount += stmt.executeUpdate("DELETE FROM olympiad_nobles WHERE olympiad_nobles.charId NOT IN (SELECT obj_Id FROM characters);");
+			cleanCount += stmt.executeUpdate("DELETE FROM heroes WHERE heroes.char_Id NOT IN (SELECT obj_Id FROM characters);");
+			cleanCount += stmt.executeUpdate("DELETE FROM olympiad_nobles WHERE olympiad_nobles.char_Id NOT IN (SELECT obj_Id FROM characters);");
 			cleanCount += stmt.executeUpdate("DELETE FROM pets WHERE pets.item_obj_id NOT IN (SELECT object_id FROM items);");
 			cleanCount += stmt.executeUpdate("DELETE FROM seven_signs WHERE seven_signs.char_obj_id NOT IN (SELECT obj_Id FROM characters);");
 			// Auction
@@ -196,13 +193,20 @@ public abstract class IdFactory
 			cleanCount += stmt.executeUpdate("DELETE FROM forums WHERE forums.forum_owner_id NOT IN (SELECT clan_id FROM clan_data) AND forums.forum_parent=2;");
 			cleanCount += stmt.executeUpdate("DELETE FROM topic WHERE topic.topic_forum_id NOT IN (SELECT forum_id FROM forums);");
 			cleanCount += stmt.executeUpdate("DELETE FROM posts WHERE posts.post_forum_id NOT IN (SELECT forum_id FROM forums);");
-			LOG.info("Cleaned " + cleanCount + " elements from database.");
+			
+			if (cleanCount > 0)
+			{
+				LOG.info("Cleaned: " + cleanCount + " elements from database");
+			}
+			
 			stmt.close();
 		}
 		catch (final SQLException e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		finally
 		{

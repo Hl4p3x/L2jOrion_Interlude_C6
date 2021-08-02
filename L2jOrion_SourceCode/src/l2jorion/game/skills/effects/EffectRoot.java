@@ -23,12 +23,8 @@ package l2jorion.game.skills.effects;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.skills.Env;
 
-/**
- * @author mkizub
- */
 final class EffectRoot extends L2Effect
 {
-	
 	public EffectRoot(final Env env, final EffectTemplate template)
 	{
 		super(env, template);
@@ -40,14 +36,12 @@ final class EffectRoot extends L2Effect
 		return EffectType.ROOT;
 	}
 	
-	/** Notify started */
 	@Override
 	public void onStart()
 	{
 		getEffected().startRooted();
 	}
 	
-	/** Notify exited */
 	@Override
 	public void onExit()
 	{
@@ -57,7 +51,6 @@ final class EffectRoot extends L2Effect
 	@Override
 	public boolean onActionTime()
 	{
-		// just stop this effect
 		return false;
 	}
 }

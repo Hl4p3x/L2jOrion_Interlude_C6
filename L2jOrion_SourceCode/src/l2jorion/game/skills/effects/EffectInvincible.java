@@ -45,8 +45,6 @@ public class EffectInvincible extends L2Effect
 	@Override
 	public boolean onActionTime()
 	{
-		// Commented. But I'm not really sure about this, could cause some bugs.
-		// getEffected().setIsInvul(false);
 		return false;
 	}
 	

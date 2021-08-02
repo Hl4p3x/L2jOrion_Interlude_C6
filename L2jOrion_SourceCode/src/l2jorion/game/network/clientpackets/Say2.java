@@ -36,6 +36,8 @@ import l2jorion.game.model.BlockList;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2World;
+import l2jorion.game.model.PartyMatchRoom;
+import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance.PunishLevel;
 import l2jorion.game.network.SystemChatChannelId;
@@ -65,9 +67,11 @@ public final class Say2 extends L2GameClientPacket
 	public final static int BOAT = 11;
 	public final static int L2FRIEND = 12;
 	public final static int MSNCHAT = 13;
+	
 	public final static int PARTYMATCH_ROOM = 14;
 	public final static int PARTYROOM_COMMANDER = 15; // (Yellow)
 	public final static int PARTYROOM_ALL = 16; // (Red)
+	
 	public final static int HERO_VOICE = 17;
 	public static final int CRITICAL_ANNOUNCE = 18;
 	public final static int SCREEN_ANNOUNCE = 19;
@@ -88,7 +92,7 @@ public final class Say2 extends L2GameClientPacket
 		"ALLIANCE",
 		"ANNOUNCEMENT", // 10
 		"BOAT",
-		"WILLCRASHCLIENT:)",
+		"WILLCRASHCLIENT",
 		"FAKEALL?",
 		"PARTYMATCH_ROOM",
 		"PARTYROOM_COMMANDER",
@@ -116,10 +120,12 @@ public final class Say2 extends L2GameClientPacket
 			_type2Check = SystemChatChannelId.getChatType(_type);
 			
 		}
-		catch(BufferUnderflowException e)
+		catch (BufferUnderflowException e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			_type = CHAT_NAMES.length;
 			_type2Check = SystemChatChannelId.CHAT_NONE;
@@ -145,10 +151,8 @@ public final class Say2 extends L2GameClientPacket
 		L2PcInstance activeChar = getClient().getActiveChar();
 		
 		// Anti-PHX Announce
-		if (_type2Check == SystemChatChannelId.CHAT_NONE || _type2Check == SystemChatChannelId.CHAT_ANNOUNCE || _type2Check == SystemChatChannelId.CHAT_CRITICAL_ANNOUNCE
-				|| _type2Check == SystemChatChannelId.CHAT_SYSTEM
-				|| _type2Check == SystemChatChannelId.CHAT_CUSTOM
-				|| (_type2Check == SystemChatChannelId.CHAT_GM_PET && !activeChar.isGM()))
+		if (_type2Check == SystemChatChannelId.CHAT_NONE || _type2Check == SystemChatChannelId.CHAT_ANNOUNCE || _type2Check == SystemChatChannelId.CHAT_CRITICAL_ANNOUNCE || _type2Check == SystemChatChannelId.CHAT_SYSTEM || _type2Check == SystemChatChannelId.CHAT_CUSTOM
+			|| (_type2Check == SystemChatChannelId.CHAT_GM_PET && !activeChar.isGM()))
 		{
 			LOG.warning("[Anti-PHX Announce] Illegal Chat channel was used by character: [" + activeChar.getName() + "]");
 			return;
@@ -156,11 +160,11 @@ public final class Say2 extends L2GameClientPacket
 		
 		if (activeChar == null)
 		{
-			LOG.warning("[Say2.java] Active Character is null.");
+			LOG.warning("Say2: Active Character is null.");
 			return;
 		}
 		
-		if ( activeChar.isChatBanned() && !activeChar.isGM() && _type != CLAN && _type != ALLIANCE && _type != PARTY)
+		if (activeChar.isChatBanned() && !activeChar.isGM() && _type != CLAN && _type != ALLIANCE && _type != PARTY)
 		{
 			activeChar.sendMessage("You may not chat while a chat ban is in effect.");
 			return;
@@ -168,7 +172,7 @@ public final class Say2 extends L2GameClientPacket
 		
 		if (activeChar.isInJail() && Config.JAIL_DISABLE_CHAT)
 		{
-			if(_type == TELL || _type == SHOUT || _type == TRADE || _type == HERO_VOICE)
+			if (_type == TELL || _type == SHOUT || _type == TRADE || _type == HERO_VOICE)
 			{
 				activeChar.sendMessage("You can not chat with players outside of the jail.");
 				return;
@@ -238,23 +242,26 @@ public final class Say2 extends L2GameClientPacket
 			String name = saymode.getName();
 			int actor = saymode.getObjectId();
 			_type = 0;
+			
 			Collection<L2Object> list = saymode.getKnownList().getKnownObjects().values();
 			
 			CreatureSay cs = new CreatureSay(actor, _type, name, _text);
-			for(L2Object obj : list)
+			for (L2Object obj : list)
 			{
-				if(obj == null || !(obj instanceof L2Character))
+				if (obj == null || !(obj instanceof L2Character))
 				{
 					continue;
 				}
+				
 				L2Character chara = (L2Character) obj;
 				chara.sendPacket(cs);
 			}
 			return;
 		}
 		
-		CreatureSay cs = new CreatureSay(activeChar.getObjectId(), _type, ""+(Config.SHOW_TIME_IN_CHAT ? "["+fmt.format(new Date(System.currentTimeMillis())) +"]" : "")+" " +activeChar.getName(), _text);
-		switch(_type)
+		CreatureSay cs = new CreatureSay(activeChar.getObjectId(), _type, "" + (Config.SHOW_TIME_IN_CHAT ? "[" + fmt.format(new Date(System.currentTimeMillis())) + "]" : "") + " " + activeChar.getName(), _text);
+		
+		switch (_type)
 		{
 			case TELL:
 				L2PcInstance receiver = L2World.getInstance().getPlayer(_target);
@@ -299,9 +306,9 @@ public final class Say2 extends L2GameClientPacket
 						return;
 					}
 					
-					receiver.sendPacket(new CreatureSay(activeChar.getObjectId(), _type, activeChar.getName(), (Config.SHOW_TIME_IN_CHAT ? "["+fmt.format(new Date(System.currentTimeMillis())) +"]" : "")+" "+ _text));
-					activeChar.sendPacket(new CreatureSay(activeChar.getObjectId(), _type, "->" + receiver.getName(), (Config.SHOW_TIME_IN_CHAT ? "["+fmt.format(new Date(System.currentTimeMillis())) +"]" : "")+" "+ _text));
-				
+					receiver.sendPacket(new CreatureSay(activeChar.getObjectId(), _type, activeChar.getName(), (Config.SHOW_TIME_IN_CHAT ? "[" + fmt.format(new Date(System.currentTimeMillis())) + "]" : "") + " " + _text));
+					activeChar.sendPacket(new CreatureSay(activeChar.getObjectId(), _type, "->" + receiver.getName(), (Config.SHOW_TIME_IN_CHAT ? "[" + fmt.format(new Date(System.currentTimeMillis())) + "]" : "") + " " + _text));
+					
 				}
 				else if (BlockList.isBlocked(receiver, activeChar))
 				{
@@ -312,22 +319,23 @@ public final class Say2 extends L2GameClientPacket
 				break;
 			case SHOUT:
 				
-				if (activeChar.getLevel() <= Config.MIN_LEVEL_FOR_CHAT)
+				if (activeChar.getLevel() <= (Config.MIN_LEVEL_FOR_CHAT - 1))
 				{
-					activeChar.sendMessage("Your level is too low for SHOUT chat. Min.: "+Config.MIN_LEVEL_FOR_CHAT);
+					activeChar.sendMessage("Your level is too low for SHOUT chat. Min.: " + Config.MIN_LEVEL_FOR_CHAT);
 					return;
 				}
 				
 				if (Config.DEFAULT_GLOBAL_CHAT.equalsIgnoreCase("on"))
 				{
-					int region = MapRegionTable.getInstance().getMapRegion(activeChar.getX(), activeChar.getY());
-					for(L2PcInstance player : L2World.getInstance().getAllPlayers().values())
+					int region = MapRegionTable.getInstance().getMapRegionLocId(activeChar.getX(), activeChar.getY());
+					for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 					{
-						if (region == MapRegionTable.getInstance().getMapRegion(player.getX(), player.getY()))
+						if (region == MapRegionTable.getInstance().getMapRegionLocId(player.getX(), player.getY()))
 						{
-							// Like L2OFF if player is blocked can't read the message
-							if(!BlockList.isBlocked(player, activeChar))
+							if (!BlockList.isBlocked(player, activeChar))
+							{
 								player.sendPacket(cs);
+							}
 						}
 					}
 				}
@@ -336,7 +344,7 @@ public final class Say2 extends L2GameClientPacket
 					// Flood protect Say
 					if (!getClient().getFloodProtectors().getGlobalChat().tryPerformAction("global chat"))
 					{
-						activeChar.sendMessage("You can send message every "+Config.FLOOD_PROTECTOR_GLOBAL_CHAT.FLOOD_PROTECTION_INTERVAL / 10 +" sec");
+						activeChar.sendMessage("You can send message every " + Config.FLOOD_PROTECTOR_GLOBAL_CHAT.FLOOD_PROTECTION_INTERVAL / 10 + " sec");
 						return;
 					}
 					
@@ -344,14 +352,15 @@ public final class Say2 extends L2GameClientPacket
 					{
 						if ((activeChar.getPvpKills() < Config.GLOBAL_PVP_AMOUNT) && !activeChar.isGM())
 						{
-							activeChar.sendMessage("You must have at least " + Config.GLOBAL_PVP_AMOUNT+ " pvp kills in order to speak in global chat");
+							activeChar.sendMessage("You must have at least " + Config.GLOBAL_PVP_AMOUNT + " pvp kills in order to speak in global chat");
 							return;
 						}
 						for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 						{
-							// Like L2OFF if player is blocked can't read the message
-							if(!BlockList.isBlocked(player, activeChar))
+							if (!BlockList.isBlocked(player, activeChar))
+							{
 								player.sendPacket(cs);
+							}
 						}
 					}
 					else
@@ -369,16 +378,15 @@ public final class Say2 extends L2GameClientPacket
 			case TRADE:
 				if (Config.DEFAULT_TRADE_CHAT.equalsIgnoreCase("ON"))
 				{
-					// Flood protect Say
 					if (!getClient().getFloodProtectors().getTradeChat().tryPerformAction("trade chat"))
 					{
-						activeChar.sendMessage("You can send message every "+Config.FLOOD_PROTECTOR_TRADE_CHAT.FLOOD_PROTECTION_INTERVAL / 10 +" sec");
+						activeChar.sendMessage("You can send message every " + Config.FLOOD_PROTECTOR_TRADE_CHAT.FLOOD_PROTECTION_INTERVAL / 10 + " sec");
 						return;
 					}
 					
-					if (activeChar.getLevel() <= Config.MIN_LEVEL_FOR_CHAT)
+					if (activeChar.getLevel() <= (Config.MIN_LEVEL_FOR_CHAT - 1))
 					{
-						activeChar.sendMessage("Your level is too low for TRADE chat. Min.: "+Config.MIN_LEVEL_FOR_CHAT);
+						activeChar.sendMessage("Your level is too low for TRADE chat. Min.: " + Config.MIN_LEVEL_FOR_CHAT);
 						return;
 					}
 					
@@ -386,12 +394,12 @@ public final class Say2 extends L2GameClientPacket
 					{
 						if ((activeChar.getPvpKills() <= Config.TRADE_PVP_AMOUNT) && !activeChar.isGM())
 						{
-							activeChar.sendMessage("You must have at least " + Config.TRADE_PVP_AMOUNT+ "  pvp kills in order to speak in trade chat");
+							activeChar.sendMessage("You must have at least " + Config.TRADE_PVP_AMOUNT + "  pvp kills in order to speak in trade chat");
 							return;
 						}
-						for(L2PcInstance player : L2World.getInstance().getAllPlayers().values())
+						for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 						{
-							if(!BlockList.isBlocked(player, activeChar))
+							if (!BlockList.isBlocked(player, activeChar))
 							{
 								player.sendPacket(cs);
 							}
@@ -408,11 +416,11 @@ public final class Say2 extends L2GameClientPacket
 						}
 					}
 				}
-				else if(Config.DEFAULT_TRADE_CHAT.equalsIgnoreCase("limited"))
+				else if (Config.DEFAULT_TRADE_CHAT.equalsIgnoreCase("limited"))
 				{
-					if (activeChar.getLevel() <= Config.MIN_LEVEL_FOR_CHAT)
+					if (activeChar.getLevel() <= (Config.MIN_LEVEL_FOR_CHAT - 1))
 					{
-						activeChar.sendMessage("Your level is too low for TRADE chat. Min.: "+Config.MIN_LEVEL_FOR_CHAT);
+						activeChar.sendMessage("Your level is too low for TRADE chat. Min.: " + Config.MIN_LEVEL_FOR_CHAT);
 						return;
 					}
 					
@@ -424,10 +432,10 @@ public final class Say2 extends L2GameClientPacket
 							return;
 						}
 						
-						int region = MapRegionTable.getInstance().getMapRegion(activeChar.getX(), activeChar.getY());
+						int region = MapRegionTable.getInstance().getMapRegionLocId(activeChar.getX(), activeChar.getY());
 						for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 						{
-							if (region == MapRegionTable.getInstance().getMapRegion(player.getX(), player.getY()))
+							if (region == MapRegionTable.getInstance().getMapRegionLocId(player.getX(), player.getY()))
 							{
 								if (!BlockList.isBlocked(player, activeChar))
 								{
@@ -439,12 +447,12 @@ public final class Say2 extends L2GameClientPacket
 					}
 					else
 					{
-						int region = MapRegionTable.getInstance().getMapRegion(activeChar.getX(), activeChar.getY());
-						for(L2PcInstance player : L2World.getInstance().getAllPlayers().values())
+						int region = MapRegionTable.getInstance().getMapRegionLocId(activeChar.getX(), activeChar.getY());
+						for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 						{
-							if(region == MapRegionTable.getInstance().getMapRegion(player.getX(), player.getY()))
+							if (region == MapRegionTable.getInstance().getMapRegionLocId(player.getX(), player.getY()))
 							{
-								if(!BlockList.isBlocked(player, activeChar))
+								if (!BlockList.isBlocked(player, activeChar))
 								{
 									player.sendPacket(cs);
 								}
@@ -461,11 +469,7 @@ public final class Say2 extends L2GameClientPacket
 					String text = _text;
 					String reformatedText = (text).substring(1);
 					
-					CreatureSay pcs = new CreatureSay(activeChar.getObjectId(), SHOUT, ""+(Config.SHOW_TIME_IN_CHAT ? "["+fmt.format(new Date(System.currentTimeMillis())) +"]" : "")+" " +activeChar.getName(), reformatedText);
-					
-					//SystemMessage sm = new SystemMessage(SystemMessageId.PREMIUM_MESSAGE);
-					
-					//sm.addString((Config.SHOW_TIME_IN_CHAT ? "["+fmt.format(new Date(System.currentTimeMillis())) +"]" : "") + " "+activeChar.getName()+": "+reformatedText);
+					CreatureSay pcs = new CreatureSay(activeChar.getObjectId(), SHOUT, "" + (Config.SHOW_TIME_IN_CHAT ? "[" + fmt.format(new Date(System.currentTimeMillis())) + "]" : "") + " " + activeChar.getName(), reformatedText);
 					
 					for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 					{
@@ -474,18 +478,17 @@ public final class Say2 extends L2GameClientPacket
 							player.sendPacket(pcs);
 						}
 					}
-					
 					break;
 				}
 				
 				if (_text.startsWith("."))
-				{	
+				{
 					StringTokenizer st = new StringTokenizer(_text);
 					IVoicedCommandHandler vch;
 					String command = "";
 					String target = "";
 					
-					if(st.countTokens() > 1)
+					if (st.countTokens() > 1)
 					{
 						command = st.nextToken().substring(1);
 						target = _text.substring(command.length() + 2);
@@ -508,7 +511,6 @@ public final class Say2 extends L2GameClientPacket
 				{
 					if (player != null && activeChar.isInsideRadius(player, 1250, false, true))
 					{
-						// Like L2OFF if player is blocked can't read the message
 						if (!BlockList.isBlocked(player, activeChar))
 						{
 							player.sendPacket(cs);
@@ -546,19 +548,32 @@ public final class Say2 extends L2GameClientPacket
 				
 				PetitionManager.getInstance().sendActivePetitionMessage(activeChar, _text);
 				break;
-			case PARTYROOM_ALL:
+			case PARTYMATCH_ROOM: // 14
+				if (activeChar.isInPartyMatchRoom())
+				{
+					PartyMatchRoom _room = PartyMatchRoomList.getInstance().getPlayerRoom(activeChar);
+					if (_room != null)
+					{
+						for (L2PcInstance _member : _room.getPartyMembers())
+						{
+							_member.sendPacket(cs);
+						}
+					}
+				}
+				break;
+			case PARTYROOM_COMMANDER: // 15
 				if (activeChar.isInParty())
 				{
-					if (activeChar.getParty().isInCommandChannel() && activeChar.getParty().isLeader(activeChar))
+					if (activeChar.getParty().isInCommandChannel() && activeChar.getParty().getCommandChannel().getChannelLeader().equals(activeChar))
 					{
 						activeChar.getParty().getCommandChannel().broadcastCSToChannelMembers(cs, activeChar);
 					}
 				}
 				break;
-			case PARTYROOM_COMMANDER:
+			case PARTYROOM_ALL: // 16
 				if (activeChar.isInParty())
 				{
-					if (activeChar.getParty().isInCommandChannel() && activeChar.getParty().getCommandChannel().getChannelLeader().equals(activeChar))
+					if (activeChar.getParty().isInCommandChannel() && activeChar.getParty().isLeader(activeChar))
 					{
 						activeChar.getParty().getCommandChannel().broadcastCSToChannelMembers(cs, activeChar);
 					}
@@ -577,12 +592,11 @@ public final class Say2 extends L2GameClientPacket
 						player.sendPacket(cs);
 					}
 				}
-				else if(activeChar.isHero())
+				else if (activeChar.isHero())
 				{
-					// Flood protect Hero Voice
 					if (!getClient().getFloodProtectors().getHeroVoice().tryPerformAction("hero voice"))
 					{
-						activeChar.sendMessage("You can send message every "+Config.FLOOD_PROTECTOR_HERO_VOICE.FLOOD_PROTECTION_INTERVAL / 10 +" sec.");
+						activeChar.sendMessage("You can send message every " + Config.FLOOD_PROTECTOR_HERO_VOICE.FLOOD_PROTECTION_INTERVAL / 10 + " sec.");
 						return;
 					}
 					
@@ -593,7 +607,7 @@ public final class Say2 extends L2GameClientPacket
 							continue;
 						}
 						
-						if(!BlockList.isBlocked(player, activeChar))
+						if (!BlockList.isBlocked(player, activeChar))
 						{
 							player.sendPacket(cs);
 						}
@@ -603,9 +617,45 @@ public final class Say2 extends L2GameClientPacket
 		}
 	}
 	
-	private static final String[] WALKER_COMMAND_LIST = { "USESKILL", "USEITEM", "BUYITEM", "SELLITEM", "SAVEITEM", "LOADITEM", "MSG", "SET", "DELAY", "LABEL", "JMP", "CALL",
-		"RETURN", "MOVETO", "NPCSEL", "NPCDLG", "DLGSEL", "CHARSTATUS", "POSOUTRANGE", "POSINRANGE", "GOHOME", "SAY", "EXIT", "PAUSE", "STRINDLG", "STRNOTINDLG", "CHANGEWAITTYPE",
-		"FORCEATTACK", "ISMEMBER", "REQUESTJOINPARTY", "REQUESTOUTPARTY", "QUITPARTY", "MEMBERSTATUS", "CHARBUFFS", "ITEMCOUNT", "FOLLOWTELEPORT" };
+	private static final String[] WALKER_COMMAND_LIST =
+	{
+		"USESKILL",
+		"USEITEM",
+		"BUYITEM",
+		"SELLITEM",
+		"SAVEITEM",
+		"LOADITEM",
+		"MSG",
+		"SET",
+		"DELAY",
+		"LABEL",
+		"JMP",
+		"CALL",
+		"RETURN",
+		"MOVETO",
+		"NPCSEL",
+		"NPCDLG",
+		"DLGSEL",
+		"CHARSTATUS",
+		"POSOUTRANGE",
+		"POSINRANGE",
+		"GOHOME",
+		"SAY",
+		"EXIT",
+		"PAUSE",
+		"STRINDLG",
+		"STRNOTINDLG",
+		"CHANGEWAITTYPE",
+		"FORCEATTACK",
+		"ISMEMBER",
+		"REQUESTJOINPARTY",
+		"REQUESTOUTPARTY",
+		"QUITPARTY",
+		"MEMBERSTATUS",
+		"CHARBUFFS",
+		"ITEMCOUNT",
+		"FOLLOWTELEPORT"
+	};
 	
 	private boolean checkBot(String text)
 	{
@@ -631,23 +681,23 @@ public final class Say2 extends L2GameClientPacket
 			}
 			
 			if (!filteredText.equalsIgnoreCase(_text))
-			{				
+			{
 				if (Config.CHAT_FILTER_PUNISHMENT.equalsIgnoreCase("chat"))
 				{
 					activeChar.setPunishLevel(PunishLevel.CHAT, Config.CHAT_FILTER_PUNISHMENT_PARAM1);
-					activeChar.sendMessage("Administrator banned you chat from " + Config.CHAT_FILTER_PUNISHMENT_PARAM1 + " minutes");
+					activeChar.sendMessage("The chat has been automatically banned for " + Config.CHAT_FILTER_PUNISHMENT_PARAM1 + " min.");
 				}
 				else if (Config.CHAT_FILTER_PUNISHMENT.equalsIgnoreCase("karma"))
 				{
 					activeChar.setKarma(Config.CHAT_FILTER_PUNISHMENT_PARAM2);
-					activeChar.sendMessage("You have get " + Config.CHAT_FILTER_PUNISHMENT_PARAM2 + " karma for bad words");
+					activeChar.sendMessage("You've got " + Config.CHAT_FILTER_PUNISHMENT_PARAM2 + " karma for bad words.");
 				}
 				else if (Config.CHAT_FILTER_PUNISHMENT.equalsIgnoreCase("jail"))
 				{
 					activeChar.setPunishLevel(PunishLevel.JAIL, Config.CHAT_FILTER_PUNISHMENT_PARAM1);
 				}
 				
-				activeChar.sendMessage("The word "+_text+" is not allowed!");
+				activeChar.sendMessage("The word: " + _text + " is not allowed here.");
 				_text = filteredText;
 			}
 		}

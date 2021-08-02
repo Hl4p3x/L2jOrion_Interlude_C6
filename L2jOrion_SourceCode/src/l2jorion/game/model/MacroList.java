@@ -33,12 +33,11 @@ import javolution.util.FastMap;
 import l2jorion.game.model.L2Macro.L2MacroCmd;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.SendMacroList;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class ...
@@ -186,15 +185,15 @@ public class MacroList
 					sb.append(cmd_sb.toString());
 				}
 				else
+				{
 					break;
+				}
 				
 			}
 			
 			statement.setString(7, sb.toString());
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
-			sb = null;
 		}
 		catch (final Exception e)
 		{

@@ -20,10 +20,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-/**
- * Format chS c (id) 0xD0 h (subid) 0x0C S the hero's words :)
- * @author -Wooden-
- */
 public final class RequestWriteHeroWords extends L2GameClientPacket
 {
 	@SuppressWarnings("unused")

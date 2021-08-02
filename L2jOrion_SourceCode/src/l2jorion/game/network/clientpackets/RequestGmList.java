@@ -22,9 +22,6 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.datatables.GmListTable;
 
-/**
- * This class handles RequestGmLista packet triggered by /gmlist command
- */
 public final class RequestGmList extends L2GameClientPacket
 {
 	@Override
@@ -37,7 +34,9 @@ public final class RequestGmList extends L2GameClientPacket
 	protected void runImpl()
 	{
 		if (getClient().getActiveChar() == null)
+		{
 			return;
+		}
 		
 		GmListTable.getInstance().sendListToPlayer(getClient().getActiveChar());
 	}

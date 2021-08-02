@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
+<!-- Fortress zones -->
+ 	<zone name='' id='21501' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Shanty Fortress -->
+ 		<stat name='fortId' val='101'/>
+ 		<stat name='spawnX' val='-52695'/>
+ 		<stat name='spawnY' val='156457'/>
+ 		<stat name='spawnZ' val='-2053'/>
+ 	</zone>
+  	<zone name='' id='21502' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Southern Fortress -->
+ 		<stat name='fortId' val='102'/>
+ 		<stat name='spawnX' val='-22759'/>
+ 		<stat name='spawnY' val='219818'/>
+ 		<stat name='spawnZ' val='-3236'/>
+ 	</zone>
+ 	<zone name='' id='21503' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Hive Fortress -->
+ 		<stat name='fortId' val='103'/>
+ 		<stat name='spawnX' val='16625'/>
+ 		<stat name='spawnY' val='188108'/>
+ 		<stat name='spawnZ' val='-2924'/>
+ 	</zone>
+ 	<zone name='' id='21504' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Valley Fortress -->
+ 		<stat name='fortId' val='104'/>
+ 		<stat name='spawnX' val='126058'/>
+ 		<stat name='spawnY' val='123425'/>
+ 		<stat name='spawnZ' val='-2585'/>
+ 	</zone>
+ 	<zone name='' id='21505' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Ivory Fortress -->
+ 		<stat name='fortId' val='105'/>
+ 		<stat name='spawnX' val='72808'/>
+ 		<stat name='spawnY' val='4307'/>
+ 		<stat name='spawnZ' val='-3045'/>
+ 	</zone>
+ 	<zone name='' id='21506' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Narsell Fortress -->
+ 		<stat name='fortId' val='106'/>
+ 		<stat name='spawnX' val='154966'/>
+ 		<stat name='spawnY' val='55276'/>
+ 		<stat name='spawnZ' val='-3254'/>
+ 	</zone>
+ 	<zone name='' id='21507' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Bayou Fortress -->
+ 		<stat name='fortId' val='107'/>
+ 		<stat name='spawnX' val='189910'/>
+ 		<stat name='spawnY' val='39770'/>
+ 		<stat name='spawnZ' val='-3410'/>
+ 	</zone>
+ 	<zone name='' id='21508' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- White Sands Fortress -->
+ 		<stat name='fortId' val='108'/>
+ 		<stat name='spawnX' val='118361'/>
+ 		<stat name='spawnY' val='204924'/>
+ 		<stat name='spawnZ' val='-3333'/>
+ 	</zone>
+ 	<zone name='' id='21509' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Borderland Fortress -->
+ 		<stat name='fortId' val='109'/>
+ 		<stat name='spawnX' val='159009'/>
+ 		<stat name='spawnY' val='-70167'/>
+ 		<stat name='spawnZ' val='-2864'/>
+ 	</zone>
+ 	<zone name='' id='21510' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Marshland Fortress -->
+ 		<stat name='fortId' val='110'/>
+ 		<stat name='spawnX' val='69791'/>
+ 		<stat name='spawnY' val='-61482'/>
+ 		<stat name='spawnZ' val='-2786'/>
+ 	</zone>
+ 	<zone name='' id='21511' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Archaic Fortress -->
+ 		<stat name='fortId' val='111'/>
+ 		<stat name='spawnX' val='109568'/>
+ 		<stat name='spawnY' val='-141277'/>
+ 		<stat name='spawnZ' val='-2957'/>
+ 	</zone>
+ 	<zone name='' id='21512' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Floran Fortress - Border -->
+ 		<stat name='fortId' val='112'/>
+ 		<stat name='spawnX' val='5688'/>
+ 		<stat name='spawnY' val='149726'/>
+ 		<stat name='spawnZ' val='-2889'/>
+ 	</zone>
+ 	<zone name='' id='21513' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Cloud Mountain Fortress - Border -->
+ 		<stat name='fortId' val='113'/>
+ 		<stat name='spawnX' val='-53204'/>
+ 		<stat name='spawnY' val='91210'/>
+ 		<stat name='spawnZ' val='-2821'/>
+ 	</zone>
+ 	<zone name='' id='21514' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Tanor Fortress - Border -->
+ 		<stat name='fortId' val='114'/>
+ 		<stat name='spawnX' val='60258'/>
+ 		<stat name='spawnY' val='139425'/>
+ 		<stat name='spawnZ' val='-1754'/>
+ 	</zone>
+ 	<zone name='' id='21515' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Dragonspine Fortress - Border -->
+ 		<stat name='fortId' val='115'/>
+ 		<stat name='spawnX' val='11542'/>
+ 		<stat name='spawnY' val='95060'/>
+ 		<stat name='spawnZ' val='-3426'/>
+ 	</zone>
+ 	<zone name='' id='21516' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Antharas Fortress - Border -->
+ 		<stat name='fortId' val='116'/>
+ 		<stat name='spawnX' val='79199'/>
+ 		<stat name='spawnY' val='91021'/>
+ 		<stat name='spawnZ' val='-2878'/>
+ 	</zone>
+ 	<zone name='' id='21517' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Western Fortress - Border -->
+ 		<stat name='fortId' val='117'/>
+ 		<stat name='spawnX' val='111376'/>
+ 		<stat name='spawnY' val='-15203'/>
+ 		<stat name='spawnZ' val='-995'/>
+ 	</zone>
+ 	<zone name='' id='21518' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Hunters Fortress - Border -->
+ 		<stat name='fortId' val='118'/>
+ 		<stat name='spawnX' val='125308'/>
+ 		<stat name='spawnY' val='95066'/>
+ 		<stat name='spawnZ' val='-2140'/>
+ 	</zone>
+ 	<zone name='' id='21519' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Aaru Fortress - Border -->
+ 		<stat name='fortId' val='119'/>
+ 		<stat name='spawnX' val='73066'/>
+ 		<stat name='spawnY' val='185954'/>
+ 		<stat name='spawnZ' val='-2581'/>
+ 	</zone>
+ 	<zone name='' id='21520' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Demon Fortress - Border -->
+ 		<stat name='fortId' val='120'/>
+ 		<stat name='spawnX' val='100698'/>
+ 		<stat name='spawnY' val='-55334'/>
+ 		<stat name='spawnZ' val='-645'/>
+ 	</zone>
+ 	<zone name='' id='21521' type='FortZone' shape='Cuboid' minZ='-3800' maxZ='3200'>
+ 		<!-- Monastic Fortress - Border -->
+ 		<stat name='fortId' val='121'/>
+ 		<stat name='spawnX' val='72146'/>
+ 		<stat name='spawnY' val='-94782'/>
+ 		<stat name='spawnZ' val='-1428'/>
+ 	</zone>
+</list>

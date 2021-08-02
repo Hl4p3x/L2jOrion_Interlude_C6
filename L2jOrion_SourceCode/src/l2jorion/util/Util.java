@@ -26,9 +26,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javolution.text.TextBuilder;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class Util
 {
@@ -119,18 +118,20 @@ public class Util
 	
 	public static void printSection(String s)
 	{
-		final int maxlength = 80;
-		s = " " + s + " ";
+		final int maxlength = 90;
+		s = "( " + s + " ) ";
+		
 		final int slen = s.length();
 		if (slen > maxlength)
 		{
 			System.out.println(s);
 			return;
 		}
+		
 		int i;
 		for (i = 0; i < maxlength - slen; i++)
 		{
-			s = "." +s;
+			s = "-" + s;
 		}
 		System.out.println(s);
 	}

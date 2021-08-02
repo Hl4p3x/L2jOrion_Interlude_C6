@@ -19,6 +19,7 @@ package l2jorion.game.network.serverpackets;
 public class AllyCrest extends L2GameServerPacket
 {
 	private static final String _S__C7_ALLYCREST = "[S] ae AllyCrest";
+	
 	private final int _crestId;
 	private final int _crestSize;
 	private byte[] _data;
@@ -37,7 +38,6 @@ public class AllyCrest extends L2GameServerPacket
 		writeD(_crestId);
 		writeD(_crestSize);
 		writeB(_data);
-		_data = null;
 	}
 	
 	@Override

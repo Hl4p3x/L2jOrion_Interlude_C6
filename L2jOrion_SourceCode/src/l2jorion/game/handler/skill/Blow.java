@@ -23,12 +23,11 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
-import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.L2Skill.SkillType;
+import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2SummonInstance;
-import l2jorion.game.model.entity.olympiad.Olympiad;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.PlaySound;
 import l2jorion.game.network.serverpackets.SystemMessage;
@@ -49,18 +48,20 @@ public class Blow implements ISkillHandler
 	public void useSkill(final L2Character activeChar, final L2Skill skill, final L2Object[] targets)
 	{
 		if (activeChar.isAlikeDead())
+		{
 			return;
+		}
 		
 		final boolean bss = activeChar.checkBss();
 		final boolean sps = activeChar.checkSps();
 		final boolean ss = activeChar.checkSs();
 		
-		Formulas.getInstance();
-		
 		for (final L2Character target : (L2Character[]) targets)
 		{
 			if (target.isAlikeDead())
+			{
 				continue;
+			}
 			
 			// Check firstly if target dodges skill
 			final boolean skillIsEvaded = Formulas.calcPhysicalSkillEvasion(target, skill);
@@ -70,20 +71,32 @@ public class Blow implements ISkillHandler
 			if (skill.getName().equals("Backstab"))
 			{
 				if (activeChar.isBehindTarget())
+				{
 					_successChance = (byte) Config.BACKSTAB_ATTACK_BEHIND;
+				}
 				else if (activeChar.isFrontTarget())
+				{
 					_successChance = (byte) Config.BACKSTAB_ATTACK_FRONT;
+				}
 				else
+				{
 					_successChance = (byte) Config.BACKSTAB_ATTACK_SIDE;
+				}
 			}
 			else
 			{
 				if (activeChar.isBehindTarget())
+				{
 					_successChance = (byte) Config.BLOW_ATTACK_BEHIND;
+				}
 				else if (activeChar.isFrontTarget())
+				{
 					_successChance = (byte) Config.BLOW_ATTACK_FRONT;
+				}
 				else
+				{
 					_successChance = (byte) Config.BLOW_ATTACK_SIDE;
+				}
 			}
 			
 			boolean success = true;
@@ -135,7 +148,9 @@ public class Blow implements ISkillHandler
 					// if there is not critical condition, calculate critical chance
 				}
 				else if (Formulas.calcCrit(skill.getBaseCritRate() * 10 * BaseStats.DEX.calcBonus(activeChar)))
+				{
 					crit = true;
+				}
 				
 				double damage = (int) Formulas.calcBlowDamage(activeChar, target, skill, shld, crit, soul);
 				
@@ -169,17 +184,23 @@ public class Blow implements ISkillHandler
 								// Only transfer dmg up to current HP, it should
 								// not be killed
 								if (summon.getCurrentHp() < tDmg)
+								{
 									tDmg = (int) summon.getCurrentHp() - 1;
+								}
+								
 								if (tDmg > 0)
 								{
 									summon.reduceCurrentHp(tDmg, activeChar);
 									damage -= tDmg;
 								}
 							}
+							
 							if (damage >= player.getCurrentHp())
 							{
 								if (player.isInDuel())
+								{
 									player.setCurrentHp(1);
+								}
 								else
 								{
 									player.setCurrentHp(0);
@@ -188,19 +209,25 @@ public class Blow implements ISkillHandler
 										player.abortAttack();
 										player.abortCast();
 										player.getStatus().stopHpMpRegeneration();
-										// player.setIsDead(true);
 										player.setIsPendingRevive(true);
 										if (player.getPet() != null)
+										{
 											player.getPet().getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, null);
+										}
 									}
 									else
+									{
 										player.doDie(activeChar);
+									}
 								}
 							}
 							else
+							{
 								player.setCurrentHp(player.getCurrentHp() - damage);
+							}
 						}
-						if(player.getScreentxt())
+						
+						if (player.getScreentxt())
 						{
 							SystemMessage smsg = new SystemMessage(SystemMessageId.S1_GAVE_YOU_S2_DMG);
 							smsg.addString(activeChar.getName());
@@ -214,9 +241,12 @@ public class Blow implements ISkillHandler
 							smsg.addNumber((int) damage);
 							player.sendPacket(smsg);
 						}
+						
 						// stop if no vengeance, so only target will be effected
 						if (!player.vengeanceSkill(skill))
+						{
 							break;
+						}
 					} // end for
 				} // end skill directlyToHp check
 				else
@@ -225,7 +255,9 @@ public class Blow implements ISkillHandler
 					
 					// vengeance reflected damage
 					if (target.vengeanceSkill(skill))
+					{
 						activeChar.reduceCurrentHp(damage, target);
+					}
 				}
 				
 				// Manage attack or cast break of the target (calculating rate, sending message...)
@@ -239,22 +271,24 @@ public class Blow implements ISkillHandler
 					final L2PcInstance activePlayer = (L2PcInstance) activeChar;
 					
 					activePlayer.sendDamageMessage(target, (int) damage, false, true, false);
-					if (activePlayer.isInOlympiadMode() && target instanceof L2PcInstance && ((L2PcInstance) target).isInOlympiadMode() && ((L2PcInstance) target).getOlympiadGameId() == activePlayer.getOlympiadGameId())
-					{
-						Olympiad.getInstance().notifyCompetitorDamage(activePlayer, (int) damage, activePlayer.getOlympiadGameId());
-					}
+					// if (activePlayer.isInOlympiadMode() && target instanceof L2PcInstance && ((L2PcInstance) target).isInOlympiadMode() && ((L2PcInstance) target).getOlympiadGameId() == activePlayer.getOlympiadGameId())
+					// {
+					// Olympiad.getInstance().notifyCompetitorDamage(activePlayer, (int) damage, activePlayer.getOlympiadGameId());
+					// }
 				}
 				
 			}
 			else
 			{
 				if (skillIsEvaded)
+				{
 					if (target instanceof L2PcInstance)
 					{
 						final SystemMessage sm = new SystemMessage(SystemMessageId.AVOIDED_S1S_ATTACK);
 						sm.addString(activeChar.getName());
 						((L2PcInstance) target).sendPacket(sm);
 					}
+				}
 				
 				final SystemMessage sm = new SystemMessage(SystemMessageId.ATTACK_FAILED);
 				sm.addSkillName(skill);
@@ -272,7 +306,9 @@ public class Blow implements ISkillHandler
 			{
 				final L2Effect effect = activeChar.getFirstEffect(skill.getId());
 				if (effect != null && effect.isSelfEffect())
+				{
 					effect.exit(false);
+				}
 				skill.getEffectsSelf(activeChar);
 			}
 		}

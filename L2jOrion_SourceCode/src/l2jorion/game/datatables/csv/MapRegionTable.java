@@ -18,46 +18,38 @@
  */
 package l2jorion.game.datatables.csv;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
+import java.util.HashMap;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
+import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
-import l2jorion.Config;
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.ClanHallManager;
 import l2jorion.game.managers.FortManager;
-import l2jorion.game.managers.TownManager;
 import l2jorion.game.managers.ZoneManager;
 import l2jorion.game.model.L2Character;
+import l2jorion.game.model.L2MapRegion;
+import l2jorion.game.model.L2Object;
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.ClanHall;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.model.entity.siege.Fort;
-import l2jorion.game.model.zone.type.L2ArenaZone;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.model.zone.type.L2ClanHallZone;
-import l2jorion.game.model.zone.type.L2TownZone;
+import l2jorion.game.model.zone.type.L2RespawnZone;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
+import l2jorion.util.xml.IXmlReader;
 
-public class MapRegionTable
+public class MapRegionTable implements IXmlReader
 {
 	private static Logger LOG = LoggerFactory.getLogger(MapRegionTable.class);
-
-	private static MapRegionTable _instance;
-
-	private final int[][] _regions = new int[20][22];
-
-	private final int[][] _pointsWithKarmas;
-
+	
 	public static enum TeleportWhereType
 	{
 		Castle,
@@ -66,494 +58,348 @@ public class MapRegionTable
 		Town,
 		Fortress
 	}
-
-	public static MapRegionTable getInstance()
+	
+	private static final Map<String, L2MapRegion> _regions = new HashMap<>();
+	private static final String defaultRespawn = "talking_island_town";
+	
+	protected MapRegionTable()
 	{
-		if(_instance == null)
-		{
-			_instance = new MapRegionTable();
-		}
-
-		return _instance;
+		load();
 	}
-
-	private MapRegionTable()
+	
+	@Override
+	public void load()
 	{
-		FileReader reader = null;
-		BufferedReader buff = null;
-		LineNumberReader lnr = null;
+		_regions.clear();
+		parseDatapackDirectory("data/xml/mapregion", false);
+		LOG.info("{}: Loaded {} map regions", getClass().getSimpleName(), _regions.size());
+	}
+	
+	@Override
+	public void parseDocument(Document doc)
+	{
+		NamedNodeMap attrs;
+		String name;
+		String town;
+		int locId;
+		int castle;
+		int bbs;
 		
-		try
+		for (Node n = doc.getFirstChild(); n != null; n = n.getNextSibling())
 		{
-			File fileData = new File(Config.DATAPACK_ROOT+"/data/csv/mapregion.csv");
-			
-			reader = new FileReader(fileData);
-			buff = new BufferedReader(reader);
-			lnr = new LineNumberReader(buff);
-			
-			String line = null;
-
-			int region;
-
-			while((line = lnr.readLine()) != null)
+			if ("list".equalsIgnoreCase(n.getNodeName()))
 			{
-				//ignore comments
-				if(line.trim().length() == 0 || line.startsWith("#"))
+				for (Node d = n.getFirstChild(); d != null; d = d.getNextSibling())
 				{
-					continue;
-				}
-
-				StringTokenizer st = new StringTokenizer(line, ";");
-
-				region = Integer.parseInt(st.nextToken());
-
-				for(int j = 0; j < 10; j++)
-				{
-					_regions[j][region] = Integer.parseInt(st.nextToken());
+					if ("region".equalsIgnoreCase(d.getNodeName()))
+					{
+						attrs = d.getAttributes();
+						name = attrs.getNamedItem("name").getNodeValue();
+						town = attrs.getNamedItem("town").getNodeValue();
+						locId = parseInteger(attrs, "locId");
+						castle = parseInteger(attrs, "castle");
+						bbs = parseInteger(attrs, "bbs");
+						
+						L2MapRegion region = new L2MapRegion(name, town, locId, castle, bbs);
+						for (Node c = d.getFirstChild(); c != null; c = c.getNextSibling())
+						{
+							attrs = c.getAttributes();
+							if ("respawnPoint".equalsIgnoreCase(c.getNodeName()))
+							{
+								int spawnX = parseInteger(attrs, "X");
+								int spawnY = parseInteger(attrs, "Y");
+								int spawnZ = parseInteger(attrs, "Z");
+								
+								boolean other = parseBoolean(attrs, "isOther", false);
+								boolean chaotic = parseBoolean(attrs, "isChaotic", false);
+								boolean banish = parseBoolean(attrs, "isBanish", false);
+								
+								if (other)
+								{
+									region.addOtherSpawn(spawnX, spawnY, spawnZ);
+								}
+								else if (chaotic)
+								{
+									region.addChaoticSpawn(spawnX, spawnY, spawnZ);
+								}
+								else if (banish)
+								{
+									region.addBanishSpawn(spawnX, spawnY, spawnZ);
+								}
+								else
+								{
+									region.addSpawn(spawnX, spawnY, spawnZ);
+								}
+							}
+							else if ("map".equalsIgnoreCase(c.getNodeName()))
+							{
+								region.addMap(parseInteger(attrs, "X"), parseInteger(attrs, "Y"));
+							}
+							else if ("banned".equalsIgnoreCase(c.getNodeName()))
+							{
+								region.addBannedRace(attrs.getNamedItem("race").getNodeValue(), attrs.getNamedItem("point").getNodeValue());
+							}
+						}
+						_regions.put(name, region);
+					}
 				}
 			}
 		}
-		catch(FileNotFoundException e)
-		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
-				e.printStackTrace();
-			
-			LOG.warn("mapregion.csv is missing in data folder");
-		}
-		catch(NoSuchElementException e1)
-		{
-			LOG.warn("Error for structure CSV file: ");
-			e1.printStackTrace();
-		}
-		catch(IOException e0)
-		{
-			LOG.warn("Error while creating table: " + e0);
-			e0.printStackTrace();
-		}
-		finally
-		{
-			if(lnr != null)
-				try
-				{
-					lnr.close();
-				}
-				catch(Exception e1)
-				{
-					e1.printStackTrace();
-				}
-			
-			if(buff != null)
-				try
-				{
-					buff.close();
-				}
-				catch(Exception e1)
-				{
-					e1.printStackTrace();
-				}
-			
-			if(reader != null)
-				try
-				{
-					reader.close();
-				}
-				catch(Exception e1)
-				{
-					e1.printStackTrace();
-				}
-			
-		}
-
-		_pointsWithKarmas = new int[20][3];
-		//Talking Island
-		_pointsWithKarmas[0][0] = -79077;
-		_pointsWithKarmas[0][1] = 240355;
-		_pointsWithKarmas[0][2] = -3440;
-		//Elven
-		_pointsWithKarmas[1][0] = 43503;
-		_pointsWithKarmas[1][1] = 40398;
-		_pointsWithKarmas[1][2] = -3450;
-		//DarkElven
-		_pointsWithKarmas[2][0] = 1675;
-		_pointsWithKarmas[2][1] = 19581;
-		_pointsWithKarmas[2][2] = -3110;
-		//Orc
-		_pointsWithKarmas[3][0] = -44413;
-		_pointsWithKarmas[3][1] = -121762;
-		_pointsWithKarmas[3][2] = -235;
-		//Dwalf
-		_pointsWithKarmas[4][0] = 12009;
-		_pointsWithKarmas[4][1] = -187319;
-		_pointsWithKarmas[4][2] = -3309;
-		//Gludio
-		_pointsWithKarmas[5][0] = -18872;
-		_pointsWithKarmas[5][1] = 126216;
-		_pointsWithKarmas[5][2] = -3280;
-		//Gludin
-		_pointsWithKarmas[6][0] = -85915;
-		_pointsWithKarmas[6][1] = 150402;
-		_pointsWithKarmas[6][2] = -3060;
-		//Dion
-		_pointsWithKarmas[7][0] = 23652;
-		_pointsWithKarmas[7][1] = 144823;
-		_pointsWithKarmas[7][2] = -3330;
-		//Giran
-		_pointsWithKarmas[8][0] = 79125;
-		_pointsWithKarmas[8][1] = 154197;
-		_pointsWithKarmas[8][2] = -3490;
-		//Oren
-		_pointsWithKarmas[9][0] = 73840;
-		_pointsWithKarmas[9][1] = 58193;
-		_pointsWithKarmas[9][2] = -2730;
-		//Aden
-		_pointsWithKarmas[10][0] = 44413;
-		_pointsWithKarmas[10][1] = 22610;
-		_pointsWithKarmas[10][2] = 235;
-		//Hunters
-		_pointsWithKarmas[11][0] = 114137;
-		_pointsWithKarmas[11][1] = 72993;
-		_pointsWithKarmas[11][2] = -2445;
-		//Giran
-		_pointsWithKarmas[12][0] = 79125;
-		_pointsWithKarmas[12][1] = 154197;
-		_pointsWithKarmas[12][2] = -3490;
-		// heine
-		_pointsWithKarmas[13][0] = 119536;
-		_pointsWithKarmas[13][1] = 218558;
-		_pointsWithKarmas[13][2] = -3495;
-		// Rune Castle Town
-		_pointsWithKarmas[14][0] = 42931;
-		_pointsWithKarmas[14][1] = -44733;
-		_pointsWithKarmas[14][2] = -1326;
-		// Goddard
-		_pointsWithKarmas[15][0] = 147419;
-		_pointsWithKarmas[15][1] = -64980;
-		_pointsWithKarmas[15][2] = -3457;
-		// Schuttgart
-		_pointsWithKarmas[16][0] = 85184;
-		_pointsWithKarmas[16][1] = -138560;
-		_pointsWithKarmas[16][2] = -2256;
-		//Primeval Isle
-		_pointsWithKarmas[18][0] = 10468;
-		_pointsWithKarmas[18][1] = -24569;
-		_pointsWithKarmas[18][2] = -3645;
-		//Bandit
-		_pointsWithKarmas[18][0] = 82288;
-		_pointsWithKarmas[18][1] = -17539;
-		_pointsWithKarmas[18][2] = -1824;
 	}
-
-	public final int getMapRegion(int posX, int posY)
+	
+	public final L2MapRegion getMapRegion(int locX, int locY)
 	{
-		return _regions[getMapRegionX(posX)][getMapRegionY(posY)];
+		for (L2MapRegion region : _regions.values())
+		{
+			if (region.isZoneInRegion(getMapRegionX(locX), getMapRegionY(locY)))
+			{
+				return region;
+			}
+		}
+		return null;
 	}
-
+	
 	public final int getMapRegionX(int posX)
 	{
-		return (posX >> 15) + 4;// + centerTileX;
+		return (posX >> 15) + 9 + 11;// + centerTileX;
 	}
-
+	
 	public final int getMapRegionY(int posY)
 	{
-		return (posY >> 15) + 10;// + centerTileX;
+		return (posY >> 15) + 10 + 8;// + centerTileX;
 	}
-
-	public int getAreaCastle(L2Character activeChar)
+	
+	public final int getMapRegionLocId(int locX, int locY)
 	{
-		int area = getClosestTownNumber(activeChar);
-		int castle;
-
-		switch(area)
+		L2MapRegion region = getMapRegion(locX, locY);
+		if (region != null)
 		{
-			case 0:
-				castle = 1;
-				break;//Talking Island Village
-			case 1:
-				castle = 4;
-				break; //Elven Village
-			case 2:
-				castle = 4;
-				break; //Dark Elven Village
-			case 3:
-				castle = 9;
-				break; //Orc Village
-			case 4:
-				castle = 9;
-				break; //Dwarven Village
-			case 5:
-				castle = 1;
-				break; //Town of Gludio
-			case 6:
-				castle = 1;
-				break; //Gludin Village
-			case 7:
-				castle = 2;
-				break; //Town of Dion
-			case 8:
-				castle = 3;
-				break; //Town of Giran
-			case 9:
-				castle = 4;
-				break; //Town of Oren
-			case 10:
-				castle = 5;
-				break; //Town of Aden
-			case 11:
-				castle = 5;
-				break; //Hunters Village
-			case 12:
-				castle = 3;
-				break; //Giran Harbor
-			case 13:
-				castle = 6;
-				break; //Heine
-			case 14:
-				castle = 8;
-				break; //Rune Township
-			case 15:
-				castle = 7;
-				break; //Town of Goddard
-			case 16:
-				castle = 9;
-				break; //Town of Shuttgart
-			case 17:
-				castle = 4;
-				break; //Ivory Tower
-			case 18:
-				castle = 8;
-				break; //Primeval Isle Wharf
-			case 19:
-				castle = 4;
-				break; //Bandit
-			default:
-				castle = 5;
-				break; //Town of Aden
+			return region.getLocId();
 		}
-		return castle;
+		return 0;
 	}
-
+	
+	public final L2MapRegion getMapRegion(L2Object obj)
+	{
+		return getMapRegion(obj.getX(), obj.getY());
+	}
+	
+	public final int getMapRegionLocId(L2Object obj)
+	{
+		return getMapRegionLocId(obj.getX(), obj.getY());
+	}
+	
 	public int getClosestTownNumber(L2Character activeChar)
 	{
-		return getMapRegion(activeChar.getX(), activeChar.getY());
+		return getMapRegionLocId(activeChar.getX(), activeChar.getY());
 	}
-
+	
 	public String getClosestTownName(L2Character activeChar)
 	{
-		int nearestTownId = getMapRegion(activeChar.getX(), activeChar.getY());
-		String nearestTown;
-
-		switch(nearestTownId)
+		L2MapRegion region = getMapRegion(activeChar);
+		
+		if (region == null)
 		{
-			case 0:
-				nearestTown = "Talking Island Village";
-				break;
-			case 1:
-				nearestTown = "Elven Village";
-				break;
-			case 2:
-				nearestTown = "Dark Elven Village";
-				break;
-			case 3:
-				nearestTown = "Orc Village";
-				break;
-			case 4:
-				nearestTown = "Dwarven Village";
-				break;
-			case 5:
-				nearestTown = "Town of Gludio";
-				break;
-			case 6:
-				nearestTown = "Gludin Village";
-				break;
-			case 7:
-				nearestTown = "Town of Dion";
-				break;
-			case 8:
-				nearestTown = "Town of Giran";
-				break;
-			case 9:
-				nearestTown = "Town of Oren";
-				break;
-			case 10:
-				nearestTown = "Town of Aden";
-				break;
-			case 11:
-				nearestTown = "Hunters Village";
-				break;
-			case 12:
-				nearestTown = "Giran Harbor";
-				break;
-			case 13:
-				nearestTown = "Heine";
-				break;
-			case 14:
-				nearestTown = "Rune Township";
-				break;
-			case 15:
-				nearestTown = "Town of Goddard";
-				break;
-			case 16:
-				nearestTown = "Town of Shuttgart";
-				break;
-			case 18:
-				nearestTown = "Primeval Isle";
-				break;
-			case 19:
-				nearestTown = "Bandit";
-				break;
-			default:
-				nearestTown = "Town of Aden";
-				break;
-
+			return "Aden Castle Town";
 		}
-
-		return nearestTown;
+		
+		return region.getTown();
 	}
-
+	
+	public int getAreaCastle(L2Character activeChar)
+	{
+		L2MapRegion region = getMapRegion(activeChar);
+		
+		if (region == null)
+		{
+			return 0;
+		}
+		
+		return region.getCastle();
+	}
+	
 	public Location getTeleToLocation(L2Character activeChar, TeleportWhereType teleportWhere)
 	{
-		int[] coord;
-		if(activeChar instanceof L2PcInstance)
+		if (activeChar instanceof L2PcInstance)
 		{
 			L2PcInstance player = (L2PcInstance) activeChar;
-
+			
 			// If in Monster Derby Track
-			if(player.isInsideZone(L2Character.ZONE_MONSTERTRACK))
+			if (player.isInsideZone(ZoneId.ZONE_MONSTERTRACK))
 			{
 				return new Location(12661, 181687, -3560);
 			}
-
+			
 			Castle castle = null;
 			Fort fort = null;
 			ClanHall clanhall = null;
-
-			if(player.getClan() != null)
+			
+			if (player.getClan() != null)
 			{
 				// If teleport to clan hall
-				if(teleportWhere == TeleportWhereType.ClanHall)
+				if (teleportWhere == TeleportWhereType.ClanHall)
 				{
-
-					clanhall = ClanHallManager.getInstance().getClanHallByOwner(player.getClan());
-					if(clanhall != null)
+					clanhall = ClanHallManager.getInstance().getAbstractHallByOwner(player.getClan());
+					if (clanhall != null)
 					{
 						L2ClanHallZone zone = clanhall.getZone();
-						if(zone != null)
+						if ((zone != null))
 						{
-							return zone.getSpawn();
+							if (player.getKarma() > 0)
+							{
+								return zone.getChaoticSpawnLoc();
+							}
+							return zone.getSpawnLoc();
 						}
 					}
 				}
-
+				
 				// If teleport to castle
-				if(teleportWhere == TeleportWhereType.Castle)
+				if (teleportWhere == TeleportWhereType.Castle)
 				{
 					castle = CastleManager.getInstance().getCastleByOwner(player.getClan());
 				}
-
+				
 				// If teleport to fort
-				if(teleportWhere == TeleportWhereType.Fortress)
+				if (teleportWhere == TeleportWhereType.Fortress)
 				{
 					fort = FortManager.getInstance().getFortByOwner(player.getClan());
 				}
-
+				
 				// Check if player is on castle&fortress ground
-				if(castle == null)
+				if (castle == null)
 				{
 					castle = CastleManager.getInstance().getCastle(player);
 				}
-
-				if(fort == null)
+				
+				if (fort == null)
 				{
 					fort = FortManager.getInstance().getFort(player);
 				}
-
-				if(castle != null && castle.getCastleId() > 0)
+				
+				if (castle != null && castle.getCastleId() > 0)
 				{
 					// If Teleporting to castle or
 					// If is on castle with siege and player's clan is defender
-					if(teleportWhere == TeleportWhereType.Castle || teleportWhere == TeleportWhereType.Castle && castle.getSiege().getIsInProgress() && castle.getSiege().getDefenderClan(player.getClan()) != null)
+					if (teleportWhere == TeleportWhereType.Castle || teleportWhere == TeleportWhereType.Castle && castle.getSiege().getIsInProgress() && castle.getSiege().getDefenderClan(player.getClan()) != null)
 					{
-						coord = castle.getZone().getSpawn();
-						return new Location(coord[0], coord[1], coord[2]);
+						if (player.getKarma() > 0)
+						{
+							return castle.getResidenceZone().getChaoticSpawnLoc();
+						}
+						return castle.getResidenceZone().getSpawnLoc();
 					}
-
-					if(teleportWhere == TeleportWhereType.SiegeFlag && castle.getSiege().getIsInProgress())
+					
+					if (teleportWhere == TeleportWhereType.SiegeFlag && castle.getSiege().getIsInProgress())
 					{
 						// Check if player's clan is attacker
 						List<L2NpcInstance> flags = castle.getSiege().getFlag(player.getClan());
-						if(flags != null && !flags.isEmpty())
+						if (flags != null && !flags.isEmpty())
 						{
 							// Spawn to flag - Need more work to get player to the nearest flag
 							L2NpcInstance flag = flags.get(0);
 							return new Location(flag.getX(), flag.getY(), flag.getZ());
 						}
-						flags = null;
 					}
 				}
-
+				
 				else if (fort != null && fort.getFortId() > 0)
 				{
 					// teleporting to castle or fortress
 					// is on caslte with siege and player's clan is defender
-					if(teleportWhere == TeleportWhereType.Fortress || teleportWhere == TeleportWhereType.Fortress && fort.getSiege().getIsInProgress() && fort.getSiege().getDefenderClan(player.getClan()) != null)
-					{
-						coord = fort.getZone().getSpawn();
-						return new Location(coord[0], coord[1], coord[2]);
-					}
-
-					if(teleportWhere == TeleportWhereType.SiegeFlag && fort.getSiege().getIsInProgress())
-					{
-						// check if player's clan is attacker
-						List<L2NpcInstance> flags = fort.getSiege().getFlag(player.getClan());
-
-						if(flags != null && !flags.isEmpty())
-						{
-							// spawn to flag
-							L2NpcInstance flag = flags.get(0);
-							return new Location(flag.getX(), flag.getY(), flag.getZ());
-						}
-						flags = null;
-					}
+					/*
+					 * if (teleportWhere == TeleportWhereType.Fortress || teleportWhere == TeleportWhereType.Fortress && fort.getSiege().getIsInProgress() && fort.getSiege().getDefenderClan(player.getClan()) != null) { coord = fort.getZone().getSpawn(); return new Location(coord[0], coord[1],
+					 * coord[2]); } if (teleportWhere == TeleportWhereType.SiegeFlag && fort.getSiege().getIsInProgress()) { // check if player's clan is attacker List<L2NpcInstance> flags = fort.getSiege().getFlag(player.getClan()); if (flags != null && !flags.isEmpty()) { // spawn to flag
+					 * L2NpcInstance flag = flags.get(0); return new Location(flag.getX(), flag.getY(), flag.getZ()); } flags = null; }
+					 */
 				}
-
 			}
-
+			
 			// teleport RED PK 5+ to Floran Village
-			if(player.getPkKills() > 5 && player.getKarma() > 1)
+			if (player.getPkKills() > 5 && player.getKarma() > 1)
 			{
-				return new Location(17817, 170079, -3530);
-			}
-
-			//Karma player land out of city
-			if(player.getKarma() > 1)
-			{
-				int closest = getMapRegion(activeChar.getX(), activeChar.getY());
-				if(closest >= 0 && closest < _pointsWithKarmas.length)
-				{
-					return new Location(_pointsWithKarmas[closest][0], _pointsWithKarmas[closest][1], _pointsWithKarmas[closest][2]);
-				}
 				return new Location(17817, 170079, -3530);
 			}
 			
-			// Checking if in arena
-			L2ArenaZone arena = ZoneManager.getInstance().getArena(player);
-			if(arena != null)
+			// Karma player land out of city
+			if (player.getKarma() > 0)
 			{
-				coord = arena.getSpawnLoc();
-				return new Location(coord[0], coord[1], coord[2]);
+				try
+				{
+					L2RespawnZone zone = ZoneManager.getInstance().getZone(player, L2RespawnZone.class);
+					if (zone != null)
+					{
+						return getRestartRegion(activeChar, zone.getRespawnPoint((L2PcInstance) activeChar)).getChaoticSpawnLoc();
+					}
+					
+					return getMapRegion(activeChar).getChaoticSpawnLoc();
+				}
+				catch (Exception e)
+				{
+					if (player.isFlying())
+					{
+						return _regions.get("union_base_of_kserth").getChaoticSpawnLoc();
+					}
+					
+					return _regions.get(defaultRespawn).getChaoticSpawnLoc();
+				}
 			}
 			
 		}
 		// Get the nearest town
-		L2TownZone town = null;
-		if (activeChar != null && (town = TownManager.getInstance().getClosestTown(activeChar)) != null)
+		try
 		{
-			coord = town.getSpawnLoc();
-			return new Location(coord[0], coord[1], coord[2]);
+			L2RespawnZone zone = ZoneManager.getInstance().getZone(activeChar, L2RespawnZone.class);
+			if (zone != null)
+			{
+				return getRestartRegion(activeChar, zone.getRespawnPoint((L2PcInstance) activeChar)).getSpawnLoc();
+			}
+			
+			return getMapRegion(activeChar).getSpawnLoc();
 		}
-
-		town = TownManager.getInstance().getTown(9);
-		coord = town.getSpawnLoc();
-		return new Location(coord[0], coord[1], coord[2]);
+		catch (Exception e)
+		{
+			LOG.warn("ZoneManager:", e);
+			
+			// Port to the default respawn if no closest town found.
+			return _regions.get(defaultRespawn).getSpawnLoc();
+		}
+	}
+	
+	public L2MapRegion getRestartRegion(L2Character activeChar, String point)
+	{
+		try
+		{
+			L2PcInstance player = ((L2PcInstance) activeChar);
+			L2MapRegion region = _regions.get(point);
+			
+			if (region != null && region.getBannedRace().containsKey(player.getRace()))
+			{
+				getRestartRegion(player, region.getBannedRace().get(player.getRace()));
+			}
+			
+			return region;
+		}
+		catch (Exception e)
+		{
+			LOG.warn("getRestartRegion - point:" + point, e);
+			
+			return _regions.get(defaultRespawn);
+		}
+	}
+	
+	public L2MapRegion getMapRegionByName(String regionName)
+	{
+		return _regions.get(regionName);
+	}
+	
+	public static MapRegionTable getInstance()
+	{
+		return SingletonHolder._instance;
+	}
+	
+	private static class SingletonHolder
+	{
+		protected static final MapRegionTable _instance = new MapRegionTable();
 	}
 }

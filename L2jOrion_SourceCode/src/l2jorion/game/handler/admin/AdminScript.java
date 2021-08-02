@@ -25,13 +25,12 @@ import java.util.StringTokenizer;
 
 import javax.script.ScriptException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.scripting.L2ScriptEngineManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 /**
  * @author KidZor
@@ -50,10 +49,6 @@ public class AdminScript implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
 		
 		if (command.startsWith("admin_load_script"))
 		{
@@ -75,7 +70,9 @@ public class AdminScript implements IAdminCommandHandler
 					catch (final ScriptException e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 						
 						L2ScriptEngineManager.getInstance().reportScriptFileError(file, e);
 					}
@@ -88,7 +85,9 @@ public class AdminScript implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 			st = null;
 		}

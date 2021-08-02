@@ -28,6 +28,7 @@ import l2jorion.game.model.actor.instance.L2MonsterInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2SummonInstance;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.model.zone.type.L2TownZone;
 
 public class NpcInfo extends L2GameServerPacket
@@ -100,7 +101,7 @@ public class NpcInfo extends L2GameServerPacket
 		if (Config.SHOW_NPC_LVL && _activeChar instanceof L2MonsterInstance)
 		{
 			String t = "Lv " + cha.getLevel() + (cha.getAggroRange() > 0 ? "*" : "");
-			if(_title != null)
+			if (_title != null)
 			{
 				t += " " + _title;
 			}
@@ -114,26 +115,23 @@ public class NpcInfo extends L2GameServerPacket
 		
 		if (Config.SHOW_NPC_CREST)
 		{
-			if (cha.isInsideZone(L2Character.ZONE_PEACE) && cha.getCastle().getOwnerId() != 0)
+			if (cha.isInsideZone(ZoneId.ZONE_PEACE) && cha.getCastle().getOwnerId() != 0)
 			{
 				L2TownZone Town = TownManager.getInstance().getTown(_x, _y, _z);
 				if (Town != null)
 				{
-					int townId = Town.getTownId();
-					if (townId != 33 && townId != 22)
-					{
-						L2Clan clan;
-						clan = ClanTable.getInstance().getClan(cha.getCastle().getOwnerId());
-						_clanCrest = clan.getCrestId();
-						_clanId = clan.getClanId();
-						_allyCrest = clan.getAllyCrestId();
-						_allyId = clan.getAllyId();
-					}
+					L2Clan clan;
+					clan = ClanTable.getInstance().getClan(cha.getCastle().getOwnerId());
+					_clanCrest = clan.getCrestId();
+					_clanId = clan.getClanId();
+					_allyCrest = clan.getAllyCrestId();
+					_allyId = clan.getAllyId();
 				}
 			}
 		}
 		
 		_heading = _activeChar.getHeading();
+		
 		_mAtkSpd = _activeChar.getMAtkSpd();
 		_pAtkSpd = _activeChar.getPAtkSpd();
 		_runSpd = _activeChar.getRunSpeed();
@@ -146,7 +144,7 @@ public class NpcInfo extends L2GameServerPacket
 	{
 		_activeChar = cha;
 		_idTemplate = cha.getTemplate().idTemplate;
-		_isAttackable = cha.isAutoAttackable(attacker); //(cha.getKarma() > 0);
+		_isAttackable = cha.isAutoAttackable(attacker); // (cha.getKarma() > 0);
 		_rhand = 0;
 		_lhand = 0;
 		_isSummoned = cha.isShowSummonAnimation();
@@ -224,8 +222,8 @@ public class NpcInfo extends L2GameServerPacket
 		if (_activeChar instanceof L2Summon)
 		{
 			writeD(0x01);
-			writeD(((L2Summon)_activeChar).getPvpFlag());
-			writeD(((L2Summon)_activeChar).getKarma());
+			writeD(((L2Summon) _activeChar).getPvpFlag());
+			writeD(((L2Summon) _activeChar).getKarma());
 		}
 		else
 		{
@@ -259,7 +257,7 @@ public class NpcInfo extends L2GameServerPacket
 		}
 		else
 		{
-			 writeC(0);
+			writeC(0);
 		}
 		
 		writeF(_collisionRadius);
@@ -268,8 +266,9 @@ public class NpcInfo extends L2GameServerPacket
 		writeD(0x00); // C4
 		writeD(0x00); // C6
 	}
-
-	/* (non-Javadoc)
+	
+	/*
+	 * (non-Javadoc)
 	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
 	 */
 	@Override

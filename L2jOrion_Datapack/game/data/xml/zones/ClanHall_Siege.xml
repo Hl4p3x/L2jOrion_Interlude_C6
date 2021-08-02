@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
+	<!-- Clan Hall Siege Zones -->
+	<zone name="partisan_agit001" type="SiegeZone" shape="NPoly" minZ="-2344" maxZ="-1544">
+		<stat name="clanHallId" val="21" />
+		<!-- battlefield_territory -->
+		<node X="42768" Y="109156" />
+		<node X="44460" Y="107584" />
+		<node X="47219" Y="108081" />
+		<node X="48281" Y="109544" />
+		<node X="47600" Y="112400" />
+		<node X="44092" Y="113504" />
+		<node X="43180" Y="112736" />
+	</zone>
+	<zone name="devastated_castle" type="SiegeZone" shape="NPoly" minZ="-2634" maxZ="366">
+		<stat name="clanHallId" val="34" />
+		<!-- battlefield_territory -->
+		<node X="176367" Y="-19559" />
+		<node X="180367" Y="-19559" />
+		<node X="180367" Y="-13059" />
+		<node X="176367" Y="-13059" />
+	</zone>
+	<zone name="bandits'_stronghold" type="SiegeZone" shape="NPoly" minZ="-2920" maxZ="80">
+		<stat name="clanHallId" val="35" />
+		<!-- battlefield_territory -->
+		<node X="79028" Y="-17588" />
+		<node X="84640" Y="-19528" />
+		<node X="86952" Y="-16888" />
+		<node X="83636" Y="-13448" />
+		<node X="79196" Y="-13584" />
+	</zone>
+	<zone name="rainbow_spring" type="SiegeZone" shape="NPoly" minZ="-2460" maxZ="-1860">
+		<stat name="clanHallId" val="62" />
+		<!-- battlefield_territory -->
+		<node X="150253" Y="-127587" />
+		<node X="154061" Y="-128780" />
+		<node X="157203" Y="-125699" />
+		<node X="154870" Y="-123511" />
+		<node X="150933" Y="-124975" />
+	</zone>
+	<zone name="beast_farm_guildhall" type="SiegeZone" shape="NPoly" minZ="-1407" maxZ="-907">
+		<stat name="clanHallId" val="63" />
+		<!-- battlefield_territory -->
+		<node X="59997" Y="-96111" />
+		<node X="61969" Y="-92430" />
+		<node X="58303" Y="-89937" />
+		<node X="55402" Y="-91364" />
+		<node X="55254" Y="-92999" />
+		<node X="55344" Y="-93295" />
+		<node X="56049" Y="-94619" />
+	</zone>
+	<zone name="fortress_of_restless" type="SiegeZone" shape="NPoly" minZ="-193" maxZ="1687">
+		<stat name="clanHallId" val="64" />
+		<!-- battlefield_territory -->
+		<node X="59775" Y="-31402" />
+		<node X="61052" Y="-28295" />
+		<node X="60391" Y="-25395" />
+		<node X="56108" Y="-25117" />
+		<node X="55018" Y="-27310" />
+		<node X="57221" Y="-31878" />
+	</zone>
+</list>

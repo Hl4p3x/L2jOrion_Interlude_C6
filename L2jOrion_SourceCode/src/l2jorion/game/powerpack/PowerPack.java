@@ -18,21 +18,18 @@
  */
 package l2jorion.game.powerpack;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.community.CommunityBoard;
 import l2jorion.game.datatables.sql.ItemMarketTable;
 import l2jorion.game.handler.VoicedCommandHandler;
 import l2jorion.game.handler.custom.CustomBypassHandler;
-import l2jorion.game.handler.voiced.Bank;
-import l2jorion.game.handler.voiced.Menu;
-import l2jorion.game.handler.voiced.PremiumMenu;
-import l2jorion.game.handler.voiced.Sub;
-import l2jorion.game.handler.voiced.Vote;
-import l2jorion.game.handler.voiced.VoteForEvent;
-import l2jorion.game.handler.voiced.Watch;
+import l2jorion.game.handler.voice.Bank;
+import l2jorion.game.handler.voice.Menu;
+import l2jorion.game.handler.voice.PremiumMenu;
+import l2jorion.game.handler.voice.Sub;
+import l2jorion.game.handler.voice.Vote;
+import l2jorion.game.handler.voice.VoteForEvent;
+import l2jorion.game.handler.voice.Watch;
 import l2jorion.game.powerpack.bossInfo.RaidInfoHandler;
 import l2jorion.game.powerpack.buffer.BuffHandler;
 import l2jorion.game.powerpack.buffer.BuffTable;
@@ -40,7 +37,8 @@ import l2jorion.game.powerpack.engrave.EngraveManager;
 import l2jorion.game.powerpack.gatekeeper.GKHandler;
 import l2jorion.game.powerpack.other.Market;
 import l2jorion.game.powerpack.shop.Shop;
-import l2jorion.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class PowerPack
 {
@@ -61,13 +59,10 @@ public class PowerPack
 	{
 		if (Config.POWERPAK_ENABLED)
 		{
-			Util.printSection("PowerPack");
 			PowerPackConfig.load();
 			
-			if(PowerPackConfig.BUFFER_ENABLED)
+			if (PowerPackConfig.BUFFER_ENABLED)
 			{
-				BuffTable.getInstance();
-				
 				if ((PowerPackConfig.BUFFER_COMMAND != null && PowerPackConfig.BUFFER_COMMAND.length() > 0) || PowerPackConfig.BUFFER_USEBBS)
 				{	
 					BuffHandler handler = new BuffHandler();
@@ -85,12 +80,13 @@ public class PowerPack
 				}
 				
 				LOG.info("Buffer - Enabled");
+				BuffTable.getInstance();
 			}
 			
 			if (PowerPackConfig.GLOBALGK_ENABDLED)
 			{
 				GKHandler handler = new GKHandler();
-				if( PowerPackConfig.GLOBALGK_USECOMMAND && PowerPackConfig.GLOBALGK_COMMAND != null && PowerPackConfig.GLOBALGK_COMMAND.length() > 0)
+				if ( PowerPackConfig.GLOBALGK_USECOMMAND && PowerPackConfig.GLOBALGK_COMMAND != null && PowerPackConfig.GLOBALGK_COMMAND.length() > 0)
 				{
 					VoicedCommandHandler.getInstance().registerVoicedCommandHandler(handler);
 				}
@@ -99,6 +95,7 @@ public class PowerPack
 				{
 					CommunityBoard.getInstance().registerBBSHandler(handler);
 				}
+				
 				CustomBypassHandler.getInstance().registerCustomBypassHandler(handler);
 				LOG.info("Gatekeeper - Enabled");
 			}
@@ -135,8 +132,8 @@ public class PowerPack
 					CommunityBoard.getInstance().registerBBSHandler(gm);
 				}
 				
-				ItemMarketTable.getInstance().load();
 				LOG.info("Market - Enabled");
+				ItemMarketTable.getInstance().load();
 			}
 			
 			if (PowerPackConfig.ENGRAVER_ENABLED)
@@ -147,45 +144,45 @@ public class PowerPack
 			
 			CustomBypassHandler.getInstance().registerCustomBypassHandler(new Menu());
 			VoicedCommandHandler.getInstance().registerVoicedCommandHandler(new Menu());
-			LOG.info("Command .menu - Enabled");
+			LOG.info("Command: .menu - Enabled");
 			
 			CustomBypassHandler.getInstance().registerCustomBypassHandler(new PremiumMenu());
 			VoicedCommandHandler.getInstance().registerVoicedCommandHandler(new PremiumMenu());
 			
 			VoicedCommandHandler.getInstance().registerVoicedCommandHandler(new Vote());
-			LOG.info("Command .votereward - Enabled");
+			LOG.info("Command: .votereward - Enabled");
 			
 			if (Config.CUSTOM_SUB_CLASS_COMMAND)
 			{
 				Sub handle4 = new Sub();
 				CustomBypassHandler.getInstance().registerCustomBypassHandler(handle4);
 				VoicedCommandHandler.getInstance().registerVoicedCommandHandler(new Sub());
-				LOG.info("Command .sub - Enabled");
+				LOG.info("Command: .sub - Enabled");
 			}
 			
 			if (PowerPackConfig.RESPAWN_BOSS)
 			{
 				CustomBypassHandler.getInstance().registerCustomBypassHandler(new RaidInfoHandler());
 				VoicedCommandHandler.getInstance().registerVoicedCommandHandler(new RaidInfoHandler());
-				LOG.info("Command .boss  - Enabled");
+				LOG.info("Command: .boss  - Enabled");
 			}
 			
 			if (PowerPackConfig.BANK_SYSTEM)
 			{
 				CustomBypassHandler.getInstance().registerCustomBypassHandler(new Bank());
 				VoicedCommandHandler.getInstance().registerVoicedCommandHandler(new Bank());
-				LOG.info("Command .bank  - Enabled");
+				LOG.info("Command: .bank  - Enabled");
 			}
 			
 			if (Config.MENU_NEW_STYLE)
 			{
 				CustomBypassHandler.getInstance().registerCustomBypassHandler(new Watch());
 				VoicedCommandHandler.getInstance().registerVoicedCommandHandler(new Watch());
-				LOG.info("Command .watch  - Enabled");
+				LOG.info("Command: .watch  - Enabled");
 				
 				CustomBypassHandler.getInstance().registerCustomBypassHandler(new VoteForEvent());
 				VoicedCommandHandler.getInstance().registerVoicedCommandHandler(new VoteForEvent());
-				LOG.info("Command .event  - Enabled");
+				LOG.info("Command: .event  - Enabled");
 			}
 		}
 	}

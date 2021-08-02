@@ -24,23 +24,24 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
+import l2jorion.util.HTMLFilter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author Layane
- */
 public class HtmCache
 {
 	private static Logger LOG = LoggerFactory.getLogger(HtmCache.class);
 	private static HtmCache _instance;
 	
-	private final FastMap<Integer, String> _cache;
+	private static final HTMLFilter HTML_FILTER = new HTMLFilter();
+	
+	private static final Map<String, String> _cache = Config.LAZY_CACHE ? new ConcurrentHashMap<>() : new HashMap<>();
 	
 	private int _loadedFiles;
 	private long _bytesBuffLen;
@@ -57,8 +58,9 @@ public class HtmCache
 	
 	public HtmCache()
 	{
-		_cache = new FastMap<>();
-		reload();
+		_cache.clear();
+		_loadedFiles = 0;
+		_bytesBuffLen = 0;
 	}
 	
 	public void reload()
@@ -66,27 +68,27 @@ public class HtmCache
 		reload(Config.DATAPACK_ROOT);
 	}
 	
-	public void reload(final File f)
+	public void reload(File f)
 	{
 		if (!Config.LAZY_CACHE)
 		{
 			LOG.info("Html cache start...");
 			parseDir(f);
-			LOG.info("HTML Cache: " + String.format("%.3f", getMemoryUsage()) + " megabytes on " + getLoadedFiles() + " files loaded");
+			LOG.info("HtmCache: " + String.format("%.3f", getMemoryUsage()) + " megabytes on " + getLoadedFiles() + " files loaded");
 		}
 		else
 		{
 			_cache.clear();
 			_loadedFiles = 0;
 			_bytesBuffLen = 0;
-			LOG.info("HTML Cache: Running cache.");
+			LOG.info("HtmCache: Running lazy cache");
 		}
 	}
 	
 	public void reloadPath(final File f)
 	{
 		parseDir(f);
-		LOG.info("HTML Cache: Reloaded specified path.");
+		LOG.info("HTML Cache: Reloaded specified path");
 	}
 	
 	public double getMemoryUsage()
@@ -105,7 +107,9 @@ public class HtmCache
 		public boolean accept(final File file)
 		{
 			if (!file.isDirectory())
+			{
 				return file.getName().endsWith(".htm") || file.getName().endsWith(".html");
+			}
 			return true;
 		}
 	}
@@ -131,76 +135,40 @@ public class HtmCache
 		filter = null;
 	}
 	
-	public String loadFile(final File file)
+	public String loadFile(File file)
 	{
-		final HtmFilter filter = new HtmFilter();
-		
-		String content = null;
-		
-		if (file.exists() && filter.accept(file) && !file.isDirectory())
+		if (!HTML_FILTER.accept(file))
 		{
-			FileInputStream fis = null;
-			BufferedInputStream bis = null;
-			try
-			{
-				fis = new FileInputStream(file);
-				bis = new BufferedInputStream(fis);
-				final int bytes = bis.available();
-				final byte[] raw = new byte[bytes];
-				
-				bis.read(raw);
-				
-				content = new String(raw, "UTF-8");
-				content = content.replaceAll("\r\n", "\n");
-				
-				final String relpath = Util.getRelativePath(Config.DATAPACK_ROOT, file);
-				final int hashcode = relpath.hashCode();
-				
-				final String oldContent = _cache.get(hashcode);
-				
-				if (oldContent == null)
-				{
-					_bytesBuffLen += bytes;
-					_loadedFiles++;
-				}
-				else
-				{
-					_bytesBuffLen = _bytesBuffLen - oldContent.length() + bytes;
-				}
-				
-				_cache.put(hashcode, content);
-				
-			}
-			catch (final Exception e)
-			{
-				LOG.warn("problem with htm file " + e);
-				e.printStackTrace();
-			}
-			finally
-			{
-				if (bis != null)
-					try
-					{
-						bis.close();
-					}
-					catch (final Exception e1)
-					{
-						e1.printStackTrace();
-					}
-				
-				if (fis != null)
-					try
-					{
-						fis.close();
-					}
-					catch (final Exception e1)
-					{
-						e1.printStackTrace();
-					}
-			}
-			
+			return null;
 		}
 		
+		final String relpath = Util.getRelativePath(Config.DATAPACK_ROOT, file);
+		String content = null;
+		try (FileInputStream fis = new FileInputStream(file);
+			BufferedInputStream bis = new BufferedInputStream(fis))
+		{
+			final int bytes = bis.available();
+			byte[] raw = new byte[bytes];
+			
+			bis.read(raw);
+			content = new String(raw, "UTF-8");
+			content = content.replaceAll("(?s)<!--.*?-->", ""); // Remove html comments
+			
+			String oldContent = _cache.put(relpath, content);
+			if (oldContent == null)
+			{
+				_bytesBuffLen += bytes;
+				_loadedFiles++;
+			}
+			else
+			{
+				_bytesBuffLen = (_bytesBuffLen - oldContent.length()) + bytes;
+			}
+		}
+		catch (Exception e)
+		{
+			LOG.warn("Problem with htm file {}!", file, e);
+		}
 		return content;
 	}
 	
@@ -217,38 +185,52 @@ public class HtmCache
 		return content;
 	}
 	
-	public String getHtm(final String path)
+	public String getHtm(String prefix, String path)
 	{
-		String content = _cache.get(path.hashCode());
+		String newPath = null;
+		String content;
 		
-		if (Config.LAZY_CACHE && content == null)
+		if ((prefix != null) && !prefix.isEmpty())
 		{
-			content = loadFile(new File(Config.DATAPACK_ROOT, path));
+			newPath = prefix + path;
+			content = getHtm(newPath);
+			if (content != null)
+			{
+				return content;
+			}
+		}
+		
+		content = getHtm(path);
+		if ((content != null) && (newPath != null))
+		{
+			_cache.put(newPath, content);
 		}
 		
 		return content;
 	}
 	
-	public boolean contains(final String path)
+	public String getHtm(String path)
 	{
-		return _cache.containsKey(path.hashCode());
-	}
-	
-	/**
-	 * Check if an HTM exists and can be loaded
-	 * @param path The path to the HTM
-	 * @return
-	 */
-	public boolean isLoadable(final String path)
-	{
-		File file = new File(path);
-		HtmFilter filter = new HtmFilter();
-		
-		if (file.exists() && filter.accept(file) && !file.isDirectory())
+		if ((path == null) || path.isEmpty())
 		{
-			return true;
+			return ""; // avoid possible NPE
 		}
 		
-		return false;
+		String content = _cache.get(path);
+		if (Config.LAZY_CACHE && (content == null))
+		{
+			content = loadFile(new File(Config.DATAPACK_ROOT, path));
+		}
+		return content;
+	}
+	
+	public boolean contains(String path)
+	{
+		return _cache.containsKey(path);
+	}
+	
+	public boolean isLoadable(String path)
+	{
+		return HTML_FILTER.accept(new File(Config.DATAPACK_ROOT, path));
 	}
 }

@@ -31,16 +31,9 @@ import java.util.StringTokenizer;
 import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.model.L2NpcWalkerNode;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * Main Table to Load Npc Walkers Routes and Chat SQL Table.<br>
- * @author Rayan RPG for L2Emu Project
- * @author ProGramMoS
- * @since 927
- */
 public class NpcWalkerRoutesTable
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(NpcWalkerRoutesTable.class);
@@ -54,7 +47,6 @@ public class NpcWalkerRoutesTable
 		if (_instance == null)
 		{
 			_instance = new NpcWalkerRoutesTable();
-			LOG.info("Initializing Walkers Routes Table.");
 		}
 		
 		return _instance;
@@ -62,13 +54,11 @@ public class NpcWalkerRoutesTable
 	
 	private NpcWalkerRoutesTable()
 	{
-		// not here
 	}
 	
 	public void load()
 	{
 		_routes = new FastList<>();
-		// java.sql.Connection con = null;
 		
 		FileReader reader = null;
 		BufferedReader buff = null;
@@ -118,29 +108,33 @@ public class NpcWalkerRoutesTable
 				route.setRunning(running);
 				
 				_routes.add(route);
-				route = null;
 			}
 			
-			LOG.info("WalkerRoutesTable: Loaded " + _routes.size() + " Npc Walker Routes.");
+			LOG.info("NpcWalkerRoutesTable: Loaded " + _routes.size() + " npc walker routes");
 			
 		}
 		catch (final FileNotFoundException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("walker_routes.csv is missing in data folder");
 		}
 		catch (final IOException e0)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e0.printStackTrace();
+			}
 			
 			LOG.warn("Error while creating table: " + e0.getMessage() + "\n" + e0);
 		}
 		finally
 		{
 			if (lnr != null)
+			{
 				try
 				{
 					lnr.close();
@@ -149,8 +143,10 @@ public class NpcWalkerRoutesTable
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 			if (buff != null)
+			{
 				try
 				{
 					buff.close();
@@ -159,8 +155,10 @@ public class NpcWalkerRoutesTable
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 			if (reader != null)
+			{
 				try
 				{
 					reader.close();
@@ -169,6 +167,7 @@ public class NpcWalkerRoutesTable
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 		}
 		

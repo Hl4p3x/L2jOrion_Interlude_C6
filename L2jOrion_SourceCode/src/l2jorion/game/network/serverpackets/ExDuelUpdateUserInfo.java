@@ -21,23 +21,12 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * Format: ch Sddddddddd.
- * @author KenM
- */
 public class ExDuelUpdateUserInfo extends L2GameServerPacket
 {
-	
-	/** The Constant _S__FE_4F_EXDUELUPDATEUSERINFO. */
 	private static final String _S__FE_4F_EXDUELUPDATEUSERINFO = "[S] FE:4F ExDuelUpdateUserInfo";
 	
-	/** The _active char. */
 	private final L2PcInstance _activeChar;
 	
-	/**
-	 * Instantiates a new ex duel update user info.
-	 * @param cha the cha
-	 */
 	public ExDuelUpdateUserInfo(final L2PcInstance cha)
 	{
 		_activeChar = cha;
@@ -60,10 +49,6 @@ public class ExDuelUpdateUserInfo extends L2GameServerPacket
 		writeD(_activeChar.getMaxCp());
 	}
 	
-	/**
-	 * Gets the type.
-	 * @return the type
-	 */
 	@Override
 	public String getType()
 	{

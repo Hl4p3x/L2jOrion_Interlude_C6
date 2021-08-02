@@ -21,20 +21,15 @@
 package l2jorion.game.model.actor.instance;
 
 import l2jorion.game.ai.L2BoatAI;
-import l2jorion.game.model.L2CharPosition;
 import l2jorion.game.model.L2Vehicle;
 import l2jorion.game.model.Location;
 import l2jorion.game.network.serverpackets.VehicleDeparture;
 import l2jorion.game.network.serverpackets.VehicleInfo;
 import l2jorion.game.network.serverpackets.VehicleStarted;
 import l2jorion.game.templates.L2CharTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * @author Damon, L2jOrion
- */
 public class L2BoatInstance extends L2Vehicle
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(L2BoatInstance.class);
@@ -42,7 +37,8 @@ public class L2BoatInstance extends L2Vehicle
 	public L2BoatInstance(int objectId, L2CharTemplate template)
 	{
 		super(objectId, template);
-		setAI(new L2BoatAI(new AIAccessor()));
+		
+		setAI(new L2BoatAI(this));
 	}
 	
 	@Override
@@ -80,9 +76,9 @@ public class L2BoatInstance extends L2Vehicle
 	}
 	
 	@Override
-	public void stopMove(L2CharPosition pos)
+	public void stopMove(Location loc)
 	{
-		super.stopMove(pos);
+		super.stopMove(loc);
 		
 		broadcastPacket(new VehicleStarted(this, 0));
 		broadcastPacket(new VehicleInfo(this));
@@ -91,7 +87,7 @@ public class L2BoatInstance extends L2Vehicle
 	@Override
 	public final String getLevels()
 	{
-		return ""+0;
+		return "" + 0;
 	}
 	
 	@Override

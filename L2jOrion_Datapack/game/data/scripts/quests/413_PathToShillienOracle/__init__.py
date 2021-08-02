@@ -93,6 +93,7 @@ class Quest (JQuest) :
             htmltext = "30330-10.htm"
             st.takeItems(ANDARIEL_BOOK,1)
             st.takeItems(GARMIEL_BOOK,1)
+            st.addExpAndSp(16000,5650)
             st.giveItems(ORB_OF_ABYSS,1)
             st.set("cond","0")
             st.setState(COMPLETED)

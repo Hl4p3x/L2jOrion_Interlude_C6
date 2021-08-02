@@ -12,6 +12,10 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import javolution.util.FastSet;
@@ -38,6 +42,7 @@ import l2jorion.game.model.base.ClassLevel;
 import l2jorion.game.model.base.PlayerClass;
 import l2jorion.game.network.serverpackets.ExAutoSoulShot;
 import l2jorion.game.network.serverpackets.ExShowScreenMessage;
+import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.MoveToPawn;
 import l2jorion.game.powerpack.PowerPackConfig;
@@ -45,19 +50,15 @@ import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.L2PcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Broadcast;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.util.random.Rnd;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-
 public class phantomPlayers
-{ 
-	static final Logger LOG = LoggerFactory.getLogger(phantomPlayers.class);
+{
+	protected final Logger LOG = LoggerFactory.getLogger(phantomPlayers.class);
 	
 	public String _phantomAcc = Config.PHANTOM_PLAYERS_AKK;
 	
@@ -67,7 +68,7 @@ public class phantomPlayers
 	public static int _setsLightCount = 0;
 	public static int _setsHeavyCount = 0;
 	
-	//Sets
+	// Sets
 	public static int _setsCount = 0;
 	private FastList<L2Set> _setsRobeN = new FastList<>();
 	private FastList<L2Set> _setsRobeD = new FastList<>();
@@ -96,7 +97,6 @@ public class phantomPlayers
 	
 	public static FastMap<Integer, L2phantome> _phantoms = new FastMap<>();
 	
-	
 	public static FastList<String> _PhantomsRandomPhrases = new FastList<>();
 	public static int _PhantomsRandomPhrasesCount = 0;
 	public static int _PhantomLastPhrase = Rnd.get(_PhantomsRandomPhrasesCount);
@@ -107,16 +107,16 @@ public class phantomPlayers
 	public static int LoadedPhantoms = 0;
 	
 	public static phantomPlayers getInstance()
-	{ 
+	{
 		return _instance;
 	}
-
+	
 	public static void init()
 	{
 		_instance = new phantomPlayers();
 		_instance.load();
 	}
-
+	
 	private void load()
 	{
 		if (Config.ALLOW_PHANTOM_PLAYERS)
@@ -129,52 +129,55 @@ public class phantomPlayers
 			_PhantomsLimit = Config.PHANTOM_PLAYERS_COUNT_FIRST;
 		}
 	}
-
-	public void cachephantoms(){ new Thread(new Runnable()
+	
+	public void cachephantoms()
 	{
-		@Override
-		public void run()
+		new Thread(new Runnable()
 		{
-			String name = "";
-			int obj_id = 0;
-			Connection con = null;
-			try
+			@Override
+			public void run()
 			{
-				con = L2DatabaseFactory.getInstance().getConnection();
-				con.setTransactionIsolation(1);
-				PreparedStatement st = con.prepareStatement("SELECT obj_Id, char_name FROM characters WHERE account_name = ?");
-				st.setString(1, _phantomAcc);
-				ResultSet rs = st.executeQuery();
-				rs.setFetchSize(250);
-				while(rs.next())
+				String name = "";
+				int obj_id = 0;
+				Connection con = null;
+				try
 				{
-					obj_id = Integer.valueOf(rs.getInt("obj_Id"));
-					name = rs.getString("char_name");
-					_phantoms.put(obj_id, new L2phantome(obj_id, name));
+					con = L2DatabaseFactory.getInstance().getConnection();
+					con.setTransactionIsolation(1);
+					PreparedStatement st = con.prepareStatement("SELECT obj_Id, char_name FROM characters WHERE account_name = ?");
+					st.setString(1, _phantomAcc);
+					ResultSet rs = st.executeQuery();
+					rs.setFetchSize(250);
+					while (rs.next())
+					{
+						obj_id = Integer.valueOf(rs.getInt("obj_Id"));
+						name = rs.getString("char_name");
+						_phantoms.put(obj_id, new L2phantome(obj_id, name));
+					}
+					st.close();
+					rs.close();
+					con.close();
+					
+					LOG.info("Phantom system: Cached " + _phantoms.size() + " players.");
 				}
-				st.close();
-				rs.close();
-				con.close();
+				catch (Exception e)
+				{
+					LOG.warn("Phantom system: could not load chars from DB: " + e);
+				}
+				finally
+				{
+					CloseUtil.close(con);
+				}
 				
-				LOG.info("Phantom system: Cached " + _phantoms.size() + " players.");
+				if (!_phantoms.isEmpty())
+				{
+					ThreadPoolManager.getInstance().scheduleAi(new phantomTask(), Config.PHANTOM_PLAYERS_DELAY_FIRST * 1000);
+				}
+				
 			}
-			catch (Exception e)
-			{
-				LOG.warn("Phantom system: could not load chars from DB: " + e);
-			}
-			finally
-			{
-				CloseUtil.close(con);
-			}
-			
-			if (!_phantoms.isEmpty())
-			{
-				ThreadPoolManager.getInstance().scheduleAi(new phantomTask(), Config.PHANTOM_PLAYERS_DELAY_FIRST * 1000);
-			}
-			
-		}}).start();
+		}).start();
 	}
-
+	
 	private void parseRandomLocs()
 	{
 		_PhantomsRandomLoc.clear();
@@ -185,7 +188,9 @@ public class phantomPlayers
 		{
 			File Data = new File("./config/phantom/random_locations.ini");
 			if (!Data.exists())
+			{
 				return;
+			}
 			fr = new FileReader(Data);
 			br = new BufferedReader(fr);
 			lnr = new LineNumberReader(br);
@@ -193,7 +198,9 @@ public class phantomPlayers
 			while ((line = lnr.readLine()) != null)
 			{
 				if (line.trim().length() == 0 || line.startsWith("#"))
+				{
 					continue;
+				}
 				String[] items = line.split(",");
 				_PhantomsRandomLoc.add(new Location(Integer.parseInt(items[0]), Integer.parseInt(items[1]), Integer.parseInt(items[2])));
 			}
@@ -203,25 +210,29 @@ public class phantomPlayers
 		catch (Exception e)
 		{
 			e.printStackTrace();
-		} 
+		}
 		finally
 		{
 			try
 			{
 				if (fr != null)
+				{
 					fr.close();
+				}
 				if (br != null)
+				{
 					br.close();
+				}
 				if (lnr != null)
+				{
 					lnr.close();
+				}
 			}
 			catch (Exception e1)
 			{
 			}
 		}
 	}
-	
-	
 	
 	private void cachePhrases()
 	{
@@ -233,7 +244,9 @@ public class phantomPlayers
 		{
 			File Data = new File("./config/phantom/chats.ini");
 			if (!Data.exists())
+			{
 				return;
+			}
 			fr = new FileReader(Data);
 			br = new BufferedReader(fr);
 			lnr = new LineNumberReader(br);
@@ -241,13 +254,15 @@ public class phantomPlayers
 			while ((line = lnr.readLine()) != null)
 			{
 				if (line.trim().length() == 0 || line.startsWith("#"))
+				{
 					continue;
+				}
 				_PhantomsRandomPhrases.add(line);
 			}
 			_PhantomsRandomPhrasesCount = _PhantomsRandomPhrases.size() - 1;
 			LOG.info("Loaded: " + _PhantomsRandomPhrasesCount + " chat messages");
 		}
-		catch (Exception e) 
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -256,11 +271,17 @@ public class phantomPlayers
 			try
 			{
 				if (fr != null)
+				{
 					fr.close();
+				}
 				if (br != null)
+				{
 					br.close();
+				}
 				if (lnr != null)
+				{
 					lnr.close();
+				}
 			}
 			catch (Exception e1)
 			{
@@ -361,21 +382,21 @@ public class phantomPlayers
 		for (int i = 1; i > 0;)
 		{
 			obj = Rnd.get(600000001, 600004000);
-			if (!AlreadySpawned.contains(obj)) 
+			if (!AlreadySpawned.contains(obj))
 			{
 				return obj;
 			}
 		}
 		return getRandomPhantomNext();
 	}
-
+	
 	private Location getRandomLoc()
 	{
 		Location loc = _PhantomsRandomLoc.get(Rnd.get(0, LoadedRandomLoc));
 		
 		return loc;
 	}
-
+	
 	static class L2Set
 	{
 		public int _body;
@@ -405,10 +426,13 @@ public class phantomPlayers
 			this.name = name;
 		}
 	}
+	
 	// TODO phantomTask
 	private class phantomTask implements Runnable
 	{
-		public phantomTask(){}
+		public phantomTask()
+		{
+		}
 		
 		@Override
 		public void run()
@@ -417,7 +441,7 @@ public class phantomPlayers
 			
 			LOG.info("Phantom system: spawning...");
 			
-			while(LoadedPhantoms < Config.PHANTOM_PLAYERS_COUNT_FIRST)
+			while (LoadedPhantoms < Config.PHANTOM_PLAYERS_COUNT_FIRST)
 			{
 				L2PcInstance phantom = null;
 				
@@ -425,11 +449,13 @@ public class phantomPlayers
 				phantom = loadPhantom(PhantomObjId);
 				
 				if (phantom == null)
+				{
 					continue;
+				}
 				
 				try
 				{
-					Thread.sleep(Config.PHANTOM_PLAYERS_DELAY_SPAWN_FIRST);
+					Thread.sleep(Config.PHANTOM_PLAYERS_DELAY_SPAWN_FIRST * 1000);
 				}
 				catch (InterruptedException e)
 				{
@@ -443,7 +469,7 @@ public class phantomPlayers
 	}
 	
 	// TODO loadPhantom
-	protected L2PcInstance loadPhantom(int objId)
+	public L2PcInstance loadPhantom(int objId)
 	{
 		int all_players = L2World.getInstance().getAllPlayersCount();
 		if (!AlreadySpawned.contains(objId))
@@ -454,7 +480,11 @@ public class phantomPlayers
 				AlreadySpawned.add(objId);
 				
 				if (phantom == null)
+				{
 					return null;
+				}
+				
+				L2World.getInstance().addPlayerToWorld(phantom);
 				
 				phantom.setRunning();
 				phantom.setOnlineStatus(true);
@@ -472,11 +502,11 @@ public class phantomPlayers
 					phantom.setTitle("");
 				}
 				
-				//default colours
+				// default colours
 				phantom.getAppearance().setNameColor(Integer.decode(new StringBuilder().append("0x").append("FFFFFF").toString()).intValue());
 				phantom.getAppearance().setTitleColor(Integer.decode(new StringBuilder().append("0x").append("FFFF77").toString()).intValue());
 				
-				L2PcTemplate template = phantom.getTemplate();	
+				L2PcTemplate template = phantom.getTemplate();
 				L2ItemInstance rhand = phantom.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND);
 				if (rhand == null)
 				{
@@ -487,9 +517,13 @@ public class phantomPlayers
 						if (item.isEquipable())
 						{
 							if (phantom.getActiveWeaponItem() == null || !(item.getItem().getType2() != L2Item.TYPE2_WEAPON))
+							{
 								phantom.getInventory().equipItemAndRecord(item);
+							}
 							else
+							{
 								phantom.getInventory().equipItemAndRecord(item);
+							}
 						}
 					}
 					
@@ -535,7 +569,7 @@ public class phantomPlayers
 				if (Rnd.get(100) <= Config.CHANCE_FOR_NEUTRAL_PHANTOM && (!_PhantomsRandomLoc.isEmpty()))
 				{
 					Location loc = getRandomLoc();
-					phantom.spawnMe(loc.getX()+Rnd.get(300), loc.getY()+Rnd.get(300), loc.getZ());
+					phantom.spawnMe(loc.getX() + Rnd.get(300), loc.getY() + Rnd.get(300), loc.getZ());
 					phantom.setIsPhantomNeutral(true);
 					
 					if (Rnd.get(100) <= 50)
@@ -548,7 +582,7 @@ public class phantomPlayers
 						{
 							if ((TownManager.getInstance().getTown(phantom.getX(), phantom.getY(), phantom.getZ()) != null))
 							{
-								for (L2Object target : L2World.getVisibleObjects(phantom, 500))
+								for (L2Object target : L2World.getInstance().getVisibleObjects(phantom, 500))
 								{
 									if (target != null && target instanceof L2TeleporterInstance && phantom.isInsideRadius(target, 500, false, true))
 									{
@@ -568,7 +602,7 @@ public class phantomPlayers
 						{
 							if ((TownManager.getInstance().getTown(phantom.getX(), phantom.getY(), phantom.getZ()) != null))
 							{
-								for (L2Object target : L2World.getVisibleObjects(phantom, 500))
+								for (L2Object target : L2World.getInstance().getVisibleObjects(phantom, 500))
 								{
 									if (target != null && target instanceof L2MerchantInstance && phantom.isInsideRadius(target, 500, false, true))
 									{
@@ -599,7 +633,7 @@ public class phantomPlayers
 						ArrayList<L2Skill> skills_to_buff = new ArrayList<>();
 						if (phantom.isMageClass())
 						{
-							for (int skillId:PowerPackConfig.MAGE_SKILL_LIST.keySet())
+							for (int skillId : PowerPackConfig.MAGE_SKILL_LIST.keySet())
 							{
 								L2Skill skill = SkillTable.getInstance().getInfo(skillId, PowerPackConfig.MAGE_SKILL_LIST.get(skillId));
 								if (skill != null)
@@ -610,7 +644,7 @@ public class phantomPlayers
 						}
 						else
 						{
-							for (int skillId:PowerPackConfig.FIGHTER_SKILL_LIST.keySet())
+							for (int skillId : PowerPackConfig.FIGHTER_SKILL_LIST.keySet())
 							{
 								L2Skill skill = SkillTable.getInstance().getInfo(skillId, PowerPackConfig.FIGHTER_SKILL_LIST.get(skillId));
 								if (skill != null)
@@ -621,7 +655,7 @@ public class phantomPlayers
 						}
 						for (L2Skill sk : skills_to_buff)
 						{
-							sk.getEffects(phantom,phantom,false,false,false);
+							sk.getEffects(phantom, phantom, false, false, false);
 						}
 					}
 					
@@ -677,9 +711,9 @@ public class phantomPlayers
 			}
 		}
 		return null;
-		//TODO Load Phantom END
+		// TODO Load Phantom END
 	}
-
+	
 	public static String getRandomChatPhrase()
 	{
 		_PhantomLastPhrase = Rnd.get(_PhantomsRandomPhrasesCount);
@@ -687,24 +721,27 @@ public class phantomPlayers
 		return _PhantomsRandomPhrases.get(_PhantomLastPhrase);
 	}
 	
-	public void loadPhantomSystem(L2PcInstance gm, boolean reload, int count, int grade){ new Thread(new Runnable()
+	public void loadPhantomSystem(L2PcInstance gm, boolean reload, int count, int grade)
 	{
-		@Override
-		public void run()
+		new Thread(new Runnable()
 		{
-			if (!_phantoms.isEmpty())
+			@Override
+			public void run()
 			{
-				if (reload)
+				if (!_phantoms.isEmpty())
 				{
-					ThreadPoolManager.getInstance().scheduleAi(new phantomTaskForAdmin(gm), 0);
+					if (reload)
+					{
+						ThreadPoolManager.getInstance().scheduleAi(new phantomTaskForAdmin(gm), 0);
+					}
+					else
+					{
+						ThreadPoolManager.getInstance().scheduleAi(new phantomTaskForAdmin2(gm, count, grade), 0);
+					}
 				}
-				else
-				{
-					ThreadPoolManager.getInstance().scheduleAi(new phantomTaskForAdmin2(gm, count, grade), 0);
-				}
+				
 			}
-			
-		}}).start();
+		}).start();
 	}
 	
 	private class phantomTaskForAdmin2 implements Runnable
@@ -729,7 +766,7 @@ public class phantomPlayers
 			_gm.sendMessage("Phantoms loading...");
 			_gm.sendPacket(new ExShowScreenMessage("Phantoms loading...", 3000, 2, true));
 			
-			while(LoadedMorePhantoms < _count)
+			while (LoadedMorePhantoms < _count)
 			{
 				L2PcInstance phantom = null;
 				
@@ -746,8 +783,8 @@ public class phantomPlayers
 				LoadedPhantoms++;
 			}
 			
-			_gm.sendMessage("Phantoms loaded: +"+_count);
-			_gm.sendPacket(new ExShowScreenMessage("Phantoms loaded: +"+_count, 3000, 2, true));
+			_gm.sendMessage("Phantoms loaded: +" + _count);
+			_gm.sendPacket(new ExShowScreenMessage("Phantoms loaded: +" + _count, 3000, 2, true));
 		}
 	}
 	
@@ -768,7 +805,7 @@ public class phantomPlayers
 			_gm.sendMessage("Phantoms loading...");
 			_gm.sendPacket(new ExShowScreenMessage("Phantoms loading...", 3000, 2, true));
 			
-			while(LoadedPhantoms < Config.PHANTOM_PLAYERS_COUNT_FIRST)
+			while (LoadedPhantoms < Config.PHANTOM_PLAYERS_COUNT_FIRST)
 			{
 				L2PcInstance phantom = null;
 				
@@ -784,14 +821,14 @@ public class phantomPlayers
 				LoadedPhantoms++;
 			}
 			
-			_gm.sendMessage("Phantoms loaded: "+LoadedPhantoms);
-			_gm.sendPacket(new ExShowScreenMessage("Phantoms loaded: "+LoadedPhantoms, 3000, 2, true));
+			_gm.sendMessage("Phantoms loaded: " + LoadedPhantoms);
+			_gm.sendPacket(new ExShowScreenMessage("Phantoms loaded: " + LoadedPhantoms, 3000, 2, true));
 			
 		}
 	}
 	
 	// TODO loadPhantomForAdmin
-	protected L2PcInstance loadPhantomForAdmin(int objId, L2PcInstance gm, int grade)
+	public L2PcInstance loadPhantomForAdmin(int objId, L2PcInstance gm, int grade)
 	{
 		int all_players = L2World.getInstance().getAllPlayersCount();
 		if (!AlreadySpawned.contains(objId))
@@ -805,6 +842,8 @@ public class phantomPlayers
 				{
 					return null;
 				}
+				
+				L2World.getInstance().addPlayerToWorld(phantom);
 				
 				phantom.setRunning();
 				phantom.setOnlineStatus(true);
@@ -822,7 +861,7 @@ public class phantomPlayers
 					phantom.setTitle("");
 				}
 				
-				//Reset lvl
+				// Reset lvl
 				String setLevel = "1";
 				
 				L2Set set = null;
@@ -843,15 +882,25 @@ public class phantomPlayers
 				}
 				
 				if (set._body != 0)
+				{
 					body = ItemTable.getInstance().createDummyItem(set._body);
+				}
 				if (set._gaiters != 0)
+				{
 					gaiters = ItemTable.getInstance().createDummyItem(set._gaiters);
+				}
 				if (set._gloves != 0)
+				{
 					gloves = ItemTable.getInstance().createDummyItem(set._gloves);
+				}
 				if (set._boots != 0)
+				{
 					boots = ItemTable.getInstance().createDummyItem(set._boots);
+				}
 				if (set._weapon != 0)
+				{
 					weapon = ItemTable.getInstance().createDummyItem(set._weapon);
+				}
 				
 				if (body != null)
 				{
@@ -882,27 +931,27 @@ public class phantomPlayers
 				// Set lvl
 				if (grade == 0)
 				{
-					setLevel = ""+Rnd.get(1, 19);
+					setLevel = "" + Rnd.get(1, 19);
 				}
 				if (grade == 1)
 				{
-					setLevel = ""+Rnd.get(20, 39);
+					setLevel = "" + Rnd.get(20, 39);
 				}
 				if (grade == 2)
 				{
-					setLevel = ""+Rnd.get(40, 51);
+					setLevel = "" + Rnd.get(40, 51);
 				}
 				if (grade == 3)
 				{
-					setLevel = ""+Rnd.get(52, 60);
+					setLevel = "" + Rnd.get(52, 60);
 				}
 				if (grade == 4)
 				{
-					setLevel = ""+Rnd.get(61, 75);
+					setLevel = "" + Rnd.get(61, 75);
 				}
 				if (grade == 5)
 				{
-					setLevel = ""+Rnd.get(76, 80);
+					setLevel = "" + Rnd.get(76, 80);
 				}
 				
 				final byte lvl = Byte.parseByte(setLevel);
@@ -917,14 +966,13 @@ public class phantomPlayers
 					phantom.getStat().addExpAndSp(tXp - pXp, 0);
 				}
 				
-				
 				// Change class
 				ClassId classId = phantom.getClassId();
 				int jobLevel = 0;
 				int level = phantom.getLevel();
 				ClassLevel phantomlvl = PlayerClass.values()[classId.getId()].getLevel();
 				
-				switch(phantomlvl)
+				switch (phantomlvl)
 				{
 					case First:
 						jobLevel = 1;
@@ -943,7 +991,7 @@ public class phantomPlayers
 					classes_list.clear();
 					for (ClassId child : ClassId.values())
 					{
-						if(child.childOf(classId) && child.level() == jobLevel)
+						if (child.childOf(classId) && child.level() == jobLevel)
 						{
 							classes_list.add(child.getId());
 							
@@ -958,7 +1006,7 @@ public class phantomPlayers
 					classes_list.clear();
 					for (ClassId child : ClassId.values())
 					{
-						if(child.childOf(classId) && child.level() == jobLevel)
+						if (child.childOf(classId) && child.level() == jobLevel)
 						{
 							classes_list.add(child.getId());
 						}
@@ -972,7 +1020,7 @@ public class phantomPlayers
 					classes_list.clear();
 					for (ClassId child : ClassId.values())
 					{
-						if(child.childOf(classId) && child.level() == jobLevel)
+						if (child.childOf(classId) && child.level() == jobLevel)
 						{
 							classes_list.add(child.getId());
 						}
@@ -982,10 +1030,9 @@ public class phantomPlayers
 					changeClass(phantom, classes_list.get(randomClass));
 				}
 				
-				//default colours
+				// default colours
 				phantom.getAppearance().setNameColor(Integer.decode(new StringBuilder().append("0x").append("FFFFFF").toString()).intValue());
 				phantom.getAppearance().setTitleColor(Integer.decode(new StringBuilder().append("0x").append("FFFF77").toString()).intValue());
-				
 				
 				// Buffs
 				if (Config.AUTOBUFFS_ON_CREATE)
@@ -993,7 +1040,7 @@ public class phantomPlayers
 					ArrayList<L2Skill> skills_to_buff = new ArrayList<>();
 					if (phantom.isMageClass())
 					{
-						for (int skillId:PowerPackConfig.MAGE_SKILL_LIST.keySet())
+						for (int skillId : PowerPackConfig.MAGE_SKILL_LIST.keySet())
 						{
 							L2Skill skill = SkillTable.getInstance().getInfo(skillId, PowerPackConfig.MAGE_SKILL_LIST.get(skillId));
 							if (skill != null)
@@ -1004,7 +1051,7 @@ public class phantomPlayers
 					}
 					else
 					{
-						for (int skillId:PowerPackConfig.FIGHTER_SKILL_LIST.keySet())
+						for (int skillId : PowerPackConfig.FIGHTER_SKILL_LIST.keySet())
 						{
 							L2Skill skill = SkillTable.getInstance().getInfo(skillId, PowerPackConfig.FIGHTER_SKILL_LIST.get(skillId));
 							if (skill != null)
@@ -1015,31 +1062,42 @@ public class phantomPlayers
 					}
 					for (L2Skill sk : skills_to_buff)
 					{
-						sk.getEffects(phantom,phantom,false,false,false);
+						sk.getEffects(phantom, phantom, false, false, false);
 					}
 				}
+				L2ItemInstance item = null;
 				
 				// Auto shots
 				if (phantom.getClassId().isMage())
 				{
-					if (phantom.getInventory().getItemByItemId(3947) != null && phantom.getInventory().getItemByItemId(3947).getCount() >= 1)
+					item = phantom.getInventory().addItem("Admin", 3952, 5000, null, null);
+					InventoryUpdate iu = new InventoryUpdate();
+					iu.addItem(item);
+					phantom.sendPacket(iu);
+					
+					if (phantom.getInventory().getItemByItemId(3952) != null && phantom.getInventory().getItemByItemId(3952).getCount() >= 1)
 					{
-						phantom.addAutoSoulShot(3947);
+						phantom.addAutoSoulShot(3952);
 						phantom.rechargeAutoSoulShot(true, true, false);
-						phantom.sendPacket(new ExAutoSoulShot(3947, 1));
+						phantom.sendPacket(new ExAutoSoulShot(3952, 1));
 					}
 				}
 				else
 				{
-					if (phantom.getInventory().getItemByItemId(1835) != null && phantom.getInventory().getItemByItemId(1835).getCount() >= 1)
+					item = phantom.getInventory().addItem("Admin", 1467, 5000, null, null);
+					InventoryUpdate iu = new InventoryUpdate();
+					iu.addItem(item);
+					phantom.sendPacket(iu);
+					
+					if (phantom.getInventory().getItemByItemId(1467) != null && phantom.getInventory().getItemByItemId(1467).getCount() >= 1)
 					{
-						phantom.addAutoSoulShot(1835);
+						phantom.addAutoSoulShot(1467);
 						phantom.rechargeAutoSoulShot(true, true, false);
 						phantom.sendPacket(new ExAutoSoulShot(1835, 1));
 					}
 				}
 				
-				phantom.spawnMe(gm.getX()+Rnd.get(300), gm.getY()+Rnd.get(300), gm.getZ());
+				phantom.spawnMe(gm.getX() + Rnd.get(300), gm.getY() + Rnd.get(300), gm.getZ());
 				
 				if (Rnd.get(100) <= 10)
 				{
@@ -1073,9 +1131,9 @@ public class phantomPlayers
 			factory.setValidating(false);
 			factory.setIgnoringComments(true);
 			File file = new File(Config.DATAPACK_ROOT + "/config/phantom/sets.xml");
-			if(!file.exists())
+			if (!file.exists())
 			{
-				if(Config.DEBUG)
+				if (Config.DEBUG)
 				{
 					LOG.info("The sets.xml file is missing.");
 				}
@@ -1208,11 +1266,12 @@ public class phantomPlayers
 				}
 			}
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
-			
+			}
 			
 			LOG.error("Error while loading sets.", e);
 			
@@ -1260,7 +1319,7 @@ public class phantomPlayers
 		final MagicSkillUser msu = new MagicSkillUser(_phantom, 1050, 1, unstuckTimer, 0);
 		_phantom.broadcastPacket(msu);
 		
-		//End SoE Animation section
+		// End SoE Animation section
 		_phantom.setTarget(null);
 		
 		EscapeFinalizer ef = new EscapeFinalizer(_phantom);
@@ -1272,17 +1331,19 @@ public class phantomPlayers
 	private class EscapeFinalizer implements Runnable
 	{
 		private L2PcInstance _phantom;
-
+		
 		EscapeFinalizer(L2PcInstance phantom)
 		{
 			_phantom = phantom;
 		}
-
+		
 		@Override
 		public void run()
 		{
 			if (_phantom.isDead())
+			{
 				return;
+			}
 			
 			_phantom.setIsIn7sDungeon(false);
 			_phantom.enableAllSkills();
@@ -1293,10 +1354,12 @@ public class phantomPlayers
 			{
 				_phantom.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 			}
-			catch(Throwable e)
+			catch (Throwable e)
 			{
-				if(Config.ENABLE_ALL_EXCEPTIONS)
+				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 	}

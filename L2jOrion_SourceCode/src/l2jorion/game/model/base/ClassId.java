@@ -20,18 +20,8 @@
  */
 package l2jorion.game.model.base;
 
-/**
- * This class defines all classes (ex : human fighter, darkFighter...) that a player can chose.<BR>
- * <BR>
- * Data :<BR>
- * <BR>
- * <li>id : The Identifier of the class</li> <li>isMage : True if the class is a mage class</li> <li>race : The race of this class</li> <li>parent : The parent ClassId or null if this class is the root</li><BR>
- * <BR>
- * @version $Revision: 1.4.4.4 $ $Date: 2005/03/27 15:29:33 $
- */
 public enum ClassId
 {
-	
 	/** The fighter. */
 	fighter(0x00, false, Race.human, null),
 	
@@ -410,6 +400,8 @@ public enum ClassId
 	/** The parent ClassId or null if this class is a root. */
 	private final ClassId _parent;
 	
+	public static final ClassId[] VALUES = values();
+	
 	/**
 	 * Constructor of ClassId.<BR>
 	 * <BR>
@@ -465,10 +457,14 @@ public enum ClassId
 	public final boolean childOf(final ClassId cid)
 	{
 		if (_parent == null)
+		{
 			return false;
+		}
 		
 		if (_parent == cid)
+		{
 			return true;
+		}
 		
 		return _parent.childOf(cid);
 		
@@ -493,7 +489,9 @@ public enum ClassId
 	public final int level()
 	{
 		if (_parent == null)
+		{
 			return 0;
+		}
 		
 		return 1 + _parent.level();
 	}

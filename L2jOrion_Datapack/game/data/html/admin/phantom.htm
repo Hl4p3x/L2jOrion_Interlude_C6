@@ -1,0 +1,67 @@
+<html>
+<title>Phantom system</title>
+<body>
+<center>
+<img src="l2ui.SquareGray" width="298" height="1">
+<table width=300 bgcolor="000000">
+<tr><td>
+<center>
+<font color="3399ff">Statistic</font>
+<table width="300">
+<tr>
+<td>Total: <font color="ff0000">%total%</font></td>
+<td>Loaded: <font color="LEVEL">%loaded%/%limit%</font></td>
+<td>Available: <font color="009900">%available%</font></td>
+</tr>
+<tr>
+<td>Locations: %locations%</td>
+<td>Chats: %chats%</td>
+<td>Sets: %sets%</td>
+</tr>
+</table>
+<button value="Refresh" action="bypass -h admin_phantom" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2">
+<br>
+</center>
+</td></tr></table>
+<img src="l2ui.SquareGray" width="298" height="1">
+<br>
+<font color="3399ff">Control (All)</font>
+<table width=300>
+	<tr>
+		<td align="center"><button value="Stop" action="bypass -h admin_phantom_Stop" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+		<td align="center"><button value="Start" action="bypass -h admin_phantom_Start" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+		<td align="center"><button value="Re-Load" action="bypass -h admin_phantom_Reload" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+	</tr>
+	<tr>
+		<td align="center"><button value="Reset" action="bypass -h admin_phantom_Reset" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+		<td align="center"><button value="Recall" action="bypass -h admin_phantom_Recall" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+		<td align="center"><button value="Kill" action="bypass -h admin_phantom_Kill" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+	</tr>
+	<tr>
+		<td align="center"><button value="Res" action="bypass -h admin_phantom_Res" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+		<td align="center"><button value="Give Flag" action="bypass -h admin_phantom_Give_Flag" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+		<td align="center"><button value="Remove Flag" action="bypass -h admin_phantom_Remove_Flag" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+	</tr>
+</table>
+<br>
+<font color="3399ff">Spawn menu</font>
+<table width=260>
+	<tr>
+		<td align="center">Count:</td>
+		<td align="center">Level:</td>
+		<td align="center">Grade﻿</td>
+		<td align="center">Neutral</td>
+		<td align="center"></td>
+	</tr>
+	<tr>
+		<td align="center"><edit var="count" width="35" height"19"></td>
+		<td align="center"><combobox width="55" height"19" var="comboList" list="1-19;20-39;40-51;52-60;61-75;76-80;">﻿</td>
+		<td align="center"><combobox width="35" height"19" var="comboList" list="N;D;C;B;A;S;">﻿</td>
+		<td align="center"><combobox width="55" height"19" var="comboList" list="false;true;">﻿</td>
+		<td align="center"><button value="Spawn" action="bypass -h admin_phantom_spawn" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+	</tr>
+</table>
+</center>
+
+</body>
+</html>

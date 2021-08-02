@@ -25,7 +25,9 @@ public class NobleCustomItem implements IItemHandler
 		if (Config.NOBLE_CUSTOM_ITEMS)
 		{
 			if (!(playable instanceof L2PcInstance))
+			{
 				return;
+			}
 			
 			L2PcInstance activeChar = (L2PcInstance) playable;
 			
@@ -36,13 +38,13 @@ public class NobleCustomItem implements IItemHandler
 			
 			if (activeChar.isNoble())
 			{
-				activeChar.sendMessage("You can't use! You're The Noblesse now.");
+				activeChar.sendMessage("You're already The Nobless!");
 			}
 			else
 			{
 				activeChar.setNoble(true);
-				activeChar.sendMessage("Congratulations! You've got The Noble status");
-				activeChar.sendPacket(new ExShowScreenMessage("Congratulations! You've got The Noble status", 4000, 0x02, false));
+				activeChar.sendMessage("Congratulations! You've got The Nobless status");
+				activeChar.sendPacket(new ExShowScreenMessage("Congratulations! You've got The Nobless status", 4000, 0x02, false));
 				PlaySound playSound = new PlaySound("ItemSound.quest_fanfare_1");
 				activeChar.sendPacket(playSound);
 				activeChar.broadcastUserInfo();
@@ -59,16 +61,16 @@ public class NobleCustomItem implements IItemHandler
 			}
 		}
 	}
-
+	
 	@Override
 	public int[] getItemIds()
 	{
 		return ITEM_IDS;
 	}
-
+	
 	private static final int ITEM_IDS[] =
 	{
 		Config.NOOBLE_CUSTOM_ITEM_ID
 	};
-
+	
 }

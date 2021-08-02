@@ -98,6 +98,7 @@ class Quest (JQuest) :
      htmltext = "30501-03.htm" 
      st.takeItems(HEAD_OF_BETRAYER,-1) 
      st.takeItems(BETRAYER_UMBAR_REPORT,-1) 
+     st.addExpAndSp(16000,5650) 
      st.giveItems(MARK_OF_RAIDER,1) 
      st.unset("cond") 
      st.setState(COMPLETED) 

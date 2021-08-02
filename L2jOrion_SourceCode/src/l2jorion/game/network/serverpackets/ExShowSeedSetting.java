@@ -26,10 +26,6 @@ import l2jorion.game.managers.CastleManorManager.SeedProduction;
 import l2jorion.game.model.L2Manor;
 import l2jorion.game.model.entity.siege.Castle;
 
-/**
- * format(packet 0xFE) ch dd [ddcdcdddddddd] c - id h - sub id d - manor id d - size [ d - seed id d - level c d - reward 1 id c d - reward 2 id d - next sale limit d - price for castle to produce 1 d - min seed price d - max seed price d - today sales d - today price d - next sales d - next price ]
- * @author l3x
- */
 public class ExShowSeedSetting extends L2GameServerPacket
 {
 	private static final String _S__FE_1F_EXSHOWSEEDSETTING = "[S] FE:1F ExShowSeedSetting";

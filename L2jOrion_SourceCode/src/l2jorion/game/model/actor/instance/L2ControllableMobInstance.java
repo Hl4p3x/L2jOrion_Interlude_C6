@@ -19,33 +19,20 @@
  */
 package l2jorion.game.model.actor.instance;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.ai.L2CharacterAI;
 import l2jorion.game.ai.L2ControllableMobAI;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-/**
- * @author littlecrow
- */
 public class L2ControllableMobInstance extends L2MonsterInstance
 {
 	private static Logger LOG = LoggerFactory.getLogger(L2ControllableMobInstance.class);
 	private boolean _isInvul;
 	private L2ControllableMobAI _aiBackup; // to save ai, avoiding beeing detached
-	
-	protected class ControllableAIAcessor extends AIAccessor
-	{
-		@Override
-		public void detachAI()
-		{
-			// do nothing, AI of controllable mobs can't be detached automatically
-		}
-	}
 	
 	@Override
 	public boolean isAggressive()
@@ -66,24 +53,9 @@ public class L2ControllableMobInstance extends L2MonsterInstance
 	}
 	
 	@Override
-	public L2CharacterAI getAI()
+	public L2CharacterAI initAI()
 	{
-		if (_ai == null)
-		{
-			synchronized (this)
-			{
-				if (_ai == null && _aiBackup == null)
-				{
-					_ai = new L2ControllableMobAI(new ControllableAIAcessor());
-					_aiBackup = (L2ControllableMobAI) _ai;
-				}
-				else
-				{
-					_ai = _aiBackup;
-				}
-			}
-		}
-		return _ai;
+		return new L2ControllableMobAI(this);
 	}
 	
 	@Override

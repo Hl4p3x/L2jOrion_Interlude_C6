@@ -23,6 +23,7 @@ import l2jorion.Config;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.L2ZoneType;
+import l2jorion.game.model.zone.ZoneId;
 
 public class L2PeaceZone extends L2ZoneType
 {
@@ -34,7 +35,7 @@ public class L2PeaceZone extends L2ZoneType
 	@Override
 	protected void onEnter(final L2Character character)
 	{
-		character.setInsideZone(L2Character.ZONE_PEACE, true);
+		character.setInsideZone(ZoneId.ZONE_PEACE, true);
 		if (character instanceof L2PcInstance)
 		{
 			if(Config.BOT_PROTECTOR)
@@ -48,7 +49,7 @@ public class L2PeaceZone extends L2ZoneType
 	@Override
 	protected void onExit(final L2Character character)
 	{
-		character.setInsideZone(L2Character.ZONE_PEACE, false);
+		character.setInsideZone(ZoneId.ZONE_PEACE, false);
 		if (character instanceof L2PcInstance)
 		{
 			if(Config.BOT_PROTECTOR)

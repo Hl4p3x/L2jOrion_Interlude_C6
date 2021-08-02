@@ -25,13 +25,8 @@ import l2jorion.game.datatables.sql.CharNameTable;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * Support for "Chat with Friends" dialog. Format: ch (hdSdh) h: Total Friend Count h: Unknown d: Player Object ID S: Friend Name d: Online/Offline h: Unknown
- * @author Tempy
- */
 public class FriendList extends L2GameServerPacket
 {
-	//private static Logger LOG = LoggerFactory.getLogger(FriendList.class.getName());
 	private static final String _S__FA_FRIENDLIST = "[S] FA FriendList";
 	
 	private final List<FriendInfo> _info;
@@ -53,13 +48,13 @@ public class FriendList extends L2GameServerPacket
 	public FriendList(L2PcInstance player)
 	{
 		_info = new ArrayList<>(player.getFriendList().size());
-
+		
 		for (int objId : player.getFriendList())
 		{
 			final String name = CharNameTable.getInstance().getNameById(objId);
 			final L2PcInstance player1 = L2World.getInstance().getPlayer(objId);
-
-			_info.add(new FriendInfo(objId, name, (player1 != null && player1.isOnline()==1)));
+			
+			_info.add(new FriendInfo(objId, name, (player1 != null && player1.isOnline() == 1)));
 		}
 	}
 	
@@ -77,10 +72,6 @@ public class FriendList extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

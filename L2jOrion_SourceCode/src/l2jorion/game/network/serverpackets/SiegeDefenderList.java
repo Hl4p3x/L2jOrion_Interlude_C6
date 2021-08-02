@@ -25,36 +25,10 @@ import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2SiegeClan;
 import l2jorion.game.model.entity.siege.Castle;
 
-/**
- * Populates the Siege Defender List in the SiegeInfo Window<BR>
- * <BR>
- * packet type id 0xcb<BR>
- * format: cddddddd + dSSdddSSd<BR>
- * <BR>
- * c = 0xcb<BR>
- * d = CastleID<BR>
- * d = unknow (0x00)<BR>
- * d = unknow (0x01)<BR>
- * d = unknow (0x00)<BR>
- * d = Number of Defending Clans?<BR>
- * d = Number of Defending Clans<BR>
- * { //repeats<BR>
- * d = ClanID<BR>
- * S = ClanName<BR>
- * S = ClanLeaderName<BR>
- * d = ClanCrestID<BR>
- * d = signed time (seconds)<BR>
- * d = Type -> Owner = 0x01 || Waiting = 0x02 || Accepted = 0x03<BR>
- * d = AllyID<BR>
- * S = AllyName<BR>
- * S = AllyLeaderName<BR>
- * d = AllyCrestID<BR>
- * @author KenM
- */
 public class SiegeDefenderList extends L2GameServerPacket
 {
 	private static final String _S__CA_SiegeDefenderList = "[S] cb SiegeDefenderList";
-	// private static Logger LOG = LoggerFactory.getLogger(SiegeDefenderList.class);
+	
 	private final Castle _castle;
 	
 	public SiegeDefenderList(final Castle castle)
@@ -90,7 +64,7 @@ public class SiegeDefenderList extends L2GameServerPacket
 				writeS(clan.getName());
 				writeS(clan.getLeaderName());
 				writeD(clan.getCrestId());
-				writeD(0x00); // signed time (seconds) (not storated by L2J)
+				writeD(0x00);
 				switch (siegeclan.getType())
 				{
 					case OWNER:
@@ -118,7 +92,7 @@ public class SiegeDefenderList extends L2GameServerPacket
 				writeS(clan.getName());
 				writeS(clan.getLeaderName());
 				writeD(clan.getCrestId());
-				writeD(0x00); // signed time (seconds) (not storated by L2J)
+				writeD(0x00);
 				writeD(0x02); // waiting approval
 				writeD(clan.getAllyId());
 				writeS(clan.getAllyName());
@@ -133,10 +107,6 @@ public class SiegeDefenderList extends L2GameServerPacket
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

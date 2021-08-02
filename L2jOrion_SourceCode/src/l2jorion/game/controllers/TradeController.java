@@ -38,12 +38,11 @@ import l2jorion.game.datatables.sql.ItemTable;
 import l2jorion.game.model.L2TradeList;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class TradeController
 {
@@ -76,7 +75,9 @@ public class TradeController
 			catch (final Throwable t)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					t.printStackTrace();
+				}
 			}
 		}
 	}
@@ -126,12 +127,14 @@ public class TradeController
 					LOG.debug("created " + dummyItemCount + " Dummy-Items for buylists");
 				}
 				
-				LOG.info("TradeController: Loaded " + _lists.size() + " Buylists.");
+				LOG.info("TradeController: Loaded " + _lists.size() + " buy lists");
 			}
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.warn("error while creating trade controller in line: " + (lnr == null ? 0 : lnr.getLineNumber()), e);
 				
@@ -140,6 +143,7 @@ public class TradeController
 			{
 				
 				if (lnr != null)
+				{
 					try
 					{
 						lnr.close();
@@ -148,8 +152,10 @@ public class TradeController
 					{
 						e1.printStackTrace();
 					}
+				}
 				
 				if (buff != null)
+				{
 					try
 					{
 						buff.close();
@@ -158,8 +164,10 @@ public class TradeController
 					{
 						e1.printStackTrace();
 					}
+				}
 				
 				if (reader != null)
+				{
 					try
 					{
 						reader.close();
@@ -168,6 +176,7 @@ public class TradeController
 					{
 						e1.printStackTrace();
 					}
+				}
 				
 			}
 			
@@ -241,8 +250,7 @@ public class TradeController
 						
 						if (!rset1.getString("npc_id").equals("gm") && price < (item.getReferencePrice() / 2))
 						{
-							
-							LOG.warn("L2TradeList " + buy1.getListId() + " itemId  " + itemId + " has an ADENA sell price lower then reference price.. Automatically Updating it..");
+							LOG.warn("TradeList:" + buy1.getListId() + " itemId: " + itemId + " has an ADENA sell price lower than reference price. Automatically updating it...");
 							price = item.getReferencePrice();
 						}
 						
@@ -265,7 +273,7 @@ public class TradeController
 						
 						try
 						{
-							while (rset.next()) // TODO aici
+							while (rset.next())
 							{
 								dummyItemCount++;
 								itemId = rset.getInt("item_id");
@@ -311,45 +319,39 @@ public class TradeController
 						catch (final Exception e)
 						{
 							if (Config.ENABLE_ALL_EXCEPTIONS)
+							{
 								e.printStackTrace();
+							}
 							
 							LOG.warn("TradeController: Problem with buylist " + buy1.getListId() + " item " + itemId);
 						}
+						
 						if (LimitedItem)
 						{
-							_listsTaskItem.put(new Integer(buy1.getListId()), buy1);
+							_listsTaskItem.put(buy1.getListId(), buy1);
 						}
 						else
 						{
-							_lists.put(new Integer(buy1.getListId()), buy1);
+							_lists.put(buy1.getListId(), buy1);
 						}
 						
 						_nextListId = Math.max(_nextListId, buy1.getListId() + 1);
-						buy1 = null;
 					}
 					
 					DatabaseUtils.close(rset);
 					DatabaseUtils.close(statement);
-					
-					rset = null;
-					statement = null;
 				}
 				rset1.close();
 				statement1.close();
-				
-				rset1 = null;
-				statement1 = null;
 				
 				if (Config.DEBUG)
 				{
 					LOG.debug("created " + dummyItemCount + " Dummy-Items for buylists");
 				}
 				
-				LOG.info("TradeController: Loaded " + _lists.size() + " Buylists.");
-				LOG.info("TradeController: Loaded " + _listsTaskItem.size() + " Limited Buylists.");
-				/*
-				 * Restore Task for reinitialyze count of buy item
-				 */
+				LOG.info("TradeController: Loaded " + _lists.size() + " buy lists");
+				LOG.info("TradeController: Loaded " + _listsTaskItem.size() + " limited buy lists");
+				
 				try
 				{
 					int time = 0;
@@ -374,9 +376,6 @@ public class TradeController
 					}
 					rset2.close();
 					statement2.close();
-					
-					rset2 = null;
-					statement2 = null;
 				}
 				catch (final Exception e)
 				{
@@ -393,7 +392,6 @@ public class TradeController
 			finally
 			{
 				CloseUtil.close(con);
-				con = null;
 			}
 			
 			if (Config.CUSTOM_MERCHANT_TABLES)
@@ -459,8 +457,7 @@ public class TradeController
 							
 							if (!rset1.getString("npc_id").equals("gm") && price < (item.getReferencePrice() / 2))
 							{
-								
-								LOG.warn("L2TradeList " + buy1.getListId() + " itemId  " + itemId + " has an ADENA sell price lower then reference price.. Automatically Updating it..");
+								LOG.warn("TradeList:" + buy1.getListId() + " itemId: " + itemId + " has an ADENA sell price lower than reference price. Automatically updating it...");
 								price = item.getReferencePrice();
 							}
 							
@@ -504,8 +501,7 @@ public class TradeController
 									
 									if (!rset1.getString("npc_id").equals("gm") && price < item2.getReferencePrice() / 2)
 									{
-										
-										LOG.warn("L2TradeList " + buy1.getListId() + " itemId  " + itemId + " has an ADENA sell price lower then reference price.. Automatically Updating it..");
+										LOG.warn("TradeList:" + buy1.getListId() + " itemId: " + itemId + " has an ADENA sell price lower than reference price. Automatically updating it...");
 										price = item2.getReferencePrice();
 									}
 									
@@ -528,17 +524,19 @@ public class TradeController
 							catch (final Exception e)
 							{
 								if (Config.ENABLE_ALL_EXCEPTIONS)
+								{
 									e.printStackTrace();
+								}
 								
 								LOG.warn("TradeController: Problem with buylist " + buy1.getListId() + " item " + itemId);
 							}
 							if (LimitedItem)
 							{
-								_listsTaskItem.put(new Integer(buy1.getListId()), buy1);
+								_listsTaskItem.put(buy1.getListId(), buy1);
 							}
 							else
 							{
-								_lists.put(new Integer(buy1.getListId()), buy1);
+								_lists.put(buy1.getListId(), buy1);
 							}
 							_nextListId = Math.max(_nextListId, buy1.getListId() + 1);
 							
@@ -547,22 +545,20 @@ public class TradeController
 						
 						DatabaseUtils.close(rset);
 						DatabaseUtils.close(statement);
-						
-						rset = null;
-						statement = null;
 					}
 					rset1.close();
 					statement1.close();
-					
-					rset1 = null;
-					statement1 = null;
 					
 					if (Config.DEBUG)
 					{
 						LOG.debug("created " + dummyItemCount + " Dummy-Items for buylists");
 					}
 					
-					LOG.info("TradeController: Loaded " + (_lists.size() - initialSize) + " Custom Buylists.");
+					int list = (_lists.size() - initialSize);
+					if (list > 0)
+					{
+						LOG.info("TradeController: Loaded " + list + " custom buy lists");
+					}
 					
 					/**
 					 * Restore Task for reinitialyze count of buy item
@@ -632,8 +628,7 @@ public class TradeController
 			
 			if (price < (item.getReferencePrice() / 2))
 			{
-				
-				LOG.warn("L2TradeList " + listId + " itemId  " + itemId + " has an ADENA sell price lower then reference price.. Automatically Updating it..");
+				LOG.warn("TradeList:" + listId + " itemId:" + itemId + " has an ADENA sell price lower than reference price. Automatically ipdating it...");
 				price = item.getReferencePrice();
 			}
 			
@@ -641,19 +636,20 @@ public class TradeController
 			buy1.addItem(item);
 			itemCreated++;
 		}
-		st = null;
 		
-		_lists.put(new Integer(buy1.getListId()), buy1);
-		buy1 = null;
+		_lists.put(Integer.valueOf(buy1.getListId()), buy1);
+		
 		return itemCreated;
 	}
 	
 	public L2TradeList getBuyList(final int listId)
 	{
-		if (_lists.get(new Integer(listId)) != null)
-			return _lists.get(new Integer(listId));
+		if (_lists.get(Integer.valueOf(listId)) != null)
+		{
+			return _lists.get(Integer.valueOf(listId));
+		}
 		
-		return _listsTaskItem.get(new Integer(listId));
+		return _listsTaskItem.get(Integer.valueOf(listId));
 	}
 	
 	public List<L2TradeList> getBuyListByNpcId(final int npcId)
@@ -669,8 +665,7 @@ public class TradeController
 			
 			if (list.getNpcId().startsWith("shop"))
 			{
-				lists.add(list);
-				return lists;
+				continue;
 			}
 			
 			if (npcId == Integer.parseInt(list.getNpcId()))
@@ -687,8 +682,7 @@ public class TradeController
 			
 			if (list.getNpcId().startsWith("shop"))
 			{
-				lists.add(list);
-				return lists;
+				continue;
 			}
 			
 			if (npcId == Integer.parseInt(list.getNpcId()))
@@ -699,42 +693,58 @@ public class TradeController
 		return lists;
 	}
 	
-	/*public List<L2TradeList> getBuyListByCode()
+	public List<L2TradeList> getBuyListById(String npcId)
 	{
-		final List<L2TradeList> access = new FastList<>();
+		final List<L2TradeList> lists = new FastList<>();
 		
 		for (final L2TradeList list : _lists.values())
 		{
 			if (list.getNpcId().startsWith("gm"))
 			{
-				return null;
+				continue;
 			}
 			
 			if (list.getNpcId().startsWith("shop"))
 			{
-				access.add(list);
+				lists.add(list);
+			}
+			
+			if (npcId.contains(list.getNpcId()))
+			{
+				lists.add(list);
 			}
 		}
 		for (final L2TradeList list : _listsTaskItem.values())
 		{
 			if (list.getNpcId().startsWith("gm"))
 			{
-				return null;
+				continue;
 			}
 			
 			if (list.getNpcId().startsWith("shop"))
 			{
-				access.add(list);
+				lists.add(list);
 			}
 			
+			if (npcId.contains(list.getNpcId()))
+			{
+				lists.add(list);
+			}
 		}
-		return access;
-	}*/
+		return lists;
+	}
+	
+	/*
+	 * public List<L2TradeList> getBuyListByCode() { final List<L2TradeList> access = new FastList<>(); for (final L2TradeList list : _lists.values()) { if (list.getNpcId().startsWith("gm")) { return null; } if (list.getNpcId().startsWith("shop")) { access.add(list); } } for (final L2TradeList list
+	 * : _listsTaskItem.values()) { if (list.getNpcId().startsWith("gm")) { return null; } if (list.getNpcId().startsWith("shop")) { access.add(list); } } return access; }
+	 */
 	
 	protected void restoreCount(final int time)
 	{
 		if (_listsTaskItem == null)
+		{
 			return;
+		}
 		
 		for (final L2TradeList list : _listsTaskItem.values())
 		{
@@ -759,7 +769,9 @@ public class TradeController
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("TradeController: Could not update Timer save in Buylist");
 		}
@@ -778,7 +790,9 @@ public class TradeController
 		int listId;
 		
 		if (_listsTaskItem == null)
+		{
 			return;
+		}
 		
 		try
 		{
@@ -811,7 +825,9 @@ public class TradeController
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			LOG.error("TradeController: Could not store Count Item");
 		}
 		finally

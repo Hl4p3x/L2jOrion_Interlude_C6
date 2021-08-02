@@ -19,8 +19,6 @@
  */
 package l2jorion.game.model.zone.type;
 
-import javolution.util.FastMap;
-import l2jorion.Config;
 import l2jorion.game.datatables.csv.MapRegionTable;
 import l2jorion.game.managers.ClanHallManager;
 import l2jorion.game.model.L2Character;
@@ -28,71 +26,53 @@ import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2SiegeSummonInstance;
 import l2jorion.game.model.entity.ClanHall;
-import l2jorion.game.model.entity.siege.clanhalls.DevastatedCastle;
-import l2jorion.game.model.zone.L2ZoneType;
-import l2jorion.game.network.SystemMessageId;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.serverpackets.ClanHallDecoration;
-import l2jorion.game.network.serverpackets.SystemMessage;
 
-public class L2ClanHallZone extends L2ZoneType
+public class L2ClanHallZone extends L2ResidenceZone
 {
-	private int _clanHallId;
-	private final int[] _spawnLoc;
-	
 	public L2ClanHallZone(final int id)
 	{
 		super(id);
-		
-		_spawnLoc = new int[3];
 	}
 	
 	@Override
 	public void setParameter(final String name, final String value)
 	{
-		switch (name)
+		if (name.equals("clanHallId"))
 		{
-			case "clanHallId":
-				_clanHallId = Integer.parseInt(value);
-				// Register self to the correct clan hall
-				ClanHallManager.getInstance().getClanHallById(_clanHallId).setZone(this);
-				break;
-			case "spawnX":
-				_spawnLoc[0] = Integer.parseInt(value);
-				break;
-			case "spawnY":
-				_spawnLoc[1] = Integer.parseInt(value);
-				break;
-			case "spawnZ":
-				_spawnLoc[2] = Integer.parseInt(value);
-				break;
-			default:
-				super.setParameter(name, value);
-				break;
+			setResidenceId(Integer.parseInt(value));
+			// Register self to the correct clan hall
+			ClanHall hall = ClanHallManager.getInstance().getClanHallsById(getResidenceId());
+			if (hall == null)
+			{
+				LOG.warn("L2ClanHallZone: Clan hall with id " + getResidenceId() + " does not exist!");
+			}
+			else
+			{
+				hall.setZone(this);
+			}
+		}
+		else
+		{
+			super.setParameter(name, value);
 		}
 	}
 	
 	@Override
 	protected void onEnter(final L2Character character)
 	{
-		if (DevastatedCastle.getInstance().getIsInProgress())
-		{
-			character.setInsideZone(L2Character.ZONE_PVP, true);
-			character.setInsideZone(L2Character.ZONE_SIEGE, true);
-			
-			if (character instanceof L2PcInstance)
-			{
-				((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.ENTERED_COMBAT_ZONE));
-			}
-		}
 		if (character instanceof L2PcInstance)
 		{
 			// Set as in clan hall
-			character.setInsideZone(L2Character.ZONE_CLANHALL, true);
+			character.setInsideZone(ZoneId.ZONE_CLANHALL, true);
 			
-			ClanHall clanHall = ClanHallManager.getInstance().getClanHallById(_clanHallId);
+			ClanHall clanHall = ClanHallManager.getInstance().getClanHallById(getResidenceId());
 			
 			if (clanHall == null)
+			{
 				return;
+			}
 			
 			// Send decoration packet
 			final ClanHallDecoration deco = new ClanHallDecoration(clanHall);
@@ -101,7 +81,7 @@ public class L2ClanHallZone extends L2ZoneType
 			// Send a message
 			if (clanHall.getOwnerId() != 0 && clanHall.getOwnerId() == ((L2PcInstance) character).getClanId())
 			{
-				((L2PcInstance) character).sendMessage("You have entered your clan hall");
+				((L2PcInstance) character).sendMessage("You have entered your clan hall.");
 			}
 		}
 	}
@@ -109,22 +89,6 @@ public class L2ClanHallZone extends L2ZoneType
 	@Override
 	protected void onExit(final L2Character character)
 	{
-		if (DevastatedCastle.getInstance().getIsInProgress())
-		{
-			character.setInsideZone(L2Character.ZONE_PVP, false);
-			character.setInsideZone(L2Character.ZONE_SIEGE, false);
-			
-			if (character instanceof L2PcInstance)
-			{
-				((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
-				
-				// Set pvp flag
-				if (((L2PcInstance) character).getPvpFlag() == 0)
-				{
-					((L2PcInstance) character).startPvPFlag();
-				}
-			}
-		}
 		if (character instanceof L2SiegeSummonInstance)
 		{
 			((L2SiegeSummonInstance) character).unSummon(((L2SiegeSummonInstance) character).getOwner());
@@ -132,12 +96,12 @@ public class L2ClanHallZone extends L2ZoneType
 		if (character instanceof L2PcInstance)
 		{
 			// Unset clanhall zone
-			character.setInsideZone(L2Character.ZONE_CLANHALL, false);
+			character.setInsideZone(ZoneId.ZONE_CLANHALL, false);
 			
 			// Send a message
-			if (((L2PcInstance) character).getClanId() != 0 && ClanHallManager.getInstance().getClanHallById(_clanHallId).getOwnerId() == ((L2PcInstance) character).getClanId())
+			if (((L2PcInstance) character).getClanId() != 0 && ClanHallManager.getInstance().getClanHallsById(getResidenceId()).getOwnerId() == ((L2PcInstance) character).getClanId())
 			{
-				((L2PcInstance) character).sendMessage("You have left your clan hall");
+				((L2PcInstance) character).sendMessage("You have left your clan hall.");
 			}
 		}
 	}
@@ -153,9 +117,15 @@ public class L2ClanHallZone extends L2ZoneType
 	}
 	
 	/**
-	 * Removes all foreigners from the clan hall
-	 * @param owningClanId
+	 * Get the clan hall's spawn
+	 * @return
 	 */
+	public Location getSpawn()
+	{
+		return new Location(0, 0, 0);
+	}
+	
+	@Override
 	public void banishForeigners(final int owningClanId)
 	{
 		for (final L2Character temp : _characterList.values())
@@ -174,62 +144,13 @@ public class L2ClanHallZone extends L2ZoneType
 		}
 	}
 	
-	@Override
-	public FastMap<Integer, L2Character> getCharactersInside()
+	public void banishNonSiegeParticipants()
 	{
-		return _characterList;
-	}
-	
-	/**
-	 * Get the clan hall's spawn
-	 * @return
-	 */
-	public Location getSpawn()
-	{
-		return new Location(_spawnLoc[0], _spawnLoc[1], _spawnLoc[2]);
-	}
-	
-	public void updateZoneStatusForCharactersInside()
-	{
-		if (DevastatedCastle.getInstance().getIsInProgress())
+		for (L2PcInstance player : getPlayersInside())
 		{
-			for (final L2Character character : _characterList.values())
+			if ((player != null) && player.isInHideoutSiege())
 			{
-				try
-				{
-					onEnter(character);
-				}
-				catch (final NullPointerException e)
-				{
-					if (Config.ENABLE_ALL_EXCEPTIONS)
-						e.printStackTrace();
-				}
-			}
-		}
-		else
-		{
-			for (final L2Character character : _characterList.values())
-			{
-				try
-				{
-					character.setInsideZone(L2Character.ZONE_PVP, false);
-					character.setInsideZone(L2Character.ZONE_SIEGE, false);
-					
-					if (character instanceof L2PcInstance)
-					{
-						((L2PcInstance) character).sendPacket(new SystemMessage(SystemMessageId.LEFT_COMBAT_ZONE));
-					}
-					
-					if (character instanceof L2SiegeSummonInstance)
-					{
-						((L2SiegeSummonInstance) character).unSummon(((L2SiegeSummonInstance) character).getOwner());
-					}
-				}
-				catch (final NullPointerException e)
-				{
-					if (Config.ENABLE_ALL_EXCEPTIONS)
-						e.printStackTrace();
-				}
+				player.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 			}
 		}
 	}

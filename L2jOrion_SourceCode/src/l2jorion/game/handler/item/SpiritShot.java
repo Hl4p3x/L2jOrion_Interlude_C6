@@ -31,7 +31,6 @@ import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.L2Weapon;
-import l2jorion.game.util.Broadcast;
 
 public class SpiritShot implements IItemHandler
 {
@@ -56,15 +55,13 @@ public class SpiritShot implements IItemHandler
 		2159
 	};
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.handler.IItemHandler#useItem(l2jorion.game.model.L2PcInstance, l2jorion.game.model.L2ItemInstance)
-	 */
 	@Override
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		L2ItemInstance weaponInst = activeChar.getActiveWeaponInstance();
@@ -83,11 +80,14 @@ public class SpiritShot implements IItemHandler
 		
 		// Check if Spiritshot is already active
 		if (weaponInst.getChargedSpiritshot() != L2ItemInstance.CHARGED_NONE)
+		{
 			return;
+		}
 		
 		// Check for correct grade
 		final int weaponGrade = weaponItem.getCrystalType();
-		if (weaponGrade == L2Item.CRYSTAL_NONE && itemId != 5790 && itemId != 2509 || weaponGrade == L2Item.CRYSTAL_D && itemId != 2510 || weaponGrade == L2Item.CRYSTAL_C && itemId != 2511 || weaponGrade == L2Item.CRYSTAL_B && itemId != 2512 || weaponGrade == L2Item.CRYSTAL_A && itemId != 2513 || weaponGrade == L2Item.CRYSTAL_S && itemId != 2514)
+		if (weaponGrade == L2Item.CRYSTAL_NONE && itemId != 5790 && itemId != 2509 || weaponGrade == L2Item.CRYSTAL_D && itemId != 2510 || weaponGrade == L2Item.CRYSTAL_C && itemId != 2511 || weaponGrade == L2Item.CRYSTAL_B && itemId != 2512 || weaponGrade == L2Item.CRYSTAL_A && itemId != 2513
+			|| weaponGrade == L2Item.CRYSTAL_S && itemId != 2514)
 		{
 			if (!activeChar.getAutoSoulShot().contains(itemId))
 			{
@@ -126,7 +126,7 @@ public class SpiritShot implements IItemHandler
 		
 		if (!activeChar.getEffects())
 		{
-			Broadcast.toSelfAndKnownPlayersInRadius(activeChar, new MagicSkillUser(activeChar, activeChar, SKILL_IDS[weaponGrade], 1, 0, 0), 360000);
+			activeChar.broadcastPacket(new MagicSkillUser(activeChar, activeChar, SKILL_IDS[weaponGrade], 1, 0, 0), 500);
 		}
 	}
 	

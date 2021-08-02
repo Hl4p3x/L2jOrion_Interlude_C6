@@ -62,7 +62,9 @@ public class L2SkillChargeEffect extends L2Skill
 	public void useSkill(final L2Character activeChar, final L2Object[] targets)
 	{
 		if (activeChar.isAlikeDead())
+		{
 			return;
+		}
 		
 		// get the effect
 		final EffectCharge effect = (EffectCharge) activeChar.getFirstEffect(chargeSkillId);
@@ -94,6 +96,7 @@ public class L2SkillChargeEffect extends L2Skill
 				getEffects(activeChar, (L2Character) target, false, false, false);
 			}
 		}
+		
 		if (activeChar instanceof L2PcInstance)
 		{
 			activeChar.sendPacket(new EtcStatusUpdate((L2PcInstance) activeChar));

@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<project name="Orion" default="dist-local" basedir=".">
+	<description></description>
+
+	<target name="prepare-local" description="Prepare the local folder property">
+		<property name="build" location="build" />
+	</target>
+
+	<target name="prepare-final" description="Prepare the final folders properties">
+		<property name="build.dist" location="${build}/dist" />
+		<property name="build.dist.game" location="${build.dist}/game" />
+		<property name="build.dist.login" location="${build.dist}/login" />
+		<property name="build.dist.libs" location="${build.dist}/libs" />
+		<property name="build.dist.Quick_DB_Installer" location="${build.dist}/Quick_DB_Installer" />
+		<property name="properties-file" location="${build.dist.game}/config/other/L2jOrion-datapack.ini" />
+	</target>
+
+	<target name="init" description="Create the output directories. Do nothing if dirs were already created">
+		<mkdir dir="${build}" />
+		<mkdir dir="${build.dist}" />
+		<mkdir dir="${build.dist.game}" />
+		<mkdir dir="${build.dist.login}" />
+		<mkdir dir="${build.dist.libs}" />
+		<mkdir dir="${build.dist.Quick_DB_Installer}" />
+	</target>
+
+	<target name="export" depends="version" description="Syncronizes build space contents with project.">
+		<copy todir="${build.dist.game}/data">
+			<fileset dir="${basedir}/data">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+		<copy todir="${build.dist.game}">
+			<fileset dir="${basedir}/cfiles/game">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+		<copy todir="${build.dist.login}">
+			<fileset dir="${basedir}/cfiles/login">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+		<copy todir="${build.dist.libs}">
+			<fileset dir="${basedir}/cfiles/libs">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+		<copy todir="${build.dist.Quick_DB_Installer}">
+			<fileset dir="${basedir}/cfiles/Quick_DB_Installer">
+				<include name="**/*.*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="dist-local" depends="prepare-local,prepare-final,export" description="Create distribution files and Zip one into 'build' folder">
+		<zip destfile="${build}/L2jOrion_Server_Files_(Changeset-).zip" basedir="${build.dist}" update="true" />
+	</target>
+
+	<target name="version" depends="init" description="Create Version file">
+		<tstamp>
+			<format property="build.tstamp" pattern="dd-MM-yyyy hh:mm:ss aa" />
+		</tstamp>
+		
+		<delete dir="${build.dist}" />
+	</target>
+
+</project>

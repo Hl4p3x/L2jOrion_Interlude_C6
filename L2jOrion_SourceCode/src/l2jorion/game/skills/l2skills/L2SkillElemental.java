@@ -30,7 +30,6 @@ import l2jorion.game.templates.StatsSet;
 
 public class L2SkillElemental extends L2Skill
 {
-	
 	private final int[] _seeds;
 	private final boolean _seedAny;
 	
@@ -57,7 +56,9 @@ public class L2SkillElemental extends L2Skill
 	public void useSkill(final L2Character activeChar, final L2Object[] targets)
 	{
 		if (activeChar.isAlikeDead())
+		{
 			return;
+		}
 		
 		final boolean sps = activeChar.checkSps();
 		final boolean bss = activeChar.checkBss();

@@ -38,9 +38,8 @@ import javax.script.ScriptException;
 
 import javolution.util.FastMap;
 import l2jorion.Config;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class CompiledScriptCache implements Serializable
 {

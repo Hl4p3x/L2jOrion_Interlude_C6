@@ -5,7 +5,6 @@ import l2jorion.game.skills.Env;
 
 public class EffectMeditation extends L2Effect
 {
-	
 	public EffectMeditation(final Env env, final EffectTemplate template)
 	{
 		super(env, template);
@@ -34,7 +33,6 @@ public class EffectMeditation extends L2Effect
 	@Override
 	public boolean onActionTime()
 	{
-		// stop effect
 		return false;
 	}
 }

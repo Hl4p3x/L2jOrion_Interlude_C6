@@ -43,8 +43,10 @@ public class ZakenPlayer implements ISkillHandler
 			for (final L2Object target1 : targets)
 			{
 				if (!(target1 instanceof L2Character))
+				{
 					continue;
-
+				}
+				
 				final L2Character target = (L2Character) target1;
 				final int ch = (Rnd.get(14) + 1);
 				if (ch == 1)
@@ -104,7 +106,9 @@ public class ZakenPlayer implements ISkillHandler
 		catch (final Throwable e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 	}
 	

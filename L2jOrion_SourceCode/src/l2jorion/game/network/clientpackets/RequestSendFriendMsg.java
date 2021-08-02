@@ -33,58 +33,64 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 public final class RequestSendFriendMsg extends L2GameClientPacket
 {
 	private static Logger _logChat = Logger.getLogger("chat");
-
+	
 	private String _message;
 	private String _reciever;
-
+	
 	@Override
 	protected void readImpl()
 	{
 		_message = readS();
 		_reciever = readS();
 	}
-
+	
 	@Override
 	protected void runImpl()
 	{
 		L2PcInstance activeChar = getClient().getActiveChar();
-		if(activeChar == null)
+		if (activeChar == null)
+		{
 			return;
+		}
+		
 		if (activeChar.isSubmitingPin())
 		{
 			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		L2PcInstance targetPlayer = L2World.getInstance().getPlayer(_reciever);
-		if(targetPlayer == null/* || !targetPlayer.getFriendList().contains(activeChar.getName())*/)
+		if (targetPlayer == null)
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_NOT_FOUND_IN_THE_GAME));
 			return;
 		}
+		
 		if (targetPlayer.isSubmitingPin())
 		{
 			activeChar.sendMessage("Unable to do any action while PIN is not submitted by the target.");
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-		if(Config.LOG_CHAT)
+		
+		if (Config.LOG_CHAT)
 		{
 			LogRecord record = new LogRecord(Level.INFO, _message);
 			record.setLoggerName("chat");
 			record.setParameters(new Object[]
 			{
-					"PRIV_MSG", "[" + activeChar.getName() + " to " + _reciever + "]"
+				"PRIV_MSG",
+				"[" + activeChar.getName() + " to " + _reciever + "]"
 			});
-
-			_logChat.log(null, record+" [3]");
-			_logChat.info(record+" [3]");
+			
+			_logChat.log(record);
 		}
-
+		
 		FriendRecvMsg frm = new FriendRecvMsg(activeChar.getName(), _reciever, _message);
 		targetPlayer.sendPacket(frm);
 	}
-
+	
 	@Override
 	public String getType()
 	{

@@ -28,6 +28,7 @@ import l2jorion.game.network.SystemMessageId;
 public class AllyInfo extends L2GameServerPacket
 {
 	private static final String _S__7A_FRIENDLIST = "[S] 7a AllyInfo";
+	
 	private final L2PcInstance _cha;
 	
 	public AllyInfo(final L2PcInstance cha)
@@ -40,7 +41,9 @@ public class AllyInfo extends L2GameServerPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		if (activeChar.getAllyId() == 0)
 		{
@@ -84,6 +87,7 @@ public class AllyInfo extends L2GameServerPacket
 		// clan information
 		sm = new SystemMessage(SystemMessageId.CLAN_INFO_HEAD);
 		_cha.sendPacket(sm);
+		
 		for (final L2Clan clan : ClanTable.getInstance().getClans())
 		{
 			if (clan.getAllyId() == _cha.getAllyId())
@@ -100,20 +104,14 @@ public class AllyInfo extends L2GameServerPacket
 				sm = new SystemMessage(SystemMessageId.CLAN_INFO_LEVEL);
 				sm.addNumber(clan.getLevel());
 				_cha.sendPacket(sm);
-				// ---------
 				sm = new SystemMessage(SystemMessageId.CLAN_INFO_SEPARATOR);
 				_cha.sendPacket(sm);
 			}
 		}
-		// =========================
 		sm = new SystemMessage(SystemMessageId.CLAN_INFO_FOOT);
 		_cha.sendPacket(sm);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

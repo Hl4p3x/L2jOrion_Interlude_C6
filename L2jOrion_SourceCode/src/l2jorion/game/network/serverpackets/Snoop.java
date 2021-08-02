@@ -23,6 +23,7 @@ package l2jorion.game.network.serverpackets;
 public class Snoop extends L2GameServerPacket
 {
 	private static final String _S__D5_SNOOP = "[S] D5 Snoop";
+	
 	private final int _convoId;
 	private final String _name;
 	private final int _type;

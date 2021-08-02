@@ -30,10 +30,7 @@ public class FriendAddRequest extends L2GameServerPacket
 		writeS(_requestorName);
 		writeD(0);
 	}
-
-	/* (non-Javadoc)
-	 * @see l2jorion.game.network.serverpackets.L2GameServerPacket#getType()
-	 */
+	
 	@Override
 	public String getType()
 	{

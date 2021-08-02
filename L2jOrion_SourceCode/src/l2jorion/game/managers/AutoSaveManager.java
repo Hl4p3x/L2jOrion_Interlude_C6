@@ -23,13 +23,12 @@ import java.sql.PreparedStatement;
 import java.util.Collection;
 import java.util.concurrent.ScheduledFuture;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.Config;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.thread.ThreadPoolManager;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
@@ -39,8 +38,8 @@ public class AutoSaveManager
 	
 	private ScheduledFuture<?> _autoSaveInDB;
 	
-	//private ScheduledFuture<?> _autoCheckConnectionStatus;
-	//private ScheduledFuture<?> _autoCleanDatabase;
+	// private ScheduledFuture<?> _autoCheckConnectionStatus;
+	// private ScheduledFuture<?> _autoCleanDatabase;
 	
 	public static final AutoSaveManager getInstance()
 	{
@@ -53,24 +52,16 @@ public class AutoSaveManager
 	}
 	
 	public void stopAutoSaveManager()
-	{		
+	{
 		if (_autoSaveInDB != null)
 		{
 			_autoSaveInDB.cancel(true);
 			_autoSaveInDB = null;
 		}
 		
-		/*if (_autoCheckConnectionStatus != null)
-		{
-			_autoCheckConnectionStatus.cancel(true);
-			_autoCheckConnectionStatus = null;
-		}
-		
-		if (_autoCleanDatabase != null)
-		{
-			_autoCleanDatabase.cancel(true);
-			_autoCleanDatabase = null;
-		}*/
+		/*
+		 * if (_autoCheckConnectionStatus != null) { _autoCheckConnectionStatus.cancel(true); _autoCheckConnectionStatus = null; } if (_autoCleanDatabase != null) { _autoCleanDatabase.cancel(true); _autoCleanDatabase = null; }
+		 */
 	}
 	
 	public void startAutoSaveManager()
@@ -84,12 +75,12 @@ public class AutoSaveManager
 		
 		if (Config.CHECK_CONNECTION_INITIAL_TIME > 0)
 		{
-			//_autoCheckConnectionStatus = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new PlayersSaveTask(), Config.CHECK_CONNECTION_INITIAL_TIME, Config.CHECK_CONNECTION_DELAY_TIME);
+			// _autoCheckConnectionStatus = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new PlayersSaveTask(), Config.CHECK_CONNECTION_INITIAL_TIME, Config.CHECK_CONNECTION_DELAY_TIME);
 		}
 		
 		if (Config.CLEANDB_INITIAL_TIME > 0)
 		{
-			//_autoCleanDatabase = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoCleanDBTask(), Config.CLEANDB_INITIAL_TIME, Config.CLEANDB_DELAY_TIME);
+			// _autoCleanDatabase = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoCleanDBTask(), Config.CLEANDB_INITIAL_TIME, Config.CLEANDB_DELAY_TIME);
 		}
 	}
 	
@@ -98,7 +89,7 @@ public class AutoSaveManager
 		@Override
 		public void run()
 		{
-			LOG.info("Auto Save Manager: Saving players data...");
+			// LOG.info("Auto Save Manager: Saving players data...");
 			
 			final Collection<L2PcInstance> players = L2World.getInstance().getAllPlayers().values();
 			
@@ -121,7 +112,7 @@ public class AutoSaveManager
 					}
 				}
 			}
-			LOG.info("Auto Save Manager: Players data saved.");
+			// LOG.info("Auto Save Manager: Players data saved.");
 		}
 	}
 	
@@ -135,7 +126,7 @@ public class AutoSaveManager
 			final Collection<L2PcInstance> players = L2World.getInstance().getAllPlayers().values();
 			
 			for (final L2PcInstance player : players)
-			{			
+			{
 				if (player != null && !player.isInOfflineMode() && !player.isPhantom())
 				{
 					if (player.getClient() == null || player.isOnline() == 0)
@@ -154,7 +145,9 @@ public class AutoSaveManager
 						catch (Exception e)
 						{
 							if (Config.ENABLE_ALL_EXCEPTIONS)
+							{
 								e.printStackTrace();
+							}
 							
 							LOG.info("Auto Save Manager: Error saving player: " + player.getName(), e);
 						}
@@ -164,6 +157,7 @@ public class AutoSaveManager
 			LOG.info("Auto Save Manager: Players connections checked.");
 		}
 	}
+	
 	protected class AutoCleanDBTask implements Runnable
 	{
 		@Override
@@ -196,7 +190,7 @@ public class AutoSaveManager
 				CloseUtil.close(con);
 			}
 			
-			LOG.info("Auto Save Manager: "+erased + " cached skills cleaned from database.");
+			LOG.info("Auto Save Manager: " + erased + " cached skills cleaned from database.");
 		}
 	}
 	

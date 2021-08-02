@@ -26,7 +26,9 @@ COORD={
 11:[172185,-17602,-4901], #Disciple's Necropolis
 12:[ 83000,209213,-5439], #Saint's Necropolis
 13:[-19500, 13508,-4901], #Catacomb of Dark Omens
-14:[113865, 84543,-6541]  #Catacomb of the Forbidden Path
+14:[113865, 84543,-6541],  #Catacomb of the Forbidden Path
+15:[-79368, 111366,-4896], #Oracle of Dawn
+16:[-80168, 86534,-5156] #Oracle of Dusk
 }
 
 class Quest (JQuest) :
@@ -42,6 +44,11 @@ class Quest (JQuest) :
          if count:
             htmltext="5a.htm"
          st.set("count",str(count+1))
+         st.setState(STARTED)
+         st.set("cond","1")
+         st.getPlayer().teleToLocation(-114790,-180576,-6781)
+    elif event == "5b.htm" :
+      if id :
          st.setState(STARTED)
          st.set("cond","1")
          st.getPlayer().teleToLocation(-114790,-180576,-6781)
@@ -73,6 +80,30 @@ class Quest (JQuest) :
            id=str(npcId-31493)
            st.set("id",id)
            htmltext="4.htm"
+     elif npcId in range(31127,31132) : #Oracle of Dawn
+        if player.getLevel() < 20 :
+           st.exitQuest(1)
+           htmltext="1b.htm"
+        elif len(player.getAllActiveQuests()) > MAX_QUEST :
+           st.exitQuest(1)
+           htmltext="1c.htm"
+        else :
+           st.setState(CREATED)
+           id=str(15)
+           st.set("id",id)
+           htmltext="4a.htm"
+     elif npcId in range(31137,31142) : #Oracle of Dusk
+        if player.getLevel() < 20 :
+           st.exitQuest(1)
+           htmltext="1b.htm"
+        elif len(player.getAllActiveQuests()) > MAX_QUEST :
+           st.exitQuest(1)
+           htmltext="1c.htm"
+        else :
+           st.setState(CREATED)
+           id=str(16)
+           st.set("id",id)
+           htmltext="4a.htm"
      elif st.getState() == STARTED :
         if id :
            x,y,z=COORD[id]
@@ -97,4 +128,18 @@ for npcId in range(31494,31508):
     QUEST.addStartNpc(npcId)
 
 for npcId in range(31488,31494) :
+    QUEST.addTalkId(npcId)
+	
+for npcId in range(31127,31132):
+    QUEST.addTalkId(npcId)
+    QUEST.addStartNpc(npcId)
+	
+for npcId in range(31127,31132) :
+    QUEST.addTalkId(npcId)
+	
+for npcId in range(31137,31142):
+    QUEST.addTalkId(npcId)
+    QUEST.addStartNpc(npcId)
+	
+for npcId in range(31137,31142) :
     QUEST.addTalkId(npcId)

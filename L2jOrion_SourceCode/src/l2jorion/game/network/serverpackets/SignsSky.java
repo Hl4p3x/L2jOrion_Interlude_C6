@@ -22,32 +22,37 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 
-/**
- * Changes the sky color depending on the outcome of the Seven Signs competition. packet type id 0xf8 format: c h
- * @author Tempy
- */
 public class SignsSky extends L2GameServerPacket
 {
 	private static final String _S__F8_SignsSky = "[S] F8 SignsSky";
 	
+	public static final SignsSky REGULAR_SKY_PACKET = new SignsSky(256);
+	public static final SignsSky DUSK_SKY_PACKET = new SignsSky(257);
+	public static final SignsSky DAWN_SKY_PACKET = new SignsSky(258);
+	public static final SignsSky RED_SKY_PACKET = new SignsSky(259);
+	
 	private int _state = 0;
 	
-	public SignsSky()
+	public static SignsSky Sky()
 	{
 		final int compWinner = SevenSigns.getInstance().getCabalHighestScore();
 		
 		if (SevenSigns.getInstance().isSealValidationPeriod())
+		{
 			if (compWinner == SevenSigns.CABAL_DAWN)
 			{
-				_state = 2;
+				return DAWN_SKY_PACKET;
 			}
-			else if (compWinner == SevenSigns.CABAL_DUSK)
+			
+			if (compWinner == SevenSigns.CABAL_DUSK)
 			{
-				_state = 1;
+				return DUSK_SKY_PACKET;
 			}
+		}
+		return REGULAR_SKY_PACKET;
 	}
 	
-	public SignsSky(final int state)
+	public SignsSky(int state)
 	{
 		_state = state;
 	}
@@ -56,23 +61,9 @@ public class SignsSky extends L2GameServerPacket
 	protected final void writeImpl()
 	{
 		writeC(0xf8);
-		
-		if (_state == 2)
-		{
-			writeH(258);
-		}
-		else if (_state == 1)
-		{
-			writeH(257);
-			// else
-			// writeH(256);
-		}
+		writeH(_state);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

@@ -15,11 +15,13 @@
 package l2jorion.game.model.actor.instance;
 
 import l2jorion.Config;
+import l2jorion.game.enums.AchType;
 import l2jorion.game.managers.GrandBossManager;
 import l2jorion.game.managers.RaidBossPointsManager;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.spawn.L2Spawn;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.PlaySound;
 import l2jorion.game.network.serverpackets.SystemMessage;
@@ -36,7 +38,7 @@ public final class L2GrandBossInstance extends L2MonsterInstance
 		super(objectId, template);
 		setIsRaid(true);
 	}
-
+	
 	@Override
 	protected int getMaintenanceInterval()
 	{
@@ -47,7 +49,41 @@ public final class L2GrandBossInstance extends L2MonsterInstance
 	public boolean doDie(L2Character killer)
 	{
 		if (!super.doDie(killer))
+		{
 			return false;
+		}
+		
+		AchType type = null;
+		switch (getNpcId())
+		{
+			case 29019:
+			case 29066:
+			case 29067:
+			case 29068:
+				type = AchType.ANTHARAS;
+				break;
+			case 29001:
+				type = AchType.QUEEN_ANT;
+				break;
+			case 29006:
+				type = AchType.CORE;
+				break;
+			case 29014:
+				type = AchType.ORFEN;
+				break;
+			case 29022:
+				type = AchType.ZAKEN;
+				break;
+			case 29020:
+				type = AchType.BAIUM;
+				break;
+			case 29028:
+				type = AchType.VALAKAS;
+				break;
+			case 29047:
+				type = AchType.HALISHA;
+				break;
+		}
 		
 		L2PcInstance player = null;
 		
@@ -68,19 +104,29 @@ public final class L2GrandBossInstance extends L2MonsterInstance
 			
 			if (player.getParty() != null)
 			{
-				for(L2PcInstance member : player.getParty().getPartyMembers())
+				for (L2PcInstance member : player.getParty().getPartyMembers())
 				{
 					RaidBossPointsManager.addPoints(member, getNpcId(), (getLevel() / 2) + Rnd.get(-5, 5));
+					member.getAchievement().increase(AchType.GRANDBOSS);
+					if (type != null)
+					{
+						member.getAchievement().increase(type);
+					}
 				}
 			}
 			else
 			{
 				RaidBossPointsManager.addPoints(player, getNpcId(), (getLevel() / 2) + Rnd.get(-5, 5));
+				player.getAchievement().increase(AchType.GRANDBOSS);
+				if (type != null)
+				{
+					player.getAchievement().increase(type);
+				}
 			}
 		}
 		return true;
 	}
-
+	
 	@Override
 	public void onSpawn()
 	{
@@ -97,10 +143,9 @@ public final class L2GrandBossInstance extends L2MonsterInstance
 	{
 		_minionList.spawnMinions();
 		
-		_minionMaintainTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new Runnable()
+		if (_minionMaintainTask == null)
 		{
-			@Override
-			public void run()
+			_minionMaintainTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(() ->
 			{
 				L2Spawn bossSpawn = getSpawn();
 				
@@ -113,7 +158,7 @@ public final class L2GrandBossInstance extends L2MonsterInstance
 				
 				if (Config.RBS_SPECIFIC_LOCK_RAGE.get(bossSpawn.getNpcid()) != null && Config.RBS_SPECIFIC_LOCK_RAGE.get(bossSpawn.getNpcid()).intValue() == 1)
 				{
-					if (!isInsideZone(L2Character.ZONE_BOSS) && getSpawn() != null)
+					if (!isInsideZone(ZoneId.ZONE_BOSS) && getSpawn() != null)
 					{
 						teleToLocation(getSpawn().getLocx(), getSpawn().getLocy(), getSpawn().getLocz(), false);
 					}
@@ -130,8 +175,8 @@ public final class L2GrandBossInstance extends L2MonsterInstance
 				}
 				
 				_minionList.maintainMinions();
-			}
-		}, 60000, getMaintenanceInterval());
+			}, 60000, getMaintenanceInterval());
+		}
 	}
 	
 	public void healFull()

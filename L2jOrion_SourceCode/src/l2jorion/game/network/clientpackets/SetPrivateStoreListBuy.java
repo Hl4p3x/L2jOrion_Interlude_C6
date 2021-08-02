@@ -19,9 +19,9 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
-import l2jorion.game.model.L2Character;
 import l2jorion.game.model.TradeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.PrivateStoreManageListBuy;
@@ -32,14 +32,12 @@ public final class SetPrivateStoreListBuy extends L2GameClientPacket
 {
 	private int _count;
 	private int[] _items; // count * 3
-
-
+	
 	@Override
 	protected void readImpl()
 	{
 		_count = readD();
-
-
+		
 		if (_count <= 0 || _count * 12 > _buf.remaining() || _count > Config.MAX_ITEM_IN_PACKET)
 		{
 			_count = 0;
@@ -54,7 +52,7 @@ public final class SetPrivateStoreListBuy extends L2GameClientPacket
 			int itemId = readD();
 			_items[x * 4 + 0] = itemId;
 			_items[(x * 4 + 3)] = readH();
-
+			
 			readH();
 			long cnt = readD();
 			
@@ -76,31 +74,20 @@ public final class SetPrivateStoreListBuy extends L2GameClientPacket
 	{
 		L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
+		
 		if (player.isSubmitingPin())
 		{
 			player.sendMessage("Unable to do any action while PIN is not submitted");
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		if (!player.getAccessLevel().allowTransaction())
 		{
-			player.sendMessage("Transactions are disable for your Access Level");
-			player.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-		
-		/*if (player.isInsideZone(L2Character.ZONE_MULTIFUNCTION) && !L2MultiFunctionZone.store_zone)
-		{
-			player.sendPacket(new PrivateStoreManageListBuy(player));
-			player.sendMessage("You cannot start store while inside PvP zone.");
-			return;
-		}*/
-		
-		if (player.isTradeDisabled())
-		{
-			player.sendMessage("Trade is disabled here. Try in other place.");
-			player.sendPacket(new PrivateStoreManageListBuy(player));
+			player.sendPacket(SystemMessageId.YOU_ARE_NOT_AUTHORIZED_TO_DO_THAT);
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
@@ -113,10 +100,10 @@ public final class SetPrivateStoreListBuy extends L2GameClientPacket
 			return;
 		}
 		
-		if (player.isInsideZone(L2Character.ZONE_NOSTORE))
+		if (player.isInsideZone(ZoneId.ZONE_NOSTORE))
 		{
 			player.sendPacket(new PrivateStoreManageListBuy(player));
-			player.sendMessage("Trade is disable here. Try in another place.");
+			player.sendPacket(SystemMessageId.NO_PRIVATE_STORE_HERE);
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
@@ -124,23 +111,23 @@ public final class SetPrivateStoreListBuy extends L2GameClientPacket
 		if (player.getLevel() <= Config.MIN_LEVEL_FOR_TRADE)
 		{
 			player.sendPacket(new PrivateStoreManageListBuy(player));
-			player.sendMessage("This action requires minimum "+(Config.MIN_LEVEL_FOR_TRADE + 1)+" level.");
+			player.sendMessage("This action requires minimum " + (Config.MIN_LEVEL_FOR_TRADE + 1) + " level.");
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
+		
 		TradeList tradeList = player.getBuyList();
 		tradeList.clear();
-
+		
 		int cost = 0;
-
+		
 		for (int i = 0; i < _count; i++)
 		{
 			int itemId = _items[i * 4 + 0];
 			int count = _items[i * 4 + 1];
 			int price = _items[i * 4 + 2];
 			int enchant = _items[i * 4 + 3];
-
+			
 			cost += count * price;
 			if (cost > Integer.MAX_VALUE)
 			{
@@ -192,5 +179,4 @@ public final class SetPrivateStoreListBuy extends L2GameClientPacket
 	{
 		return "[C] 91 SetPrivateStoreListBuy";
 	}
-	
 }

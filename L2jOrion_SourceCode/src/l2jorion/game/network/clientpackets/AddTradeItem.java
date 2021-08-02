@@ -16,9 +16,6 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.TradeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
@@ -28,6 +25,8 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.network.serverpackets.TradeOtherAdd;
 import l2jorion.game.network.serverpackets.TradeOwnAdd;
 import l2jorion.game.network.serverpackets.TradeUpdate;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class AddTradeItem extends L2GameClientPacket
 {
@@ -50,8 +49,10 @@ public final class AddTradeItem extends L2GameClientPacket
 	protected void runImpl()
 	{
 		final L2PcInstance player = getClient().getActiveChar();
-		if (player == null) // Player null
+		if (player == null)
+		{
 			return;
+		}
 		
 		final TradeList trade = player.getActiveTradeList();
 		if (trade == null) // Trade null
@@ -66,7 +67,9 @@ public final class AddTradeItem extends L2GameClientPacket
 		{
 			// Trade partner not found, cancel trade
 			if (trade.getPartner() != null)
+			{
 				LOG.warn("Character:" + player.getName() + " requested invalid trade object: " + _objectId);
+			}
 			
 			player.sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_NOT_FOUND_IN_THE_GAME));
 			player.getClient().sendPacket(ActionFailed.STATIC_PACKET);
@@ -101,10 +104,14 @@ public final class AddTradeItem extends L2GameClientPacket
 		
 		final TradeList.TradeItem item = trade.addItem(_objectId, _count);
 		if (item == null)
+		{
 			return;
+		}
 		
 		if (item.isAugmented())
+		{
 			return;
+		}
 		
 		player.sendPacket(new TradeOwnAdd(item));
 		player.sendPacket(new TradeUpdate(trade, player));

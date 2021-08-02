@@ -24,7 +24,6 @@ import l2jorion.game.skills.Env;
 
 public class ConditionPlayerMp extends Condition
 {
-	
 	private final int _mp;
 	
 	public ConditionPlayerMp(final int mp)

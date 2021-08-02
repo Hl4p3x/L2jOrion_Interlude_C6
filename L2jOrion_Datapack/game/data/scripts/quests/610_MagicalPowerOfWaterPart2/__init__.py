@@ -1,4 +1,3 @@
-#Made by Emperorc
 import sys
 from java.lang import System
 from l2jorion import Config
@@ -48,7 +47,7 @@ class Quest (JQuest) :
 
  def onAdvEvent (self, event, npc, player) :
    if event == "Soul of Water Ashutar has despawned" :
-       npc.reduceCurrentHp(9999999,npc,None)
+       npc.reduceCurrentHp(9999999,npc,False)
        self.addSpawn(31560,105452,-36775,-1050,34000, False, 0)
        AutoChat(npc,"The fetter strength is weaken Your consciousness has been defeated!")
        return

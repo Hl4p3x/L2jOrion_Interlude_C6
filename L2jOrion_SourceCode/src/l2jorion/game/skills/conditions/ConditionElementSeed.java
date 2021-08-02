@@ -23,9 +23,6 @@ package l2jorion.game.skills.conditions;
 import l2jorion.game.skills.Env;
 import l2jorion.game.skills.effects.EffectSeed;
 
-/**
- * @author Advi
- */
 public class ConditionElementSeed extends Condition
 {
 	private static int[] seedSkills =
@@ -39,7 +36,6 @@ public class ConditionElementSeed extends Condition
 	public ConditionElementSeed(final int[] seeds)
 	{
 		_requiredSeeds = seeds;
-		// if (Config.DEVELOPER) LOG.info("Required seeds: " + _requiredSeeds[0] + ", " + _requiredSeeds[1] + ", " + _requiredSeeds[2]+ ", " + _requiredSeeds[3]+ ", " + _requiredSeeds[4]);
 	}
 	
 	ConditionElementSeed(final int fire, final int water, final int wind, final int various, final int any)
@@ -64,10 +60,11 @@ public class ConditionElementSeed extends Condition
 				Seeds[i] -= _requiredSeeds[i];
 			}
 			else
+			{
 				return false;
+			}
 		}
 		
-		// if (Config.DEVELOPER) LOG.info("Seeds: " + Seeds[0] + ", " + Seeds[1] + ", " + Seeds[2]);
 		if (_requiredSeeds[3] > 0)
 		{
 			int count = 0;
@@ -80,7 +77,9 @@ public class ConditionElementSeed extends Condition
 				}
 			}
 			if (count < _requiredSeeds[3])
+			{
 				return false;
+			}
 		}
 		
 		if (_requiredSeeds[4] > 0)
@@ -91,7 +90,9 @@ public class ConditionElementSeed extends Condition
 				count += Seeds[i];
 			}
 			if (count < _requiredSeeds[4])
+			{
 				return false;
+			}
 		}
 		
 		return true;

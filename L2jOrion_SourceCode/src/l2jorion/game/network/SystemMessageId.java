@@ -21,10 +21,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public final class SystemMessageId
 {
@@ -258,7 +257,7 @@ public final class SystemMessageId
 	 * ID: 37<br>
 	 * Message: $s1 hit you for $s2 damage.
 	 */
-	//public static final SystemMessageId S1_GAVE_YOU_S2_DMG2;
+	// public static final SystemMessageId S1_GAVE_YOU_S2_DMG2;
 	
 	/**
 	 * ID: 41<br>
@@ -676,7 +675,7 @@ public final class SystemMessageId
 	
 	/**
 	 * ID: 110<br>
-	 * Message: $s1 $s2's effect can be felt.
+	 * The effects of $s1 flow through you
 	 */
 	public static final SystemMessageId YOU_FEEL_S1_EFFECT;
 	
@@ -2106,7 +2105,7 @@ public final class SystemMessageId
 	 * ID: 357<br>
 	 * Message: It has already been spoiled.
 	 */
-	public static final SystemMessageId ALREDAY_SPOILED;
+	public static final SystemMessageId ALREADY_SPOILED;
 	
 	/**
 	 * ID: 358<br>
@@ -11823,6 +11822,8 @@ public final class SystemMessageId
 	public static final SystemMessageId S1_HUNTED_PLAYER_S2_IN_S3;
 	public static final SystemMessageId S1_ASSASSINATED_PLAYER_S2_IN_S3;
 	
+	public static final SystemMessageId SUBSCRIPTION_MSG;
+	
 	/**
 	 * Array containing all SystemMessageIds<br>
 	 * Important: Always initialize with a length of the highest SystemMessageId + 1!!!
@@ -11868,7 +11869,7 @@ public final class SystemMessageId
 		WELCOME_TO_LINEAGE = new SystemMessageId(34);
 		YOU_DID_S1_DMG = new SystemMessageId(35);
 		S1_GAVE_YOU_S2_DMG = new SystemMessageId(36);
-		//S1_GAVE_YOU_S2_DMG2 = new SystemMessageId(37);
+		// S1_GAVE_YOU_S2_DMG2 = new SystemMessageId(37);
 		GETTING_READY_TO_SHOOT_AN_ARROW = new SystemMessageId(41);
 		AVOIDED_S1S_ATTACK = new SystemMessageId(42);
 		MISSED_TARGET = new SystemMessageId(43);
@@ -12175,7 +12176,7 @@ public final class SystemMessageId
 		CANCEL_ENCHANT = new SystemMessageId(354);
 		INAPPROPRIATE_ENCHANT_CONDITION = new SystemMessageId(355);
 		REJECT_RESURRECTION = new SystemMessageId(356);
-		ALREDAY_SPOILED = new SystemMessageId(357);
+		ALREADY_SPOILED = new SystemMessageId(357);
 		S1_HOURS_UNTIL_SIEGE_CONCLUSION = new SystemMessageId(358);
 		S1_MINUTES_UNTIL_SIEGE_CONCLUSION = new SystemMessageId(359);
 		CASTLE_SIEGE_S1_SECONDS_LEFT = new SystemMessageId(360);
@@ -13799,8 +13800,10 @@ public final class SystemMessageId
 		CRITICAL_HIT2 = new SystemMessageId(2157);
 		CRITICAL_HIT_MAGIC2 = new SystemMessageId(2158);
 		PREMIUM_MESSAGE = new SystemMessageId(2159);
-		S1_HUNTED_PLAYER_S2_IN_S3  = new SystemMessageId(2160);
+		S1_HUNTED_PLAYER_S2_IN_S3 = new SystemMessageId(2160);
 		S1_ASSASSINATED_PLAYER_S2_IN_S3 = new SystemMessageId(2161);
+		
+		SUBSCRIPTION_MSG = new SystemMessageId(2162);
 		
 		buildFastLookupTable();
 	}
@@ -13869,7 +13872,9 @@ public final class SystemMessageId
 	private static final SystemMessageId getSystemMessageIdInternal(final int id)
 	{
 		if (id < 0 || id >= VALUES.length)
+		{
 			return null;
+		}
 		
 		return VALUES[id];
 	}
@@ -13919,13 +13924,19 @@ public final class SystemMessageId
 	public final void setParamCount(final int params)
 	{
 		if (params < 0)
+		{
 			throw new IllegalArgumentException("Invalid negative param count: " + params);
+		}
 		
 		if (params > 10)
+		{
 			throw new IllegalArgumentException("Maximum param count exceeded: " + params);
+		}
 		
 		if (params != 0)
+		{
 			_staticSystemMessage = null;
+		}
 		
 		_params = (byte) params;
 	}

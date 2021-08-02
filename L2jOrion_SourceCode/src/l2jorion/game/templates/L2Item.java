@@ -42,6 +42,7 @@ import l2jorion.util.database.L2DatabaseFactory;
 public abstract class L2Item
 {
 	private static Map<Integer, String> _Icons = null;
+	
 	public static final int TYPE1_WEAPON_RING_EARRING_NECKLACE = 0;
 	public static final int TYPE1_SHIELD_ARMOR = 1;
 	public static final int TYPE1_ITEM_QUESTITEM_ADENA = 4;
@@ -81,13 +82,14 @@ public abstract class L2Item
 	public static final int SLOT_BABYPET = 0x400000;
 	public static final int SLOT_FACE = 0x040000;
 	public static final int SLOT_DHAIR = 0x080000;
+	public static final int SLOT_ALLDRESS = 0x020000;
 	
-	public static final int CRYSTAL_NONE = 0x00; // ??
-	public static final int CRYSTAL_D = 0x01; // ??
-	public static final int CRYSTAL_C = 0x02; // ??
-	public static final int CRYSTAL_B = 0x03; // ??
-	public static final int CRYSTAL_A = 0x04; // ??
-	public static final int CRYSTAL_S = 0x05; // ??
+	public static final int CRYSTAL_NONE = 0x00;
+	public static final int CRYSTAL_D = 0x01;
+	public static final int CRYSTAL_C = 0x02;
+	public static final int CRYSTAL_B = 0x03;
+	public static final int CRYSTAL_A = 0x04;
+	public static final int CRYSTAL_S = 0x05;
 	
 	private static final int[] crystalItemId =
 	{
@@ -140,6 +142,9 @@ public abstract class L2Item
 	protected EffectTemplate[] _effectTemplates;
 	protected L2Skill[] _skills;
 	
+	private boolean _isfakeArmor;
+	private boolean _isfakeWeapon;
+	
 	private static final Func[] _emptyFunctionSet = new Func[0];
 	protected static final L2Effect[] _emptyEffectSet = new L2Effect[0];
 	
@@ -147,7 +152,18 @@ public abstract class L2Item
 	 * Constructor of the L2Item that fill class variables.<BR>
 	 * <BR>
 	 * <U><I>Variables filled :</I></U><BR>
-	 * <LI>type</LI> <LI>_itemId</LI> <LI>_name</LI> <LI>_type1 & _type2</LI> <LI>_weight</LI> <LI>_crystallizable</LI> <LI>_stackable</LI> <LI>_crystalType & _crystlaCount</LI> <LI>_duration</LI> <LI>_bodypart</LI> <LI>_referencePrice</LI> <LI>_sellable</LI>
+	 * <LI>type</LI>
+	 * <LI>_itemId</LI>
+	 * <LI>_name</LI>
+	 * <LI>_type1 & _type2</LI>
+	 * <LI>_weight</LI>
+	 * <LI>_crystallizable</LI>
+	 * <LI>_stackable</LI>
+	 * <LI>_crystalType & _crystlaCount</LI>
+	 * <LI>_duration</LI>
+	 * <LI>_bodypart</LI>
+	 * <LI>_referencePrice</LI>
+	 * <LI>_sellable</LI>
 	 * @param type : Enum designating the type of the item
 	 * @param set : StatsSet corresponding to a set of couples (key,value) for description of the item
 	 */
@@ -301,7 +317,9 @@ public abstract class L2Item
 			}
 		}
 		else
+		{
 			return _crystalCount;
+		}
 	}
 	
 	/**
@@ -444,7 +462,9 @@ public abstract class L2Item
 	public Func[] getStatFuncs(final L2ItemInstance instance, final L2Character player)
 	{
 		if (_funcTemplates == null)
+		{
 			return _emptyFunctionSet;
+		}
 		final List<Func> funcs = new FastList<>();
 		for (final FuncTemplate t : _funcTemplates)
 		{
@@ -459,7 +479,9 @@ public abstract class L2Item
 			}
 		}
 		if (funcs.size() == 0)
+		{
 			return _emptyFunctionSet;
+		}
 		return funcs.toArray(new Func[funcs.size()]);
 	}
 	
@@ -472,7 +494,9 @@ public abstract class L2Item
 	public L2Effect[] getEffects(final L2ItemInstance instance, final L2Character player)
 	{
 		if (_effectTemplates == null)
+		{
 			return _emptyEffectSet;
+		}
 		final List<L2Effect> effects = new FastList<>();
 		for (final EffectTemplate et : _effectTemplates)
 		{
@@ -487,7 +511,9 @@ public abstract class L2Item
 			}
 		}
 		if (effects.size() == 0)
+		{
 			return _emptyEffectSet;
+		}
 		return effects.toArray(new L2Effect[effects.size()]);
 	}
 	
@@ -500,7 +526,10 @@ public abstract class L2Item
 	public L2Effect[] getSkillEffects(final L2Character caster, final L2Character target)
 	{
 		if (_skills == null)
+		{
 			return _emptyEffectSet;
+		}
+		
 		final List<L2Effect> effects = new FastList<>();
 		
 		for (final L2Skill skill : _skills)
@@ -514,13 +543,17 @@ public abstract class L2Item
 			{
 				target.removeEffect(target.getFirstEffect(skill.getId()));
 			}
+			
 			for (final L2Effect e : skill.getEffects(caster, target, false, false, false))
 			{
 				effects.add(e);
 			}
 		}
+		
 		if (effects.size() == 0)
+		{
 			return _emptyEffectSet;
+		}
 		return effects.toArray(new L2Effect[effects.size()]);
 	}
 	
@@ -639,7 +672,7 @@ public abstract class L2Item
 			PreparedStatement statement = con.prepareStatement("Select * From market_icons");
 			ResultSet rset = statement.executeQuery();
 			
-			while(rset.next())
+			while (rset.next())
 			{
 				int itemId = rset.getInt("itemId");
 				String itemIcon = rset.getString("itemIcon");
@@ -649,9 +682,9 @@ public abstract class L2Item
 			rset.close();
 			statement.close();
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-		
+			
 		}
 		finally
 		{
@@ -662,8 +695,26 @@ public abstract class L2Item
 					con.close();
 				}
 			}
-			catch (Exception e) {
+			catch (Exception e)
+			{
 			}
 		}
+	}
+	
+	public boolean isFakeArmor()
+	{
+		if (Config.FAKE_ARMORS)
+		{
+			if (Config.LIST_FAKE_ARMOR_ITEMS.contains(getItemId()))
+			{
+				return true;
+			}
+		}
+		return _isfakeArmor;
+	}
+	
+	public boolean isFakeWeapon()
+	{
+		return _isfakeWeapon;
 	}
 }

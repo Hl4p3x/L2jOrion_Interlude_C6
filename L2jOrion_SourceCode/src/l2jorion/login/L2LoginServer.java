@@ -24,10 +24,8 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
-import java.sql.SQLException;
-import java.util.logging.LogManager;
-
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 import l2jorion.Config;
@@ -37,6 +35,7 @@ import l2jorion.game.datatables.GameServerTable;
 import l2jorion.mmocore.SelectorConfig;
 import l2jorion.mmocore.SelectorThread;
 import l2jorion.status.Status;
+import l2jorion.util.Util;
 import l2jorion.util.database.L2DatabaseFactory;
 
 public class L2LoginServer
@@ -84,7 +83,7 @@ public class L2LoginServer
 		{
 			L2DatabaseFactory.getInstance();
 		}
-		catch(SQLException e)
+		catch (Exception e)
 		{
 			LOG.severe("FATAL: Failed initializing database. Reason: " + e.getMessage());
 			
@@ -100,56 +99,56 @@ public class L2LoginServer
 		{
 			LoginController.load();
 		}
-		catch(GeneralSecurityException e)
+		catch (GeneralSecurityException e)
 		{
 			LOG.log(Level.SEVERE, "FATAL: Failed initializing LoginController. Reason: " + e.getMessage());
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
 			{
 				e.printStackTrace();
 			}
 			
 			System.exit(1);
 		}
-
+		
 		try
 		{
 			GameServerTable.load();
 		}
-		catch(GeneralSecurityException e)
+		catch (GeneralSecurityException e)
 		{
 			LOG.log(Level.SEVERE, "FATAL: Failed to load GameServerTable. Reason: " + e.getMessage());
 			
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
 			{
 				e.printStackTrace();
 			}
 			
 			System.exit(1);
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			LOG.log(Level.SEVERE, "FATAL: Failed to load GameServerTable. Reason: " + e.getMessage());
 			
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
 			{
 				e.printStackTrace();
 			}
 			
 			System.exit(1);
 		}
-
+		
 		InetAddress bindAddress = null;
-		if(!Config.LOGIN_BIND_ADDRESS.equals("*"))
+		if (!Config.LOGIN_BIND_ADDRESS.equals("*"))
 		{
 			try
 			{
 				bindAddress = InetAddress.getByName(Config.LOGIN_BIND_ADDRESS);
 			}
-			catch(UnknownHostException e1)
+			catch (UnknownHostException e1)
 			{
 				LOG.log(Level.SEVERE, "WARNING: The LoginServer bind address is invalid, using all avaliable IPs. Reason: " + e1.getMessage());
 				
-				if(Config.ENABLE_ALL_EXCEPTIONS)
+				if (Config.ENABLE_ALL_EXCEPTIONS)
 				{
 					e1.printStackTrace();
 				}
@@ -182,7 +181,7 @@ public class L2LoginServer
 		{
 			_selectorThread = new SelectorThread<>(sc, sh, lph, sh, sh);
 		}
-		catch(IOException e)
+		catch (IOException e)
 		{
 			LOG.log(Level.SEVERE, "FATAL: Failed to open Selector. Reason: " + e.getMessage());
 			
@@ -198,13 +197,14 @@ public class L2LoginServer
 		{
 			_gameServerListener = new GameServerListener();
 			_gameServerListener.start();
+			
 			LOG.info("Listening for GameServers on " + Config.GAME_SERVER_LOGIN_HOST + ":" + Config.GAME_SERVER_LOGIN_PORT);
 		}
-		catch(IOException e)
+		catch (IOException e)
 		{
 			LOG.log(Level.SEVERE, "FATAL: Failed to start the Game Server Listener. Reason: " + e.getMessage());
 			
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
 			{
 				e.printStackTrace();
 			}
@@ -219,7 +219,7 @@ public class L2LoginServer
 			LOG.info("Login Server ready on " + (bindAddress == null ? "*" : bindAddress.getHostAddress()) + ":" + Config.PORT_LOGIN);
 		}
 		
-		catch(IOException e)
+		catch (IOException e)
 		{
 			LOG.log(Level.SEVERE, "FATAL: Failed to open server socket. Reason: " + e.getMessage());
 			
@@ -231,8 +231,10 @@ public class L2LoginServer
 			System.exit(1);
 		}
 		
-		//load bannedIps
+		// load bannedIps
 		Config.loadBanFile();
+		
+		Util.printSection("Waiting for game server");
 	}
 	
 	public GameServerListener getGameServerListener()

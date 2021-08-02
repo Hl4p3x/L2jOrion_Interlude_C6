@@ -19,22 +19,12 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Format: ch d.
- * @author KenM
- */
 public class ExDuelReady extends L2GameServerPacket
 {
-	/** The Constant _S__FE_4C_EXDUELREADY. */
 	private static final String _S__FE_4C_EXDUELREADY = "[S] FE:4C ExDuelReady";
 	
-	/** The _unk1. */
 	private final int _unk1;
 	
-	/**
-	 * Instantiates a new ex duel ready.
-	 * @param unk1 the unk1
-	 */
 	public ExDuelReady(final int unk1)
 	{
 		_unk1 = unk1;
@@ -49,10 +39,6 @@ public class ExDuelReady extends L2GameServerPacket
 		writeD(_unk1);
 	}
 	
-	/**
-	 * Gets the type.
-	 * @return the type
-	 */
 	@Override
 	public String getType()
 	{

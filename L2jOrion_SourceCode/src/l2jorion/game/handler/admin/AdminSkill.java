@@ -35,14 +35,9 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.PledgeSkillList;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-/**
- * This class handles following admin commands: - show_skills - remove_skills - skill_list - skill_index - add_skill - remove_skill - get_skills - reset_skills - give_all_skills - remove_all_skills - add_clan_skills
- * @version $Revision: 1.2.4.7 $ $Date: 2005/04/11 10:06:02 $
- */
 public class AdminSkill implements IAdminCommandHandler
 {
 	private static Logger LOG = LoggerFactory.getLogger(AdminSkill.class);
@@ -67,11 +62,6 @@ public class AdminSkill implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		if (command.equals("admin_show_skills"))
 		{
 			showMainPage(activeChar);
@@ -82,12 +72,13 @@ public class AdminSkill implements IAdminCommandHandler
 			{
 				String val = command.substring(20);
 				removeSkillsPage(activeChar, Integer.parseInt(val));
-				val = null;
 			}
 			catch (final StringIndexOutOfBoundsException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		else if (command.startsWith("admin_skill_list"))
@@ -105,7 +96,9 @@ public class AdminSkill implements IAdminCommandHandler
 			catch (final StringIndexOutOfBoundsException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 		}
 		else if (command.startsWith("admin_add_skill"))
@@ -124,7 +117,9 @@ public class AdminSkill implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Usage: //add_skill <skill_id> <level>");
 			}
@@ -147,7 +142,9 @@ public class AdminSkill implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Usage: //remove_skill <skill_id>");
 			}
@@ -204,7 +201,9 @@ public class AdminSkill implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Usage: //add_clan_skill <skill_id> <level>");
 			}
@@ -511,7 +510,9 @@ public class AdminSkill implements IAdminCommandHandler
 		if (target instanceof L2PcInstance)
 		{
 			if (target == activeChar || (target != activeChar && activeChar.getAccessLevel().getLevel() < 3))
+			{
 				player = (L2PcInstance) target;
+			}
 			else
 			{
 				showMainPage(activeChar);
@@ -552,7 +553,9 @@ public class AdminSkill implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 			
 			if (skill != null)

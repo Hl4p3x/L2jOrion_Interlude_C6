@@ -20,10 +20,6 @@
  */
 package l2jorion.game.model;
 
-/**
- * Used to Store data sent to Client for Character Selection screen.
- * @version $Revision: 1.2.2.2.2.4 $ $Date: 2005/03/27 15:29:33 $
- */
 public class CharSelectInfoPackage
 {
 	private String _name;
@@ -50,11 +46,9 @@ public class CharSelectInfoPackage
 	private int _karma = 0;
 	private int _augmentationId = 0;
 	private int _accessLevel;
+	private int _fakeArmorObjectId = 0;
+	private int _fakeArmorItemId = 0;
 	
-	/**
-	 * @param objectId
-	 * @param name
-	 */
 	public CharSelectInfoPackage(final int objectId, final String name)
 	{
 		setObjectId(objectId);
@@ -275,7 +269,9 @@ public class CharSelectInfoPackage
 	public int getEnchantEffect()
 	{
 		if (_paperdoll[Inventory.PAPERDOLL_RHAND][2] > 0)
+		{
 			return _paperdoll[Inventory.PAPERDOLL_RHAND][2];
+		}
 		
 		return _paperdoll[Inventory.PAPERDOLL_LRHAND][2];
 	}
@@ -308,5 +304,25 @@ public class CharSelectInfoPackage
 	public void setAccessLevel(final int accessLevel)
 	{
 		_accessLevel = accessLevel;
+	}
+	
+	public int getFakeArmorObjectId()
+	{
+		return _fakeArmorObjectId;
+	}
+	
+	public void setFakeArmorObjectId(int objectId)
+	{
+		_fakeArmorObjectId = objectId;
+	}
+	
+	public int getFakeArmorItemId()
+	{
+		return _fakeArmorItemId;
+	}
+	
+	public void setFakeArmorItemId(int itemId)
+	{
+		_fakeArmorItemId = itemId;
 	}
 }

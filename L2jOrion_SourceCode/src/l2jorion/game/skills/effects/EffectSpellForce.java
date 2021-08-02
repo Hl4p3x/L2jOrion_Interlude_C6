@@ -21,9 +21,6 @@ package l2jorion.game.skills.effects;
 
 import l2jorion.game.skills.Env;
 
-/**
- * @author kombat
- */
 public final class EffectSpellForce extends EffectForce
 {
 	public EffectSpellForce(final Env env, final EffectTemplate template)

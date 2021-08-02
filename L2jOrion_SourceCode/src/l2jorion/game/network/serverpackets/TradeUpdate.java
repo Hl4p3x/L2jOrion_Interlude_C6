@@ -25,12 +25,10 @@ import l2jorion.game.model.TradeList.TradeItem;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author Beetle
- */
 public class TradeUpdate extends L2GameServerPacket
 {
 	private static final String _S__74_TRADEUPDATE = "[S] 74 TradeUpdate";
+	
 	private final L2ItemInstance[] _items;
 	private final TradeItem[] _trade_items;
 	
@@ -43,15 +41,13 @@ public class TradeUpdate extends L2GameServerPacket
 	private int getItemCount(final int objectId)
 	{
 		for (final L2ItemInstance item : _items)
+		{
 			if (item.getObjectId() == objectId)
+			{
 				return item.getCount();
+			}
+		}
 		return 0;
-	}
-	
-	@Override
-	public String getType()
-	{
-		return _S__74_TRADEUPDATE;
 	}
 	
 	@Override
@@ -81,5 +77,11 @@ public class TradeUpdate extends L2GameServerPacket
 			writeH(0x00); // ?
 			writeH(0x00);
 		}
+	}
+	
+	@Override
+	public String getType()
+	{
+		return _S__74_TRADEUPDATE;
 	}
 }

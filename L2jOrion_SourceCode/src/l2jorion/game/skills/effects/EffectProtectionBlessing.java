@@ -23,9 +23,6 @@ import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.skills.Env;
 
-/**
- * @author eX1steam, L2jOrion
- */
 public class EffectProtectionBlessing extends L2Effect
 {
 	public EffectProtectionBlessing(final Env env, final EffectTemplate template)
@@ -39,7 +36,6 @@ public class EffectProtectionBlessing extends L2Effect
 		return EffectType.PROTECTION_BLESSING;
 	}
 	
-	/** Notify started */
 	@Override
 	public void onStart()
 	{
@@ -49,7 +45,6 @@ public class EffectProtectionBlessing extends L2Effect
 		}
 	}
 	
-	/** Notify exited */
 	@Override
 	public void onExit()
 	{
@@ -62,7 +57,6 @@ public class EffectProtectionBlessing extends L2Effect
 	@Override
 	public boolean onActionTime()
 	{
-		// just stop this effect
 		return false;
 	}
 }

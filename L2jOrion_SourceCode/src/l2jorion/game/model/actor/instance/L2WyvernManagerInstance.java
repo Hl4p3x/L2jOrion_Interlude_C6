@@ -21,9 +21,10 @@ package l2jorion.game.model.actor.instance;
 
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.datatables.SkillTable;
+import l2jorion.game.managers.CHSiegeManager;
 import l2jorion.game.managers.ClanHallManager;
-import l2jorion.game.model.L2Character;
 import l2jorion.game.model.entity.ClanHall;
+import l2jorion.game.model.entity.siege.hallsiege.SiegableHall;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToPawn;
@@ -31,36 +32,17 @@ import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.Ride;
 import l2jorion.game.network.serverpackets.SystemMessage;
-import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.game.util.Broadcast;
 
-/**
- * The Class L2WyvernManagerInstance.
- */
 public class L2WyvernManagerInstance extends L2CastleChamberlainInstance
 {
-	
-	/** The Constant COND_CLAN_OWNER. */
-	protected static final int COND_CLAN_OWNER = 3;
-	
-	/** The _clan hall id. */
 	private int _clanHallId = -1;
 	
-	/**
-	 * Instantiates a new l2 wyvern manager instance.
-	 * @param objectId the object id
-	 * @param template the template
-	 */
 	public L2WyvernManagerInstance(final int objectId, final L2NpcTemplate template)
 	{
 		super(objectId, template);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.instance.L2CastleChamberlainInstance#onBypassFeedback(l2jorion.game.model.actor.instance.L2PcInstance, java.lang.String)
-	 */
 	@Override
 	public void onBypassFeedback(final L2PcInstance player, final String command)
 	{
@@ -76,7 +58,7 @@ public class L2WyvernManagerInstance extends L2CastleChamberlainInstance
 				if (player.isMounted())
 				{
 					final SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
-					sm.addString("You Already Have a Pet or Are Mounted.");
+					sm.addString("You already have a pet or are mounted.");
 					player.sendPacket(sm);
 				}
 				else
@@ -100,7 +82,9 @@ public class L2WyvernManagerInstance extends L2CastleChamberlainInstance
 					else
 					{
 						if (!player.disarmWeapons())
+						{
 							return;
+						}
 						player.getPet().unSummon(player);
 						player.getInventory().destroyItemByItemId("Wyvern", 1460, 10, player, player.getTarget());
 						final Ride mount = new Ride(player.getObjectId(), Ride.ACTION_MOUNT, 12621);
@@ -134,17 +118,14 @@ public class L2WyvernManagerInstance extends L2CastleChamberlainInstance
 		}
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.instance.L2CastleChamberlainInstance#onAction(l2jorion.game.model.actor.instance.L2PcInstance)
-	 */
 	@Override
 	public void onAction(final L2PcInstance player)
 	{
 		if (!canTarget(player))
+		{
 			return;
+		}
 		
-		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
 		{
 			// Set the target of the L2PcInstance player
@@ -153,10 +134,6 @@ public class L2WyvernManagerInstance extends L2CastleChamberlainInstance
 			// Send a Server->Client packet MyTargetSelected to the L2PcInstance player
 			MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
 			player.sendPacket(my);
-			my = null;
-			
-			// Send a Server->Client packet ValidateLocation to correct the L2NpcInstance position and heading on the client
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
@@ -169,9 +146,7 @@ public class L2WyvernManagerInstance extends L2CastleChamberlainInstance
 			else
 			{
 				// Like L2OFF player must rotate to the Npc
-				MoveToPawn sp = new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE);
-				player.sendPacket(sp);
-				Broadcast.toKnownPlayers(player, sp);
+				player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
 				
 				showMessageWindow(player);
 			}
@@ -179,18 +154,53 @@ public class L2WyvernManagerInstance extends L2CastleChamberlainInstance
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
-	/**
-	 * Show message window.
-	 * @param player the player
-	 */
+	@Override
+	protected int validateCondition(final L2PcInstance player)
+	{
+		if (player.getClan() != null)
+		{
+			if (getClanHall() != null && getClanHall().getOwnerId() == player.getClanId())
+			{
+				SiegableHall hall = (SiegableHall) getClanHall();
+				if (hall != null && hall.isInSiege())
+				{
+					return COND_BUSY_BECAUSE_OF_SIEGE;
+				}
+				
+				if (player.isClanLeader())
+				{
+					return COND_OWNER;
+				}
+				
+				return COND_CLAN_MEMBER;
+			}
+			else if (getCastle() != null && getCastle().getCastleId() > 0)
+			{
+				if (getCastle().getSiege().getIsInProgress())
+				{
+					return COND_BUSY_BECAUSE_OF_SIEGE;
+				}
+				
+				if (getCastle().getOwnerId() == player.getClanId())
+				{
+					if (player.isClanLeader())
+					{
+						return COND_OWNER;
+					}
+					
+					return COND_CLAN_MEMBER;
+				}
+			}
+		}
+		return COND_ALL_FALSE;
+	}
+	
 	private void showMessageWindow(final L2PcInstance player)
 	{
 		player.sendPacket(ActionFailed.STATIC_PACKET);
+		
 		String filename = "data/html/wyvernmanager/wyvernmanager-no.htm";
-		if (getClanHall() != null)
-		{
-			filename = "data/html/wyvernmanager/wyvernmanager-clan-no.htm";
-		}
+		
 		final int condition = validateCondition(player);
 		if (condition > COND_ALL_FALSE)
 		{
@@ -198,7 +208,7 @@ public class L2WyvernManagerInstance extends L2CastleChamberlainInstance
 			{
 				filename = "data/html/wyvernmanager/wyvernmanager.htm"; // Owner message window
 			}
-			else if (condition == COND_CLAN_OWNER)
+			else if (condition == COND_CLAN_MEMBER)
 			{
 				filename = "data/html/wyvernmanager/wyvernmanager-clan.htm";
 			}
@@ -208,57 +218,29 @@ public class L2WyvernManagerInstance extends L2CastleChamberlainInstance
 		html.replace("%objectId%", String.valueOf(getObjectId()));
 		html.replace("%npcname%", getName());
 		player.sendPacket(html);
-		html = null;
-		filename = null;
 	}
 	
-	/**
-	 * Return the L2ClanHall this L2NpcInstance belongs to.
-	 * @return the clan hall
-	 */
+	@Override
 	public final ClanHall getClanHall()
 	{
 		if (_clanHallId < 0)
 		{
-			ClanHall temp = ClanHallManager.getInstance().getNearbyClanHall(getX(), getY(), 500);
+			ClanHall temp = ClanHallManager.getInstance().getNearbyClanHall(getX(), getY(), 2000);
+			if (temp == null)
+			{
+				temp = CHSiegeManager.getInstance().getNearbyClanHall(this);
+			}
 			
 			if (temp != null)
 			{
 				_clanHallId = temp.getId();
-				temp = null;
 			}
 			
 			if (_clanHallId < 0)
-				return null;
-		}
-		return ClanHallManager.getInstance().getClanHallById(_clanHallId);
-	}
-	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.instance.L2CastleChamberlainInstance#validateCondition(l2jorion.game.model.actor.instance.L2PcInstance)
-	 */
-	@Override
-	protected int validateCondition(final L2PcInstance player)
-	{
-		if (getClanHall() != null && player.getClan() != null)
-		{
-			if (getClanHall().getOwnerId() == player.getClanId() && player.isClanLeader())
-				return COND_CLAN_OWNER; // Owner of the clanhall
-		}
-		else if (super.getCastle() != null && super.getCastle().getCastleId() > 0)
-		{
-			if (player.getClan() != null)
 			{
-				// Checks if player is in Sieage Zone, he can't use wyvern!!
-				if (super.isInsideZone(L2Character.ZONE_SIEGE) || super.getCastle().getSiege().getIsInProgress())
-					return COND_BUSY_BECAUSE_OF_SIEGE; // Busy because of siege
-				else if (super.getCastle().getOwnerId() == player.getClanId() // Clan owns castle
-					&& player.isClanLeader()) // Leader of clan
-					return COND_OWNER; // Owner
+				return null;
 			}
 		}
-		
-		return COND_ALL_FALSE;
+		return ClanHallManager.getInstance().getClanHallsById(_clanHallId);
 	}
 }

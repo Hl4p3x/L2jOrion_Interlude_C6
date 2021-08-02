@@ -20,13 +20,10 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class ...
- * @version $Revision: 1.2.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class SendTradeDone extends L2GameServerPacket
 {
 	private static final String _S__32_SENDTRADEDONE = "[S] 22 SendTradeDone";
+	
 	private final int _num;
 	
 	public SendTradeDone(final int num)
@@ -41,10 +38,6 @@ public class SendTradeDone extends L2GameServerPacket
 		writeD(_num);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.serverpackets.ServerBasePacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

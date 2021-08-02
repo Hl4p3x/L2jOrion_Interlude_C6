@@ -24,12 +24,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import l2jorion.game.model.entity.event.CTF;
 import l2jorion.game.model.entity.event.DM;
 import l2jorion.game.model.entity.event.TvT;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class EventManager
 {
@@ -38,15 +38,15 @@ public class EventManager
 	private final static String EVENT_MANAGER_CONFIGURATION_FILE = "./config/events/eventmanager.ini";
 	
 	public static boolean TVT_EVENT_ENABLED;
-	public static  ArrayList<String> TVT_TIMES_LIST;
+	public static ArrayList<String> TVT_TIMES_LIST;
 	
-	public static  boolean CTF_EVENT_ENABLED;
-	public static  ArrayList<String> CTF_TIMES_LIST;
+	public static boolean CTF_EVENT_ENABLED;
+	public static ArrayList<String> CTF_TIMES_LIST;
 	
-	public static  boolean DM_EVENT_ENABLED;
-	public static  ArrayList<String> DM_TIMES_LIST;
+	public static boolean DM_EVENT_ENABLED;
+	public static ArrayList<String> DM_TIMES_LIST;
 	
-	public static  boolean POLL_ENABLED;
+	public static boolean POLL_ENABLED;
 	
 	private static EventManager instance = null;
 	
@@ -57,7 +57,7 @@ public class EventManager
 	
 	public static EventManager getInstance()
 	{
-		if(instance == null)
+		if (instance == null)
 		{
 			instance = new EventManager();
 		}
@@ -65,7 +65,8 @@ public class EventManager
 		
 	}
 	
-	public static void loadConfiguration(){
+	public static void loadConfiguration()
+	{
 		
 		InputStream is = null;
 		try
@@ -74,55 +75,47 @@ public class EventManager
 			is = new FileInputStream(new File(EVENT_MANAGER_CONFIGURATION_FILE));
 			eventSettings.load(is);
 			
-			//============================================================
-			
 			TVT_EVENT_ENABLED = Boolean.parseBoolean(eventSettings.getProperty("TVTEventEnabled", "false"));
 			TVT_TIMES_LIST = new ArrayList<>();
-			
 			String[] propertySplit;
 			propertySplit = eventSettings.getProperty("TVTStartTime", "").split(";");
-
-			for(String time : propertySplit)
+			for (String time : propertySplit)
 			{
 				TVT_TIMES_LIST.add(time);
 			}
 			
 			CTF_EVENT_ENABLED = Boolean.parseBoolean(eventSettings.getProperty("CTFEventEnabled", "false"));
 			CTF_TIMES_LIST = new ArrayList<>();
-			
 			propertySplit = eventSettings.getProperty("CTFStartTime", "").split(";");
-
-			for(String time : propertySplit)
+			for (String time : propertySplit)
 			{
 				CTF_TIMES_LIST.add(time);
 			}
 			
 			DM_EVENT_ENABLED = Boolean.parseBoolean(eventSettings.getProperty("DMEventEnabled", "false"));
 			DM_TIMES_LIST = new ArrayList<>();
-			
 			propertySplit = eventSettings.getProperty("DMStartTime", "").split(";");
-
-			for(String time : propertySplit)
+			for (String time : propertySplit)
 			{
 				DM_TIMES_LIST.add(time);
 			}
 			
 			POLL_ENABLED = Boolean.parseBoolean(eventSettings.getProperty("PollEnabled", "false"));
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
-		
+			
 		}
 		finally
 		{
-			if(is != null)
+			if (is != null)
 			{
 				try
 				{
 					is.close();
 				}
-				catch(IOException e)
+				catch (IOException e)
 				{
 					e.printStackTrace();
 				}
@@ -153,15 +146,15 @@ public class EventManager
 	{
 		TvT.loadData();
 		
-		if(!TvT.checkStartJoinOk())
+		if (!TvT.checkStartJoinOk())
 		{
 			LOG.warn("registerTvT: TvT Event is not setted Properly");
 		}
 		
-		//clear all tvt
+		// clear all tvt
 		EventsGlobalTask.getInstance().clearEventTasksByEventName(TvT.get_eventName());
 		
-		for(String time:TVT_TIMES_LIST)
+		for (String time : TVT_TIMES_LIST)
 		{
 			TvT newInstance = TvT.getNewInstance();
 			newInstance.setEventStartTime(time);
@@ -178,10 +171,10 @@ public class EventManager
 			LOG.warn("registerCTF: CTF Event is not setted Properly");
 		}
 		
-		//clear all tvt
+		// clear all tvt
 		EventsGlobalTask.getInstance().clearEventTasksByEventName(CTF.get_eventName());
 		
-		for(String time:CTF_TIMES_LIST)
+		for (String time : CTF_TIMES_LIST)
 		{
 			
 			CTF newInstance = CTF.getNewInstance();
@@ -200,10 +193,10 @@ public class EventManager
 			LOG.warn("registerDM: DM Event is not setted Properly");
 		}
 		
-		//clear all tvt
+		// clear all tvt
 		EventsGlobalTask.getInstance().clearEventTasksByEventName(DM.get_eventName());
 		
-		for (String time:DM_TIMES_LIST)
+		for (String time : DM_TIMES_LIST)
 		{
 			DM newInstance = DM.getNewInstance();
 			newInstance.setEventStartTime(time);

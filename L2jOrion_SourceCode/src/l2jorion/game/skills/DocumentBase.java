@@ -28,6 +28,10 @@ import java.util.StringTokenizer;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+
 import javolution.text.TextBuilder;
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -42,6 +46,7 @@ import l2jorion.game.skills.conditions.ConditionElementSeed;
 import l2jorion.game.skills.conditions.ConditionForceBuff;
 import l2jorion.game.skills.conditions.ConditionGameChance;
 import l2jorion.game.skills.conditions.ConditionGameTime;
+import l2jorion.game.skills.conditions.ConditionGameTime.CheckGameTime;
 import l2jorion.game.skills.conditions.ConditionLogicAnd;
 import l2jorion.game.skills.conditions.ConditionLogicNot;
 import l2jorion.game.skills.conditions.ConditionLogicOr;
@@ -52,6 +57,7 @@ import l2jorion.game.skills.conditions.ConditionPlayerLevel;
 import l2jorion.game.skills.conditions.ConditionPlayerMp;
 import l2jorion.game.skills.conditions.ConditionPlayerRace;
 import l2jorion.game.skills.conditions.ConditionPlayerState;
+import l2jorion.game.skills.conditions.ConditionPlayerState.CheckPlayerState;
 import l2jorion.game.skills.conditions.ConditionSkillStats;
 import l2jorion.game.skills.conditions.ConditionSlotItemId;
 import l2jorion.game.skills.conditions.ConditionTargetAggro;
@@ -62,8 +68,6 @@ import l2jorion.game.skills.conditions.ConditionTargetUsesWeaponKind;
 import l2jorion.game.skills.conditions.ConditionUsingItemType;
 import l2jorion.game.skills.conditions.ConditionUsingSkill;
 import l2jorion.game.skills.conditions.ConditionWithSkill;
-import l2jorion.game.skills.conditions.ConditionGameTime.CheckGameTime;
-import l2jorion.game.skills.conditions.ConditionPlayerState.CheckPlayerState;
 import l2jorion.game.skills.effects.EffectTemplate;
 import l2jorion.game.skills.funcs.FuncTemplate;
 import l2jorion.game.skills.funcs.Lambda;
@@ -75,12 +79,8 @@ import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.L2Weapon;
 import l2jorion.game.templates.L2WeaponType;
 import l2jorion.game.templates.StatsSet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 abstract class DocumentBase
 {
@@ -108,7 +108,9 @@ abstract class DocumentBase
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Error loading file " + _file, e);
 			return null;
@@ -121,7 +123,9 @@ abstract class DocumentBase
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Error in file " + _file, e);
 			return null;
@@ -151,12 +155,16 @@ abstract class DocumentBase
 	{
 		Condition condition = null;
 		n = n.getFirstChild();
+		
 		if (n == null)
+		{
 			return;
+		}
 		
 		if ("cond".equalsIgnoreCase(n.getNodeName()))
 		{
 			condition = parseCondition(n.getFirstChild(), template);
+			
 			final Node msg = n.getAttributes().getNamedItem("msg");
 			if (condition != null && msg != null)
 			{
@@ -202,7 +210,9 @@ abstract class DocumentBase
 			else if ("effect".equalsIgnoreCase(n.getNodeName()))
 			{
 				if (template instanceof EffectTemplate)
+				{
 					throw new RuntimeException("Nested effects");
+				}
 				
 				attachEffect(n, template, condition);
 			}
@@ -215,7 +225,9 @@ abstract class DocumentBase
 		final String order = n.getAttributes().getNamedItem("order").getNodeValue();
 		final Lambda lambda = getLambda(n, template);
 		final int ord = Integer.decode(getValue(order, template));
+		
 		final Condition applayCond = parseCondition(n.getFirstChild(), template);
+		
 		final FuncTemplate ft = new FuncTemplate(attachCond, applayCond, name, stat, ord, lambda);
 		
 		if (template instanceof L2Item)
@@ -249,6 +261,7 @@ abstract class DocumentBase
 		final String name = attrs.getNamedItem("name").getNodeValue();
 		int time, count = 1;
 		int showIcon = 0;
+		
 		if (attrs.getNamedItem("noicon") != null)
 		{
 			showIcon = Integer.decode(getValue(attrs.getNamedItem("noicon").getNodeValue(), template));
@@ -328,6 +341,14 @@ abstract class DocumentBase
 			{
 				abnormal = L2Character.ABNORMAL_EFFECT_FLOATING_ROOT;
 			}
+			else if (abn.equals("dancestun"))
+			{
+				abnormal = L2Character.ABNORMAL_EFFECT_DANCE_STUNNED;
+			}
+			else if (abn.equals("ghoststun"))
+			{
+				abnormal = L2Character.ABNORMAL_EFFECT_FIREROOT_STUN;
+			}
 		}
 		
 		float stackOrder = 0;
@@ -345,7 +366,9 @@ abstract class DocumentBase
 		
 		double effectPower = -1;
 		if (attrs.getNamedItem("effectPower") != null)
+		{
 			effectPower = Double.parseDouble(getValue(attrs.getNamedItem("effectPower").getNodeValue(), template));
+		}
 		
 		SkillType type = null;
 		if (attrs.getNamedItem("effectType") != null)
@@ -442,31 +465,49 @@ abstract class DocumentBase
 			n = n.getNextSibling();
 		}
 		if (n == null)
+		{
 			return null;
+		}
 		
 		if ("and".equalsIgnoreCase(n.getNodeName()))
+		{
 			return parseLogicAnd(n, template);
+		}
 		
 		if ("or".equalsIgnoreCase(n.getNodeName()))
+		{
 			return parseLogicOr(n, template);
+		}
 		
 		if ("not".equalsIgnoreCase(n.getNodeName()))
+		{
 			return parseLogicNot(n, template);
+		}
 		
 		if ("player".equalsIgnoreCase(n.getNodeName()))
+		{
 			return parsePlayerCondition(n);
+		}
 		
 		if ("target".equalsIgnoreCase(n.getNodeName()))
+		{
 			return parseTargetCondition(n, template);
+		}
 		
 		if ("skill".equalsIgnoreCase(n.getNodeName()))
+		{
 			return parseSkillCondition(n);
+		}
 		
 		if ("using".equalsIgnoreCase(n.getNodeName()))
+		{
 			return parseUsingCondition(n);
+		}
 		
 		if ("game".equalsIgnoreCase(n.getNodeName()))
+		{
 			return parseGameCondition(n);
+		}
 		
 		return null;
 	}
@@ -474,6 +515,7 @@ abstract class DocumentBase
 	protected Condition parseLogicAnd(Node n, final Object template)
 	{
 		final ConditionLogicAnd cond = new ConditionLogicAnd();
+		
 		for (n = n.getFirstChild(); n != null; n = n.getNextSibling())
 		{
 			if (n.getNodeType() == Node.ELEMENT_NODE)
@@ -514,7 +556,9 @@ abstract class DocumentBase
 		for (n = n.getFirstChild(); n != null; n = n.getNextSibling())
 		{
 			if (n.getNodeType() == Node.ELEMENT_NODE)
+			{
 				return new ConditionLogicNot(parseCondition(n, template));
+			}
 		}
 		
 		LOG.warn("Empty <not> condition in " + _file);
@@ -741,7 +785,9 @@ abstract class DocumentBase
 	protected Condition parseSkillCondition(final Node n)
 	{
 		final NamedNodeMap attrs = n.getAttributes();
+		
 		final Stats stat = Stats.valueOfXml(attrs.getNamedItem("stat").getNodeValue());
+		
 		return new ConditionSkillStats(stat);
 	}
 	
@@ -782,14 +828,19 @@ abstract class DocumentBase
 			else if ("skill".equalsIgnoreCase(a.getNodeName()))
 			{
 				final int id = Integer.parseInt(a.getNodeValue());
+				
 				cond = joinAnd(cond, new ConditionUsingSkill(id));
 			}
 			else if ("slotitem".equalsIgnoreCase(a.getNodeName()))
 			{
 				final StringTokenizer st = new StringTokenizer(a.getNodeValue(), ";");
+				
 				final int id = Integer.parseInt(st.nextToken().trim());
+				
 				final int slot = Integer.parseInt(st.nextToken().trim());
+				
 				int enchant = 0;
+				
 				if (st.hasMoreTokens())
 				{
 					enchant = Integer.parseInt(st.nextToken().trim());
@@ -798,10 +849,12 @@ abstract class DocumentBase
 				cond = joinAnd(cond, new ConditionSlotItemId(slot, id, enchant));
 			}
 		}
+		
 		if (cond == null)
 		{
 			LOG.warn("Unrecognized <using> condition in " + _file);
 		}
+		
 		return cond;
 	}
 	
@@ -843,7 +896,9 @@ abstract class DocumentBase
 		final NamedNodeMap attrs = n.getAttributes();
 		final String name = attrs.getNamedItem("name").getNodeValue();
 		if (name.charAt(0) != '#')
+		{
 			throw new IllegalArgumentException("Table name must start with #");
+		}
 		
 		final StringTokenizer data = new StringTokenizer(n.getFirstChild().getNodeValue());
 		final List<String> array = new FastList<>();
@@ -882,31 +937,45 @@ abstract class DocumentBase
 		{
 			final String val = nval.getNodeValue();
 			if (val.charAt(0) == '#')
+			{
 				return new LambdaConst(Double.parseDouble(getTableValue(val)));
+			}
 			else if (val.charAt(0) == '$')
 			{
 				if (val.equalsIgnoreCase("$player_level"))
+				{
 					return new LambdaStats(LambdaStats.StatsType.PLAYER_LEVEL);
+				}
 				
 				if (val.equalsIgnoreCase("$target_level"))
+				{
 					return new LambdaStats(LambdaStats.StatsType.TARGET_LEVEL);
+				}
 				
 				if (val.equalsIgnoreCase("$player_max_hp"))
+				{
 					return new LambdaStats(LambdaStats.StatsType.PLAYER_MAX_HP);
+				}
 				
 				if (val.equalsIgnoreCase("$player_max_mp"))
+				{
 					return new LambdaStats(LambdaStats.StatsType.PLAYER_MAX_MP);
+				}
 				
 				// try to find value out of item fields
 				final StatsSet set = getStatsSet();
 				final String field = set.getString(val.substring(1));
 				if (field != null)
+				{
 					return new LambdaConst(Double.parseDouble(getValue(field, template)));
+				}
 				// failed
 				throw new IllegalArgumentException("Unknown value " + val);
 			}
 			else
+			{
 				return new LambdaConst(Double.parseDouble(val));
+			}
 		}
 		final LambdaCalc calc = new LambdaCalc();
 		n = n.getFirstChild();
@@ -916,7 +985,9 @@ abstract class DocumentBase
 		}
 		
 		if (n == null || !"val".equals(n.getNodeName()))
+		{
 			throw new IllegalArgumentException("Value not specified");
+		}
 		
 		for (n = n.getFirstChild(); n != null; n = n.getNextSibling())
 		{
@@ -935,11 +1006,17 @@ abstract class DocumentBase
 		if (value.charAt(0) == '#')
 		{
 			if (template instanceof L2Skill)
+			{
 				return getTableValue(value);
+			}
 			else if (template instanceof Integer)
+			{
 				return getTableValue(value, ((Integer) template).intValue());
+			}
 			else
+			{
 				throw new IllegalStateException();
+			}
 		}
 		return value;
 	}
@@ -947,12 +1024,16 @@ abstract class DocumentBase
 	protected Condition joinAnd(final Condition cond, final Condition c)
 	{
 		if (cond == null)
+		{
 			return c;
+		}
+		
 		if (cond instanceof ConditionLogicAnd)
 		{
 			((ConditionLogicAnd) cond).add(c);
 			return cond;
 		}
+		
 		final ConditionLogicAnd and = new ConditionLogicAnd();
 		and.add(cond);
 		and.add(c);

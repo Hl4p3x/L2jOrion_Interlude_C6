@@ -1,0 +1,65 @@
+<html><title>NPC Info</title><body>
+<center>
+<table width=280 border=0>
+<tr>
+<td><button value="Kill" action="bypass -h admin_kill" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td><button value="Delete" action="bypass -h admin_delete" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td><button value="Recall" action="bypass -h admin_recall_npc" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td><button value="Buffs" action="bypass -h admin_getbuffs" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+</tr>
+<tr>
+<td><button value="Edit" action="bypass -h admin_edit_npc" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td><button value="Skills" action="bypass -h admin_show_skilllist_npc %id%" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td><button value="Drop" action="bypass -h admin_show_droplist %id%" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td><button value="Send Home" action="bypass -h admin_sendHome %loc%" width=65 height=19 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+</tr>
+</table>
+<br>
+
+<table width=280 border=0>
+<tr><td colspan="4"><table width=280 border=0><tr><td width=280><font color="LEVEL">Npc:</font> %name% <font color=00FF00>%lvl%</font> Lvl (Id:<font color="LEVEL">%id%</font> Spawn Id:<font color="LEVEL">%spawnId%)</font></td></tr></table></td></tr>
+
+<tr><td><table width=280 border=0 bgcolor=000000><tr><td width=100><font color="LEVEL">HP:</font></td><td align=right width=170><font color=FF4040>%hp%/%hpmax%</font></td></tr></table></td></tr>
+<tr><td><table width=280 border=0><tr><td width=100><font color="LEVEL">MP:</font></td><td align=right width=170><font color=3399ff>%mp%/%mpmax%</font></td></tr></table></td></tr>
+
+<tr><td><table width=280 border=0 bgcolor=000000><tr><td width=100><font color="LEVEL">Object Id</font></td><td align=right width=170>%objid%</td></tr></table></td></tr>
+<tr><td><table width=280 border=0><tr><td width=100><font color="LEVEL">Type:</font></td><td align=right width=170><font color=99ff33>%class%</font></td></tr></table></td></tr>
+<tr><td><table width=280 border=0 bgcolor=000000><tr><td width=100><font color="LEVEL">Race</font></td><td align=right width=170>%race%</td></tr></table></td></tr>
+<tr><td><table width=280 border=0><tr><td width=100><font color="LEVEL">Location Id:</font></td><td align=right width=170>%locId%</td></tr></table></td></tr>
+<tr><td><table width=280 border=0 bgcolor=000000><tr><td width=100><font color="LEVEL">Location:</font></td><td align=right width=170>%loc%</td></tr></table></td></tr>
+<tr><td><table width=280 border=0><tr><td width=100><font color="LEVEL">Heading:</font></td><td align=right width=170>%heading%</td></tr></table></td></tr>
+<tr><td><table width=280 border=0 bgcolor=000000><tr><td width=100><font color="LEVEL">Collision Radius:</font></td><td align=right width=170>%collision_radius%</td></tr></table></td></tr>
+<tr><td><table width=280 border=0><tr><td width=100><font color="LEVEL">Collision Height:</font></td><td align=right width=170>%collision_height%</td></tr></table></td></tr>
+
+<tr><td><table width=280 border=0 bgcolor=000000><tr><td width=100><font color="LEVEL">Faction:</font></td><td align=right width=170>%fId%</td></tr></table></td></tr>
+<tr><td><table width=280 border=0><tr><td width=100><font color="LEVEL">Faction Range:</font></td><td align=right width=170>%fRange%</td></tr></table></td></tr>
+
+<tr><td><table width=280 border=0 bgcolor=000000><tr><td width=100><font color="LEVEL">Respawn Time:</font></td><td align=right width=170>%respawnTime%</td></tr></table></td></tr>
+<tr><td><table width=280 border=0><tr><td width=100><font color="LEVEL">Aggro Range:</font></td><td align=right width=170>%aggro%</td></tr></table></td></tr>
+<tr><td><table width=280 border=0 bgcolor=000000><tr><td width=100><font color="LEVEL">Undead:</font></td><td align=right width=170>%undead%</td></tr></table></td></tr>
+
+</table><br>
+
+<font color="LEVEL">Combat</font><br1>
+<table border="0" width="100%">
+<tr><td>P.Atk.</td><td>%patk%</td><td>M.Atk.</td><td>%matk%</td></tr>
+<tr><td>P.Def.</td><td>%pdef%</td><td>M.Def.</td><td>%mdef%</td></tr>
+<tr><td>Accuracy</td><td>%accu%</td><td>Evasion</td><td>%evas%</td></tr>
+<tr><td>Critical</td><td>%crit%</td><td>Speed</td><td>%rspd%</td></tr>
+<tr><td>Atk.Speed</td><td>%aspd%</td><td>Cast.Speed</td><td>%cspd%</td></tr>
+</table><br>
+
+<font color="LEVEL">Basic Stats</font><br1>
+<table border="0" width="100%">
+<tr>
+<td>STR</td><td>%str%</td>
+<td>DEX</td><td>%dex%</td>
+<td>CON</td><td>%con%</td>
+</tr>
+<tr>
+<td>INT</td><td>%int%</td>
+<td>WIT</td><td>%wit%</td>
+<td>MEN</td><td>%men%</td>
+</tr>
+</table>
+</center></body></html>

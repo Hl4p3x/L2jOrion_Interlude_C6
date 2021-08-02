@@ -31,7 +31,7 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 public class SellList extends L2GameServerPacket
 {
 	private static final String _S__10_SELLLIST = "[S] 10 SellList";
-	//private static Logger LOG = LoggerFactory.getLogger(SellList.class);
+	
 	private final L2PcInstance _activeChar;
 	private final L2MerchantInstance _lease;
 	private final int _money;
@@ -65,12 +65,12 @@ public class SellList extends L2GameServerPacket
 				}
 				
 				if (item != null && !item.isEquipped() && // Not equipped
-				item.getItem().isSellable() && // Item is sellable
-				item.getItem().getItemId() != 57 && // Adena is not sellable
-				(_activeChar.getPet() == null || // Pet not summoned or
-				item.getObjectId() != _activeChar.getPet().getControlItemId())) // Pet is summoned and not the item that summoned the pet
+					item.getItem().isSellable() && // Item is sellable
+					item.getItem().getItemId() != 57 && // Adena is not sellable
+					(_activeChar.getPet() == null || // Pet not summoned or
+						item.getObjectId() != _activeChar.getPet().getControlItemId())) // Pet is summoned and not the item that summoned the pet
 				{
-				_selllist.add(item);
+					_selllist.add(item);
 				}
 			}
 		}

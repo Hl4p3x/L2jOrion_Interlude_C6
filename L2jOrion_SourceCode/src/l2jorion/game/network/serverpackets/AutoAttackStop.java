@@ -20,20 +20,12 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * This class ...
- * @version $Revision: 1.3.2.1.2.3 $ $Date: 2005/03/27 15:29:57 $
- */
 public class AutoAttackStop extends L2GameServerPacket
 {
-	// dh
-	
 	private static final String _S__3C_AUTOATTACKSTOP = "[S] 3C AutoAttackStop";
+	
 	private final int _targetObjId;
 	
-	/**
-	 * @param targetObjId
-	 */
 	public AutoAttackStop(final int targetObjId)
 	{
 		_targetObjId = targetObjId;

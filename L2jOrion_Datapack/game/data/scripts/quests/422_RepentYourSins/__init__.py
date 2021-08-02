@@ -100,7 +100,7 @@ class Quest (JQuest) :
                 htmltext = "30981-15.htm"
                 player.setPkKills(0)
                 st.playSound("ItemSound.quest_finished")
-                st.exitQuest(1)
+                #st.exitQuest(1)
             else :
                 st.giveItems(PENITENTS_MANACLES2,1)
                 st.takeItems(PENITENTS_MANACLES,1)
@@ -132,11 +132,11 @@ class Quest (JQuest) :
    id = st.getState()
    if npcId == 30981 : #Black Judge
        if id == CREATED :
-           if player.getPkKills() >= 1 and player.getLevel() < 80:
+           if player.getPkKills() >= 1: # and player.getLevel() < 80:
                htmltext = "30981-02.htm"
            else:
                htmltext = "30981-01.htm"
-               st.exitQuest(1)
+               #st.exitQuest(1)
        elif condition <= 9 :
            htmltext = "30981-07.htm"
        elif condition <= 13 and condition > 9 and st.getQuestItemsCount(MANUAL_OF_MANACLES) == 0 :
@@ -147,7 +147,7 @@ class Quest (JQuest) :
            htmltext = "30981-09.htm"
        elif condition == 15 and st.getQuestItemsCount(PENITENTS_MANACLES1) > 0 :
            htmltext = "30981-10.htm"
-       elif condition >= 16 :
+       elif condition >= 16 and player.getPkKills() >= 1:
            if st.getQuestItemsCount(PENITENTS_MANACLES) > 0 :
                plevel = findPetLvl(player,PENITENTS_MANACLES)
                level = player.getLevel()
@@ -162,6 +162,8 @@ class Quest (JQuest) :
                    htmltext = "30981-12.htm"
            else :
                htmltext = "30981-18.htm"
+       elif condition >= 1 :
+           htmltext = "30981-01.htm"
    elif npcId == 30668 : # Katari
        if condition == 2 :
            st.set("cond","6")

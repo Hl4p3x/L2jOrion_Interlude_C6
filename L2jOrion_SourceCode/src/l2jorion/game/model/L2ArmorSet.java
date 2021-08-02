@@ -104,15 +104,25 @@ public final class L2ArmorSet
 	public boolean containAll(final int chest, final int legs, final int head, final int gloves, final int feet)
 	{
 		if (_chest != 0 && _chest != chest)
+		{
 			return false;
+		}
 		if (_legs != 0 && _legs != legs)
+		{
 			return false;
+		}
 		if (_head != 0 && _head != head)
+		{
 			return false;
+		}
 		if (_gloves != 0 && _gloves != gloves)
+		{
 			return false;
+		}
 		if (_feet != 0 && _feet != feet)
+		{
 			return false;
+		}
 		
 		return true;
 	}
@@ -148,7 +158,9 @@ public final class L2ArmorSet
 		L2ItemInstance shieldItem = inv.getPaperdollItem(Inventory.PAPERDOLL_LHAND);
 		
 		if (shieldItem != null && shieldItem.getItemId() == _shield)
+		{
 			return true;
+		}
 		
 		inv = null;
 		shieldItem = null;
@@ -159,7 +171,9 @@ public final class L2ArmorSet
 	public boolean containShield(final int shield_id)
 	{
 		if (_shield == 0)
+		{
 			return false;
+		}
 		
 		return _shield == shield_id;
 	}
@@ -183,7 +197,9 @@ public final class L2ArmorSet
 	{
 		// Player don't have full set
 		if (!containAll(player))
+		{
 			return false;
+		}
 		
 		final Inventory inv = player.getInventory();
 		
@@ -194,15 +210,25 @@ public final class L2ArmorSet
 		L2ItemInstance feetItem = inv.getPaperdollItem(Inventory.PAPERDOLL_FEET);
 		
 		if (chestItem.getEnchantLevel() < 6)
+		{
 			return false;
+		}
 		if (_legs != 0 && legsItem.getEnchantLevel() < 6)
+		{
 			return false;
+		}
 		if (_gloves != 0 && glovesItem.getEnchantLevel() < 6)
+		{
 			return false;
+		}
 		if (_head != 0 && headItem.getEnchantLevel() < 6)
+		{
 			return false;
+		}
 		if (_feet != 0 && feetItem.getEnchantLevel() < 6)
+		{
 			return false;
+		}
 		
 		chestItem = null;
 		legsItem = null;

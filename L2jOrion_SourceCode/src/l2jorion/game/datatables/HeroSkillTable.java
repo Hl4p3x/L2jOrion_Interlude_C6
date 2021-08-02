@@ -21,9 +21,6 @@ package l2jorion.game.datatables;
 
 import l2jorion.game.model.L2Skill;
 
-/**
- * @author BiTi
- */
 public class HeroSkillTable
 {
 	private static HeroSkillTable _instance;
@@ -68,7 +65,9 @@ public class HeroSkillTable
 		for (final int id : _HeroSkillsId)
 		{
 			if (id == skillid)
+			{
 				return true;
+			}
 		}
 		_HeroSkillsId = null;
 		

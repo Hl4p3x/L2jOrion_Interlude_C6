@@ -20,17 +20,14 @@
  */
 package l2jorion.game.network.serverpackets;
 
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.util.Point3D;
 
-/**
- * @author Damon
- */
 public class StopMoveInVehicle extends L2GameServerPacket
 {
 	private final int _charObjId;
 	private final int _boatId;
-	private final Point3D _pos;
+	private final Location _pos;
 	private final int _heading;
 	
 	public StopMoveInVehicle(L2PcInstance player, int boatId)

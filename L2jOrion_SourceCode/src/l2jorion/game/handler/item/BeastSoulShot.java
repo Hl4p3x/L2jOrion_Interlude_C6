@@ -33,12 +33,7 @@ import l2jorion.game.network.serverpackets.ExAutoSoulShot;
 import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Weapon;
-import l2jorion.game.util.Broadcast;
 
-/**
- * Beast SoulShot Handler
- * @author programmos, scoria dev
- */
 public class BeastSoulShot implements IItemHandler
 {
 	// All the item IDs that this handler knows.
@@ -51,7 +46,9 @@ public class BeastSoulShot implements IItemHandler
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		if (playable == null)
+		{
 			return;
+		}
 		
 		L2PcInstance activeOwner = null;
 		
@@ -68,7 +65,9 @@ public class BeastSoulShot implements IItemHandler
 		}
 		
 		if (activeOwner == null)
+		{
 			return;
+		}
 		
 		L2Summon activePet = activeOwner.getPet();
 		
@@ -101,8 +100,10 @@ public class BeastSoulShot implements IItemHandler
 			}
 			
 			if (weaponInst.getChargedSoulshot() != L2ItemInstance.CHARGED_NONE)
+			{
 				// SoulShots are already active.
 				return;
+			}
 			
 			int shotCount = item.getCount();
 			shotConsumption = weaponItem.getSoulShotCount();
@@ -127,7 +128,9 @@ public class BeastSoulShot implements IItemHandler
 		else
 		{
 			if (activePet.getChargedSoulShot() != L2ItemInstance.CHARGED_NONE)
+			{
 				return;
+			}
 			
 			activePet.setChargedSoulShot(L2ItemInstance.CHARGED_SOULSHOT);
 		}
@@ -154,7 +157,7 @@ public class BeastSoulShot implements IItemHandler
 		activeOwner.sendPacket(new SystemMessage(SystemMessageId.PET_USE_THE_POWER_OF_SPIRIT));
 		if (!activeOwner.getEffects())
 		{
-			Broadcast.toSelfAndKnownPlayersInRadius(activeOwner, new MagicSkillUser(activePet, activePet, 2033, 1, 0, 0), 360000);
+			activeOwner.broadcastPacket(new MagicSkillUser(activePet, activePet, 2033, 1, 0, 0), 500);
 		}
 	}
 	

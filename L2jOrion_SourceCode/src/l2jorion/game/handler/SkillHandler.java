@@ -23,9 +23,6 @@ package l2jorion.game.handler;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import l2jorion.game.GameServer;
 import l2jorion.game.handler.skill.BalanceLife;
 import l2jorion.game.handler.skill.BeastFeed;
@@ -65,6 +62,8 @@ import l2jorion.game.handler.skill.ZakenPlayer;
 import l2jorion.game.handler.skill.ZakenSelf;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Skill.SkillType;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class SkillHandler
 {
@@ -123,7 +122,7 @@ public class SkillHandler
 		registerSkillHandler(new GetPlayer());
 		registerSkillHandler(new ZakenPlayer());
 		registerSkillHandler(new ZakenSelf());
-		LOG.info("SkillHandler: Loaded " + _datatable.size() + " handlers.");
+		LOG.info("SkillHandler: Loaded " + _datatable.size() + " handlers");
 		
 	}
 	

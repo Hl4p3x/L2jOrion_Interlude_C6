@@ -20,7 +20,7 @@ import java.nio.BufferUnderflowException;
 
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
-import l2jorion.game.model.L2CharPosition;
+import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
@@ -34,9 +34,11 @@ public class MoveBackwardToLocation extends L2GameClientPacket
 	private int _targetX;
 	private int _targetY;
 	private int _targetZ;
+	
 	private int _originX;
 	private int _originY;
 	private int _originZ;
+	
 	private int _moveMovement;
 	
 	@Override
@@ -69,23 +71,24 @@ public class MoveBackwardToLocation extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
-		// Like L2OFF movements prohibited when char is sitting
+		// activeChar.setClickedArrowButton(false);
+		
 		if (activeChar.isSitting())
 		{
 			getClient().sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 		
-		// Like L2OFF movements prohibited when char is teleporting
 		if (activeChar.isTeleporting())
 		{
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 		
-		// Like L2OFF the enchant window will close
 		if (activeChar.getActiveEnchantItem() != null)
 		{
 			activeChar.sendPacket(new EnchantResult(0));
@@ -113,31 +116,34 @@ public class MoveBackwardToLocation extends L2GameClientPacket
 			return;
 		}
 		
-		if (_moveMovement == 0 && !Config.ALLOW_USE_CURSOR_FOR_WALK)
+		if (_moveMovement == 0)
+		{
+			// activeChar.setClickedArrowButton(true);
+			if (!Config.ALLOW_USE_CURSOR_FOR_WALK)
+			{
+				activeChar.sendPacket(ActionFailed.STATIC_PACKET);
+				return;
+			}
+		}
+		
+		double dx = _targetX - activeChar.getX();
+		double dy = _targetY - activeChar.getY();
+		
+		if (activeChar.isOutOfControl() || dx * dx + dy * dy > 98010000)
 		{
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
+			return;
 		}
-		else
+		
+		// This is to avoid exploit with Hit + Fast movement
+		if ((activeChar.isMoving() && activeChar.isAttackingNow()))
 		{
-			double dx = _targetX - activeChar.getX();
-			double dy = _targetY - activeChar.getY();
-			
-			// Can't move if character is confused, or trying to move a huge distance
-			if (activeChar.isOutOfControl() || dx * dx + dy * dy > 98010000)
-			{
-				activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-				return;
-			}
-			
-			// This is to avoid exploit with Hit + Fast movement
-			if ((activeChar.isMoving() && activeChar.isAttackingNow()))
-			{
-				activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-				return;
-			}
-			
-			activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new L2CharPosition(_targetX, _targetY, _targetZ, 0));
+			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
+			return;
 		}
+		
+		activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new Location(_targetX, _targetY, _targetZ, 0));
+		
 	}
 	
 	@Override

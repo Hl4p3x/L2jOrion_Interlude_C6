@@ -37,6 +37,7 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.Announcements;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.model.zone.type.L2TownZone;
 
 public class AdminTownWar implements IAdminCommandHandler
@@ -47,28 +48,30 @@ public class AdminTownWar implements IAdminCommandHandler
 		"admin_townwar_end"
 	};
 	private L2Object _activeObject;
+	
 	public final L2Object getActiveObject()
 	{
 		return _activeObject;
 	}
+	
 	@Override
 	public boolean useAdminCommand(String command, L2PcInstance activeChar)
-	{	
-		if(command.startsWith("admin_townwar_start")) //townwar_start
+	{
+		if (command.startsWith("admin_townwar_start")) // townwar_start
 		{
 			startTW(activeChar);
 		}
-		if(command.startsWith("admin_townwar_end")) //townwar_end
+		if (command.startsWith("admin_townwar_end")) // townwar_end
 		{
 			endTW(activeChar);
 		}
 		return true;
 	}
-	@SuppressWarnings("deprecation")
+	
 	private void startTW(L2PcInstance activeChar)
 	{
 		// All Towns will become War Zones
-		if(Config.TW_ALL_TOWNS)
+		if (Config.TW_ALL_TOWNS)
 		{
 			TownManager.getInstance().getTown(1).setParameter("noPeace", "true");
 			TownManager.getInstance().getTown(2).setParameter("noPeace", "true");
@@ -92,62 +95,62 @@ public class AdminTownWar implements IAdminCommandHandler
 		}
 		
 		// A Town will become War Zone
-		if(!Config.TW_ALL_TOWNS && Config.TW_TOWN_ID != 18 && Config.TW_TOWN_ID != 21 && Config.TW_TOWN_ID != 22)
+		if (!Config.TW_ALL_TOWNS && Config.TW_TOWN_ID != 18 && Config.TW_TOWN_ID != 21 && Config.TW_TOWN_ID != 22)
 		{
 			TownManager.getInstance().getTown(Config.TW_TOWN_ID).setParameter("noPeace", "true");
 		}
-
+		
 		Collection<L2PcInstance> pls = L2World.getInstance().getAllPlayers().values();
 		{
-			int x,y,z;
+			int x, y, z;
 			L2TownZone Town;
-			byte zonaPaz = 1;
-
-			for(L2PcInstance onlinePlayer : pls)
-				if(onlinePlayer.isOnline() == 1 )
+			
+			for (L2PcInstance onlinePlayer : pls)
+			{
+				if (onlinePlayer.isOnline() == 1)
 				{
 					x = onlinePlayer.getX();
 					y = onlinePlayer.getY();
 					z = onlinePlayer.getZ();
-
+					
 					Town = TownManager.getInstance().getTown(x, y, z);
-					if(Town != null)
+					if (Town != null)
 					{
-						if(Town.getTownId() == Config.TW_TOWN_ID && !Config.TW_ALL_TOWNS)
+						if (Town.getTownId() == Config.TW_TOWN_ID && !Config.TW_ALL_TOWNS)
 						{
-							onlinePlayer.setInsideZone(zonaPaz, false);
+							onlinePlayer.setInsideZone(ZoneId.ZONE_PVP, true);
 							onlinePlayer.revalidateZone(true);
 						}
-						else if(Config.TW_ALL_TOWNS)
+						else if (Config.TW_ALL_TOWNS)
 						{
-							onlinePlayer.setInsideZone(zonaPaz, false);
+							onlinePlayer.setInsideZone(ZoneId.ZONE_PVP, true);
 							onlinePlayer.revalidateZone(true);
 						}
-					}
 						onlinePlayer.setInTownWar(true);
 					}
+				}
+			}
 		}
-
+		
 		// Announce for all towns
-		if(Config.TW_ALL_TOWNS)
+		if (Config.TW_ALL_TOWNS)
 		{
 			Announcements.getInstance().gameAnnounceToAll("Town War Event!");
 			Announcements.getInstance().gameAnnounceToAll("All towns have been set to war zone by " + activeChar.getName() + ".");
 		}
 		
 		// Announce for one town
-		if(!Config.TW_ALL_TOWNS) 
+		if (!Config.TW_ALL_TOWNS)
 		{
 			Announcements.getInstance().gameAnnounceToAll("Town War Event!");
 			Announcements.getInstance().gameAnnounceToAll(TownManager.getInstance().getTown(Config.TW_TOWN_ID).getName() + " has been set to war zone by " + activeChar.getName() + ".");
 		}
 	}
-
-	@SuppressWarnings("deprecation")
+	
 	private void endTW(L2PcInstance activeChar)
 	{
 		// All Towns will become Peace Zones
-		if(Config.TW_ALL_TOWNS)
+		if (Config.TW_ALL_TOWNS)
 		{
 			TownManager.getInstance().getTown(1).setParameter("noPeace", "false");
 			TownManager.getInstance().getTown(2).setParameter("noPeace", "false");
@@ -170,55 +173,56 @@ public class AdminTownWar implements IAdminCommandHandler
 		}
 		
 		// A Town will become Peace Zone
-		if(!Config.TW_ALL_TOWNS && Config.TW_TOWN_ID != 18 && Config.TW_TOWN_ID != 21 && Config.TW_TOWN_ID != 22)
+		if (!Config.TW_ALL_TOWNS && Config.TW_TOWN_ID != 18 && Config.TW_TOWN_ID != 21 && Config.TW_TOWN_ID != 22)
 		{
 			TownManager.getInstance().getTown(Config.TW_TOWN_ID).setParameter("noPeace", "false");
 		}
-
+		
 		Collection<L2PcInstance> pls = L2World.getInstance().getAllPlayers().values();
 		{
-			int xx,yy,zz;
+			int xx, yy, zz;
 			L2TownZone Town;
-			byte zonaPaz = 1;
-
-			for(L2PcInstance onlinePlayer : pls)
-				if(onlinePlayer.isOnline() == 1 )
+			
+			for (L2PcInstance onlinePlayer : pls)
+			{
+				if (onlinePlayer.isOnline() == 1)
 				{
 					xx = onlinePlayer.getX();
 					yy = onlinePlayer.getY();
 					zz = onlinePlayer.getZ();
-
-					Town = TownManager.getInstance().getTown(xx,yy,zz);
-					if(Town != null)
+					
+					Town = TownManager.getInstance().getTown(xx, yy, zz);
+					if (Town != null)
 					{
-						if(Town.getTownId() == Config.TW_TOWN_ID && !Config.TW_ALL_TOWNS)
+						if (Town.getTownId() == Config.TW_TOWN_ID && !Config.TW_ALL_TOWNS)
 						{
-							onlinePlayer.setInsideZone(zonaPaz, true);
+							onlinePlayer.setInsideZone(ZoneId.ZONE_PVP, false);
 							onlinePlayer.revalidateZone(true);
 						}
-						else if(Config.TW_ALL_TOWNS)
+						else if (Config.TW_ALL_TOWNS)
 						{
-							onlinePlayer.setInsideZone(zonaPaz, true);
+							onlinePlayer.setInsideZone(ZoneId.ZONE_PVP, false);
 							onlinePlayer.revalidateZone(true);
 						}
 					}
-						onlinePlayer.setInTownWar(false);
-					}
+					onlinePlayer.setInTownWar(false);
+				}
+			}
 		}
-
+		
 		// Announce for all towns
-		if(Config.TW_ALL_TOWNS)
+		if (Config.TW_ALL_TOWNS)
 		{
-			Announcements.getInstance().gameAnnounceToAll("All towns have been set back to normal by " + activeChar.getName() + ".");	
+			Announcements.getInstance().gameAnnounceToAll("All towns have been set back to normal by " + activeChar.getName() + ".");
 		}
 		
 		// Announce for one town
-		if(!Config.TW_ALL_TOWNS)
+		if (!Config.TW_ALL_TOWNS)
 		{
 			Announcements.getInstance().gameAnnounceToAll(TownManager.getInstance().getTown(Config.TW_TOWN_ID).getName() + " has been set back to normal by " + activeChar.getName() + ".");
 		}
 	}
-
+	
 	@Override
 	public String[] getAdminCommandList()
 	{

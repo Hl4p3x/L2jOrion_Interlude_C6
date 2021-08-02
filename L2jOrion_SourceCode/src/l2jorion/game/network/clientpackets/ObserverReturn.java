@@ -30,10 +30,14 @@ public final class ObserverReturn extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		if (activeChar.inObserverMode())
+		{
 			activeChar.leaveObserverMode();
+		}
 	}
 	
 	@Override
