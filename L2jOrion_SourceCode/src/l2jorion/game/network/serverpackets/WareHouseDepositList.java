@@ -24,10 +24,11 @@ import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class WareHouseDepositList extends L2GameServerPacket
+public class WareHouseDepositList extends PacketServer
 {
 	private static Logger LOG = LoggerFactory.getLogger(WareHouseDepositList.class);
 	

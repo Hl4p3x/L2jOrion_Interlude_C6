@@ -24,9 +24,6 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExClosePartyRoom;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * @author Gnacik
- */
 public class PartyMatchRoomList
 {
 	private int _maxid = 1;
@@ -48,7 +45,9 @@ public class PartyMatchRoomList
 		for (final L2PcInstance _member : getRoom(id).getPartyMembers())
 		{
 			if (_member == null)
+			{
 				continue;
+			}
 			
 			_member.sendPacket(new ExClosePartyRoom());
 			_member.sendPacket(new SystemMessage(SystemMessageId.PARTY_ROOM_DISBANDED));
@@ -82,9 +81,15 @@ public class PartyMatchRoomList
 	public PartyMatchRoom getPlayerRoom(final L2PcInstance player)
 	{
 		for (final PartyMatchRoom _room : _rooms.values())
+		{
 			for (final L2PcInstance member : _room.getPartyMembers())
+			{
 				if (member.equals(player))
+				{
 					return _room;
+				}
+			}
+		}
 		
 		return null;
 	}
@@ -92,9 +97,15 @@ public class PartyMatchRoomList
 	public int getPlayerRoomId(final L2PcInstance player)
 	{
 		for (final PartyMatchRoom _room : _rooms.values())
+		{
 			for (final L2PcInstance member : _room.getPartyMembers())
+			{
 				if (member.equals(player))
+				{
 					return _room.getId();
+				}
+			}
+		}
 		
 		return -1;
 	}

@@ -238,7 +238,6 @@ public class L2OlympiadManagerInstance extends L2FolkInstance
 						player.sendPacket(html);
 					}
 					break;
-				
 				case 3: // Spectator overview
 					html.setFile(Olympiad.OLYMPIAD_HTML_PATH + "olympiad_observe_list.htm");
 					
@@ -280,7 +279,6 @@ public class L2OlympiadManagerInstance extends L2FolkInstance
 				case 4: // Send heroes list.
 					player.sendPacket(new ExHeroList());
 					break;
-				
 				case 5: // Hero pending state.
 					if (Hero.getInstance().isInactiveHero(player.getObjectId()))
 					{
@@ -289,7 +287,6 @@ public class L2OlympiadManagerInstance extends L2FolkInstance
 						player.sendPacket(html);
 					}
 					break;
-				
 				case 6: // Hero confirm action.
 					if (Hero.getInstance().isInactiveHero(player.getObjectId()))
 					{
@@ -316,7 +313,36 @@ public class L2OlympiadManagerInstance extends L2FolkInstance
 					html.replace("%objectId%", getObjectId());
 					player.sendPacket(html);
 					break;
-				
+				case 8: // Show rank for a specific class, example >> Olympiad 1_88
+					int classId1 = Integer.parseInt(command.substring(11));
+					if (classId1 >= 88 && classId1 <= 118)
+					{
+						List<String> names = Olympiad.getInstance().getClassLeaderBoardCustom(classId1);
+						html.setFile(Olympiad.OLYMPIAD_HTML_PATH + "noble_ranking.htm");
+						
+						int index = 1;
+						for (String name : names)
+						{
+							html.replace("%place" + index + "%", index);
+							html.replace("%rank" + index + "%", name);
+							
+							index++;
+							if (index > 10)
+							{
+								break;
+							}
+						}
+						
+						for (; index <= 10; index++)
+						{
+							html.replace("%place" + index + "%", "");
+							html.replace("%rank" + index + "%", "");
+						}
+						
+						html.replace("%objectId%", getObjectId());
+						player.sendPacket(html);
+					}
+					break;
 				default:
 					break;
 			}

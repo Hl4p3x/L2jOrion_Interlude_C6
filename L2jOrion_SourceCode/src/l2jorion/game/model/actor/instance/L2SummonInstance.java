@@ -130,12 +130,6 @@ public class L2SummonInstance extends L2Summon
 	}
 	
 	@Override
-	public final String getLevels()
-	{
-		return "" + 1;
-	}
-	
-	@Override
 	public int getSummonType()
 	{
 		return 1;
@@ -357,11 +351,6 @@ public class L2SummonInstance extends L2Summon
 	@Override
 	public boolean destroyItemByItemId(final String process, final int itemId, final int count, final L2Object reference, final boolean sendMessage)
 	{
-		if (Config.DEBUG)
-		{
-			LOG.warn("L2SummonInstance: " + getTemplate().name + " (" + getOwner().getName() + ") consume.");
-		}
-		
 		return getOwner().destroyItemByItemId(process, itemId, count, reference, sendMessage);
 	}
 }

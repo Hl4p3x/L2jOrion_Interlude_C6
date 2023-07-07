@@ -43,13 +43,7 @@ public class SoulShots implements IItemHandler
 		1464,
 		1465,
 		1466,
-		1467,
-		10000,
-		10001,
-		10002,
-		10003,
-		10004,
-		10010
+		1467
 	};
 	
 	private static final int[] SKILL_IDS =

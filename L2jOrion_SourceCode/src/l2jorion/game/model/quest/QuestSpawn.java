@@ -31,12 +31,10 @@ import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author programmos
- */
 public final class QuestSpawn
 {
 	private final Logger LOG = LoggerFactory.getLogger(QuestSpawn.class);
+	
 	private static QuestSpawn instance;
 	
 	public static QuestSpawn getInstance()
@@ -65,30 +63,17 @@ public final class QuestSpawn
 		}
 	}
 	
-	// Method - Public
-	/**
-	 * Add spawn for player instance Will despawn after the spawn length expires Uses player's coords and heading. Adds a little randomization in the x y coords Return object id of newly spawned npc
-	 * @param npcId
-	 * @param cha
-	 * @return
-	 */
 	public L2NpcInstance addSpawn(final int npcId, final L2Character cha)
 	{
 		return addSpawn(npcId, cha.getX(), cha.getY(), cha.getZ(), cha.getHeading(), false, 0);
 	}
 	
-	/**
-	 * Add spawn for player instance Return object id of newly spawned npc
-	 * @param npcId
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @param heading
-	 * @param randomOffset
-	 * @param despawnDelay
-	 * @return
-	 */
 	public L2NpcInstance addSpawn(final int npcId, int x, int y, final int z, final int heading, final boolean randomOffset, final int despawnDelay)
+	{
+		return addSpawn(npcId, x, y, z, heading, randomOffset, despawnDelay, 0);
+	}
+	
+	public L2NpcInstance addSpawn(final int npcId, int x, int y, final int z, final int heading, final boolean randomOffset, final int despawnDelay, int respawnDelay)
 	{
 		L2NpcInstance result = null;
 		try
@@ -139,7 +124,15 @@ public final class QuestSpawn
 				spawn.setLocx(x);
 				spawn.setLocy(y);
 				spawn.setLocz(z + 20);
-				spawn.stopRespawn();
+				
+				if (respawnDelay > 0)
+				{
+					spawn.setRespawnDelay(respawnDelay);
+				}
+				else
+				{
+					spawn.stopRespawn();
+				}
 				
 				if (!randomOffset)
 				{

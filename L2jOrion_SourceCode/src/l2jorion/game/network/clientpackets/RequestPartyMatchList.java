@@ -20,6 +20,7 @@ import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.PartyMatchWaitingList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExPartyRoomMember;
 import l2jorion.game.network.serverpackets.PartyMatchDetail;
@@ -27,7 +28,7 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class RequestPartyMatchList extends L2GameClientPacket
+public class RequestPartyMatchList extends PacketClient
 {
 	private static final Logger LOG = LoggerFactory.getLogger(RequestPartyMatchList.class);
 	

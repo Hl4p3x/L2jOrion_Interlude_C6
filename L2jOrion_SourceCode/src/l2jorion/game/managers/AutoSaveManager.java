@@ -127,7 +127,7 @@ public class AutoSaveManager
 			
 			for (final L2PcInstance player : players)
 			{
-				if (player != null && !player.isInOfflineMode() && !player.isPhantom())
+				if (player != null && !player.isInOfflineMode() && !player.isBot())
 				{
 					if (player.getClient() == null || player.isOnline() == 0)
 					{

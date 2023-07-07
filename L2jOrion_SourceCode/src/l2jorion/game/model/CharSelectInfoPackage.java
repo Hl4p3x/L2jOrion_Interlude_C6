@@ -46,8 +46,11 @@ public class CharSelectInfoPackage
 	private int _karma = 0;
 	private int _augmentationId = 0;
 	private int _accessLevel;
-	private int _fakeArmorObjectId = 0;
-	private int _fakeArmorItemId = 0;
+	
+	private int _armorSkinOption = 0;
+	private int _weaponSkinOption = 0;
+	private int _hairSkinOption = 0;
+	private int _faceSkinOption = 0;
 	
 	public CharSelectInfoPackage(final int objectId, final String name)
 	{
@@ -306,23 +309,43 @@ public class CharSelectInfoPackage
 		_accessLevel = accessLevel;
 	}
 	
-	public int getFakeArmorObjectId()
+	public void setArmorSkinOption(int armorSkinOption)
 	{
-		return _fakeArmorObjectId;
+		_armorSkinOption = armorSkinOption;
 	}
 	
-	public void setFakeArmorObjectId(int objectId)
+	public int getArmorSkinOption()
 	{
-		_fakeArmorObjectId = objectId;
+		return _armorSkinOption;
 	}
 	
-	public int getFakeArmorItemId()
+	public void setWeaponSkinOption(int armorSkinOption)
 	{
-		return _fakeArmorItemId;
+		_weaponSkinOption = armorSkinOption;
 	}
 	
-	public void setFakeArmorItemId(int itemId)
+	public int getWeaponSkinOption()
 	{
-		_fakeArmorItemId = itemId;
+		return _weaponSkinOption;
+	}
+	
+	public void setHairSkinOption(int hairSkinOption)
+	{
+		_hairSkinOption = hairSkinOption;
+	}
+	
+	public int getHairSkinOption()
+	{
+		return _hairSkinOption;
+	}
+	
+	public void setFaceSkinOption(int faceSkinOption)
+	{
+		_faceSkinOption = faceSkinOption;
+	}
+	
+	public int getFaceSkinOption()
+	{
+		return _faceSkinOption;
 	}
 }

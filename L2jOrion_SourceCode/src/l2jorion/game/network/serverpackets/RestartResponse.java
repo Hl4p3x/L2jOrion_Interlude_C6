@@ -20,23 +20,26 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class RestartResponse extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class RestartResponse extends PacketServer
 {
 	private static final String _S__74_RESTARTRESPONSE = "[S] 74 RestartResponse";
 	
 	private static final RestartResponse STATIC_PACKET_TRUE = new RestartResponse(true);
 	private static final RestartResponse STATIC_PACKET_FALSE = new RestartResponse(false);
+	private final String _message;
+	private final boolean _result;
 	
 	public static final RestartResponse valueOf(boolean result)
 	{
 		return result ? STATIC_PACKET_TRUE : STATIC_PACKET_FALSE;
 	}
 	
-	private final boolean _result;
-	
 	public RestartResponse(boolean result)
 	{
 		_result = result;
+		_message = "No message";
 	}
 	
 	@Override
@@ -44,6 +47,7 @@ public class RestartResponse extends L2GameServerPacket
 	{
 		writeC(0x5f);
 		writeD(_result ? 1 : 0);
+		writeS(_message);
 	}
 	
 	@Override

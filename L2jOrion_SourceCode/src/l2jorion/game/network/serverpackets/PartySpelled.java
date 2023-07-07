@@ -26,8 +26,9 @@ import java.util.List;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2SummonInstance;
+import l2jorion.game.network.PacketServer;
 
-public class PartySpelled extends L2GameServerPacket
+public class PartySpelled extends PacketServer
 {
 	private static final String _S__EE_PartySpelled = "[S] EE PartySpelled";
 	

@@ -46,6 +46,7 @@ import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.L2GameClient;
 import l2jorion.game.network.L2GameClient.GameClientState;
+import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.gameserverpackets.AuthRequest;
 import l2jorion.game.network.gameserverpackets.BlowFishKey;
 import l2jorion.game.network.gameserverpackets.ChangeAccessLevel;
@@ -61,6 +62,7 @@ import l2jorion.game.network.loginserverpackets.LoginServerFail;
 import l2jorion.game.network.loginserverpackets.PlayerAuthResponse;
 import l2jorion.game.network.serverpackets.AuthLoginFail;
 import l2jorion.game.network.serverpackets.CharSelectInfo;
+import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.log.Log;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
@@ -274,6 +276,7 @@ public class LoginServerThread extends Thread
 							Toolkit.getDefaultToolkit().beep();
 							
 							final ServerStatus st = new ServerStatus();
+							
 							if (Config.SERVER_LIST_BRACKET)
 							{
 								st.addAttribute(ServerStatus.SERVER_LIST_SQUARE_BRACKET, ServerStatus.ON);
@@ -306,6 +309,7 @@ public class LoginServerThread extends Thread
 							{
 								st.addAttribute(ServerStatus.SERVER_LIST_STATUS, ServerStatus.STATUS_AUTO);
 							}
+							
 							sendPacket(st);
 							if (L2World.getInstance().getAllPlayers().values().size() > 0)
 							{
@@ -321,7 +325,9 @@ public class LoginServerThread extends Thread
 						case 03:
 							final PlayerAuthResponse par = new PlayerAuthResponse(decrypt);
 							final String account = par.getAccount();
+							
 							WaitingClient wcToRemove = null;
+							
 							synchronized (_waitingClients)
 							{
 								for (final WaitingClient wc : _waitingClients)
@@ -363,7 +369,7 @@ public class LoginServerThread extends Thread
 								}
 								else
 								{
-									String text = "Session key is not correct. Closing connection for account " + wcToRemove.account + ".";
+									String text = "Session key is not correct. Closing connection for account: " + wcToRemove.account;
 									Log.add(text, "Seasons_incorrect");
 									
 									wcToRemove.gameClient.getConnection().sendPacket(new AuthLoginFail(1));
@@ -482,13 +488,7 @@ public class LoginServerThread extends Thread
 			
 			e.printStackTrace();
 		}
-		
-		pl = null;
 	}
-	
-	/*
-	 * public void addGameServerLogin(String account, L2GameClient client) { _accountsInGameServer.put(account, client); }
-	 */
 	
 	public boolean addGameServerLogin(final String account, final L2GameClient client)
 	{
@@ -552,16 +552,23 @@ public class LoginServerThread extends Thread
 	
 	public void doKickPlayer(final String account)
 	{
-		if (_accountsInGameServer.get(account) != null)
+		L2GameClient client = _accountsInGameServer.get(account);
+		if (client != null)
 		{
-			_accountsInGameServer.get(account).closeNow();
-			LoginServerThread.getInstance().sendLogout(account);
-			
-			if (Config.DEBUG)
+			final L2PcInstance player = client.getActiveChar();
+			if (player != null)
 			{
-				LOG.debug("called [doKickPlayer], closing connection");
+				player.sendPacket(new SystemMessage(SystemMessageId.ANOTHER_LOGIN_WITH_ACCOUNT));
+				ThreadPoolManager.getInstance().scheduleGeneral(() ->
+				{
+					client.closeNow();
+				}, 1000);
 			}
-			
+			else
+			{
+				client.closeNow();
+			}
+			LoginServerThread.getInstance().sendLogout(account);
 		}
 	}
 	
@@ -589,10 +596,12 @@ public class LoginServerThread extends Thread
 		
 		byte[] data = sl.getContent();
 		NewCrypt.appendChecksum(data);
+		
 		if (Config.DEBUG)
 		{
 			LOG.debug("[S]\n" + Util.printData(data));
 		}
+		
 		data = _blowfish.crypt(data);
 		
 		final int len = data.length + 2;

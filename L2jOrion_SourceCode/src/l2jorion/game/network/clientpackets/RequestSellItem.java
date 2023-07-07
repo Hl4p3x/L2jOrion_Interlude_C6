@@ -28,6 +28,7 @@ import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2MerchantInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ItemList;
@@ -36,7 +37,7 @@ import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.powerpack.PowerPackConfig;
 
-public final class RequestSellItem extends L2GameClientPacket
+public final class RequestSellItem extends PacketClient
 {
 	private int _listId;
 	private int _count;
@@ -85,15 +86,10 @@ public final class RequestSellItem extends L2GameClientPacket
 		final L2PcInstance player = getClient().getActiveChar();
 		
 		if (player == null)
-			return;
-
-		if (player.isSubmitingPin())
 		{
-			player.sendMessage("Unable to do any action while PIN is not submitted");
-			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
+		
 		if (!getClient().getFloodProtectors().getTransaction().tryPerformAction("buy"))
 		{
 			player.sendMessage("You buying too fast.");
@@ -102,7 +98,9 @@ public final class RequestSellItem extends L2GameClientPacket
 		
 		// Alt game - Karma punishment
 		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_SHOP && player.getKarma() > 0)
+		{
 			return;
+		}
 		
 		final L2Object target = player.getTarget();
 		
@@ -111,7 +109,9 @@ public final class RequestSellItem extends L2GameClientPacket
 			if (!player.isGM() && (target == null // No target (ie GM Shop)
 				|| !(target instanceof L2MerchantInstance) // Target not a merchant and not mercmanager
 				|| !player.isInsideRadius(target, L2NpcInstance.INTERACTION_DISTANCE, false, false)))
+			{
 				return; // Distance is too far
+			}
 		}
 		
 		String htmlFolder = "";
@@ -129,7 +129,9 @@ public final class RequestSellItem extends L2GameClientPacket
 		else
 		{
 			if (!PowerPackConfig.GMSHOP_USECOMMAND)
+			{
 				return;
+			}
 		}
 		
 		if (!PowerPackConfig.GMSHOP_USECOMMAND && _listId > 1000000) // lease
@@ -181,15 +183,10 @@ public final class RequestSellItem extends L2GameClientPacket
 			}
 			
 			// Check totalPrice
-			/*if (totalPrice <= 0)
-			{
-				Announcements _a = Announcements.getInstance();
-				_a.sys("2");
-				// Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to purchase over " + Integer.MAX_VALUE + " adena worth of goods.", Config.DEFAULT_PUNISH);
-				SystemMessage sm = new SystemMessage(SystemMessageId.YOU_HAVE_EXCEEDED_QUANTITY_THAT_CAN_BE_INPUTTED);
-				sendPacket(sm);
-				return;
-			}*/
+			/*
+			 * if (totalPrice <= 0) { Announcements _a = Announcements.getInstance(); // Util.handleIllegalPlayerAction(player, "Warning!! Character " + player.getName() + " of account " + player.getAccountName() + " tried to purchase over " + Integer.MAX_VALUE + " adena worth of goods.",
+			 * Config.DEFAULT_PUNISH); SystemMessage sm = new SystemMessage(SystemMessageId.YOU_HAVE_EXCEEDED_QUANTITY_THAT_CAN_BE_INPUTTED); sendPacket(sm); return; }
+			 */
 			item = player.getInventory().destroyItem("Sell", objectId, count, player, null);
 		}
 		player.addAdena("Sell", (int) totalPrice, merchant, false);

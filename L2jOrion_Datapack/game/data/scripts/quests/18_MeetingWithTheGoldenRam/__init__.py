@@ -1,7 +1,3 @@
-# Contributed by t0rm3nt0r to the Official L2J Datapack Project.
-# With some minor cleanup by DrLecter.
-# Visit http://forum.l2jdp.com for more details.
-
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState

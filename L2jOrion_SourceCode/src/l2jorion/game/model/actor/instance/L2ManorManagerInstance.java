@@ -20,9 +20,9 @@
  */
 package l2jorion.game.model.actor.instance;
 
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import javolution.util.FastList;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.controllers.TradeController;
 import l2jorion.game.datatables.sql.ItemTable;
@@ -40,14 +40,13 @@ import l2jorion.game.network.serverpackets.ExShowProcureCropDetail;
 import l2jorion.game.network.serverpackets.ExShowSeedInfo;
 import l2jorion.game.network.serverpackets.ExShowSellCropList;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
+import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.network.serverpackets.SystemMessage;
-import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.game.util.Broadcast;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
+import l2jorion.util.random.Rnd;
 
 public class L2ManorManagerInstance extends L2MerchantInstance
 {
@@ -69,33 +68,26 @@ public class L2ManorManagerInstance extends L2MerchantInstance
 		
 		player.setLastFolkNPC(this);
 		
-		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
 		{
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
-			
-			// Send a Server->Client packet MyTargetSelected to the L2PcInstance player
-			MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
-			player.sendPacket(my);
-			
-			// Send a Server->Client packet ValidateLocation to correct the L2NpcInstance position and heading on the client
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
-			// Calculate the distance between the L2PcInstance and the L2NpcInstance
 			if (!canInteract(player))
 			{
-				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 			}
 			else
 			{
-				// Like L2OFF player must rotate to the Npc
-				MoveToPawn sp = new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE);
-				player.sendPacket(sp);
-				Broadcast.toKnownPlayers(player, sp);
+				if (player.isMoving())
+				{
+					player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+				}
+				
+				player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
+				
+				broadcastPacket(new SocialAction(getObjectId(), Rnd.get(8)));
 				
 				// If player is a lord of this manor, alternative message from NPC
 				if (CastleManorManager.getInstance().isDisabled())
@@ -105,7 +97,6 @@ public class L2ManorManagerInstance extends L2MerchantInstance
 					html.replace("%objectId%", String.valueOf(getObjectId()));
 					html.replace("%npcname%", getName());
 					player.sendPacket(html);
-					html = null;
 				}
 				else if (!player.isGM() // Player is not GM
 					&& getCastle() != null && getCastle().getCastleId() > 0 // Verification of castle
@@ -122,7 +113,7 @@ public class L2ManorManagerInstance extends L2MerchantInstance
 				}
 			}
 		}
-		// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
+		
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
@@ -152,7 +143,6 @@ public class L2ManorManagerInstance extends L2MerchantInstance
 	@Override
 	public void onBypassFeedback(final L2PcInstance player, final String command)
 	{
-		// BypassValidation Exploit plug.
 		if (player.getLastFolkNPC() == null || player.getLastFolkNPC().getObjectId() != getObjectId())
 		{
 			return;
@@ -197,7 +187,7 @@ public class L2ManorManagerInstance extends L2MerchantInstance
 					else
 					{
 						L2TradeList tradeList = new L2TradeList(0);
-						FastList<SeedProduction> seeds = getCastle().getSeedProduction(CastleManorManager.PERIOD_CURRENT);
+						ArrayList<SeedProduction> seeds = getCastle().getSeedProduction(CastleManorManager.PERIOD_CURRENT);
 						
 						for (final SeedProduction s : seeds)
 						{

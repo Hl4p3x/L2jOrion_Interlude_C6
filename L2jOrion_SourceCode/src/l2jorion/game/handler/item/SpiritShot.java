@@ -97,7 +97,7 @@ public class SpiritShot implements IItemHandler
 		}
 		
 		// Consume Spiritshot if player has enough of them
-		// TODO: test ss
+		// XXX: test ss
 		if (!Config.DONT_DESTROY_SS)
 		{
 			if (!activeChar.destroyItemWithoutTrace("Consume", item.getObjectId(), weaponItem.getSpiritShotCount(), null, false))

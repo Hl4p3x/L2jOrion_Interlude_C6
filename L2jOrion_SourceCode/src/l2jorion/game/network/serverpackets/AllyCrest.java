@@ -16,7 +16,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class AllyCrest extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class AllyCrest extends PacketServer
 {
 	private static final String _S__C7_ALLYCREST = "[S] ae AllyCrest";
 	

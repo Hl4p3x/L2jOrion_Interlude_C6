@@ -28,20 +28,18 @@ import l2jorion.game.script.faenor.FaenorInterface;
 public class ScriptEngine
 {
 	protected EngineInterface _utils = FaenorInterface.getInstance();
+	
 	public static final Hashtable<String, ParserFactory> parserFactories = new Hashtable<>();
 	
 	protected static Parser createParser(final String name) throws ParserNotCreatedException
 	{
 		ParserFactory s = parserFactories.get(name);
-		if (s == null) // shape not found
+		if (s == null)
 		{
 			try
 			{
 				Class.forName("l2jorion.game.script." + name);
-				// By now the static block with no function would
-				// have been executed if the shape was found.
-				// the shape is expected to have put its factory
-				// in the hashtable.
+				
 				s = parserFactories.get(name);
 				if (s == null)
 				{
@@ -55,8 +53,6 @@ public class ScriptEngine
 					e.printStackTrace();
 				}
 				
-				// We'll throw an exception to indicate that
-				// the shape could not be created
 				throw new ParserNotCreatedException();
 			}
 		}

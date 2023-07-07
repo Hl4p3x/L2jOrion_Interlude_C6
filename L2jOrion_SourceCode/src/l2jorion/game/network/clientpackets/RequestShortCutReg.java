@@ -22,9 +22,10 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.L2ShortCut;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ShortCutRegister;
 
-public final class RequestShortCutReg extends L2GameClientPacket
+public final class RequestShortCutReg extends PacketClient
 {
 	private int _type;
 	private int _id;

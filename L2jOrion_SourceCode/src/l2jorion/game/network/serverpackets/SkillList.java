@@ -21,9 +21,12 @@
 package l2jorion.game.network.serverpackets;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class SkillList extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class SkillList extends PacketServer
 {
 	private static final String _S__6D_SKILLLIST = "[S] 58 SkillList";
 	
@@ -43,12 +46,18 @@ public class SkillList extends L2GameServerPacket
 			passive = pPassive;
 			disabled = pDisabled;
 		}
+		
+		public int getId()
+		{
+			return id;
+		}
 	}
 	
 	public void addSkill(int id, int level, boolean passive, boolean disabled)
 	{
-		
 		_skills.add(new Skill(id, level, passive, disabled));
+		// Let's sort skills by id
+		Collections.sort(_skills, (sk1, sk2) -> sk1.getId() - sk2.getId());
 	}
 	
 	@Override

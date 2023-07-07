@@ -12,9 +12,11 @@ import l2jorion.game.model.entity.ClanHall;
 import l2jorion.game.model.entity.event.CTF;
 import l2jorion.game.model.entity.event.DM;
 import l2jorion.game.model.entity.event.TvT;
+import l2jorion.game.model.entity.event.dungeon.Dungeon;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.model.entity.siege.Fort;
 import l2jorion.game.model.zone.ZoneId;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.RestartResponse;
 import l2jorion.game.network.serverpackets.Revive;
@@ -23,7 +25,7 @@ import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.IllegalPlayerAction;
 import l2jorion.game.util.Util;
 
-public final class RequestRestartPoint extends L2GameClientPacket
+public final class RequestRestartPoint extends PacketClient
 {
 	protected int _requestedPointType;
 	protected boolean _continuation;
@@ -48,13 +50,13 @@ public final class RequestRestartPoint extends L2GameClientPacket
 		{
 			if ((activeChar._inEventTvT && TvT.is_started()) || (activeChar._inEventDM && DM.is_started()) || (activeChar._inEventCTF && CTF.is_started()))
 			{
-				activeChar.sendMessage("You can't restart in Event!");
+				activeChar.sendMessage("You can't restart in Event.");
 				return;
 			}
 			
 			if (activeChar.isInArenaEvent() || activeChar.isArenaProtection())
 			{
-				activeChar.sendMessage("You cannot restart while in Tournament Event!");
+				activeChar.sendMessage("You cannot restart while in Tournament Event.");
 				activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 				sendPacket(RestartResponse.valueOf(false));
 				return;
@@ -65,6 +67,15 @@ public final class RequestRestartPoint extends L2GameClientPacket
 				Location loc = null;
 				Castle castle = null;
 				Fort fort = null;
+				
+				if (Config.L2UNLIMITED_CUSTOM)
+				{
+					if (Dungeon.getPlayers().contains(activeChar))
+					{
+						activeChar.setInstanceId(0);
+						Dungeon.getPlayers().remove(activeChar);
+					}
+				}
 				
 				if (activeChar.isInJail())
 				{
@@ -90,7 +101,7 @@ public final class RequestRestartPoint extends L2GameClientPacket
 							if (activeChar.getClan().getHasHideout() == 0)
 							{
 								// cheater
-								activeChar.sendMessage("You may not use this respawn point!");
+								activeChar.sendMessage("You may not use this respawn point.");
 								Util.handleIllegalPlayerAction(activeChar, "Player " + activeChar.getName() + " used respawn cheat.", IllegalPlayerAction.PUNISH_KICK);
 								return;
 							}
@@ -187,11 +198,13 @@ public final class RequestRestartPoint extends L2GameClientPacket
 						if (!activeChar.isGM() && activeChar.isInsideZone(ZoneId.ZONE_RANDOM))
 						{
 							loc = RandomZoneTaskManager.getInstance().getCurrentZone().getLoc();
+							activeChar.setIsIn7sDungeon(false);
+							activeChar.setIsPendingRevive(true);
+							activeChar.teleToLocation(loc, 50, true);
+							return;
 						}
-						else
-						{
-							loc = new Location(activeChar.getX(), activeChar.getY(), activeChar.getZ());
-						}
+						
+						loc = new Location(activeChar.getX(), activeChar.getY(), activeChar.getZ());
 						break;
 					
 					case 27: // to jail
@@ -209,18 +222,22 @@ public final class RequestRestartPoint extends L2GameClientPacket
 							break;
 						}
 						
+						if (activeChar.isInsideZone(ZoneId.ZONE_PVP)) // Fix for arena if CUSTOM_RESPAWN = true
+						{
+							loc = MapRegionTable.getInstance().getTeleToLocation(activeChar, MapRegionTable.TeleportWhereType.Town);
+							break;
+						}
+						
 						if (Config.CUSTOM_RESPAWN)
 						{
 							loc = new Location(Config.CSPAWN_X, Config.CSPAWN_Y, Config.CSPAWN_Z);
+							break;
 						}
-						else
-						{
-							loc = MapRegionTable.getInstance().getTeleToLocation(activeChar, MapRegionTable.TeleportWhereType.Town);
-						}
+						
+						loc = MapRegionTable.getInstance().getTeleToLocation(activeChar, MapRegionTable.TeleportWhereType.Town);
 						break;
 				}
 				
-				// Stand up and teleport, proof dvp video.
 				activeChar.setIsIn7sDungeon(false);
 				activeChar.setIsPendingRevive(true);
 				activeChar.teleToLocation(loc, true);
@@ -254,13 +271,12 @@ public final class RequestRestartPoint extends L2GameClientPacket
 		{
 			if (activeChar.getClan() != null && castle.getSiege().checkIsAttacker(activeChar.getClan()))
 			{
-				// Schedule respawn delay for attacker
 				ThreadPoolManager.getInstance().scheduleGeneral(new DeathTask(activeChar), castle.getSiege().getAttackerRespawnDelay());
 				activeChar.sendMessage("You will be re-spawned in " + castle.getSiege().getAttackerRespawnDelay() / 1000 + " seconds");
 				return;
 			}
 		}
-		// run immediately (no need to schedule)
+		
 		new DeathTask(activeChar).run();
 	}
 	

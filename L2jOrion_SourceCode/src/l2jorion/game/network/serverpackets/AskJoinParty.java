@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class AskJoinParty extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class AskJoinParty extends PacketServer
 {
 	private static final String _S__4B_ASKJOINPARTY_0X4B = "[S] 39 AskJoinParty 0x4b";
 	

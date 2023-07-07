@@ -34,6 +34,7 @@ import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2VillageMasterInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExStorageMaxCount;
 import l2jorion.game.network.serverpackets.PledgeSkillList;
@@ -45,7 +46,7 @@ import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class RequestAquireSkill extends L2GameClientPacket
+public class RequestAquireSkill extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestAquireSkill.class);
 	
@@ -70,17 +71,23 @@ public class RequestAquireSkill extends L2GameClientPacket
 		final L2PcInstance player = getClient().getActiveChar();
 		
 		if (player == null)
+		{
 			return;
+		}
 		
 		final L2FolkInstance trainer = player.getLastFolkNPC();
 		
 		if (trainer == null)
+		{
 			return;
+		}
 		
 		final int npcid = trainer.getNpcId();
 		
 		if (!player.isInsideRadius(trainer, L2NpcInstance.INTERACTION_DISTANCE, false, false) && !player.isGM())
+		{
 			return;
+		}
 		
 		if (!Config.ALT_GAME_SKILL_LEARN)
 		{
@@ -88,8 +95,10 @@ public class RequestAquireSkill extends L2GameClientPacket
 		}
 		
 		if (player.getSkillLevel(_id) >= _level)
+		{
 			// already knows the skill with this level
 			return;
+		}
 		
 		final L2Skill skill = SkillTable.getInstance().getInfo(_id, _level);
 		
@@ -206,12 +215,11 @@ public class RequestAquireSkill extends L2GameClientPacket
 				return;
 			}
 		}
-		else if (_skillType == 2) // pledgeskills TODO: Find appropriate system messages.
+		else if (_skillType == 2) // pledgeskills
 		{
 			if (!player.isClanLeader())
 			{
-				// TODO: Find and add system msg
-				player.sendMessage("This feature is available only for the clan leader");
+				player.sendMessage("This feature is available only for the clan leader.");
 				return;
 			}
 			
@@ -236,7 +244,7 @@ public class RequestAquireSkill extends L2GameClientPacket
 			
 			if (counts == 0)
 			{
-				player.sendMessage("You are trying to learn skill that u can't..");
+				player.sendMessage("You are trying to learn skill that u can't.");
 				Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to learn skill that he can't!!!", IllegalPlayerAction.PUNISH_KICK);
 				return;
 			}

@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExUseSharedGroupItem extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExUseSharedGroupItem extends PacketServer
 {
 	private static final String _S__FE_49_EXUSESHAREDGROUPITEM = "[S] FE:49 ExUseSharedGroupItem";
 	

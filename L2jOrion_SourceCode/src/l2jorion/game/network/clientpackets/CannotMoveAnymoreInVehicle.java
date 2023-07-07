@@ -18,12 +18,10 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.StopMoveInVehicle;
 
-/**
- * @author Damon
- */
-public final class CannotMoveAnymoreInVehicle extends L2GameClientPacket
+public final class CannotMoveAnymoreInVehicle extends PacketClient
 {
 	private int _x, _y, _z, _heading;
 	private int _boatId;

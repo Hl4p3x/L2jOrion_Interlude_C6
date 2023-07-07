@@ -22,12 +22,13 @@ import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.PartyMatchWaitingList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExClosePartyRoom;
 import l2jorion.game.network.serverpackets.PartyMatchList;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestOustFromPartyRoom extends L2GameClientPacket
+public final class RequestOustFromPartyRoom extends PacketClient
 {
 	
 	private int _charid;

@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.datatables.sql;
 
 import java.sql.Connection;
@@ -30,7 +10,6 @@ import java.util.Map;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
-import l2jorion.Config;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2EnchantSkillLearn;
@@ -86,7 +65,7 @@ public class SkillTreeTable
 				
 				if (parentClassId != -1)
 				{
-					final Map<Integer, L2SkillLearn> parentMap = getSkillTrees().get(ClassId.values()[parentClassId]);
+					final Map<Integer, L2SkillLearn> parentMap = getSkillTrees().get(ClassId.values()[parentClassId]); // it needs to rework
 					map.putAll(parentMap);
 				}
 				
@@ -289,12 +268,6 @@ public class SkillTreeTable
 		return _instance;
 	}
 	
-	/**
-	 * Return the minimum level needed to have this Expertise.<BR>
-	 * <BR>
-	 * @param grade The grade level searched
-	 * @return
-	 */
 	public int getExpertiseLevel(final int grade)
 	{
 		if (grade <= 0)
@@ -315,13 +288,6 @@ public class SkillTreeTable
 		return 0;
 	}
 	
-	/**
-	 * Each class receives new skill on certain levels, this methods allow the retrieval of the minimum character level of given class required to learn a given skill
-	 * @param skillId The iD of the skill
-	 * @param classId The classId of the character
-	 * @param skillLvl The SkillLvl
-	 * @return The min level
-	 */
 	public int getMinSkillLevel(final int skillId, final ClassId classId, final int skillLvl)
 	{
 		final Map<Integer, L2SkillLearn> map = getSkillTrees().get(classId);
@@ -369,13 +335,6 @@ public class SkillTreeTable
 		return result.toArray(new L2SkillLearn[result.size()]);
 	}
 	
-	/**
-	 * Gets the available skills.
-	 * @param player the learning skill player.
-	 * @param classId the learning skill class ID.
-	 * @param holder
-	 * @return all available skills for a given {@code player}, {@code classId}, {@code includeByFs} and {@code includeAutoGet}.
-	 */
 	private List<L2SkillLearn> getAvailableSkills(final L2PcInstance player, final ClassId classId, final ISkillsHolder holder)
 	{
 		final List<L2SkillLearn> result = new ArrayList<>();
@@ -411,8 +370,8 @@ public class SkillTreeTable
 	
 	public L2SkillLearn[] getAvailableSkills(final L2PcInstance cha)
 	{
-		final List<L2SkillLearn> result = new FastList<>();
-		final List<L2SkillLearn> skills = new FastList<>();
+		final List<L2SkillLearn> result = new ArrayList<>();
+		final List<L2SkillLearn> skills = new ArrayList<>();
 		
 		skills.addAll(_fishingSkillTrees);
 		
@@ -445,7 +404,7 @@ public class SkillTreeTable
 				
 				if (!knownSkill && temp.getLevel() == 1)
 				{
-					// this is a new skill
+					// new skill
 					result.add(temp);
 				}
 			}
@@ -456,8 +415,8 @@ public class SkillTreeTable
 	
 	public L2EnchantSkillLearn[] getAvailableEnchantSkills(final L2Character player)
 	{
-		final List<L2EnchantSkillLearn> result = new FastList<>();
-		final List<L2EnchantSkillLearn> skills = new FastList<>();
+		final List<L2EnchantSkillLearn> result = new ArrayList<>();
+		final List<L2EnchantSkillLearn> skills = new ArrayList<>();
 		
 		skills.addAll(_enchantSkillTrees);
 		
@@ -480,7 +439,7 @@ public class SkillTreeTable
 	
 	public L2PledgeSkillLearn[] getAvailablePledgeSkills(final L2PcInstance cha)
 	{
-		final List<L2PledgeSkillLearn> result = new FastList<>();
+		final List<L2PledgeSkillLearn> result = new ArrayList<>();
 		final List<L2PledgeSkillLearn> skills = _pledgeSkillTrees;
 		
 		if (skills == null)
@@ -523,11 +482,6 @@ public class SkillTreeTable
 		return result.toArray(new L2PledgeSkillLearn[result.size()]);
 	}
 	
-	/**
-	 * Returns all allowed skills for a given class.
-	 * @param classId
-	 * @return all allowed skills for a given class.
-	 */
 	public Collection<L2SkillLearn> getAllowedSkills(final ClassId classId)
 	{
 		return getSkillTrees().get(classId).values();
@@ -555,7 +509,7 @@ public class SkillTreeTable
 	public int getMinLevelForNewSkill(final L2PcInstance cha)
 	{
 		int minLevel = 0;
-		final List<L2SkillLearn> skills = new FastList<>();
+		final List<L2SkillLearn> skills = new ArrayList<>();
 		
 		skills.addAll(_fishingSkillTrees);
 		
@@ -693,23 +647,21 @@ public class SkillTreeTable
 		return 0;
 	}
 	
-	/**
-	 * @param player
-	 * @param classId
-	 * @return
-	 */
 	public Collection<L2Skill> getAllAvailableSkills(final L2PcInstance player, final ClassId classId)
 	{
 		// Get available skills
 		int unLearnable = 0;
+		
 		final PlayerSkillHolder holder = new PlayerSkillHolder(player.getSkills());
 		List<L2SkillLearn> learnable = getAvailableSkills(player, classId, holder);
+		
 		while (learnable.size() > unLearnable)
 		{
 			for (final L2SkillLearn s : learnable)
 			{
 				final L2Skill sk = SkillTable.getInstance().getInfo(s.getId(), s.getLevel());
-				if ((sk == null) || ((sk.getId() == L2Skill.SKILL_DIVINE_INSPIRATION) && !Config.AUTO_LEARN_DIVINE_INSPIRATION && !player.isGM()))
+				
+				if (sk == null)
 				{
 					unLearnable++;
 					continue;
@@ -721,6 +673,7 @@ public class SkillTreeTable
 			// Get new available skills, some skills depend of previous skills to be available.
 			learnable = getAvailableSkills(player, classId, holder);
 		}
+		
 		return holder.getSkills().values();
 	}
 	

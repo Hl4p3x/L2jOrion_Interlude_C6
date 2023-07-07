@@ -153,7 +153,9 @@ public class AutoSpawnInstance
 	public boolean addSpawnLocation(final int[] spawnLoc)
 	{
 		if (spawnLoc.length != 3)
+		{
 			return false;
+		}
 		
 		return addSpawnLocation(spawnLoc[0], spawnLoc[1], spawnLoc[2], -1);
 	}
@@ -167,7 +169,9 @@ public class AutoSpawnInstance
 		catch (final IndexOutOfBoundsException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			return null;
 		}

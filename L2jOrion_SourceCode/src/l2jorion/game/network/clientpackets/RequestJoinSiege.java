@@ -28,14 +28,12 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.model.entity.siege.Fort;
 import l2jorion.game.model.entity.siege.hallsiege.SiegableHall;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SiegeInfo;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * @author ProGramMoS
- */
-public final class RequestJoinSiege extends L2GameClientPacket
+public final class RequestJoinSiege extends PacketClient
 {
 	private int _castleId;
 	private int _isAttacker;

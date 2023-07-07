@@ -23,10 +23,11 @@ import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.util.Util;
 
-public final class RequestExMagicSkillUseGround extends L2GameClientPacket
+public final class RequestExMagicSkillUseGround extends PacketClient
 {
 	private int _x;
 	private int _y;
@@ -55,7 +56,6 @@ public final class RequestExMagicSkillUseGround extends L2GameClientPacket
 			return;
 		}
 		
-		// Get the level of the used skill
 		final int level = activeChar.getSkillLevel(_skillId);
 		if (level <= 0)
 		{
@@ -63,17 +63,13 @@ public final class RequestExMagicSkillUseGround extends L2GameClientPacket
 			return;
 		}
 		
-		// Get the L2Skill template corresponding to the skillID received from the client
 		final L2Skill skill = SkillTable.getInstance().getInfo(_skillId, level);
 		
 		if (skill != null)
 		{
 			activeChar.setCurrentSkillWorldPosition(new Location(_x, _y, _z));
 			
-			// normally magicskilluse packet turns char client side but for these skills, it doesn't (even with correct target)
 			activeChar.setHeading(Util.calculateHeadingFrom(activeChar.getX(), activeChar.getY(), _x, _y));
-			// activeChar.broadcastPacket(new ValidateLocation(activeChar));
-			
 			activeChar.useMagic(skill, _ctrlPressed, _shiftPressed);
 		}
 		else

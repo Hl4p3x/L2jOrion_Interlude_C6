@@ -31,11 +31,6 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * This class ...
- * @version $Revision: 1.1.2.4 $ $Date: 2005/04/06 16:13:51 $
- */
-
 public class Remedy implements IItemHandler
 {
 	private static int[] ITEM_IDS =
@@ -61,7 +56,9 @@ public class Remedy implements IItemHandler
 			activeChar = ((L2PetInstance) playable).getOwner();
 		}
 		else
+		{
 			return;
+		}
 		
 		if (activeChar.isInOlympiadMode())
 		{
@@ -117,11 +114,11 @@ public class Remedy implements IItemHandler
 					break;
 				}
 			}
-			effects = null;
+			
 			MagicSkillUser MSU = new MagicSkillUser(playable, playable, 34, 1, 0, 0);
 			activeChar.sendPacket(MSU);
 			activeChar.broadcastPacket(MSU);
-			MSU = null;
+			
 			playable.destroyItem("Consume", item.getObjectId(), 1, null, false);
 		}
 		else if (itemId == 1834) // emergency dressing
@@ -135,11 +132,11 @@ public class Remedy implements IItemHandler
 					break;
 				}
 			}
-			effects = null;
+			
 			MagicSkillUser MSU = new MagicSkillUser(playable, playable, 2045, 1, 0, 0);
 			activeChar.sendPacket(MSU);
 			activeChar.broadcastPacket(MSU);
-			MSU = null;
+			
 			playable.destroyItem("Consume", item.getObjectId(), 1, null, false);
 		}
 		else if (itemId == 3889) // potion of recovery
@@ -153,7 +150,6 @@ public class Remedy implements IItemHandler
 				}
 			}
 			
-			effects = null;
 			activeChar.setIsImobilised(false);
 			
 			if (activeChar.getFirstEffect(L2Effect.EffectType.ROOT) == null)
@@ -164,7 +160,7 @@ public class Remedy implements IItemHandler
 			MagicSkillUser MSU = new MagicSkillUser(playable, playable, 2042, 1, 0, 0);
 			activeChar.sendPacket(MSU);
 			activeChar.broadcastPacket(MSU);
-			MSU = null;
+			
 			playable.destroyItem("Consume", item.getObjectId(), 1, null, false);
 		}
 		

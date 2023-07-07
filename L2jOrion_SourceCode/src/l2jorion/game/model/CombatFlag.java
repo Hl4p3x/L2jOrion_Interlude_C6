@@ -26,14 +26,8 @@ import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.ItemList;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * @author programmos, scoria dev
- */
-
 public class CombatFlag
 {
-	// private static final Logger LOG = LoggerFactory.getLogger(CombatFlag.class);
-	
 	protected L2PcInstance _player = null;
 	public int playerId = 0;
 	private L2ItemInstance _item = null;
@@ -43,11 +37,6 @@ public class CombatFlag
 	
 	private final int _itemId;
 	
-	// private int _heading;
-	// private int _fortId;
-	
-	// =========================================================
-	// Constructor
 	public CombatFlag(/* int fort_id, */final int x, final int y, final int z, final int heading, final int item_id)
 	{
 		// _fortId = fort_id;
@@ -86,11 +75,9 @@ public class CombatFlag
 		// the comabt flag if unmounting is successful.
 		if (player.isMounted())
 		{
-			// TODO: dismount
 			if (!player.dismount())
 			{
-				// TODO: correct this custom message.
-				player.sendMessage("You may not pick up this item while riding in this territory");
+				player.sendMessage("You may not pick up this item while riding in this territory.");
 				return;
 			}
 		}

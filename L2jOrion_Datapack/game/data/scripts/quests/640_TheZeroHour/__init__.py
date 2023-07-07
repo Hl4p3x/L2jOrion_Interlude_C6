@@ -1,8 +1,4 @@
-# Made by Kerberos v1.0 on 2009/05/08
-# this script is part of the Official L2J Datapack Project.
-# Visit http://www.l2jdp.com/forum for more details.
 import sys
-
 from l2jorion import Config
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
@@ -17,6 +13,8 @@ Kahman = 31554
 MONSTERS = range(22105,22112)+range(22113,22120)+[22121]
 
 #ITEMS
+DROP_CHANCE = 100 #Here you can set chance for drop Fangs
+DROP_COUNT = 1 #Here you can set count how much Fangs mobs should drop (+ x Config rate from rates.ini)
 Fang = 8085
 
 REWARDS={
@@ -80,10 +78,13 @@ class Quest (JQuest) :
         return htmltext
 
     def onKill(self, npc, player, isPet) :
-        st = player.getQuestState(qn)
+        partyMember = self.getRandomPartyMemberState(player, STARTED)
+        if not partyMember: return
+        st = partyMember.getQuestState(qn)
         if not st : return
-        st.giveItems(Fang,int(Config.RATE_DROP_QUEST))
-        st.playSound("ItemSound.quest_itemget")
+        if st.getRandom(100) <= DROP_CHANCE:
+            st.giveItems(Fang, DROP_COUNT * int(Config.RATE_DROP_QUEST))
+            st.playSound("ItemSound.quest_itemget")
         return
 
 QUEST       = Quest(640,qn,"The Zero Hour")

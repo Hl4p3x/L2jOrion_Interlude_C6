@@ -25,7 +25,6 @@ public abstract class ReceivablePacket<T extends MMOClient<?>> extends AbstractP
 	
 	protected ReceivablePacket()
 	{
-		
 	}
 	
 	protected abstract boolean read();

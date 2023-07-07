@@ -1,4 +1,3 @@
-#quest by zerghase
 import sys
 from l2jorion import Config 
 from l2jorion.game.model.quest import State

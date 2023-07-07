@@ -22,18 +22,12 @@ package l2jorion.login.network.gameserverpackets;
 
 import l2jorion.login.network.clientpackets.ClientBasePacket;
 
-/**
- * @author -Wooden-
- */
 public class ChangeAccessLevel extends ClientBasePacket
 {
 	
 	private final int _level;
 	private final String _account;
 	
-	/**
-	 * @param decrypt
-	 */
 	public ChangeAccessLevel(final byte[] decrypt)
 	{
 		super(decrypt);
@@ -41,20 +35,13 @@ public class ChangeAccessLevel extends ClientBasePacket
 		_account = readS();
 	}
 	
-	/**
-	 * @return Returns the account.
-	 */
 	public String getAccount()
 	{
 		return _account;
 	}
 	
-	/**
-	 * @return Returns the level.
-	 */
 	public int getLevel()
 	{
 		return _level;
 	}
-	
 }

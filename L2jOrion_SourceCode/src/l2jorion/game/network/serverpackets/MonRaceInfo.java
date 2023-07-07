@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2NpcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class MonRaceInfo extends L2GameServerPacket
+public class MonRaceInfo extends PacketServer
 {
 	private static final String _S__DD_MonRaceInfo = "[S] dd MonRaceInfo";
 	

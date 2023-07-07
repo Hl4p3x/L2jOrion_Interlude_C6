@@ -24,18 +24,14 @@ import java.util.List;
 import javolution.util.FastList;
 import l2jorion.game.managers.CursedWeaponsManager;
 import l2jorion.game.model.L2Character;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ExCursedWeaponList;
 
-/**
- * Format: (ch)
- * @author -Wooden-
- */
-public class RequestCursedWeaponList extends L2GameClientPacket
+public class RequestCursedWeaponList extends PacketClient
 {
 	@Override
 	protected void readImpl()
 	{
-		// nothing to read it's just a trigger
 	}
 	
 	@Override
@@ -44,9 +40,10 @@ public class RequestCursedWeaponList extends L2GameClientPacket
 		final L2Character activeChar = getClient().getActiveChar();
 		
 		if (activeChar == null)
+		{
 			return;
+		}
 		
-		// send a ExCursedWeaponList :p
 		final List<Integer> list = new FastList<>();
 		for (final int id : CursedWeaponsManager.getInstance().getCursedWeaponsIds())
 		{

@@ -23,17 +23,14 @@ import l2jorion.Config;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExVariationCancelResult;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 
-/**
- * Format(ch) d
- * @author -Wooden-
- */
-public final class RequestRefineCancel extends L2GameClientPacket
+public final class RequestRefineCancel extends PacketClient
 {
 	private int _targetItemObjId;
 	

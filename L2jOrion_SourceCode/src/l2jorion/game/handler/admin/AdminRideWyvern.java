@@ -27,9 +27,6 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.Ride;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * @author L2jOrion.
- */
 public class AdminRideWyvern implements IAdminCommandHandler
 {
 	private static final String[] ADMIN_COMMANDS =

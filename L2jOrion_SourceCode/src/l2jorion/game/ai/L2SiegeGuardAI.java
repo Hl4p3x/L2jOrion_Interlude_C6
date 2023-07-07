@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.ai;
 
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_ACTIVE;
@@ -238,7 +218,6 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 	 */
 	private void thinkActive()
 	{
-		// Update every 1s the _globalAggro counter to come close to 0
 		if (_globalAggro != 0)
 		{
 			if (_globalAggro < 0)
@@ -275,7 +254,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 			}
 			
 			// Chose a target from its aggroList
-			final L2Character hated = (_actor.isConfused()) ? getAttackTarget() : npc.getMostHated();
+			final L2Character hated = (_actor.isConfused()) ? (L2Character) getTarget() : npc.getMostHated();
 			
 			// Order to the L2Attackable to attack the target
 			if (hated != null)
@@ -302,16 +281,6 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 		((L2SiegeGuardInstance) _actor).returnHome();
 	}
 	
-	/**
-	 * Manage AI attack thinks of a L2Attackable (called by onEvtThink).
-	 * <ul>
-	 * <li>Update the attack timeout if actor is running</li>
-	 * <li>If target is dead or timeout is expired, stop this attack and set the Intention to AI_INTENTION_ACTIVE</li>
-	 * <li>Call all L2Object of its Faction inside the Faction Range</li>
-	 * <li>Chose a target and order to attack it with magic skill or physical attack</li>
-	 * </ul>
-	 * TODO: Manage casting rules to healer mobs (like Ant Nurses)
-	 */
 	private void thinkAttack()
 	{
 		if (_attackTimeout < GameTimeController.getInstance().getGameTicks())
@@ -328,7 +297,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 		}
 		
 		// Check if target is dead or if timeout is expired to stop this attack
-		final L2Character attackTarget = getAttackTarget();
+		final L2Character attackTarget = (L2Character) getTarget();
 		if ((attackTarget == null) || attackTarget.isAlikeDead() || (_attackTimeout < GameTimeController.getInstance().getGameTicks()))
 		{
 			// Stop hating this target after the attack timeout or if target is dead
@@ -339,7 +308,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 			
 			// Cancel target and timeout
 			_attackTimeout = Integer.MAX_VALUE;
-			setAttackTarget(null);
+			setTarget(null);
 			
 			// Set the AI Intention to AI_INTENTION_ACTIVE
 			setIntention(AI_INTENTION_ACTIVE, null, null);
@@ -368,7 +337,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 		}
 		
 		// Verify if the target exists or is invul.
-		final L2Character target = getAttackTarget();
+		final L2Character target = (L2Character) getTarget();
 		if ((target == null) || target.isInvul())
 		{
 			return;
@@ -435,10 +404,11 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 				continue;
 			}
 			
-			if (!npc.isDead() && (Math.abs(target.getZ() - npc.getZ()) < 600) && ((npc.getAI()._intention == CtrlIntention.AI_INTENTION_IDLE) || (npc.getAI()._intention == CtrlIntention.AI_INTENTION_ACTIVE)) && target.isInsideRadius(npc, 1500, true, false) && GeoData.getInstance().canSeeTarget(npc, target))
+			if (!npc.isDead() && (Math.abs(target.getZ() - npc.getZ()) < 600) && ((npc.getAI()._intention == CtrlIntention.AI_INTENTION_IDLE) || (npc.getAI()._intention == CtrlIntention.AI_INTENTION_ACTIVE)) && target.isInsideRadius(npc, 1500, true, false)
+				&& GeoData.getInstance().canSeeTarget(npc, target))
 			{
 				// Notify the L2Object AI with EVT_AGGRESSION
-				npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, getAttackTarget(), 1);
+				npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, getTarget(), 1);
 				return;
 			}
 			
@@ -483,10 +453,6 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 		}
 	}
 	
-	/**
-	 * Prepare NPC attacks.<br>
-	 * The NPC will try to cast spells or attack his target in melee if his AI isn't considered as an healer.
-	 */
 	private void attackPrepare()
 	{
 		if (_actor == null)
@@ -494,7 +460,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 			return;
 		}
 		
-		L2Character attackTarget = getAttackTarget();
+		L2Character attackTarget = (L2Character) getTarget();
 		if (attackTarget == null)
 		{
 			_actor.setTarget(null);
@@ -524,7 +490,7 @@ public class L2SiegeGuardAI extends L2CharacterAI implements Runnable
 		
 		// Get all informations needed to choose between physical or magical attack
 		double dist = _actor.getPlanDistanceSq(attackTarget.getX(), attackTarget.getY());
-		int range = _actor.getPhysicalAttackRange() + _actor.getTemplate().getCollisionRadius() + _attackTarget.getTemplate().getCollisionRadius();
+		int range = _actor.getPhysicalAttackRange() + _actor.getTemplate().getCollisionRadius() + attackTarget.getTemplate().getCollisionRadius();
 		if (attackTarget.isMoving())
 		{
 			range += 50;

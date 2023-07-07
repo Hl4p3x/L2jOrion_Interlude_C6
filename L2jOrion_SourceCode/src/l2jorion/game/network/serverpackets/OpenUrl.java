@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public final class OpenUrl extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public final class OpenUrl extends PacketServer
 {
 	public static final String _S__70_OPENURL = "[S] 70 OpenUrl";
 	

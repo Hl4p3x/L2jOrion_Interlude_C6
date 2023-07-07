@@ -136,7 +136,7 @@ public class Forum
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement ps = con.prepareStatement(RESTORE_CHILDREN);
-					
+			
 			ps.setInt(1, _forumId);
 			
 			try (ResultSet result = ps.executeQuery())
@@ -226,7 +226,7 @@ public class Forum
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement ps = con.prepareStatement(ADD_FORUM);
-					
+			
 			ps.setInt(1, _forumId);
 			ps.setString(2, _forumName);
 			ps.setInt(3, _parent.getId());

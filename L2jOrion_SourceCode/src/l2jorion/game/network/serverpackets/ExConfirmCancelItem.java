@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExConfirmCancelItem extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExConfirmCancelItem extends PacketServer
 {
 	private static final String _S__FE_56_EXCONFIRMCANCELITEM = "[S] FE:56 ExConfirmCancelItem";
 	

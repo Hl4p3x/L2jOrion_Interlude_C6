@@ -20,17 +20,15 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+
 import l2jorion.Config;
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.CastleManorManager;
 import l2jorion.game.managers.CastleManorManager.CropProcure;
+import l2jorion.game.network.PacketClient;
 
-/**
- * Format: (ch) dd [dddc] d - manor id d - size [ d - crop id d - sales d - price c - reward type ]
- * @author l3x
- */
-public class RequestSetCrop extends L2GameClientPacket
+public class RequestSetCrop extends PacketClient
 {
 	private int _size;
 	private int _manorId;
@@ -67,9 +65,11 @@ public class RequestSetCrop extends L2GameClientPacket
 	protected void runImpl()
 	{
 		if (_size < 1)
+		{
 			return;
+		}
 		
-		final FastList<CropProcure> crops = new FastList<>();
+		final ArrayList<CropProcure> crops = new ArrayList<>();
 		for (int i = 0; i < _size; i++)
 		{
 			final int id = _items[i * 4 + 0];

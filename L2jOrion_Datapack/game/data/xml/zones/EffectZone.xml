@@ -643,7 +643,7 @@
 	<!-- Swamp of Screams (Monsters Buffs) -->
 	<zone name="godad_swamp_monster1" type="EffectZone" shape="NPoly" minZ="-3375" maxZ="-2975"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -657,7 +657,7 @@
 	</zone>
 	<zone name="godad_swamp_monster2" type="EffectZone" shape="NPoly" minZ="-3191" maxZ="-2991"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -673,7 +673,7 @@
 	</zone>
 	<zone name="godad_swamp_monster3" type="EffectZone" shape="NPoly" minZ="-3335" maxZ="-2935"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -689,7 +689,7 @@
 	</zone>
 	<zone name="godad_swamp_monster4" type="EffectZone" shape="NPoly" minZ="-3179" maxZ="-2979"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -704,7 +704,7 @@
 	</zone>
 	<zone name="godad_swamp_monster5" type="EffectZone" shape="NPoly" minZ="-3255" maxZ="-2955"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -719,7 +719,7 @@
 	</zone>
 	<zone name="godad_swamp_monster6" type="EffectZone" shape="NPoly" minZ="-3458" maxZ="-3158"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -735,7 +735,7 @@
 	</zone>
 	<zone name="godad_swamp_monster7" type="EffectZone" shape="NPoly" minZ="-3418" maxZ="-3118"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -750,7 +750,7 @@
 	</zone>
 	<zone name="godad_swamp_monster8" type="EffectZone" shape="NPoly" minZ="-3410" maxZ="-3110"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -766,7 +766,7 @@
 	</zone>
 	<zone name="godad_swamp_monster9" type="EffectZone" shape="NPoly" minZ="-3422" maxZ="-3122"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -782,7 +782,7 @@
 	</zone>
 	<zone name="godad_swamp_monster10" type="EffectZone" shape="NPoly" minZ="-3370" maxZ="-3070"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -799,7 +799,7 @@
 	</zone>
 	<zone name="godad_swamp_monster11" type="EffectZone" shape="NPoly" minZ="-3366" maxZ="-3066"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -815,7 +815,7 @@
 	</zone>
 	<zone name="godad_swamp_monster12" type="EffectZone" shape="NPoly" minZ="-2522" maxZ="-2222"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -829,7 +829,7 @@
 	</zone>
 	<zone name="godad_swamp_monster13" type="EffectZone" shape="NPoly" minZ="-2470" maxZ="-2170"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -844,7 +844,7 @@
 	</zone>
 	<zone name="godad_swamp_monster14" type="EffectZone" shape="NPoly" minZ="-2458" maxZ="-2158"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -861,7 +861,7 @@
 	</zone>
 	<zone name="godad_swamp_monster15" type="EffectZone" shape="NPoly" minZ="-2542" maxZ="-2242"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -875,7 +875,7 @@
 	</zone>
 	<zone name="godad_swamp_monster16" type="EffectZone" shape="NPoly" minZ="-2558" maxZ="-2258"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -889,7 +889,7 @@
 	</zone>
 	<zone name="godad_swamp_monster17" type="EffectZone" shape="NPoly" minZ="-2414" maxZ="-2114"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -903,7 +903,7 @@
 	</zone>
 	<zone name="godad_swamp_monster18" type="EffectZone" shape="NPoly" minZ="-2522" maxZ="-2222"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -916,7 +916,7 @@
 	</zone>
 	<zone name="godad_swamp_monster19" type="EffectZone" shape="NPoly" minZ="-2462" maxZ="-2162"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -930,7 +930,7 @@
 	</zone>
 	<zone name="godad_swamp_monster20" type="EffectZone" shape="NPoly" minZ="-2574" maxZ="-2274"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -944,7 +944,7 @@
 	</zone>
 	<zone name="godad_swamp_monster21" type="EffectZone" shape="NPoly" minZ="-2727" maxZ="-2427"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -958,7 +958,7 @@
 	</zone>
 	<zone name="godad_swamp_monster22" type="EffectZone" shape="NPoly" minZ="-2767" maxZ="-2467"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -972,7 +972,7 @@
 	</zone>
 	<zone name="godad_swamp_monster23" type="EffectZone" shape="NPoly" minZ="-2763" maxZ="-2463"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -987,7 +987,7 @@
 	</zone>
 	<zone name="godad_swamp_monster24" type="EffectZone" shape="NPoly" minZ="-2550" maxZ="-2150"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -1001,7 +1001,7 @@
 	</zone>
 	<zone name="godad_swamp_monster25" type="EffectZone" shape="NPoly" minZ="-2486" maxZ="-2286"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->
@@ -1015,7 +1015,7 @@
 	</zone>
 	<zone name="godad_swamp_monster26" type="EffectZone" shape="NPoly" minZ="-2819" maxZ="-2619"> <!-- [22_16] -->
 		<stat name="targetClass" val="L2NpcInstance" />
-		<stat name="skillIdLvl" val="4644-2;4645-3;4647-3;" /> <!-- @s_area_haste2;@s_area_focus3;@s_area_might3 -->
+		<stat name="skillIdLvl" val="4320-4;4592-4;" /> <!-- Poison & Hex -->
 		<stat name="chance" val="70" />
 		<stat name="initialDelay" val="1000" />
 		<stat name="reuse" val="6000" /> <!-- Guess -->

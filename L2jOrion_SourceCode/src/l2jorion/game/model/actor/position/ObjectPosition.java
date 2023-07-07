@@ -78,7 +78,6 @@ public class ObjectPosition
 			{
 				getActiveObject().decayMe();
 			}
-			
 		}
 	}
 	
@@ -231,10 +230,6 @@ public class ObjectPosition
 		getWorldPosition().setXYZ(x, y, z);
 	}
 	
-	/**
-	 * Sets the world position.
-	 * @param newPosition the new world position
-	 */
 	public final void setWorldPosition(Location newPosition)
 	{
 		setWorldPosition(newPosition.getX(), newPosition.getY(), newPosition.getZ());

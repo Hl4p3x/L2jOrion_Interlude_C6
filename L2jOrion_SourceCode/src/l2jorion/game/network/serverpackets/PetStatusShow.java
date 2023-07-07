@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Summon;
+import l2jorion.game.network.PacketServer;
 
-public class PetStatusShow extends L2GameServerPacket
+public class PetStatusShow extends PacketServer
 {
 	private static final String _S__C9_PETSTATUSSHOW = "[S] B0 PetStatusShow";
 	

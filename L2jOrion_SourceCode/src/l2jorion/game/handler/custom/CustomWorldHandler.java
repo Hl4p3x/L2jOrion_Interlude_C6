@@ -19,25 +19,14 @@ package l2jorion.game.handler.custom;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.Rebirth;
 
-/**
- * This will simply manage any custom 'Enter World callers' needed.<br>
- * Rather then having to add them to the core's. (yuck!)
- * @author JStar
- */
 public class CustomWorldHandler
 {
-	
 	private static CustomWorldHandler _instance = null;
 	
 	private CustomWorldHandler()
 	{
-		// Do Nothing ^_-
 	}
 	
-	/**
-	 * Receives the non-static instance of the RebirthManager.
-	 * @return
-	 */
 	public static CustomWorldHandler getInstance()
 	{
 		if (_instance == null)
@@ -48,25 +37,16 @@ public class CustomWorldHandler
 		return _instance;
 	}
 	
-	/**
-	 * Requests entry into the world - manages appropriately.
-	 * @param player
-	 */
 	public void enterWorld(final L2PcInstance player)
 	{
-		// L2Rebirth's skills must be actived only on main class
 		if (!player.isSubClassActive())
 		{
-			Rebirth.getInstance().grantRebirthSkills(player);// Rebirth Caller - if player has any skills, they will be granted them.
+			Rebirth.getInstance().grantRebirthSkills(player);
 		}
 	}
 	
-	/**
-	 * Requests removal from the world - manages appropriately.
-	 * @param player
-	 */
 	public void exitWorld(final L2PcInstance player)
 	{
-		// TODO: Remove the rebirth engine's bonus skills from player?
+		
 	}
 }

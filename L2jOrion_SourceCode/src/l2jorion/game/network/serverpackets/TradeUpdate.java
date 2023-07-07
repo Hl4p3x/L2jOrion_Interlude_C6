@@ -24,8 +24,9 @@ import l2jorion.game.model.TradeList;
 import l2jorion.game.model.TradeList.TradeItem;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class TradeUpdate extends L2GameServerPacket
+public class TradeUpdate extends PacketServer
 {
 	private static final String _S__74_TRADEUPDATE = "[S] 74 TradeUpdate";
 	

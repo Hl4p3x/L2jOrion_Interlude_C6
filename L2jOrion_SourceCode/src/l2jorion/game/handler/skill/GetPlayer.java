@@ -26,12 +26,7 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Skill.SkillType;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.util.random.Rnd;
-
-/*
- * Mobs can teleport players to them
- */
 
 public class GetPlayer implements ISkillHandler
 {
@@ -44,21 +39,25 @@ public class GetPlayer implements ISkillHandler
 	public void useSkill(final L2Character activeChar, final L2Skill skill, final L2Object[] targets)
 	{
 		if (activeChar.isAlikeDead())
+		{
 			return;
+		}
 		
 		for (final L2Object target : targets)
 		{
 			if (target instanceof L2PcInstance)
 			{
-				L2PcInstance trg = (L2PcInstance) target;
-				if (trg.isAlikeDead())
+				L2PcInstance trg = target.getActingPlayer();
+				if (trg == null || trg.isAlikeDead())
+				{
 					continue;
+				}
 				
-				// trg.teleToLocation(activeChar.getX(), activeChar.getY(), activeChar.getZ(), true);
-				trg.setXYZ(activeChar.getX() + Rnd.get(-10, 10), activeChar.getY() + Rnd.get(-10, 10), activeChar.getZ());
-				trg.sendPacket(new ValidateLocation(trg));
+				int x = activeChar.getX() + Rnd.get(-10, 10);
+				int y = activeChar.getY() + Rnd.get(-10, 10);
+				int z = activeChar.getZ();
 				
-				trg = null;
+				trg.instantTeleport(x, y, z, true);
 			}
 		}
 	}

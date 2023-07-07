@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class AuthLoginFail extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class AuthLoginFail extends PacketServer
 {
 	private static final String _S__12_AUTHLOGINFAIL = "[S] 14 AuthLoginFail";
 	

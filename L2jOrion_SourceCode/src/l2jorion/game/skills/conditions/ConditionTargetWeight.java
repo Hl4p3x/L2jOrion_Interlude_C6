@@ -18,7 +18,7 @@ public class ConditionTargetWeight extends Condition
 	public boolean testImpl(final Env env)
 	{
 		final L2Character targetObj = env.getTarget();
-		if ((targetObj != null) && targetObj.isPlayer)
+		if ((targetObj != null) && targetObj.isPlayer())
 		{
 			final L2PcInstance target = targetObj.getActingPlayer();
 			if (!target.getDietMode() && (target.getMaxLoad() > 0))

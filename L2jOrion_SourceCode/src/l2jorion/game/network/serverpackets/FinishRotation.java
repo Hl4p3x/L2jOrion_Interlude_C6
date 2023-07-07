@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
+import l2jorion.game.network.PacketServer;
 
-public class FinishRotation extends L2GameServerPacket
+public class FinishRotation extends PacketServer
 {
 	private static final String _S__78_FINISHROTATION = "[S] 63 FinishRotation";
 	

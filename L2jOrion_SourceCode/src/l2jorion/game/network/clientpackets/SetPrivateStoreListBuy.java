@@ -22,13 +22,14 @@ import l2jorion.Config;
 import l2jorion.game.model.TradeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.ZoneId;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.PrivateStoreManageListBuy;
 import l2jorion.game.network.serverpackets.PrivateStoreMsgBuy;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class SetPrivateStoreListBuy extends L2GameClientPacket
+public final class SetPrivateStoreListBuy extends PacketClient
 {
 	private int _count;
 	private int[] _items; // count * 3
@@ -78,13 +79,6 @@ public final class SetPrivateStoreListBuy extends L2GameClientPacket
 			return;
 		}
 		
-		if (player.isSubmitingPin())
-		{
-			player.sendMessage("Unable to do any action while PIN is not submitted");
-			player.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-		
 		if (!player.getAccessLevel().allowTransaction())
 		{
 			player.sendPacket(SystemMessageId.YOU_ARE_NOT_AUTHORIZED_TO_DO_THAT);
@@ -96,6 +90,14 @@ public final class SetPrivateStoreListBuy extends L2GameClientPacket
 		{
 			player.sendMessage("You cannot start store now.");
 			player.sendPacket(new PrivateStoreManageListBuy(player));
+			player.sendPacket(ActionFailed.STATIC_PACKET);
+			return;
+		}
+		
+		if (Config.RON_CUSTOM && !player.isInsideZone(ZoneId.ZONE_PEACE))
+		{
+			player.sendPacket(new PrivateStoreManageListBuy(player));
+			player.sendPacket(SystemMessageId.NO_PRIVATE_STORE_HERE);
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
@@ -157,6 +159,23 @@ public final class SetPrivateStoreListBuy extends L2GameClientPacket
 		{
 			player.sendPacket(new PrivateStoreManageListBuy(player));
 			player.sendPacket(new SystemMessage(SystemMessageId.YOU_HAVE_EXCEEDED_QUANTITY_THAT_CAN_BE_INPUTTED));
+			return;
+		}
+		
+		if (Config.RON_CUSTOM)
+		{
+			// Check for available funds
+			if (player.getInventory().getItemByItemId(tradeList.getSellBuyItemId()) == null || cost > player.getInventory().getItemByItemId(tradeList.getSellBuyItemId()).getCount() || cost <= 0)
+			{
+				player.sendPacket(new PrivateStoreManageListBuy(player));
+				player.sendPacket(new SystemMessage(SystemMessageId.THE_PURCHASE_PRICE_IS_HIGHER_THAN_MONEY));
+				return;
+			}
+			
+			player.sitDown();
+			player.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_BUY);
+			player.broadcastUserInfo();
+			player.broadcastPacket(new PrivateStoreMsgBuy(player));
 			return;
 		}
 		

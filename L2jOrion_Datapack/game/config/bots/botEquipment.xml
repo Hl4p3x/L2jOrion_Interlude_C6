@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<bot type="equipment">
+		<!-- Equipment newbie class begin -->
+		<!-- Equipment with Heavy Armor -->
+		<type classId="0" weapon="68" shield="0" helm="1148" chest="26" legs="34" gloves="51" feet="39" hair="0" face="0" neck="909" lear="846" rear="846" lfing="878" rfing="878"/> <!-- Human Fighter -->
+		<type classId="18" weapon="68" shield="0" helm="1148" chest="26" legs="34" gloves="51" feet="39" hair="0" face="0" neck="909" lear="846" rear="846" lfing="878" rfing="878"/> <!-- Elf Fighter -->
+		<type classId="31" weapon="68" shield="0" helm="1148" chest="26" legs="34" gloves="51" feet="39" hair="0" face="0" neck="909" lear="846" rear="846" lfing="878" rfing="878"/> <!-- Dark Elf Fighter -->
+		<type classId="44" weapon="68" shield="0" helm="1148" chest="26" legs="34" gloves="51" feet="39" hair="0" face="0" neck="909" lear="846" rear="846" lfing="878" rfing="878"/> <!-- Orc Fighter -->
+		<type classId="53" weapon="87" shield="0" helm="1148" chest="26" legs="34" gloves="51" feet="39" hair="0" face="0" neck="909" lear="846" rear="846" lfing="878" rfing="878"/> <!-- Dwarven Fighter -->
+		<!-- Equipment with Robe Armor -->
+		<type classId="10" weapon="177" shield="0" helm="44" chest="1101" legs="1104" gloves="51" feet="39" hair="0" face="0" neck="909" lear="846" rear="846" lfing="878" rfing="878"/> <!-- Human Mage -->
+		<type classId="25" weapon="177" shield="0" helm="44" chest="1101" legs="1104" gloves="51" feet="39" hair="0" face="0" neck="909" lear="846" rear="846" lfing="878" rfing="878"/> <!-- Elf Mage -->
+		<type classId="38" weapon="177" shield="0" helm="44" chest="1101" legs="1104" gloves="51" feet="39" hair="0" face="0" neck="909" lear="846" rear="846" lfing="878" rfing="878"/> <!-- Dark Elf Mage -->
+		<type classId="49" weapon="177" shield="0" helm="44" chest="1101" legs="1104" gloves="51" feet="39" hair="0" face="0" neck="909" lear="846" rear="846" lfing="878" rfing="878"/> <!-- Orc Mage -->
+		<!-- Equipment newbie class end -->
+		<!-- Equipment 3rd class begin -->
+		<!-- Equipment with Light Armor -->
+		<type classId="92" weapon="7577" shield="0" helm="6382" chest="6379" legs="0" gloves="6380" feet="6381" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Sagittarius -->
+		<type classId="93" weapon="6590" shield="0" helm="6382" chest="6379" legs="0" gloves="6380" feet="6381" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Adventurer -->
+		<type classId="101" weapon="6590" shield="0" helm="6382" chest="6379" legs="0" gloves="6380" feet="6381" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Wind Rider -->
+		<type classId="102" weapon="7577" shield="0" helm="6382" chest="6379" legs="0" gloves="6380" feet="6381" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Moonlight Sentinel -->
+		<type classId="108" weapon="6590" shield="0" helm="6382" chest="6379" legs="0" gloves="6380" feet="6381" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Ghost Hunter -->
+		<type classId="109" weapon="7577" shield="0" helm="6382" chest="6379" legs="0" gloves="6380" feet="6381" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Ghost Sentinel -->
+		<type classId="114" weapon="6602" shield="0" helm="6382" chest="6379" legs="0" gloves="6380" feet="6381" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Grand Khauatari -->
+		<type classId="117" weapon="6590" shield="0" helm="6382" chest="6379" legs="0" gloves="6380" feet="6381" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Seeker -->
+		<!-- Equipment with Heavy Armor -->
+		<type classId="88" weapon="6580" shield="0" helm="6378" chest="6373" legs="6374" gloves="6375" feet="6376" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Duelist -->
+		<type classId="89" weapon="6599" shield="0" helm="6378" chest="6373" legs="6374" gloves="6375" feet="6376" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Dreadnought -->
+		<type classId="90" weapon="6583" shield="6377" helm="6378" chest="6373" legs="6374" gloves="6375" feet="6376" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Phoenix Knight -->
+		<type classId="100" weapon="6583" shield="6377" helm="6378" chest="6373" legs="6374" gloves="6375" feet="6376" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Sword Muse -->
+		<type classId="91" weapon="6583" shield="6377" helm="6378" chest="6373" legs="6374" gloves="6375" feet="6376" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Hell Knight -->
+		<type classId="107" weapon="6580" shield="0" helm="6378" chest="6373" legs="6374" gloves="6375" feet="6376" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Spectral Dancer -->
+		<type classId="99" weapon="6583" shield="6377" helm="6378" chest="6373" legs="6374" gloves="6375" feet="6376" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Eva Templar -->
+		<type classId="106" weapon="6583" shield="6377" helm="6378" chest="6373" legs="6374" gloves="6375" feet="6376" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Shillien Templar -->
+		<type classId="113" weapon="6607" shield="0" helm="6378" chest="6373" legs="6374" gloves="6375" feet="6376" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Titan -->
+		<type classId="118" weapon="6585" shield="6377" helm="6378" chest="6373" legs="6374" gloves="6375" feet="6376" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Maestro -->
+		<!-- Equipment with Robe Armor -->
+		<type classId="94" weapon="6608" shield="0" helm="512" chest="2407" legs="0" gloves="5767" feet="5779" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Archmage -->
+		<type classId="95" weapon="6608" shield="0" helm="512" chest="2407" legs="0" gloves="5767" feet="5779" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Soultaker -->
+		<type classId="98" weapon="6608" shield="0" helm="512" chest="2407" legs="0" gloves="5767" feet="5779" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Hierophant -->
+		<type classId="96" weapon="6608" shield="0" helm="512" chest="2407" legs="0" gloves="5767" feet="5779" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Arcana Lord -->
+		<type classId="97" weapon="6608" shield="0" helm="512" chest="2407" legs="0" gloves="5767" feet="5779" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Cardinal -->
+		<type classId="103" weapon="6608" shield="0" helm="512" chest="2407" legs="0" gloves="5767" feet="5779" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Mystic Muse -->
+		<type classId="111" weapon="6608" shield="0" helm="512" chest="2407" legs="0" gloves="5767" feet="5779" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Spectral Master -->
+		<type classId="112" weapon="6608" shield="0" helm="512" chest="2407" legs="0" gloves="5767" feet="5779" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Shillen Saint -->
+		<type classId="115" weapon="6608" shield="0" helm="512" chest="2407" legs="0" gloves="5767" feet="5779" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Dominator -->
+		<type classId="118" weapon="6608" shield="0" helm="512" chest="2407" legs="0" gloves="5767" feet="5779" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Doomcryer -->
+		<type classId="116" weapon="6608" shield="0" helm="512" chest="2407" legs="0" gloves="5767" feet="5779" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Elemental Master -->
+		<type classId="105" weapon="6608" shield="0" helm="512" chest="2407" legs="0" gloves="5767" feet="5779" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Eva Saint -->
+		<type classId="110" weapon="6608" shield="0" helm="512" chest="2407" legs="0" gloves="5767" feet="5779" hair="0" face="0" neck="920" lear="858" rear="858" lfing="889" rfing="889"/> <!-- Storm Screamer -->
+		<!-- Equipment 3rd class end -->
+	</bot>
+</list>

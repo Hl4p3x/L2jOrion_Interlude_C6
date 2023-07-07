@@ -19,9 +19,10 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.quest.QuestState;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.TutorialCloseHtml;
 
-public class RequestTutorialLinkHtml extends L2GameClientPacket
+public class RequestTutorialLinkHtml extends PacketClient
 {
 	private String _bypass;
 	private boolean protector_packet = false;

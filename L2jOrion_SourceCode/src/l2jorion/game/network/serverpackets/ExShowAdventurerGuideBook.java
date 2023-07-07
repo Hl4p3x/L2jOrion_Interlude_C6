@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExShowAdventurerGuideBook extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExShowAdventurerGuideBook extends PacketServer
 {
 	private static final String _S__FE_37_EXSHOWADVENTURERGUIDEBOOK = "[S] FE:37 ExShowAdventurerGuideBook";
 	

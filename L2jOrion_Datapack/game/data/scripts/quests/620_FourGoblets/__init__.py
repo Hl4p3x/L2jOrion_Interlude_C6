@@ -144,7 +144,7 @@ class Quest (JQuest) :
           htmltext = "31453-12.htm"
           st.exitQuest(1)
     elif event == "11" :
-      if st.getQuestItemsCount(SEALED_BOX) >= 1 :
+      while st.getQuestItemsCount(SEALED_BOX) >= 1 :
         htmltext = "31454-13.htm"
         st.takeItems(SEALED_BOX,1)
         reward = 0
@@ -377,7 +377,7 @@ class Quest (JQuest) :
       elif st.getQuestItemsCount(GOBLETS[0]) + st.getQuestItemsCount(GOBLETS[1]) + st.getQuestItemsCount(GOBLETS[2]) + st.getQuestItemsCount(GOBLETS[3]) >= 4 :
         htmltext = "31452-5.htm"
     elif event == "19" :
-      if st.getQuestItemsCount(SEALED_BOX) >= 1 :
+      while st.getQuestItemsCount(SEALED_BOX) >= 1 :
         htmltext = "31919-3.htm"
         st.takeItems(SEALED_BOX,1)
         reward = 0

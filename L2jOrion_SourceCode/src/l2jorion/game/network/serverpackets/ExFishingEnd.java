@@ -22,8 +22,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class ExFishingEnd extends L2GameServerPacket
+public class ExFishingEnd extends PacketServer
 {
 	private static final String _S__FE_14_EXFISHINGEND = "[S] FE:14 ExFishingEnd";
 	private final boolean _win;

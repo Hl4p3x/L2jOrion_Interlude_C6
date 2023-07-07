@@ -22,12 +22,8 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.L2ZoneType;
 import l2jorion.game.model.zone.ZoneId;
 
-/**
- * Zone where store is not allowed.
- * @author StarCOM
- */
 public class L2NoStoreZone extends L2ZoneType
-{	
+{
 	public L2NoStoreZone(final int id)
 	{
 		super(id);

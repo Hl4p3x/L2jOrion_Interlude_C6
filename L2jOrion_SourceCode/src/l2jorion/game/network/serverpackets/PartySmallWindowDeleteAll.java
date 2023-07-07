@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class PartySmallWindowDeleteAll extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class PartySmallWindowDeleteAll extends PacketServer
 {
 	private static final String _S__65_PARTYSMALLWINDOWDELETEALL = "[S] 50 PartySmallWindowDeleteAll";
 	

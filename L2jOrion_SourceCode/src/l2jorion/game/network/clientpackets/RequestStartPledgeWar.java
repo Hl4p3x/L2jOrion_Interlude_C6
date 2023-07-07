@@ -24,11 +24,12 @@ import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestStartPledgeWar extends L2GameClientPacket
+public final class RequestStartPledgeWar extends PacketClient
 {
 	private String _pledgeName;
 	private L2Clan _clan;
@@ -46,13 +47,6 @@ public final class RequestStartPledgeWar extends L2GameClientPacket
 		player = getClient().getActiveChar();
 		if (player == null)
 		{
-			return;
-		}
-		
-		if (player.isSubmitingPin())
-		{
-			player.sendMessage("Unable to do any action while PIN is not submitted");
-			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 		

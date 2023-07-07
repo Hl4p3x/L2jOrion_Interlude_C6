@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
+import l2jorion.game.network.PacketServer;
 
-public class ValidateLocation extends L2GameServerPacket
+public class ValidateLocation extends PacketServer
 {
 	private static final String _S__76_SETTOLOCATION = "[S] 61 ValidateLocation";
 	
@@ -36,6 +37,15 @@ public class ValidateLocation extends L2GameServerPacket
 		_y = cha.getY();
 		_z = cha.getZ();
 		_heading = cha.getHeading();
+	}
+	
+	public ValidateLocation(L2Character cha, boolean client)
+	{
+		_charObjId = cha.getObjectId();
+		_x = cha.getClientX();
+		_y = cha.getClientY();
+		_z = cha.getClientZ();
+		_heading = cha.getClientHeading();
 	}
 	
 	@Override

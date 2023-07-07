@@ -22,9 +22,6 @@ package l2jorion.login;
 
 public class HackingException extends Exception
 {
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
 	private static final long serialVersionUID = 4050762693478463029L;
 	String _ip;
 	private final int _connects;

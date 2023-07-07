@@ -25,6 +25,7 @@ public class ZoneNPoly extends L2ZoneForm
 {
 	private int[] _x;
 	private int[] _y;
+	
 	private int _z1;
 	private int _z2;
 	
@@ -32,6 +33,7 @@ public class ZoneNPoly extends L2ZoneForm
 	{
 		_x = x;
 		_y = y;
+		
 		_z1 = z1;
 		_z2 = z2;
 	}
@@ -40,7 +42,9 @@ public class ZoneNPoly extends L2ZoneForm
 	public boolean isInsideZone(int x, int y, int z)
 	{
 		if (z < _z1 || z > _z2)
+		{
 			return false;
+		}
 		
 		boolean inside = false;
 		for (int i = 0, j = _x.length - 1; i < _x.length; j = i++)
@@ -60,11 +64,15 @@ public class ZoneNPoly extends L2ZoneForm
 		
 		// First check if a point of the polygon lies inside the rectangle
 		if (_x[0] > ax1 && _x[0] < ax2 && _y[0] > ay1 && _y[0] < ay2)
+		{
 			return true;
+		}
 		
 		// Or a point of the rectangle inside the polygon
 		if (isInsideZone(ax1, ay1, (_z2 - 1)))
+		{
 			return true;
+		}
 		
 		// If the first point wasn't inside the rectangle it might still have any line crossing any side
 		// of the rectangle
@@ -79,13 +87,21 @@ public class ZoneNPoly extends L2ZoneForm
 			
 			// Check if this line intersects any of the four sites of the rectangle
 			if (lineSegmentsIntersect(tX, tY, uX, uY, ax1, ay1, ax1, ay2))
+			{
 				return true;
+			}
 			if (lineSegmentsIntersect(tX, tY, uX, uY, ax1, ay1, ax2, ay1))
+			{
 				return true;
+			}
 			if (lineSegmentsIntersect(tX, tY, uX, uY, ax2, ay2, ax1, ay2))
+			{
 				return true;
+			}
 			if (lineSegmentsIntersect(tX, tY, uX, uY, ax2, ay2, ax2, ay1))
+			{
 				return true;
+			}
 		}
 		
 		return false;
@@ -100,7 +116,9 @@ public class ZoneNPoly extends L2ZoneForm
 		{
 			test = Math.pow(_x[i] - x, 2) + Math.pow(_y[i] - y, 2);
 			if (test < shortestDist)
+			{
 				shortestDist = test;
+			}
 		}
 		
 		return Math.sqrt(shortestDist);

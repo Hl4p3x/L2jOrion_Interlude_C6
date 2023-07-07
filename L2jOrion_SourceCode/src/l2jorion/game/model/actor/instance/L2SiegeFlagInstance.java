@@ -25,9 +25,6 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2SiegeClan;
 import l2jorion.game.model.entity.siege.Siege;
 import l2jorion.game.network.serverpackets.ActionFailed;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
-import l2jorion.game.network.serverpackets.StatusUpdate;
-import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
 
 public class L2SiegeFlagInstance extends L2NpcInstance
@@ -100,28 +97,13 @@ public class L2SiegeFlagInstance extends L2NpcInstance
 	public void onAction(final L2PcInstance player)
 	{
 		if (player == null || !canTarget(player))
+		{
 			return;
+		}
 		
-		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
 		{
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
-			
-			// Send a Server->Client packet MyTargetSelected to the L2PcInstance player
-			MyTargetSelected my = new MyTargetSelected(getObjectId(), player.getLevel() - getLevel());
-			player.sendPacket(my);
-			my = null;
-			
-			// Send a Server->Client packet StatusUpdate of the L2NpcInstance to the L2PcInstance to update its HP bar
-			StatusUpdate su = new StatusUpdate(getObjectId());
-			su.addAttribute(StatusUpdate.CUR_HP, (int) getStatus().getCurrentHp());
-			su.addAttribute(StatusUpdate.MAX_HP, getMaxHp());
-			player.sendPacket(su);
-			su = null;
-			
-			// Send a Server->Client packet ValidateLocation to correct the L2NpcInstance position and heading on the client
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
@@ -131,7 +113,6 @@ public class L2SiegeFlagInstance extends L2NpcInstance
 			}
 			else
 			{
-				// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
 				player.sendPacket(ActionFailed.STATIC_PACKET);
 			}
 		}

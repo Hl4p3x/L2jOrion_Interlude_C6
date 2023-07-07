@@ -22,15 +22,12 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExAskJoinPartyRoom;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * Format: (ch) S
- * @author -Wooden-
- */
-public class RequestAskJoinPartyRoom extends L2GameClientPacket
+public class RequestAskJoinPartyRoom extends PacketClient
 {
 	private static String _name;
 	
@@ -45,7 +42,9 @@ public class RequestAskJoinPartyRoom extends L2GameClientPacket
 	{
 		final L2PcInstance _activeChar = getClient().getActiveChar();
 		if (_activeChar == null)
+		{
 			return;
+		}
 		
 		// Send PartyRoom invite request (with activeChar) name to the target
 		final L2PcInstance _target = L2World.getInstance().getPlayer(_name);
@@ -57,10 +56,14 @@ public class RequestAskJoinPartyRoom extends L2GameClientPacket
 				_target.sendPacket(new ExAskJoinPartyRoom(_activeChar.getName()));
 			}
 			else
+			{
 				_activeChar.sendPacket(new SystemMessage(SystemMessageId.S1_IS_BUSY_TRY_LATER).addString(_target.getName()));
+			}
 		}
 		else
+		{
 			_activeChar.sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_NOT_FOUND_IN_THE_GAME));
+		}
 	}
 	
 	@Override

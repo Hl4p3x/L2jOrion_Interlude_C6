@@ -22,9 +22,10 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.PrivateStoreMsgSell;
 
-public class SetPrivateStoreMsgSell extends L2GameClientPacket
+public class SetPrivateStoreMsgSell extends PacketClient
 {
 	private String _storeMsg;
 	

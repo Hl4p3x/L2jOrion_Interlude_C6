@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class PrivateStoreMsgSell extends L2GameServerPacket
+public class PrivateStoreMsgSell extends PacketServer
 {
 	private static final String _S__B5_PRIVATESTOREMSGSELL = "[S] 9c PrivateStoreMsgSell";
 	

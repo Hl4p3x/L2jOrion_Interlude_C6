@@ -140,12 +140,12 @@ public final class SiegableHall extends ClanHall
 			
 			ps.setInt(1, getOwnerId());
 			ps.setLong(2, getNextSiegeTime());
-			ps.setInt(3, getId());
+			ps.setInt(3, getClanHallId());
 			ps.execute();
 		}
 		catch (Exception e)
 		{
-			LOG.log(Level.WARNING, " getOwnerId():" + getOwnerId() + " getNextSiegeTime():" + getNextSiegeTime() + " getId():" + getId());
+			LOG.log(Level.WARNING, " getOwnerId():" + getOwnerId() + " getNextSiegeTime():" + getNextSiegeTime() + " getId():" + getClanHallId());
 			LOG.log(Level.WARNING, "Exception: SiegableHall.updateDb(): " + e.getMessage(), e);
 		}
 		finally

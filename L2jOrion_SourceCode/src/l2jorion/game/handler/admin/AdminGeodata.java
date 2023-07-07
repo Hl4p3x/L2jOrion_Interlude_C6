@@ -92,7 +92,7 @@ public class AdminGeodata implements IAdminCommandHandler
 					}
 					else
 					{
-						activeChar.sendMessage("Can not move beeline!");
+						activeChar.sendMessage("Can not move beeline.");
 					}
 				}
 				else

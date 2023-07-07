@@ -24,8 +24,9 @@ import l2jorion.game.model.L2ManufactureItem;
 import l2jorion.game.model.L2ManufactureList;
 import l2jorion.game.model.L2RecipeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class RecipeShopManageList extends L2GameServerPacket
+public class RecipeShopManageList extends PacketServer
 {
 	
 	private static final String _S__D8_RecipeShopManageList = "[S] d8 RecipeShopManageList";

@@ -30,15 +30,9 @@ import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
-import l2jorion.logger.Logger;
-import l2jorion.logger.LoggerFactory;
 
-/**
- * @author Ederik
- */
 public class L2ProtectorInstance extends L2NpcInstance
 {
-	private static Logger LOG = LoggerFactory.getLogger(L2ProtectorInstance.class);
 	private ScheduledFuture<?> _aiTask;
 	
 	private class ProtectorAI implements Runnable
@@ -50,7 +44,6 @@ public class L2ProtectorInstance extends L2NpcInstance
 			_caster = caster;
 		}
 		
-		@SuppressWarnings("synthetic-access")
 		@Override
 		public void run()
 		{
@@ -61,17 +54,17 @@ public class L2ProtectorInstance extends L2NpcInstance
 			{
 				if (player.getKarma() > 0 && Config.PROTECTOR_PLAYER_PK || player.getPvpFlag() != 0 && Config.PROTECTOR_PLAYER_PVP)
 				{
-					LOG.warn("player: " + player);
 					handleCast(player, Config.PROTECTOR_SKILLID, Config.PROTECTOR_SKILLLEVEL);
 				}
 				final L2Summon activePet = player.getPet();
 				
 				if (activePet == null)
+				{
 					continue;
+				}
 				
 				if (activePet.getKarma() > 0 && Config.PROTECTOR_PLAYER_PK || activePet.getPvpFlag() != 0 && Config.PROTECTOR_PLAYER_PVP)
 				{
-					LOG.warn("activePet: " + activePet);
 					handleCastonPet(activePet, Config.PROTECTOR_SKILLID, Config.PROTECTOR_SKILLLEVEL);
 				}
 			}
@@ -81,7 +74,9 @@ public class L2ProtectorInstance extends L2NpcInstance
 		private boolean handleCast(final L2PcInstance player, final int skillId, final int skillLevel)
 		{
 			if (player.isGM() || player.isDead() || !player.isVisible() || !isInsideRadius(player, Config.PROTECTOR_RADIUS_ACTION, false, false))
+			{
 				return false;
+			}
 			
 			L2Skill skill = SkillTable.getInstance().getInfo(skillId, skillLevel);
 			
@@ -103,7 +98,9 @@ public class L2ProtectorInstance extends L2NpcInstance
 		private boolean handleCastonPet(final L2Summon player, final int skillId, final int skillLevel)
 		{
 			if (player.isDead() || !player.isVisible() || !isInsideRadius(player, Config.PROTECTOR_RADIUS_ACTION, false, false))
+			{
 				return false;
+			}
 			
 			L2Skill skill = SkillTable.getInstance().getInfo(skillId, skillLevel);
 			if (player.getFirstEffect(skill) == null)

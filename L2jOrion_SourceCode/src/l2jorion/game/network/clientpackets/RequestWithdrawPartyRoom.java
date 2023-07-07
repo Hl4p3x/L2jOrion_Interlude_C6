@@ -23,15 +23,12 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExClosePartyRoom;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * Format (ch) dd
- * @author -Wooden-
- */
-public final class RequestWithdrawPartyRoom extends L2GameClientPacket
+public final class RequestWithdrawPartyRoom extends PacketClient
 {
 	
 	private int _roomid;
@@ -51,11 +48,15 @@ public final class RequestWithdrawPartyRoom extends L2GameClientPacket
 		final L2PcInstance _activeChar = getClient().getActiveChar();
 		
 		if (_activeChar == null)
+		{
 			return;
+		}
 		
 		final PartyMatchRoom _room = PartyMatchRoomList.getInstance().getRoom(_roomid);
 		if (_room == null)
+		{
 			return;
+		}
 		
 		if ((_activeChar.isInParty() && _room.getOwner().isInParty()) && (_activeChar.getParty().getPartyLeaderOID() == _room.getOwner().getParty().getPartyLeaderOID()))
 		{

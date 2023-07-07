@@ -22,13 +22,14 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ExConfirmVariationRefiner;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 
-public class RequestConfirmRefinerItem extends L2GameClientPacket
+public class RequestConfirmRefinerItem extends PacketClient
 {
 	private static final int GEMSTONE_D = 2130;
 	private static final int GEMSTONE_C = 2131;

@@ -37,13 +37,17 @@ public class L2WaterZone extends L2ZoneType
 	{
 		if (character instanceof L2PcInstance && ((L2PcInstance) character).isInBoat())
 		{
-			// to avoid any possibility
 			return;
 		}
+		
 		character.setInsideZone(ZoneId.ZONE_WATER, true);
 		
 		if (character instanceof L2PcInstance)
 		{
+			if (((L2PcInstance) character).isGM())
+			{
+				((L2PcInstance) character).sendMessage("You entered water name: " + getName());
+			}
 			((L2PcInstance) character).broadcastUserInfo();
 		}
 		else if (character instanceof L2NpcInstance)
@@ -56,14 +60,6 @@ public class L2WaterZone extends L2ZoneType
 				}
 			}
 		}
-
-		if (character instanceof L2PcInstance) 
-		{
-			if (((L2PcInstance) character).isGM())
-			{
-				((L2PcInstance)character).sendMessage("You entered water name: "+getName());
-			}
-		}
 	}
 	
 	@Override
@@ -71,15 +67,13 @@ public class L2WaterZone extends L2ZoneType
 	{
 		character.setInsideZone(ZoneId.ZONE_WATER, false);
 		
-		 if (character instanceof L2PcInstance) 
-		 {
-			 if (((L2PcInstance) character).isGM())
-			 {
-				 ((L2PcInstance)character).sendMessage("You exited water name:"+getName());
-			 }
-		 }
 		if (character instanceof L2PcInstance)
 		{
+			if (((L2PcInstance) character).isGM())
+			{
+				((L2PcInstance) character).sendMessage("You exited water name:" + getName());
+			}
+			
 			((L2PcInstance) character).broadcastUserInfo();
 		}
 		else if (character instanceof L2NpcInstance)

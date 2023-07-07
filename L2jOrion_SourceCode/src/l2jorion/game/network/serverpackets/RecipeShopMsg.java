@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class RecipeShopMsg extends L2GameServerPacket
+public class RecipeShopMsg extends PacketServer
 {
 	private static final String _S__DB_RecipeShopMsg = "[S] db RecipeShopMsg";
 	

@@ -1,27 +1,13 @@
-/*
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package l2jorion.game.datatables.sql;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
 import l2jorion.game.model.L2ItemMarketModel;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.thread.ThreadPoolManager;
@@ -32,19 +18,14 @@ import l2jorion.util.database.L2DatabaseFactory;
 
 public class ItemMarketTable
 {
-	private static ItemMarketTable _instance = null;
-	
-	private Map<Integer, String> _itemIcons = null;
-	private Map<Integer, List<L2ItemMarketModel>> _marketItems = null;
-	private Map<Integer, Integer> _allItems = new FastMap<>();
-	
-	private List<L2ItemMarketModel> _latestItems = new FastList<>();
-	
 	public static Logger LOG = LoggerFactory.getLogger(ItemMarketTable.class);
 	
-	private ItemMarketTable()
-	{
-	}
+	private static ItemMarketTable _instance = null;
+	private int loadedItemsNumber = 0;
+	private int lastItemId = 0;
+	
+	private Map<Integer, List<L2ItemMarketModel>> _marketItems = null;
+	private Map<Integer, Integer> _allItems = new HashMap<>();
 	
 	public static ItemMarketTable getInstance()
 	{
@@ -58,22 +39,21 @@ public class ItemMarketTable
 	
 	public void load()
 	{
-		_marketItems = new FastMap<>();
+		_marketItems = new HashMap<>();
+		int maxNumber = 0;
 		
 		Connection con = null;
-		int mrktCount = 0;
 		
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
-			PreparedStatement statement = con.prepareStatement("Select * From market_items Order By ownerId");
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM market_items ORDER BY ownerId");
 			ResultSet rset = statement.executeQuery();
-			
 			while (rset.next())
 			{
+				int id = rset.getInt("id");
 				int ownerId = rset.getInt("ownerId");
 				String ownerName = rset.getString("ownerName");
-				int itemObjId = rset.getInt("itemObjId");
 				int itemId = rset.getInt("itemId");
 				String itemName = rset.getString("itemName");
 				String itemType = rset.getString("itemType");
@@ -89,9 +69,9 @@ public class ItemMarketTable
 				String augmentationBonus = rset.getString("augmentationBonus");
 				
 				L2ItemMarketModel mrktItem = new L2ItemMarketModel();
+				mrktItem.setId(id);
 				mrktItem.setOwnerId(ownerId);
 				mrktItem.setOwnerName(ownerName);
-				mrktItem.setItemObjId(itemObjId);
 				mrktItem.setItemId(itemId);
 				mrktItem.setItemName(itemName);
 				mrktItem.setItemType(itemType);
@@ -106,6 +86,12 @@ public class ItemMarketTable
 				mrktItem.setAugmentationSkillLevel(augmentationSkillLevel);
 				mrktItem.setAugmentationBonus(augmentationBonus);
 				
+				if (id > maxNumber)
+				{
+					maxNumber = id;
+					setLastItemId(maxNumber);
+				}
+				
 				List<L2ItemMarketModel> list = null;
 				
 				if (_marketItems.containsKey(ownerId))
@@ -116,20 +102,19 @@ public class ItemMarketTable
 				}
 				else
 				{
-					list = new FastList<>();
+					list = new ArrayList<>();
 					list.add(mrktItem);
 					_marketItems.put(ownerId, list);
 				}
 				
-				_latestItems.add(mrktItem);
-				_allItems.put(itemObjId, ownerId);
+				_allItems.put(id, ownerId);
 				
-				mrktCount++;
+				loadedItemsNumber++;
 			}
 			
-			if (mrktCount > 0)
+			if (loadedItemsNumber > 0)
 			{
-				LOG.info("Market: Loaded " + mrktCount + " items");
+				LOG.info("Market: Loaded " + loadedItemsNumber + " items");
 			}
 			
 			rset.close();
@@ -138,39 +123,6 @@ public class ItemMarketTable
 		catch (Exception e)
 		{
 			LOG.warn("Error while loading market items " + e.getMessage());
-		}
-		finally
-		{
-			CloseUtil.close(con);
-		}
-		
-		loadIcons();
-	}
-	
-	private void loadIcons()
-	{
-		_itemIcons = new FastMap<>();
-		Connection con = null;
-		
-		try
-		{
-			con = L2DatabaseFactory.getInstance().getConnection();
-			PreparedStatement statement = con.prepareStatement("Select * From market_icons");
-			ResultSet rset = statement.executeQuery();
-			
-			while (rset.next())
-			{
-				int itemId = rset.getInt("itemId");
-				String itemIcon = rset.getString("itemIcon");
-				_itemIcons.put(itemId, itemIcon);
-			}
-			
-			rset.close();
-			statement.close();
-		}
-		catch (Exception e)
-		{
-			LOG.warn("Error while loading market icons " + e.getMessage());
 		}
 		finally
 		{
@@ -192,22 +144,21 @@ public class ItemMarketTable
 				}
 				else
 				{
-					list = new FastList<>();
+					list = new ArrayList<>();
 					list.add(itemToMarket);
 					_marketItems.put(owner.getObjectId(), list);
 				}
 				
-				_latestItems.add(itemToMarket);
-				_allItems.put(itemToMarket.getItemObjId(), owner.getObjectId());
+				_allItems.put(itemToMarket.getId(), owner.getObjectId());
 				
 				ThreadPoolManager.getInstance().scheduleGeneral(new SaveTask(itemToMarket), 500);
 			}
 		}
 	}
 	
-	public void removeItemFromMarket(int ownerId, int itemObjId, int count)
+	public void removeItemFromMarket(int ownerId, int id, int count)
 	{
-		L2ItemMarketModel mrktItem = getItem(itemObjId);
+		L2ItemMarketModel mrktItem = getItem(id);
 		List<L2ItemMarketModel> list = getItemsByOwnerId(ownerId);
 		synchronized (this)
 		{
@@ -217,7 +168,7 @@ public class ItemMarketTable
 				{
 					list.remove(mrktItem);
 					_marketItems.put(ownerId, list);
-					_allItems.remove(itemObjId);
+					_allItems.remove(id);
 					ThreadPoolManager.getInstance().scheduleGeneral(new DeleteTask(mrktItem), 500);
 				}
 				else
@@ -226,11 +177,9 @@ public class ItemMarketTable
 					mrktItem.setCount(mrktItem.getCount() - count);
 					list.add(mrktItem);
 					_marketItems.put(ownerId, list);
-					_allItems.remove(itemObjId);
+					_allItems.remove(id);
 					ThreadPoolManager.getInstance().scheduleGeneral(new UpdateTask(mrktItem), 500);
 				}
-				
-				_latestItems.remove(mrktItem);
 			}
 		}
 	}
@@ -247,14 +196,14 @@ public class ItemMarketTable
 		return null;
 	}
 	
-	public L2ItemMarketModel getItem(int itemObjId)
+	public L2ItemMarketModel getItem(int Id)
 	{
 		List<L2ItemMarketModel> list = getAllItems();
 		synchronized (this)
 		{
 			for (L2ItemMarketModel model : list)
 			{
-				if (model.getItemObjId() == itemObjId)
+				if (model.getId() == Id)
 				{
 					return model;
 				}
@@ -269,7 +218,7 @@ public class ItemMarketTable
 		{
 			if (_marketItems != null && !_marketItems.isEmpty())
 			{
-				List<L2ItemMarketModel> list = new FastList<>();
+				List<L2ItemMarketModel> list = new ArrayList<>();
 				
 				for (List<L2ItemMarketModel> lst : _marketItems.values())
 				{
@@ -288,15 +237,7 @@ public class ItemMarketTable
 				return list;
 			}
 		}
-		return null;
-	}
-	
-	public List<L2ItemMarketModel> getLatest()
-	{
-		if (_latestItems != null && !_latestItems.isEmpty())
-		{
-			return _latestItems;
-		}
+		
 		return null;
 	}
 	
@@ -306,7 +247,7 @@ public class ItemMarketTable
 		{
 			if (_marketItems != null && !_marketItems.isEmpty())
 			{
-				List<L2ItemMarketModel> searchList = new FastList<>();
+				List<L2ItemMarketModel> searchList = new ArrayList<>();
 				for (List<L2ItemMarketModel> lst : _marketItems.values())
 				{
 					if (lst != null && !lst.isEmpty())
@@ -322,15 +263,6 @@ public class ItemMarketTable
 				}
 				return searchList;
 			}
-		}
-		return null;
-	}
-	
-	public String getItemIcon(int itemId)
-	{
-		if (_itemIcons != null && !_itemIcons.isEmpty())
-		{
-			return _itemIcons.get(itemId);
 		}
 		return null;
 	}
@@ -351,16 +283,16 @@ public class ItemMarketTable
 			try
 			{
 				con = L2DatabaseFactory.getInstance().getConnection();
-				PreparedStatement statement = con.prepareStatement("Insert Into market_items Values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-				statement.setInt(1, _marketItem.getOwnerId());
-				statement.setString(2, _marketItem.getOwnerName());
-				statement.setString(3, _marketItem.getItemName());
-				statement.setInt(4, _marketItem.getEnchLvl());
-				statement.setInt(5, _marketItem.getItemGrade());
-				statement.setString(6, _marketItem.getL2Type());
-				statement.setString(7, _marketItem.getItemType());
-				statement.setInt(8, _marketItem.getItemId());
-				statement.setInt(9, _marketItem.getItemObjId());
+				PreparedStatement statement = con.prepareStatement("INSERT INTO market_items Values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+				statement.setInt(1, _marketItem.getId());
+				statement.setInt(2, _marketItem.getOwnerId());
+				statement.setString(3, _marketItem.getOwnerName());
+				statement.setString(4, _marketItem.getItemName());
+				statement.setInt(5, _marketItem.getEnchLvl());
+				statement.setInt(6, _marketItem.getItemGrade());
+				statement.setString(7, _marketItem.getL2Type());
+				statement.setString(8, _marketItem.getItemType());
+				statement.setInt(9, _marketItem.getItemId());
 				statement.setInt(10, _marketItem.getCount());
 				statement.setInt(11, _marketItem.getPriceItem());
 				statement.setInt(12, _marketItem.getPrice());
@@ -399,9 +331,9 @@ public class ItemMarketTable
 			try
 			{
 				con = L2DatabaseFactory.getInstance().getConnection();
-				PreparedStatement statement = con.prepareStatement("Delete From market_items Where ownerId = ? AND itemObjId = ?");
+				PreparedStatement statement = con.prepareStatement("DELETE FROM market_items WHERE ownerId = ? AND id = ?");
 				statement.setInt(1, _marketItem.getOwnerId());
-				statement.setInt(2, _marketItem.getItemObjId());
+				statement.setInt(2, _marketItem.getId());
 				statement.execute();
 				statement.close();
 			}
@@ -432,9 +364,9 @@ public class ItemMarketTable
 			try
 			{
 				con = L2DatabaseFactory.getInstance().getConnection();
-				PreparedStatement statement = con.prepareStatement("Update market_items Set _count = ? Where itemObjId = ? AND ownerId = ?");
+				PreparedStatement statement = con.prepareStatement("UPDATE market_items SET _count = ? WHERE id = ? AND ownerId = ?");
 				statement.setInt(1, _marketItem.getCount());
-				statement.setInt(2, _marketItem.getItemObjId());
+				statement.setInt(2, _marketItem.getId());
 				statement.setInt(3, _marketItem.getOwnerId());
 				statement.executeUpdate();
 				statement.close();
@@ -467,5 +399,15 @@ public class ItemMarketTable
 			return 0;
 		}
 		return _marketItems.get(objId).size();
+	}
+	
+	public void setLastItemId(int id)
+	{
+		lastItemId = id;
+	}
+	
+	public int getLastItemId()
+	{
+		return lastItemId;
 	}
 }

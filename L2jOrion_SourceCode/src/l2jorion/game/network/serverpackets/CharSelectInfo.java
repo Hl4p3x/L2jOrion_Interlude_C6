@@ -23,22 +23,25 @@ package l2jorion.game.network.serverpackets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.LinkedList;
 import java.util.List;
 
-import javolution.util.FastList;
 import l2jorion.Config;
+import l2jorion.game.datatables.xml.DressMeData;
 import l2jorion.game.model.CharSelectInfoPackage;
 import l2jorion.game.model.Inventory;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.model.base.SkinPackage;
 import l2jorion.game.network.L2GameClient;
+import l2jorion.game.network.PacketServer;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-public class CharSelectInfo extends L2GameServerPacket
+public class CharSelectInfo extends PacketServer
 {
 	private static final String _S__1F_CHARSELECTINFO = "[S] 1F CharSelectInfo";
 	
@@ -97,15 +100,12 @@ public class CharSelectInfo extends L2GameServerPacket
 		{
 			final CharSelectInfoPackage charInfoPackage = _characterPackages[i];
 			
-			final int fakeArmorObjectId = charInfoPackage.getFakeArmorObjectId();
-			final int fakeArmorItemId = charInfoPackage.getFakeArmorItemId();
-			
 			writeS(charInfoPackage.getName());
 			writeD(charInfoPackage.getCharId());
 			writeS(_loginName);
 			writeD(_sessionId);
 			writeD(charInfoPackage.getClanId());
-			writeD(0x00); // ??
+			writeD(0x00);
 			
 			writeD(charInfoPackage.getSex());
 			writeD(charInfoPackage.getRace());
@@ -119,14 +119,14 @@ public class CharSelectInfo extends L2GameServerPacket
 				writeD(charInfoPackage.getBaseClassId());
 			}
 			
-			writeD(0x01); // active ??
+			writeD(0x01);
 			
 			writeD(0x00); // x
 			writeD(0x00); // y
 			writeD(0x00); // z
 			
-			writeF(charInfoPackage.getCurrentHp()); // hp cur
-			writeF(charInfoPackage.getCurrentMp()); // mp cur
+			writeF(charInfoPackage.getCurrentHp());
+			writeF(charInfoPackage.getCurrentMp());
 			
 			writeD(charInfoPackage.getSp());
 			writeQ(charInfoPackage.getExp());
@@ -149,26 +149,78 @@ public class CharSelectInfo extends L2GameServerPacket
 			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_NECK));
 			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_RFINGER));
 			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LFINGER));
+			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_HEAD));
 			
-			// writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_HEAD));
-			writeD(fakeArmorObjectId == 0 ? charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_HEAD) : 0);
-			
-			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_RHAND));
-			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LHAND));
-			
-			// writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_GLOVES));
-			// writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_CHEST));
-			// writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LEGS));
-			// writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_FEET));
-			writeD(fakeArmorObjectId == 0 ? charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_GLOVES) : 0);
-			writeD(fakeArmorObjectId == 0 ? charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_CHEST) : fakeArmorObjectId);
-			writeD(fakeArmorObjectId == 0 ? charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LEGS) : 0);
-			writeD(fakeArmorObjectId == 0 ? charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_FEET) : 0);
-			
-			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_BACK));
-			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LRHAND));
-			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_HAIR));
-			writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_FACE));
+			if (Config.ALLOW_DRESS_ME_SYSTEM)
+			{
+				if (charInfoPackage.getWeaponSkinOption() > 0 && getWeaponOption(charInfoPackage.getWeaponSkinOption()) != null)
+				{
+					writeD(getWeaponOption(charInfoPackage.getWeaponSkinOption()).getWeaponId() != 0 ? getWeaponOption(charInfoPackage.getWeaponSkinOption()).getWeaponId() : charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_RHAND));
+				}
+				else
+				{
+					writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_RHAND));
+				}
+				
+				writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LHAND));
+				
+				if (charInfoPackage.getArmorSkinOption() > 0 && getArmorOption(charInfoPackage.getArmorSkinOption()) != null)
+				{
+					writeD(getArmorOption(charInfoPackage.getArmorSkinOption()).getGlovesId() != 0 ? getArmorOption(charInfoPackage.getArmorSkinOption()).getGlovesId() : charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_GLOVES));
+					writeD(getArmorOption(charInfoPackage.getArmorSkinOption()).getChestId() != 0 ? getArmorOption(charInfoPackage.getArmorSkinOption()).getChestId() : charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_CHEST));
+					writeD(getArmorOption(charInfoPackage.getArmorSkinOption()).getLegsId() != 0 ? getArmorOption(charInfoPackage.getArmorSkinOption()).getLegsId() : charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LEGS));
+					writeD(getArmorOption(charInfoPackage.getArmorSkinOption()).getFeetId() != 0 ? getArmorOption(charInfoPackage.getArmorSkinOption()).getFeetId() : charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_FEET));
+				}
+				else
+				{
+					writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_GLOVES));
+					writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_CHEST));
+					writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LEGS));
+					writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_FEET));
+				}
+				
+				writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_BACK));
+				
+				if (charInfoPackage.getWeaponSkinOption() > 0 && getWeaponOption(charInfoPackage.getWeaponSkinOption()) != null)
+				{
+					writeD(getWeaponOption(charInfoPackage.getWeaponSkinOption()).getWeaponId() != 0 ? getWeaponOption(charInfoPackage.getWeaponSkinOption()).getWeaponId() : charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LRHAND));
+				}
+				else
+				{
+					writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LRHAND));
+				}
+				
+				if (charInfoPackage.getHairSkinOption() > 0 && getHairOption(charInfoPackage.getHairSkinOption()) != null)
+				{
+					writeD(getHairOption(charInfoPackage.getHairSkinOption()).getHairId() != 0 ? getHairOption(charInfoPackage.getHairSkinOption()).getHairId() : charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_HAIR));
+				}
+				else
+				{
+					writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_HAIR));
+				}
+				
+				if (charInfoPackage.getFaceSkinOption() > 0 && getFaceOption(charInfoPackage.getFaceSkinOption()) != null)
+				{
+					writeD(getFaceOption(charInfoPackage.getFaceSkinOption()).getFaceId() != 0 ? getFaceOption(charInfoPackage.getFaceSkinOption()).getFaceId() : charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_FACE));
+				}
+				else
+				{
+					writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_FACE));
+				}
+			}
+			else
+			{
+				writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_RHAND));
+				writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LHAND));
+				writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_GLOVES));
+				writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_CHEST));
+				writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LEGS));
+				writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_FEET));
+				writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_BACK));
+				writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_LRHAND));
+				writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_HAIR));
+				writeD(charInfoPackage.getPaperdollObjectId(Inventory.PAPERDOLL_FACE));
+			}
 			
 			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_DHAIR));
 			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_REAR));
@@ -176,50 +228,99 @@ public class CharSelectInfo extends L2GameServerPacket
 			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_NECK));
 			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_RFINGER));
 			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LFINGER));
+			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_HEAD));
 			
-			// writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_HEAD));
-			writeD(fakeArmorItemId == 0 ? charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_HEAD) : 0);
-			
-			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_RHAND));
-			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LHAND));
-			
-			// writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_GLOVES));
-			// writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_CHEST));
-			// writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LEGS));
-			// writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_FEET));
-			writeD(fakeArmorItemId == 0 ? charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_GLOVES) : 0);
-			writeD(fakeArmorItemId == 0 ? charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_CHEST) : fakeArmorItemId);
-			writeD(fakeArmorItemId == 0 ? charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LEGS) : 0);
-			writeD(fakeArmorItemId == 0 ? charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_FEET) : 0);
-			
-			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_BACK));
-			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LRHAND));
-			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_HAIR));
-			writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_FACE));
+			if (Config.ALLOW_DRESS_ME_SYSTEM)
+			{
+				if (charInfoPackage.getWeaponSkinOption() > 0 && getWeaponOption(charInfoPackage.getWeaponSkinOption()) != null)
+				{
+					writeD(getWeaponOption(charInfoPackage.getWeaponSkinOption()).getWeaponId() != 0 ? getWeaponOption(charInfoPackage.getWeaponSkinOption()).getWeaponId() : charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_RHAND));
+				}
+				else
+				{
+					writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_RHAND));
+				}
+				
+				writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LHAND));
+				
+				if (charInfoPackage.getArmorSkinOption() > 0 && getArmorOption(charInfoPackage.getArmorSkinOption()) != null)
+				{
+					writeD(getArmorOption(charInfoPackage.getArmorSkinOption()).getGlovesId() != 0 ? getArmorOption(charInfoPackage.getArmorSkinOption()).getGlovesId() : charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_GLOVES));
+					writeD(getArmorOption(charInfoPackage.getArmorSkinOption()).getChestId() != 0 ? getArmorOption(charInfoPackage.getArmorSkinOption()).getChestId() : charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_CHEST));
+					writeD(getArmorOption(charInfoPackage.getArmorSkinOption()).getLegsId() != 0 ? getArmorOption(charInfoPackage.getArmorSkinOption()).getLegsId() : charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LEGS));
+					writeD(getArmorOption(charInfoPackage.getArmorSkinOption()).getFeetId() != 0 ? getArmorOption(charInfoPackage.getArmorSkinOption()).getFeetId() : charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_FEET));
+				}
+				else
+				{
+					writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_GLOVES));
+					writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_CHEST));
+					writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LEGS));
+					writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_FEET));
+				}
+				
+				writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_BACK));
+				
+				if (charInfoPackage.getWeaponSkinOption() > 0 && getWeaponOption(charInfoPackage.getWeaponSkinOption()) != null)
+				{
+					writeD(getWeaponOption(charInfoPackage.getWeaponSkinOption()).getWeaponId() != 0 ? getWeaponOption(charInfoPackage.getWeaponSkinOption()).getWeaponId() : charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LRHAND));
+				}
+				else
+				{
+					writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LRHAND));
+				}
+				
+				if (charInfoPackage.getHairSkinOption() > 0 && getHairOption(charInfoPackage.getHairSkinOption()) != null)
+				{
+					writeD(getHairOption(charInfoPackage.getHairSkinOption()).getHairId() != 0 ? getHairOption(charInfoPackage.getHairSkinOption()).getHairId() : charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_HAIR));
+				}
+				else
+				{
+					writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_HAIR));
+				}
+				
+				if (charInfoPackage.getFaceSkinOption() > 0 && getFaceOption(charInfoPackage.getFaceSkinOption()) != null)
+				{
+					writeD(getFaceOption(charInfoPackage.getFaceSkinOption()).getFaceId() != 0 ? getFaceOption(charInfoPackage.getFaceSkinOption()).getFaceId() : charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_FACE));
+				}
+				else
+				{
+					writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_FACE));
+				}
+			}
+			else
+			{
+				writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_RHAND));
+				writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LHAND));
+				writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_GLOVES));
+				writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_CHEST));
+				writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LEGS));
+				writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_FEET));
+				writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_BACK));
+				writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_LRHAND));
+				writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_HAIR));
+				writeD(charInfoPackage.getPaperdollItemId(Inventory.PAPERDOLL_FACE));
+			}
 			
 			writeD(charInfoPackage.getHairStyle());
 			writeD(charInfoPackage.getHairColor());
 			writeD(charInfoPackage.getFace());
 			
-			writeF(charInfoPackage.getMaxHp()); // hp max
-			writeF(charInfoPackage.getMaxMp()); // mp max
+			writeF(charInfoPackage.getMaxHp()); // Hp max
+			writeF(charInfoPackage.getMaxMp()); // Mp max
 			
 			final long deleteTime = charInfoPackage.getDeleteTimer();
 			final int accesslevels = charInfoPackage.getAccessLevel();
 			int deletedays = 0;
-			
 			if (deleteTime > 0)
 			{
 				deletedays = (int) ((deleteTime - System.currentTimeMillis()) / 1000);
 			}
 			else if (accesslevels < 0)
 			{
-				deletedays = -1; // like L2OFF player looks dead if he is banned.
+				deletedays = -1; // Like L2OFF player looks dead if he is banned.
 			}
+			writeD(deletedays); // Days left before
 			
-			writeD(deletedays); // days left before
-			// delete .. if != 0
-			// then char is inactive
 			writeD(charInfoPackage.getClassId());
 			
 			if (i == _activeId)
@@ -228,11 +329,10 @@ public class CharSelectInfo extends L2GameServerPacket
 			}
 			else
 			{
-				writeD(0x00); // c3 auto-select char
+				writeD(0x00); // Auto-select character
 			}
 			
 			writeC(charInfoPackage.getEnchantEffect() > 127 ? 127 : charInfoPackage.getEnchantEffect());
-			
 			writeD(charInfoPackage.getAugmentationId());
 		}
 	}
@@ -240,7 +340,7 @@ public class CharSelectInfo extends L2GameServerPacket
 	private CharSelectInfoPackage[] loadCharacterSelectInfo()
 	{
 		CharSelectInfoPackage charInfopackage;
-		final List<CharSelectInfoPackage> characterList = new FastList<>();
+		final List<CharSelectInfoPackage> characterList = new LinkedList<>();
 		
 		Connection con = null;
 		
@@ -249,15 +349,10 @@ public class CharSelectInfo extends L2GameServerPacket
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement statement = con.prepareStatement("SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, sp, karma, pvpkills, pkkills, clanid, maxload, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, base_class FROM characters WHERE account_name=?");
 			
-			if (Config.FAKE_ARMORS)
-			{
-				statement = con.prepareStatement("SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier, colRad, colHeight, exp, sp, karma, pvpkills, pkkills, clanid, maxload, race, classid, deletetime, cancraft, title, rec_have, rec_left, accesslevel, online, char_slot, lastAccess, base_class, fakeArmorObjectId, fakeArmorItemId, fakeWeaponObjectId, fakeWeaponItemId FROM characters WHERE account_name=?");
-			}
-			
 			statement.setString(1, _loginName);
 			final ResultSet charList = statement.executeQuery();
 			
-			while (charList.next())// fills the package
+			while (charList.next()) // Fills the package
 			{
 				charInfopackage = restoreChar(charList);
 				if (charInfopackage != null)
@@ -309,7 +404,39 @@ public class CharSelectInfo extends L2GameServerPacket
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
+		}
+	}
+	
+	private void loadCharacterDressMeInfo(final CharSelectInfoPackage charInfopackage, final int ObjectId)
+	{
+		Connection con = null;
+		
+		try
+		{
+			con = L2DatabaseFactory.getInstance().getConnection();
+			final PreparedStatement statement = con.prepareStatement("SELECT obj_Id, armor_skins, armor_skin_option, weapon_skins, weapon_skin_option, hair_skins, hair_skin_option, face_skins, face_skin_option FROM characters_dressme_data WHERE obj_id=?");
+			
+			statement.setInt(1, ObjectId);
+			final ResultSet chardata = statement.executeQuery();
+			
+			if (chardata.next())
+			{
+				charInfopackage.setArmorSkinOption(chardata.getInt("armor_skin_option"));
+				charInfopackage.setWeaponSkinOption(chardata.getInt("weapon_skin_option"));
+				charInfopackage.setHairSkinOption(chardata.getInt("hair_skin_option"));
+				charInfopackage.setFaceSkinOption(chardata.getInt("face_skin_option"));
+			}
+			
+			chardata.close();
+			DatabaseUtils.close(statement);
+		}
+		catch (final Exception e)
+		{
+			e.printStackTrace();
+		}
+		finally
+		{
+			CloseUtil.close(con);
 		}
 	}
 	
@@ -317,7 +444,6 @@ public class CharSelectInfo extends L2GameServerPacket
 	{
 		final int objectId = chardata.getInt("obj_id");
 		
-		// See if the char must be deleted
 		final long deletetime = chardata.getLong("deletetime");
 		if (deletetime > 0)
 		{
@@ -358,12 +484,6 @@ public class CharSelectInfo extends L2GameServerPacket
 		
 		charInfopackage.setAccessLevel(chardata.getInt("accesslevel"));
 		
-		if (Config.FAKE_ARMORS)
-		{
-			charInfopackage.setFakeArmorObjectId(chardata.getInt("fakeArmorObjectId"));
-			charInfopackage.setFakeArmorItemId(chardata.getInt("fakeArmorItemId"));
-		}
-		
 		final int baseClassId = chardata.getInt("base_class");
 		final int activeClassId = chardata.getInt("classid");
 		
@@ -372,6 +492,8 @@ public class CharSelectInfo extends L2GameServerPacket
 		{
 			loadCharacterSubclassInfo(charInfopackage, objectId, activeClassId);
 		}
+		
+		loadCharacterDressMeInfo(charInfopackage, objectId);
 		
 		charInfopackage.setClassId(activeClassId);
 		
@@ -428,6 +550,26 @@ public class CharSelectInfo extends L2GameServerPacket
 		charInfopackage.setLastAccess(chardata.getLong("lastAccess"));
 		
 		return charInfopackage;
+	}
+	
+	public SkinPackage getArmorOption(int option)
+	{
+		return (DressMeData.getInstance().getArmorSkinsPackage(option));
+	}
+	
+	public SkinPackage getWeaponOption(int option)
+	{
+		return DressMeData.getInstance().getWeaponSkinsPackage(option);
+	}
+	
+	public SkinPackage getHairOption(int option)
+	{
+		return DressMeData.getInstance().getHairSkinsPackage(option);
+	}
+	
+	public SkinPackage getFaceOption(int option)
+	{
+		return DressMeData.getInstance().getFaceSkinsPackage(option);
 	}
 	
 	@Override

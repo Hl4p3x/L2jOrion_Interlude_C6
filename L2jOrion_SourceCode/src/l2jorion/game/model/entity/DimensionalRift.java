@@ -254,6 +254,7 @@ public class DimensionalRift
 		}
 		
 		_hasJumped = true;
+		
 		DimensionalRiftManager.getInstance().getRoom(_type, _choosenRoom).unspawn().setPartyInside(false);
 		_completedRooms.add(_choosenRoom);
 		_choosenRoom = -1;

@@ -25,16 +25,10 @@ import java.util.List;
 import javolution.util.FastList;
 import l2jorion.login.network.clientpackets.ClientBasePacket;
 
-/**
- * @author -Wooden-
- */
 public class PlayerInGame extends ClientBasePacket
 {
 	private final List<String> _accounts;
 	
-	/**
-	 * @param decrypt
-	 */
 	public PlayerInGame(final byte[] decrypt)
 	{
 		super(decrypt);
@@ -49,9 +43,6 @@ public class PlayerInGame extends ClientBasePacket
 		}
 	}
 	
-	/**
-	 * @return Returns the accounts.
-	 */
 	public List<String> getAccounts()
 	{
 		return _accounts;

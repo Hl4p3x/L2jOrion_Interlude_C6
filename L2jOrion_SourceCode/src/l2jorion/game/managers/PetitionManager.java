@@ -32,10 +32,10 @@ import l2jorion.Config;
 import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.idfactory.IdFactory;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.clientpackets.Say2;
 import l2jorion.game.network.serverpackets.CreatureSay;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
@@ -205,7 +205,7 @@ public final class PetitionManager
 			return _type.toString().replace("_", " ");
 		}
 		
-		public void sendPetitionerPacket(final L2GameServerPacket responsePacket)
+		public void sendPetitionerPacket(final PacketServer responsePacket)
 		{
 			if (getPetitioner() == null || getPetitioner().isOnline() == 0)
 				// endPetitionConsultation(PetitionState.Petitioner_Missing);
@@ -214,7 +214,7 @@ public final class PetitionManager
 			getPetitioner().sendPacket(responsePacket);
 		}
 		
-		public void sendResponderPacket(final L2GameServerPacket responsePacket)
+		public void sendResponderPacket(final PacketServer responsePacket)
 		{
 			if (getResponder() == null || getResponder().isOnline() == 0)
 			{

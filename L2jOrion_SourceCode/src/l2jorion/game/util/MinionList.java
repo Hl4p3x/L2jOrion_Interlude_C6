@@ -30,10 +30,12 @@ import javolution.util.FastSet;
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.idfactory.IdFactory;
+import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2MinionData;
 import l2jorion.game.model.actor.instance.L2MinionInstance;
 import l2jorion.game.model.actor.instance.L2MonsterInstance;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
@@ -118,13 +120,13 @@ public class MinionList
 		synchronized (minionReferences)
 		{
 			minionReferences.remove(minion);
+			
 			if (_respawnTasks.get(current) == null)
 			{
 				_respawnTasks.put(current, minion.getNpcId());
 			}
 			else
 			{
-				// nice AoE
 				for (int i = 1; i < 30; i++)
 				{
 					if (_respawnTasks.get(current + i) == null)
@@ -142,10 +144,6 @@ public class MinionList
 		_respawnTasks.clear();
 	}
 	
-	/**
-	 * Manage respawning of minions for this RaidBoss.<BR>
-	 * <BR>
-	 */
 	public void maintainMinions()
 	{
 		if (master == null || master.isAlikeDead())
@@ -159,7 +157,12 @@ public class MinionList
 		{
 			for (final long deathTime : _respawnTasks.keySet())
 			{
-				final double delay = Config.RAID_MINION_RESPAWN_TIMER;
+				double delay = Config.RAID_MINION_RESPAWN_TIMER;
+				
+				if (_respawnTasks.containsValue(27189)) // fairy tree minion
+				{
+					delay = 20000;
+				}
 				
 				if (current - deathTime > delay)
 				{
@@ -170,14 +173,6 @@ public class MinionList
 		}
 	}
 	
-	/**
-	 * Manage the spawn of all Minions of this RaidBoss.<BR>
-	 * <BR>
-	 * <B><U> Actions</U> :</B><BR>
-	 * <BR>
-	 * <li>Get the Minion data of all Minions that must be spawn</li>
-	 * <li>For each Minion type, spawn the amount of Minion needed</li><BR>
-	 */
 	public void spawnMinions()
 	{
 		if (master == null || master.isAlikeDead())
@@ -206,19 +201,6 @@ public class MinionList
 		}
 	}
 	
-	/**
-	 * Init a Minion and add it in the world as a visible object.<BR>
-	 * <BR>
-	 * <B><U> Actions</U> :</B><BR>
-	 * <BR>
-	 * <li>Get the template of the Minion to spawn</li>
-	 * <li>Create and Init the Minion and generate its Identifier</li>
-	 * <li>Set the Minion HP, MP and Heading</li>
-	 * <li>Set the Minion leader to this RaidBoss</li>
-	 * <li>Init the position of the Minion and add it in the world as a visible object</li><BR>
-	 * <BR>
-	 * @param minionid The I2NpcTemplate Identifier of the Minion to spawn
-	 */
 	public void spawnSingleMinion(final int minionid)
 	{
 		// Get the template of the Minion to spawn
@@ -259,6 +241,16 @@ public class MinionList
 		final int newY = master.getY() + spawnConstant;
 		
 		monster.spawnMe(newX, newY, master.getZ());
+		
+		if (minionid == 27189)
+		{
+			monster.startAbnormalEffect(L2Character.ABNORMAL_EFFECT_MAGIC_CIRCLE);
+			ThreadPoolManager.getInstance().scheduleGeneral(() ->
+			{
+				monster.stopAbnormalEffect(L2Character.ABNORMAL_EFFECT_MAGIC_CIRCLE);
+			}, 1500);
+			
+		}
 		
 		if (Config.DEBUG)
 		{

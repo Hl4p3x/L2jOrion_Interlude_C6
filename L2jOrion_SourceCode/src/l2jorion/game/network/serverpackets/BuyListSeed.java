@@ -25,8 +25,9 @@ import java.util.List;
 import javolution.util.FastList;
 import l2jorion.game.model.L2TradeList;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
+import l2jorion.game.network.PacketServer;
 
-public final class BuyListSeed extends L2GameServerPacket
+public final class BuyListSeed extends PacketServer
 {
 	private static final String _S__E8_BUYLISTSEED = "[S] E8 BuyListSeed";
 	

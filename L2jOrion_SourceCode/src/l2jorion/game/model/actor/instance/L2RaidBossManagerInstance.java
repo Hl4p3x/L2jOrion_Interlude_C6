@@ -20,15 +20,11 @@ import javolution.text.TextBuilder;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
-import l2jorion.game.network.serverpackets.ValidateLocation;
+import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.game.util.Broadcast;
+import l2jorion.util.random.Rnd;
 
-/**
- * @author xAddytzu moded by Bobi
- */
 public class L2RaidBossManagerInstance extends L2NpcInstance
 {
 	public L2RaidBossManagerInstance(final int objectId, final L2NpcTemplate template)
@@ -41,40 +37,35 @@ public class L2RaidBossManagerInstance extends L2NpcInstance
 	public void onAction(final L2PcInstance player)
 	{
 		if (!canTarget(player))
+		{
 			return;
+		}
 		
-		// Check if the L2PcInstance already target the L2Npc
 		if (this != player.getTarget())
 		{
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
-			
-			// Send a Server->Client packet MyTargetSelected to the L2PcInstance player
-			final MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
-			player.sendPacket(my);
-			
-			// Send a Server->Client packet ValidateLocation to correct the L2Npc position and heading on the client
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
-			// Calculate the distance between the L2PcInstance and the L2Npc
 			if (!canInteract(player))
 			{
-				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 			}
 			else
 			{
-				// Like L2OFF player must rotate to the Npc
-				MoveToPawn sp = new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE);
-				player.sendPacket(sp);
-				Broadcast.toKnownPlayers(player, sp);
+				if (player.isMoving())
+				{
+					player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+				}
+				
+				player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
+				
+				broadcastPacket(new SocialAction(getObjectId(), Rnd.get(8)));
 				
 				showChatWindow(player);
 			}
 		}
-		// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
+		
 		player.sendPacket(new ActionFailed());
 	}
 	

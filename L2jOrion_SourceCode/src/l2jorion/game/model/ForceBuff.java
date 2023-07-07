@@ -27,9 +27,6 @@ import l2jorion.game.skills.effects.EffectForce;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * @author ProGramMoS, L2jOrion
- */
 public final class ForceBuff
 {
 	protected int _forceId;
@@ -88,9 +85,13 @@ public final class ForceBuff
 			}
 			
 			if (effect instanceof EffectForce)
+			{
 				((EffectForce) effect).decreaseForce();
+			}
 			else
+			{
 				effect.exit(false);
+			}
 		}
 		effect = null;
 	}

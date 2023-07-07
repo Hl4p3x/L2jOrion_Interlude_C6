@@ -67,7 +67,7 @@ public class SoulCrystal
 			5582,
 			5914
 		}
-	// BLU 12 - 13
+		// BLU 12 - 13
 	};
 	
 	/**

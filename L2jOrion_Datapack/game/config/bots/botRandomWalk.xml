@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<!-- Admin command for location: //loc3 -->
+	<!-- townId starts from 1 and increases by +1 -->
+	<!-- Giran -->
+	<bot townId="1">
+		<node X="82248" Y="148600" Z="-3464" iterations="20"/>
+		<node X="82072" Y="147560" Z="-3464" iterations="20"/>
+		<node X="82792" Y="147832" Z="-3464" iterations="20"/>
+		<node X="83320" Y="147976" Z="-3400" iterations="20"/>
+		<node X="84584" Y="148536" Z="-3400" iterations="20"/>
+		<node X="83384" Y="149256" Z="-3400" iterations="20"/>
+		<node X="83064" Y="148392" Z="-3464" iterations="20"/>
+		<node X="87016" Y="148632" Z="-3400" iterations="20"/>
+		<node X="85816" Y="148872" Z="-3400" iterations="20"/>
+		<node X="85832" Y="153208" Z="-3496" iterations="20"/>
+		<node X="81384" Y="150040" Z="-3528" iterations="20"/>
+		<node X="79656" Y="150728" Z="-3512" iterations="20"/>
+		<node X="79272" Y="149544" Z="-3528" iterations="20"/>
+		<node X="80744" Y="146424" Z="-3528" iterations="20"/>
+	</bot>
+	<!-- Dion  -->
+	<bot townId="2">
+		<node X="18769" Y="145629" Z="-3108" iterations="20"/>
+		<node X="18482" Y="145795" Z="-3088" iterations="20"/>
+		<node X="17763" Y="146746" Z="-3114" iterations="20"/>
+		<node X="17168" Y="145258" Z="-3048" iterations="20"/>
+		<node X="17639" Y="145415" Z="-3068" iterations="20"/>
+		<node X="18641" Y="145345" Z="-3120" iterations="20"/>
+		<node X="18928" Y="144966" Z="-3124" iterations="20"/>
+		<node X="19099" Y="143987" Z="-3071" iterations="20"/>
+	</bot>
+</list>

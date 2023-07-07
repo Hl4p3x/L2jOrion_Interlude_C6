@@ -21,6 +21,7 @@
 package l2jorion.game.skills.effects;
 
 import l2jorion.game.model.L2Effect;
+import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.skills.Env;
 
 public class EffectBlockBuff extends L2Effect
@@ -39,7 +40,10 @@ public class EffectBlockBuff extends L2Effect
 	@Override
 	public void onStart()
 	{
-		getEffected().setBlockBuff(true);
+		if (getEffected() instanceof L2PcInstance)
+		{
+			((L2PcInstance) getEffected()).setBlockAllBuffs(true);
+		}
 	}
 	
 	@Override
@@ -51,6 +55,9 @@ public class EffectBlockBuff extends L2Effect
 	@Override
 	public void onExit()
 	{
-		getEffected().setBlockBuff(false);
+		if (getEffected() instanceof L2PcInstance)
+		{
+			((L2PcInstance) getEffected()).setBlockAllBuffs(false);
+		}
 	}
 }

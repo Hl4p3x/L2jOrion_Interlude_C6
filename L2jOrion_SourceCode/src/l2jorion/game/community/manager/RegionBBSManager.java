@@ -5,8 +5,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import l2jorion.game.cache.HtmCache;
-import l2jorion.game.community.CommunityBoard;
+import l2jorion.game.community.CommunityBoardManager;
 import l2jorion.game.datatables.sql.ClanTable;
+import l2jorion.game.handler.ICommunityBoardHandler;
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.ClanHallManager;
 import l2jorion.game.model.L2Clan;
@@ -15,18 +16,14 @@ import l2jorion.game.model.entity.ClanHall;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.util.StringUtil;
 
-public class RegionBBSManager extends BaseBBSManager
+public class RegionBBSManager extends BaseBBSManager implements ICommunityBoardHandler
 {
-	protected RegionBBSManager()
-	{
-	}
-	
 	@Override
 	public void parseCmd(String command, L2PcInstance player)
 	{
 		if (command.equals("_bbsloc"))
 		{
-			CommunityBoard.getInstance().addBypass(player, "Region", command);
+			CommunityBoardManager.getInstance().addBypass(player, "Region", command);
 			
 			showRegionsList(player);
 		}
@@ -58,7 +55,9 @@ public class RegionBBSManager extends BaseBBSManager
 		{
 			final L2Clan owner = ClanTable.getInstance().getClan(castle.getOwnerId());
 			
-			StringUtil.append(sb, "<table><tr><td width=5></td><td width=175><a action=\"bypass _bbsloc;", castle.getCastleId(), "\">", castle.getName(), "</a></td><td width=160>", ((owner != null) ? "<a action=\"bypass _bbsclan;home;" + owner.getClanId() + "\">" + owner.getName() + "</a>" : "None"), "</td><td width=160>", ((owner != null && owner.getAllyId() > 0) ? owner.getAllyName() : "None"), "</td><td width=120>", ((owner != null) ? castle.getTaxPercent() : "0"), "</td><td width=5></td></tr></table><br1><img src=\"L2UI.Squaregray\" width=627 height=1><br1>");
+			StringUtil.append(sb, "<table><tr><td width=5></td><td width=175><a action=\"bypass _bbsloc;", castle.getCastleId(), "\">", castle.getName(), "</a></td><td width=160>", ((owner != null) ? "<a action=\"bypass _bbsclan;home;" + owner.getClanId() + "\">" + owner.getName()
+				+ "</a>" : "None"), "</td><td width=160>", ((owner != null
+					&& owner.getAllyId() > 0) ? owner.getAllyName() : "None"), "</td><td width=120>", ((owner != null) ? castle.getTaxPercent() : "0"), "</td><td width=5></td></tr></table><br1><img src=\"L2UI.Squaregray\" width=627 height=1><br1>");
 		}
 		separateAndSend(content.replace("%castleList%", sb.toString()), player);
 	}
@@ -88,7 +87,8 @@ public class RegionBBSManager extends BaseBBSManager
 			{
 				final L2Clan chOwner = ClanTable.getInstance().getClan(ch.getOwnerId());
 				
-				StringUtil.append(sb, "<table><tr><td width=5></td><td width=200>", ch.getName(), "</td><td width=200>", ((chOwner != null) ? "<a action=\"bypass _bbsclan;home;" + chOwner.getClanId() + "\">" + chOwner.getName() + "</a>" : "None"), "</td><td width=200>", ((chOwner != null) ? chOwner.getLeaderName() : "None"), "</td><td width=5></td></tr></table><br1><img src=\"L2UI.Squaregray\" width=627 height=1><br1>");
+				StringUtil.append(sb, "<table><tr><td width=5></td><td width=200>", ch.getName(), "</td><td width=200>", ((chOwner != null) ? "<a action=\"bypass _bbsclan;home;" + chOwner.getClanId() + "\">" + chOwner.getName()
+					+ "</a>" : "None"), "</td><td width=200>", ((chOwner != null) ? chOwner.getLeaderName() : "None"), "</td><td width=5></td></tr></table><br1><img src=\"L2UI.Squaregray\" width=627 height=1><br1>");
 			}
 		}
 		separateAndSend(content.replace("%hallsList%", sb.toString()), player);
@@ -102,5 +102,20 @@ public class RegionBBSManager extends BaseBBSManager
 	private static class SingletonHolder
 	{
 		protected static final RegionBBSManager INSTANCE = new RegionBBSManager();
+	}
+	
+	@Override
+	public String[] getBypassBbsCommands()
+	{
+		return new String[]
+		{
+			"_bbsloc"
+		};
+	}
+	
+	@Override
+	public void handleCommand(String command, L2PcInstance player, String params)
+	{
+		parseCmd(command, player);
 	}
 }

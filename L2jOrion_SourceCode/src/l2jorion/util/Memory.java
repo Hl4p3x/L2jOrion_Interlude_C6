@@ -20,9 +20,6 @@
  */
 package l2jorion.util;
 
-/**
- * @author programmos
- */
 public class Memory
 {
 	public static long getUsedMemory()

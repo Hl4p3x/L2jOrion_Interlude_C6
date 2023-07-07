@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
+import l2jorion.game.network.PacketServer;
 
-public class ShowMiniMap extends L2GameServerPacket
+public class ShowMiniMap extends PacketServer
 {
 	private static final String _S__B6_SHOWMINIMAP = "[S] 9d ShowMiniMap";
 	private final int _mapId;

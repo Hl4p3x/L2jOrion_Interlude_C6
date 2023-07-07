@@ -20,9 +20,6 @@
  */
 package l2jorion.game.model.multisell;
 
-/**
- * @author programmos
- */
 public class MultiSellIngredient
 {
 	private int _itemId, _itemCount, _enchantmentLevel;

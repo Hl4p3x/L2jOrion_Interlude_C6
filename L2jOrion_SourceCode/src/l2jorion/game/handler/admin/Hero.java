@@ -18,6 +18,10 @@
  */
 package l2jorion.game.handler.admin;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.model.L2Object;
@@ -28,12 +32,8 @@ import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-
 /**
- *L2Scoria
+ * L2Scoria
  **/
 public class Hero implements IAdminCommandHandler
 {
@@ -41,38 +41,38 @@ public class Hero implements IAdminCommandHandler
 	{
 		"admin_sethero"
 	};
-
+	
 	private final static Logger LOG = LoggerFactory.getLogger(Hero.class.getName());
-
+	
 	@Override
 	public boolean useAdminCommand(String command, L2PcInstance activeChar)
 	{
-
-		if(command.startsWith("admin_sethero"))
+		
+		if (command.startsWith("admin_sethero"))
 		{
 			String[] cmdParams = command.split(" ");
-
+			
 			long heroTime = 0;
-			if(cmdParams.length > 1)
+			if (cmdParams.length > 1)
 			{
 				try
 				{
 					heroTime = Integer.parseInt(cmdParams[1]) * 24L * 60L * 60L * 1000L;
 				}
-				catch(NumberFormatException nfe)
+				catch (NumberFormatException nfe)
 				{
-					//None
+					// None
 				}
 			}
-		
+			
 			L2Object target = activeChar.getTarget();
-
-			if (target.isPlayer)
+			
+			if (target.isPlayer())
 			{
 				L2PcInstance targetPlayer = (L2PcInstance) target;
 				boolean newHero = !targetPlayer.isHero();
 				
-				if(newHero)
+				if (newHero)
 				{
 					targetPlayer.setHero(true);
 					targetPlayer.sendMessage("You are now a hero.");
@@ -89,29 +89,25 @@ public class Hero implements IAdminCommandHandler
 					sendMessages(false, targetPlayer, activeChar, true, true);
 					targetPlayer.broadcastUserInfo();
 				}
-
-				targetPlayer = null;
 			}
 			else
 			{
 				activeChar.sendMessage("Impossible to set a non Player Target as hero.");
-
+				
 				return false;
 			}
-
-			target = null;
 		}
 		return true;
 	}
-
+	
 	private void sendMessages(boolean fornewHero, L2PcInstance player, L2PcInstance gm, boolean announce, boolean notifyGmList)
 	{
-		if(fornewHero)
+		if (fornewHero)
 		{
 			player.sendMessage(gm.getName() + " has granted Hero Status for you!");
 			gm.sendMessage("You've granted Hero Status for " + player.getName());
-
-			if(notifyGmList)
+			
+			if (notifyGmList)
 			{
 				GmListTable.broadcastMessageToGMs("Warn: " + gm.getName() + " has set " + player.getName() + " as Hero !");
 			}
@@ -120,36 +116,38 @@ public class Hero implements IAdminCommandHandler
 		{
 			player.sendMessage(gm.getName() + " has revoked Hero Status from you!");
 			gm.sendMessage("You've revoked Hero Status from " + player.getName());
-
-			if(notifyGmList)
+			
+			if (notifyGmList)
 			{
 				GmListTable.broadcastMessageToGMs("Warn: " + gm.getName() + " has removed Hero Status of player " + player.getName());
 			}
 		}
 	}
-
+	
 	/**
-	 * @param player 
+	 * @param player
 	 * @param newHero
-	 * @param heroTime 
+	 * @param heroTime
 	 */
 	private void updateDatabase(L2PcInstance player, boolean newHero, long heroTime)
 	{
 		Connection con = null;
 		try
 		{
-			if(player == null)
+			if (player == null)
+			{
 				return;
-
+			}
+			
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement statement = con.prepareStatement("SELECT * FROM characters_custom_data WHERE obj_Id=?");
 			statement.setInt(1, player.getObjectId());
 			ResultSet result = statement.executeQuery();
-
-			if(result.next())
+			
+			if (result.next())
 			{
 				PreparedStatement stmt = con.prepareStatement(newHero ? UPDATE_DATA : DEL_DATA);
-				if(newHero)
+				if (newHero)
 				{
 					stmt.setLong(1, heroTime == 0 ? 0 : System.currentTimeMillis() + heroTime);
 					stmt.setInt(2, player.getObjectId());
@@ -165,7 +163,7 @@ public class Hero implements IAdminCommandHandler
 			}
 			else
 			{
-				if(newHero)
+				if (newHero)
 				{
 					PreparedStatement stmt = con.prepareStatement(INSERT_DATA);
 					stmt.setInt(1, player.getObjectId());
@@ -180,24 +178,30 @@ public class Hero implements IAdminCommandHandler
 			}
 			result.close();
 			statement.close();
-
+			
 			result = null;
 			statement = null;
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
 			LOG.warn("Error: could not update database: " + e);
 		}
 		finally
 		{
-			try { CloseUtil.close(con); } catch(Exception e) { }
+			try
+			{
+				CloseUtil.close(con);
+			}
+			catch (Exception e)
+			{
+			}
 			con = null;
 		}
 	}
-
+	
 	// Updates That Will be Executed by MySQL
 	// ----------------------------------------
-	String INSERT_DATA= "INSERT INTO characters_custom_data (obj_Id, char_name, noble, hero, hero_end_date) VALUES (?,?,?,?,?)";
+	String INSERT_DATA = "INSERT INTO characters_custom_data (obj_Id, char_name, noble, hero, hero_end_date) VALUES (?,?,?,?,?)";
 	String UPDATE_DATA = "UPDATE characters_custom_data SET noble=1, hero=1, hero_end_date=? WHERE obj_Id=?";
 	String DEL_DATA = "UPDATE characters_custom_data SET hero = 0, hero_end_date=0 WHERE obj_Id=?";
 	

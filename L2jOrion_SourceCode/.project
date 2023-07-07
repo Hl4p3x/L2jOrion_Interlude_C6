@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>L2jOrion_SourceCode</name>
+	<name>Orion</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -12,9 +12,7 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>org.eclipse.jem.workbench.JavaEMFNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>org.eclipse.jem.beaninfo.BeanInfoNature</nature>
 	</natures>
 	<filteredResources>
 		<filter>

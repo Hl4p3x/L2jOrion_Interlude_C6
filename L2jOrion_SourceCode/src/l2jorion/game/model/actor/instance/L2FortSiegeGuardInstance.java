@@ -27,13 +27,11 @@ import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.knownlist.FortSiegeGuardKnownList;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
-import l2jorion.game.network.serverpackets.StatusUpdate;
-import l2jorion.game.network.serverpackets.ValidateLocation;
+import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.game.util.Broadcast;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
+import l2jorion.util.random.Rnd;
 
 public class L2FortSiegeGuardInstance extends L2Attackable
 {
@@ -120,9 +118,6 @@ public class L2FortSiegeGuardInstance extends L2Attackable
 		}
 	}
 	
-	/**
-	 * Custom onAction behaviour. Note that super() is not called because guards need extra check to see if a player should interact or ATTACK them when clicked.
-	 */
 	@Override
 	public void onAction(final L2PcInstance player)
 	{
@@ -132,31 +127,9 @@ public class L2FortSiegeGuardInstance extends L2Attackable
 			return;
 		}
 		
-		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
 		{
-			if (Config.DEBUG)
-			{
-				LOG.info("new target selected:" + getObjectId());
-			}
-			
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
-			
-			// Send a Server->Client packet MyTargetSelected to the L2PcInstance player
-			MyTargetSelected my = new MyTargetSelected(getObjectId(), player.getLevel() - getLevel());
-			player.sendPacket(my);
-			my = null;
-			
-			// Send a Server->Client packet StatusUpdate of the L2NpcInstance to the L2PcInstance to update its HP bar
-			StatusUpdate su = new StatusUpdate(getObjectId());
-			su.addAttribute(StatusUpdate.CUR_HP, (int) getStatus().getCurrentHp());
-			su.addAttribute(StatusUpdate.MAX_HP, getMaxHp());
-			player.sendPacket(su);
-			su = null;
-			
-			// Send a Server->Client packet ValidateLocation to correct the L2NpcInstance position and heading on the client
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
@@ -171,19 +144,22 @@ public class L2FortSiegeGuardInstance extends L2Attackable
 			{
 				if (!canInteract(player))
 				{
-					// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 					player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 				}
 				else
 				{
-					// Like L2OFF player must rotate to the Npc
-					MoveToPawn sp = new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE);
-					player.sendPacket(sp);
-					Broadcast.toKnownPlayers(player, sp);
+					if (player.isMoving())
+					{
+						player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+					}
+					
+					player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
+					
+					broadcastPacket(new SocialAction(getObjectId(), Rnd.get(8)));
 				}
 			}
 		}
-		// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
+		
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	

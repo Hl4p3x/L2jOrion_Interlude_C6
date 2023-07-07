@@ -1,5 +1,3 @@
-# Created by Emperorc
-# Finished by Kerberos_20 10/23/07
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
@@ -9,9 +7,6 @@ from l2jorion.game.network.serverpackets import WareHouseWithdrawalList
 from l2jorion.game.network.serverpackets import ActionFailed
 
 qn = "6051_VarkaSilenosSupport"
-
-#print "6051. Varka Silenos Support"
-
 
 Ashas = 31377 #Hierarch
 Naran = 31378 #Messenger

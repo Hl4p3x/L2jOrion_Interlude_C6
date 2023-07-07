@@ -20,8 +20,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.TradeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class PrivateStoreListBuy extends L2GameServerPacket
+public class PrivateStoreListBuy extends PacketServer
 {
 	private static final String _S__D1_PRIVATESTORELISTBUY = "[S] b8 PrivateStoreListBuy";
 	
@@ -35,7 +36,13 @@ public class PrivateStoreListBuy extends L2GameServerPacket
 	{
 		_storePlayer = storePlayer;
 		_activeChar = player;
+		
 		_playerAdena = _activeChar.getAdena();
+		if (_storePlayer.getSellList().isBuffer())
+		{
+			_playerAdena = player.getItemCount(_storePlayer.getBuyList().getSellBuyItemId(), -1);
+		}
+		
 		_items = _storePlayer.getBuyList().getAvailableItems(_activeChar.getInventory());
 		
 	}
@@ -59,7 +66,9 @@ public class PrivateStoreListBuy extends L2GameServerPacket
 			writeD(item.getItem().getReferencePrice());
 			writeH(0);
 			
-			writeD(item.getItem().getBodyPart());
+			writeD(_storePlayer.getBuyList().getSellBuyItemId());
+			// writeD(item.getItem().getBodyPart());
+			
 			writeH(item.getItem().getType2());
 			writeD(item.getPrice());
 			writeD(item.getCount());

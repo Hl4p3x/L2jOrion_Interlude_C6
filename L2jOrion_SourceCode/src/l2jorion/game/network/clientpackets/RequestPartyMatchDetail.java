@@ -20,13 +20,14 @@ import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.PartyMatchWaitingList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExManagePartyRoomMember;
 import l2jorion.game.network.serverpackets.ExPartyRoomMember;
 import l2jorion.game.network.serverpackets.PartyMatchDetail;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestPartyMatchDetail extends L2GameClientPacket
+public final class RequestPartyMatchDetail extends PacketClient
 {
 	
 	private int _roomid;

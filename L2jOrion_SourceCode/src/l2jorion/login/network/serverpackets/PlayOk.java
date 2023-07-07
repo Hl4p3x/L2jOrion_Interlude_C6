@@ -22,9 +22,6 @@ package l2jorion.login.network.serverpackets;
 
 import l2jorion.login.SessionKey;
 
-/**
- * L2jOrion
- */
 public final class PlayOk extends L2LoginServerPacket
 {
 	private final int _playOk1, _playOk2;
@@ -43,10 +40,6 @@ public final class PlayOk extends L2LoginServerPacket
 		writeD(_playOk2);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see L2jOrion.loginserver.network.serverpackets.L2LoginServerPacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

@@ -1,14 +1,11 @@
-#
-# Created by DraX on 2005.08.08
-#
-
 import sys
 
 from l2jorion.game.model.quest        import State
 from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
+
 qn = "30358_thifiell_occupation_change"
-#print "30358. Thifiell occupation change"
+
 TETRARCH_THIFIELL = 30358
 
 class Quest (JQuest) :

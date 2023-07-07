@@ -20,8 +20,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2ClanMember;
+import l2jorion.game.network.PacketServer;
 
-public class PledgeReceivePowerInfo extends L2GameServerPacket
+public class PledgeReceivePowerInfo extends PacketServer
 {
 	private static final String _S__FE_3C_PLEDGERECEIVEPOWERINFO = "[S] FE:3D PledgeReceivePowerInfo";
 	

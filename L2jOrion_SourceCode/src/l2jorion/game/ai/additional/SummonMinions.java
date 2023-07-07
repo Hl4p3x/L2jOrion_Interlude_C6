@@ -1,20 +1,7 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package l2jorion.game.ai.additional;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -25,25 +12,19 @@ import l2jorion.game.model.L2Attackable;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.quest.Quest;
-import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.util.random.Rnd;
 
 public class SummonMinions extends Quest implements Runnable
 {
 	private static int HasSpawned;
-	private static FastSet<Integer> myTrackingSet = new FastSet<>(); // Used to track instances of npcs
+	private static FastSet<Integer> TrackingSet = new FastSet<>(); // Used to track instances of npcs
+	
 	private final FastMap<Integer, FastList<L2PcInstance>> _attackersList = new FastMap<Integer, FastList<L2PcInstance>>().shared();
-	private static final FastMap<Integer, Integer[]> MINIONS = new FastMap<>();
+	
+	private static final Map<Integer, Integer[]> MINIONS = new ConcurrentHashMap<>();
 	
 	static
 	{
-		MINIONS.put(20767, new Integer[]
-		{
-			20768,
-			20769,
-			20770
-		}); // Timak Orc Troop
-		
 		MINIONS.put(21524, new Integer[]
 		{
 			21525
@@ -113,7 +94,6 @@ public class SummonMinions extends Quest implements Runnable
 		super(questId, name, descr);
 		final int[] mobs =
 		{
-			20767,
 			21524,
 			21531,
 			21539,
@@ -144,9 +124,9 @@ public class SummonMinions extends Quest implements Runnable
 		
 		if (MINIONS.containsKey(npcId))
 		{
-			if (!myTrackingSet.contains(npcObjId)) // this allows to handle multiple instances of npc
+			if (!TrackingSet.contains(npcObjId)) // this allows to handle multiple instances of npc
 			{
-				myTrackingSet.add(npcObjId);
+				TrackingSet.add(npcObjId);
 				HasSpawned = npcObjId;
 			}
 			
@@ -223,28 +203,13 @@ public class SummonMinions extends Quest implements Runnable
 				{
 					HasSpawned = 0;
 					Integer[] minions = MINIONS.get(npcId);
-					if (npcId != 20767)
+					for (final Integer minion : minions)
 					{
-						for (final Integer minion : minions)
-						{
-							final L2Attackable newNpc = (L2Attackable) addSpawn(minion, npc.getX() + Rnd.get(-150, 150), npc.getY() + Rnd.get(-150, 150), npc.getZ(), 0, false, 0);
-							newNpc.setRunning();
-							newNpc.addDamageHate(attacker, 0, 999);
-							newNpc.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, attacker);
-							newNpc.doCast(SkillTable.getInstance().getInfo(4671, 1));
-						}
-					}
-					else
-					{
-						for (final Integer minion : minions)
-						{
-							this.addSpawn(minion, (npc.getX() + Rnd.get(-100, 100)), (npc.getY() + Rnd.get(-100, 100)), npc.getZ(), 0, false, 0);
-						}
-					}
-					
-					if (npcId == 20767)
-					{
-						npc.broadcastPacket(new CreatureSay(npcObjId, 0, npc.getName(), "Come out, you children of darkness!"));
+						final L2Attackable newNpc = (L2Attackable) addSpawn(minion, npc.getX() + Rnd.get(-150, 150), npc.getY() + Rnd.get(-150, 150), npc.getZ(), 0, false, 0);
+						newNpc.setRunning();
+						newNpc.addDamageHate(attacker, 0, 999);
+						newNpc.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, attacker);
+						newNpc.doCast(SkillTable.getInstance().getInfo(4671, 1));
 					}
 				}
 			}
@@ -264,7 +229,7 @@ public class SummonMinions extends Quest implements Runnable
 		final int npcObjId = npc.getObjectId();
 		if (MINIONS.containsKey(npcId))
 		{
-			myTrackingSet.remove(npcObjId);
+			TrackingSet.remove(npcObjId);
 		}
 		return super.onKill(npc, killer, isPet);
 	}

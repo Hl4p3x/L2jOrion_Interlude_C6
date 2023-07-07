@@ -19,6 +19,7 @@
  */
 package l2jorion.game.model.actor.knownlist;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
@@ -62,7 +63,7 @@ public class CharKnownList extends ObjectKnownList
 	}
 	
 	@Override
-	public final void removeAllKnownObjects()
+	public void removeAllKnownObjects()
 	{
 		super.removeAllKnownObjects();
 		
@@ -91,7 +92,6 @@ public class CharKnownList extends ObjectKnownList
 			getKnownRelations().remove(object.getObjectId());
 		}
 		
-		// If object is targeted by the L2Character, cancel Attack or Cast
 		if (object == getActiveChar().getTarget())
 		{
 			getActiveChar().setTarget(null);
@@ -119,7 +119,7 @@ public class CharKnownList extends ObjectKnownList
 	
 	public Collection<L2Character> getKnownCharacters()
 	{
-		FastList<L2Character> result = new FastList<>();
+		ArrayList<L2Character> result = new ArrayList<>();
 		
 		final Collection<L2Object> objs = getKnownObjects().values();
 		for (L2Object obj : objs)
@@ -134,7 +134,7 @@ public class CharKnownList extends ObjectKnownList
 	
 	public Collection<L2Character> getKnownCharactersInRadius(long radius)
 	{
-		FastList<L2Character> result = new FastList<>();
+		ArrayList<L2Character> result = new ArrayList<>();
 		
 		final Collection<L2Object> objs = getKnownObjects().values();
 		for (L2Object obj : objs)

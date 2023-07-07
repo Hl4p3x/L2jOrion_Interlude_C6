@@ -19,10 +19,11 @@
  */
 package l2jorion.game.network.clientpackets;
 
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestDeleteMacro extends L2GameClientPacket
+public final class RequestDeleteMacro extends PacketClient
 {
 	private int _id;
 	

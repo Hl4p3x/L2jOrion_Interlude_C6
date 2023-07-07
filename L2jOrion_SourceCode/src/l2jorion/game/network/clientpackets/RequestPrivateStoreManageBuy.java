@@ -22,13 +22,14 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.PrivateStoreManageListBuy;
 import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestPrivateStoreManageBuy extends L2GameClientPacket
+public final class RequestPrivateStoreManageBuy extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(EnterWorld.class);
 	

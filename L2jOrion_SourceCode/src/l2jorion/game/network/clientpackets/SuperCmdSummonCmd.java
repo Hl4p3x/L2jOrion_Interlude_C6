@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.clientpackets;
 
-public class SuperCmdSummonCmd extends L2GameClientPacket
+import l2jorion.game.network.PacketClient;
+
+public class SuperCmdSummonCmd extends PacketClient
 {
 	@SuppressWarnings("unused")
 	private String _summonName;

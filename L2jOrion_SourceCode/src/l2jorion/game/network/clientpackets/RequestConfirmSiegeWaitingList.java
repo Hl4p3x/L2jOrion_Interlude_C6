@@ -25,9 +25,10 @@ import l2jorion.game.managers.CastleManager;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.siege.Castle;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.SiegeDefenderList;
 
-public final class RequestConfirmSiegeWaitingList extends L2GameClientPacket
+public final class RequestConfirmSiegeWaitingList extends PacketClient
 {
 	private int _approved;
 	private int _castleId;

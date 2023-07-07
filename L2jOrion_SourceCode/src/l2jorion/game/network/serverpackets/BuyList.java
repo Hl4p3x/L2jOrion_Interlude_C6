@@ -25,9 +25,10 @@ import java.util.List;
 import l2jorion.Config;
 import l2jorion.game.model.L2TradeList;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.templates.L2Item;
 
-public final class BuyList extends L2GameServerPacket
+public final class BuyList extends PacketServer
 {
 	private static final String _S__1D_BUYLIST = "[S] 11 BuyList";
 	

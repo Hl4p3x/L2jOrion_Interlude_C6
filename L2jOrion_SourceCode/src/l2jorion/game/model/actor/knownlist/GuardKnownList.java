@@ -26,43 +26,43 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2GuardInstance;
 import l2jorion.game.model.actor.instance.L2MonsterInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.logger.Logger;
-import l2jorion.logger.LoggerFactory;
 
 public class GuardKnownList extends AttackableKnownList
 {
-	private static Logger LOG = LoggerFactory.getLogger(GuardKnownList.class);
+	// private static Logger LOG = LoggerFactory.getLogger(GuardKnownList.class);
 	
-	// =========================================================
-	// Data Field
-	
-	// =========================================================
-	// Constructor
 	public GuardKnownList(final L2GuardInstance activeChar)
 	{
 		super(activeChar);
 	}
 	
-	// =========================================================
-	// Method - Public
 	@Override
 	public boolean addKnownObject(L2Object object)
 	{
 		if (!super.addKnownObject(object))
+		{
 			return false;
+		}
 		
 		if (object instanceof L2PcInstance)
 		{
 			// Check if the object added is a L2PcInstance that owns Karma
 			L2PcInstance player = (L2PcInstance) object;
 			
+			if (Config.L2UNLIMITED_CUSTOM)
+			{
+				if (getActiveChar() != null && getActiveChar().getNpcId() == 30733 && player.getPvpFlag() != 0)
+				{
+					// Set the L2GuardInstance Intention to AI_INTENTION_ACTIVE
+					if (getActiveChar().getAI().getIntention() == CtrlIntention.AI_INTENTION_IDLE)
+					{
+						getActiveChar().getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null);
+					}
+				}
+			}
+			
 			if (player.getKarma() > 0)
 			{
-				if (Config.DEBUG)
-				{
-					LOG.debug(getActiveChar().getObjectId() + ": PK " + player.getObjectId() + " entered scan range");
-				}
-				
 				// Set the L2GuardInstance Intention to AI_INTENTION_ACTIVE
 				if (getActiveChar().getAI().getIntention() == CtrlIntention.AI_INTENTION_IDLE)
 				{
@@ -78,11 +78,6 @@ public class GuardKnownList extends AttackableKnownList
 			
 			if (mob.isAggressive())
 			{
-				if (Config.DEBUG)
-				{
-					LOG.debug(getActiveChar().getObjectId() + ": Aggressive mob " + mob.getObjectId() + " entered scan range");
-				}
-				
 				// Set the L2GuardInstance Intention to AI_INTENTION_ACTIVE
 				if (getActiveChar().getAI().getIntention() == CtrlIntention.AI_INTENTION_IDLE)
 				{
@@ -97,14 +92,14 @@ public class GuardKnownList extends AttackableKnownList
 	@Override
 	public boolean removeKnownObject(L2Object object)
 	{
-		if(!super.removeKnownObject(object))
+		if (!super.removeKnownObject(object))
+		{
 			return false;
+		}
 		
 		// Check if the _aggroList of the L2GuardInstance is Empty
 		if (getActiveChar().noTarget())
 		{
-			// removeAllKnownObjects();
-			
 			// Set the L2GuardInstance to AI_INTENTION_IDLE
 			L2CharacterAI ai = getActiveChar().getAI();
 			if (ai != null)
@@ -116,11 +111,6 @@ public class GuardKnownList extends AttackableKnownList
 		return true;
 	}
 	
-	// =========================================================
-	// Method - Private
-	
-	// =========================================================
-	// Property - Public
 	@Override
 	public final L2GuardInstance getActiveChar()
 	{

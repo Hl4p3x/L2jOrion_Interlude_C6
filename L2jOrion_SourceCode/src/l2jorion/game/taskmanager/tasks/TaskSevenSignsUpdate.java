@@ -27,12 +27,9 @@ import l2jorion.game.taskmanager.TaskManager;
 import l2jorion.game.taskmanager.TaskManager.ExecutedTask;
 import l2jorion.game.taskmanager.TaskTypes;
 import l2jorion.log.Log;
-import l2jorion.logger.Logger;
-import l2jorion.logger.LoggerFactory;
 
 public class TaskSevenSignsUpdate extends Task
 {
-	private static final Logger LOG = LoggerFactory.getLogger(TaskSevenSignsUpdate.class);
 	public static final String NAME = "sevensignsupdate";
 	
 	@Override
@@ -53,9 +50,8 @@ public class TaskSevenSignsUpdate extends Task
 				SevenSignsFestival.getInstance().saveFestivalData(false);
 			}
 			
-			// LOG.info("[GlobalTask] SevenSigns save launched.");
 			final String text = "SevenSigns save launched.";
-			Log.add(text, "Global_Task");
+			Log.add(text, "Global_task");
 		}
 		catch (final Exception e)
 		{

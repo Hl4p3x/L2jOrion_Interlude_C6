@@ -22,9 +22,10 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.ZoneId;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.skills.effects.EffectCharge;
 
-public class EtcStatusUpdate extends L2GameServerPacket
+public class EtcStatusUpdate extends PacketServer
 {
 	private static final String _S__F3_ETCSTATUSUPDATE = "[S] F3 EtcStatusUpdate";
 	

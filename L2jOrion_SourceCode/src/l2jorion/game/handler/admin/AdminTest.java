@@ -1,14 +1,4 @@
 /*
- * $Header: AdminTest.java, 25/07/2005 17:15:21 luisantonioa Exp $
- *
- * $Author: luisantonioa $
- * $Date: 25/07/2005 17:15:21 $
- * $Revision: 1 $
- * $Log: AdminTest.java,v $
- * Revision 1  25/07/2005 17:15:21  luisantonioa
- * Added copyright notice
- *
- *
  * L2jOrion Project - www.l2jorion.com 
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -143,56 +133,6 @@ public class AdminTest implements IAdminCommandHandler
 				
 				activeChar.sendMessage("Command format is //skill_test <ID>");
 			}
-		}
-		else if (command.equals("admin_mp on"))
-		{
-			// .startPacketMonitor();
-			activeChar.sendMessage("command not working");
-		}
-		else if (command.equals("admin_mp off"))
-		{
-			// .stopPacketMonitor();
-			activeChar.sendMessage("command not working");
-		}
-		else if (command.equals("admin_mp dump"))
-		{
-			// .dumpPacketHistory();
-			activeChar.sendMessage("command not working");
-		}
-		else if (command.equals("admin_known on"))
-		{
-			Config.CHECK_KNOWN = true;
-		}
-		else if (command.equals("admin_known off"))
-		{
-			Config.CHECK_KNOWN = false;
-		}
-		else if (command.equals("admin_test"))
-		{
-			activeChar.sendMessage("Now the server will send a packet that client cannot read correctly");
-			activeChar.sendMessage("generating a critical error..");
-			
-			int i = 5;
-			while (i > 0)
-			{
-				
-				activeChar.sendMessage("Client will crash in " + i + " seconds");
-				
-				try
-				{
-					Thread.sleep(1000);
-					i--;
-				}
-				catch (final InterruptedException e)
-				{
-				}
-				
-			}
-			
-			// final UserInfo ui = new UserInfo(activeChar);
-			/// ui._critical_test = true;
-			// activeChar.sendPacket(ui);
-			
 		}
 		else if (command.startsWith("admin_oly_obs_mode"))
 		{

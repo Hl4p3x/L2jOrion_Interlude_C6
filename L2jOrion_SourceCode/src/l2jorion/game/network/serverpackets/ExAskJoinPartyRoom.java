@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExAskJoinPartyRoom extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExAskJoinPartyRoom extends PacketServer
 {
 	private final String _charName;
 	

@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class StopPledgeWar extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class StopPledgeWar extends PacketServer
 {
 	private static final String _S__7f_STOPPLEDGEWAR = "[S] 67 StopPledgeWar";
 	

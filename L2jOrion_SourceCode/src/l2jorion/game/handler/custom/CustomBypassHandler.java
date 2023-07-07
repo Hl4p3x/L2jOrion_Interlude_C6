@@ -21,6 +21,7 @@ import java.util.Map;
 import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.handler.ICustomByPassHandler;
+import l2jorion.game.handler.voice.DressMe;
 import l2jorion.game.idfactory.BitSetIDFactory;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.Rebirth;
@@ -39,6 +40,7 @@ public class CustomBypassHandler
 		_handlers = new FastMap<>();
 		
 		registerCustomBypassHandler(new ExtractableByPassHandler());
+		registerCustomBypassHandler(new DressMe());
 	}
 	
 	public static CustomBypassHandler getInstance()

@@ -625,14 +625,9 @@ public class AutoSpawn
 						LOG.info("AutoSpawnHandler: Spawns removed for spawn instance (Object ID = " + _objectId + ").");
 					}
 				}
-				
-				spawnInst = null;
 			}
 			catch (final Exception e)
 			{
-				// if(Config.ENABLE_ALL_EXCEPTIONS)
-				// e.printStackTrace();
-				
 				LOG.warn("AutoSpawnHandler: An error occurred while despawning spawn (Object ID = " + _objectId + "): " + e);
 				e.printStackTrace();
 			}
@@ -753,7 +748,7 @@ public class AutoSpawn
 					GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 					gc.clear();
 					gc.setTimeInMillis(respawnTime);
-					final String text = "" + mob.getName() + " killed. Next respawn: " + DateFormat.getDateTimeInstance().format(gc.getTime());
+					final String text = mob.getName() + " killed. Next respawn: " + DateFormat.getDateTimeInstance().format(gc.getTime());
 					Log.add(text, "RaidBosses");
 					
 					_storedInfo.remove(mob.getNpcId());

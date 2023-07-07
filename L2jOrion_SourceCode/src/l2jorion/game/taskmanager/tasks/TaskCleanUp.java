@@ -40,8 +40,8 @@ public final class TaskCleanUp extends Task
 	{
 		System.runFinalization();
 		System.gc();
-		final String text = "Java Memory Cleanup launched.";
-		Log.add(text, "Global_Task");
+		final String text = "Java Memory Cleanup launched";
+		Log.add(text, "Global_task");
 	}
 	
 	@Override

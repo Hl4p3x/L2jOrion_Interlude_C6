@@ -32,25 +32,24 @@ import l2jorion.game.model.actor.instance.L2FolkInstance;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ShortCutRegister;
 import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.network.serverpackets.UserInfo;
+import l2jorion.game.powerpack.shop.Shop;
 import l2jorion.game.util.IllegalPlayerAction;
 import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
-/**
- * Format chdd c: (id) 0xD0 h: (subid) 0x06 d: skill id d: skill lvl
- * @author -Wooden-
- */
-public final class RequestExEnchantSkill extends L2GameClientPacket
+public final class RequestExEnchantSkill extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestAquireSkill.class);
+	
 	private int _skillId;
 	private int _skillLvl;
 	
@@ -64,7 +63,6 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		
 		final L2PcInstance player = getClient().getActiveChar();
 		
 		if (player == null)
@@ -72,23 +70,23 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 			return;
 		}
 		
-		if (player.isSubmitingPin())
-		{
-			player.sendMessage("Unable to do any action while PIN is not submitted");
-			player.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-		final L2FolkInstance trainer = player.getLastFolkNPC();
-		if (trainer == null)
-		{
-			return;
-		}
+		L2FolkInstance trainer = null;
+		int npcid = 0;
 		
-		final int npcid = trainer.getNpcId();
-		
-		if (!player.isInsideRadius(trainer, L2NpcInstance.INTERACTION_DISTANCE, false, false) && !player.isGM())
+		if (!player.hasTempAccess())
 		{
-			return;
+			trainer = player.getLastFolkNPC();
+			if (trainer == null)
+			{
+				return;
+			}
+			
+			npcid = trainer.getNpcId();
+			
+			if (!player.isInsideRadius(trainer, L2NpcInstance.INTERACTION_DISTANCE, false, false))
+			{
+				return;
+			}
 		}
 		
 		if (player.getSkillLevel(_skillId) >= _skillLvl)
@@ -112,7 +110,7 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 		int _requiredSp = 10000000;
 		int _requiredExp = 100000;
 		byte _rate = 0;
-		int _baseLvl = 1;
+		// int _baseLvl = 1;
 		
 		final L2EnchantSkillLearn[] skills = SkillTreeTable.getInstance().getAvailableEnchantSkills(player);
 		
@@ -120,22 +118,23 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 		{
 			final L2Skill sk = SkillTable.getInstance().getInfo(s.getId(), s.getLevel());
 			
-			if (sk == null || sk != skill || !sk.getCanLearn(player.getClassId()) || !sk.canTeachBy(npcid))
+			if (sk == null || sk != skill || !sk.getCanLearn(player.getClassId()) || !player.hasTempAccess() && !sk.canTeachBy(npcid))
 			{
 				continue;
 			}
 			
 			counts++;
+			
 			_requiredSp = s.getSpCost();
 			_requiredExp = s.getExp();
 			_rate = s.getRate(player);
-			_baseLvl = s.getBaseLevel();
+			// _baseLvl = s.getBaseLevel();
 		}
 		
 		if (counts == 0 && !Config.ALT_GAME_SKILL_LEARN)
 		{
 			player.sendMessage("You are trying to learn skill that u can't.");
-			Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to learn skill that he can't!!!", IllegalPlayerAction.PUNISH_KICK);
+			Util.handleIllegalPlayerAction(player, "Player " + player.getName() + " tried to learn skill that he can't!", IllegalPlayerAction.PUNISH_KICK);
 			return;
 		}
 		
@@ -163,13 +162,14 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 						player.sendPacket(new SystemMessage(SystemMessageId.YOU_DONT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL));
 						return;
 					}
+					
 					if (Config.SCROLL_STACKABLE)
 					{
-						player.destroyItem("Consume", spb.getObjectId(), 1, trainer, true);
+						player.destroyItem("Consume", spb.getObjectId(), 1, null, true);
 					}
 					else
 					{
-						player.destroyItem("Consume", spb, trainer, true);
+						player.destroyItem("Consume", spb, null, true);
 					}
 				}
 			}
@@ -186,6 +186,7 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 			player.sendPacket(sm);
 			return;
 		}
+		
 		if (Rnd.get(100) <= _rate)
 		{
 			player.addSkill(skill, true);
@@ -209,24 +210,33 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 			player.sendPacket(sm);
 			
 			int enchantValue = _skillLvl >= 130 ? _skillLvl - 140 : _skillLvl - 100;
+			
 			if (player.getAchievement().getCount(AchType.ENCHANT_SKILL) < enchantValue)
 			{
-				player.getAchievement().increase(AchType.ENCHANT_SKILL, enchantValue, false, false);
+				player.getAchievement().increase(AchType.ENCHANT_SKILL, enchantValue, false, false, false, 0);
 			}
 		}
 		else
 		{
 			if (skill.getLevel() > 100)
 			{
-				_skillLvl = _baseLvl;
+				_skillLvl = SkillTable.getInstance().getMaxLevel(_skillId);
 				player.addSkill(SkillTable.getInstance().getInfo(_skillId, _skillLvl), true);
-				player.sendSkillList();
 			}
+			
 			final SystemMessage sm = new SystemMessage(SystemMessageId.YOU_HAVE_FAILED_TO_ENCHANT_THE_SKILL_S1);
 			sm.addSkillName(_skillId);
 			player.sendPacket(sm);
 		}
-		trainer.showEnchantSkillList(player, player.getClassId());
+		
+		if (!player.hasTempAccess() && trainer != null)
+		{
+			trainer.showEnchantSkillList(player, player.getClassId());
+		}
+		else
+		{
+			Shop.showEnchantSkillList(player);
+		}
 		
 		player.sendPacket(new UserInfo(player));
 		player.sendSkillList();
@@ -250,5 +260,4 @@ public final class RequestExEnchantSkill extends L2GameClientPacket
 	{
 		return "[C] D0:07 RequestExEnchantSkill";
 	}
-	
 }

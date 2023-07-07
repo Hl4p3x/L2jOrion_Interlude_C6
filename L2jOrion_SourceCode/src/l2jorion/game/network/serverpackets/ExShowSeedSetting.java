@@ -19,14 +19,16 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.CastleManorManager;
 import l2jorion.game.managers.CastleManorManager.SeedProduction;
 import l2jorion.game.model.L2Manor;
 import l2jorion.game.model.entity.siege.Castle;
+import l2jorion.game.network.PacketServer;
 
-public class ExShowSeedSetting extends L2GameServerPacket
+public class ExShowSeedSetting extends PacketServer
 {
 	private static final String _S__FE_1F_EXSHOWSEEDSETTING = "[S] FE:1F ExShowSeedSetting";
 	
@@ -43,7 +45,7 @@ public class ExShowSeedSetting extends L2GameServerPacket
 	{
 		_manorId = manorId;
 		final Castle c = CastleManager.getInstance().getCastleById(_manorId);
-		final FastList<Integer> seeds = L2Manor.getInstance().getSeedsForCastle(_manorId);
+		final ArrayList<Integer> seeds = L2Manor.getInstance().getSeedsForCastle(_manorId);
 		_count = seeds.size();
 		_seedData = new int[_count * 12];
 		int i = 0;

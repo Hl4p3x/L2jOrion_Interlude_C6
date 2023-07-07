@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import javolution.util.FastList;
+import l2jorion.game.network.PacketServer;
 
-public class ExEnchantSkillInfo extends L2GameServerPacket
+public class ExEnchantSkillInfo extends PacketServer
 {
 	private static final String _S__FE_18_EXENCHANTSKILLINFO = "[S] FE:18 ExEnchantSkillInfo";
 	private final FastList<Req> _reqs;

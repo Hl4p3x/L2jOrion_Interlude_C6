@@ -386,7 +386,6 @@ public abstract class FlagWar extends ClanHallSiegeEngine
 			
 			synchronized (this)
 			{
-				// TODO: Zoey76: previous bad implementation.
 				// Converting map.keySet() to List and map.values() to List doesn't ensure that
 				// first element in the key's List correspond to the first element in the values' List
 				// That's the reason that values aren't copied to a List, instead using _data.get(clanIds.get(0))
@@ -771,7 +770,7 @@ public abstract class FlagWar extends ClanHallSiegeEngine
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement ps = con.prepareStatement(SQL_LOAD_ATTACKERS);
 			
-			ps.setInt(1, _hall.getId());
+			ps.setInt(1, _hall.getClanHallId());
 			try (ResultSet rset = ps.executeQuery())
 			{
 				while (rset.next())
@@ -846,7 +845,7 @@ public abstract class FlagWar extends ClanHallSiegeEngine
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement ps = con.prepareStatement(SQL_SAVE_CLAN);
 			
-			ps.setInt(1, _hall.getId());
+			ps.setInt(1, _hall.getClanHallId());
 			ps.setInt(2, flag);
 			ps.setInt(3, 0);
 			ps.setInt(4, clanId);
@@ -892,7 +891,7 @@ public abstract class FlagWar extends ClanHallSiegeEngine
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement ps = con.prepareStatement(SQL_SAVE_ATTACKER);
 			
-			ps.setInt(1, _hall.getId());
+			ps.setInt(1, _hall.getClanHallId());
 			ps.setInt(2, clanId);
 			ps.setInt(3, objectId);
 			ps.execute();
@@ -916,10 +915,10 @@ public abstract class FlagWar extends ClanHallSiegeEngine
 			PreparedStatement ps1 = con.prepareStatement(SQL_CLEAR_CLAN);
 			PreparedStatement ps2 = con.prepareStatement(SQL_CLEAR_CLAN_ATTACKERS);
 			
-			ps1.setInt(1, _hall.getId());
+			ps1.setInt(1, _hall.getClanHallId());
 			ps1.execute();
 			
-			ps2.setInt(1, _hall.getId());
+			ps2.setInt(1, _hall.getClanHallId());
 			ps2.execute();
 		}
 		catch (Exception e)

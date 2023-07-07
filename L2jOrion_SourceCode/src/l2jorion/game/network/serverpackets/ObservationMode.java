@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ObservationMode extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ObservationMode extends PacketServer
 {
 	private static final String _S__DF_OBSERVMODE = "[S] DF ObservationMode";
 	

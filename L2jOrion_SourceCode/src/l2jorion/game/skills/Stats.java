@@ -105,13 +105,14 @@ public enum Stats
 	MOVEMENT("movement"), // slowdown movement, debuff
 	CONFUSION("confusion"), // mob changes target, opposite to aggression/hate
 	SLEEP("sleep"), // sleep (don't move/ATTACK) until attacked
+	
 	FIRE("fire"),
 	WIND("wind"),
 	WATER("water"),
 	EARTH("earth"),
 	HOLY("holy"),
 	DARK("dark"),
-	//
+	
 	AGGRESSION_VULN("aggressionVuln"),
 	BLEED_VULN("bleedVuln"),
 	POISON_VULN("poisonVuln"),

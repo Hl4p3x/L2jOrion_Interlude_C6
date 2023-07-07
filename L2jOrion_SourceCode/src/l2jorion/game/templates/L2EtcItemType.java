@@ -39,30 +39,17 @@ public enum L2EtcItemType
 	final int _id;
 	final String _name;
 	
-	/**
-	 * Constructor of the L2EtcItemType.
-	 * @param id : int designating the ID of the EtcItemType
-	 * @param name : String designating the name of the EtcItemType
-	 */
 	L2EtcItemType(final int id, final String name)
 	{
 		_id = id;
 		_name = name;
 	}
 	
-	/**
-	 * Returns the ID of the item after applying the mask.
-	 * @return int : ID of the item
-	 */
 	public int mask()
 	{
 		return 1 << _id + 21;
 	}
 	
-	/**
-	 * Returns the name of the EtcItemType
-	 * @return String
-	 */
 	@Override
 	public String toString()
 	{

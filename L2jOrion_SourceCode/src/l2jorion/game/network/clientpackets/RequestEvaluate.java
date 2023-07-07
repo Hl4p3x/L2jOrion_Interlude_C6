@@ -23,11 +23,12 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.Config;
 import l2jorion.game.enums.AchType;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.network.serverpackets.UserInfo;
 
-public final class RequestEvaluate extends L2GameClientPacket
+public final class RequestEvaluate extends PacketClient
 {
 	@SuppressWarnings("unused")
 	private int _targetId;

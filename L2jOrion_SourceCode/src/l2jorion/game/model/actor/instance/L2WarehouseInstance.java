@@ -112,10 +112,6 @@ public final class L2WarehouseInstance extends L2FolkInstance
 		player.sendPacket(new WareHouseDepositList(player, WareHouseDepositList.PRIVATE));
 	}
 	
-	/**
-	 * Show deposit window clan.
-	 * @param player the player
-	 */
 	private void showDepositWindowClan(final L2PcInstance player)
 	{
 		player.sendPacket(ActionFailed.STATIC_PACKET);
@@ -136,15 +132,10 @@ public final class L2WarehouseInstance extends L2FolkInstance
 				
 				WareHouseDepositList dl = new WareHouseDepositList(player, WareHouseDepositList.CLAN);
 				player.sendPacket(dl);
-				dl = null;
 			}
 		}
 	}
 	
-	/**
-	 * Show withdraw window clan.
-	 * @param player the player
-	 */
 	private void showWithdrawWindowClan(final L2PcInstance player)
 	{
 		player.sendPacket(ActionFailed.STATIC_PACKET);
@@ -169,10 +160,6 @@ public final class L2WarehouseInstance extends L2FolkInstance
 		}
 	}
 	
-	/**
-	 * Show withdraw window freight.
-	 * @param player the player
-	 */
 	private void showWithdrawWindowFreight(final L2PcInstance player)
 	{
 		player.sendPacket(ActionFailed.STATIC_PACKET);
@@ -210,21 +197,14 @@ public final class L2WarehouseInstance extends L2FolkInstance
 				LOG.debug("no items freightened");
 			}
 		}
-		freight = null;
 	}
 	
-	/**
-	 * Show deposit window freight.
-	 * @param player the player
-	 */
 	private void showDepositWindowFreight(final L2PcInstance player)
 	{
-		// No other chars in the account of this player
 		if (player.getAccountChars().size() == 0)
 		{
 			player.sendPacket(new SystemMessage(SystemMessageId.CHARACTER_DOES_NOT_EXIST));
 		}
-		// One or more chars other than this player for this account
 		else
 		{
 			
@@ -246,22 +226,14 @@ public final class L2WarehouseInstance extends L2FolkInstance
 		}
 	}
 	
-	/**
-	 * Show deposit window freight.
-	 * @param player the player
-	 * @param obj_Id the obj_ id
-	 */
 	private void showDepositWindowFreight(final L2PcInstance player, final int obj_Id)
 	{
 		player.sendPacket(ActionFailed.STATIC_PACKET);
+		
 		L2PcInstance destChar = L2PcInstance.load(obj_Id);
 		if (destChar == null)
 		{
-			// Something went wrong!
-			if (Config.DEBUG)
-			{
-				LOG.warn("Error retrieving a target object for char " + player.getName() + " - using freight.");
-			}
+			LOG.warn("Error retrieving a target object for char " + player.getName() + " - using freight");
 			return;
 		}
 		
@@ -277,27 +249,18 @@ public final class L2WarehouseInstance extends L2FolkInstance
 		player.setActiveWarehouse(freight);
 		player.tempInvetoryDisable();
 		destChar.deleteMe();
-		destChar = null;
-		freight = null;
-		
-		if (Config.DEBUG)
-		{
-			LOG.debug("Showing items to freight");
-		}
 		
 		player.sendPacket(new WareHouseDepositList(player, WareHouseDepositList.FREIGHT));
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.instance.L2FolkInstance#onBypassFeedback(l2jorion.game.model.actor.instance.L2PcInstance, java.lang.String)
-	 */
 	@Override
 	public void onBypassFeedback(final L2PcInstance player, final String command)
 	{
 		// Like L2OFF if you have enchant window opened it will be closed
 		if (player.getActiveEnchantItem() != null)
+		{
 			player.sendPacket(new EnchantResult(0));
+		}
 		
 		if (command.startsWith("WithdrawP"))
 		{
@@ -340,9 +303,6 @@ public final class L2WarehouseInstance extends L2FolkInstance
 		}
 		else
 		{
-			// this class dont know any other commands, let forward
-			// the command to the parent class
-			
 			super.onBypassFeedback(player, command);
 		}
 	}

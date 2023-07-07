@@ -24,29 +24,37 @@ import org.strixplatform.StrixPlatform;
 import org.strixplatform.utils.StrixClientData;
 
 import l2jorion.Config;
+import l2jorion.game.network.PacketServer;
 
-public final class KeyPacket extends L2GameServerPacket
+public final class KeyPacket extends PacketServer
 {
 	private static final String _S__01_KEYPACKET = "[S] 01 KeyPacket";
 	
 	private byte[] _key;
 	private final StrixClientData _clientData;
+	private int _result;
 	
-	public KeyPacket(final byte[] key)
+	public KeyPacket(final byte[] key, int result)
 	{
 		_key = key;
 		_clientData = null;
-	}
-	
-	public KeyPacket(final byte[] key, final StrixClientData clientData)
-	{
-		_key = key;
-		_clientData = clientData;
+		_result = result;
 		
 		if (_key == null)
 		{
+			// Fix for null
+			_key = new byte[260];
+		}
+	}
+	
+	public KeyPacket(final byte[] key, final StrixClientData clientData, int result)
+	{
+		_key = key;
+		_clientData = clientData;
+		_result = result;
+		if (_key == null)
+		{
 			// just to fix null
-			LOG.info("New fake key sent");
 			_key = new byte[260];
 		}
 	}
@@ -64,7 +72,7 @@ public final class KeyPacket extends L2GameServerPacket
 			}
 		}
 		
-		writeC(0x01);
+		writeC(_result);
 		writeB(_key);
 		writeD(0x01);
 		writeD(0x01);
@@ -75,5 +83,4 @@ public final class KeyPacket extends L2GameServerPacket
 	{
 		return _S__01_KEYPACKET;
 	}
-	
 }

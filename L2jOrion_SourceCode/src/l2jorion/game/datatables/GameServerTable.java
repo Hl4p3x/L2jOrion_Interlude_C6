@@ -1,22 +1,3 @@
-/* L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.datatables;
 
 import java.io.File;
@@ -57,15 +38,13 @@ import l2jorion.util.random.Rnd;
 public class GameServerTable
 {
 	private static Logger LOG = LoggerFactory.getLogger(GameServerTable.class);
+	
 	private static GameServerTable _instance;
 	
-	// Server Names Config
 	private static Map<Integer, String> _serverNames = new FastMap<>();
 	
-	// Game Server Table
 	private final Map<Integer, GameServerInfo> _gameServerTable = new FastMap<Integer, GameServerInfo>().shared();
 	
-	// RSA Config
 	private static final int KEYS_SIZE = 10;
 	private KeyPair[] _keyPairs;
 	
@@ -109,9 +88,6 @@ public class GameServerTable
 		{
 			_keyPairs[i] = keyGen.genKeyPair();
 		}
-		
-		keyGen = null;
-		spec = null;
 	}
 	
 	private void loadServerNames()
@@ -135,9 +111,6 @@ public class GameServerTable
 						Integer id = Integer.valueOf(xpp.getAttributeValue(null, "id").toString());
 						String name = xpp.getAttributeValue(null, "name").toString();
 						_serverNames.put(id, name);
-						
-						id = null;
-						name = null;
 					}
 				}
 			}
@@ -213,11 +186,6 @@ public class GameServerTable
 			
 			DatabaseUtils.close(rset);
 			DatabaseUtils.close(statement);
-			
-			rset = null;
-			statement = null;
-			gsi = null;
-			
 		}
 		catch (final Exception e)
 		{
@@ -268,7 +236,6 @@ public class GameServerTable
 	
 	public boolean register(final int id, final GameServerInfo gsi)
 	{
-		// avoid two servers registering with the same id
 		synchronized (_gameServerTable)
 		{
 			if (!_gameServerTable.containsKey(id))
@@ -300,7 +267,6 @@ public class GameServerTable
 			statement.executeUpdate();
 			
 			DatabaseUtils.close(statement);
-			statement = null;
 			
 		}
 		catch (final SQLException e)

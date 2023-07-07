@@ -1,0 +1,11 @@
+<Event ID="Squash Event" Active="24 Dec 2009-26 Dec 2022"> 
+	<Droplist>
+		<AllDrop Items="6391" Count="1,4" Chance="20%" />	<!-- Nectar -->
+	</Droplist>
+	<Message Type="OnJoin" Msg="Squash Event started!" />
+	<EventEnd>
+		<Take From="AllPlayers">
+			<Item ItemID="6391"></Item>
+		</Take>
+	</EventEnd>
+</Event>

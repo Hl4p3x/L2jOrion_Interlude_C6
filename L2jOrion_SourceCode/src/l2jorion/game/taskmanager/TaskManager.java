@@ -30,19 +30,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.concurrent.ScheduledFuture;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.taskmanager.tasks.TaskCleanUp;
+import l2jorion.game.taskmanager.tasks.TaskOlympiadSave;
 import l2jorion.game.taskmanager.tasks.TaskRaidPointsReset;
 import l2jorion.game.taskmanager.tasks.TaskRecom;
 import l2jorion.game.taskmanager.tasks.TaskRestart;
 import l2jorion.game.taskmanager.tasks.TaskSevenSignsUpdate;
 import l2jorion.game.taskmanager.tasks.TaskShutdown;
+import l2jorion.game.taskmanager.tasks.TaskWeeklyTopBoard;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
@@ -57,14 +59,14 @@ public final class TaskManager
 	
 	protected static final String[] SQL_STATEMENTS =
 	{
-		"SELECT id,task,type,last_activation,param1,param2,param3 FROM global_tasks",
+		"SELECT id, task, type, last_activation, param1, param2, param3 FROM global_tasks",
 		"UPDATE global_tasks SET last_activation=? WHERE id=?",
 		"SELECT id FROM global_tasks WHERE task=?",
 		"INSERT INTO global_tasks (task,type,last_activation,param1,param2,param3) VALUES(?,?,?,?,?,?)"
 	};
 	
-	private final FastMap<Integer, Task> _tasks = new FastMap<>();
-	protected final FastList<ExecutedTask> _currentTasks = new FastList<>();
+	private final HashMap<Integer, Task> _tasks = new HashMap<>();
+	protected final ArrayList<ExecutedTask> _currentTasks = new ArrayList<>();
 	
 	public class ExecutedTask implements Runnable
 	{
@@ -106,7 +108,6 @@ public final class TaskManager
 				statement.setInt(2, id);
 				statement.executeUpdate();
 				statement.close();
-				statement = null;
 			}
 			catch (SQLException e)
 			{
@@ -115,12 +116,11 @@ public final class TaskManager
 					e.printStackTrace();
 				}
 				
-				LOG.warn("cannot updated the Global Task " + id + ": " + e.getMessage());
+				LOG.warn("Cannot updated the Global Task " + id + ": " + e.getMessage());
 			}
 			finally
 			{
 				CloseUtil.close(con);
-				con = null;
 			}
 			
 			if (type == TYPE_SHEDULED || type == TYPE_TIME)
@@ -202,17 +202,24 @@ public final class TaskManager
 	private void initializate()
 	{
 		registerTask(new TaskCleanUp());
-		// registerTask(new TaskOlympiadSave());
+		registerTask(new TaskOlympiadSave());
 		registerTask(new TaskRaidPointsReset());
 		registerTask(new TaskRecom());
 		registerTask(new TaskRestart());
 		registerTask(new TaskSevenSignsUpdate());
 		registerTask(new TaskShutdown());
+		
+		// registerTask(new TaskDailyMissionsReset());
+		
+		if (Config.RON_CUSTOM)
+		{
+			registerTask(new TaskWeeklyTopBoard());
+		}
 	}
 	
 	public void registerTask(Task task)
 	{
-		int key = task.getName().hashCode();
+		int key = task.getName().trim().toLowerCase().hashCode();
 		if (!_tasks.containsKey(key))
 		{
 			_tasks.put(key, task);
@@ -248,14 +255,10 @@ public final class TaskManager
 						_currentTasks.add(current);
 					}
 				}
-				
 			}
 			
 			rset.close();
 			statement.close();
-			rset = null;
-			statement = null;
-			
 		}
 		catch (Exception e)
 		{
@@ -265,7 +268,6 @@ public final class TaskManager
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
@@ -401,8 +403,6 @@ public final class TaskManager
 			
 			rset.close();
 			statement.close();
-			rset = null;
-			statement = null;
 			
 			output = true;
 		}
@@ -444,9 +444,7 @@ public final class TaskManager
 			statement.setString(5, param2);
 			statement.setString(6, param3);
 			statement.execute();
-			
 			statement.close();
-			statement = null;
 			
 			output = true;
 		}

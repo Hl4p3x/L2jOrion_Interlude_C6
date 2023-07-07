@@ -26,7 +26,6 @@ import l2jorion.log.Log;
 
 public class TaskShutdown extends Task
 {
-	//private static final Logger LOG = LoggerFactory.getLogger(TaskShutdown.class);
 	public static final String NAME = "shutdown";
 	
 	@Override
@@ -39,7 +38,7 @@ public class TaskShutdown extends Task
 	public void onTimeElapsed(final ExecutedTask task)
 	{
 		final String text = "Server Shutdown launched..";
-		Log.add(text, "Global_Task");
+		Log.add(text, "Global_task");
 		
 		final Shutdown handler = new Shutdown(Integer.valueOf(task.getParams()[2]), false);
 		handler.start();

@@ -30,6 +30,7 @@ import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2ManorManagerInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.siege.Castle;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
@@ -38,11 +39,7 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.util.Util;
 
-/**
- * Format: cdd[dd] c // id (0xC4) d // manor id d // seeds to buy [ d // seed id d // count ]
- * @author l3x
- */
-public class RequestBuySeed extends L2GameClientPacket
+public class RequestBuySeed extends PacketClient
 {
 	private int _count;
 	private int _manorId;
@@ -88,10 +85,14 @@ public class RequestBuySeed extends L2GameClientPacket
 		
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		
 		if (!getClient().getFloodProtectors().getManor().tryPerformAction("BuySeed"))
+		{
 			return;
+		}
 		
 		if (_count < 1)
 		{
@@ -107,7 +108,9 @@ public class RequestBuySeed extends L2GameClientPacket
 		}
 		
 		if (!(target instanceof L2ManorManagerInstance))
+		{
 			return;
+		}
 		
 		final Castle castle = CastleManager.getInstance().getCastleById(_manorId);
 		
@@ -123,10 +126,14 @@ public class RequestBuySeed extends L2GameClientPacket
 			residual = seed.getCanProduce();
 			
 			if (price <= 0)
+			{
 				return;
+			}
 			
 			if (residual < count)
+			{
 				return;
+			}
 			
 			totalPrice += count * price;
 			

@@ -1,19 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package l2jorion.game.datatables.sql;
 
 import java.sql.Connection;
@@ -95,19 +79,19 @@ public class AdminCommandAccessRights
 		return out;
 	}
 	
-	public boolean hasAccess(final String adminCommand, final AccessLevel accessLevel)
+	public boolean hasAccess(final String adminCommand, final AccessLevel playerAccessLevel)
 	{
-		if (accessLevel.getLevel() <= 0)
+		if (playerAccessLevel.getLevel() <= 0)
 		{
 			return false;
 		}
 		
-		if (!accessLevel.isGm())
+		if (!playerAccessLevel.isGm())
 		{
 			return false;
 		}
 		
-		if (accessLevel.getLevel() == Config.MASTERACCESS_LEVEL)
+		if (playerAccessLevel.getLevel() == Config.MASTERACCESS_LEVEL)
 		{
 			return true;
 		}
@@ -118,18 +102,18 @@ public class AdminCommandAccessRights
 			command = adminCommand.substring(0, adminCommand.indexOf(" "));
 		}
 		
-		int acar = 0;
+		int commandAccessLevel = 0;
 		if (adminCommandAccessRights.get(command) != null)
 		{
-			acar = adminCommandAccessRights.get(command);
+			commandAccessLevel = adminCommandAccessRights.get(command);
 		}
 		
-		if (acar == 0)
+		if (commandAccessLevel == 0)
 		{
 			LOG.warn("AdminCommandAccessRights: No rights found for admin command: " + command);
 			return false;
 		}
-		else if (acar >= accessLevel.getLevel())
+		else if (commandAccessLevel >= playerAccessLevel.getLevel())
 		{
 			return true;
 		}

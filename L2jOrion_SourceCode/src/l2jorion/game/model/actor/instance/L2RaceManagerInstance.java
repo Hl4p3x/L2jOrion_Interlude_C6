@@ -26,11 +26,11 @@ import javolution.util.FastList;
 import l2jorion.game.idfactory.IdFactory;
 import l2jorion.game.model.actor.knownlist.RaceManagerKnownList;
 import l2jorion.game.model.entity.MonsterRace;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.DeleteObject;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.MonRaceInfo;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.PlaySound;
@@ -207,7 +207,7 @@ public class L2RaceManagerInstance extends L2NpcInstance
 		}
 	}
 	
-	protected void broadcast(final L2GameServerPacket pkt)
+	protected void broadcast(final PacketServer pkt)
 	{
 		for (final L2RaceManagerInstance manager : _managers)
 		{

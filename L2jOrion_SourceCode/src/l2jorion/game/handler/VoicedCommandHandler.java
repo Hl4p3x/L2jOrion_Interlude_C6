@@ -1,34 +1,19 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.handler;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javolution.util.FastMap;
 import l2jorion.Config;
-import l2jorion.game.GameServer;
+import l2jorion.game.autofarm.AutofarmCommandHandler;
+import l2jorion.game.handler.custom.CustomBypassHandler;
 import l2jorion.game.handler.voice.DressMe;
 import l2jorion.game.handler.voice.Event_CTF;
 import l2jorion.game.handler.voice.Event_DM;
 import l2jorion.game.handler.voice.Event_TVT;
+import l2jorion.game.handler.voice.ExpireItems;
 import l2jorion.game.handler.voice.OfflineShop;
 import l2jorion.game.handler.voice.Online;
+import l2jorion.game.handler.voice.PartyTeleport;
 import l2jorion.game.handler.voice.SellBuffs;
 import l2jorion.game.handler.voice.Wedding;
 import l2jorion.logger.Logger;
@@ -36,11 +21,11 @@ import l2jorion.logger.LoggerFactory;
 
 public class VoicedCommandHandler
 {
-	private static Logger LOG = LoggerFactory.getLogger(GameServer.class.getName());
+	private static Logger LOG = LoggerFactory.getLogger(VoicedCommandHandler.class);
 	
 	private static VoicedCommandHandler _instance;
 	
-	private Map<String, IVoicedCommandHandler> _datatable;
+	private Map<String, IVoicedCommandHandler> _datatable = new ConcurrentHashMap<>();
 	
 	public static VoicedCommandHandler getInstance()
 	{
@@ -54,8 +39,6 @@ public class VoicedCommandHandler
 	
 	private VoicedCommandHandler()
 	{
-		_datatable = new FastMap<>();
-		
 		if (Config.CTF_COMMAND)
 		{
 			registerVoicedCommandHandler(new Event_CTF());
@@ -96,6 +79,19 @@ public class VoicedCommandHandler
 			registerVoicedCommandHandler(new DressMe());
 		}
 		
+		if (Config.AUTOFARM_ENABLED)
+		{
+			registerVoicedCommandHandler(new AutofarmCommandHandler());
+		}
+		
+		if (Config.L2LIMIT_CUSTOM)
+		{
+			registerVoicedCommandHandler(new PartyTeleport());
+		}
+		
+		registerVoicedCommandHandler(new ExpireItems());
+		CustomBypassHandler.getInstance().registerCustomBypassHandler(new ExpireItems());
+		
 		LOG.info("VoicedCommandHandler: Loaded " + _datatable.size() + " handlers");
 		
 	}
@@ -134,9 +130,6 @@ public class VoicedCommandHandler
 		return _datatable.get(command);
 	}
 	
-	/**
-	 * @return
-	 */
 	public int size()
 	{
 		return _datatable.size();

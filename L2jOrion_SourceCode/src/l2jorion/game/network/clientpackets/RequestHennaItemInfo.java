@@ -23,10 +23,11 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.datatables.csv.HennaTable;
 import l2jorion.game.model.actor.instance.L2HennaInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.HennaItemInfo;
 import l2jorion.game.templates.L2Henna;
 
-public final class RequestHennaItemInfo extends L2GameClientPacket
+public final class RequestHennaItemInfo extends PacketClient
 {
 	private int _symbolId;
 	

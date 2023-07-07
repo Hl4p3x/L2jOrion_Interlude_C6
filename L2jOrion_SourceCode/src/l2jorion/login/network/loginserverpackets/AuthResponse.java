@@ -23,14 +23,8 @@ package l2jorion.login.network.loginserverpackets;
 import l2jorion.game.datatables.GameServerTable;
 import l2jorion.login.network.serverpackets.ServerBasePacket;
 
-/**
- * @author -Wooden-
- */
 public class AuthResponse extends ServerBasePacket
 {
-	/**
-	 * @param serverId
-	 */
 	public AuthResponse(final int serverId)
 	{
 		writeC(0x02);

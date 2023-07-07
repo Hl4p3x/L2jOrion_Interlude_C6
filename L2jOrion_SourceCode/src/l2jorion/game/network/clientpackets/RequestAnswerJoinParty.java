@@ -23,6 +23,7 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExManagePartyRoomMember;
 import l2jorion.game.network.serverpackets.JoinParty;
@@ -31,7 +32,7 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 /**
  * sample 2a 01 00 00 00 format cdd
  */
-public final class RequestAnswerJoinParty extends L2GameClientPacket
+public final class RequestAnswerJoinParty extends PacketClient
 {
 	
 	private int _response;

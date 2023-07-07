@@ -26,9 +26,7 @@ import l2jorion.game.model.quest.Quest.QuestEventType;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.SocialAction;
-import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.util.random.Rnd;
 
@@ -50,24 +48,6 @@ public class L2ClanHallSiegeInstance extends L2NpcInstance
 		if (this != player.getTarget())
 		{
 			player.setTarget(this);
-			
-			player.onActionRequest();
-			
-			if (isAutoAttackable(player))
-			{
-				MyTargetSelected my = new MyTargetSelected(getObjectId(), player.getLevel() - getLevel());
-				player.sendPacket(my);
-				
-				StatusUpdate su = new StatusUpdate(getObjectId());
-				su.addAttribute(StatusUpdate.CUR_HP, (int) getCurrentHp());
-				su.addAttribute(StatusUpdate.MAX_HP, getMaxHp());
-				player.sendPacket(su);
-			}
-			else
-			{
-				MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
-				player.sendPacket(my);
-			}
 		}
 		else
 		{
@@ -83,6 +63,11 @@ public class L2ClanHallSiegeInstance extends L2NpcInstance
 				}
 				else
 				{
+					if (player.isMoving())
+					{
+						player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+					}
+					
 					player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
 					
 					broadcastPacket(new SocialAction(getObjectId(), Rnd.get(8)));
@@ -130,7 +115,7 @@ public class L2ClanHallSiegeInstance extends L2NpcInstance
 				return;
 			}
 			
-			SiegableHall hall = CHSiegeManager.getInstance().getSiegableHall(getClanHall().getId());
+			SiegableHall hall = CHSiegeManager.getInstance().getSiegableHall(getClanHall().getClanHallId());
 			if (hall != null)
 			{
 				if (System.currentTimeMillis() < clan.getDissolvingExpiryTime())
@@ -149,7 +134,7 @@ public class L2ClanHallSiegeInstance extends L2NpcInstance
 				return;
 			}
 			
-			SiegableHall hall = CHSiegeManager.getInstance().getSiegableHall(getClanHall().getId());
+			SiegableHall hall = CHSiegeManager.getInstance().getSiegableHall(getClanHall().getClanHallId());
 			if (hall != null)
 			{
 				CHSiegeManager.getInstance().unRegisterClan(clan, hall, player);

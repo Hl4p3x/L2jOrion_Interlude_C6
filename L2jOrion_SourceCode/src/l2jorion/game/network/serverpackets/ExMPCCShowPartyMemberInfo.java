@@ -21,8 +21,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Party;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class ExMPCCShowPartyMemberInfo extends L2GameServerPacket
+public class ExMPCCShowPartyMemberInfo extends PacketServer
 {
 	private final L2Party _party;
 	

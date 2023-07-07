@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
+import l2jorion.game.network.PacketServer;
 
-public class ChangeWaitType extends L2GameServerPacket
+public class ChangeWaitType extends PacketServer
 {
 	private static final String _S__3F_CHANGEWAITTYPE = "[S] 2F ChangeWaitType";
 	

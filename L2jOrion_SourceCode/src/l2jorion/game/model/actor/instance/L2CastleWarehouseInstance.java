@@ -12,10 +12,6 @@ import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * The Class L2CastleWarehouseInstance.
- * @author l3x
- */
 public class L2CastleWarehouseInstance extends L2FolkInstance
 {
 	private static Logger LOG = LoggerFactory.getLogger(L2CastleWarehouseInstance.class);
@@ -161,7 +157,9 @@ public class L2CastleWarehouseInstance extends L2FolkInstance
 			catch (IndexOutOfBoundsException | NumberFormatException ioobe)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					ioobe.printStackTrace();
+				}
 			}
 			showChatWindow(player, val);
 		}
@@ -218,15 +216,21 @@ public class L2CastleWarehouseInstance extends L2FolkInstance
 	protected int validateCondition(final L2PcInstance player)
 	{
 		if (player.isGM())
+		{
 			return COND_OWNER;
+		}
 		if (getCastle() != null && getCastle().getCastleId() > 0)
 		{
 			if (player.getClan() != null)
 			{
 				if (getCastle().getSiege().getIsInProgress())
+				{
 					return COND_BUSY_BECAUSE_OF_SIEGE; // Busy because of siege
-				else if (getCastle().getOwnerId() == player.getClanId()) // Clan owns castle
+				}
+				else if (getCastle().getOwnerId() == player.getClanId())
+				{
 					return COND_OWNER;
+				}
 			}
 		}
 		return COND_ALL_FALSE;

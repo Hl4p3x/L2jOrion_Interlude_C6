@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExAskJoinMPCC extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExAskJoinMPCC extends PacketServer
 {
 	private final String _requestorName;
 	

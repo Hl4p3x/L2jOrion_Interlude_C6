@@ -20,6 +20,7 @@
  */
 package l2jorion.game.idfactory;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,19 +44,22 @@ public class StackIDFactory extends IdFactory
 	protected StackIDFactory()
 	{
 		super();
+		
 		_curOID = FIRST_OID;
 		_tempOID = FIRST_OID;
 		
-		java.sql.Connection con = null;
+		Connection con = null;
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
 			
 			final int[] tmp_obj_ids = extractUsedObjectIDTable();
+			
 			if (tmp_obj_ids.length > 0)
 			{
 				_curOID = tmp_obj_ids[tmp_obj_ids.length - 1];
 			}
+			
 			LOG.info("Max Id = " + _curOID);
 			
 			int N = tmp_obj_ids.length;
@@ -65,7 +69,9 @@ public class StackIDFactory extends IdFactory
 			}
 			
 			_curOID++;
+			
 			LOG.info("IdFactory: Next usable Object ID is: " + _curOID);
+			
 			_initialized = true;
 		}
 		catch (final Exception e1)
@@ -86,6 +92,7 @@ public class StackIDFactory extends IdFactory
 			_tempOID++;
 			return N;
 		}
+		
 		// check these IDs not present in DB
 		if (Config.BAD_ID_CHECKING)
 		{

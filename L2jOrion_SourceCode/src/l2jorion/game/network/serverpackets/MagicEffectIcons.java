@@ -23,7 +23,9 @@ package l2jorion.game.network.serverpackets;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MagicEffectIcons extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class MagicEffectIcons extends PacketServer
 {
 	private static String _S__97_MAGICEFFECTICONS = "[S] 7f MagicEffectIcons";
 	

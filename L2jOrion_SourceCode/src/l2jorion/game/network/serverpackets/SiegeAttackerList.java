@@ -25,8 +25,9 @@ import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2SiegeClan;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.model.entity.siege.hallsiege.SiegableHall;
+import l2jorion.game.network.PacketServer;
 
-public class SiegeAttackerList extends L2GameServerPacket
+public class SiegeAttackerList extends PacketServer
 {
 	private static final String _S__CA_SiegeAttackerList = "[S] ca SiegeAttackerList";
 	
@@ -87,7 +88,7 @@ public class SiegeAttackerList extends L2GameServerPacket
 		}
 		else
 		{
-			writeD(_hall.getId());
+			writeD(_hall.getClanHallId());
 			writeD(0x00); // 0
 			writeD(0x01); // 1
 			writeD(0x00); // 0

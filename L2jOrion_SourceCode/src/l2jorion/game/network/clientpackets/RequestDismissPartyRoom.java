@@ -23,12 +23,9 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 
-/**
- * Format: (ch) dd
- * @author -Wooden-
- */
-public class RequestDismissPartyRoom extends L2GameClientPacket
+public class RequestDismissPartyRoom extends PacketClient
 {
 	private int _roomid;
 	@SuppressWarnings("unused")
@@ -46,11 +43,15 @@ public class RequestDismissPartyRoom extends L2GameClientPacket
 	{
 		final L2PcInstance _activeChar = getClient().getActiveChar();
 		if (_activeChar == null)
+		{
 			return;
+		}
 		
 		final PartyMatchRoom _room = PartyMatchRoomList.getInstance().getRoom(_roomid);
 		if (_room == null)
+		{
 			return;
+		}
 		
 		PartyMatchRoomList.getInstance().deleteRoom(_roomid);
 	}

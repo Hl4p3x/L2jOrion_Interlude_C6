@@ -22,14 +22,12 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.GetOffVehicle;
 import l2jorion.game.network.serverpackets.StopMoveInVehicle;
 
-/**
- * @author Damon
- */
-public final class RequestGetOffVehicle extends L2GameClientPacket
+public final class RequestGetOffVehicle extends PacketClient
 {
 	private int _boatId, _x, _y, _z;
 	

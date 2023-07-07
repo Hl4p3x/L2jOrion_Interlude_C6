@@ -18,11 +18,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-/**
- * @author Gnacik Mode : 0 - add 1 - modify 2 - quit
- */
-public class ExManagePartyRoomMember extends L2GameServerPacket
+public class ExManagePartyRoomMember extends PacketServer
 {
 	private final L2PcInstance _activeChar;
 	private final PartyMatchRoom _room;

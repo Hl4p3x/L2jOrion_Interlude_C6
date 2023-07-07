@@ -22,6 +22,8 @@ package l2jorion.login;
 import java.nio.ByteBuffer;
 
 import l2jorion.Config;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.login.L2LoginClient.LoginClientState;
 import l2jorion.login.network.clientpackets.AuthGameGuard;
 import l2jorion.login.network.clientpackets.RequestAuthLogin;
@@ -29,9 +31,6 @@ import l2jorion.login.network.clientpackets.RequestServerList;
 import l2jorion.login.network.clientpackets.RequestServerLogin;
 import l2jorion.mmocore.IPacketHandler;
 import l2jorion.mmocore.ReceivablePacket;
-import l2jorion.log.Log;
-import l2jorion.logger.Logger;
-import l2jorion.logger.LoggerFactory;
 
 public final class L2LoginPacketHandler implements IPacketHandler<L2LoginClient>
 {
@@ -47,7 +46,7 @@ public final class L2LoginPacketHandler implements IPacketHandler<L2LoginClient>
 		
 		if (Config.PACKET_HANDLER_DEBUG)
 		{
-			Log.add("Packet: " + Integer.toHexString(opcode) + " on State: " + state.name() + " Client: " + client.toString(), "LoginPacketsLog");
+			LOG.info("Packet: " + Integer.toHexString(opcode) + " on State: " + state.name() + " Client: " + client.toString(), "LoginPacketsLog");
 		}
 		
 		switch (state)
@@ -92,6 +91,6 @@ public final class L2LoginPacketHandler implements IPacketHandler<L2LoginClient>
 	
 	private void debugOpcode(final int opcode, final LoginClientState state)
 	{
-		LOG.debug("Unknown Opcode: " + opcode + " for state: " + state.name());
+		LOG.warn("Unknown Opcode: " + opcode + " for state: " + state.name());
 	}
 }

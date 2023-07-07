@@ -28,10 +28,11 @@ import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.ClanHall;
 import l2jorion.game.model.entity.siege.Castle;
+import l2jorion.game.network.PacketServer;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class SiegeInfo extends L2GameServerPacket
+public class SiegeInfo extends PacketServer
 {
 	private static Logger LOG = LoggerFactory.getLogger(SiegeInfo.class);
 	
@@ -94,7 +95,7 @@ public class SiegeInfo extends L2GameServerPacket
 		}
 		else
 		{
-			writeD(_hall.getId());
+			writeD(_hall.getClanHallId());
 			
 			final int ownerId = _hall.getOwnerId();
 			writeD(ownerId == activeChar.getClanId() && activeChar.isClanLeader() ? 0x01 : 0x00);
@@ -123,7 +124,7 @@ public class SiegeInfo extends L2GameServerPacket
 			}
 			
 			writeD((int) (Calendar.getInstance().getTimeInMillis() / 1000));
-			writeD((int) ((CHSiegeManager.getInstance().getSiegableHall(_hall.getId()).getNextSiegeTime()) / 1000));
+			writeD((int) ((CHSiegeManager.getInstance().getSiegableHall(_hall.getClanHallId()).getNextSiegeTime()) / 1000));
 			writeD(0x00); // number of choices?
 		}
 	}

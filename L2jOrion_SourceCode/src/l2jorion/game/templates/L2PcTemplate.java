@@ -20,9 +20,9 @@
  */
 package l2jorion.game.templates;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javolution.util.FastList;
 import l2jorion.game.datatables.sql.ItemTable;
 import l2jorion.game.model.base.ClassId;
 import l2jorion.game.model.base.Race;
@@ -34,6 +34,9 @@ public class L2PcTemplate extends L2CharTemplate
 	
 	public final int _currentCollisionRadius;
 	public final int _currentCollisionHeight;
+	public final int _currentCollisionRadiusFemale;
+	public final int _currentCollisionHeightFemale;
+	
 	public final String className;
 	
 	public final int spawnX;
@@ -48,7 +51,7 @@ public class L2PcTemplate extends L2CharTemplate
 	public final float lvlMpAdd;
 	public final float lvlMpMod;
 	
-	private final List<L2Item> _items = new FastList<>();
+	private final List<L2Item> _items = new ArrayList<>();
 	
 	public L2PcTemplate(final StatsSet set)
 	{
@@ -60,6 +63,9 @@ public class L2PcTemplate extends L2CharTemplate
 		
 		_currentCollisionRadius = set.getInteger("collision_radius");
 		_currentCollisionHeight = set.getInteger("collision_height");
+		
+		_currentCollisionRadiusFemale = set.getInteger("collision_radius_female");
+		_currentCollisionHeightFemale = set.getInteger("collision_height_female");
 		
 		spawnX = set.getInteger("spawnX");
 		spawnY = set.getInteger("spawnY");
@@ -74,6 +80,11 @@ public class L2PcTemplate extends L2CharTemplate
 		lvlMpMod = set.getFloat("lvlMpMod");
 	}
 	
+	public final ClassId getClassId()
+	{
+		return classId;
+	}
+	
 	public void addItem(final int itemId)
 	{
 		final L2Item item = ItemTable.getInstance().getTemplate(itemId);
@@ -86,6 +97,16 @@ public class L2PcTemplate extends L2CharTemplate
 	public L2Item[] getItems()
 	{
 		return _items.toArray(new L2Item[_items.size()]);
+	}
+	
+	public int getCollisionRadiusFemale()
+	{
+		return _currentCollisionRadiusFemale;
+	}
+	
+	public int getCollisionHeightFemale()
+	{
+		return _currentCollisionHeightFemale;
 	}
 	
 	@Override

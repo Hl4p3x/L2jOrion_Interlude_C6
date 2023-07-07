@@ -42,13 +42,7 @@ public class BlessedSpiritShot implements IItemHandler
 		3949,
 		3950,
 		3951,
-		3952,
-		10005, // Blessed Spiritshot: D-Grade
-		10006, // Blessed Spiritshot: C-Grade
-		10007, // Blessed Spiritshot: B-Grade
-		10008, // Blessed Spiritshot: A-Grade
-		10009, // Blessed Spiritshot: S Grade
-		10011 // Blessed Spiritshot: None Grade
+		3952
 	};
 	private static final int[] SKILL_IDS =
 	{

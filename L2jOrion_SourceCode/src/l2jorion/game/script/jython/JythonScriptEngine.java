@@ -54,7 +54,6 @@ import org.python.core.parser;
 
 public class JythonScriptEngine extends AbstractScriptEngine implements Compilable, Invocable
 {
-	
 	// my factory, may be null
 	private ScriptEngineFactory factory;
 	
@@ -235,7 +234,6 @@ public class JythonScriptEngine extends AbstractScriptEngine implements Compilab
 		});
 	}
 	
-	// ScriptEngine methods
 	@Override
 	public Object eval(String str, ScriptContext ctx) throws ScriptException
 	{

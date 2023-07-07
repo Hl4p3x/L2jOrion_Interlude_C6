@@ -24,12 +24,13 @@ import l2jorion.Config;
 import l2jorion.game.model.L2Macro;
 import l2jorion.game.model.L2Macro.L2MacroCmd;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestMakeMacro extends L2GameClientPacket
+public final class RequestMakeMacro extends PacketClient
 {
 	private final Logger LOG = LoggerFactory.getLogger(RequestMakeMacro.class);
 	private L2Macro _macro;

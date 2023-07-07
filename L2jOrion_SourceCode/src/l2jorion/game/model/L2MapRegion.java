@@ -165,6 +165,7 @@ public class L2MapRegion
 		{
 			return _spawnLocs.get(Rnd.get(_spawnLocs.size()));
 		}
+		
 		return _spawnLocs.get(0);
 	}
 	

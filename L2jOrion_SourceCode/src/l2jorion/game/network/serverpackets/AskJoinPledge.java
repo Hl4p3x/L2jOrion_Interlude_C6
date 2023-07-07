@@ -16,7 +16,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class AskJoinPledge extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class AskJoinPledge extends PacketServer
 {
 	private final int _requestorObjId;
 	private final String _pledgeName;

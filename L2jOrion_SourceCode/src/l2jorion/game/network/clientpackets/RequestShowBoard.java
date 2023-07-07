@@ -21,9 +21,11 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
-import l2jorion.game.community.CommunityBoard;
+import l2jorion.game.community.CommunityBoardManager;
+import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 
-public final class RequestShowBoard extends L2GameClientPacket
+public final class RequestShowBoard extends PacketClient
 {
 	@SuppressWarnings("unused")
 	private int _unknown;
@@ -37,7 +39,13 @@ public final class RequestShowBoard extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		CommunityBoard.getInstance().handleCommands(getClient(), Config.BBS_DEFAULT);
+		L2PcInstance activeChar = getClient().getActiveChar();
+		if (activeChar == null)
+		{
+			return;
+		}
+		
+		CommunityBoardManager.getInstance().onBypassCommand(getClient(), Config.BBS_DEFAULT);
 	}
 	
 	@Override

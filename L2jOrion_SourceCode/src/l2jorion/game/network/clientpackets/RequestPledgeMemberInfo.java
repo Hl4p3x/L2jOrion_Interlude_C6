@@ -23,13 +23,10 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.PledgeReceiveMemberInfo;
 
-/**
- * Format: (ch) dS
- * @author -Wooden-
- */
-public final class RequestPledgeMemberInfo extends L2GameClientPacket
+public final class RequestPledgeMemberInfo extends PacketClient
 {
 	@SuppressWarnings("unused")
 	private int _unk1;
@@ -45,18 +42,22 @@ public final class RequestPledgeMemberInfo extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		// LOG.info("C5: RequestPledgeMemberInfo d:"+_unk1);
-		// LOG.info("C5: RequestPledgeMemberInfo S:"+_player);
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
-		// do we need powers to do that??
+		}
+		
 		final L2Clan clan = activeChar.getClan();
 		if (clan == null)
+		{
 			return;
+		}
 		final L2ClanMember member = clan.getClanMember(_player);
 		if (member == null)
+		{
 			return;
+		}
 		activeChar.sendPacket(new PledgeReceiveMemberInfo(member));
 	}
 	

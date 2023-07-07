@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExCloseMPCC extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExCloseMPCC extends PacketServer
 {
 	@Override
 	protected void writeImpl()

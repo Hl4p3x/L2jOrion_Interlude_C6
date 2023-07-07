@@ -51,7 +51,9 @@ public class L2ClanMember
 	public L2ClanMember(final L2Clan clan, final String name, final int level, final int classId, final int objectId, final int pledgeType, final int powerGrade, final String title)
 	{
 		if (clan == null)
+		{
 			throw new IllegalArgumentException("Can not create a ClanMember with a null clan.");
+		}
 		_clan = clan;
 		_name = name;
 		_level = level;
@@ -68,7 +70,9 @@ public class L2ClanMember
 	public L2ClanMember(final L2PcInstance player)
 	{
 		if (player.getClan() == null)
+		{
 			throw new IllegalArgumentException("Can not create a ClanMember if player has a null clan.");
+		}
 		
 		_clan = player.getClan();
 		_player = player;
@@ -140,7 +144,10 @@ public class L2ClanMember
 	public int getClassId()
 	{
 		if (_player != null)
+		{
 			return _player.getClassId().getId();
+		}
+		
 		return _classId;
 	}
 	
@@ -150,7 +157,9 @@ public class L2ClanMember
 	public int getLevel()
 	{
 		if (_player != null)
+		{
 			return _player.getLevel();
+		}
 		return _level;
 	}
 	
@@ -160,7 +169,9 @@ public class L2ClanMember
 	public String getName()
 	{
 		if (_player != null)
+		{
 			return _player.getName();
+		}
 		return _name;
 	}
 	
@@ -170,21 +181,27 @@ public class L2ClanMember
 	public int getObjectId()
 	{
 		if (_player != null)
+		{
 			return _player.getObjectId();
+		}
 		return _objectId;
 	}
 	
 	public String getTitle()
 	{
 		if (_player != null)
+		{
 			return _player.getTitle();
+		}
 		return _title;
 	}
 	
 	public int getPledgeType()
 	{
 		if (_player != null)
+		{
 			return _player.getPledgeType();
+		}
 		return _pledgeType;
 	}
 	
@@ -231,7 +248,9 @@ public class L2ClanMember
 	public int getPowerGrade()
 	{
 		if (_player != null)
+		{
 			return _player.getPowerGrade();
+		}
 		return _powerGrade;
 	}
 	
@@ -290,14 +309,18 @@ public class L2ClanMember
 	public int getSponsor()
 	{
 		if (_player != null)
+		{
 			return _player.getSponsor();
+		}
 		return _sponsor;
 	}
 	
 	public int getApprentice()
 	{
 		if (_player != null)
+		{
 			return _player.getApprentice();
+		}
 		return _apprentice;
 	}
 	
@@ -313,14 +336,18 @@ public class L2ClanMember
 		{
 			final L2ClanMember apprentice = _clan.getClanMember(_apprentice);
 			if (apprentice != null)
+			{
 				return apprentice.getName();
+			}
 			return "Error";
 		}
 		if (_sponsor != 0)
 		{
 			final L2ClanMember sponsor = _clan.getClanMember(_sponsor);
 			if (sponsor != null)
+			{
 				return sponsor.getName();
+			}
 			return "Error";
 		}
 		return "";
@@ -336,7 +363,9 @@ public class L2ClanMember
 		int pledgeClass = 0;
 		
 		if (player == null)
+		{
 			return pledgeClass;
+		}
 		
 		L2Clan clan = player.getClan();
 		

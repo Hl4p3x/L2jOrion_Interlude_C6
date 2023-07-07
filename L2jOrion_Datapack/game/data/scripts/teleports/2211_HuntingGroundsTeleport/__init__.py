@@ -1,11 +1,11 @@
-# By Deniska Spectr
 import sys
 from l2jorion.game.model.actor.instance import L2PcInstance
 from l2jorion.game.model.quest          import State
 from l2jorion.game.model.quest          import QuestState
 from l2jorion.game.model.quest.jython   import QuestJython as JQuest
+
 qn = "2211_HuntingGroundsTeleport"
-#print "2211. Hunting Grounds Teleport"
+
 GLUDIN_DAWN,GLUDIO_DAWN,DION_DAWN,GIRAN_DAWN,HEINE_DAWN,OREN_DAWN,ADEN_DAWN,\
 GLUDIN_DUSK,GLUDIO_DUSK,DION_DUSK,GIRAN_DUSK,HEINE_DUSK,OREN_DUSK,ADEN_DUSK = range(31078,31092)
 HW_DAWN,HW_DUSK = range(31168,31170)
@@ -14,9 +14,9 @@ SCHUTTGART_DAWN,SCHUTTGART_DUSK = range(31997,31999)
 
 class Quest (JQuest) :
 
- def __init__(self, id, name, descr): JQuest.__init__(self, id, name, descr)
+ def __init__(self,id,name,descr): JQuest.__init__(self,id,name,descr)
 
- def onTalk (Self, npc, player):
+ def onTalk (self, npc, player):
     npcId = npc.getNpcId()
     if npcId in [GLUDIN_DAWN,GLUDIN_DUSK] :
           htmltext = "hg_gludin.htm"
@@ -46,9 +46,10 @@ class Quest (JQuest) :
 
 QUEST    = Quest(2211, qn, "Teleports")
 CREATED    = State('Start', QUEST)
+STARTED     = State('Started', QUEST)
 
 QUEST.setInitialState(CREATED)
 
 for i in range(31078,31092)+range(31168,31170)+range(31692,31696)+range(31997,31999) :
-   QUEST.addStartNpc(i)
-   QUEST.addTalkId(i)
+    QUEST.addStartNpc(i)
+    QUEST.addTalkId(i)

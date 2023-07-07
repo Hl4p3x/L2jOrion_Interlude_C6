@@ -261,7 +261,7 @@ public class Blow implements ISkillHandler
 				}
 				
 				// Manage attack or cast break of the target (calculating rate, sending message...)
-				if (!target.isRaid() && Formulas.calcAtkBreak(target, damage))
+				if (skill.isMagic() && !target.isRaid() && Formulas.calcAtkBreak(target, damage))
 				{
 					target.breakAttack();
 					target.breakCast();

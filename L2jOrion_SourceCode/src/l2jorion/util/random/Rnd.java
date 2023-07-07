@@ -24,7 +24,7 @@ public final class Rnd
 		return MTRandom.getInstance().getSecureRandom().nextDouble();
 	}
 	
-	public static final int get(int n) // get random number from 0 to n-1
+	public static final int get(int n) // get random number from 0 to n - 1
 	{
 		return (int) (MTRandom.getInstance().getSecureRandom().nextDouble() * n);
 	}
@@ -72,5 +72,10 @@ public final class Rnd
 		}
 		
 		return list.get(get(list.size()));
+	}
+	
+	public static final <T> T get(T[] array)
+	{
+		return array[get(array.length)];
 	}
 }

@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <list>
 <skill id="2001" levels="1" name="Red Potion">
   <set name="target" val="TARGET_SELF"/>
@@ -891,6 +891,7 @@
   <set name="mpConsume" val="3"/>
   <set name="target" val="TARGET_CORPSE_MOB"/>
   <set name="hitTime" val="500"/>
+  <set name="staticHitTime" val="true" />
   <set name="skillType" val="HARVEST"/>
   <set name="reuseDelay" val="1000"/>
   <set name="operateType" val="OP_ACTIVE"/>
@@ -900,6 +901,7 @@
 <skill id="2099" levels="1" name="Escape: 5 minutes">
   <set name="target" val="TARGET_SELF"/>
   <set name="hitTime" val="300000"/>
+  <set name="staticHitTime" val="true" />
   <set name="skillType" val="RECALL"/>
   <set name="operateType" val="OP_ACTIVE"/>
 </skill>

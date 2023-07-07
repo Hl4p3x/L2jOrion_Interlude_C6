@@ -23,8 +23,9 @@ package l2jorion.game.network.serverpackets;
 import java.util.List;
 
 import javolution.util.FastList;
+import l2jorion.game.network.PacketServer;
 
-public class AquireSkillInfo extends L2GameServerPacket
+public class AquireSkillInfo extends PacketServer
 {
 	private static final String _S__A4_AQUIRESKILLINFO = "[S] 8b AquireSkillInfo";
 	

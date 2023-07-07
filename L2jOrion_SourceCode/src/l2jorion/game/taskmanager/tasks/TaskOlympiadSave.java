@@ -26,13 +26,10 @@ import l2jorion.game.taskmanager.TaskManager;
 import l2jorion.game.taskmanager.TaskManager.ExecutedTask;
 import l2jorion.game.taskmanager.TaskTypes;
 import l2jorion.log.Log;
-import l2jorion.logger.Logger;
-import l2jorion.logger.LoggerFactory;
 
 public class TaskOlympiadSave extends Task
 {
-	private static final Logger LOG = LoggerFactory.getLogger(TaskOlympiadSave.class);
-	public static final String NAME = "olympiadsave";
+	public static final String NAME = "OlympiadSave";
 	
 	@Override
 	public String getName()
@@ -48,9 +45,8 @@ public class TaskOlympiadSave extends Task
 			if (Olympiad.getInstance().inCompPeriod())
 			{
 				Olympiad.getInstance().saveOlympiadStatus();
-				// LOG.info("[GlobalTask] Olympiad System save launched.");
 				final String text = "Olympiad System save launched";
-				Log.add(text, "Global_Task");
+				Log.add(text, "Global_task");
 			}
 		}
 		catch (final Exception e)
@@ -70,5 +66,4 @@ public class TaskOlympiadSave extends Task
 		super.initializate();
 		TaskManager.addUniqueTask(NAME, TaskTypes.TYPE_FIXED_SHEDULED, "900000", "1800000", "");
 	}
-	
 }

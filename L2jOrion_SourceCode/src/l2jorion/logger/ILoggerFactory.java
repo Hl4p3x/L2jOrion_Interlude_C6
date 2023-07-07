@@ -24,12 +24,6 @@
  */
 package l2jorion.logger;
 
-/**
- * <code>ILoggerFactory</code> instances manufacture {@link Logger} instances by name.
- * <p>
- * Most users retrieve {@link Logger} instances through the static {@link LoggerFactory#getLogger(String)} method. An instance of of this interface is bound internally with {@link LoggerFactory} class at compile time.
- * @author Ceki G&uuml;lc&uuml;
- */
 public interface ILoggerFactory
 {
 	

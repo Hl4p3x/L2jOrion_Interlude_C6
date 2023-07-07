@@ -1,21 +1,3 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game;
 
 import java.util.concurrent.TimeUnit;
@@ -24,6 +6,7 @@ import l2jorion.Config;
 import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.controllers.TradeController;
 import l2jorion.game.datatables.OfflineTradeTable;
+import l2jorion.game.datatables.OfflineTradeTableWithBuffer;
 import l2jorion.game.managers.AutoSaveManager;
 import l2jorion.game.managers.CastleManorManager;
 import l2jorion.game.managers.CursedWeaponsManager;
@@ -31,10 +14,12 @@ import l2jorion.game.managers.GrandBossManager;
 import l2jorion.game.managers.ItemsOnGroundManager;
 import l2jorion.game.managers.QuestManager;
 import l2jorion.game.managers.RaidBossSpawnManager;
+import l2jorion.game.model.L2Effect;
+import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.entity.Hero;
-import l2jorion.game.model.entity.Hitman;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.model.entity.sevensigns.SevenSignsFestival;
 import l2jorion.game.model.olympiad.Olympiad;
@@ -43,7 +28,7 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.gameserverpackets.ServerStatus;
 import l2jorion.game.network.serverpackets.ServerClose;
 import l2jorion.game.network.serverpackets.SystemMessage;
-import l2jorion.game.powerpack.buffer.BuffTable;
+import l2jorion.game.powerpack.buffer.BuffsTable;
 import l2jorion.game.thread.LoginServerThread;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Broadcast;
@@ -124,7 +109,15 @@ public class Shutdown extends Thread
 			{
 				if ((Config.OFFLINE_TRADE_ENABLE || Config.OFFLINE_CRAFT_ENABLE) && Config.RESTORE_OFFLINERS)
 				{
-					OfflineTradeTable.storeOffliners();
+					if (!Config.RON_CUSTOM)
+					{
+						OfflineTradeTable.storeOffliners();
+					}
+					else
+					{
+						OfflineTradeTableWithBuffer.storeOffliners();
+					}
+					
 					LOG.info("Offline Traders Table: Offline shops stored ({}ms).", tc.getEstimatedTimeAndRestartCounter());
 				}
 			}
@@ -278,7 +271,7 @@ public class Shutdown extends Thread
 		
 		LOG.info("{}({}) issued shutdown command, {} in {} seconds.", activeChar.getName(), activeChar.getObjectId(), MODE_TEXT[_shutdownMode], seconds);
 		
-		Broadcast.toAllOnlinePlayers(Config.ALT_Server_Menu_Name + " is " + MODE_TEXT[_shutdownMode] + " in " + seconds + " seconds.");
+		Broadcast.toAllOnlinePlayers(Config.ALT_Server_Menu_Name + " will be " + MODE_TEXT[_shutdownMode] + " in " + seconds + " seconds.");
 		
 		if (_shutdownMode > 0)
 		{
@@ -488,12 +481,7 @@ public class Shutdown extends Thread
 			LOG.info("Quest Manager: Data saved ({}ms).", tc.getEstimatedTimeAndRestartCounter());
 		}
 		
-		if (Hitman.start())
-		{
-			Hitman.getInstance().save();
-		}
-		
-		BuffTable.getInstance().onServerShutdown();
+		BuffsTable.getInstance().onServerShutdown();
 		LOG.info("Characters Schemes Table: Data saved ({}ms).", tc.getEstimatedTimeAndRestartCounter());
 		
 		// Save items on ground before closing
@@ -527,6 +515,22 @@ public class Shutdown extends Thread
 			try
 			{
 				player.store();
+				if (player.getPet() != null)
+				{
+					final L2Summon summon = player.getPet();
+					for (final L2Effect e : summon.getAllEffects())
+					{
+						if (e != null)
+						{
+							e.exit(true);
+						}
+					}
+					
+					if (summon instanceof L2PetInstance)
+					{
+						summon.unSummon(player);
+					}
+				}
 			}
 			catch (Throwable t)
 			{

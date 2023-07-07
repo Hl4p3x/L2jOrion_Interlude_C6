@@ -221,7 +221,6 @@ public abstract class Inventory extends ItemContainer
 					if (getOwner() instanceof L2PcInstance)
 					{
 						player = (L2PcInstance) getOwner();
-						
 						skill = SkillTable.getInstance().getInfo(3261, 1);
 						player.removeSkill(skill);
 						player.sendSkillList();
@@ -258,7 +257,6 @@ public abstract class Inventory extends ItemContainer
 					if (getOwner() instanceof L2PcInstance)
 					{
 						player = (L2PcInstance) getOwner();
-						
 						skill = SkillTable.getInstance().getInfo(3261, 1);
 						player.addSkill(skill, false);
 						player.sendSkillList();
@@ -268,7 +266,6 @@ public abstract class Inventory extends ItemContainer
 		}
 	}
 	
-	// XXX
 	final class StatsListener implements PaperdollListener
 	{
 		@Override
@@ -391,7 +388,6 @@ public abstract class Inventory extends ItemContainer
 				{
 					player.addSkill(passiveSkill, false);
 					player.sendSkillList();
-					
 				}
 			}
 			
@@ -718,8 +714,6 @@ public abstract class Inventory extends ItemContainer
 	@Override
 	protected void removeItem(final L2ItemInstance item)
 	{
-		// Unequip item if equiped
-		// if (item.isEquipped()) unEquipItemInSlotAndRecord(item.getEquipSlot());
 		for (int i = 0; i < _paperdoll.length; i++)
 		{
 			if (_paperdoll[i] == item)
@@ -1013,7 +1007,7 @@ public abstract class Inventory extends ItemContainer
 			// case PAPERDOLL_CHEST: slot = item.getItem().getBodyPart(); break;// fall through
 			case PAPERDOLL_CHEST:
 				slot = L2Item.SLOT_CHEST;
-				break; // TODO
+				break;
 			case PAPERDOLL_LEGS:
 				slot = L2Item.SLOT_LEGS;
 				break;
@@ -1031,11 +1025,6 @@ public abstract class Inventory extends ItemContainer
 		return slot;
 	}
 	
-	/**
-	 * Unequips item in body slot and returns alterations.
-	 * @param slot : int designating the slot of the paperdoll
-	 * @return L2ItemInstance[] : list of changes
-	 */
 	public L2ItemInstance[] unEquipItemInBodySlotAndRecord(int slot)
 	{
 		Inventory.ChangeRecorder recorder = newRecorder();
@@ -1210,24 +1199,9 @@ public abstract class Inventory extends ItemContainer
 			return;
 		}
 		
-		if (getOwner() instanceof L2PcInstance)
-		{
-			final L2PcInstance player = (L2PcInstance) getOwner();
-			
-			// Like L2OFF weapon hero and crown aren't removed after restart
-			if (!player.isGM())
-			{
-				if (!player.isHero())
-				{
-					final int itemId = item.getItemId();
-					
-					if (itemId >= 6611 && itemId <= 6621 || itemId == 6842)
-					{
-						return;
-					}
-				}
-			}
-		}
+		/*
+		 * if (getOwner() instanceof L2PcInstance) { final L2PcInstance player = (L2PcInstance) getOwner(); if (!player.isGM()) { if (!player.isHero()) { final int itemId = item.getItemId(); if (itemId >= 6611 && itemId <= 6621 || itemId == 6842) { return; } } } }
+		 */
 		
 		final int targetSlot = item.getItem().getBodyPart();
 		switch (targetSlot)
@@ -1404,7 +1378,7 @@ public abstract class Inventory extends ItemContainer
 				setPaperdollItem(PAPERDOLL_BACK, item);
 				break;
 			default:
-				LOG.warn("unknown body slot:" + targetSlot);
+				// LOG.warn("unknown body slot:" + targetSlot);
 		}
 	}
 	
@@ -1512,25 +1486,10 @@ public abstract class Inventory extends ItemContainer
 					continue;
 				}
 				
-				if (getOwner() instanceof L2PcInstance)
-				{
-					L2PcInstance player = (L2PcInstance) getOwner();
-					
-					if (!player.isGM())
-					{
-						if (!player.isHero())
-						{
-							final int itemId = item.getItemId();
-							
-							if (itemId >= 6611 && itemId <= 6621 || itemId == 6842)
-							{
-								item.setLocation(ItemLocation.INVENTORY);
-							}
-						}
-					}
-					
-					player = null;
-				}
+				// Like L2OFF weapon hero and crown aren't removed after restart
+				/*
+				 * if (getOwner() instanceof L2PcInstance) { L2PcInstance player = (L2PcInstance) getOwner(); final int itemId = item.getItemId(); if (!player.isGM()) { if (!player.isHero()) { if (itemId >= 6611 && itemId <= 6621 || itemId == 6842) { item.setLocation(ItemLocation.INVENTORY); } } } }
+				 */
 				
 				L2World.getInstance().storeObject(item);
 				
@@ -1544,16 +1503,13 @@ public abstract class Inventory extends ItemContainer
 					addItem(item);
 				}
 			}
-			
 			inv.close();
 			DatabaseUtils.close(statement);
 			refreshWeight();
-			
-			statement = null;
-			inv = null;
-			item = null;
 		}
-		catch (final Exception e)
+		catch (
+		
+		final Exception e)
 		{
 			LOG.warn("Could not restore inventory : ");
 			e.printStackTrace();
@@ -1576,6 +1532,27 @@ public abstract class Inventory extends ItemContainer
 			if (item == null)
 			{
 				continue;
+			}
+			
+			// Like L2OFF weapon hero and crown aren't removed after restart
+			if (getOwner() instanceof L2PcInstance)
+			{
+				L2PcInstance player = (L2PcInstance) getOwner();
+				
+				final int itemId = item.getItemId();
+				
+				if (!player.isGM())
+				{
+					if (!player.isHero())
+					{
+						if (itemId >= 6611 && itemId <= 6621 || itemId == 6842)
+						{
+							item.setLocation(ItemLocation.INVENTORY);
+							setPaperdollItem(PAPERDOLL_RHAND, null);
+							setPaperdollItem(PAPERDOLL_LRHAND, null);
+						}
+					}
+				}
 			}
 			
 			slot = item.getEquipSlot();

@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.ai;
 
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_ACTIVE;
@@ -76,7 +56,9 @@ public class L2ControllableMobAI extends L2AttackableAI
 	protected void onEvtThink()
 	{
 		if (isThinking() || _actor.isAllSkillsDisabled())
+		{
 			return;
+		}
 		
 		setThinking(true);
 		
@@ -123,16 +105,19 @@ public class L2ControllableMobAI extends L2AttackableAI
 	@Override
 	protected void thinkCast()
 	{
-		if (getAttackTarget() == null || getAttackTarget().isAlikeDead())
+		L2Character target = (L2Character) getTarget();
+		if (target == null || target.isAlikeDead())
 		{
-			setAttackTarget(findNextRndTarget());
+			setTarget(findNextRndTarget());
 			clientStopMoving(null);
 		}
 		
-		if (getAttackTarget() == null)
+		if (target == null)
+		{
 			return;
+		}
 		
-		((L2Attackable) _actor).setTarget(getAttackTarget());
+		((L2Attackable) _actor).setTarget(target);
 		
 		if (!_actor.isMuted())
 		{
@@ -140,7 +125,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 			int max_range = 0;
 			for (final L2Skill sk : _actor.getAllSkills())
 			{
-				if (Util.checkIfInRange(sk.getCastRange(), _actor, getAttackTarget(), true) && !_actor.isSkillDisabled(sk) && _actor.getCurrentMp() > _actor.getStat().getMpConsume(sk))
+				if (Util.checkIfInRange(sk.getCastRange(), _actor, getTarget(), true) && !_actor.isSkillDisabled(sk) && _actor.getCurrentMp() > _actor.getStat().getMpConsume(sk))
 				{
 					_actor.doCast(sk);
 					return;
@@ -150,7 +135,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 			
 			if (!isNotMoving())
 			{
-				moveToPawn(getAttackTarget(), max_range);
+				moveToPawn(getTarget(), max_range);
 			}
 			return;
 		}
@@ -167,7 +152,9 @@ public class L2ControllableMobAI extends L2AttackableAI
 		}
 		
 		if (target == null)
+		{
 			return;
+		}
 		
 		_actor.setTarget(target);
 		// as a response, we put the target in a forced attack mode
@@ -244,14 +231,14 @@ public class L2ControllableMobAI extends L2AttackableAI
 	
 	protected void thinkAttack()
 	{
-		if (getAttackTarget() == null || getAttackTarget().isAlikeDead())
+		L2Character target = (L2Character) getTarget();
+		if (target == null || target.isAlikeDead())
 		{
-			if (getAttackTarget() != null)
+			if (target != null)
 			{
 				// stop hating
 				L2Attackable npc = (L2Attackable) _actor;
-				npc.stopHating(getAttackTarget());
-				npc = null;
+				npc.stopHating(target);
 			}
 			
 			setIntention(AI_INTENTION_ACTIVE);
@@ -276,17 +263,17 @@ public class L2ControllableMobAI extends L2AttackableAI
 						continue;
 					}
 					
-					if (_actor.isInsideRadius(npc, npc.getFactionRange(), false, true) && Math.abs(getAttackTarget().getZ() - npc.getZ()) < 200)
+					if (_actor.isInsideRadius(npc, npc.getFactionRange(), false, true) && Math.abs(getTarget().getZ() - npc.getZ()) < 200)
 					{
-						npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, getAttackTarget(), 1);
+						npc.getAI().notifyEvent(CtrlEvent.EVT_AGGRESSION, getTarget(), 1);
 					}
 				}
 			}
 			
-			_actor.setTarget(getAttackTarget());
+			_actor.setTarget(getTarget());
 			final L2Skill[] skills = _actor.getAllSkills();
-			final double dist2 = _actor.getPlanDistanceSq(getAttackTarget().getX(), getAttackTarget().getY());
-			final int range = _actor.getPhysicalAttackRange() + _actor.getTemplate().collisionRadius + getAttackTarget().getTemplate().collisionRadius;
+			final double dist2 = _actor.getPlanDistanceSq(getTarget().getX(), getTarget().getY());
+			final int range = _actor.getPhysicalAttackRange() + _actor.getTemplate().collisionRadius + target.getTemplate().collisionRadius;
 			int max_range = range;
 			
 			if (!_actor.isMuted() && dist2 > (range + 20) * (range + 20))
@@ -302,7 +289,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 					}
 					max_range = Math.max(max_range, castRange);
 				}
-				moveToPawn(getAttackTarget(), range);
+				moveToPawn(getTarget(), range);
 				return;
 			}
 			
@@ -314,7 +301,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 			}
 			else
 			{
-				hated = getAttackTarget();
+				hated = target;
 			}
 			
 			if (hated == null)
@@ -323,9 +310,9 @@ public class L2ControllableMobAI extends L2AttackableAI
 				return;
 			}
 			
-			if (hated != getAttackTarget())
+			if (hated != getTarget())
 			{
-				setAttackTarget(hated);
+				setTarget(hated);
 			}
 			
 			if (!_actor.isMuted() && skills.length > 0 && Rnd.nextInt(5) == 3)
@@ -341,13 +328,14 @@ public class L2ControllableMobAI extends L2AttackableAI
 					}
 				}
 			}
-			_actor.doAttack(getAttackTarget());
+			_actor.doAttack(target);
 		}
 	}
 	
 	private void thinkActive()
 	{
-		setAttackTarget(findNextRndTarget());
+		L2Character target = (L2Character) getTarget();
+		setTarget(findNextRndTarget());
 		L2Character hated;
 		
 		if (_actor.isConfused())
@@ -356,7 +344,7 @@ public class L2ControllableMobAI extends L2AttackableAI
 		}
 		else
 		{
-			hated = getAttackTarget();
+			hated = target;
 		}
 		
 		if (hated != null)
@@ -369,30 +357,42 @@ public class L2ControllableMobAI extends L2AttackableAI
 	private boolean autoAttackCondition(final L2Character target)
 	{
 		if (target == null || !(_actor instanceof L2Attackable))
+		{
 			return false;
+		}
 		
 		final L2Attackable me = (L2Attackable) _actor;
 		
 		if (target instanceof L2FolkInstance || target instanceof L2DoorInstance)
+		{
 			return false;
+		}
 		
 		if (target.isAlikeDead() || !me.isInsideRadius(target, me.getAggroRange(), false, false) || Math.abs(_actor.getZ() - target.getZ()) > 100)
+		{
 			return false;
+		}
 		
 		// Check if the target isn't invulnerable
 		if (target.isInvul())
+		{
 			return false;
+		}
 		
 		// Check if the target is a L2PcInstance
 		if (target instanceof L2PcInstance)
 		{
 			// Check if the target isn't in silent move mode
 			if (((L2PcInstance) target).isSilentMoving())
+			{
 				return false;
+			}
 		}
 		
 		if (target instanceof L2NpcInstance)
+		{
 			return false;
+		}
 		
 		return me.isAggressive();
 	}
@@ -435,8 +435,10 @@ public class L2ControllableMobAI extends L2AttackableAI
 			}
 		}
 		
-		if (potentialTarget.size() == 0) // nothing to do
+		if (potentialTarget.size() == 0)
+		{
 			return null;
+		}
 		
 		// we choose a random target
 		int choice = Rnd.nextInt(potentialTarget.size());

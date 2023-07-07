@@ -1,4 +1,3 @@
-#Made by Kerb
 import sys
 from java.lang import System
 from l2jorion import Config
@@ -9,6 +8,7 @@ from l2jorion.game.network.serverpackets import CreatureSay
 from l2jorion.util.random import Rnd
 
 qn = "625_TheFinestIngredientsPart2"
+
 #Npcs
 JEREMY = 31521
 TABLE = 31542
@@ -137,8 +137,8 @@ class Quest (JQuest) :
             if len(PartyQuestMembers) == 0 : return
             st = PartyQuestMembers[Rnd.get(len(PartyQuestMembers))]
             if st.getQuestItemsCount(FOOD) > 0 :
-                st.takeItems(FOOD,1)
-            st.giveItems(MEAT,1)
+                st.takeItems(FOOD,1,npc)
+            st.giveItems(MEAT,1,npc)
             st.set("cond","3")
             st.playSound("ItemSound.quest_middle")
         else :

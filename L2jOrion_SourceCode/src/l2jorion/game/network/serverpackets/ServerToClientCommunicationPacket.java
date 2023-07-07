@@ -1,6 +1,8 @@
 package l2jorion.game.network.serverpackets;
 
-public class ServerToClientCommunicationPacket extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ServerToClientCommunicationPacket extends PacketServer
 {
 	private static final String _S__7D_SERVERTOCLIENT = "[S] 7D ServerToClientCommunicationPacket";
 	

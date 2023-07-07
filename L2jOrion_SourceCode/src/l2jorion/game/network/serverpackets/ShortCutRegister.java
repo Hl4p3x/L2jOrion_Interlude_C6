@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2ShortCut;
+import l2jorion.game.network.PacketServer;
 
-public class ShortCutRegister extends L2GameServerPacket
+public class ShortCutRegister extends PacketServer
 {
 	private static final String _S__56_SHORTCUTREGISTER = "[S] 44 ShortCutRegister";
 	

@@ -22,9 +22,10 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.PledgeShowMemberListAll;
 
-public final class RequestPledgeMemberList extends L2GameClientPacket
+public final class RequestPledgeMemberList extends PacketClient
 {
 	@Override
 	protected void readImpl()

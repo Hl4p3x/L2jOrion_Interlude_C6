@@ -23,8 +23,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import l2jguard.HwidConfig;
-import l2jguard.hwidmanager.HwidManager;
 import l2jorion.Config;
 import l2jorion.game.GameServer;
 import l2jorion.game.community.manager.MailBBSManager;
@@ -33,16 +31,14 @@ import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.datatables.csv.MapRegionTable;
 import l2jorion.game.datatables.sql.AdminCommandAccessRights;
-import l2jorion.game.datatables.sql.CharNameTable;
 import l2jorion.game.handler.custom.CustomWorldHandler;
-import l2jorion.game.handler.item.Potions;
+import l2jorion.game.handler.voice.Menu;
 import l2jorion.game.handler.voice.Vote;
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.ClanHallManager;
 import l2jorion.game.managers.CoupleManager;
 import l2jorion.game.managers.CrownManager;
 import l2jorion.game.managers.DimensionalRiftManager;
-import l2jorion.game.managers.FortSiegeManager;
 import l2jorion.game.managers.PetitionManager;
 import l2jorion.game.managers.SiegeManager;
 import l2jorion.game.model.Inventory;
@@ -58,7 +54,6 @@ import l2jorion.game.model.base.PlayerClass;
 import l2jorion.game.model.entity.Announcements;
 import l2jorion.game.model.entity.ClanHall;
 import l2jorion.game.model.entity.Hero;
-import l2jorion.game.model.entity.Hitman;
 import l2jorion.game.model.entity.Wedding;
 import l2jorion.game.model.entity.event.CTF;
 import l2jorion.game.model.entity.event.DM;
@@ -66,13 +61,13 @@ import l2jorion.game.model.entity.event.L2Event;
 import l2jorion.game.model.entity.event.TvT;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.model.entity.siege.Castle;
-import l2jorion.game.model.entity.siege.FortSiege;
 import l2jorion.game.model.entity.siege.Siege;
 import l2jorion.game.model.olympiad.Olympiad;
 import l2jorion.game.model.quest.Quest;
 import l2jorion.game.model.quest.QuestState;
 import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.L2GameClient.GameClientState;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ClientSetTime;
@@ -104,7 +99,7 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.network.serverpackets.UserInfo;
 import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.powerpack.PowerPackConfig;
-import l2jorion.game.powerpack.buffer.BuffTable;
+import l2jorion.game.powerpack.buffer.BuffsTable;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
@@ -112,15 +107,12 @@ import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
-public class EnterWorld extends L2GameClientPacket
+public class EnterWorld extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(EnterWorld.class);
 	
 	private final SimpleDateFormat fmt = new SimpleDateFormat("H:mm:ss");
 	private final SimpleDateFormat df = new SimpleDateFormat("dd MMMM, E, yyyy");
-	private static final int MANA_POT_CD = (int) Config.MANA_POT_CD;
-	private static final int HEALING_POT_CD = (int) Config.HEALING_POT_CD;
-	private static final int CP_POT_CD = (int) Config.CP_POT_CD;
 	
 	@Override
 	protected void readImpl()
@@ -142,41 +134,23 @@ public class EnterWorld extends L2GameClientPacket
 		getClient().setState(GameClientState.IN_GAME);
 		
 		activeChar.setLocked(true);
-		activeChar.SetIsEnteringToWorld(true);
+		activeChar.setIsEnteringToWorld(true);
 		activeChar.setOnlineStatus(true);
 		activeChar.setRunning();
 		
 		activeChar.broadcastKarma();
 		
-		if (Config.L2JGUARD_PROTECTION)
-		{
-			HwidManager.getInstance().validBox(activeChar, HwidConfig.PROTECT_WINDOWS_COUNT, L2World.getInstance().getAllPlayers().values(), true);
-		}
-		
 		activeChar.broadcastPacket(new ValidateLocation(activeChar));
 		activeChar.broadcastPacket(new StopMove(activeChar));
 		
-		if (L2World.getInstance().findObject(activeChar.getObjectId()) != null)
+		if (!activeChar.isGM() && Config.CHECK_NAME_ON_LOGIN)
 		{
-			if (Config.DEBUG)
-			{
-				LOG.warn("DEBUG " + getType() + ": User already exist in OID map! User " + activeChar.getName() + " is character clone.");
-			}
-		}
-		
-		if (!activeChar.isGM() && !activeChar.isDonator() && Config.CHECK_NAME_ON_LOGIN)
-		{
-			if (activeChar.getName().length() < 3 || activeChar.getName().length() > 16 || !Util.isAlphaNumeric(activeChar.getName()) || !isValidName(activeChar.getName()))
+			if (activeChar.getName().length() < 1 || activeChar.getName().length() > 16 || !Util.isAlphaNumeric(activeChar.getName()) || !isValidName(activeChar.getName()))
 			{
 				LOG.warn("Charname: " + activeChar.getName() + " is invalid. EnterWorld failed.");
 				getClient().closeNow();
 				return;
 			}
-		}
-		
-		if (Config.ALLOW_HITMAN_GDE)
-		{
-			Hitman.getInstance().onEnterWorld(activeChar);
 		}
 		
 		if (Config.L2JMOD_ALLOW_WEDDING)
@@ -205,7 +179,7 @@ public class EnterWorld extends L2GameClientPacket
 			activeChar.restoreEffects();
 		}
 		
-		// Apply augmentation boni for equipped items
+		// Apply augmentation bonus for equipped items
 		for (L2ItemInstance temp : activeChar.getInventory().getAugmentedItems())
 		{
 			if (temp != null && temp.isEquipped())
@@ -249,7 +223,10 @@ public class EnterWorld extends L2GameClientPacket
 		// Welcome to Lineage II
 		sendPacket(new SystemMessage(SystemMessageId.WELCOME_TO_LINEAGE));
 		
-		SevenSigns.getInstance().sendCurrentPeriodMsg(activeChar);
+		if (!Config.RON_CUSTOM)
+		{
+			SevenSigns.getInstance().sendCurrentPeriodMsg(activeChar);
+		}
 		
 		if (Config.ANNOUNCE_NEW_STYLE)
 		{
@@ -279,11 +256,14 @@ public class EnterWorld extends L2GameClientPacket
 		
 		if (activeChar.isAlikeDead())
 		{
-			sendPacket(new Die(activeChar)); // No broadcast needed since the player will already spawn dead to others
-			ExRedSky packet = new ExRedSky(777);
-			sendPacket(packet);
-			PlaySound death_music = new PlaySound(1, "nade", 0, 0, 0, 0, 0);
-			sendPacket(death_music);
+			sendPacket(new Die(activeChar));
+			if (Config.RED_SKY)
+			{
+				ExRedSky packet = new ExRedSky(777);
+				sendPacket(packet);
+				PlaySound death_music = new PlaySound(1, "nade", 0, 0, 0, 0, 0);
+				sendPacket(death_music);
+			}
 		}
 		
 		if (Config.ALLOW_WATER)
@@ -312,7 +292,7 @@ public class EnterWorld extends L2GameClientPacket
 			notifyCastleOwner(activeChar);
 		}
 		
-		if (Olympiad.getInstance().playerInStadia(activeChar))
+		if (Olympiad.getInstance().playerInStadium(activeChar))
 		{
 			activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 			activeChar.sendMessage("You have been teleported to the nearest town due to you being in an Olympiad Stadium.");
@@ -350,26 +330,7 @@ public class EnterWorld extends L2GameClientPacket
 				}
 			}
 			
-			for (FortSiege fortsiege : FortSiegeManager.getInstance().getSieges())
-			{
-				if (!fortsiege.getIsInProgress())
-				{
-					continue;
-				}
-				
-				if (fortsiege.checkIsAttacker(activeChar.getClan()))
-				{
-					activeChar.setSiegeState((byte) 1);
-					break;
-				}
-				else if (fortsiege.checkIsDefender(activeChar.getClan()))
-				{
-					activeChar.setSiegeState((byte) 2);
-					break;
-				}
-			}
-			
-			// Add message at connexion if clanHall not paid. Possibly this is custom...
+			// Add message at connection if clanHall is not paid.
 			ClanHall clanHall = ClanHallManager.getInstance().getClanHallByOwner(activeChar.getClan());
 			if (clanHall != null)
 			{
@@ -382,7 +343,6 @@ public class EnterWorld extends L2GameClientPacket
 		
 		if (!activeChar.isGM() && activeChar.getSiegeState() < 2 && activeChar.isInsideZone(ZoneId.ZONE_SIEGE))
 		{
-			// Attacker or spectator logging in to a siege zone. Actually should be checked for inside castle only?
 			activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 			activeChar.sendMessage("You have been teleported to the nearest town due to you being in siege zone.");
 		}
@@ -405,6 +365,11 @@ public class EnterWorld extends L2GameClientPacket
 		if (DM._savePlayers.contains(activeChar.getName()))
 		{
 			DM.addDisconnectedPlayer(activeChar);
+		}
+		
+		if (Config.RON_CUSTOM)
+		{
+			activeChar.restoreIpAccessData(activeChar, activeChar.getClient() == null ? "localhost" : activeChar.getClient().getConnection().getInetAddress().getHostAddress());
 		}
 		
 		if (Config.ALLOW_DUALBOX)
@@ -431,15 +396,15 @@ public class EnterWorld extends L2GameClientPacket
 				
 				if (activeChar.getLevel() >= 20 && lvlnow == ClassLevel.First)
 				{
-					L2ClassMasterInstance.getInstance().onTable(activeChar);
+					L2ClassMasterInstance.getInstance().mainTable(activeChar);
 				}
 				else if (activeChar.getLevel() >= 40 && lvlnow == ClassLevel.Second)
 				{
-					L2ClassMasterInstance.getInstance().onTable(activeChar);
+					L2ClassMasterInstance.getInstance().mainTable(activeChar);
 				}
 				else if (activeChar.getLevel() >= 76 && lvlnow == ClassLevel.Third)
 				{
-					L2ClassMasterInstance.getInstance().onTable(activeChar);
+					L2ClassMasterInstance.getInstance().mainTable(activeChar);
 				}
 			}
 		}
@@ -468,7 +433,7 @@ public class EnterWorld extends L2GameClientPacket
 		// NPCBuffer
 		if (PowerPackConfig.BUFFER_ENABLED)
 		{
-			BuffTable.getInstance().onPlayerLogin(activeChar.getObjectId());
+			BuffsTable.getInstance().onPlayerLogin(activeChar.getObjectId());
 		}
 		
 		// Elrokian Trap like L2OFF
@@ -495,6 +460,32 @@ public class EnterWorld extends L2GameClientPacket
 			}
 		}
 		
+		if (Config.L2LIMIT_CUSTOM)
+		{
+			if (activeChar.getInventory().getItemByItemId(5964) != null)
+			{
+				if (activeChar.getSkill(8000) == null)
+				{
+					activeChar.addSkill(SkillTable.getInstance().getInfo(8000, 1), true);
+				}
+			}
+			else
+			{
+				activeChar.removeSkill(8000, true);
+			}
+		}
+		
+		if (Config.RON_CUSTOM)
+		{
+			if (activeChar.isCursedWeaponEquiped())
+			{
+				activeChar.setHeroAura(true);
+				activeChar.setArmorSkinOption(13);
+				activeChar.setHairSkinOption(66);
+				activeChar.setIsTryingSkin(true);
+			}
+		}
+		
 		// Apply death penalty
 		activeChar.restoreDeathPenaltyBuffLevel();
 		
@@ -506,7 +497,7 @@ public class EnterWorld extends L2GameClientPacket
 			loadTutorial(activeChar);
 		}
 		
-		ColorSystem(activeChar);
+		colorSystem(activeChar);
 		
 		activeChar.updatePunishState();
 		// Custom status
@@ -528,7 +519,7 @@ public class EnterWorld extends L2GameClientPacket
 		activeChar.sendPacket(new UserInfo(activeChar));
 		
 		// Close lock at login
-		activeChar.SetIsEnteringToWorld(false);
+		activeChar.setIsEnteringToWorld(false);
 		activeChar.setLocked(false);
 		
 		// Just in case to avoid stuck on enter to world
@@ -591,7 +582,7 @@ public class EnterWorld extends L2GameClientPacket
 			
 			if (Config.GM_STARTUP_SILENCE && AdminCommandAccessRights.getInstance().hasAccess("admin_silence", activeChar.getAccessLevel()))
 			{
-				activeChar.setMessageRefusal(0);
+				activeChar.setMessageRefusal(true);
 			}
 			
 			if (Config.GM_STARTUP_AUTO_LIST && AdminCommandAccessRights.getInstance().hasAccess("admin_gmliston", activeChar.getAccessLevel()))
@@ -616,6 +607,12 @@ public class EnterWorld extends L2GameClientPacket
 		
 		if (activeChar.getFirstLog())
 		{
+			if (Config.RON_CUSTOM)
+			{
+				Announcements.getInstance().gameAnnounceToAll(activeChar.getName() + ", " + Config.ALT_SERVER_TEXT);
+				activeChar.startAbnormalEffect(L2Character.ABNORMAL_EFFECT_BIG_HEAD);
+			}
+			
 			if (Config.NEW_PLAYER_EFFECT)
 			{
 				L2Skill skill = SkillTable.getInstance().getInfo(2025, 1);
@@ -646,25 +643,72 @@ public class EnterWorld extends L2GameClientPacket
 				activeChar.sendPacket(new ExAutoSoulShot(3947, 1));
 			}
 			
-			// Potions
-			if (activeChar.getInventory().getItemByItemId(5592) != null)
+			// Auto Potions
+			autoPotions(activeChar);
+			
+			if (Config.ALLOW_PREMIUM_ON_START)
 			{
-				activeChar.sendPacket(new ExAutoSoulShot(5592, 1));
-				activeChar.setAutoPot(5592, ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoPot(5592, activeChar, Float.parseFloat("0.95")), 1000, CP_POT_CD * 1000), true);
+				if (activeChar.getPremiumService() == 0)
+				{
+					activeChar.setPremiumService(1);
+					updateDatabase(activeChar, Config.HOW_MANY_DAYS * 24L * 60L * 60L * 1000L);
+					if (Config.PREMIUM_NAME_COLOR_ENABLED)
+					{
+						activeChar.getAppearance().setTitleColor(Config.PREMIUM_TITLE_COLOR);
+					}
+					activeChar.sendMessage("Congratulations! You're The Premium account now.");
+					if (Config.PREMIUM_BUFF_MULTIPLIER > 0)
+					{
+						activeChar.restoreEffects();
+					}
+				}
 			}
-			if (activeChar.getInventory().getItemByItemId(1539) != null)
+			
+			if (Config.ALLOW_NOBLE_ON_START)
 			{
-				activeChar.sendPacket(new ExAutoSoulShot(1539, 1));
-				activeChar.setAutoPot(1539, ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoPot(1539, activeChar, Float.parseFloat("0.95")), 1000, HEALING_POT_CD * 1000), true);
-			}
-			if (activeChar.getInventory().getItemByItemId(728) != null)
-			{
-				activeChar.sendPacket(new ExAutoSoulShot(728, 1));
-				activeChar.setAutoPot(728, ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new AutoPot(728, activeChar, Float.parseFloat("0.70")), 1000, MANA_POT_CD * 1000), true);
+				if (!(activeChar.isNoble()))
+				{
+					activeChar.setNoble(true);
+					activeChar.sendMessage("Congratulations! You've got The Noblesse status.");
+					PlaySound playSound = new PlaySound("ItemSound.quest_fanfare_1");
+					activeChar.sendPacket(playSound);
+					
+					L2ItemInstance newitem = activeChar.getInventory().addItem("Tiara", 7694, 1, activeChar, null);
+					InventoryUpdate playerIU = new InventoryUpdate();
+					playerIU.addItem(newitem);
+					activeChar.sendPacket(playerIU);
+					SystemMessage sm;
+					sm = new SystemMessage(SystemMessageId.EARNED_ITEM);
+					sm.addItemName(7694);
+					activeChar.sendPacket(sm);
+				}
 			}
 			
 			activeChar.setFirstLog(false);
 			activeChar.updateFirstLog();
+		}
+		
+		if (Config.L2UNLIMITED_CUSTOM)
+		{
+			if (activeChar.getInventory().getPaperdollItem(0) != null)
+			{
+				if (Util.contains(activeChar.tattoo1, activeChar.getInventory().getPaperdollItem(0).getItemId()))
+				{
+					activeChar.addCubic(4, 6, 1822, 14, 55, 3600000, false);
+				}
+				else if (Util.contains(activeChar.tattoo2, activeChar.getInventory().getPaperdollItem(0).getItemId()))
+				{
+					activeChar.addCubic(5, 8, 1975, 8, 30, 3600000, false);
+				}
+			}
+			
+			if (activeChar.getInventory().getPaperdollItem(15) != null)
+			{
+				if (Util.contains(activeChar.tattoo3, activeChar.getInventory().getPaperdollItem(15).getItemId()))
+				{
+					activeChar.addCubic(2, 7, 1822, 15, 8, 3600000, false);
+				}
+			}
 		}
 		
 		if (Config.WELCOME_HTM && isValidName(activeChar.getName()))
@@ -730,40 +774,6 @@ public class EnterWorld extends L2GameClientPacket
 			activeChar.sendPacket(ExMailArrived.STATIC_PACKET);
 		}
 		
-		if (Config.ALLOW_PREMIUM_ON_START && CharNameTable.getInstance().accountCharNumber(getClient().getAccountName()) == 1 && activeChar.getLevel() == 1)
-		{
-			if (activeChar.getPremiumService() == 0)
-			{
-				activeChar.setPremiumService(1);
-				updateDatabase(activeChar, Config.HOW_MANY_DAYS * 24L * 60L * 60L * 1000L);
-				if (Config.PREMIUM_NAME_COLOR_ENABLED && activeChar.getPremiumService() == 1)
-				{
-					activeChar.getAppearance().setTitleColor(Config.PREMIUM_TITLE_COLOR);
-				}
-				activeChar.sendMessage("Congratulations! You're The Premium account now.");
-			}
-		}
-		
-		if (Config.ALLOW_NOBLE_ON_START && CharNameTable.getInstance().accountCharNumber(getClient().getAccountName()) == 1 && activeChar.getLevel() == 1)
-		{
-			if (!(activeChar.isNoble()))
-			{
-				activeChar.setNoble(true);
-				activeChar.sendMessage("Congratulations! You've got The Noblesse status.");
-				PlaySound playSound = new PlaySound("ItemSound.quest_fanfare_1");
-				activeChar.sendPacket(playSound);
-				
-				L2ItemInstance newitem = activeChar.getInventory().addItem("Tiara", 7694, 1, activeChar, null);
-				InventoryUpdate playerIU = new InventoryUpdate();
-				playerIU.addItem(newitem);
-				activeChar.sendPacket(playerIU);
-				SystemMessage sm;
-				sm = new SystemMessage(SystemMessageId.EARNED_ITEM);
-				sm.addItemName(7694);
-				activeChar.sendPacket(sm);
-			}
-		}
-		
 		if (Config.POP_UP_VOTE_MENU && activeChar.getClient() != null)
 		{
 			try
@@ -807,6 +817,8 @@ public class EnterWorld extends L2GameClientPacket
 				return;
 			}
 			
+			player.setPremiumExpire(System.currentTimeMillis() + premiumTime);
+			
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement stmt = con.prepareStatement("REPLACE INTO account_premium (account_name, premium_service, enddate) VALUES (?,?,?)");
 			
@@ -831,7 +843,7 @@ public class EnterWorld extends L2GameClientPacket
 		}
 	}
 	
-	private void ColorSystem(L2PcInstance activeChar)
+	private void colorSystem(L2PcInstance activeChar)
 	{
 		if (activeChar.getPvpKills() >= Config.PVP_AMOUNT1 && Config.PVP_COLOR_SYSTEM_ENABLED)
 		{
@@ -1018,96 +1030,22 @@ public class EnterWorld extends L2GameClientPacket
 		}
 	}
 	
-	private class AutoPot implements Runnable
+	private void autoPotions(L2PcInstance activeChar)
 	{
-		private int _id;
-		private L2PcInstance _activeChar;
-		private float _pTime;
-		
-		public AutoPot(int id, L2PcInstance activeChar, float pTime)
+		if (activeChar.getInventory().getItemByItemId(5592) != null)
 		{
-			_id = id;
-			_activeChar = activeChar;
-			_pTime = pTime;
+			activeChar.sendPacket(new ExAutoSoulShot(5592, 1));
+			activeChar.setAutoPot(5592, ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new Menu.AutoPot(5592, activeChar, Float.parseFloat("0.95")), 1000, (long) (Config.MANA_POT_CD * 1000)), true);
 		}
-		
-		@Override
-		public void run()
+		if (activeChar.getInventory().getItemByItemId(1539) != null)
 		{
-			try
-			{
-				if (_activeChar.getInventory().getItemByItemId(_id) == null)
-				{
-					_activeChar.sendPacket(new ExAutoSoulShot(_id, 0));
-					_activeChar.setAutoPot(_id, null, false);
-					return;
-				}
-			}
-			catch (Exception e)
-			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					e.printStackTrace();
-				}
-			}
-			
-			switch (_id)
-			{
-				case 728:
-				{
-					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(728) != null) && _activeChar.getCurrentMp() < _pTime * _activeChar.getMaxMp())
-					{
-						MagicSkillUser msu = new MagicSkillUser(_activeChar, _activeChar, 2279, 2, 0, 100);
-						_activeChar.broadcastPacket(msu);
-						
-						Potions is = new Potions();
-						is.useItem(_activeChar, _activeChar.getInventory().getItemByItemId(728));
-					}
-					break;
-				}
-				case 1539:
-				case 1540:
-				case 1060:
-				{
-					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(_id) != null) && _activeChar.getCurrentHp() < _pTime * _activeChar.getMaxHp())
-					{
-						MagicSkillUser msu = new MagicSkillUser(_activeChar, _activeChar, 2037, 1, 0, 100);
-						_activeChar.broadcastPacket(msu);
-						
-						Potions is = new Potions();
-						is.useItem(_activeChar, _activeChar.getInventory().getItemByItemId(_id));
-					}
-					break;
-				}
-				case 5592:
-				{
-					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(5592) != null) && _activeChar.getCurrentCp() < _pTime * _activeChar.getMaxCp())
-					{
-						MagicSkillUser msu = new MagicSkillUser(_activeChar, _activeChar, 2166, 2, 0, 100);
-						_activeChar.broadcastPacket(msu);
-						
-						Potions is = new Potions();
-						is.useItem(_activeChar, _activeChar.getInventory().getItemByItemId(5592));
-					}
-					break;
-				}
-			}
-			
-			try
-			{
-				if (_activeChar.getInventory().getItemByItemId(_id) == null)
-				{
-					_activeChar.sendPacket(new ExAutoSoulShot(_id, 0));
-					_activeChar.setAutoPot(_id, null, false);
-				}
-			}
-			catch (Exception e)
-			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					e.printStackTrace();
-				}
-			}
+			activeChar.sendPacket(new ExAutoSoulShot(1539, 1));
+			activeChar.setAutoPot(1539, ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new Menu.AutoPot(1539, activeChar, Float.parseFloat("0.95")), 1000, (long) Config.HEALING_POT_CD * 1000), true);
+		}
+		if (activeChar.getInventory().getItemByItemId(728) != null)
+		{
+			activeChar.sendPacket(new ExAutoSoulShot(728, 1));
+			activeChar.setAutoPot(728, ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new Menu.AutoPot(728, activeChar, Float.parseFloat("0.70")), 1000, (long) Config.CP_POT_CD * 1000), true);
 		}
 	}
 	

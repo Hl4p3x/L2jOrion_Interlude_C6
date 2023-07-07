@@ -76,7 +76,7 @@ public class Mdam implements ISkillHandler
 			}
 			
 			final boolean mcrit = Formulas.calcMCrit(activeChar.getMCriticalHit(target, skill));
-			final int damage = (int) Formulas.calcMagicDam(activeChar, target, skill, sps, bss, mcrit);
+			int damage = (int) Formulas.calcMagicDam(activeChar, target, skill, sps, bss, mcrit);
 			
 			if (damage > 50000 && Config.LOG_HIGH_DAMAGES && activeChar instanceof L2PcInstance)
 			{
@@ -106,8 +106,6 @@ public class Mdam implements ISkillHandler
 					target.breakCast();
 				}
 				
-				activeChar.sendDamageMessage(target, damage, mcrit, false, false);
-				
 				if (skill.hasEffects())
 				{
 					if (target.reflectSkill(skill))
@@ -126,6 +124,19 @@ public class Mdam implements ISkillHandler
 							// Like L2OFF must remove the first effect only if the second effect is successful
 							target.stopSkillEffects(skill.getId());
 							skill.getEffects(activeChar, target, false, sps, bss);
+							
+							switch (skill.getId())
+							{
+								case 1339:
+								case 1340:
+								case 1341:
+								case 1342:
+									// recalculate dmg if effect is succeed
+									damage = (int) Formulas.calcMagicDam(activeChar, target, skill, sps, bss, mcrit);
+									break;
+								default:
+									break;
+							}
 						}
 						else
 						{
@@ -136,7 +147,9 @@ public class Mdam implements ISkillHandler
 						}
 					}
 				}
+				
 				target.reduceCurrentHp(damage, activeChar);
+				activeChar.sendDamageMessage(target, damage, mcrit, false, false);
 			}
 		}
 		

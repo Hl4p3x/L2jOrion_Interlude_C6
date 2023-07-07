@@ -6,9 +6,6 @@ import l2jorion.game.handler.vote.engine.VoteBase;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author Vilmis
- */
 public class L2TopOnline extends VoteBase
 {
 	@Override
@@ -29,7 +26,7 @@ public class L2TopOnline extends VoteBase
 	@Override
 	public String getApiEndpoint(L2PcInstance player)
 	{
-		return String.format("http://l2top.online/avote/%s/%s", getPlayerIp(player), Config.VOTE_L2TOPONLINE_ID);
+		return String.format("https://l2jtop.com/api/%s/ip/%s/", Config.VOTE_L2TOPONLINE_ID, getPlayerIp(player));
 	}
 	
 	@Override

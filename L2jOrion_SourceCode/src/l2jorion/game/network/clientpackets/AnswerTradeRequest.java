@@ -18,12 +18,13 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SendTradeDone;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class AnswerTradeRequest extends L2GameClientPacket
+public final class AnswerTradeRequest extends PacketClient
 {
 	private int _response;
 	

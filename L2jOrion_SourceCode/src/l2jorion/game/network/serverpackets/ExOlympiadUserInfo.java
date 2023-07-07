@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class ExOlympiadUserInfo extends L2GameServerPacket
+public class ExOlympiadUserInfo extends PacketServer
 {
 	private static final String _S__FE_29_OLYMPIADUSERINFO = "[S] FE:29 ExOlympiadUserInfo";
 	

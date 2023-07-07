@@ -48,7 +48,9 @@ public class L2FolkInstance extends L2NpcInstance
 	@Override
 	public void onAction(final L2PcInstance player)
 	{
+		player.setTempAccess(false);
 		player.setLastFolkNPC(this);
+		
 		super.onAction(player);
 	}
 	
@@ -184,7 +186,9 @@ public class L2FolkInstance extends L2NpcInstance
 			{
 				continue;
 			}
+			
 			counts++;
+			
 			esl.addSkill(s.getId(), s.getLevel(), s.getSpCost(), s.getExp());
 		}
 		

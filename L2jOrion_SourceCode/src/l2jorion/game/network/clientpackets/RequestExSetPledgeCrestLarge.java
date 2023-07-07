@@ -25,11 +25,12 @@ import l2jorion.game.cache.CrestCache.CrestType;
 import l2jorion.game.idfactory.IdFactory;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 
-public final class RequestExSetPledgeCrestLarge extends L2GameClientPacket
+public final class RequestExSetPledgeCrestLarge extends PacketClient
 {
-
+	
 	private int _length;
 	private byte[] _data;
 	
@@ -38,7 +39,9 @@ public final class RequestExSetPledgeCrestLarge extends L2GameClientPacket
 	{
 		_length = readD();
 		if (_length > 2176)
+		{
 			return;
+		}
 		
 		_data = new byte[_length];
 		readB(_data);
@@ -48,15 +51,21 @@ public final class RequestExSetPledgeCrestLarge extends L2GameClientPacket
 	protected void runImpl()
 	{
 		if (_length < 0 || _length > 2176)
+		{
 			return;
+		}
 		
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		final L2Clan clan = activeChar.getClan();
 		if (clan == null)
+		{
 			return;
+		}
 		
 		if (clan.getDissolvingExpiryTime() > System.currentTimeMillis())
 		{

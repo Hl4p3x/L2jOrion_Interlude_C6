@@ -1,27 +1,10 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package l2jorion.game.datatables;
 
 import javolution.util.FastList;
 import javolution.util.FastMap;
-import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
@@ -84,34 +67,19 @@ public class GmListTable
 	
 	private GmListTable()
 	{
-		// LOG.info("GmListTable: initialized.");
 		_gmList = new FastMap<L2PcInstance, Boolean>().shared();
 	}
 	
 	public void addGm(final L2PcInstance player, final boolean hidden)
 	{
-		if (Config.DEBUG)
-		{
-			LOG.debug("added gm: " + player.getName());
-		}
-		
 		_gmList.put(player, hidden);
 	}
 	
 	public void deleteGm(final L2PcInstance player)
 	{
-		if (Config.DEBUG)
-		{
-			LOG.debug("deleted gm: " + player.getName());
-		}
-		
 		_gmList.remove(player);
 	}
 	
-	/**
-	 * GM will be displayed on clients gmlist
-	 * @param player
-	 */
 	public void showGm(final L2PcInstance player)
 	{
 		final FastMap.Entry<L2PcInstance, Boolean> gm = _gmList.getEntry(player);
@@ -122,10 +90,6 @@ public class GmListTable
 		}
 	}
 	
-	/**
-	 * GM will no longer be displayed on clients gmlist
-	 * @param player
-	 */
 	public void hideGm(final L2PcInstance player)
 	{
 		final FastMap.Entry<L2PcInstance, Boolean> gm = _gmList.getEntry(player);
@@ -170,7 +134,7 @@ public class GmListTable
 		}
 	}
 	
-	public static void broadcastToGMs(final L2GameServerPacket packet)
+	public static void broadcastToGMs(final PacketServer packet)
 	{
 		for (final L2PcInstance gm : getInstance().getAllGms(true))
 		{
@@ -182,7 +146,6 @@ public class GmListTable
 	{
 		for (final L2PcInstance gm : getInstance().getAllGms(true))
 		{
-			// prevents a NPE.
 			if (gm != null)
 			{
 				gm.sendPacket(SystemMessage.sendString(message));

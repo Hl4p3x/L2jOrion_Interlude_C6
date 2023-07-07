@@ -172,23 +172,4 @@ public class DatabaseUtils
 			}
 		}
 	}
-	
-	public static void closeDatabaseCSR(final Connection conn, final PreparedStatement stmt, final ResultSet rs)
-	{
-		close(rs);
-		close(stmt);
-		close(conn);
-	}
-	
-	public static void closeDatabaseCS(final Connection conn, final PreparedStatement stmt)
-	{
-		close(stmt);
-		close(conn);
-	}
-	
-	public static void closeDatabaseSR(final PreparedStatement stmt, final ResultSet rs)
-	{
-		close(rs);
-		close(stmt);
-	}
 }

@@ -44,8 +44,6 @@ public class Fort
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(Fort.class);
 	
-	// =========================================================
-	// Data Field
 	private int _fortId = 0;
 	private final List<L2DoorInstance> _doors = new FastList<>();
 	private String _name = "";
@@ -58,10 +56,10 @@ public class Fort
 	private L2FortZone _zone;
 	private L2Clan _formerOwner = null;
 	
-	// Constructor
 	public Fort(final int fortId)
 	{
 		_fortId = fortId;
+		
 		load();
 	}
 	
@@ -77,21 +75,10 @@ public class Fort
 		setOwner(clan);
 	}
 	
-	// This method add to the treasury
-	/**
-	 * Add amount to fort instance's treasury (warehouse).
-	 * @param amount
-	 */
 	public void addToTreasury(final int amount)
 	{
-		// TODO: Implement?
 	}
 	
-	/**
-	 * Add amount to fort instance's treasury (warehouse), no tax paying.
-	 * @param amount
-	 * @return
-	 */
 	public boolean addToTreasuryNoTax(final int amount)
 	{
 		return true;
@@ -154,7 +141,9 @@ public class Fort
 	public void openCloseDoor(final L2PcInstance activeChar, final int doorId, final boolean open)
 	{
 		if (activeChar.getClanId() != getOwnerId())
+		{
 			return;
+		}
 		
 		L2DoorInstance door = getDoor(doorId);
 		
@@ -311,7 +300,9 @@ public class Fort
 		final L2DoorInstance door = getDoor(doorId);
 		
 		if (door == null)
+		{
 			return;
+		}
 		
 		if (door.getDoorId() == doorId)
 		{
@@ -547,14 +538,18 @@ public class Fort
 	public final L2DoorInstance getDoor(final int doorId)
 	{
 		if (doorId <= 0)
+		{
 			return null;
+		}
 		
 		for (int i = 0; i < getDoors().size(); i++)
 		{
 			L2DoorInstance door = getDoors().get(i);
 			
 			if (door.getDoorId() == doorId)
+			{
 				return door;
+			}
 			
 			door = null;
 		}

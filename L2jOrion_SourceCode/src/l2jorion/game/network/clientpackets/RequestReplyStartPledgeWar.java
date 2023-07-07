@@ -22,10 +22,11 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestReplyStartPledgeWar extends L2GameClientPacket
+public final class RequestReplyStartPledgeWar extends PacketClient
 {
 	private int _answer;
 	

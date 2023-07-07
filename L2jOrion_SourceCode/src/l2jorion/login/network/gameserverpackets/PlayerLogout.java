@@ -22,26 +22,17 @@ package l2jorion.login.network.gameserverpackets;
 
 import l2jorion.login.network.clientpackets.ClientBasePacket;
 
-/**
- * @author -Wooden-
- */
 public class PlayerLogout extends ClientBasePacket
 {
 	
 	private final String _account;
 	
-	/**
-	 * @param decrypt
-	 */
 	public PlayerLogout(final byte[] decrypt)
 	{
 		super(decrypt);
 		_account = readS();
 	}
 	
-	/**
-	 * @return Returns the account.
-	 */
 	public String getAccount()
 	{
 		return _account;

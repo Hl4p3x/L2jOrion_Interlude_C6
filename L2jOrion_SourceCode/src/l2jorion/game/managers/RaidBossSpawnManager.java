@@ -39,10 +39,15 @@ import l2jorion.Config;
 import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.datatables.sql.SpawnTable;
+import l2jorion.game.model.L2World;
+import l2jorion.game.model.L2WorldRegion;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2RaidBossInstance;
 import l2jorion.game.model.entity.Announcements;
 import l2jorion.game.model.spawn.L2Spawn;
+import l2jorion.game.model.zone.L2ZoneType;
+import l2jorion.game.model.zone.form.ZoneCylinder;
+import l2jorion.game.model.zone.type.L2BossZone;
 import l2jorion.game.skills.Stats;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.templates.StatsSet;
@@ -64,6 +69,7 @@ public class RaidBossSpawnManager
 	protected static final Map<Integer, L2Spawn> _spawns = new ConcurrentHashMap<>();
 	protected static final Map<Integer, StatsSet> _storedInfo = new ConcurrentHashMap<>();
 	protected static final Map<Integer, ScheduledFuture<?>> _schedules = new ConcurrentHashMap<>();
+	protected static L2BossZone _zone;
 	
 	public static List<L2RaidBossInstance> BOSSES_LIST = new ArrayList<>();
 	
@@ -207,6 +213,11 @@ public class RaidBossSpawnManager
 				}
 				
 				_bosses.put(bossId, raidboss);
+				
+				if (Config.RON_CUSTOM)
+				{
+					addRaidBossZone(raidboss);
+				}
 			}
 			
 			_schedules.remove(bossId);
@@ -239,7 +250,7 @@ public class RaidBossSpawnManager
 			GregorianCalendar gc = (GregorianCalendar) Calendar.getInstance();
 			gc.clear();
 			gc.setTimeInMillis(respawnTime);
-			final String text = "" + boss.getName() + " killed. Next respawn: " + DateFormat.getDateTimeInstance().format(gc.getTime());
+			final String text = boss.getName() + " killed. Next respawn: " + DateFormat.getDateTimeInstance().format(gc.getTime());
 			Log.add(text, "RaidBosses");
 			
 			info.set("killed_time", date.format(new Date(System.currentTimeMillis())));
@@ -272,6 +283,7 @@ public class RaidBossSpawnManager
 		
 		// _storedInfo.remove(boss.getNpcId());
 		_storedInfo.put(boss.getNpcId(), info);
+		
 	}
 	
 	public void addNewSpawn(final L2Spawn spawnDat, final long respawnTime, double currentHP, final double currentMP, final boolean storeInDb)
@@ -325,6 +337,11 @@ public class RaidBossSpawnManager
 				info.set("respawnTime", 0L);
 				
 				_storedInfo.put(bossId, info);
+				
+				if (Config.RON_CUSTOM)
+				{
+					addRaidBossZone(raidboss);
+				}
 			}
 		}
 		else
@@ -422,7 +439,6 @@ public class RaidBossSpawnManager
 				statement.setInt(1, bossId);
 				statement.execute();
 				DatabaseUtils.close(statement);
-				statement = null;
 			}
 			catch (final Exception e)
 			{
@@ -431,13 +447,11 @@ public class RaidBossSpawnManager
 					e.printStackTrace();
 				}
 				
-				// problem with deleting spawn
 				LOG.warn("RaidBossSpawnManager: Could not remove raidboss #" + bossId + " from DB: " + e);
 			}
 			finally
 			{
 				CloseUtil.close(con);
-				con = null;
 			}
 		}
 	}
@@ -480,15 +494,29 @@ public class RaidBossSpawnManager
 				statement.setLong(1, info.getLong("respawnTime"));
 				statement.setString(2, info.getString("killed_time"));
 				statement.setString(3, info.getString("next_respawn"));
-				statement.setDouble(4, info.getDouble("currentHP"));
-				statement.setDouble(5, info.getDouble("currentMP"));
+				
+				double hp = boss.getCurrentHp();
+				double mp = boss.getCurrentMp();
+				
+				if (boss.isDead())
+				{
+					hp = boss.getMaxHp();
+					mp = boss.getMaxMp();
+				}
+				
+				statement.setDouble(4, hp);
+				statement.setDouble(5, mp);
+				
+				// statement.setDouble(4, info.getDouble("currentHP"));
+				// statement.setDouble(5, info.getDouble("currentMP"));
+				
 				statement.setInt(6, bossId);
 				statement.execute();
 				DatabaseUtils.close(statement);
 			}
 			catch (SQLException e)
 			{
-				LOG.warn("RaidBossSpawnManager: Couldnt update raidboss_spawnlist table " + e.getMessage(), e);
+				LOG.warn("RaidBossSpawnManager: Couldn't update raidboss_spawnlist table:" + e.getMessage(), e);
 			}
 			finally
 			{
@@ -673,6 +701,40 @@ public class RaidBossSpawnManager
 	public static RaidBossSpawnManager getInstance()
 	{
 		return SingletonHolder._instance;
+	}
+	
+	public static void addRaidBossZone(L2RaidBossInstance raidboss)
+	{
+		_zone = GrandBossManager.getInstance().getZone(raidboss.getX(), raidboss.getY(), raidboss.getZ());
+		if (_zone == null)
+		{
+			int levelLimit = (raidboss.getLevel() + 8);
+			L2WorldRegion[][] worldRegions = L2World.getInstance().getAllWorldRegions();
+			L2ZoneType temp = new L2BossZone(99000 + raidboss.getNpcId());
+			temp.setName("zone: " + raidboss.getName() + " Level limit:" + levelLimit);
+			temp.setParameter("maxLevel", "" + levelLimit);
+			temp.setParameter("pvp", "true");
+			temp.setParameter("teleportOut", "false");
+			temp.setZone(new ZoneCylinder(raidboss.getX(), raidboss.getY(), (raidboss.getZ() - 500), (raidboss.getZ() + 500), 1000));
+			int ax, ay, bx, by;
+			
+			for (int x = 0; x < worldRegions.length; x++)
+			{
+				for (int y = 0; y < worldRegions[x].length; y++)
+				{
+					ax = x - L2World.OFFSET_X << L2World.SHIFT_BY;
+					bx = x + 1 - L2World.OFFSET_X << L2World.SHIFT_BY;
+					ay = y - L2World.OFFSET_Y << L2World.SHIFT_BY;
+					by = y + 1 - L2World.OFFSET_Y << L2World.SHIFT_BY;
+					
+					if (temp.getZone().intersectsRectangle(ax, bx, ay, by))
+					{
+						worldRegions[x][y].addZone(temp);
+					}
+				}
+			}
+			GrandBossManager.getInstance().addZone((L2BossZone) temp);
+		}
 	}
 	
 	private static class SingletonHolder

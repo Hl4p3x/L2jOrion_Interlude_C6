@@ -1,10 +1,4 @@
-# Formerly based on Elektra's script
-# updated by DrLecter for the Official L2J Datapack Project.
-# Visit http://forum.l2jdp.com/ for more details.
-
 qn = "3995_echo"
-
-#print "3995. Echo"
 
 NPCS        = [31042,31043]
 ADENA       = 57

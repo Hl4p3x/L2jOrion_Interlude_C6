@@ -26,6 +26,7 @@ import l2jorion.game.model.multisell.L2Multisell;
 import l2jorion.game.model.multisell.MultiSellEntry;
 import l2jorion.game.model.multisell.MultiSellIngredient;
 import l2jorion.game.model.multisell.MultiSellListContainer;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ItemList;
@@ -38,7 +39,7 @@ import l2jorion.game.templates.L2Weapon;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class MultiSellChoose extends L2GameClientPacket
+public class MultiSellChoose extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(MultiSellChoose.class.getName());
 	
@@ -82,7 +83,7 @@ public class MultiSellChoose extends L2GameClientPacket
 		
 		L2NpcInstance merchant = player.getTarget() instanceof L2NpcInstance ? (L2NpcInstance) player.getTarget() : null;
 		
-		if (!player.hasTempAccessBuy())
+		if (!player.hasTempAccess())
 		{
 			if (merchant == null || !player.isInsideRadius(merchant, L2NpcInstance.INTERACTION_DISTANCE, false, false))
 			{
@@ -155,6 +156,7 @@ public class MultiSellChoose extends L2GameClientPacket
 					newIng = false;
 				}
 			}
+			
 			if (newIng)
 			{
 				// If there is a maintainIngredient, then we do not need to check the enchantment parameter as the enchant level will be checked elsewhere
@@ -400,13 +402,16 @@ public class MultiSellChoose extends L2GameClientPacket
 				for (int i = 0; i < e.getItemCount() * _amount; i++)
 				{
 					product = inv.addItem("Multisell[" + _listId + "]", e.getItemId(), 1, player, player.getTarget());
+					
 					if (maintainEnchantment && (product != null))
 					{
 						if (i < augmentation.size())
 						{
 							product.setAugmentation(new L2Augmentation(product, augmentation.get(i).getAugmentationId(), augmentation.get(i).getSkill(), true));
 						}
+						
 						product.setEnchantLevel(e.getEnchantmentLevel());
+						product.updateDatabase(); // fix for enchant number
 					}
 				}
 			}
@@ -465,6 +470,7 @@ public class MultiSellChoose extends L2GameClientPacket
 		MultiSellEntry newEntry = new MultiSellEntry();
 		newEntry.setEntryId(templateEntry.getEntryId());
 		int totalAdenaCount = 0;
+		
 		boolean hasIngredient = false;
 		
 		for (MultiSellIngredient ing : templateEntry.getIngredients())
@@ -535,6 +541,7 @@ public class MultiSellChoose extends L2GameClientPacket
 					newIngredient.setEnchantmentLevel(enchantLevel);
 				}
 			}
+			
 			newEntry.addProduct(newIngredient);
 		}
 		return newEntry;

@@ -22,9 +22,6 @@ package l2jorion.login.network.loginserverpackets;
 
 import l2jorion.login.network.serverpackets.ServerBasePacket;
 
-/**
- * @author -Wooden-
- */
 public class KickPlayer extends ServerBasePacket
 {
 	public KickPlayer(final String account)

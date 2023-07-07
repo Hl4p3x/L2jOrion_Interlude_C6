@@ -81,7 +81,7 @@ public class Heal implements ISkillHandler
 		{
 			target = (L2Character) trg;
 			
-			if (target == null || target.isDead() || target.isInvul())
+			if (target == null || target.isDead() || target.isAlikeDead() || target.isInvul())
 			{
 				continue;
 			}

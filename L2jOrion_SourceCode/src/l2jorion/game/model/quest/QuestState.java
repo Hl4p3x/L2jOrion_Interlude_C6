@@ -48,6 +48,7 @@ import l2jorion.game.network.serverpackets.TutorialEnableClientEvent;
 import l2jorion.game.network.serverpackets.TutorialShowHtml;
 import l2jorion.game.network.serverpackets.TutorialShowQuestionMark;
 import l2jorion.game.skills.Stats;
+import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
@@ -122,6 +123,8 @@ public final class QuestState
 		if (getStateId().equals("Completed"))
 		{
 			_isCompleted = true;
+			
+			getPlayer().getAchievement().increase(AchType.QUEST_COMPLETE);
 		}
 		else
 		{
@@ -218,12 +221,8 @@ public final class QuestState
 			{
 				
 				LOG.info(getPlayer().getName() + ", " + getQuestName() + " cond [null] is not an integer.  Value stored, but no packet was sent... ");
-				
 			}
-			
 		}
-		
-		old = null;
 		
 		return val;
 	}
@@ -313,11 +312,6 @@ public final class QuestState
 		if (questId > 0 && cond > 0)
 		{
 			getPlayer().sendPacket(new ExShowQuestMark(questId));
-		}
-		
-		if (isCompleted())
-		{
-			getPlayer().getAchievement().increase(AchType.QUEST_COMPLETE);
 		}
 	}
 	
@@ -449,7 +443,7 @@ public final class QuestState
 		
 		// Set quantity of item
 		// Add items to player's inventory
-		final L2ItemInstance item = getPlayer().getInventory().addItem("Quest", itemId, count, getPlayer(), getPlayer().getTarget());
+		L2ItemInstance item = getPlayer().getInventory().addItem("Quest", itemId, count, getPlayer(), getPlayer().getTarget());
 		
 		if (item == null)
 		{
@@ -459,6 +453,68 @@ public final class QuestState
 		if (enchantlevel > 0)
 		{
 			item.setEnchantLevel(enchantlevel);
+		}
+		
+		// If item for reward is gold, send message of gold reward to client
+		if (itemId == 57)
+		{
+			SystemMessage smsg = new SystemMessage(SystemMessageId.EARNED_ADENA);
+			smsg.addNumber(count);
+			getPlayer().sendPacket(smsg);
+		}
+		else
+		{
+			if (count > 1)
+			{
+				SystemMessage smsg = new SystemMessage(SystemMessageId.EARNED_S2_S1_S);
+				smsg.addItemName(item.getItemId());
+				smsg.addNumber(count);
+				getPlayer().sendPacket(smsg);
+			}
+			else
+			{
+				SystemMessage smsg = new SystemMessage(SystemMessageId.EARNED_ITEM);
+				smsg.addItemName(item.getItemId());
+				getPlayer().sendPacket(smsg);
+			}
+		}
+		
+		if (!Config.FORCE_INVENTORY_UPDATE)
+		{
+			InventoryUpdate iu = new InventoryUpdate();
+			iu.addModifiedItem(item);
+			getPlayer().sendPacket(iu);
+		}
+		else
+		{
+			getPlayer().sendPacket(new ItemList(getPlayer(), false));
+		}
+		
+		StatusUpdate su = new StatusUpdate(getPlayer().getObjectId());
+		su.addAttribute(StatusUpdate.CUR_LOAD, getPlayer().getCurrentLoad());
+		getPlayer().sendPacket(su);
+	}
+	
+	// XXX For party looting
+	public synchronized void giveItems(int itemId, int count, L2NpcInstance npc)
+	{
+		if (count <= 0 || getPlayer().getParty() == null || !Util.checkIfInRange(Config.ALT_PARTY_RANGE, npc, getPlayer(), true))
+		{
+			return;
+		}
+		
+		final int questId = getQuest().getQuestIntId();
+		// If item for reward is gold (ID=57), modify count with rate for quest reward
+		if (itemId == 57 && !(questId >= 217 && questId <= 233) && !(questId >= 401 && questId <= 418))
+		{
+			count = (int) (count * Config.RATE_QUESTS_REWARD);
+		}
+		
+		L2ItemInstance item = getPlayer().getInventory().addItem("Quest", itemId, count, getPlayer(), getPlayer().getTarget());
+		
+		if (item == null)
+		{
+			return;
 		}
 		
 		// If item for reward is gold, send message of gold reward to client
@@ -561,7 +617,8 @@ public final class QuestState
 			// just wait 3-5 seconds before the drop
 			try
 			{
-				Thread.sleep(Rnd.get(3, 5) * 1000);
+				int sec = Rnd.get(3, 5) * 1000;
+				Thread.sleep(sec);
 			}
 			catch (final InterruptedException e)
 			{
@@ -579,8 +636,6 @@ public final class QuestState
 		return neededCount > 0 && currentCount + itemCount >= neededCount;
 	}
 	
-	// TODO: More radar functions need to be added when the radar class is complete.
-	// BEGIN STUFF THAT WILL PROBABLY BE CHANGED
 	public void addRadar(final int x, final int y, final int z)
 	{
 		getPlayer().getRadar().addMarker(x, y, z);
@@ -596,7 +651,6 @@ public final class QuestState
 		getPlayer().getRadar().removeAllMarkers();
 	}
 	
-	// END STUFF THAT WILL PROBABLY BE CHANGED
 	public void takeItems(final int itemId, int count)
 	{
 		// Get object item from player's inventory list
@@ -634,12 +688,57 @@ public final class QuestState
 			getPlayer().destroyItemByItemId("Quest", itemId, count, getPlayer(), true);
 		}
 		
-		// on quests, always refresh inventory
 		final InventoryUpdate u = new InventoryUpdate();
 		u.addItem(item);
 		getPlayer().sendPacket(u);
+	}
+	
+	// XXX Take item from party members
+	public void takeItems(final int itemId, int count, L2NpcInstance npc)
+	{
+		if (count <= 0 || getPlayer().getParty() == null || !Util.checkIfInRange(Config.ALT_PARTY_RANGE, npc, getPlayer(), true))
+		{
+			return;
+		}
 		
-		item = null;
+		// Get object item from player's inventory list
+		L2ItemInstance item = getPlayer().getInventory().getItemByItemId(itemId);
+		
+		if (item == null)
+		{
+			return;
+		}
+		
+		if (getPlayer().isProcessingTransaction())
+		{
+			getPlayer().cancelActiveTrade();
+		}
+		
+		// Tests on count value in order not to have negative value
+		if (count < 0 || count > item.getCount())
+		{
+			count = item.getCount();
+		}
+		
+		// Destroy the quantity of items wanted
+		if (itemId == 57)
+		{
+			getPlayer().reduceAdena("Quest", count, getPlayer(), true);
+		}
+		else
+		{
+			// Fix for destroyed quest items
+			if (item.isEquipped())
+			{
+				getPlayer().getInventory().unEquipItemInBodySlotAndRecord(item.getItem().getBodyPart());
+			}
+			
+			getPlayer().destroyItemByItemId("Quest", itemId, count, getPlayer(), true);
+		}
+		
+		final InventoryUpdate u = new InventoryUpdate();
+		u.addItem(item);
+		getPlayer().sendPacket(u);
 	}
 	
 	/**
@@ -822,7 +921,7 @@ public final class QuestState
 	 * @param repeatable
 	 * @return QuestState
 	 */
-	public QuestState exitQuest(final boolean repeatable)
+	public QuestState exitQuest(boolean repeatable)
 	{
 		if (isCompleted())
 		{
@@ -852,11 +951,17 @@ public final class QuestState
 		else
 		{
 			checkNewbieQuests();
+			
 			// Otherwise, delete variables for quest and update database (quest CANNOT be created again => not repeatable)
 			if (_vars != null)
 			{
 				for (final String var : _vars.keySet())
 				{
+					if (var.contains("<state>"))
+					{
+						continue; // in this case we must keep the state in database
+					}
+					
 					unset(var);
 				}
 			}

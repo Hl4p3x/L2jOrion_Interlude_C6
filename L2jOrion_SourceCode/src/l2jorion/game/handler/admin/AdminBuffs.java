@@ -11,10 +11,6 @@ import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 
-/**
- * @author ProGramMoS
- */
-
 public class AdminBuffs implements IAdminCommandHandler
 {
 	private static final String[] ADMIN_COMMANDS =
@@ -261,7 +257,5 @@ public class AdminBuffs implements IAdminCommandHandler
 		{
 			remover.sendMessage("No target");
 		}
-		
 	}
-	
 }

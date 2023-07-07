@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class AskJoinFriend extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class AskJoinFriend extends PacketServer
 {
 	private static final String _S__7d_ASKJoinFriend_0X7d = "[S] 7d AskJoinFriend 0x7d";
 	

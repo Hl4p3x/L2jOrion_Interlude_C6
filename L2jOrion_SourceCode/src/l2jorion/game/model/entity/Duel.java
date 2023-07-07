@@ -32,13 +32,13 @@ import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.olympiad.OlympiadManager;
 import l2jorion.game.model.zone.ZoneId;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ExDuelEnd;
 import l2jorion.game.network.serverpackets.ExDuelReady;
 import l2jorion.game.network.serverpackets.ExDuelStart;
 import l2jorion.game.network.serverpackets.ExDuelUpdateUserInfo;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.PlaySound;
 import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.network.serverpackets.SystemMessage;
@@ -68,38 +68,15 @@ public class Duel
 	
 	public static enum DuelResultEnum
 	{
-		
-		/** The Continue. */
 		Continue,
-		
-		/** The Team1 win. */
 		Team1Win,
-		
-		/** The Team2 win. */
 		Team2Win,
-		
-		/** The Team1 surrender. */
 		Team1Surrender,
-		
-		/** The Team2 surrender. */
 		Team2Surrender,
-		
-		/** The Canceled. */
 		Canceled,
-		
-		/** The Timeout. */
 		Timeout
 	}
 	
-	// =========================================================
-	// Constructor
-	/**
-	 * Instantiates a new duel.
-	 * @param playerA the player a
-	 * @param playerB the player b
-	 * @param partyDuel the party duel
-	 * @param duelId the duel id
-	 */
 	public Duel(final L2PcInstance playerA, final L2PcInstance playerB, final int partyDuel, final int duelId)
 	{
 		_duelId = duelId;
@@ -136,34 +113,17 @@ public class Duel
 		ThreadPoolManager.getInstance().scheduleGeneral(new ScheduleStartDuelTask(this), 3000);
 	}
 	
-	// ===============================================================
-	// Nested Class
-	
 	/**
 	 * The Class PlayerCondition.
 	 */
 	public class PlayerCondition
 	{
-		
-		/** The _player. */
 		private L2PcInstance _player;
-		
-		/** The _hp. */
 		private double _hp;
-		
-		/** The _mp. */
 		private double _mp;
-		
-		/** The _cp. */
 		private double _cp;
-		
-		/** The _pa duel. */
 		private boolean _paDuel;
-		
-		/** The _z. */
 		private int _x, _y, _z;
-		
-		/** The _debuffs. */
 		private FastList<L2Effect> _debuffs;
 		
 		/**
@@ -272,30 +232,18 @@ public class Duel
 		}
 	}
 	
-	// ===============================================================
-	// Schedule task
 	/**
 	 * The Class ScheduleDuelTask.
 	 */
 	public class ScheduleDuelTask implements Runnable
 	{
-		
-		/** The _duel. */
 		private final Duel _duel;
 		
-		/**
-		 * Instantiates a new schedule duel task.
-		 * @param duel the duel
-		 */
 		public ScheduleDuelTask(final Duel duel)
 		{
 			_duel = duel;
 		}
 		
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Runnable#run()
-		 */
 		@Override
 		public void run()
 		{
@@ -355,8 +303,6 @@ public class Duel
 				if (count == 4)
 				{
 					// players need to be teleportet first
-					// TODO: stadia manager needs a function to return an unused stadium for duels
-					
 					// currently if oly in competition period
 					// and defined location is into a stadium
 					// just use Gludin Arena as location
@@ -411,10 +357,6 @@ public class Duel
 			_result = result;
 		}
 		
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Runnable#run()
-		 */
 		@Override
 		public void run()
 		{
@@ -428,9 +370,6 @@ public class Duel
 			}
 		}
 	}
-	
-	// ========================================================
-	// Method - Private
 	
 	/**
 	 * Stops all players from attacking. Used for duel timeout / interrupt.
@@ -467,12 +406,7 @@ public class Duel
 			_playerA.sendPacket(af);
 			_playerB.sendPacket(af);
 		}
-		
-		af = null;
 	}
-	
-	// ========================================================
-	// Method - Public
 	
 	/**
 	 * Check if a player engaged in pvp combat (only for 1on1 duels).
@@ -550,9 +484,6 @@ public class Duel
 			broadcastToTeam2(ready);
 			broadcastToTeam1(start);
 			broadcastToTeam2(start);
-			
-			ready = null;
-			start = null;
 		}
 		else
 		{
@@ -577,17 +508,12 @@ public class Duel
 			// _playerB.broadcastStatusUpdate();
 			_playerA.broadcastUserInfo();
 			_playerB.broadcastUserInfo();
-			
-			ready = null;
-			start = null;
 		}
 		
 		// play sound
 		PlaySound ps = new PlaySound(1, "B04_S01", 0, 0, 0, 0, 0);
 		broadcastToTeam1(ps);
 		broadcastToTeam2(ps);
-		
-		ps = null;
 		
 		// start duelling task
 		ThreadPoolManager.getInstance().scheduleGeneral(new ScheduleDuelTask(this), 1000);
@@ -616,7 +542,6 @@ public class Duel
 			_playerConditions.put(_playerA.getObjectId(), new PlayerCondition(_playerA, _partyDuel));
 			_playerConditions.put(_playerB.getObjectId(), new PlayerCondition(_playerB, _partyDuel));
 		}
-		
 	}
 	
 	/**
@@ -731,15 +656,8 @@ public class Duel
 		return _finished;
 	}
 	
-	/**
-	 * teleport all players to the given coordinates.
-	 * @param x the x
-	 * @param y the y
-	 * @param z the z
-	 */
 	public void teleportPlayers(final int x, final int y, final int z)
 	{
-		// TODO: adjust the values if needed... or implement something better (especially using more then 1 arena)
 		if (!_partyDuel)
 		{
 			return;
@@ -766,7 +684,7 @@ public class Duel
 	 * Broadcast a packet to the challanger team.
 	 * @param packet the packet
 	 */
-	public void broadcastToTeam1(final L2GameServerPacket packet)
+	public void broadcastToTeam1(final PacketServer packet)
 	{
 		if (_playerA == null)
 		{
@@ -790,7 +708,7 @@ public class Duel
 	 * Broadcast a packet to the challenged team.
 	 * @param packet the packet
 	 */
-	public void broadcastToTeam2(final L2GameServerPacket packet)
+	public void broadcastToTeam2(final PacketServer packet)
 	{
 		if (_playerB == null)
 		{
@@ -880,8 +798,6 @@ public class Duel
 		{
 			looser.broadcastPacket(new SocialAction(looser.getObjectId(), 7));
 		}
-		
-		looser = null;
 	}
 	
 	/**
@@ -911,7 +827,6 @@ public class Duel
 		
 		broadcastToTeam1(sm);
 		broadcastToTeam2(sm);
-		sm = null;
 		
 		return _countdown;
 	}
@@ -974,11 +889,8 @@ public class Duel
 			case Canceled:
 				stopFighting();
 				
-				// dont restore hp, mp, cp
 				restorePlayerConditions(true);
 				
-				// TODO: is there no other message for a canceled duel?
-				// send SystemMessage
 				sm = new SystemMessage(SystemMessageId.THE_DUEL_HAS_ENDED_IN_A_TIE);
 				
 				broadcastToTeam1(sm);
@@ -986,11 +898,8 @@ public class Duel
 				break;
 			case Timeout:
 				stopFighting();
-				// hp,mp,cp seem to be restored in a timeout too...
 				restorePlayerConditions(false);
-				// send SystemMessage
 				sm = new SystemMessage(SystemMessageId.THE_DUEL_HAS_ENDED_IN_A_TIE);
-				
 				broadcastToTeam1(sm);
 				broadcastToTeam2(sm);
 				break;
@@ -1014,9 +923,6 @@ public class Duel
 		_playerConditions.clear();
 		_playerConditions = null;
 		DuelManager.getInstance().removeDuel(this);
-		
-		sm = null;
-		duelEnd = null;
 	}
 	
 	/**
@@ -1104,7 +1010,6 @@ public class Duel
 		// stop the fight
 		stopFighting();
 		
-		// TODO: Can every party member cancel a party duel? or only the party leaders?
 		if (_partyDuel)
 		{
 			if (_playerA.getParty().getPartyMembers().contains(player))
@@ -1289,6 +1194,5 @@ public class Duel
 		{
 			e.removeDebuff(debuff);
 		}
-		
 	}
 }

@@ -28,7 +28,8 @@ public class Bank implements IVoicedCommandHandler, ICustomByPassHandler
 {
 	private static String[] _voicedCommands =
 	{
-		"bank", "exchange"
+		"bank",
+		"exchange"
 	};
 	
 	@Override
@@ -64,7 +65,7 @@ public class Bank implements IVoicedCommandHandler, ICustomByPassHandler
 	@Override
 	public String[] getByPassCommands()
 	{
-		return new String [] 
+		return new String[]
 		{
 			"bank_main",
 			"bank_deposit",
@@ -178,19 +179,19 @@ public class Bank implements IVoicedCommandHandler, ICustomByPassHandler
 			{
 				if (blueSS != null)
 				{
-					player.addItem("Add",5575,(blueSS.getCount() * 3),null,true);
+					player.addItem("Add", 5575, (blueSS.getCount() * 3), null, true);
 					player.destroyItem("Consume", blueSS.getObjectId(), blueSS.getCount(), null, true);
 				}
 				
 				if (greenSS != null)
 				{
-					player.addItem("Add",5575,(greenSS.getCount() * 5),null,true);
+					player.addItem("Add", 5575, (greenSS.getCount() * 5), null, true);
 					player.destroyItem("Consume", greenSS.getObjectId(), greenSS.getCount(), null, false);
 				}
 				
 				if (redSS != null)
 				{
-					player.addItem("Add",5575,(redSS.getCount() * 10),null,true);
+					player.addItem("Add", 5575, (redSS.getCount() * 10), null, true);
 					player.destroyItem("Consume", redSS.getObjectId(), redSS.getCount(), null, false);
 				}
 				
@@ -200,14 +201,13 @@ public class Bank implements IVoicedCommandHandler, ICustomByPassHandler
 					player.sendPacket(new ExShowScreenMessage("Exchanged.", 1000, 2, false));
 					player.sendPacket(new PlaySound("ItemSound3.ItemSound3.sys_exchange_success"));
 				}
-				
 				break;
 			}
 			case bank_exchange_fa:
 			{
 				if (inventoryAdena != null && inventoryAdena.getCount() > 350000000)
 				{
-					player.addItem("Add",6673,1,null,true);
+					player.addItem("Add", 6673, 1, null, true);
 					player.destroyItem("Consume", inventoryAdena.getObjectId(), 350000000, null, true);
 					
 					player.sendMessage("Exchanged.");
@@ -220,10 +220,8 @@ public class Bank implements IVoicedCommandHandler, ICustomByPassHandler
 					player.sendPacket(new ExShowScreenMessage("You don't have enough Adena.", 1000, 2, false));
 					player.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
 				}
-				
 				break;
 			}
-		
 		}
 	}
 }

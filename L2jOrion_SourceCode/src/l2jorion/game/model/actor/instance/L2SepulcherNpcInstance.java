@@ -30,22 +30,15 @@ import l2jorion.game.model.quest.Quest;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.SocialAction;
-import l2jorion.game.network.serverpackets.StatusUpdate;
-import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
-import l2jorion.game.util.Broadcast;
 import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author sandman
- */
 public class L2SepulcherNpcInstance extends L2NpcInstance
 {
 	private static Logger LOG = LoggerFactory.getLogger(L2SepulcherNpcInstance.class);
@@ -109,96 +102,45 @@ public class L2SepulcherNpcInstance extends L2NpcInstance
 			return;
 		}
 		
-		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
 		{
-			if (Config.DEBUG)
-			{
-				LOG.info("new target selected:" + getObjectId());
-			}
-			
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
-			
-			// Check if the player is attackable (without a forced attack)
-			if (isAutoAttackable(player))
-			{
-				// Send a Server->Client packet MyTargetSelected to the
-				// L2PcInstance player
-				// The player.getLevel() - getLevel() permit to display the
-				// correct color in the select window
-				final MyTargetSelected my = new MyTargetSelected(getObjectId(), player.getLevel() - getLevel());
-				player.sendPacket(my);
-				
-				// Send a Server->Client packet StatusUpdate of the
-				// L2NpcInstance to the L2PcInstance to update its HP bar
-				final StatusUpdate su = new StatusUpdate(getObjectId());
-				su.addAttribute(StatusUpdate.CUR_HP, (int) getStatus().getCurrentHp());
-				su.addAttribute(StatusUpdate.MAX_HP, getMaxHp());
-				player.sendPacket(su);
-			}
-			else
-			{
-				// Send a Server->Client packet MyTargetSelected to the
-				// L2PcInstance player
-				final MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
-				player.sendPacket(my);
-			}
-			
-			// Send a Server->Client packet ValidateLocation to correct the
-			// L2NpcInstance position and heading on the client
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
-			// Check if the player is attackable (without a forced attack) and
-			// isn't dead
 			if (isAutoAttackable(player) && !isAlikeDead())
 			{
-				// Check the height difference
 				if (Math.abs(player.getZ() - getZ()) < 400) // this max heigth
-				// difference might
-				// need some tweaking
 				{
-					// Set the L2PcInstance Intention to AI_INTENTION_ATTACK
 					player.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, this);
 				}
 				else
 				{
-					// Send a Server->Client packet ActionFailed (target is out
-					// of attack range) to the L2PcInstance player
 					player.sendPacket(ActionFailed.STATIC_PACKET);
 				}
 			}
 			
 			if (!isAutoAttackable(player))
 			{
-				// Calculate the distance between the L2PcInstance and the
-				// L2NpcInstance
 				if (!canInteract(player))
 				{
-					// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 					player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 				}
 				else
 				{
-					// Like L2OFF player must rotate to the Npc
-					MoveToPawn sp = new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE);
-					player.sendPacket(sp);
-					Broadcast.toKnownPlayers(player, sp);
+					if (player.isMoving())
+					{
+						player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+					}
 					
-					// Send a Server->Client packet SocialAction to the all
-					// L2PcInstance on the _knownPlayer of the L2NpcInstance
-					// to display a social action of the L2NpcInstance on their
-					// client
-					final SocialAction sa = new SocialAction(getObjectId(), Rnd.get(8));
-					broadcastPacket(sa);
+					player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
+					
+					broadcastPacket(new SocialAction(getObjectId(), Rnd.get(8)));
 					
 					doAction(player);
 				}
 			}
-			// Send a Server->Client ActionFailed to the L2PcInstance in order
-			// to avoid that the client wait another packet
+			
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 		}
 	}
@@ -392,11 +334,14 @@ public class L2SepulcherNpcInstance extends L2NpcInstance
 		{
 			_closeTask.cancel(true);
 		}
+		
 		_closeTask = ThreadPoolManager.getInstance().scheduleEffect(new CloseNextDoor(doorId), 10000);
+		
 		if (_spawnNextMysteriousBoxTask != null)
 		{
 			_spawnNextMysteriousBoxTask.cancel(true);
 		}
+		
 		_spawnNextMysteriousBoxTask = ThreadPoolManager.getInstance().scheduleEffect(new SpawnNextMysteriousBox(npcId), 0);
 	}
 	

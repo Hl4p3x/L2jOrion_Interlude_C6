@@ -18,13 +18,14 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
 import l2jorion.game.GameServer;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.CharDeleteFail;
 import l2jorion.game.network.serverpackets.CharDeleteOk;
 import l2jorion.game.network.serverpackets.CharSelectInfo;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class CharacterDelete extends L2GameClientPacket
+public final class CharacterDelete extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(CharacterDelete.class);
 	private int _charSlot;

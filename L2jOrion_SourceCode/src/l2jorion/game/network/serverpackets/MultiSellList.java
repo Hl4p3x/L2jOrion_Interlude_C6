@@ -34,8 +34,9 @@ import l2jorion.game.datatables.sql.ItemTable;
 import l2jorion.game.model.multisell.MultiSellEntry;
 import l2jorion.game.model.multisell.MultiSellIngredient;
 import l2jorion.game.model.multisell.MultiSellListContainer;
+import l2jorion.game.network.PacketServer;
 
-public class MultiSellList extends L2GameServerPacket
+public class MultiSellList extends PacketServer
 {
 	private static final String _S__D0_MULTISELLLIST = "[S] D0 MultiSellList";
 	
@@ -84,13 +85,14 @@ public class MultiSellList extends L2GameServerPacket
 				
 				for (final MultiSellIngredient i : ent.getIngredients())
 				{
-					final int items = i.getItemId();
+					final int item = i.getItemId();
 					int typeE = 65335;
-					if (items != 65336 && items != 65436)
+					if (item != 65336 && item != 65436)
 					{
 						typeE = ItemTable.getInstance().getTemplate(i.getItemId()).getType2();
 					}
-					writeH(items); // ID
+					
+					writeH(item); // ID
 					writeH(typeE);
 					writeD(i.getItemCount()); // Count
 					writeH(i.getEnchantmentLevel()); // Enchant Level

@@ -258,15 +258,8 @@ public class L2CubicInstance
 		return _owner;
 	}
 	
-	/**
-	 * Gets the m critical hit.
-	 * @param target the target
-	 * @param skill the skill
-	 * @return the m critical hit
-	 */
 	public final int getMCriticalHit(final L2Character target, final L2Skill skill)
 	{
-		// TODO: Temporary now mcrit for cubics is the baseMCritRate of its owner
 		return _owner.getTemplate().baseMCritRate;
 	}
 	

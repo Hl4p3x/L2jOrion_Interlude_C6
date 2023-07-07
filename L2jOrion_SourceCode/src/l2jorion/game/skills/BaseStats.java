@@ -53,7 +53,7 @@ public enum BaseStats
 	protected static final double[] WITbonus = new double[MAX_STAT_VALUE];
 	protected static final double[] CONbonus = new double[MAX_STAT_VALUE];
 	protected static final double[] MENbonus = new double[MAX_STAT_VALUE];
-
+	
 	private final BaseStat _stat;
 	
 	public final String getValue()
@@ -125,8 +125,8 @@ public enum BaseStats
 				LOG.warn("Character " + actor.getName() + " has STR over max value " + MAX_STAT_VALUE + "... Using " + MAX_STAT_VALUE);
 				return STRbonus[MAX_STAT_VALUE];
 			}
-			return STRbonus[actor.getSTR()];
 			
+			return STRbonus[actor.getSTR()];
 		}
 	}
 	
@@ -263,6 +263,7 @@ public enum BaseStats
 				LOG.warn("Character " + actor.getName() + " has CON over max value " + MAX_STAT_VALUE + "... Using " + MAX_STAT_VALUE);
 				return CONbonus[MAX_STAT_VALUE];
 			}
+			
 			return CONbonus[actor.getCON()];
 		}
 	}
@@ -297,6 +298,7 @@ public enum BaseStats
 				LOG.warn("Character " + actor.getName() + " has MEN over max value " + MAX_STAT_VALUE + "... Using " + MAX_STAT_VALUE);
 				return MENbonus[MAX_STAT_VALUE];
 			}
+			
 			return MENbonus[actor.getMEN()];
 		}
 	}
@@ -359,19 +361,33 @@ public enum BaseStats
 									}
 									
 									if ("STR".equalsIgnoreCase(statName))
+									{
 										STRbonus[val] = bonus;
+									}
 									else if ("INT".equalsIgnoreCase(statName))
+									{
 										INTbonus[val] = bonus;
+									}
 									else if ("DEX".equalsIgnoreCase(statName))
+									{
 										DEXbonus[val] = bonus;
+									}
 									else if ("WIT".equalsIgnoreCase(statName))
+									{
 										WITbonus[val] = bonus;
+									}
 									else if ("CON".equalsIgnoreCase(statName))
+									{
 										CONbonus[val] = bonus;
+									}
 									else if ("MEN".equalsIgnoreCase(statName))
+									{
 										MENbonus[val] = bonus;
+									}
 									else
+									{
 										LOG.warn("[BaseStats] Invalid stats name: " + statName + ", skipping");
+									}
 								}
 							}
 						}

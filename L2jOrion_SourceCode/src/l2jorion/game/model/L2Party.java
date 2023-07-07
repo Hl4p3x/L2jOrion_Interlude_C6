@@ -34,11 +34,11 @@ import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.model.actor.instance.L2SummonInstance;
 import l2jorion.game.model.entity.DimensionalRift;
 import l2jorion.game.model.entity.sevensigns.SevenSignsFestival;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.game.network.serverpackets.ExCloseMPCC;
 import l2jorion.game.network.serverpackets.ExOpenMPCC;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.PartyMemberPosition;
 import l2jorion.game.network.serverpackets.PartySmallWindowAdd;
 import l2jorion.game.network.serverpackets.PartySmallWindowAll;
@@ -99,30 +99,17 @@ public class L2Party
 		return getPartyMembers().size();
 	}
 	
-	/**
-	 * Check if another player can start invitation process
-	 * @return boolean if party waits for invitation respond
-	 */
 	public boolean getPendingInvitation()
 	{
 		return _pendingInvitation;
 	}
 	
-	/**
-	 * set invitation process flag and store time for expiration happens when: player join party or player decline to join
-	 * @param val
-	 */
 	public void setPendingInvitation(boolean val)
 	{
 		_pendingInvitation = val;
 		_pendingInviteTimeout = GameTimeController.getInstance().getGameTicks() + L2PcInstance.REQUEST_TIMEOUT * GameTimeController.TICKS_PER_SECOND;
 	}
 	
-	/**
-	 * Check if player invitation is expired
-	 * @return boolean if time is expired
-	 * @see l2jorion.game.model.actor.instance.L2PcInstance#isRequestExpired()
-	 */
 	public boolean isInvitationRequestExpired()
 	{
 		return !(_pendingInviteTimeout > GameTimeController.getInstance().getGameTicks());
@@ -133,19 +120,12 @@ public class L2Party
 		return _members;
 	}
 	
-	/**
-	 * get random member from party
-	 * @param ItemId
-	 * @param target
-	 * @return
-	 */
 	private L2PcInstance getCheckedRandomMember(int ItemId, L2Character target)
 	{
 		List<L2PcInstance> availableMembers = new FastList<>();
 		
 		for (L2PcInstance member : getPartyMembers())
 		{
-			
 			if (member.getInventory().validateCapacityByItemId(ItemId) && Util.checkIfInRange(Config.ALT_PARTY_RANGE2, target, member, true))
 			{
 				availableMembers.add(member);
@@ -156,15 +136,10 @@ public class L2Party
 		{
 			return availableMembers.get(Rnd.get(availableMembers.size()));
 		}
+		
 		return null;
 	}
 	
-	/**
-	 * get next item looter
-	 * @param ItemId
-	 * @param target
-	 * @return
-	 */
 	private L2PcInstance getCheckedNextLooter(int ItemId, L2Character target)
 	{
 		for (int i = 0; i < getMemberCount(); i++)
@@ -187,20 +162,11 @@ public class L2Party
 			{
 				// continue, take another member if this just logged off
 			}
-			member = null;
 		}
 		
 		return null;
 	}
 	
-	/**
-	 * get next item looter
-	 * @param player
-	 * @param ItemId
-	 * @param spoil
-	 * @param target
-	 * @return
-	 */
 	private L2PcInstance getActualLooter(L2PcInstance player, int ItemId, boolean spoil, L2Character target)
 	{
 		L2PcInstance looter = player;
@@ -258,7 +224,7 @@ public class L2Party
 	 * Broadcasts packet to every party member
 	 * @param msg
 	 */
-	public void broadcastToPartyMembers(L2GameServerPacket msg)
+	public void broadcastToPartyMembers(PacketServer msg)
 	{
 		for (L2PcInstance member : getPartyMembers())
 		{
@@ -293,7 +259,7 @@ public class L2Party
 		}
 	}
 	
-	public void broadcastToPartyMembers(L2PcInstance player, L2GameServerPacket msg)
+	public void broadcastToPartyMembers(L2PcInstance player, PacketServer msg)
 	{
 		for (L2PcInstance member : getPartyMembers())
 		{
@@ -359,10 +325,6 @@ public class L2Party
 		
 	}
 	
-	/**
-	 * Remove player from party Overloaded method that takes player's name as parameter
-	 * @param name
-	 */
 	public void removePartyMember(String name)
 	{
 		L2PcInstance player = getPlayerByName(name);
@@ -373,10 +335,6 @@ public class L2Party
 		}
 	}
 	
-	/**
-	 * Remove player from party
-	 * @param player
-	 */
 	public void removePartyMember(L2PcInstance player)
 	{
 		removePartyMember(player, true);
@@ -462,6 +420,7 @@ public class L2Party
 					_positionBroadcastTask.cancel(false);
 					_positionBroadcastTask = null;
 				}
+				
 				_members.clear();
 			}
 		}
@@ -537,11 +496,6 @@ public class L2Party
 		return null;
 	}
 	
-	/**
-	 * distribute item(s) to party members
-	 * @param player
-	 * @param item
-	 */
 	public void distributeItem(L2PcInstance player, L2ItemInstance item)
 	{
 		if (item.getItemId() == 57)
@@ -569,7 +523,6 @@ public class L2Party
 			msg.addItemName(item.getItemId());
 			msg.addNumber(item.getCount());
 			broadcastToPartyMembers(target, msg);
-			msg = null;
 		}
 		else
 		{
@@ -577,17 +530,9 @@ public class L2Party
 			msg.addString(target.getName());
 			msg.addItemName(item.getItemId());
 			broadcastToPartyMembers(target, msg);
-			msg = null;
 		}
 	}
 	
-	/**
-	 * distribute item(s) to party members
-	 * @param player
-	 * @param item
-	 * @param spoil
-	 * @param target
-	 */
 	public void distributeItem(L2PcInstance player, L2Attackable.RewardItem item, boolean spoil, L2Attackable target)
 	{
 		if (item == null)
@@ -612,7 +557,14 @@ public class L2Party
 		
 		L2PcInstance looter = getActualLooter(player, item.getItemId(), spoil, target);
 		
-		looter.addItem(spoil ? "Sweep" : "Party", item.getItemId(), item.getCount(), player, true);
+		looter.addItem(spoil ? "Sweep" : "Party", item.getItemId(), item.getCount(), item.getEnchantLevel(), player, true);
+		
+		L2ItemInstance itemData = null;
+		
+		if (ItemTable.getInstance().getTemplate(item.getItemId()) != null)
+		{
+			itemData = ItemTable.getInstance().createDummyItem(item.getItemId());
+		}
 		
 		// Send messages to other party members about reward
 		if (item.getCount() > 1)
@@ -627,7 +579,16 @@ public class L2Party
 		{
 			SystemMessage msg = spoil ? new SystemMessage(SystemMessageId.S1_SWEEPED_UP_S2) : new SystemMessage(SystemMessageId.S1_PICKED_UP_S2);
 			msg.addString(looter.getName());
-			msg.addItemName(item.getItemId());
+			
+			if (itemData == null)
+			{
+				msg.addItemName(item.getItemId());
+			}
+			else
+			{
+				msg.addString(item.getEnchantLevel() > 0 ? "a +" + item.getEnchantLevel() + " " + itemData.getItemName() : itemData.getItemName()); // fix for enchanted items
+			}
+			
 			broadcastToPartyMembers(looter, msg);
 		}
 	}
@@ -782,7 +743,7 @@ public class L2Party
 					// Add the XP/SP points to the requested party member
 					if (!member.isDead())
 					{
-						if (member.getPremiumService() == 1)
+						if (((L2PcInstance) member).getPremiumService() >= 1)
 						{
 							member.addExpAndSp(Math.round(member.calcStat(Stats.EXPSP_RATE, xpReward * preCalculation * Config.PREMIUM_XPSP_RATE, null, null)), (int) member.calcStat(Stats.EXPSP_RATE, spReward * preCalculation * Config.PREMIUM_XPSP_RATE, null, null));
 						}

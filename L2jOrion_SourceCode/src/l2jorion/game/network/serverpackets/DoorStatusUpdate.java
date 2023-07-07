@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2DoorInstance;
+import l2jorion.game.network.PacketServer;
 
-public class DoorStatusUpdate extends L2GameServerPacket
+public class DoorStatusUpdate extends PacketServer
 {
 	private static final String _S__61_DOORSTATUSUPDATE = "[S] 4d DoorStatusUpdate";
 	
@@ -40,10 +41,10 @@ public class DoorStatusUpdate extends L2GameServerPacket
 		writeD(_door.getObjectId());
 		writeD(_door.getOpen() ? 0 : 1);
 		writeD(_door.getDamage());
-		writeD(_door.isEnemy() ? 1 : 0);
+		writeD(_door.isEnemy() ? 1 : 0); // Show hp
 		writeD(_door.getDoorId());
-		writeD((int) _door.getCurrentHp());
 		writeD(_door.getMaxHp());
+		writeD((int) _door.getCurrentHp());
 	}
 	
 	@Override

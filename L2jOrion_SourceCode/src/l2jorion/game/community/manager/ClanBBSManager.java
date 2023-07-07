@@ -3,26 +3,23 @@ package l2jorion.game.community.manager;
 import java.util.StringTokenizer;
 
 import l2jorion.game.cache.HtmCache;
-import l2jorion.game.community.CommunityBoard;
+import l2jorion.game.community.CommunityBoardManager;
 import l2jorion.game.datatables.sql.ClanTable;
+import l2jorion.game.handler.ICommunityBoardHandler;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.util.StringUtil;
 
-public class ClanBBSManager extends BaseBBSManager
+public class ClanBBSManager extends BaseBBSManager implements ICommunityBoardHandler
 {
-	protected ClanBBSManager()
-	{
-	}
-	
 	@Override
 	public void parseCmd(String command, L2PcInstance player)
 	{
 		if (command.equalsIgnoreCase("_bbsclan"))
 		{
-			CommunityBoard.getInstance().addBypass(player, "Clan", command);
+			CommunityBoardManager.getInstance().addBypass(player, "Clan", command);
 			
 			if (player.getClan() == null)
 			{
@@ -41,13 +38,13 @@ public class ClanBBSManager extends BaseBBSManager
 			final String clanCommand = st.nextToken();
 			if (clanCommand.equalsIgnoreCase("clan"))
 			{
-				CommunityBoard.getInstance().addBypass(player, "Clans List", command);
+				CommunityBoardManager.getInstance().addBypass(player, "Clans List", command);
 				
 				sendClanList(player, Integer.parseInt(st.nextToken()), "", "");
 			}
 			else if (clanCommand.equalsIgnoreCase("home"))
 			{
-				CommunityBoard.getInstance().addBypass(player, "Clan Home", command);
+				CommunityBoardManager.getInstance().addBypass(player, "Clan Home", command);
 				
 				sendClanDetails(player, Integer.parseInt(st.nextToken()));
 			}
@@ -57,19 +54,19 @@ public class ClanBBSManager extends BaseBBSManager
 			}
 			else if (clanCommand.equalsIgnoreCase("mail"))
 			{
-				CommunityBoard.getInstance().addBypass(player, "Clan Mail", command);
+				CommunityBoardManager.getInstance().addBypass(player, "Clan Mail", command);
 				
 				sendClanMail(player, Integer.parseInt(st.nextToken()));
 			}
 			else if (clanCommand.equalsIgnoreCase("management"))
 			{
-				CommunityBoard.getInstance().addBypass(player, "Clan Management", command);
+				CommunityBoardManager.getInstance().addBypass(player, "Clan Management", command);
 				
 				sendClanManagement(player, Integer.parseInt(st.nextToken()));
 			}
 			else if (clanCommand.equalsIgnoreCase("notice"))
 			{
-				CommunityBoard.getInstance().addBypass(player, "Clan Notice", command);
+				CommunityBoardManager.getInstance().addBypass(player, "Clan Notice", command);
 				
 				if (st.hasMoreTokens())
 				{
@@ -126,11 +123,15 @@ public class ClanBBSManager extends BaseBBSManager
 		else if (ar1.equalsIgnoreCase("mail"))
 		{
 			if (Integer.valueOf(ar2) != player.getClanId())
+			{
 				return;
+			}
 			
 			final L2Clan clan = ClanTable.getInstance().getClan(player.getClanId());
 			if (clan == null)
+			{
 				return;
+			}
 			
 			// Retrieve clans members, and store them under a String.
 			final StringBuilder members = new StringBuilder();
@@ -138,7 +139,9 @@ public class ClanBBSManager extends BaseBBSManager
 			for (L2ClanMember member : clan.getMembers())
 			{
 				if (members.length() > 0)
+				{
 					members.append(";");
+				}
 				
 				members.append(member.getName());
 			}
@@ -199,7 +202,9 @@ public class ClanBBSManager extends BaseBBSManager
 	{
 		final L2Clan clan = ClanTable.getInstance().getClan(clanId);
 		if (clan == null)
+		{
 			return;
+		}
 		
 		if (player.getClanId() != clanId || !player.isClanLeader())
 		{
@@ -218,7 +223,9 @@ public class ClanBBSManager extends BaseBBSManager
 	{
 		final L2Clan clan = ClanTable.getInstance().getClan(clanId);
 		if (clan == null || player.getClanId() != clanId)
+		{
 			return;
+		}
 		
 		if (clan.getLevel() < 2)
 		{
@@ -229,7 +236,7 @@ public class ClanBBSManager extends BaseBBSManager
 		
 		String content = HtmCache.getInstance().getHtm(CB_PATH + "clan/clanhome-notice.htm");
 		content = content.replaceAll("%clanid%", Integer.toString(clan.getClanId()));
-		content = content.replace("%enabled%", ""+String.valueOf(clan.isNoticeEnabled())+"");
+		content = content.replace("%enabled%", "" + String.valueOf(clan.isNoticeEnabled()) + "");
 		content = content.replace("%flag%", String.valueOf(!clan.isNoticeEnabled()));
 		send1001(content, player);
 		send1002(player, clan.getNotice(), "", "");
@@ -363,7 +370,9 @@ public class ClanBBSManager extends BaseBBSManager
 	{
 		final L2Clan clan = ClanTable.getInstance().getClan(clanId);
 		if (clan == null)
+		{
 			return;
+		}
 		
 		if (clan.getLevel() < 2)
 		{
@@ -404,5 +413,20 @@ public class ClanBBSManager extends BaseBBSManager
 	private static class SingletonHolder
 	{
 		protected static final ClanBBSManager INSTANCE = new ClanBBSManager();
+	}
+	
+	@Override
+	public String[] getBypassBbsCommands()
+	{
+		return new String[]
+		{
+			"_bbsclan"
+		};
+	}
+	
+	@Override
+	public void handleCommand(String command, L2PcInstance player, String params)
+	{
+		parseCmd(command, player);
 	}
 }

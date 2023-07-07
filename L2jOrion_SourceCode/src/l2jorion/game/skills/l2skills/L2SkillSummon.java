@@ -151,12 +151,10 @@ public class L2SkillSummon extends L2Skill
 		
 		if (_isCubic)
 		{
-			// Gnacik :
 			// If skill is enchanted calculate cubic skill level based on enchant
 			// 8 at 101 (+1 Power)
 			// 12 at 130 (+30 Power)
 			// Because 12 is max 5115-5117 skills
-			// TODO: make better method of calculation, dunno how its calculated on offi
 			int _cubicSkillLevel = getLevel();
 			if (_cubicSkillLevel > 100)
 			{
@@ -239,6 +237,9 @@ public class L2SkillSummon extends L2Skill
 				activeChar.delCubic(removedCubic.getId());
 			}
 			activeChar.addCubic(_npcId, _cubicSkillLevel, getPower(), _activationtime, _activationchance, _summonTotalLifeTime, false);
+			// Announcements _a = Announcements.getInstance();
+			// _a.sys("_npcId:" + _npcId + " _cubicSkillLevel:" + _cubicSkillLevel + " Power:" + getPower() + " _activationtime:" + _activationtime + " _activationchance:" + _activationchance + " _summonTotalLifeTime:" + _summonTotalLifeTime);
+			
 			activeChar.broadcastUserInfo();
 			return;
 		}

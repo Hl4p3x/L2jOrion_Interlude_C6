@@ -25,8 +25,9 @@ import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2Clan.SubPledge;
 import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class PledgeShowMemberListAll extends L2GameServerPacket
+public class PledgeShowMemberListAll extends PacketServer
 {
 	private static final String _S__68_PLEDGESHOWMEMBERLISTALL = "[S] 53 PledgeShowMemberListAll";
 	

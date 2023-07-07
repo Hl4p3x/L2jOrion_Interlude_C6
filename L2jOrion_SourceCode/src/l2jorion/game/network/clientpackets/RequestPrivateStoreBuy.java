@@ -28,6 +28,7 @@ import l2jorion.game.model.TradeList;
 import l2jorion.game.model.TradeList.TradeItem;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
@@ -35,7 +36,7 @@ import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestPrivateStoreBuy extends L2GameClientPacket
+public final class RequestPrivateStoreBuy extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestPrivateStoreBuy.class);
 	
@@ -69,21 +70,6 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket
 			
 			_items[i] = new ItemRequest(objectId, (int) count, price);
 		}
-		
-		if (Config.DEBUG)
-		{
-			
-			LOG.info("Player " + getClient().getActiveChar().getName() + " requested to buy to storeId " + _storePlayerId + " Items Number: " + _count);
-			
-			for (int i = 0; i < _count; i++)
-			{
-				LOG.info("Requested Item ObjectID: " + _items[i].getObjectId());
-				LOG.info("Requested Item Id: " + _items[i].getItemId());
-				LOG.info("Requested Item count: " + _items[i].getCount());
-				LOG.info("Requested Item price: " + _items[i].getPrice());
-				
-			}
-		}
 	}
 	
 	@Override
@@ -94,12 +80,7 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket
 		{
 			return;
 		}
-		if (player.isSubmitingPin())
-		{
-			player.sendMessage("Unable to do any action while PIN is not submitted");
-			player.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
+		
 		if (!getClient().getFloodProtectors().getTransaction().tryPerformAction("privatestorebuy"))
 		{
 			player.sendMessage("You buying items too fast.");
@@ -139,7 +120,6 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket
 			return;
 		}
 		
-		// FIXME: this check should be (and most probabliy is) done in the TradeList mechanics
 		long priceTotal = 0;
 		for (final ItemRequest ir : _items)
 		{
@@ -178,10 +158,15 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket
 			}
 			ir.setEnchant(enchant);
 			
+			if (storeList.isBuffer())
+			{
+				ir.setId(sellersItem.getId());
+				ir.setEnchant(sellersItem.getEnchant());
+			}
+			
 			priceTotal += ir.getPrice() * ir.getCount();
 		}
 		
-		// FIXME: this check should be (and most probabliy is) done in the TradeList mechanics
 		if (priceTotal < 0 || priceTotal > Integer.MAX_VALUE)
 		{
 			final String msgErr = "[RequestPrivateStoreBuy] player " + getClient().getActiveChar().getName() + " tried an overflow exploit, ban this player!";
@@ -206,10 +191,15 @@ public final class RequestPrivateStoreBuy extends L2GameClientPacket
 			}
 		}
 		
+		if (storeList.isBuffer())
+		{
+			storeList.GetBuffs(player, _items, (int) priceTotal);
+			return;
+		}
+		
 		if (!storeList.PrivateStoreBuy(player, _items, (int) priceTotal))
 		{
 			sendPacket(ActionFailed.STATIC_PACKET);
-			// Punishment e LOGGER in audit
 			Util.handleIllegalPlayerAction(storePlayer, "PrivateStore buy has failed due to invalid list or request. Player: " + player.getName(), Config.DEFAULT_PUNISH);
 			LOG.warn("PrivateStore buy has failed due to invalid list or request. Player: " + player.getName() + ", Private store of: " + storePlayer.getName());
 			return;

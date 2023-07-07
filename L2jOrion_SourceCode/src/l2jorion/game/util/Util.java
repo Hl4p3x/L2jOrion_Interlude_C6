@@ -114,6 +114,16 @@ public final class Util
 		return (int) (angleTarget * 182.044444444);
 	}
 	
+	public static double calculateDistance(final L2Object obj1, final L2Object obj2, final boolean includeZAxis)
+	{
+		if (obj1 == null || obj2 == null)
+		{
+			return 1000000;
+		}
+		
+		return calculateDistance(obj1.getPosition().getX(), obj1.getPosition().getY(), obj1.getPosition().getZ(), obj2.getPosition().getX(), obj2.getPosition().getY(), obj2.getPosition().getZ(), includeZAxis);
+	}
+	
 	public static double calculateDistance(final int x1, final int y1, final int z1, final int x2, final int y2, final int z2, final boolean includeZAxis)
 	{
 		final double dx = (double) x1 - x2;
@@ -124,16 +134,8 @@ public final class Util
 			final double dz = z1 - z2;
 			return Math.sqrt(dx * dx + dy * dy + dz * dz);
 		}
+		
 		return Math.sqrt(dx * dx + dy * dy);
-	}
-	
-	public static double calculateDistance(final L2Object obj1, final L2Object obj2, final boolean includeZAxis)
-	{
-		if (obj1 == null || obj2 == null)
-		{
-			return 1000000;
-		}
-		return calculateDistance(obj1.getPosition().getX(), obj1.getPosition().getY(), obj1.getPosition().getZ(), obj2.getPosition().getX(), obj2.getPosition().getY(), obj2.getPosition().getZ(), includeZAxis);
 	}
 	
 	/**
@@ -183,7 +185,12 @@ public final class Util
 	
 	public static boolean checkIfInRange(int range, L2Object obj1, L2Object obj2, boolean includeZAxis)
 	{
-		if (obj1 == null || obj2 == null)
+		if ((obj1 == null) || (obj2 == null))
+		{
+			return false;
+		}
+		
+		if (obj1.getInstanceId() != obj2.getInstanceId())
 		{
 			return false;
 		}
@@ -205,22 +212,17 @@ public final class Util
 		
 		double dx = obj1.getX() - obj2.getX();
 		double dy = obj1.getY() - obj2.getY();
+		double d = (dx * dx) + (dy * dy);
 		
 		if (includeZAxis)
 		{
 			double dz = obj1.getZ() - obj2.getZ();
-			double d = dx * dx + dy * dy + dz * dz;
-			
-			return d <= range * range + 2 * range * rad + rad * rad;
+			d += (dz * dz);
 		}
 		
-		double d = dx * dx + dy * dy;
-		return d <= range * range + 2 * range * rad + rad * rad;
+		return d <= ((range * range) + (2 * range * rad) + (rad * rad));
 	}
 	
-	/*
-	 * Checks if object is within short (sqrt(int.max_value)) radius, not using collisionRadius. Faster calculation than checkIfInRange if distance is short and collisionRadius isn't needed. Not for long distance checks (potential teleports, far away castles etc)
-	 */
 	public static boolean checkIfInShortRadius(int radius, L2Object obj1, L2Object obj2, boolean includeZAxis)
 	{
 		if (obj1 == null || obj2 == null)
@@ -490,24 +492,28 @@ public final class Util
 		int count = 0;
 		for (L2Object player : npc.getKnownList().getKnownObjects().values())
 		{
-			if (((L2Character) player).isDead())
+			if (player instanceof L2Character)
 			{
-				continue;
-			}
-			
-			if (!invisible && !((L2Character) player).isVisible())
-			{
-				continue;
-			}
-			
-			if (!(GeoData.getInstance().canSeeTarget(npc, player)))
-			{
-				continue;
-			}
-			
-			if (Util.checkIfInRange(range, npc, player, true))
-			{
-				count++;
+				if (((L2Character) player).isDead())
+				{
+					continue;
+				}
+				
+				if (!invisible && !((L2Character) player).isVisible())
+				{
+					continue;
+				}
+				
+				if (!(GeoData.getInstance().canSeeTarget(npc, player)))
+				{
+					continue;
+				}
+				
+				if (Util.checkIfInRange(range, npc, player, true))
+				{
+					count++;
+				}
+				
 			}
 		}
 		return count;

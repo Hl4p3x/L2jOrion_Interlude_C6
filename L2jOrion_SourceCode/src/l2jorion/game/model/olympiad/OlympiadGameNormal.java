@@ -13,9 +13,9 @@ import l2jorion.game.model.L2World;
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.type.L2OlympiadStadiumZone;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExOlympiadUserInfo;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.util.random.Rnd;
@@ -108,7 +108,7 @@ abstract public class OlympiadGameNormal extends AbstractOlympiadGame
 	}
 	
 	@Override
-	protected final void broadcastPacket(L2GameServerPacket packet)
+	protected final void broadcastPacket(PacketServer packet)
 	{
 		_playerOne.updatePlayer();
 		if (_playerOne.player != null)

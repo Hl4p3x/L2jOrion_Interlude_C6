@@ -430,7 +430,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 						
 						if (player.getAchievement().getCount(AchType.SUBCLASS) < player.getSubClasses().size())
 						{
-							player.getAchievement().increase(AchType.SUBCLASS, player.getSubClasses().size(), false, false);
+							player.getAchievement().increase(AchType.SUBCLASS, player.getSubClasses().size(), false, false, false, 0);
 						}
 						
 						if (Config.CHECK_SKILLS_ON_ENTER && !Config.ALT_GAME_SKILL_LEARN)
@@ -1237,7 +1237,7 @@ public final class L2VillageMasterInstance extends L2FolkInstance
 	{
 		String npcClass = getTemplate().getStatsSet().getString("jClass");
 		
-		if (npcClass.indexOf("sanctuary") > -1 || npcClass.indexOf("clergyman") > -1)
+		if (npcClass.indexOf("sanctuary") > -1 || npcClass.indexOf("clergyman") > -1 || npcClass.indexOf("temple_master") > -1)
 		{
 			return ClassType.Priest;
 		}

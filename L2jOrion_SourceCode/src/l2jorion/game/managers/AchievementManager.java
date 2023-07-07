@@ -34,6 +34,7 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.templates.StatsSet;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
+import l2jorion.util.random.Rnd;
 import l2jorion.util.xml.IXmlReader;
 
 public class AchievementManager implements IXmlReader
@@ -73,13 +74,18 @@ public class AchievementManager implements IXmlReader
 					{
 						final NamedNodeMap attrs = b.getAttributes();
 						
+						final boolean daily = parseBoolean(attrs, "daily", false);
 						final AchType type = AchType.valueOf(parseString(attrs, "type"));
+						
 						final StatsSet set = new StatsSet();
+						
+						set.set("daily", daily);
 						set.set("icon", parseString(attrs, "icon"));
 						set.set("name", parseString(attrs, "name"));
 						set.set("desc", parseString(attrs, "desc"));
 						
 						final List<AchievementHolder> levels = new ArrayList<>();
+						List<AchievementHolder> dailyRandomLevel = new ArrayList<>();
 						
 						for (Node c = b.getFirstChild(); c != null; c = c.getNextSibling())
 						{
@@ -90,7 +96,13 @@ public class AchievementManager implements IXmlReader
 							}
 						}
 						
-						_achievements.put(type, levels);
+						// Add 1 by random
+						if (daily)
+						{
+							dailyRandomLevel.add(0, levels.get(Rnd.get(0, levels.size() - 1)));
+						}
+						
+						_achievements.put(type, (daily ? dailyRandomLevel : levels));
 					}
 				}
 			}
@@ -113,11 +125,17 @@ public class AchievementManager implements IXmlReader
 		return _achievements;
 	}
 	
+	// One time
 	public List<AchType> getTypeList(L2PcInstance player)
 	{
 		List<AchType> list = new ArrayList<>();
 		for (AchType type : _achievements.keySet())
 		{
+			if (String.valueOf(type).contains("DAILY"))
+			{
+				continue;
+			}
+			
 			if (type == AchType.SPOIL && !player.getSkills().containsKey(254))
 			{
 				continue;
@@ -145,6 +163,48 @@ public class AchievementManager implements IXmlReader
 			
 			list.add(type);
 		}
+		return list;
+	}
+	
+	// Daily
+	public List<AchType> getDailyTypeList(L2PcInstance player)
+	{
+		List<AchType> list = new ArrayList<>();
+		for (AchType type : _achievements.keySet())
+		{
+			if (!(String.valueOf(type).contains("DAILY")))
+			{
+				continue;
+			}
+			
+			if (type == AchType.SPOIL && !player.getSkills().containsKey(254))
+			{
+				continue;
+			}
+			
+			if (type == AchType.LEADER && player.getClan() != null && !player.isClanLeader())
+			{
+				continue;
+			}
+			
+			if ((type == AchType.CLAN_LEVEL_UP || type == AchType.CASTLE) && !player.isClanLeader())
+			{
+				continue;
+			}
+			
+			if (type == AchType.ACADEMY && player.getClassId().level() > 1 && player.getAchievement().getLevel(AchType.ACADEMY) != 2)
+			{
+				continue;
+			}
+			
+			if (type == AchType.MONSTER_CHAMPION && Config.L2JMOD_CHAMPION_FREQUENCY == 0)
+			{
+				continue;
+			}
+			
+			list.add(type);
+		}
+		
 		return list;
 	}
 	

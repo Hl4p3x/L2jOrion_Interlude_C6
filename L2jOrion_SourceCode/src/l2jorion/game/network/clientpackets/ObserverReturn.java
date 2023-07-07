@@ -17,8 +17,10 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
+import l2jorion.game.network.serverpackets.ExShowScreenMessage;
 
-public final class ObserverReturn extends L2GameClientPacket
+public final class ObserverReturn extends PacketClient
 {
 	@Override
 	protected void readImpl()
@@ -37,6 +39,15 @@ public final class ObserverReturn extends L2GameClientPacket
 		if (activeChar.inObserverMode())
 		{
 			activeChar.leaveObserverMode();
+			
+			if (activeChar.isBossObserve())
+			{
+				activeChar.setBossObserve(false);
+				activeChar.setBossTaskNull();
+				
+				activeChar.sendMessage("Teleporting back");
+				activeChar.sendPacket(new ExShowScreenMessage("Teleporting back", 2000, 2, false));
+			}
 		}
 	}
 	

@@ -22,12 +22,7 @@ package l2jorion.login.network.serverpackets;
 import l2jorion.login.L2LoginClient;
 import l2jorion.mmocore.SendablePacket;
 
-/**
- * @author programmos
- */
 public abstract class L2LoginServerPacket extends SendablePacket<L2LoginClient>
 {
-	
 	public abstract String getType();
-	
 }

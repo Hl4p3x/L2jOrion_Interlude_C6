@@ -27,6 +27,7 @@ import l2jorion.logger.LoggerFactory;
 public final class GGAuth extends L2LoginServerPacket
 {
 	static final Logger LOG = LoggerFactory.getLogger(GGAuth.class);
+	
 	public static final int SKIP_GG_AUTH_REQUEST = 0x0b;
 	
 	private final int _response;

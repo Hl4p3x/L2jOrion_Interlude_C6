@@ -1,31 +1,14 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.network.clientpackets;
+
+import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_ATTACK;
 
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.GetOnVehicle;
 import l2jorion.game.network.serverpackets.ValidateLocation;
 
-public final class ValidatePosition extends L2GameClientPacket
+public final class ValidatePosition extends PacketClient
 {
 	private int _x;
 	private int _y;
@@ -58,16 +41,10 @@ public final class ValidatePosition extends L2GameClientPacket
 		
 		if (_x == 0 && _y == 0)
 		{
-			if (realX != 0) // in this case this seems like a client error
+			if (realX != 0)
 			{
 				return;
 			}
-		}
-		
-		// check falling if previous client Z is less then
-		if (activeChar.isFalling(_z))
-		{
-			return;
 		}
 		
 		int dx, dy, dz;
@@ -86,6 +63,12 @@ public final class ValidatePosition extends L2GameClientPacket
 					sendPacket(new GetOnVehicle(activeChar.getObjectId(), _data, activeChar.getInVehiclePosition()));
 				}
 			}
+			return;
+		}
+		
+		// Check falling if previous client Z is less then
+		if (activeChar.isFalling(_z))
+		{
 			return;
 		}
 		
@@ -144,16 +127,25 @@ public final class ValidatePosition extends L2GameClientPacket
 		{
 			switch (activeChar.getAI().getIntention())
 			{
-				case AI_INTENTION_ATTACK:
-				case AI_INTENTION_CAST:
 				case AI_INTENTION_FOLLOW:
-					activeChar.setXYZ(realX, realY, realZ);
+				{
+					if (activeChar.getTarget() instanceof L2PcInstance && activeChar.getTarget() != activeChar && activeChar.getAI().getIntention() != AI_INTENTION_ATTACK)
+					{
+						activeChar.setXYZ(realX, realY, realZ);
+						activeChar.sendPacket(new ValidateLocation(activeChar));
+					}
+					else
+					{
+						activeChar.setXYZ(_x, _y, _z);
+					}
 					break;
+				}
 				default:
-					activeChar.setXYZ(_x, _y, realZ);
+				{
+					activeChar.setXYZ(_x, _y, _z);
 					break;
+				}
 			}
-			
 		}
 		
 		activeChar.setClientX(_x);

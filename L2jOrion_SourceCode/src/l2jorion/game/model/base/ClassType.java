@@ -20,11 +20,6 @@
  */
 package l2jorion.game.model.base;
 
-/**
- * ClassType Enum
- * @author Tempy
- */
-
 public enum ClassType
 {
 	Fighter,

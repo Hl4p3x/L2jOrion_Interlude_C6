@@ -1,6 +1,3 @@
-# This is essentially a DrLecter's copy&paste from
-# a Kilkenny's contribution to the Official L2J Datapack Project.
-# Visit http://www.l2jdp.com/trac if you find a bug.
 import sys
 from l2jorion import Config
 from l2jorion.game.model.quest import State

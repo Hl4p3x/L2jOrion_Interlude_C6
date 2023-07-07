@@ -1,12 +1,11 @@
 import sys
-
 from l2jorion.game.model.actor.instance import      L2PcInstance
 from l2jorion.game.model.quest        import State
 from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
+
 qn = "1102_toivortex_red"
 
-#print "1102. Toivortex red"
 RED_DIMENSION_STONE  = 4403
 DIMENSION_VORTEX_1      = 30952
 DIMENSION_VORTEX_2      = 30953

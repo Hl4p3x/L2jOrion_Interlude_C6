@@ -90,7 +90,7 @@ public class CTF implements EventTask
 	private String startEventTime;
 	
 	/** The _team event. */
-	protected static boolean _teamEvent = true; // TODO to be integrated
+	protected static boolean _teamEvent = true;
 	
 	/** The _players. */
 	public static Vector<L2PcInstance> _players = new Vector<>();
@@ -675,8 +675,6 @@ public class CTF implements EventTask
 	 */
 	private static boolean checkStartJoinPlayerInfo()
 	{
-		
-		// TODO be integrated
 		return true;
 		
 	}

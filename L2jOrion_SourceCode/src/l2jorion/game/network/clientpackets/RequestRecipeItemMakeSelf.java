@@ -22,11 +22,9 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.controllers.RecipeController;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 
-/**
- * @author L2jOrion
- */
-public final class RequestRecipeItemMakeSelf extends L2GameClientPacket
+public final class RequestRecipeItemMakeSelf extends PacketClient
 {
 	private int _id;
 	
@@ -41,20 +39,22 @@ public final class RequestRecipeItemMakeSelf extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		if (!getClient().getFloodProtectors().getManufacture().tryPerformAction("RecipeMakeSelf"))
+		{
 			return;
+		}
 		
 		if (activeChar.getPrivateStoreType() == 5)
 		{
-			//activeChar.sendMessage("Cannot make items while trading");
 			return;
 		}
 		
 		if (activeChar.isInCraftMode())
 		{
-			//activeChar.sendMessage("Currently in Craft Mode");
 			return;
 		}
 		

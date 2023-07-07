@@ -1,4 +1,3 @@
-# Made by Emperorc
 import sys
 from l2jorion.game.ai import CtrlIntention
 from l2jorion.game.datatables.sql import SpawnTable
@@ -141,6 +140,26 @@ class Quest (JQuest) :
             Archon.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK,st2.getPlayer(),None)
         else :
             st2.giveItems(self.Items[3],1) #Quest Rate x10
+     return
+
+ def giveHallishaMarkForParty(self, st2, npc) :
+     if st2.getInt("spawned") == 0 :
+        if st2.getQuestItemsCount(self.Items[3]) >= 700:
+            st2.takeItems(self.Items[3],20)
+            xx = int(st2.getPlayer().getX())
+            yy = int(st2.getPlayer().getY())
+            zz = int(st2.getPlayer().getZ())
+            Archon = st2.addSpawn(self.Mob[1],xx,yy,zz)
+            ArchonId = Archon.getObjectId()
+            st2.set("Archon",str(ArchonId))
+            self.AddSpawn(st2,Archon)
+            st2.set("spawned","1")
+            st2.startQuestTimer("Archon Hellisha has despawned",600000,Archon)
+            self.AutoChat(Archon,self.Text[13].replace('PLAYERNAME',st2.getPlayer().getName()))
+            Archon.addDamageHate(st2.getPlayer(),0,99999)
+            Archon.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK,st2.getPlayer(),None)
+        else :
+            st2.giveItems(self.Items[3],1,npc) #Quest Rate x10
      return
 
  def findRightState(self, player,mob) :
@@ -565,7 +584,7 @@ class Quest (JQuest) :
                                 break
             if len(PartyQuestMembers) > 0 :
                 st2 = PartyQuestMembers[Rnd.get(len(PartyQuestMembers))]
-                st2.getQuest().giveHallishaMark(st2)
+                st2.getQuest().giveHallishaMarkForParty(st2,npc)
         else :
             for q in Quests.keys() :
                 st1 = player.getQuestState(Quests[q])

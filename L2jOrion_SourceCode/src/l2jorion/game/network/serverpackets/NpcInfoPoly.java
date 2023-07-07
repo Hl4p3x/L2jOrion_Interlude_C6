@@ -24,13 +24,14 @@ import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.templates.L2NpcTemplate;
 
 /**
  * This class ...
  * @version $Revision: 1.7.2.4.2.9 $ $Date: 2005/04/11 10:05:54 $
  */
-public class NpcInfoPoly extends L2GameServerPacket
+public class NpcInfoPoly extends PacketServer
 {
 	// ddddddddddddddddddffffdddcccccSSddd dddddc
 	

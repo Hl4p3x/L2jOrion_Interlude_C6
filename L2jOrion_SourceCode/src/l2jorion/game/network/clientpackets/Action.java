@@ -21,21 +21,19 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class Action extends L2GameClientPacket
+public final class Action extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(Action.class);
 	private int _objectId;
-	@SuppressWarnings("unused")
 	private int _originX;
-	@SuppressWarnings("unused")
 	private int _originY;
-	@SuppressWarnings("unused")
 	private int _originZ;
 	private int _actionId;
 	
@@ -54,7 +52,7 @@ public final class Action extends L2GameClientPacket
 	{
 		if (Config.DEBUG)
 		{
-			LOG.debug("DEBUG " + getType() + ": ActionId: " + _actionId + " , ObjectID: " + _objectId);
+			LOG.debug(getType() + ": " + (_actionId == 0 ? "Simple-click" : "Shift-click") + " Target object ID: " + _objectId + " orignX: " + _originX + " orignY: " + _originY + " orignZ: " + _originZ);
 		}
 		
 		// Get the current L2PcInstance of the player
@@ -91,13 +89,6 @@ public final class Action extends L2GameClientPacket
 			return;
 		}
 		
-		if (activeChar.isSubmitingPin())
-		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-		
 		// Players can't interact with objects in the other instances except from multiverse
 		if (obj.getInstanceId() != activeChar.getInstanceId() && activeChar.getInstanceId() != -1)
 		{
@@ -116,21 +107,18 @@ public final class Action extends L2GameClientPacket
 			}
 		}
 		
-		// reset old Moving task
-		if (activeChar.isMovingTaskDefined())
-		{
-			activeChar.setMovingTaskDefined(false);
-		}
-		
 		// Check if the target is valid, if the player haven't a shop or isn't the requester of a transaction (ex : FriendInvite, JoinAlly, JoinParty...)
 		if (activeChar.getPrivateStoreType() == 0)
 		{
 			switch (_actionId)
 			{
 				case 0:
+				{
 					obj.onAction(activeChar);
 					break;
+				}
 				case 1:
+				{
 					if (obj instanceof L2Character && ((L2Character) obj).isAlikeDead())
 					{
 						obj.onAction(activeChar);
@@ -140,11 +128,13 @@ public final class Action extends L2GameClientPacket
 						obj.onActionShift(getClient());
 					}
 					break;
+				}
 				default:
-					// Invalid action detected (probably client cheating), LOGGER this
+				{
 					LOG.warn("Character: " + activeChar.getName() + " requested invalid action: " + _actionId);
 					getClient().sendPacket(ActionFailed.STATIC_PACKET);
 					break;
+				}
 			}
 		}
 		else

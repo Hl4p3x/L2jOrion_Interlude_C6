@@ -18,9 +18,10 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.cache.CrestCache;
 import l2jorion.game.cache.CrestCache.CrestType;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.AllyCrest;
 
-public final class RequestAllyCrest extends L2GameClientPacket
+public final class RequestAllyCrest extends PacketClient
 {
 private int _crestId;
 	

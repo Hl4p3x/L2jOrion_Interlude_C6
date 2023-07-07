@@ -1,5 +1,7 @@
-# Upgrade your Hatchling to Strider version 0.2
-# by DrLecter & DraX_
+import sys
+from l2jorion.game.model.quest import State
+from l2jorion.game.model.quest import QuestState
+from l2jorion.game.model.quest.jython import QuestJython as JQuest
 
 #Quest info
 QUEST_NUMBER      = 421
@@ -13,7 +15,7 @@ qn = "421_LittleWingAdventures"
 MIN_PET_LEVEL = 55
 MIN_PLAYER_LEVEL = 45
 # Maximum distance allowed between pet and owner; if it's reached while talking to any NPC, quest is aborted
-MAX_DISTANCE = 100
+MAX_DISTANCE = 500
 
 #Messages
 default = "<html><body>You are either not carrying out your quest or don't meet the criteria.</body></html>"
@@ -38,8 +40,11 @@ ftm_41  = "<html><body>Fairy Tree of Abyss: <br>That your pet will bite me and y
 ftm_42  = "The hatchling has drunk the sap of the fairy tree of the abyss."
 end_msg = "<html><body>Fairy Mimyu:<br>Great job, your hatchling"
 end_msg2= "has become an strider, enjoy!</body></html>"
+no_pet = "Your pet should attack tree!"
+wrong_pet = "Your pet is not a hatchling!"
 
 #Quest items
+chance = 5   #Chance in x/1000 for take FT_LEAF
 FT_LEAF = 4325
 CONTROL_ITEMS = { 3500:4422, 3501:4423, 3502:4424 }
 
@@ -53,11 +58,6 @@ FAIRY_TREES = [ [27185,1,113356,93848,-2072,ftm_11,ftm_12],
                 [27188,8,106671,93905,-2070,ftm_41,ftm_42] ]
 #Mobs
 GUARDIAN = 27189
-
-import sys
-from l2jorion.game.model.quest import State
-from l2jorion.game.model.quest import QuestState
-from l2jorion.game.model.quest.jython import QuestJython as JQuest
 
 def get_control_item(st) :
   item = st.getPlayer().getPet().getControlItemId()
@@ -84,17 +84,6 @@ class Quest (JQuest) :
  def onEvent (self,event,st) :
     htmltext = event
     leafs = st.getQuestItemsCount(FT_LEAF) 
-    for i in range(4) :
-       if event == str(FAIRY_TREES[i][1]) :
-           st.set("id", str(st.getInt("id") | FAIRY_TREES[i][1]))
-           htmltext = FAIRY_TREES[i][6]
-           st.takeItems(FT_LEAF,1)
-           if 1 < leafs <= 4 :
-              st.playSound("ItemSound.quest_itemget")
-           elif leafs == 1 and st.getInt("id") == 15:
-              st.playSound("ItemSound.quest_middle")
-              st.set("cond","3")
-              st.setState(STARTED)
     if event == "16" :
        htmltext = event_1
        st.setState(STARTING)
@@ -155,16 +144,33 @@ class Quest (JQuest) :
         st.giveItems(item,1)
         st.exitQuest(1)
         st.playSound("ItemSound.quest_finish")
-   elif id == STARTING :
-     leafs = st.getQuestItemsCount(FT_LEAF)
-     if 0 < leafs :
-        for i in range(4) :
-           if npcId == FAIRY_TREES[i][0] and (st.getInt("id") | FAIRY_TREES[i][1] != st.getInt("id")) :
-              for j in range(2):
-                 for k in range(2): 
-                    st.addSpawn(GUARDIAN,FAIRY_TREES[i][2]+70*pow(-1,j%2),FAIRY_TREES[i][3]+70*pow(-1,k%2),FAIRY_TREES[i][4])
-              htmltext = FAIRY_TREES[i][5]
    return htmltext
+   
+ def onAttack (self, npc, player, damage, isPet):
+   st = player.getQuestState(qn)
+   if not st : return
+   npcId = npc.getNpcId()
+   leafs = st.getQuestItemsCount(FT_LEAF)
+   if player.getPet() == None :
+       player.sendMessage(no_pet)
+       return
+   elif player.getPet().getTemplate().npcId not in [12311,12312,12313] :
+       player.sendMessage(wrong_pet)
+       return
+   elif 0 < leafs :
+      for i in range(4) :
+         if npcId == FAIRY_TREES[i][0] and (st.getInt("id") | FAIRY_TREES[i][1] != st.getInt("id")) :
+            if st.getRandom(1000) < chance:
+               st.set("id", str(st.getInt("id") | FAIRY_TREES[i][1]))
+               st.takeItems(FT_LEAF,1)
+               player.sendMessage(FAIRY_TREES[i][6])
+               if 1 < leafs <= 4 :
+                  st.playSound("ItemSound.quest_itemget")
+               elif leafs == 1 and st.getInt("id") == 15:
+                  st.playSound("ItemSound.quest_middle")
+                  st.set("cond","3")
+                  st.setState(STARTED)
+   return
 
  def onKill(self,npc,player,isPet) :
    return  
@@ -186,6 +192,11 @@ QUEST.addTalkId(SG_CRONOS)
 QUEST.addTalkId(FY_MYMYU)
 
 STARTING.addQuestDrop(SG_CRONOS,FT_LEAF,1)
+
+QUEST.addAttackId(27185)
+QUEST.addAttackId(27186)
+QUEST.addAttackId(27187)
+QUEST.addAttackId(27188)
 
 for i in range(4) :
   QUEST.addTalkId(FAIRY_TREES[i][0])

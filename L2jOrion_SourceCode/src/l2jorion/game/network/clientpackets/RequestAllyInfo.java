@@ -20,9 +20,10 @@
  */
 package l2jorion.game.network.clientpackets;
 
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.AllyInfo;
 
-public final class RequestAllyInfo extends L2GameClientPacket
+public final class RequestAllyInfo extends PacketClient
 {
 	@Override
 	public void readImpl()

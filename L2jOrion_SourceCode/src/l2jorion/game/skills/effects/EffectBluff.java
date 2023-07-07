@@ -77,7 +77,7 @@ public class EffectBluff extends L2Effect
 		getEffected().broadcastPacket(new BeginRotation(getEffected(), getEffected().getHeading(), 1, 65535));
 		getEffected().broadcastPacket(new StopRotation(getEffected(), getEffector().getHeading(), 65535));
 		getEffected().setHeading(getEffector().getHeading());
-		// sometimes rotation didn't showed correctly ??
+		
 		getEffected().sendPacket(new ValidateLocation(getEffector()));
 		getEffector().sendPacket(new ValidateLocation(getEffected()));
 		onActionTime();

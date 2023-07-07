@@ -23,8 +23,9 @@ package l2jorion.game.network.serverpackets;
 import java.util.List;
 
 import l2jorion.game.model.Location;
+import l2jorion.game.network.PacketServer;
 
-public class ExCursedWeaponLocation extends L2GameServerPacket
+public class ExCursedWeaponLocation extends PacketServer
 {
 	private static final String _S__FE_46_EXCURSEDWEAPONLOCATION = "[S] FE:46 ExCursedWeaponLocation";
 	

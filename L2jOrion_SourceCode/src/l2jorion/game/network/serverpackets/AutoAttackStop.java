@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class AutoAttackStop extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class AutoAttackStop extends PacketServer
 {
 	private static final String _S__3C_AUTOATTACKSTOP = "[S] 3C AutoAttackStop";
 	

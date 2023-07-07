@@ -14,58 +14,85 @@
  */
 package l2jorion.game.handler.voice;
 
-import l2jorion.game.datatables.sql.ItemTable;
+import l2jorion.Config;
+import l2jorion.game.cache.HtmCache;
+import l2jorion.game.handler.ICustomByPassHandler;
 import l2jorion.game.handler.IVoicedCommandHandler;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.serverpackets.ExShowScreenMessage;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
+import l2jorion.game.network.serverpackets.PlaySound;
 
-public class DressMe implements IVoicedCommandHandler
+public class DressMe implements IVoicedCommandHandler, ICustomByPassHandler
 {
-	private static final String[] VOICED_COMMANDS =
+	private static String[] _voicedCommands =
 	{
-		"dressme"
+		Config.DRESS_ME_COMMAND
 	};
 	
 	@Override
-	public boolean useVoicedCommand(String command, L2PcInstance activeChar, String parameter)
+	public boolean useVoicedCommand(String command, L2PcInstance activeChar, String target)
 	{
-		if (command.equals("dressme"))
+		if (Config.ALLOW_DRESS_ME_FOR_PREMIUM && activeChar.getPremiumService() == 0)
 		{
-			sendMainWindow(activeChar);
+			activeChar.sendMessage("You're not The Premium account.");
+			activeChar.sendPacket(new ExShowScreenMessage("You're not The Premium account.", 1000, 2, false));
+			activeChar.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
+			return false;
 		}
 		
+		if (command.startsWith(Config.DRESS_ME_COMMAND))
+		{
+			showHtm(activeChar);
+		}
 		return true;
 	}
 	
-	public static void sendMainWindow(L2PcInstance activeChar)
+	private void showHtm(L2PcInstance player)
 	{
-		NpcHtmlMessage htm = new NpcHtmlMessage(0);
-		htm.setFile("./data/html/custom/dressme/main.htm");
-		htm.replace("%enabled%", activeChar.isDressMeEnabled() ? "enabled" : "disabled");
-		
-		if (activeChar.getDressMeData() == null)
-		{
-			htm.replace("%chestinfo%", "You have no custom chest.");
-			htm.replace("%legsinfo%", "You have no custom legs.");
-			htm.replace("%bootsinfo%", "You have no custom boots.");
-			htm.replace("%glovesinfo%", "You have no custom gloves.");
-			htm.replace("%weapinfo%", "You have no custom weapon.");
-		}
-		else
-		{
-			htm.replace("%chestinfo%", activeChar.getDressMeData().getChestId() == 0 ? "You have no custom chest." : ItemTable.getInstance().getTemplate(activeChar.getDressMeData().getChestId()).getName());
-			htm.replace("%legsinfo%", activeChar.getDressMeData().getLegsId() == 0 ? "You have no custom legs." : ItemTable.getInstance().getTemplate(activeChar.getDressMeData().getLegsId()).getName());
-			htm.replace("%bootsinfo%", activeChar.getDressMeData().getBootsId() == 0 ? "You have no custom boots." : ItemTable.getInstance().getTemplate(activeChar.getDressMeData().getBootsId()).getName());
-			htm.replace("%glovesinfo%", activeChar.getDressMeData().getGlovesId() == 0 ? "You have no custom gloves." : ItemTable.getInstance().getTemplate(activeChar.getDressMeData().getGlovesId()).getName());
-			htm.replace("%weapinfo%", activeChar.getDressMeData().getWeapId() == 0 ? "You have no custom weapon." : ItemTable.getInstance().getTemplate(activeChar.getDressMeData().getWeapId()).getName());
-		}
-		
-		activeChar.sendPacket(htm);
+		NpcHtmlMessage htm = new NpcHtmlMessage(1);
+		String text = HtmCache.getInstance().getHtm("data/html/dressme/index.htm");
+		htm.setHtml(text);
+		player.sendPacket(htm);
 	}
 	
 	@Override
 	public String[] getVoicedCommandList()
 	{
-		return VOICED_COMMANDS;
+		return _voicedCommands;
+	}
+	
+	@Override
+	public String[] getByPassCommands()
+	{
+		return new String[]
+		{
+			"dressme_back"
+		};
+	}
+	
+	private enum CommandEnum
+	{
+		dressme_back,
+	}
+	
+	@Override
+	public void handleCommand(String command, L2PcInstance player, String parameters)
+	{
+		CommandEnum comm = CommandEnum.valueOf(command);
+		
+		if (comm == null)
+		{
+			return;
+		}
+		
+		switch (comm)
+		{
+			case dressme_back:
+			{
+				showHtm(player);
+			}
+				break;
+		}
 	}
 }

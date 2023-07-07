@@ -162,8 +162,6 @@ public class L2Multisell
 					}
 				}
 			} // end for each inventory item.
-			
-			items = null;
 		} // end if "inventory-only"
 		else
 		// this is a list-all type
@@ -174,8 +172,6 @@ public class L2Multisell
 				list.addEntry(prepareEntry(ent, listTemplate.getApplyTaxes(), false, 0, taxRate));
 			}
 		}
-		
-		listTemplate = null;
 		
 		return list;
 	}
@@ -220,13 +216,10 @@ public class L2Multisell
 				{
 					newIngredient.setEnchantmentLevel(enchantLevel);
 				}
-				
-				tempItem = null;
 			}
 			
 			// finally, add this ingredient to the entry
 			newEntry.addIngredient(newIngredient);
-			newIngredient = null;
 		}
 		
 		// now add the adena, if any.
@@ -254,7 +247,6 @@ public class L2Multisell
 			}
 			
 			newEntry.addProduct(newIngredient);
-			newIngredient = null;
 		}
 		
 		return newEntry;
@@ -403,8 +395,6 @@ public class L2Multisell
 						list.addEntry(e);
 					}
 				}
-				
-				attribute = null;
 			}
 			else if ("item".equalsIgnoreCase(n.getNodeName()))
 			{

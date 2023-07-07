@@ -38,11 +38,35 @@ public class L2RespawnZone extends L2ZoneType
 	@Override
 	protected void onEnter(L2Character character)
 	{
+		if (character != null)
+		{
+			if (character instanceof L2PcInstance)
+			{
+				final L2PcInstance player = (L2PcInstance) character;
+				if (player.isGM())
+				{
+					player.sendMessage("You entered to: " + getName() + " (RZ)");
+					return;
+				}
+			}
+		}
 	}
 	
 	@Override
 	protected void onExit(L2Character character)
 	{
+		if (character != null)
+		{
+			if (character instanceof L2PcInstance)
+			{
+				final L2PcInstance player = (L2PcInstance) character;
+				if (player.isGM())
+				{
+					player.sendMessage("You left:" + getName() + " (RZ)");
+					return;
+				}
+			}
+		}
 	}
 	
 	public void addRaceRespawnPoint(String race, String point)

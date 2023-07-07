@@ -20,6 +20,7 @@
  */
 package l2jorion.game.idfactory;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -101,7 +102,8 @@ public abstract class IdFactory
 		{
 			cleanUpDB();
 		}
-		setAllCharacterOffline();
+		
+		setAllCharactersOffline();
 	}
 	
 	static
@@ -120,42 +122,37 @@ public abstract class IdFactory
 		}
 	}
 	
-	/**
-	 * Sets all character offline
-	 */
-	private void setAllCharacterOffline()
+	private void setAllCharactersOffline()
 	{
-		java.sql.Connection con2 = null;
+		Connection con = null;
+		
 		try
 		{
-			con2 = L2DatabaseFactory.getInstance().getConnection();
-			final Statement s2 = con2.createStatement();
-			s2.executeUpdate("update characters set online = 0");
+			con = L2DatabaseFactory.getInstance().getConnection();
+			final Statement s = con.createStatement();
+			s.executeUpdate("update characters set online = 0");
+			s.close();
 			
 			LOG.info("Updated characters online status");
-			
-			s2.close();
 		}
 		catch (final SQLException e)
 		{
 		}
 		finally
 		{
-			CloseUtil.close(con2);
+			CloseUtil.close(con);
 		}
 	}
 	
-	/**
-	 * Cleans up Database
-	 */
 	private void cleanUpDB()
 	{
-		java.sql.Connection conn = null;
+		Connection con = null;
 		try
 		{
 			int cleanCount = 0;
-			conn = L2DatabaseFactory.getInstance().getConnection();
-			final Statement stmt = conn.createStatement();
+			con = L2DatabaseFactory.getInstance().getConnection();
+			final Statement stmt = con.createStatement();
+			
 			// Character related
 			cleanCount += stmt.executeUpdate("DELETE FROM character_friends WHERE character_friends.char_id NOT IN (SELECT obj_Id FROM characters);");
 			cleanCount += stmt.executeUpdate("DELETE FROM character_hennas WHERE character_hennas.char_obj_id NOT IN (SELECT obj_Id FROM characters);");
@@ -171,9 +168,11 @@ public abstract class IdFactory
 			cleanCount += stmt.executeUpdate("DELETE FROM olympiad_nobles WHERE olympiad_nobles.char_Id NOT IN (SELECT obj_Id FROM characters);");
 			cleanCount += stmt.executeUpdate("DELETE FROM pets WHERE pets.item_obj_id NOT IN (SELECT object_id FROM items);");
 			cleanCount += stmt.executeUpdate("DELETE FROM seven_signs WHERE seven_signs.char_obj_id NOT IN (SELECT obj_Id FROM characters);");
+			
 			// Auction
 			cleanCount += stmt.executeUpdate("DELETE FROM auction WHERE auction.id IN (SELECT id FROM clanhall WHERE ownerId <> 0);");
 			cleanCount += stmt.executeUpdate("DELETE FROM auction_bid WHERE auctionId IN (SELECT id FROM clanhall WHERE ownerId <> 0)");
+			
 			// Clan related
 			stmt.executeUpdate("UPDATE clan_data SET auction_bid_at = 0 WHERE auction_bid_at NOT IN (SELECT auctionId FROM auction_bid);");
 			cleanCount += stmt.executeUpdate("DELETE FROM clan_data WHERE clan_data.leader_id NOT IN (SELECT obj_Id FROM characters);");
@@ -186,13 +185,22 @@ public abstract class IdFactory
 			cleanCount += stmt.executeUpdate("DELETE FROM clan_wars WHERE clan_wars.clan2 NOT IN (SELECT clan_id FROM clan_data);");
 			cleanCount += stmt.executeUpdate("DELETE FROM siege_clans WHERE siege_clans.clan_id NOT IN (SELECT clan_id FROM clan_data);");
 			stmt.executeUpdate("UPDATE castle SET taxpercent=0 WHERE castle.id NOT IN (SELECT hasCastle FROM clan_data);");
+			
 			// Character & clan related
 			cleanCount += stmt.executeUpdate("DELETE FROM items WHERE items.owner_id NOT IN (SELECT obj_Id FROM characters) AND items.owner_id NOT IN (SELECT clan_id FROM clan_data);");
 			stmt.executeUpdate("UPDATE characters SET clanid=0 WHERE characters.clanid NOT IN (SELECT clan_id FROM clan_data);");
+			
 			// Forum related
 			cleanCount += stmt.executeUpdate("DELETE FROM forums WHERE forums.forum_owner_id NOT IN (SELECT clan_id FROM clan_data) AND forums.forum_parent=2;");
+			cleanCount += stmt.executeUpdate("DELETE FROM forums WHERE forums.forum_owner_id NOT IN (SELECT obj_Id FROM characters) AND forums.forum_parent=3;");
 			cleanCount += stmt.executeUpdate("DELETE FROM topic WHERE topic.topic_forum_id NOT IN (SELECT forum_id FROM forums);");
 			cleanCount += stmt.executeUpdate("DELETE FROM posts WHERE posts.post_forum_id NOT IN (SELECT forum_id FROM forums);");
+			
+			// delete pets
+			cleanCount += stmt.executeUpdate("DELETE FROM pets WHERE pets.item_obj_id NOT IN (SELECT object_id FROM items);");
+			
+			// delete augmentations
+			cleanCount += stmt.executeUpdate("DELETE FROM augmentations WHERE augmentations.item_id NOT IN (SELECT object_id FROM items);");
 			
 			if (cleanCount > 0)
 			{
@@ -210,7 +218,7 @@ public abstract class IdFactory
 		}
 		finally
 		{
-			CloseUtil.close(conn);
+			CloseUtil.close(con);
 		}
 	}
 	
@@ -230,13 +238,14 @@ public abstract class IdFactory
 			catch (final SQLException e)
 			{
 			}
+			
 			s.executeUpdate("delete from itemsonground where object_id in (select object_id from items)");
+			
 			s.executeUpdate("create table temporaryObjectTable" + " (object_id int NOT NULL PRIMARY KEY)");
 			
 			s.executeUpdate("insert into temporaryObjectTable (object_id)" + " select obj_id from characters");
 			s.executeUpdate("insert into temporaryObjectTable (object_id)" + " select object_id from items");
 			s.executeUpdate("insert into temporaryObjectTable (object_id)" + " select clan_id from clan_data");
-			// s.executeUpdate("insert into temporaryObjectTable (object_id)" + " select crest_id from clan_data where crest_id > 0");
 			s.executeUpdate("insert into temporaryObjectTable (object_id)" + " select object_id from itemsonground");
 			
 			ResultSet result = s.executeQuery("select count(object_id) from temporaryObjectTable");
@@ -244,9 +253,8 @@ public abstract class IdFactory
 			result.next();
 			final int size = result.getInt(1);
 			final int[] tmp_obj_ids = new int[size];
-			// LOG.info("tmp table size: " + tmp_obj_ids.length);
-			result.close();
 			
+			result.close();
 			result = s.executeQuery("select object_id from temporaryObjectTable ORDER BY object_id");
 			
 			int idx = 0;
@@ -278,10 +286,6 @@ public abstract class IdFactory
 	
 	public abstract int getNextId();
 	
-	/**
-	 * return a used Object ID back to the pool
-	 * @param id
-	 */
 	public abstract void releaseId(int id);
 	
 	public abstract int size();

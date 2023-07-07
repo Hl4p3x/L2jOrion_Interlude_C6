@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public final class TradePressOwnOk extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public final class TradePressOwnOk extends PacketServer
 {
 	public static final TradePressOwnOk STATIC_PACKET = new TradePressOwnOk();
 	

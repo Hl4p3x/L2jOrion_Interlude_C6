@@ -46,7 +46,6 @@ import l2jorion.game.thread.ThreadPoolManager;
 
 public class ScrollOfEscape implements IItemHandler
 {
-	// all the items ids that this handler knowns
 	private static final int[] ITEM_IDS =
 	{
 		736,
@@ -207,9 +206,6 @@ public class ScrollOfEscape implements IItemHandler
 			}
 		}
 		
-		activeChar.disableAllSkills();
-		
-		// fix soe
 		L2Object oldtarget = activeChar.getTarget();
 		activeChar.setTarget(activeChar);
 		
@@ -220,7 +216,6 @@ public class ScrollOfEscape implements IItemHandler
 		SetupGauge sg = new SetupGauge(0, skill.getHitTime());
 		activeChar.sendPacket(sg);
 		
-		// End SoE Animation section
 		activeChar.setTarget(null);
 		
 		SystemMessage sm = new SystemMessage(SystemMessageId.S1_DISAPPEARED);
@@ -228,7 +223,7 @@ public class ScrollOfEscape implements IItemHandler
 		activeChar.sendPacket(sm);
 		
 		EscapeFinalizer ef = new EscapeFinalizer(activeChar, itemId);
-		// continue execution later
+		
 		activeChar.setSkillCast(ThreadPoolManager.getInstance().scheduleEffect(ef, skill.getHitTime()));
 		activeChar.setSkillCastEndTime(10 + GameTimeController.getInstance().getGameTicks() + skill.getHitTime() / GameTimeController.MILLIS_IN_TICK);
 	}
@@ -251,8 +246,6 @@ public class ScrollOfEscape implements IItemHandler
 			{
 				return;
 			}
-			
-			_activeChar.enableAllSkills();
 			
 			_activeChar.setIsIn7sDungeon(false);
 			
@@ -278,7 +271,7 @@ public class ScrollOfEscape implements IItemHandler
 						_activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 					}
 				}
-				// escape to fortress if own's one if own's one
+				// escape to fortress if own's one
 				else if ((_itemId == 1830 || _itemId == 5859))
 				{
 					if (FortManager.getInstance().getFortByOwner(_activeChar.getClan()) != null)

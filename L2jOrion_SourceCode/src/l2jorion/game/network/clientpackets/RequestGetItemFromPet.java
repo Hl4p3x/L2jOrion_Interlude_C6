@@ -23,16 +23,18 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PetInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ItemList;
+import l2jorion.game.network.serverpackets.PetInfo;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.util.IllegalPlayerAction;
 import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestGetItemFromPet extends L2GameClientPacket
+public final class RequestGetItemFromPet extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestGetItemFromPet.class);
 	
@@ -96,6 +98,9 @@ public final class RequestGetItemFromPet extends L2GameClientPacket
 			LOG.warn("Invalid item transfer request: " + pet.getName() + "(pet) --> " + player.getName());
 		}
 		player.sendPacket(new ItemList(player, true));
+		player.sendPacket(new PetInfo(pet));
+		pet.updateEffectIcons(true);
+		pet.broadcastStatusUpdate();
 	}
 	
 	@Override

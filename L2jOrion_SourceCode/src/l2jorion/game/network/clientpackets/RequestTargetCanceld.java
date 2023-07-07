@@ -20,9 +20,10 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import l2jorion.game.model.L2Character;
+import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 
-public final class RequestTargetCanceld extends L2GameClientPacket
+public final class RequestTargetCanceld extends PacketClient
 {
 	private int _unselect;
 	
@@ -35,7 +36,7 @@ public final class RequestTargetCanceld extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		final L2Character activeChar = getClient().getActiveChar();
+		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar != null)
 		{
 			if (_unselect == 0)
@@ -52,6 +53,12 @@ public final class RequestTargetCanceld extends L2GameClientPacket
 			else if (activeChar.getTarget() != null)
 			{
 				activeChar.setTarget(null);
+			}
+			
+			// Remove queued skill
+			if (activeChar.getQueuedSkill() != null)
+			{
+				activeChar.setQueuedSkill(null, false, false);
 			}
 		}
 	}

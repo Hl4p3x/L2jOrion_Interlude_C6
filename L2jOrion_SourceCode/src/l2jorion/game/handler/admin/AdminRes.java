@@ -82,7 +82,6 @@ public class AdminRes implements IAdminCommandHandler
 		
 		if (resParam != null)
 		{
-			// Check if a player name was specified as a param.
 			L2PcInstance plyr = L2World.getInstance().getPlayer(resParam);
 			
 			if (plyr != null)
@@ -91,7 +90,6 @@ public class AdminRes implements IAdminCommandHandler
 			}
 			else
 			{
-				// Otherwise, check if the param was a radius.
 				try
 				{
 					final int radius = Integer.parseInt(resParam);
@@ -115,8 +113,6 @@ public class AdminRes implements IAdminCommandHandler
 					return;
 				}
 			}
-			
-			plyr = null;
 		}
 		
 		if (obj == null)
@@ -136,8 +132,6 @@ public class AdminRes implements IAdminCommandHandler
 		{
 			LOG.debug("GM: " + activeChar.getName() + "(" + activeChar.getObjectId() + ") resurrected character " + obj.getObjectId());
 		}
-		
-		obj = null;
 	}
 	
 	private void handleNonPlayerRes(final L2PcInstance activeChar)

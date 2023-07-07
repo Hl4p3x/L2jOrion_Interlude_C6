@@ -33,7 +33,7 @@ public class VehicleKnownList extends CharKnownList
 			return 0;
 		}
 		
-		return object.getKnownList().getDistanceToForgetObject(_activeObject);
+		return -1;// object.getKnownList().getDistanceToForgetObject(_activeObject);
 	}
 	
 	@Override
@@ -44,6 +44,6 @@ public class VehicleKnownList extends CharKnownList
 			return 0;
 		}
 		
-		return object.getKnownList().getDistanceToWatchObject(_activeObject);
+		return -1;// object.getKnownList().getDistanceToWatchObject(_activeObject);
 	}
 }

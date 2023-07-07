@@ -30,7 +30,7 @@ public final class L2MinionInstance extends L2MonsterInstance
 {
 	private L2MonsterInstance _master;
 	
-	public L2MinionInstance(final int objectId, final L2NpcTemplate template)
+	public L2MinionInstance(int objectId, L2NpcTemplate template)
 	{
 		super(objectId, template);
 	}
@@ -45,11 +45,11 @@ public final class L2MinionInstance extends L2MonsterInstance
 	public void onSpawn()
 	{
 		super.onSpawn();
-		// Notify Leader that Minion has Spawned
-		getLeader().notifyMinionSpawned(this);
 		
+		// Notify Leader that Minion has Spawned
 		if (getLeader() != null)
 		{
+			getLeader().notifyMinionSpawned(this);
 			setIsRaidMinion(getLeader().isRaid());
 		}
 		
@@ -61,32 +61,23 @@ public final class L2MinionInstance extends L2MonsterInstance
 		}
 	}
 	
-	/**
-	 * Set the master of this L2MinionInstance.<BR>
-	 * <BR>
-	 * @param leader The L2Character that leads this L2MinionInstance
-	 */
-	public void setLeader(final L2MonsterInstance leader)
+	public void setLeader(L2MonsterInstance leader)
 	{
 		_master = leader;
 	}
 	
-	/**
-	 * Manages the doDie event for this L2MinionInstance.<BR>
-	 * <BR>
-	 * @param killer The L2Character that killed this L2MinionInstance.<BR>
-	 * <BR>
-	 * @return true, if successful
-	 */
 	@Override
-	public boolean doDie(final L2Character killer)
+	public boolean doDie(L2Character killer)
 	{
 		if (!super.doDie(killer))
 		{
 			return false;
 		}
 		
-		_master.notifyMinionDied(this);
+		if (_master != null)
+		{
+			_master.notifyMinionDied(this);
+		}
 		return true;
 	}
 }

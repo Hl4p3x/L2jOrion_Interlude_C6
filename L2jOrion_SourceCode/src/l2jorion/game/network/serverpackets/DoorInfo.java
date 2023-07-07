@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2DoorInstance;
+import l2jorion.game.network.PacketServer;
 
-public class DoorInfo extends L2GameServerPacket
+public class DoorInfo extends PacketServer
 {
 	private static final String _S__60_DOORINFO = "[S] 4c DoorInfo";
 	
@@ -43,7 +44,7 @@ public class DoorInfo extends L2GameServerPacket
 		_isClosed = !door.getOpen();
 		_maxHp = door.getMaxHp();
 		_currentHp = (int) door.getCurrentHp();
-		_showHp = door.getCastle() != null && door.getCastle().getSiege().getIsInProgress(); // door.getIsShowHp();
+		_showHp = door.isEnemy();
 		_damageGrade = door.getDamage();
 	}
 	
@@ -54,12 +55,12 @@ public class DoorInfo extends L2GameServerPacket
 		writeD(_objectId);
 		writeD(_staticObjectId);
 		writeD((_showHp) ? 1 : 0);
-		writeD(_isTargetable ? 1 : 0); // ??? (can target)
+		writeD(_isTargetable ? 1 : 0);
 		writeD(_isClosed ? 0 : 1);
 		writeD(_maxHp);
 		writeD(_currentHp);
-		writeD(0); // ??? (show HP)
-		writeD(_damageGrade); // ??? (Damage)
+		writeD(0);
+		writeD(_damageGrade);
 	}
 	
 	@Override

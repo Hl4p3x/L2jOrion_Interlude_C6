@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class RadarControl extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class RadarControl extends PacketServer
 {
 	private static final String _S__EB_RadarControl = "[S] EB RadarControl";
 	private final int _showRadar;

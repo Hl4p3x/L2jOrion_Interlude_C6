@@ -162,15 +162,12 @@ public final class L2WorldRegion
 	
 	private void switchAI(final Boolean isOn)
 	{
-		int count = 0;
 		if (!isOn)
 		{
 			for (L2Object object : _visibleObjects.values())
 			{
 				if (object instanceof L2Attackable)
 				{
-					count++;
-					
 					final L2Attackable mob = (L2Attackable) object;
 					mob.setTarget(null);
 					mob.stopMove(null);
@@ -189,11 +186,6 @@ public final class L2WorldRegion
 					((L2Vehicle) object).getKnownList().removeAllKnownObjects();
 				}
 			}
-			
-			if (Config.DEBUG)
-			{
-				LOG.info(count + " mobs were turned off");
-			}
 		}
 		else
 		{
@@ -201,8 +193,6 @@ public final class L2WorldRegion
 			{
 				if (object instanceof L2Attackable)
 				{
-					count++;
-					
 					((L2Attackable) object).getStatus().startHpMpRegeneration();
 				}
 				else if (object instanceof L2NpcInstance)
@@ -210,13 +200,7 @@ public final class L2WorldRegion
 					((L2NpcInstance) object).startRandomAnimationTimer();
 				}
 			}
-			
-			if (Config.DEBUG)
-			{
-				LOG.info(count + " mobs were turned on");
-			}
 		}
-		
 	}
 	
 	public Boolean isActive()
@@ -291,9 +275,6 @@ public final class L2WorldRegion
 		}
 	}
 	
-	/**
-	 * starts a timer to set neighbors (including self) as inactive this timer is to avoid turning off neighbors in the case when a person just moved out of a region that he may very soon return to. There is no reason to turn self & neighbors off in that case.
-	 */
 	private void startDeactivation()
 	{
 		// if the timer to activate neighbors is running, cancel it.
@@ -311,12 +292,6 @@ public final class L2WorldRegion
 		}
 	}
 	
-	/**
-	 * Add the L2Object in the L2ObjectHashSet(L2Object) _visibleObjects containing L2Object visible in this L2WorldRegion <BR>
-	 * If L2Object is a L2PcInstance, Add the L2PcInstance in the L2ObjectHashSet(L2PcInstance) _allPlayable containing L2PcInstance of all player in game in this L2WorldRegion <BR>
-	 * Assert : object.getCurrentWorldRegion() == this
-	 * @param object
-	 */
 	public void addVisibleObject(final L2Object object)
 	{
 		if (Config.ASSERT)
@@ -343,13 +318,6 @@ public final class L2WorldRegion
 		}
 	}
 	
-	/**
-	 * Remove the L2Object from the L2ObjectHashSet(L2Object) _visibleObjects in this L2WorldRegion <BR>
-	 * <BR>
-	 * If L2Object is a L2PcInstance, remove it from the L2ObjectHashSet(L2PcInstance) _allPlayable of this L2WorldRegion <BR>
-	 * Assert : object.getCurrentWorldRegion() == this || object.getCurrentWorldRegion() == null
-	 * @param object
-	 */
 	public void removeVisibleObject(final L2Object object)
 	{
 		if (Config.ASSERT)

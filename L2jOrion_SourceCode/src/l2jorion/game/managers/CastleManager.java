@@ -95,7 +95,6 @@ public class CastleManager
 					index = i;
 				}
 			}
-			castle = null;
 		}
 		return index;
 	}
@@ -285,7 +284,6 @@ public class CastleManager
 		}
 	}
 	
-	// TODO:
 	// added: remove clan cirlet for clan leaders
 	public void removeCirclet(final L2ClanMember member, final int castleId)
 	{
@@ -351,14 +349,12 @@ public class CastleManager
 				statement.setInt(2, 6841);
 				statement.execute();
 				DatabaseUtils.close(statement);
-				statement = null;
 				
 				statement = con.prepareStatement("DELETE FROM items WHERE owner_id = ? and item_id = ?");
 				statement.setInt(1, member.getObjectId());
 				statement.setInt(2, circletId);
 				statement.execute();
 				DatabaseUtils.close(statement);
-				statement = null;
 			}
 			catch (final Exception e)
 			{

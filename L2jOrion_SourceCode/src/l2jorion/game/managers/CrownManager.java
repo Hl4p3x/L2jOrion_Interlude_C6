@@ -28,6 +28,7 @@ import l2jorion.logger.LoggerFactory;
 public class CrownManager
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(CrownManager.class);
+	
 	private static CrownManager _instance;
 	
 	public static final CrownManager getInstance()
@@ -41,13 +42,15 @@ public class CrownManager
 	
 	public CrownManager()
 	{
-		//LOG.info("CrownManager: initialized");
+		// LOG.info("CrownManager: initialized");
 	}
 	
 	public void checkCrowns(final L2Clan clan)
 	{
 		if (clan == null)
+		{
 			return;
+		}
 		
 		for (final L2ClanMember member : clan.getMembers())
 		{
@@ -61,7 +64,9 @@ public class CrownManager
 	public void checkCrowns(final L2PcInstance activeChar)
 	{
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		boolean isLeader = false;
 		int crownId = -1;
@@ -94,9 +99,6 @@ public class CrownManager
 				isLeader = true;
 			}
 		}
-		
-		activeCharClan = null;
-		activeCharClanLeader = null;
 		
 		if (crownId > 0)
 		{

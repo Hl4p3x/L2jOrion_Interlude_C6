@@ -39,7 +39,6 @@ import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.datatables.sql.ItemTable;
 import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.handler.IAdminCommandHandler;
-import l2jorion.game.model.L2DropCategory;
 import l2jorion.game.model.L2DropData;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
@@ -61,6 +60,7 @@ import l2jorion.util.database.L2DatabaseFactory;
 public class AdminEditNpc implements IAdminCommandHandler
 {
 	private static Logger LOG = LoggerFactory.getLogger(AdminEditChar.class);
+	
 	private final static int PAGE_LIMIT = 7;
 	
 	private static final String[] ADMIN_COMMANDS =
@@ -88,11 +88,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		if (command.startsWith("admin_showShop "))
 		{
 			String[] args = command.split(" ");
@@ -111,8 +106,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 			{
 				showShopList(activeChar, Integer.parseInt(command.split(" ")[1]), Integer.parseInt(command.split(" ")[2]));
 			}
-			
-			args = null;
 		}
 		else if (command.startsWith("admin_edit_npc ") || command.equals("admin_edit_npc"))
 		{
@@ -126,9 +119,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 					
 					L2NpcTemplate npc = NpcTable.getInstance().getTemplate(npcId);
 					Show_Npc_Property(activeChar, npc);
-					
-					commandSplit = null;
-					npc = null;
 				}
 				catch (final Exception e)
 				{
@@ -149,9 +139,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 					
 					L2NpcTemplate npc = NpcTable.getInstance().getTemplate(npcId);
 					Show_Npc_Property(activeChar, npc);
-					
-					npc = null;
-					
 				}
 			}
 			
@@ -176,27 +163,20 @@ public class AdminEditNpc implements IAdminCommandHandler
 		}
 		else if (command.startsWith("admin_show_droplist "))
 		{
-			int npcId = 0;
-			
-			try
+			String[] args = command.split(" ");
+			if (args.length > 1)
 			{
-				npcId = Integer.parseInt(command.substring(20).trim());
-			}
-			catch (final Exception e)
-			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
+				int npcId = Integer.parseInt(args[1]);
+				
+				if (args.length > 2)
 				{
-					e.printStackTrace();
+					int page = Integer.parseInt(args[2]);
+					showNpcDropList(activeChar, npcId, page);
 				}
-			}
-			
-			if (npcId > 0)
-			{
-				showNpcDropList(activeChar, npcId);
-			}
-			else
-			{
-				activeChar.sendMessage("Usage: //show_droplist <npc_id>");
+				else
+				{
+					showNpcDropList(activeChar, npcId, 1);
+				}
 			}
 		}
 		else if (command.startsWith("admin_addShopItem "))
@@ -207,8 +187,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 			{
 				addShopItem(activeChar, args);
 			}
-			
-			args = null;
 		}
 		else if (command.startsWith("admin_delShopItem "))
 		{
@@ -218,8 +196,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 			{
 				delShopItem(activeChar, args);
 			}
-			
-			args = null;
 		}
 		else if (command.startsWith("admin_editShopItem "))
 		{
@@ -229,8 +205,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 			{
 				editShopItem(activeChar, args);
 			}
-			
-			args = null;
 		}
 		else if (command.startsWith("admin_save_npc "))
 		{
@@ -447,8 +421,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 				{
 					activeChar.sendMessage("Usage: //edit_drop <npc_id> <item_id> <category> [<min> <max> <chance>]");
 				}
-				
-				st = null;
 			}
 			catch (final StringIndexOutOfBoundsException e)
 			{
@@ -492,7 +464,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 					{
 						L2NpcTemplate npcData = NpcTable.getInstance().getTemplate(npcId);
 						showAddDropData(activeChar, npcData);
-						npcData = null;
 					}
 				}
 				else if (st.countTokens() == 6)
@@ -522,8 +493,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 				{
 					activeChar.sendMessage("Usage: //add_drop <npc_id> [<item_id> <category> <min> <max> <chance>]");
 				}
-				
-				st = null;
 			}
 			catch (final StringIndexOutOfBoundsException e)
 			{
@@ -547,7 +516,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 					npcId = Integer.parseInt(input[0]);
 					itemId = Integer.parseInt(input[1]);
 					category = Integer.parseInt(input[2]);
-					input = null;
 				}
 			}
 			catch (final Exception e)
@@ -613,12 +581,7 @@ public class AdminEditNpc implements IAdminCommandHandler
 						LOG.info("box_access: " + e);
 					}
 				}
-				
-				box = null;
 			}
-			
-			target = null;
-			players = null;
 		}
 		
 		return true;
@@ -670,11 +633,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 		
 		adminReply.setHtml(replyMSG.toString());
 		activeChar.sendPacket(adminReply);
-		
-		tradeList = null;
-		item = null;
-		adminReply = null;
-		replyMSG = null;
 	}
 	
 	private void delShopItem(final L2PcInstance activeChar, final String[] args)
@@ -721,10 +679,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 		
 		adminReply.setHtml(replyMSG.toString());
 		activeChar.sendPacket(adminReply);
-		
-		tradeList = null;
-		adminReply = null;
-		replyMSG = null;
 	}
 	
 	private void addShopItem(final L2PcInstance activeChar, final String[] args)
@@ -798,10 +752,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 		
 		adminReply.setHtml(html.toString());
 		activeChar.sendPacket(adminReply);
-		
-		tradeList = null;
-		adminReply = null;
-		html = null;
 	}
 	
 	private TextBuilder itemListHtml(final L2TradeList tradeList, final int page)
@@ -888,10 +838,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 		
 		adminReply.setHtml(replyMSG.toString());
 		activeChar.sendPacket(adminReply);
-		
-		tradeLists = null;
-		adminReply = null;
-		replyMSG = null;
 	}
 	
 	private void storeTradeList(final int itemID, final int price, final int tradeListID, final int order)
@@ -903,7 +849,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 			PreparedStatement stmt = con.prepareStatement("INSERT INTO merchant_buylists (`item_id`,`price`,`shop_id`,`order`) values (" + itemID + "," + price + "," + tradeListID + "," + order + ")");
 			stmt.execute();
 			stmt.close();
-			stmt = null;
 		}
 		catch (final SQLException esql)
 		{
@@ -925,7 +870,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 			PreparedStatement stmt = con.prepareStatement("UPDATE merchant_buylists SET `price`='" + price + "' WHERE `shop_id`='" + tradeListID + "' AND `order`='" + order + "'");
 			stmt.execute();
 			stmt.close();
-			stmt = null;
 		}
 		catch (final SQLException esql)
 		{
@@ -947,7 +891,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 			PreparedStatement stmt = con.prepareStatement("DELETE FROM merchant_buylists WHERE `shop_id`='" + tradeListID + "' AND `order`='" + order + "'");
 			stmt.execute();
 			stmt.close();
-			stmt = null;
 		}
 		catch (final SQLException esql)
 		{
@@ -976,9 +919,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 			
 			stmt.close();
 			rs.close();
-			
-			stmt = null;
-			rs = null;
 		}
 		catch (final SQLException esql)
 		{
@@ -1023,10 +963,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 				tradeLists.add(TradeController.getInstance().getBuyList(tradeListID));
 			}
 		}
-		
-		target = null;
-		content = null;
-		lines = null;
 		
 		return tradeLists;
 	}
@@ -1097,9 +1033,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 		}
 		
 		activeChar.sendPacket(adminReply);
-		
-		adminReply = null;
-		content = null;
 	}
 	
 	private void save_npc_property(final L2PcInstance activeChar, final String[] commandSplit)
@@ -1246,9 +1179,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 					newNpcData.set("absorb_level", intVal < 0 ? 0 : intVal > 12 ? 0 : intVal);
 					break;
 			}
-			
-			statToSet = null;
-			value = null;
 		}
 		catch (final Exception e)
 		{
@@ -1277,48 +1207,88 @@ public class AdminEditNpc implements IAdminCommandHandler
 		newNpcData = null;
 	}
 	
-	private void showNpcDropList(final L2PcInstance activeChar, final int npcId)
+	public static int getMaxPageNumber(int objectsSize, int pageSize)
 	{
+		return objectsSize / pageSize + (objectsSize % pageSize == 0 ? 0 : 1);
+	}
+	
+	private void showNpcDropList(final L2PcInstance activeChar, final int npcId, int page)
+	{
+		L2Item itemTemplate;
 		L2NpcTemplate npcData = NpcTable.getInstance().getTemplate(npcId);
 		
 		if (npcData == null)
 		{
-			activeChar.sendMessage("unknown npc template id" + npcId);
+			activeChar.sendMessage("Unknown npc template id: " + npcId);
 			return;
 		}
 		
-		NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
+		List<L2DropData> list = npcData.getAllDropData();
+		int total = list.size();
+		int pageLimit = 12;
 		
-		TextBuilder replyMSG = new TextBuilder("<html><title>NPC: " + npcData.name + "(" + npcData.npcId + ") 's drop manage</title>");
-		replyMSG.append("<body>");
-		replyMSG.append("<table>");
-		replyMSG.append("<tr><td>npc_id itemId category</td><td>item[id]</td><td>type</td><td>del</td></tr>");
-		L2Item itemTemplate;
-		for (final L2DropCategory cat : npcData.getDropData())
+		final int max = getMaxPageNumber(list.size(), pageLimit);
+		page = page > max ? max : page < 1 ? 1 : page;
+		
+		NpcHtmlMessage htm = new NpcHtmlMessage(5);
+		
+		TextBuilder htmBuilder = new TextBuilder("<html><title>Npc: " + npcData.getName() + " (" + npcData.getNpcId() + ") drop manage</title>");
+		htmBuilder.append("<body>");
+		htmBuilder.append("<img src=\"L2UI.Squaregray\" width=\"300\" height=\"1\">");
+		htmBuilder.append("<table width=300 height=23 bgcolor=000000>	");
+		htmBuilder.append("<tr><td align=left>Item name (<font color=LEVEL>Item Id</font>) (<font color=00ff00>Category Id</font>) (Type)</td><td align=right>Delete</td></tr>");
+		htmBuilder.append("</table");
+		htmBuilder.append("<img src=\"L2UI.Squaregray\" width=\"300\" height=\"1\">");
+		
+		if (total > 0)
 		{
-			for (final L2DropData drop : cat.getAllDrops())
-			{
-				itemTemplate = ItemTable.getInstance().getTemplate(drop.getItemId());
-				if (itemTemplate == null)
-				{
-					LOG.warn(getClass().getSimpleName() + ": Unkown item Id: " + drop.getItemId() + " for NPC: " + npcData.npcId);
-					continue;
-				}
-				replyMSG.append("<tr><td><a action=\"bypass -h admin_edit_drop " + npcData.npcId + " " + drop.getItemId() + " " + cat.getCategoryType() + "\">" + npcData.npcId + " " + drop.getItemId() + " " + cat.getCategoryType() + "</a></td>" + "<td>" + itemTemplate.getName() + "["
-					+ drop.getItemId() + "]" + "</td><td>" + (drop.isQuestDrop() ? "Q" : cat.isSweep() ? "S" : "D") + "</td><td>" + "<a action=\"bypass -h admin_del_drop " + npcData.npcId + " " + drop.getItemId() + " " + cat.getCategoryType() + "\">[x]</a></td></tr>");
-			}
+			list = list.subList((page - 1) * pageLimit, Math.min(page * pageLimit, list.size()));
 		}
 		
-		npcData = null;
+		for (L2DropData drop : list)
+		{
+			itemTemplate = ItemTable.getInstance().getTemplate(drop.getItemId());
+			if (itemTemplate == null)
+			{
+				LOG.warn(getClass().getSimpleName() + ": Unkown item Id: " + drop.getItemId() + " for NPC: " + npcData.getNpcId());
+				continue;
+			}
+			
+			String itemName = itemTemplate.getName();
+			
+			if (itemName.length() >= 28)
+			{
+				itemName = itemName.substring(0, 28) + "...";
+			}
+			
+			htmBuilder.append("<table width=300>");
+			htmBuilder.append("<tr>" //
+				+ "<td align=left width=220><a action=\"bypass -h admin_edit_drop " + npcData.getNpcId() + " " + drop.getItemId() + " " + drop.getCategory() + "\">"//
+				+ "" + itemName + "</a> (<font color=LEVEL>" + drop.getItemId() + "</font>)  (<font color=00ff00>" + drop.getCategory() + "</font>)  " //
+				+ " (" + (drop.isQuestDrop() ? "Q" : drop.getCategory() == -1 ? "S" : "D") + ")</td>" //
+				+ "<td align=right>" + "<a action=\"bypass -h admin_del_drop " + npcData.getNpcId() + " " + drop.getItemId() + " " + drop.getCategory() + "\">[x]</a></td></tr>");
+			htmBuilder.append("</table>");
+			htmBuilder.append("<img src=\"L2UI.Squaregray\" width=\"300\" height=\"1\">");
+		}
 		
-		replyMSG.append("</table>");
-		replyMSG.append("<center>");
-		replyMSG.append("<button value=\"Add DropData\" action=\"bypass -h admin_add_drop " + npcId + "\" width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\">");
-		replyMSG.append("<button value=\"Close\" action=\"bypass -h admin_close_window\" width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\">");
-		replyMSG.append("</center></body></html>");
+		if (list.isEmpty())
+		{
+			htmBuilder.append("<center><br>No Drop</center><br>");
+		}
 		
-		adminReply.setHtml(replyMSG.toString());
-		activeChar.sendPacket(adminReply);
+		htmBuilder.append("<table width=300><tr>");
+		htmBuilder.append("<td align=left width=100>" + (page > 1 ? "<button value=\"Prev\" action=\"bypass -h admin_show_droplist " + npcId + " " + (page - 1) + "\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" : "") + "</td>");
+		htmBuilder.append("<td align=center width=100>Page: " + page + " / " + max + "</td>");
+		htmBuilder.append("<td align=right width=100>" + (page < max ? "<button value=\"Next\" action=\"bypass -h admin_show_droplist " + npcId + " " + (page + 1) + "\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" : "") + "</td>");
+		htmBuilder.append("</tr></table>");
+		
+		htmBuilder.append("<center>Total items: " + total + "<br1>");
+		htmBuilder.append("<button value=\"Add Drop\" action=\"bypass -h admin_add_drop " + npcId + "\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>");
+		htmBuilder.append("<button value=\"Close\" action=\"bypass -h admin_close_window\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>");
+		htmBuilder.append("</center></body></html>");
+		
+		htm.setHtml(htmBuilder.toString());
+		activeChar.sendPacket(htm);
 	}
 	
 	private void showEditDropData(final L2PcInstance activeChar, final int npcId, final int itemId, final int category)
@@ -1334,37 +1304,32 @@ public class AdminEditNpc implements IAdminCommandHandler
 			
 			NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 			
-			TextBuilder replyMSG = new TextBuilder("<html><title>the detail of dropdata: (" + npcId + " " + itemId + " " + category + ")</title>");
+			TextBuilder replyMSG = new TextBuilder("<html><title>Drop editing</title>");
 			replyMSG.append("<body>");
 			
 			if (dropData.next())
 			{
 				replyMSG.append("<table>");
-				replyMSG.append("<tr><td>Appertain of NPC</td><td>" + NpcTable.getInstance().getTemplate(dropData.getInt("mobId")).name + "</td></tr>");
-				replyMSG.append("<tr><td>ItemName</td><td>" + ItemTable.getInstance().getTemplate(dropData.getInt("itemId")).getName() + "(" + dropData.getInt("itemId") + ")</td></tr>");
-				replyMSG.append("<tr><td>Category</td><td>" + (category == -1 ? "sweep" : Integer.toString(category)) + "</td></tr>");
-				replyMSG.append("<tr><td>MIN(" + dropData.getInt("min") + ")</td><td><edit var=\"min\" width=80></td></tr>");
-				replyMSG.append("<tr><td>MAX(" + dropData.getInt("max") + ")</td><td><edit var=\"max\" width=80></td></tr>");
-				replyMSG.append("<tr><td>CHANCE(" + dropData.getInt("chance") + ")</td><td><edit var=\"chance\" width=80></td></tr>");
+				replyMSG.append("<tr><td>Npc:</td><td>" + NpcTable.getInstance().getTemplate(dropData.getInt("mobId")).getName() + " (" + Integer.toString(npcId) + ")</td></tr>");
+				replyMSG.append("<tr><td>Item Name:</td><td>" + ItemTable.getInstance().getTemplate(dropData.getInt("itemId")).getName() + " (" + dropData.getInt("itemId") + ")</td></tr>");
+				replyMSG.append("<tr><td>Category:</td><td>" + (category == -1 ? "-1 Spoil" : Integer.toString(category)) + "</td></tr>");
+				replyMSG.append("<tr><td>Min (" + dropData.getInt("min") + "):</td><td><edit var=\"min\" width=80></td></tr>");
+				replyMSG.append("<tr><td>Max (" + dropData.getInt("max") + "):</td><td><edit var=\"max\" width=80></td></tr>");
+				replyMSG.append("<tr><td>Chance (" + dropData.getInt("chance") + "):</td><td><edit var=\"chance\" width=80></td></tr>");
 				replyMSG.append("</table>");
-				replyMSG.append("<center>");
-				replyMSG.append("<button value=\"Save Modify\" action=\"bypass -h admin_edit_drop " + npcId + " " + itemId + " " + category + " $min $max $chance\"  width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\">");
-				replyMSG.append("<br><button value=\"DropList\" action=\"bypass -h admin_show_droplist " + dropData.getInt("mobId") + "\"  width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\">");
+				replyMSG.append("<center><br><br>");
+				replyMSG.append("<button value=\"Save\" action=\"bypass -h admin_edit_drop " + npcId + " " + itemId + " " + category + " $min $max $chance\"  width=65 height=19 back=\"L2UI_ch3.smallbutton2_over\" fore=\"L2UI_ch3.smallbutton2\">");
+				replyMSG.append("<button value=\"Drop List\" action=\"bypass -h admin_show_droplist " + dropData.getInt("mobId") + "\"  width=65 height=19 back=\"L2UI_ch3.smallbutton2_over\" fore=\"L2UI_ch3.smallbutton2\">");
 				replyMSG.append("</center>");
 			}
 			
 			dropData.close();
 			DatabaseUtils.close(statement);
-			statement = null;
-			dropData = null;
 			
 			replyMSG.append("</body></html>");
 			adminReply.setHtml(replyMSG.toString());
 			
 			activeChar.sendPacket(adminReply);
-			
-			adminReply = null;
-			replyMSG = null;
 		}
 		catch (final Exception e)
 		{
@@ -1383,26 +1348,23 @@ public class AdminEditNpc implements IAdminCommandHandler
 	{
 		NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 		
-		TextBuilder replyMSG = new TextBuilder("<html><title>Add dropdata to " + npcData.name + "(" + npcData.npcId + ")</title>");
+		TextBuilder replyMSG = new TextBuilder("<html><title>Add drop to: " + npcData.getName() + " (" + npcData.getNpcId() + ")</title>");
 		replyMSG.append("<body>");
 		replyMSG.append("<table>");
-		replyMSG.append("<tr><td>Item-Id</td><td><edit var=\"itemId\" width=80></td></tr>");
-		replyMSG.append("<tr><td>MIN</td><td><edit var=\"min\" width=80></td></tr>");
-		replyMSG.append("<tr><td>MAX</td><td><edit var=\"max\" width=80></td></tr>");
-		replyMSG.append("<tr><td>CATEGORY(sweep=-1)</td><td><edit var=\"category\" width=80></td></tr>");
-		replyMSG.append("<tr><td>CHANCE(0-1000000)</td><td><edit var=\"chance\" width=80></td></tr>");
+		replyMSG.append("<tr><td>Item Id:</td><td><edit var=\"itemId\" width=80></td></tr>");
+		replyMSG.append("<tr><td>Min:</td><td><edit var=\"min\" width=80></td></tr>");
+		replyMSG.append("<tr><td>Max:</td><td><edit var=\"max\" width=80></td></tr>");
+		replyMSG.append("<tr><td>Category (-1 Spoil):</td><td><edit var=\"category\" width=80></td></tr>");
+		replyMSG.append("<tr><td>Chance (0-1000000):</td><td><edit var=\"chance\" width=80></td></tr>");
 		replyMSG.append("</table>");
-		replyMSG.append("<center>");
-		replyMSG.append("<button value=\"SAVE\" action=\"bypass -h admin_add_drop " + npcData.npcId + " $itemId $category $min $max $chance\"  width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\">");
-		replyMSG.append("<br><button value=\"DropList\" action=\"bypass -h admin_show_droplist " + npcData.npcId + "\"  width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\">");
+		replyMSG.append("<center><br><br>");
+		replyMSG.append("<button value=\"Save\" action=\"bypass -h admin_add_drop " + npcData.getNpcId() + " $itemId $category $min $max $chance\"  width=65 height=19 back=\"L2UI_ch3.smallbutton2_over\" fore=\"L2UI_ch3.smallbutton2\">");
+		replyMSG.append("<button value=\"Drop List\" action=\"bypass -h admin_show_droplist " + npcData.getNpcId() + "\"  width=65 height=19 back=\"L2UI_ch3.smallbutton2_over\" fore=\"L2UI_ch3.smallbutton2\">");
 		replyMSG.append("</center>");
 		replyMSG.append("</body></html>");
 		adminReply.setHtml(replyMSG.toString());
 		
 		activeChar.sendPacket(adminReply);
-		
-		adminReply = null;
-		replyMSG = null;
 	}
 	
 	private void updateDropData(final L2PcInstance activeChar, int npcId, final int itemId, final int min, final int max, final int category, final int chance)
@@ -1423,7 +1385,6 @@ public class AdminEditNpc implements IAdminCommandHandler
 			
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 			
 			PreparedStatement statement2 = con.prepareStatement("SELECT mobId FROM droplist WHERE mobId=? AND itemId=? AND category=?");
 			statement2.setInt(1, npcId);
@@ -1439,27 +1400,23 @@ public class AdminEditNpc implements IAdminCommandHandler
 			
 			npcIdRs.close();
 			statement2.close();
-			statement2 = null;
-			npcIdRs = null;
 			
 			if (npcId > 0)
 			{
 				reLoadNpcDropList(npcId);
 				
 				NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
-				TextBuilder replyMSG = new TextBuilder("<html><title>Drop data modify complete!</title>");
-				replyMSG.append("<body>");
-				replyMSG.append("<center><button value=\"DropList\" action=\"bypass -h admin_show_droplist " + npcId + "\" width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></center>");
+				TextBuilder replyMSG = new TextBuilder("<html><title>Drop data modify complete</title>");
+				replyMSG.append("<body><center><font color=00ff00>Drop data modify complete</font><br>");
+				replyMSG.append("<button value=\"Drop List\" action=\"bypass -h admin_show_droplist " + npcId + "\" width=65 height=19 back=\"L2UI_ch3.smallbutton2_over\" fore=\"L2UI_ch3.smallbutton2\"></center>");
 				replyMSG.append("</body></html>");
 				
 				adminReply.setHtml(replyMSG.toString());
 				activeChar.sendPacket(adminReply);
-				adminReply = null;
-				replyMSG = null;
 			}
 			else
 			{
-				activeChar.sendMessage("unknown error!");
+				activeChar.sendMessage("Unknown error");
 			}
 		}
 		catch (final Exception e)
@@ -1489,21 +1446,18 @@ public class AdminEditNpc implements IAdminCommandHandler
 			statement.setInt(6, chance);
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 			
 			reLoadNpcDropList(npcId);
 			
 			NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
-			TextBuilder replyMSG = new TextBuilder("<html><title>Add drop data complete!</title>");
-			replyMSG.append("<body>");
-			replyMSG.append("<center><button value=\"Continue add\" action=\"bypass -h admin_add_drop " + npcId + "\" width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\">");
-			replyMSG.append("<br><br><button value=\"DropList\" action=\"bypass -h admin_show_droplist " + npcId + "\" width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\">");
+			TextBuilder replyMSG = new TextBuilder("<html><title>Added successfully</title>");
+			replyMSG.append("<body><center><font color=00ff00>Added successfully</font></center><br>");
+			replyMSG.append("<center><button value=\"Continue add\" action=\"bypass -h admin_add_drop " + npcId + "\" width=65 height=19 back=\"L2UI_ch3.smallbutton2_over\" fore=\"L2UI_ch3.smallbutton2\">");
+			replyMSG.append("<br><br><button value=\"Drop List\" action=\"bypass -h admin_show_droplist " + npcId + "\" width=65 height=19 back=\"L2UI_ch3.smallbutton2_over\" fore=\"L2UI_ch3.smallbutton2\">");
 			replyMSG.append("</center></body></html>");
 			
 			adminReply.setHtml(replyMSG.toString());
 			activeChar.sendPacket(adminReply);
-			adminReply = null;
-			replyMSG = null;
 		}
 		catch (final Exception e)
 		{
@@ -1534,20 +1488,17 @@ public class AdminEditNpc implements IAdminCommandHandler
 				statement2.setInt(3, category);
 				statement2.execute();
 				statement2.close();
-				statement2 = null;
 				
 				reLoadNpcDropList(npcId);
 				
 				NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 				TextBuilder replyMSG = new TextBuilder("<html><title>Delete drop data(" + npcId + ", " + itemId + ", " + category + ")complete</title>");
-				replyMSG.append("<body>");
-				replyMSG.append("<center><button value=\"DropList\" action=\"bypass -h admin_show_droplist " + npcId + "\" width=100 height=15 back=\"sek.cbui94\" fore=\"sek.cbui92\"></center>");
+				replyMSG.append("<body><center><font color=00ff00>Delete drop data(" + npcId + ", " + itemId + ", " + category + ") complete</font><br>");
+				replyMSG.append("<button value=\"Drop List\" action=\"bypass -h admin_show_droplist " + npcId + "\" width=65 height=19 back=\"L2UI_ch3.smallbutton2_over\" fore=\"L2UI_ch3.smallbutton2\"></center>");
 				replyMSG.append("</body></html>");
 				
 				adminReply.setHtml(replyMSG.toString());
 				activeChar.sendPacket(adminReply);
-				adminReply = null;
-				replyMSG = null;
 			}
 		}
 		catch (final Exception e)
@@ -1607,14 +1558,12 @@ public class AdminEditNpc implements IAdminCommandHandler
 				dropData.setChance(dropDataList.getInt("chance"));
 				
 				final int category = dropDataList.getInt("category");
+				dropData.setCategory(category);
 				
 				npcData.addDropData(dropData, category);
 			}
 			dropDataList.close();
 			DatabaseUtils.close(statement);
-			statement = null;
-			dropDataList = null;
-			npcData = null;
 		}
 		catch (final Exception e)
 		{

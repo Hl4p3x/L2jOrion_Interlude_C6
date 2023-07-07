@@ -22,9 +22,10 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.datatables.csv.RecipeTable;
 import l2jorion.game.model.L2RecipeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.RecipeBookItemList;
 
-public final class RequestRecipeBookDestroy extends L2GameClientPacket
+public final class RequestRecipeBookDestroy extends PacketClient
 {
 	private int _recipeID;
 	

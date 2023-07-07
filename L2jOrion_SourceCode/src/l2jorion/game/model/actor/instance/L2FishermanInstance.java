@@ -134,7 +134,7 @@ public class L2FishermanInstance extends L2FolkInstance
 			if (st.countTokens() < 1)
 				return;
 			
-			player.setTempAccessBuy(false);
+			player.setTempAccess(false);
 			
 			final int val = Integer.parseInt(st.nextToken());
 			showBuyWindow(player, val);

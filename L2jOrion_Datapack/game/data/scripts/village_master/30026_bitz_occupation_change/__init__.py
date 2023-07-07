@@ -4,7 +4,7 @@ from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
 
 qn="30026_bitz_occupation_change"
-#print "30026. Bitz occupation change"
+
 GRAND_MASTER_BITZ = 30026
 
 class Quest (JQuest) :

@@ -18,11 +18,9 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.quest.QuestState;
+import l2jorion.game.network.PacketClient;
 
-/**
- * @author ProGramMoS
- */
-public class RequestTutorialQuestionMark extends L2GameClientPacket
+public class RequestTutorialQuestionMark extends PacketClient
 {
 	int _number = 0;
 	
@@ -38,7 +36,9 @@ public class RequestTutorialQuestionMark extends L2GameClientPacket
 		final L2PcInstance player = getClient().getActiveChar();
 		
 		if (player == null)
+		{
 			return;
+		}
 		
 		final QuestState qs = player.getQuestState("255_Tutorial");
 		if (qs != null)

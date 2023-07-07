@@ -23,17 +23,17 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.Config;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.PledgeShowMemberListDelete;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestWithdrawalPledge extends L2GameClientPacket
+public final class RequestWithdrawalPledge extends PacketClient
 {
 	@Override
 	protected void readImpl()
 	{
-		// trigger
+		
 	}
 	
 	@Override
@@ -41,13 +41,10 @@ public final class RequestWithdrawalPledge extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
-			return;
-		if (activeChar.isSubmitingPin())
 		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		if (activeChar.getClan() == null)
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.YOU_ARE_NOT_A_CLAN_MEMBER));
@@ -73,7 +70,6 @@ public final class RequestWithdrawalPledge extends L2GameClientPacket
 		SystemMessage sm = new SystemMessage(SystemMessageId.S1_HAS_WITHDRAWN_FROM_THE_CLAN);
 		sm.addString(activeChar.getName());
 		clan.broadcastToOnlineMembers(sm);
-		sm = null;
 		
 		// Remove the Player From the Member list
 		clan.broadcastToOnlineMembers(new PledgeShowMemberListDelete(activeChar.getName()));

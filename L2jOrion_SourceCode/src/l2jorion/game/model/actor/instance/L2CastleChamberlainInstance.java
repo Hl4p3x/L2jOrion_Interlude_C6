@@ -43,15 +43,14 @@ import l2jorion.game.network.serverpackets.ExShowManorDefaultInfo;
 import l2jorion.game.network.serverpackets.ExShowSeedInfo;
 import l2jorion.game.network.serverpackets.ExShowSeedSetting;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
+import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.network.serverpackets.SystemMessage;
-import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.game.util.Broadcast;
 import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
+import l2jorion.util.random.Rnd;
 
 public class L2CastleChamberlainInstance extends L2FolkInstance
 {
@@ -77,55 +76,47 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 			return;
 		}
 		
+		player.setTempAccess(false);
 		player.setLastFolkNPC(this);
 		
-		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
 		{
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
-			
-			// Send a Server->Client packet MyTargetSelected to the L2PcInstance player
-			MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
-			player.sendPacket(my);
-			my = null;
-			
-			// Send a Server->Client packet ValidateLocation to correct the L2NpcInstance position and heading on the client
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
-			// Calculate the distance between the L2PcInstance and the L2NpcInstance
 			if (!canInteract(player))
 			{
-				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 			}
 			else
 			{
-				// Like L2OFF player must rotate to the Npc
-				MoveToPawn sp = new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE);
-				player.sendPacket(sp);
-				Broadcast.toKnownPlayers(player, sp);
+				if (player.isMoving())
+				{
+					player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+				}
+				
+				player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
+				
+				broadcastPacket(new SocialAction(getObjectId(), Rnd.get(8)));
 				
 				showMessageWindow(player);
 			}
 		}
-		// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
+		
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
 	@Override
 	public void onBypassFeedback(final L2PcInstance player, final String command)
 	{
-		// BypassValidation Exploit plug.
 		if (player.getLastFolkNPC().getObjectId() != getObjectId())
 		{
 			return;
 		}
 		
 		StringTokenizer st = new StringTokenizer(command, " ");
-		String actualCommand = st.nextToken(); // Get actual command
+		String actualCommand = st.nextToken();
 		
 		final int condition = validateCondition(player);
 		if (condition <= COND_ALL_FALSE)
@@ -271,7 +262,7 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 					
 					player.tempInvetoryDisable();
 					
-					player.setTempAccessBuy(false);
+					player.setTempAccess(false);
 					
 					if (Config.DEBUG)
 					{
@@ -355,6 +346,7 @@ public class L2CastleChamberlainInstance extends L2FolkInstance
 						}
 						catch (final NoSuchElementException e)
 						{
+							LOG.error("NoSuchElementException | Player: " + player.getName());
 							if (Config.ENABLE_ALL_EXCEPTIONS)
 							{
 								e.printStackTrace();

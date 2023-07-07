@@ -32,9 +32,7 @@ import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.knownlist.GuardKnownList;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.SocialAction;
-import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Broadcast;
@@ -158,10 +156,6 @@ public final class L2GuardInstance extends L2Attackable
 		if (getObjectId() != player.getTargetId())
 		{
 			player.setTarget(this);
-			MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
-			player.sendPacket(my);
-			
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
@@ -206,5 +200,11 @@ public final class L2GuardInstance extends L2Attackable
 		}
 		
 		return true;
+	}
+	
+	@Override
+	public boolean isMonster()
+	{
+		return false;
 	}
 }

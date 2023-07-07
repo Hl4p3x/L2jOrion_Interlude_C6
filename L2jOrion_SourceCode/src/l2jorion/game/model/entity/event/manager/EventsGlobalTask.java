@@ -229,14 +229,18 @@ public class EventsGlobalTask implements Runnable
 			hourStr = "0" + hour;
 		}
 		else
+		{
 			hourStr = "" + hour;
+		}
 		
 		if (min < 10)
 		{
 			minStr = "0" + min;
 		}
 		else
+		{
 			minStr = "" + min;
+		}
 		
 		final String currentTime = hourStr + ":" + minStr;
 		
@@ -246,9 +250,7 @@ public class EventsGlobalTask implements Runnable
 		{
 			for (final EventTask actualEvent : registeredEventsAtCurrentTime)
 			{
-				
 				ThreadPoolManager.getInstance().scheduleGeneral(actualEvent, 5000);
-				
 			}
 		}
 	}
@@ -265,7 +267,7 @@ public class EventsGlobalTask implements Runnable
 		
 		while (!destroy)
 		{// start time checker
-		
+			
 			checkRegisteredEvents();
 			
 			try
@@ -275,7 +277,9 @@ public class EventsGlobalTask implements Runnable
 			catch (final InterruptedException e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 			}
 			
 		}

@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class TutorialShowHtml extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class TutorialShowHtml extends PacketServer
 {
 	private static final String _S__A0_TUTORIALSHOWHTML = "[S] a0 TutorialShowHtml";
 	

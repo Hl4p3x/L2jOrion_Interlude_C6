@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExSetCompassZoneCode extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExSetCompassZoneCode extends PacketServer
 {
 	private static final String _S__FE_32_EXSETCOMPASSZONECODE = "[S] FE:32 ExSetCompassZoneCode";
 	

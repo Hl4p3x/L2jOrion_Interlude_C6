@@ -17,10 +17,11 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.UserInfo;
 
-public final class Appearing extends L2GameClientPacket
+public final class Appearing extends PacketClient
 {
 	@Override
 	protected void readImpl()

@@ -1,21 +1,3 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.handler.user;
 
 import l2jorion.game.datatables.csv.MapRegionTable;
@@ -61,6 +43,9 @@ public class Loc implements IUserCommandHandler
 			case 912:
 				msg = SystemMessageId.LOC_GLUDIO_S1_S2_S3;
 				break;
+			case 913:
+				msg = SystemMessageId.LOC_NEUTRAL_ZONE_S1_S2_S3;
+				break;
 			case 914:
 				msg = SystemMessageId.LOC_ELVEN_S1_S2_S3;
 				break;
@@ -94,14 +79,26 @@ public class Loc implements IUserCommandHandler
 			case 924:
 				msg = SystemMessageId.LOC_ADEN_S1_S2_S3;
 				break;
+			case 925:
+				msg = SystemMessageId.LOC_COLISEUM_S1_S2_S3;
+				break;
 			case 926:
 				msg = SystemMessageId.LOC_HEINE_S1_S2_S3;
+				break;
+			case 1222:
+				msg = SystemMessageId.LOC_GM_CONSULATION_SERVICE_S1_S2_S3;
 				break;
 			case 1537:
 				msg = SystemMessageId.LOC_RUNE_S1_S2_S3;
 				break;
 			case 1538:
 				msg = SystemMessageId.LOC_GODDARD_S1_S2_S3;
+				break;
+			case 1643:
+				msg = SystemMessageId.LOC_DIMENSIONAL_GAP_S1_S2_S3;
+				break;
+			case 1659:
+				msg = SystemMessageId.LOC_CEMETARY_OF_THE_EMPIRE_S1_S2_S3;
 				break;
 			case 1714:
 				msg = SystemMessageId.LOC_SCHUTTGART_S1_S2_S3;

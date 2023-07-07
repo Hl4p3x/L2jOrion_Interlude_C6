@@ -18,15 +18,17 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
-import l2jorion.game.datatables.xml.AugmentScrollData;
-import l2jorion.game.datatables.xml.AugmentScrollData.L2AugmentScroll;
 import l2jorion.game.datatables.xml.AugmentationData;
+import l2jorion.game.datatables.xml.AugmentationScrollData;
+import l2jorion.game.datatables.xml.AugmentationScrollData.L2AugmentScroll;
 import l2jorion.game.enums.AchType;
 import l2jorion.game.model.L2Augmentation;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.base.Race;
+import l2jorion.game.model.entity.Announcements;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.EnchantResult;
@@ -43,7 +45,7 @@ import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
-public final class RequestEnchantItem extends L2GameClientPacket
+public final class RequestEnchantItem extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestEnchantItem.class);
 	
@@ -141,13 +143,6 @@ public final class RequestEnchantItem extends L2GameClientPacket
 			return;
 		}
 		
-		if (activeChar.isSubmitingPin())
-		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-		
 		if (activeChar.getActiveTradeList() != null)
 		{
 			activeChar.cancelActiveTrade();
@@ -160,12 +155,14 @@ public final class RequestEnchantItem extends L2GameClientPacket
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.INAPPROPRIATE_ENCHANT_CONDITION));
 			activeChar.setActiveEnchantItem(null);
+			activeChar.sendPacket(EnchantResult.CANCELLED);
 			return;
 		}
 		
 		if (activeChar.isOnline() == 0)
 		{
 			activeChar.setActiveEnchantItem(null);
+			activeChar.sendPacket(EnchantResult.CANCELLED);
 			return;
 		}
 		
@@ -188,6 +185,7 @@ public final class RequestEnchantItem extends L2GameClientPacket
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.INAPPROPRIATE_ENCHANT_CONDITION));
 			activeChar.setActiveEnchantItem(null);
+			activeChar.sendPacket(EnchantResult.CANCELLED);
 			return;
 		}
 		
@@ -195,6 +193,7 @@ public final class RequestEnchantItem extends L2GameClientPacket
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.INAPPROPRIATE_ENCHANT_CONDITION));
 			activeChar.setActiveEnchantItem(null);
+			activeChar.sendPacket(EnchantResult.CANCELLED);
 			return;
 		}
 		
@@ -776,6 +775,15 @@ public final class RequestEnchantItem extends L2GameClientPacket
 					sm.addNumber(item.getEnchantLevel());
 					sm.addItemName(item.getItemId());
 					activeChar.sendPacket(sm);
+					
+					if (Config.L2UNLIMITED_CUSTOM)
+					{
+						if (item.getEnchantLevel() >= 17)
+						{
+							int enchantNumber = (item.getEnchantLevel() + 1);
+							Announcements.getInstance().announceWithServerName(activeChar.getName() + " has been successfully enchanted " + (item.isWeapon() ? "weapon" : "armor") + ": " + item.getItem().getName() + " up to " + enchantNumber);
+						}
+					}
 				}
 				
 				item.setEnchantLevel(item.getEnchantLevel() + Config.CUSTOM_ENCHANT_VALUE);
@@ -783,7 +791,7 @@ public final class RequestEnchantItem extends L2GameClientPacket
 				
 				if (activeChar.getAchievement().getCount(item.isWeapon() ? AchType.ENCHANT_WEAPON : AchType.ENCHANT_OTHER) < item.getEnchantLevel())
 				{
-					activeChar.getAchievement().increase(item.isWeapon() ? AchType.ENCHANT_WEAPON : AchType.ENCHANT_OTHER, item.getEnchantLevel(), false, false);
+					activeChar.getAchievement().increase(item.isWeapon() ? AchType.ENCHANT_WEAPON : AchType.ENCHANT_OTHER, item.getEnchantLevel(), false, false, false, 0);
 				}
 				
 				activeChar.getAchievement().increase(AchType.ENCHANT_SUCCESS);
@@ -911,7 +919,14 @@ public final class RequestEnchantItem extends L2GameClientPacket
 					}
 					else
 					{
-						item.setEnchantLevel(0);
+						if (Config.NORMAL_ENCHANT_STAY_ON_BREAK)
+						{
+							item.setEnchantLevel(item.getEnchantLevel());
+						}
+						else
+						{
+							item.setEnchantLevel(0);
+						}
 						item.updateDatabase();
 					}
 				}
@@ -921,7 +936,15 @@ public final class RequestEnchantItem extends L2GameClientPacket
 					{
 						if (!Config.EXPLLOSIVE_CUSTOM)
 						{
-							item.setEnchantLevel(Config.BREAK_ENCHANT);
+							if (Config.BLESSED_ENCHANT_STAY_ON_BREAK)
+							{
+								item.setEnchantLevel(item.getEnchantLevel());
+							}
+							else
+							{
+								item.setEnchantLevel(Config.BREAK_ENCHANT);
+							}
+							
 							item.updateDatabase();
 						}
 						else
@@ -940,7 +963,15 @@ public final class RequestEnchantItem extends L2GameClientPacket
 					}
 					else if (crystalScroll)
 					{
-						item.setEnchantLevel(item.getEnchantLevel());
+						if (Config.CRYSTAL_ENCHANT_STAY_ON_BREAK)
+						{
+							item.setEnchantLevel(item.getEnchantLevel());
+						}
+						else
+						{
+							item.setEnchantLevel(Config.CRYSTAL_ENCHANT_MIN);
+						}
+						
 						item.updateDatabase();
 					}
 				}
@@ -959,7 +990,7 @@ public final class RequestEnchantItem extends L2GameClientPacket
 	private static void handleAugmentScrolls(L2PcInstance player, L2ItemInstance item, L2ItemInstance scroll)
 	{
 		// get scroll augment data
-		L2AugmentScroll enchant = AugmentScrollData.getInstance().getScroll(scroll);
+		L2AugmentScroll enchant = AugmentationScrollData.getInstance().getScroll(scroll);
 		if (enchant != null)
 		{
 			if (item.getItem().getType2() != L2Item.TYPE2_WEAPON)

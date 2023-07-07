@@ -30,11 +30,12 @@ import l2jorion.game.model.L2SkillLearn;
 import l2jorion.game.model.actor.instance.L2FolkInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.AquireSkillInfo;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class RequestAquireSkillInfo extends L2GameClientPacket
+public class RequestAquireSkillInfo extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestAquireSkillInfo.class);
 	

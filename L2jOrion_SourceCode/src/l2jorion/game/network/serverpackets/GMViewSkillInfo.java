@@ -23,8 +23,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class GMViewSkillInfo extends L2GameServerPacket
+public class GMViewSkillInfo extends PacketServer
 {
 	private static final String _S__91_GMViewSkillInfo = "[S] 91 GMViewSkillInfo";
 	private final L2PcInstance _activeChar;

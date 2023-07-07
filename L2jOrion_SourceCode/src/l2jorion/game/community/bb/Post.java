@@ -38,7 +38,9 @@ public class Post
 			try (ResultSet rs = ps.executeQuery())
 			{
 				while (rs.next())
+				{
 					_posts.add(new CPost(rs.getInt("post_id"), rs.getString("post_owner_name"), rs.getInt("post_ownerid"), rs.getLong("post_date"), rs.getInt("post_topic_id"), rs.getInt("post_forum_id"), rs.getString("post_txt")));
+				}
 			}
 		}
 		catch (Exception e)
@@ -93,7 +95,9 @@ public class Post
 		for (CPost cp : _posts)
 		{
 			if (i++ == id)
+			{
 				return cp;
+			}
 		}
 		return null;
 	}
@@ -127,7 +131,9 @@ public class Post
 	{
 		final CPost post = getCPost(index);
 		if (post == null)
+		{
 			return;
+		}
 		
 		Connection con = null;
 		
@@ -135,7 +141,7 @@ public class Post
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement ps = con.prepareStatement(UPDATE_TEXT);
-					
+			
 			ps.setString(1, post.getText());
 			ps.setInt(2, post.getId());
 			ps.setInt(3, post.getTopicId());

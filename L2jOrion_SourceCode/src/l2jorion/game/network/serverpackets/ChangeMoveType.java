@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
+import l2jorion.game.network.PacketServer;
 
-public class ChangeMoveType extends L2GameServerPacket
+public class ChangeMoveType extends PacketServer
 {
 	private static final String _S__3E_CHANGEMOVETYPE = "[S] 3E ChangeMoveType";
 	

@@ -1,15 +1,11 @@
-#
-# Created by DraX on 2005.07.20
-#
 import sys
 
 from l2jorion.game.model.actor.instance import      L2PcInstance
 from l2jorion.game.model.quest        import State
 from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
-qn = "1100_teleport_with_charm"
 
-#print "1100. Teleport with charm"
+qn = "1100_teleport_with_charm"
 
 ORC_GATEKEEPER_CHARM     = 1658
 DWARF_GATEKEEPER_TOKEN   = 1659

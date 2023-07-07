@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.Location;
+import l2jorion.game.network.PacketServer;
 
-public class ObservationReturn extends L2GameServerPacket
+public class ObservationReturn extends PacketServer
 {
 	private static final String _S__E0_OBSERVRETURN = "[S] E0 ObservationReturn";
 	

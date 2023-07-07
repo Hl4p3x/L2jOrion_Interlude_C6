@@ -1,8 +1,0 @@
-Most of the scripts found within the jscript folder are initialized on server start, but 
-do not run anything except when triggered by a player.  For scripts that need to be ran
-automatically, without any player interaction, cron can be used.  
-Using the format demonstrated in the example.py script, one can setup tasks that run 
-automatically at server boot.  In addition, advanced users can include other classes from java
-and setup timed tasks, such as special events that have universal drops for a certain period of time.
-
-The server admins can feel free to add more folders like cron and include them in their servers.

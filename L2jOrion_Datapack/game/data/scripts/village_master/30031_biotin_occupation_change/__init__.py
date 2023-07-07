@@ -1,14 +1,11 @@
-#
-# Created by DraX on 2005.08.08
-#
-
 import sys
 
 from l2jorion.game.model.quest        import State
 from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
+
 qn = "30031_biotin_occupation_change"
-#print "30031. Biotin occupation change"
+
 HIGH_PRIEST_BIOTIN = 30031
 
 class Quest (JQuest) :

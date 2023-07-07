@@ -23,9 +23,10 @@ package l2jorion.game.network.serverpackets;
 import java.util.List;
 
 import javolution.util.FastList;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.templates.L2PcTemplate;
 
-public class CharTemplates extends L2GameServerPacket
+public class CharTemplates extends PacketServer
 {
 	private static final String _S__23_CHARTEMPLATES = "[S] 23 CharTemplates";
 	

@@ -156,10 +156,6 @@ public class ClanHallManager
 		return _allClanHalls.get(location);
 	}
 	
-	/**
-	 * Get Map with all FreeClanHalls
-	 * @return
-	 */
 	public final Map<Integer, ClanHall> getFreeClanHalls()
 	{
 		return _freeClanHall;
@@ -170,29 +166,16 @@ public class ClanHallManager
 		return _ClanHalls;
 	}
 	
-	/**
-	 * Get Map with all ClanHalls
-	 * @return
-	 */
 	public final Map<Integer, ClanHall> getClanHalls()
 	{
 		return _clanHall;
 	}
 	
-	/**
-	 * Check is free ClanHall
-	 * @param chId
-	 * @return
-	 */
 	public final boolean isFree(final int chId)
 	{
 		return _freeClanHall.containsKey(chId);
 	}
 	
-	/**
-	 * Free a ClanHall
-	 * @param chId
-	 */
 	public final synchronized void setFree(final int chId)
 	{
 		_freeClanHall.put(chId, _clanHall.get(chId));
@@ -201,11 +184,6 @@ public class ClanHallManager
 		_clanHall.remove(chId);
 	}
 	
-	/**
-	 * Set ClanHallOwner
-	 * @param chId
-	 * @param clan
-	 */
 	public final synchronized void setOwner(final int chId, final L2Clan clan)
 	{
 		if (!_clanHall.containsKey(chId))
@@ -243,7 +221,7 @@ public class ClanHallManager
 	
 	public static final void addClanHall(ClanHall hall)
 	{
-		_ClanHalls.put(hall.getId(), hall);
+		_ClanHalls.put(hall.getClanHallId(), hall);
 	}
 	
 	public final ClanHall getClanHallsById(final int clanHallId)

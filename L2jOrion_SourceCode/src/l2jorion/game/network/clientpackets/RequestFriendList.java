@@ -17,44 +17,43 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.datatables.sql.CharNameTable;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestFriendList extends L2GameClientPacket
+public final class RequestFriendList extends PacketClient
 {
 	@Override
 	protected void readImpl()
 	{
 	}
-
+	
 	@Override
 	protected void runImpl()
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
-			return;
-		if (activeChar.isSubmitingPin())
 		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		SystemMessage sm;
-
+		
 		activeChar.sendPacket(SystemMessageId.FRIEND_LIST_HEAD);
-
+		
 		L2PcInstance friend = null;
 		for (int id : activeChar.getFriendList())
 		{
 			String friendName = CharNameTable.getInstance().getNameById(id);
 			if (friendName == null)
+			{
 				continue;
+			}
 			
 			friend = L2World.getInstance().getPlayer(friendName);
 			
 			// Currently offline
-			if (friend == null || friend.isOnline()==0)
+			if (friend == null || friend.isOnline() == 0)
 			{
 				sm = SystemMessage.getSystemMessage(SystemMessageId.S1_OFFLINE).addString(friendName);
 			}
@@ -67,7 +66,7 @@ public final class RequestFriendList extends L2GameClientPacket
 		}
 		activeChar.sendPacket(SystemMessageId.FRIEND_LIST_FOOT);
 	}
-
+	
 	@Override
 	public String getType()
 	{

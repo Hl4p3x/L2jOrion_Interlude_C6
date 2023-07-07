@@ -1,36 +1,15 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * [URL]http://www.gnu.org/copyleft/gpl.html[/URL]
- */
 package l2jorion.game.handler.admin;
 
 import java.util.StringTokenizer;
 
 import l2jorion.Config;
 import l2jorion.game.datatables.GmListTable;
-import l2jorion.game.datatables.csv.MapRegionTable;
-import l2jorion.game.datatables.xml.AugmentScrollData;
+import l2jorion.game.datatables.xml.AugmentationScrollData;
 import l2jorion.game.handler.IAdminCommandHandler;
-import l2jorion.game.managers.ZoneManager;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.model.base.Race;
 import l2jorion.game.model.olympiad.Olympiad;
-import l2jorion.game.model.zone.type.L2RespawnZone;
 import l2jorion.game.network.SystemMessageId;
+import l2jorion.game.network.serverpackets.EtcStatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.log.Log;
 import l2jorion.logger.Logger;
@@ -38,7 +17,7 @@ import l2jorion.logger.LoggerFactory;
 
 public class AdminAdmin implements IAdminCommandHandler
 {
-	private static Logger LOG = LoggerFactory.getLogger(AdminAdmin.class.getName());
+	private static Logger LOG = LoggerFactory.getLogger(AdminAdmin.class);
 	
 	private static final String[] ADMIN_COMMANDS =
 	{
@@ -60,7 +39,9 @@ public class AdminAdmin implements IAdminCommandHandler
 		"admin_manualhero",
 		"admin_augment",
 		"admin_loc",
-		"admin_loc2"
+		"admin_loc2",
+		"admin_loc3",
+		"admin_loc4"
 	};
 	
 	private enum CommandEnum
@@ -83,7 +64,9 @@ public class AdminAdmin implements IAdminCommandHandler
 		admin_manualhero,
 		admin_augment,
 		admin_loc,
-		admin_loc2
+		admin_loc2,
+		admin_loc3,
+		admin_loc4
 	}
 	
 	@Override
@@ -108,38 +91,37 @@ public class AdminAdmin implements IAdminCommandHandler
 			case admin_admin5:
 				showMainPage(activeChar, command);
 				return true;
-			
 			case admin_gmliston:
 				GmListTable.getInstance().showGm(activeChar);
 				activeChar.sendMessage("Registerd into gm list.");
 				return true;
-			
 			case admin_gmlistoff:
 				GmListTable.getInstance().hideGm(activeChar);
 				activeChar.sendMessage("Removed from gm list.");
 				return true;
-			
 			case admin_silence:
 				if (activeChar.getMessageRefusal()) // already in message refusal mode
 				{
-					activeChar.setMessageRefusal(1);
+					activeChar.setMessageRefusal(false);
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.MESSAGE_ACCEPTANCE_MODE));
+					activeChar.sendPacket(new EtcStatusUpdate(activeChar));
 				}
 				else
 				{
-					activeChar.setMessageRefusal(0);
+					activeChar.setMessageRefusal(true);
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.MESSAGE_REFUSAL_MODE));
+					activeChar.sendPacket(new EtcStatusUpdate(activeChar));
 				}
 				return true;
 			case admin_trade:
 				if (activeChar.getTradeRefusal())
 				{
-					activeChar.setTradeRefusal(1);
+					activeChar.setTradeRefusal(false);
 					activeChar.sendMessage("Trade on.");
 				}
 				else
 				{
-					activeChar.setTradeRefusal(0);
+					activeChar.setTradeRefusal(true);
 					activeChar.sendMessage("Trade off.");
 				}
 				return true;
@@ -163,12 +145,10 @@ public class AdminAdmin implements IAdminCommandHandler
 				return true;
 			case admin_diet:
 			{
-				
 				boolean no_token = false;
 				
 				if (st.hasMoreTokens())
 				{
-					
 					if (st.nextToken().equalsIgnoreCase("on"))
 					{
 						activeChar.setDietMode(true);
@@ -179,13 +159,10 @@ public class AdminAdmin implements IAdminCommandHandler
 						activeChar.setDietMode(false);
 						activeChar.sendMessage("Diet mode off");
 					}
-					
 				}
 				else
 				{
-					
 					no_token = true;
-					
 				}
 				
 				if (no_token)
@@ -201,16 +178,14 @@ public class AdminAdmin implements IAdminCommandHandler
 						activeChar.setDietMode(true);
 						activeChar.sendMessage("Diet mode on");
 					}
-					
 				}
 				
-				st = null;
 				activeChar.refreshOverloaded();
 				return true;
 				
 			}
 			case admin_augment:
-				AugmentScrollData.getInstance().reload();
+				AugmentationScrollData.getInstance().reload();
 				activeChar.sendMessage("Augment scroll data has been reloaded.");
 				return true;
 			case admin_set:
@@ -269,185 +244,35 @@ public class AdminAdmin implements IAdminCommandHandler
 				
 				if (no_token)
 				{
-					activeChar.sendMessage("Usage: //set parameter=vaue");
+					activeChar.sendMessage("Usage: //set parameter = value");
 					return false;
 				}
 				return true;
 			case admin_loc:
 			{
-				int region;
-				L2RespawnZone zone = ZoneManager.getInstance().getZone(activeChar, L2RespawnZone.class);
-				if (zone != null)
-				{
-					region = MapRegionTable.getInstance().getRestartRegion(activeChar, zone.getAllRespawnPoints().get(Race.human)).getLocId();
-				}
-				else
-				{
-					region = MapRegionTable.getInstance().getMapRegionLocId(activeChar);
-				}
-				
-				SystemMessageId msg;
-				
-				switch (region)
-				{
-					case 910:
-						msg = SystemMessageId.LOC_TI_S1_S2_S3;
-						break;
-					case 911:
-						msg = SystemMessageId.LOC_GLUDIN_S1_S2_S3;
-						break;
-					case 912:
-						msg = SystemMessageId.LOC_GLUDIO_S1_S2_S3;
-						break;
-					case 914:
-						msg = SystemMessageId.LOC_ELVEN_S1_S2_S3;
-						break;
-					case 915:
-						msg = SystemMessageId.LOC_DARK_ELVEN_S1_S2_S3;
-						break;
-					case 916:
-						msg = SystemMessageId.LOC_DION_S1_S2_S3;
-						break;
-					case 917:
-						msg = SystemMessageId.LOC_FLORAN_S1_S2_S3;
-						break;
-					case 918:
-						msg = SystemMessageId.LOC_GIRAN_S1_S2_S3;
-						break;
-					case 919:
-						msg = SystemMessageId.LOC_GIRAN_HARBOR_S1_S2_S3;
-						break;
-					case 920:
-						msg = SystemMessageId.LOC_ORC_S1_S2_S3;
-						break;
-					case 921:
-						msg = SystemMessageId.LOC_DWARVEN_S1_S2_S3;
-						break;
-					case 922:
-						msg = SystemMessageId.LOC_OREN_S1_S2_S3;
-						break;
-					case 923:
-						msg = SystemMessageId.LOC_HUNTER_S1_S2_S3;
-						break;
-					case 924:
-						msg = SystemMessageId.LOC_ADEN_S1_S2_S3;
-						break;
-					case 926:
-						msg = SystemMessageId.LOC_HEINE_S1_S2_S3;
-						break;
-					case 1537:
-						msg = SystemMessageId.LOC_RUNE_S1_S2_S3;
-						break;
-					case 1538:
-						msg = SystemMessageId.LOC_GODDARD_S1_S2_S3;
-						break;
-					case 1714:
-						msg = SystemMessageId.LOC_SCHUTTGART_S1_S2_S3;
-						break;
-					case 1924:
-						msg = SystemMessageId.LOC_PRIMEVAL_ISLE_S1_S2_S3;
-						break;
-					default:
-						msg = SystemMessageId.LOC_ADEN_S1_S2_S3;
-				}
-				
-				SystemMessage sm = new SystemMessage(msg);
-				sm.addNumber(activeChar.getX());
-				sm.addNumber(activeChar.getY());
-				sm.addNumber(activeChar.getZ());
-				activeChar.sendPacket(sm);
-				
-				activeChar.sendMessage("Added to file.");
+				activeChar.sendMessage("Loc added to file: game/AdminlocLog.txt");
 				final String text = "<node X=\"" + activeChar.getX() + "\" Y=\"" + activeChar.getY() + "\" />";
 				Log.addLocLog(text, "AdminlocLog");
 				return true;
 			}
 			case admin_loc2:
 			{
-				int region;
-				L2RespawnZone zone = ZoneManager.getInstance().getZone(activeChar, L2RespawnZone.class);
-				if (zone != null)
-				{
-					region = MapRegionTable.getInstance().getRestartRegion(activeChar, zone.getAllRespawnPoints().get(Race.human)).getLocId();
-				}
-				else
-				{
-					region = MapRegionTable.getInstance().getMapRegionLocId(activeChar);
-				}
-				
-				SystemMessageId msg;
-				
-				switch (region)
-				{
-					case 910:
-						msg = SystemMessageId.LOC_TI_S1_S2_S3;
-						break;
-					case 911:
-						msg = SystemMessageId.LOC_GLUDIN_S1_S2_S3;
-						break;
-					case 912:
-						msg = SystemMessageId.LOC_GLUDIO_S1_S2_S3;
-						break;
-					case 914:
-						msg = SystemMessageId.LOC_ELVEN_S1_S2_S3;
-						break;
-					case 915:
-						msg = SystemMessageId.LOC_DARK_ELVEN_S1_S2_S3;
-						break;
-					case 916:
-						msg = SystemMessageId.LOC_DION_S1_S2_S3;
-						break;
-					case 917:
-						msg = SystemMessageId.LOC_FLORAN_S1_S2_S3;
-						break;
-					case 918:
-						msg = SystemMessageId.LOC_GIRAN_S1_S2_S3;
-						break;
-					case 919:
-						msg = SystemMessageId.LOC_GIRAN_HARBOR_S1_S2_S3;
-						break;
-					case 920:
-						msg = SystemMessageId.LOC_ORC_S1_S2_S3;
-						break;
-					case 921:
-						msg = SystemMessageId.LOC_DWARVEN_S1_S2_S3;
-						break;
-					case 922:
-						msg = SystemMessageId.LOC_OREN_S1_S2_S3;
-						break;
-					case 923:
-						msg = SystemMessageId.LOC_HUNTER_S1_S2_S3;
-						break;
-					case 924:
-						msg = SystemMessageId.LOC_ADEN_S1_S2_S3;
-						break;
-					case 926:
-						msg = SystemMessageId.LOC_HEINE_S1_S2_S3;
-						break;
-					case 1537:
-						msg = SystemMessageId.LOC_RUNE_S1_S2_S3;
-						break;
-					case 1538:
-						msg = SystemMessageId.LOC_GODDARD_S1_S2_S3;
-						break;
-					case 1714:
-						msg = SystemMessageId.LOC_SCHUTTGART_S1_S2_S3;
-						break;
-					case 1924:
-						msg = SystemMessageId.LOC_PRIMEVAL_ISLE_S1_S2_S3;
-						break;
-					default:
-						msg = SystemMessageId.LOC_ADEN_S1_S2_S3;
-				}
-				
-				SystemMessage sm = new SystemMessage(msg);
-				sm.addNumber(activeChar.getX());
-				sm.addNumber(activeChar.getY());
-				sm.addNumber(activeChar.getZ());
-				activeChar.sendPacket(sm);
-				
-				activeChar.sendMessage("Added to file.");
+				activeChar.sendMessage("Loc added to file: game/AdminlocLog.txt");
 				final String text = activeChar.getX() + "," + activeChar.getY() + "," + activeChar.getZ() + ";";
+				Log.addLocLog(text, "AdminlocLog");
+				return true;
+			}
+			case admin_loc3:
+			{
+				activeChar.sendMessage("Loc added to file: game/AdminlocLog.txt");
+				final String text = "<node X=\"" + activeChar.getX() + "\" Y=\"" + activeChar.getY() + "\" Z=\"" + activeChar.getZ() + "\" iterations=\"20\"/>";
+				Log.addLocLog(text, "AdminlocLog");
+				return true;
+			}
+			case admin_loc4:
+			{
+				activeChar.sendMessage("Loc added to file: game/AdminlocLog.txt");
+				final String text = "<node X=\"" + activeChar.getX() + "\" Y=\"" + activeChar.getY() + "\" Z=\"" + activeChar.getZ() + "\"/>";
 				Log.addLocLog(text, "AdminlocLog");
 				return true;
 			}

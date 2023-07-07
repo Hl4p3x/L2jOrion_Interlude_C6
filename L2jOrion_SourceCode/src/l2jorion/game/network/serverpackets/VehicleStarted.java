@@ -15,8 +15,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
+import l2jorion.game.network.PacketServer;
 
-public class VehicleStarted extends L2GameServerPacket
+public class VehicleStarted extends PacketServer
 {
 	private final int _objectId;
 	private final int _state;

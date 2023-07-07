@@ -45,10 +45,6 @@ import l2jorion.game.util.EventData;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * This class ...
- * @version $Revision: 1.3.4.1 $ $Date: 2005/03/27 15:29:32 $
- */
 public class L2Event
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(L2Event.class);
@@ -73,7 +69,9 @@ public class L2Event
 			while (it.hasNext())
 			{
 				if (it.next().equals(name))
+				{
 					return i;
+				}
 			}
 			
 			temp = null;
@@ -121,7 +119,9 @@ public class L2Event
 					catch (final Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 					}
 				}
 				
@@ -154,7 +154,9 @@ public class L2Event
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 				}
 			}
 			
@@ -208,7 +210,9 @@ public class L2Event
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error(e.getMessage());
 		}
@@ -216,6 +220,7 @@ public class L2Event
 		{
 			
 			if (inbr != null)
+			{
 				try
 				{
 					inbr.close();
@@ -224,8 +229,10 @@ public class L2Event
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 			if (isr != null)
+			{
 				try
 				{
 					isr.close();
@@ -234,8 +241,10 @@ public class L2Event
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 			if (in != null)
+			{
 				try
 				{
 					in.close();
@@ -244,8 +253,10 @@ public class L2Event
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 			if (buff != null)
+			{
 				try
 				{
 					buff.close();
@@ -254,8 +265,10 @@ public class L2Event
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 			if (fis != null)
+			{
 				try
 				{
 					fis.close();
@@ -264,6 +277,7 @@ public class L2Event
 				{
 					e1.printStackTrace();
 				}
+			}
 			
 		}
 	}
@@ -300,20 +314,16 @@ public class L2Event
 			spawn.getLastSpawn().broadcastPacket(new MagicSkillUser(spawn.getLastSpawn(), spawn.getLastSpawn(), 1034, 1, 1, 1));
 			
 			npcs.add(String.valueOf(spawn.getLastSpawn().getObjectId()));
-			
-			spawn = null;
-			
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error(e.getMessage());
 		}
-		
-		template1 = null;
-		
 	}
 	
 	public static void announceAllPlayers(final String text)
@@ -324,8 +334,6 @@ public class L2Event
 		{
 			player.sendPacket(cs);
 		}
-		
-		cs = null;
 	}
 	
 	public static boolean isOnEvent(final L2PcInstance player)
@@ -342,13 +350,12 @@ public class L2Event
 				temp = player.getName().equalsIgnoreCase(it.next());
 				
 				if (temp)
+				{
 					return true;
+				}
 			}
-			
-			it = null;
 		}
 		return false;
-		
 	}
 	
 	public static void inscribePlayer(final L2PcInstance player)
@@ -369,7 +376,9 @@ public class L2Event
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("error when signing in the event:" + e.getMessage(), e);
 		}
@@ -393,7 +402,9 @@ public class L2Event
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -414,7 +425,9 @@ public class L2Event
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 	}
 }

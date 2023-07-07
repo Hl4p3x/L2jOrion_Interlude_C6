@@ -24,15 +24,11 @@ import l2jorion.Config;
 import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.managers.PetitionManager;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * Format: (c) Sd (S: content - d: type)
- * @author -Wooden-, TempyIncursion
- */
-public final class RequestPetition extends L2GameClientPacket
+public final class RequestPetition extends PacketClient
 {
 	private String _content;
 	private int _type; // 1 = on : 0 = off;
@@ -49,13 +45,10 @@ public final class RequestPetition extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
-			return;
-		if (activeChar.isSubmitingPin())
 		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		if (!GmListTable.getInstance().isGmOnline(false))
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.NO_GM_PROVIDING_SERVICE_NOW));

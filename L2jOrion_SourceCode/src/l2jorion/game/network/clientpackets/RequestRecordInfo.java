@@ -25,10 +25,11 @@ import java.util.Collection;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.SpawnItemPoly;
 import l2jorion.game.network.serverpackets.UserInfo;
 
-public class RequestRecordInfo extends L2GameClientPacket
+public class RequestRecordInfo extends PacketClient
 {	
 	@Override
 	protected void readImpl()

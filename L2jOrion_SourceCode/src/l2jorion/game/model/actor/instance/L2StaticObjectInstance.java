@@ -29,7 +29,6 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.knownlist.NullKnownList;
 import l2jorion.game.network.serverpackets.ActionFailed;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.ShowTownMap;
 import l2jorion.game.network.serverpackets.StaticObject;
@@ -43,11 +42,8 @@ public class L2StaticObjectInstance extends L2Object
 	public static final int INTERACTION_DISTANCE = 150;
 	
 	private int _staticObjectId;
-	
 	private int _type = -1; // 0 - map signs, 1 - throne , 2 - arena signs
-	
 	private int _x;
-	
 	private int _y;
 	
 	private String _texture;
@@ -57,49 +53,27 @@ public class L2StaticObjectInstance extends L2Object
 		return _staticObjectId;
 	}
 	
-	/**
-	 * Sets the static object id.
-	 * @param StaticObjectId the new static object id
-	 */
 	public void setStaticObjectId(final int StaticObjectId)
 	{
 		_staticObjectId = StaticObjectId;
 	}
 	
-	/**
-	 * Instantiates a new l2 static object instance.
-	 * @param objectId the object id
-	 */
 	public L2StaticObjectInstance(final int objectId)
 	{
 		super(objectId);
 		setKnownList(new NullKnownList(this));
 	}
 	
-	/**
-	 * Gets the type.
-	 * @return the type
-	 */
 	public int getType()
 	{
 		return _type;
 	}
 	
-	/**
-	 * Sets the type.
-	 * @param type the new type
-	 */
 	public void setType(final int type)
 	{
 		_type = type;
 	}
 	
-	/**
-	 * Sets the map.
-	 * @param texture the texture
-	 * @param x the x
-	 * @param y the y
-	 */
 	public void setMap(final String texture, final int x, final int y)
 	{
 		_texture = "town_map." + texture;
@@ -107,28 +81,16 @@ public class L2StaticObjectInstance extends L2Object
 		_y = y;
 	}
 	
-	/**
-	 * Gets the map x.
-	 * @return the map x
-	 */
 	private int getMapX()
 	{
 		return _x;
 	}
 	
-	/**
-	 * Gets the map y.
-	 * @return the map y
-	 */
 	private int getMapY()
 	{
 		return _y;
 	}
 	
-	/**
-	 * this is called when a player interacts with this NPC.
-	 * @param player the player
-	 */
 	@Override
 	public void onAction(final L2PcInstance player)
 	{
@@ -140,13 +102,9 @@ public class L2StaticObjectInstance extends L2Object
 		if (this != player.getTarget())
 		{
 			player.setTarget(this);
-			player.sendPacket(new MyTargetSelected(getObjectId(), 0));
 		}
 		else
 		{
-			MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
-			player.sendPacket(my);
-			
 			if (!player.isInsideRadius(this, INTERACTION_DISTANCE, false, false))
 			{
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
@@ -171,16 +129,14 @@ public class L2StaticObjectInstance extends L2Object
 					}
 					
 					player.sendPacket(html);
-					player.sendPacket(ActionFailed.STATIC_PACKET);
 				}
 				else if (_type == 0)
 				{
 					player.sendPacket(new ShowTownMap(_texture, getMapX(), getMapY()));
 				}
-				
-				player.sendPacket(ActionFailed.STATIC_PACKET);
 			}
 		}
+		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
 	@Override

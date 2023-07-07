@@ -26,30 +26,23 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2GuardNoHTMLInstance;
 import l2jorion.game.model.actor.instance.L2MonsterInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.logger.Logger;
-import l2jorion.logger.LoggerFactory;
 
 public class GuardNoHTMLKnownList extends AttackableKnownList
 {
-	private static Logger LOG = LoggerFactory.getLogger(GuardKnownList.class);
+	// private static Logger LOG = LoggerFactory.getLogger(GuardKnownList.class);
 	
-	// =========================================================
-	// Data Field
-	
-	// =========================================================
-	// Constructor
 	public GuardNoHTMLKnownList(final L2GuardNoHTMLInstance activeChar)
 	{
 		super(activeChar);
 	}
 	
-	// =========================================================
-	// Method - Public
 	@Override
 	public boolean addKnownObject(L2Object object)
 	{
 		if (!super.addKnownObject(object))
+		{
 			return false;
+		}
 		
 		// Set home location of the L2GuardInstance (if not already done)
 		if (getActiveChar().getHomeX() == 0)
@@ -64,19 +57,12 @@ public class GuardNoHTMLKnownList extends AttackableKnownList
 			
 			if (player.getKarma() > 0)
 			{
-				if (Config.DEBUG)
-				{
-					LOG.debug(getActiveChar().getObjectId() + ": PK " + player.getObjectId() + " entered scan range");
-				}
-				
 				// Set the L2GuardInstance Intention to AI_INTENTION_ACTIVE
 				if (getActiveChar().getAI().getIntention() == CtrlIntention.AI_INTENTION_IDLE)
 				{
 					getActiveChar().getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null);
 				}
 			}
-			
-			player = null;
 		}
 		else if (Config.ALLOW_GUARDS && object instanceof L2MonsterInstance)
 		{
@@ -85,19 +71,12 @@ public class GuardNoHTMLKnownList extends AttackableKnownList
 			
 			if (mob.isAggressive())
 			{
-				if (Config.DEBUG)
-				{
-					LOG.debug(getActiveChar().getObjectId() + ": Aggressive mob " + mob.getObjectId() + " entered scan range");
-				}
-				
 				// Set the L2GuardInstance Intention to AI_INTENTION_ACTIVE
 				if (getActiveChar().getAI().getIntention() == CtrlIntention.AI_INTENTION_IDLE)
 				{
 					getActiveChar().getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null);
 				}
 			}
-			
-			mob = null;
 		}
 		
 		return true;
@@ -106,13 +85,14 @@ public class GuardNoHTMLKnownList extends AttackableKnownList
 	@Override
 	public boolean removeKnownObject(L2Object object)
 	{
-		if(!super.removeKnownObject(object))
+		if (!super.removeKnownObject(object))
+		{
 			return false;
+		}
 		
 		// Check if the _aggroList of the L2GuardInstance is Empty
 		if (getActiveChar().noTarget())
 		{
-			// removeAllKnownObjects();
 			// Set the L2GuardInstance to AI_INTENTION_IDLE
 			final L2CharacterAI ai = getActiveChar().getAI();
 			if (ai != null)
@@ -124,10 +104,6 @@ public class GuardNoHTMLKnownList extends AttackableKnownList
 		return true;
 	}
 	
-	// =========================================================
-	// Method - Private
-	// =========================================================
-	// Property - Public
 	@Override
 	public final L2GuardNoHTMLInstance getActiveChar()
 	{

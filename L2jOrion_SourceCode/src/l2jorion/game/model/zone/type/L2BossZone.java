@@ -26,6 +26,7 @@ import l2jorion.game.datatables.csv.MapRegionTable;
 import l2jorion.game.managers.GrandBossManager;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Summon;
+import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
@@ -38,21 +39,22 @@ public class L2BossZone extends L2ZoneType
 {
 	private int _timeInvade;
 	private int _maxLevel = 0;
+	private int _maxPlayersInside = 0;
 	private boolean _enabled = true;
 	private boolean _IsFlyingEnable = true;
 	private boolean _pvp = false;
 	private boolean _AllowCursedWeapons = true;
 	private boolean _access = false;
 	private boolean _teleportOut = true;
-	
 	private boolean _NoSummonZone = true;
+	private boolean _allowedDualBox = true;
 	
 	private final Map<Integer, Long> _playerAllowedReEntryTimes;
 	private List<Integer> _playersAllowed;
 	
 	private int _bossId;
 	
-	protected volatile List<Integer> _skills = new ArrayList<>();
+	private List<Integer> _skills = new ArrayList<>();
 	
 	public L2BossZone(int id)
 	{
@@ -77,6 +79,9 @@ public class L2BossZone extends L2ZoneType
 				break;
 			case "maxLevel":
 				_maxLevel = Integer.parseInt(value);
+				break;
+			case "maxPlayersInside":
+				_maxPlayersInside = Integer.parseInt(value);
 				break;
 			case "EnabledByDefault":
 				_enabled = Boolean.parseBoolean(value);
@@ -119,6 +124,9 @@ public class L2BossZone extends L2ZoneType
 			case "noSummonZone":
 				_NoSummonZone = Boolean.parseBoolean(value);
 				break;
+			case "allowedDualBox":
+				_allowedDualBox = Boolean.parseBoolean(value);
+				break;
 			default:
 				super.setParameter(name, value);
 				break;
@@ -137,12 +145,17 @@ public class L2BossZone extends L2ZoneType
 			
 			if (character instanceof L2PcInstance)
 			{
+				final L2PcInstance player = (L2PcInstance) character;
+				
+				if (player.isBossObserve())
+				{
+					return;
+				}
+				
 				if (_NoSummonZone)
 				{
 					character.setInsideZone(ZoneId.ZONE_NOSUMMONFRIEND, true);
 				}
-				
-				final L2PcInstance player = (L2PcInstance) character;
 				
 				if (Config.BOT_PROTECTOR)
 				{
@@ -212,11 +225,45 @@ public class L2BossZone extends L2ZoneType
 					player.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 				}
 				
+				if (!_allowedDualBox)
+				{
+					player.setBossZoneId(getId());
+					if (player._active_boxes > 1)
+					{
+						List<String> playerBoxes = player.active_boxes_characters;
+						
+						if (playerBoxes != null && playerBoxes.size() > 1)
+						{
+							for (String character_name : playerBoxes)
+							{
+								L2PcInstance box = L2World.getInstance().getPlayer(character_name);
+								if (box != null && player.getBossZoneId() == box.getBossZoneId())
+								{
+									player.sendMessage("Detected same IP. Dual box is not allowed in this zone.");
+									player.sendPacket(new ExShowScreenMessage("Detected same IP. Dual box is not allowed in this zone.", 3000, 0x02, false));
+									player.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+									continue;
+								}
+							}
+						}
+					}
+				}
+				
 				if (!player.isEnteringToWorld())
 				{
 					if (_access)
 					{
 						allowPlayerEntry(player, 1);
+					}
+				}
+				
+				if (_maxPlayersInside > 0)
+				{
+					if (getPlayersInside().size() > _maxPlayersInside)
+					{
+						player.sendMessage("The boss zone reached limit of max players inside.");
+						player.sendPacket(new ExShowScreenMessage("The boss zone reached limit of max players inside.", 3000, 0x02, false));
+						player.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 					}
 				}
 				
@@ -271,12 +318,17 @@ public class L2BossZone extends L2ZoneType
 			
 			if (character instanceof L2PcInstance)
 			{
+				L2PcInstance player = (L2PcInstance) character;
+				
+				if (player.isBossObserve())
+				{
+					return;
+				}
+				
 				if (_NoSummonZone)
 				{
 					character.setInsideZone(ZoneId.ZONE_NOSUMMONFRIEND, false);
 				}
-				
-				L2PcInstance player = (L2PcInstance) character;
 				
 				if (Config.BOT_PROTECTOR)
 				{
@@ -293,6 +345,11 @@ public class L2BossZone extends L2ZoneType
 				{
 					player.stopPvPFlag();
 					player.updatePvPStatus();
+				}
+				
+				if (!_allowedDualBox)
+				{
+					player.setBossZoneId(0);
 				}
 				
 				// if the player just got disconnected/logged out, store the dc time so that
@@ -317,9 +374,17 @@ public class L2BossZone extends L2ZoneType
 	
 	public void setZoneEnabled(boolean flag)
 	{
+		setZoneEnabled(flag, true);
+	}
+	
+	public void setZoneEnabled(boolean flag, boolean teleportOut)
+	{
 		if (_enabled != flag)
 		{
-			oustAllPlayers();
+			if (teleportOut)
+			{
+				oustAllPlayers();
+			}
 		}
 		
 		_enabled = flag;
@@ -474,6 +539,14 @@ public class L2BossZone extends L2ZoneType
 			}
 		}
 		return;
+	}
+	
+	public final void updateZoneStatusForCharactersInside()
+	{
+		for (L2Character character : _characterList.values())
+		{
+			onExit(character);
+		}
 	}
 	
 	public int getBossId()

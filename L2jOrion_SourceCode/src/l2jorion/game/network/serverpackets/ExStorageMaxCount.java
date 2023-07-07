@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class ExStorageMaxCount extends L2GameServerPacket
+public class ExStorageMaxCount extends PacketServer
 {
 	private static final String _S__FE_2E_EXSTORAGEMAXCOUNT = "[S] FE:2E ExStorageMaxCount";
 	private final L2PcInstance _activeChar;

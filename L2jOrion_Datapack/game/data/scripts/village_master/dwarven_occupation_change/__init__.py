@@ -1,12 +1,9 @@
-# Created by DrLecter, based on DraX' and Ariakas work
-# 
 import sys
 from l2jorion.game.model.quest        import State
 from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
 
 qn = "dwarven_occupation_change"
-#print "Dwarven elven change"
 
 #GESTO,CROOP,BRAXT,KLUMP,NATOOLS,MONA,DONALD,YASHENI
 BH_NPCS=[30511,30676,30685,30845,30894,31269,31314,31958]

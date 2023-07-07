@@ -1,6 +1,3 @@
-# version 0.2
-# by DrLecter, with fixes from Ryo_Saeba
-
 import sys
 from l2jorion import Config
 from l2jorion.game.model.quest import State
@@ -155,6 +152,8 @@ class Quest (JQuest):
 
     if id == COMPLETED: st.setState(CREATED)
     if npcId == PET_MANAGER_MARTIN :
+      if id == TALKED:
+        return "Talked.htm"
       if id == CREATED  :
          if player.getLevel() < 15 :
             st.exitQuest(1)

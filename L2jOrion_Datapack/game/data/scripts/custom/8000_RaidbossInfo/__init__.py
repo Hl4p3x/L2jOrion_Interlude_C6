@@ -1,5 +1,3 @@
-#made by Kerberos
-#latest sync with retail on 12/8/2007
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
@@ -7,8 +5,6 @@ from l2jorion.game.model.quest.jython import QuestJython as JQuest
 from l2jorion.game.network.serverpackets import RadarControl
 
 qn = "8000_RaidbossInfo"
-
-#print "8000. Raidboss Info"
 
 NPC = range(31729,31842)
 

@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class Dice extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class Dice extends PacketServer
 {
 	private static final String _S__D4_Dice = "[S] D4 Dice";
 	private final int _charObjId;

@@ -22,19 +22,17 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.Config;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExDuelAskStart;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * Format:(ch) Sd
- * @author L2jOrion
- */
-public final class RequestDuelStart extends L2GameClientPacket
+public final class RequestDuelStart extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestDuelStart.class);
+	
 	private String _player;
 	private int _partyDuel;
 	
@@ -51,7 +49,9 @@ public final class RequestDuelStart extends L2GameClientPacket
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		final L2PcInstance targetChar = L2World.getInstance().getPlayer(_player);
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		if (targetChar == null)
 		{

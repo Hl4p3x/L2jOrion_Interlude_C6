@@ -1,34 +1,21 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.datatables.OfflineTradeTable;
+import l2jorion.game.datatables.OfflineTradeTableWithBuffer;
+import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.datatables.sql.ItemTable;
+import l2jorion.game.model.L2Skill.SkillType;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.ItemList;
+import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2EtcItemType;
@@ -47,6 +34,7 @@ public class TradeList
 		private int _count;
 		private int _price;
 		private int _curcount;
+		private int _id;
 		
 		/** Augmented Item */
 		private L2Augmentation _augmentation = null;
@@ -58,6 +46,16 @@ public class TradeList
 			_enchant = item.getEnchantLevel();
 			_count = count;
 			_price = price;
+		}
+		
+		public TradeItem(L2ItemInstance item, int count, int price, int id)
+		{
+			_objectId = item.getObjectId();
+			_item = item.getItem();
+			_enchant = item.getEnchantLevel();
+			_count = count;
+			_price = price;
+			_id = id;
 		}
 		
 		public TradeItem(L2Item item, int count, int price)
@@ -137,6 +135,16 @@ public class TradeList
 		{
 			return _augmentation == null ? false : true;
 		}
+		
+		public void setId(int id)
+		{
+			_id = id;
+		}
+		
+		public int getId()
+		{
+			return _id;
+		}
 	}
 	
 	private static Logger LOG = LoggerFactory.getLogger(TradeList.class.getName());
@@ -150,15 +158,128 @@ public class TradeList
 	private boolean _confirmed = false;
 	private boolean _locked = false;
 	
+	private int _sellBuyItemId = 0;
+	private boolean _buffer;
+	
 	public TradeList(L2PcInstance owner)
 	{
-		_items = new FastList<>();
+		_items = new ArrayList<>();
 		_owner = owner;
 	}
 	
 	public L2PcInstance getOwner()
 	{
 		return _owner;
+	}
+	
+	public boolean isBuffer()
+	{
+		return _buffer;
+	}
+	
+	public void setBuffer(boolean value)
+	{
+		_buffer = value;
+	}
+	
+	public int getSellBuyItemId()
+	{
+		return _sellBuyItemId;
+	}
+	
+	public void setSellBuyItemId(int sellBuyItemId)
+	{
+		_sellBuyItemId = sellBuyItemId;
+	}
+	
+	public TradeItem addBuff(int objectId, int count, int price)
+	{
+		L2Object o = L2World.getInstance().findObject(objectId);
+		L2ItemInstance item = (L2ItemInstance) o;
+		
+		TradeItem titem = new TradeItem(item, count, price, item.getItemId());
+		
+		_items.add(titem);
+		
+		return titem;
+	}
+	
+	public void GetBuffs(L2PcInstance player, ItemRequest[] _items, int price)
+	{
+		if (player.getInventory().getItemByItemId(_owner.getSellList().getSellBuyItemId()) == null || player.getInventory().getItemByItemId(_owner.getSellList().getSellBuyItemId()).getCount() < price)
+		{
+			player.sendPacket(new SystemMessage(SystemMessageId.YOU_NOT_ENOUGH_ADENA));
+			return;
+		}
+		
+		for (ItemRequest sk : _items)
+		{
+			L2Skill skill = SkillTable.getInstance().getInfo(sk.getId(), sk.getEnchant());
+			
+			skill.getEffects(player, player);
+			player.broadcastPacket(new MagicSkillUser(player, player, sk.getItemId(), sk.getEnchant(), 500, 0));
+			
+			SystemMessage sm = new SystemMessage(SystemMessageId.YOU_FEEL_S1_EFFECT);
+			sm.addSkillName(sk.getItemId());
+			player.sendPacket(sm);
+		}
+		
+		_owner.addItemByItemId("Reward", _owner.getSellList().getSellBuyItemId(), price, null, true);
+		player.destroyItemByItemId("Reduce", _owner.getSellList().getSellBuyItemId(), price, null, true);
+	}
+	
+	public ArrayList<L2Skill> BuffsList = new ArrayList<>();
+	
+	public L2Skill[] getBuffs()
+	{
+		// Gift of Seraphim
+		L2Skill skill1 = SkillTable.getInstance().getInfo(4703, 13);
+		// Blessing of Seraphim
+		L2Skill skill2 = SkillTable.getInstance().getInfo(4702, 13);
+		
+		// Gift of Queen
+		L2Skill skill3 = SkillTable.getInstance().getInfo(4700, 13);
+		// Blessing of Queen
+		L2Skill skill4 = SkillTable.getInstance().getInfo(4699, 13);
+		
+		L2Skill skill5 = SkillTable.getInstance().getInfo(1363, 1);
+		L2Skill skill6 = SkillTable.getInstance().getInfo(1414, 1);
+		L2Skill skill7 = SkillTable.getInstance().getInfo(1416, 1);
+		
+		L2Skill[] skills = _owner.getAllSkills();
+		for (L2Skill skill : skills)
+		{
+			if (skill == null)
+			{
+				continue;
+			}
+			
+			if ((!_owner.BuffsList.contains(skill) && !Config.LIST_PROHIBITED_BUFFS.contains(skill.getId())))
+			{
+				if ((skill.getSkillType() == SkillType.BUFF //
+					|| skill.getName().contains(skill5.getName()) //
+					|| skill.getName().contains(skill6.getName()) //
+					|| skill.getName().contains(skill7.getName()) //
+				) && skill.isActive())
+				{
+					_owner.BuffsList.add(skill);
+				}
+			}
+		}
+		
+		if (!_owner.BuffsList.contains(skill1) && !_owner.BuffsList.contains(skill2) && (_owner.getClassId().getId() == 28 || _owner.getClassId().getId() == 104))
+		{
+			_owner.BuffsList.add(skill1);
+			_owner.BuffsList.add(skill2);
+		}
+		
+		if (!_owner.BuffsList.contains(skill3) && !_owner.BuffsList.contains(skill4) && (_owner.getClassId().getId() == 14 || _owner.getClassId().getId() == 96))
+		{
+			_owner.BuffsList.add(skill3);
+			_owner.BuffsList.add(skill4);
+		}
+		
+		return _owner.BuffsList.toArray(new L2Skill[_owner.BuffsList.size()]);
 	}
 	
 	public void setPartner(L2PcInstance partner)
@@ -222,6 +343,21 @@ public class TradeList
 	public int getItemCount()
 	{
 		return _items.size();
+	}
+	
+	public ArrayList<TradeList.TradeItem> list = new ArrayList<>();
+	
+	public TradeItem adjustFakeItem(L2ItemInstance item)
+	{
+		for (TradeItem exclItem : _items)
+		{
+			if (item.getItem().getItemId() == exclItem.getId())
+			{
+				list.remove(exclItem);
+				return null;
+			}
+		}
+		return new TradeItem(item, 1, 0);
 	}
 	
 	public TradeItem adjustAvailableItem(L2ItemInstance item)
@@ -833,18 +969,37 @@ public class TradeList
 		InventoryUpdate ownerIU = new InventoryUpdate();
 		InventoryUpdate playerIU = new InventoryUpdate();
 		
-		// Transfer adena
-		if (price > playerInventory.getAdena())
+		if (!Config.RON_CUSTOM)
 		{
-			lock();
-			return false;
+			// Transfer adena
+			if (price > playerInventory.getAdena())
+			{
+				lock();
+				return false;
+			}
+			
+			L2ItemInstance adenaItem = playerInventory.getAdenaInstance();
+			playerInventory.reduceAdena("PrivateStore", price, player, _owner);
+			playerIU.addItem(adenaItem);
+			ownerInventory.addAdena("PrivateStore", price, _owner, player);
+			ownerIU.addItem(ownerInventory.getAdenaInstance());
 		}
-		
-		L2ItemInstance adenaItem = playerInventory.getAdenaInstance();
-		playerInventory.reduceAdena("PrivateStore", price, player, _owner);
-		playerIU.addItem(adenaItem);
-		ownerInventory.addAdena("PrivateStore", price, _owner, player);
-		ownerIU.addItem(ownerInventory.getAdenaInstance());
+		else
+		{
+			// Transfer adena
+			if (price > playerInventory.getItemByItemId(getSellBuyItemId()).getCount())
+			{
+				lock();
+				return false;
+			}
+			
+			L2ItemInstance currencyItem = playerInventory.getItemByItemId(getSellBuyItemId());
+			player.destroyItem("Consume", currencyItem.getObjectId(), price, null, true);
+			playerIU.addItem(currencyItem);
+			
+			ownerInventory.addItemById("PrivateStore", getSellBuyItemId(), price, _owner, player);
+			ownerIU.addItem(ownerInventory.getItemByItemId(getSellBuyItemId()));
+		}
 		
 		// Transfer items
 		for (ItemRequest item : items)
@@ -900,14 +1055,12 @@ public class TradeList
 				msg.addItemName(newItem.getItemId());
 				msg.addNumber(item.getCount());
 				_owner.sendPacket(msg);
-				msg = null;
 				
 				msg = new SystemMessage(SystemMessageId.PURCHASED_S3_S2_S_FROM_S1);
 				msg.addString(_owner.getName());
 				msg.addItemName(newItem.getItemId());
 				msg.addNumber(item.getCount());
 				player.sendPacket(msg);
-				msg = null;
 			}
 			else
 			{
@@ -915,13 +1068,11 @@ public class TradeList
 				msg.addString(player.getName());
 				msg.addItemName(newItem.getItemId());
 				_owner.sendPacket(msg);
-				msg = null;
 				
 				msg = new SystemMessage(SystemMessageId.PURCHASED_S2_FROM_S1);
 				msg.addString(_owner.getName());
 				msg.addItemName(newItem.getItemId());
 				player.sendPacket(msg);
-				msg = null;
 			}
 		}
 		
@@ -931,7 +1082,14 @@ public class TradeList
 		
 		if (_owner.isInOfflineMode())
 		{
-			OfflineTradeTable.storeOffliner(_owner);
+			if (!Config.RON_CUSTOM)
+			{
+				OfflineTradeTable.storeOffliner(_owner);
+			}
+			else
+			{
+				OfflineTradeTableWithBuffer.storeOffliner(_owner);
+			}
 		}
 		return true;
 	}
@@ -1014,7 +1172,6 @@ public class TradeList
 					
 					found = true;
 					break;
-					
 				}
 			}
 			
@@ -1024,7 +1181,6 @@ public class TradeList
 				String msg = "Requested Item is not available to sell... You are perfoming illegal operation, it has been segnalated";
 				LOG.warn("ATTENTION: Player " + player.getName() + " has performed sell illegal operation..");
 				player.sendMessage(msg);
-				msg = null;
 				return false;
 			}
 			
@@ -1033,11 +1189,8 @@ public class TradeList
 				String msg = "Transaction failed. Augmented items may not be exchanged.";
 				_owner.sendMessage(msg);
 				player.sendMessage(msg);
-				msg = null;
 				return false;
 			}
-			
-			oldItem = null;
 		}
 		
 		// Transfer items
@@ -1105,14 +1258,12 @@ public class TradeList
 				msg.addItemName(newItem.getItemId());
 				msg.addNumber(item.getCount());
 				_owner.sendPacket(msg);
-				msg = null;
 				
 				msg = new SystemMessage(SystemMessageId.S1_PURCHASED_S3_S2_S);
 				msg.addString(_owner.getName());
 				msg.addItemName(newItem.getItemId());
 				msg.addNumber(item.getCount());
 				player.sendPacket(msg);
-				msg = null;
 			}
 			else
 			{
@@ -1120,17 +1271,39 @@ public class TradeList
 				msg.addString(player.getName());
 				msg.addItemName(newItem.getItemId());
 				_owner.sendPacket(msg);
-				msg = null;
 				
 				msg = new SystemMessage(SystemMessageId.S1_PURCHASED_S2);
 				msg.addString(_owner.getName());
 				msg.addItemName(newItem.getItemId());
 				player.sendPacket(msg);
-				msg = null;
+			}
+		}
+		
+		if (Config.RON_CUSTOM)
+		{
+			// Transfer adena
+			if (price > ownerInventory.getItemByItemId(getSellBuyItemId()).getCount())
+			{
+				return false;
 			}
 			
-			newItem = null;
-			oldItem = null;
+			L2ItemInstance currencyItem = ownerInventory.getItemByItemId(getSellBuyItemId());
+			
+			_owner.destroyItem("Consume", currencyItem.getObjectId(), price, null, true);
+			ownerIU.addItem(currencyItem);
+			
+			playerInventory.addItemById("PrivateStore", getSellBuyItemId(), price, player, _owner);
+			playerIU.addItem(playerInventory.getItemByItemId(getSellBuyItemId()));
+			
+			_owner.sendPacket(ownerIU);
+			player.sendPacket(playerIU);
+			
+			if (_owner.isInOfflineMode())
+			{
+				OfflineTradeTableWithBuffer.storeOffliner(_owner);
+			}
+			
+			return true;
 		}
 		
 		// Transfer adena
@@ -1151,16 +1324,13 @@ public class TradeList
 		
 		if (_owner.isInOfflineMode())
 		{
+			
 			OfflineTradeTable.storeOffliner(_owner);
 		}
 		
 		return true;
 	}
 	
-	/**
-	 * @param objectId
-	 * @return
-	 */
 	public TradeItem getItem(int objectId)
 	{
 		for (TradeItem item : _items)

@@ -29,13 +29,12 @@ import l2jorion.game.model.L2TradeList;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.BuyList;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
-import l2jorion.game.network.serverpackets.ValidateLocation;
+import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.game.util.Broadcast;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
+import l2jorion.util.random.Rnd;
 
 public final class L2MercManagerInstance extends L2FolkInstance
 {
@@ -54,42 +53,36 @@ public final class L2MercManagerInstance extends L2FolkInstance
 	public void onAction(final L2PcInstance player)
 	{
 		if (!canTarget(player))
+		{
 			return;
+		}
+		
 		player.setLastFolkNPC(this);
 		
-		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
 		{
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
-			
-			// Send a Server->Client packet MyTargetSelected to the L2PcInstance player
-			MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
-			player.sendPacket(my);
-			my = null;
-			
-			// Send a Server->Client packet ValidateLocation to correct the L2NpcInstance position and heading on the client
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
-			// Calculate the distance between the L2PcInstance and the L2NpcInstance
 			if (!canInteract(player))
 			{
-				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 			}
 			else
 			{
-				// Like L2OFF player must rotate to the Npc
-				MoveToPawn sp = new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE);
-				player.sendPacket(sp);
-				Broadcast.toKnownPlayers(player, sp);
+				if (player.isMoving())
+				{
+					player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+				}
+				
+				player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
+				
+				broadcastPacket(new SocialAction(getObjectId(), Rnd.get(8)));
 				
 				showMessageWindow(player);
 			}
 		}
-		// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
@@ -98,10 +91,14 @@ public final class L2MercManagerInstance extends L2FolkInstance
 	{
 		final int condition = validateCondition(player);
 		if (condition <= COND_ALL_FALSE)
+		{
 			return;
+		}
 		
 		if (condition == COND_BUSY_BECAUSE_OF_SIEGE)
+		{
 			return;
+		}
 		else if (condition == COND_OWNER)
 		{
 			StringTokenizer st = new StringTokenizer(command, " ");
@@ -116,9 +113,11 @@ public final class L2MercManagerInstance extends L2FolkInstance
 			if (actualCommand.equalsIgnoreCase("hire"))
 			{
 				if (val.isEmpty())
+				{
 					return;
+				}
 				
-				player.setTempAccessBuy(false);
+				player.setTempAccess(false);
 				
 				showBuyWindow(player, Integer.parseInt(val));
 				return;
@@ -183,11 +182,15 @@ public final class L2MercManagerInstance extends L2FolkInstance
 			if (player.getClan() != null)
 			{
 				if (getCastle().getSiege().getIsInProgress())
+				{
 					return COND_BUSY_BECAUSE_OF_SIEGE; // Busy because of siege
+				}
 				else if (getCastle().getOwnerId() == player.getClanId()) // Clan owns castle
 				{
 					if ((player.getClanPrivileges() & L2Clan.CP_CS_MERCENARIES) == L2Clan.CP_CS_MERCENARIES)
+					{
 						return COND_OWNER;
+					}
 				}
 			}
 		}

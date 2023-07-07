@@ -23,12 +23,13 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class RequestGiveNickName extends L2GameClientPacket
+public class RequestGiveNickName extends PacketClient
 {
 	static Logger LOG = LoggerFactory.getLogger(RequestGiveNickName.class);
 	
@@ -59,6 +60,7 @@ public class RequestGiveNickName extends L2GameClientPacket
 			activeChar.sendPacket(sm);
 			activeChar.broadcastTitleInfo();
 		}
+		
 		// Can the player change/give a title?
 		else if ((activeChar.getClanPrivileges() & L2Clan.CP_CL_GIVE_TITLE) == L2Clan.CP_CL_GIVE_TITLE)
 		{
@@ -66,7 +68,6 @@ public class RequestGiveNickName extends L2GameClientPacket
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.CLAN_LVL_3_NEEDED_TO_ENDOWE_TITLE);
 				activeChar.sendPacket(sm);
-				sm = null;
 				return;
 			}
 			
@@ -81,14 +82,12 @@ public class RequestGiveNickName extends L2GameClientPacket
 					SystemMessage sm = new SystemMessage(SystemMessageId.TITLE_CHANGED);
 					member.sendPacket(sm);
 					member.broadcastTitleInfo();
-					sm = null;
 				}
 				else
 				{
 					SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 					sm.addString("Target needs to be online to get a title");
 					activeChar.sendPacket(sm);
-					sm = null;
 				}
 			}
 			else
@@ -96,7 +95,6 @@ public class RequestGiveNickName extends L2GameClientPacket
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 				sm.addString("Target does not belong to your clan");
 				activeChar.sendPacket(sm);
-				sm = null;
 			}
 		}
 	}

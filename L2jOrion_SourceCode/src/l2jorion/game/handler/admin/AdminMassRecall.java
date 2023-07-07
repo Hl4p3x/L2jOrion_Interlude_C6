@@ -11,10 +11,6 @@ import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.type.L2BossZone;
 
-/**
- * This class handles following admin commands: - recallparty - recallclan - recallally
- * @author Yamaneko
- */
 public class AdminMassRecall implements IAdminCommandHandler
 {
 	private static String[] _adminCommands =
@@ -49,7 +45,7 @@ public class AdminMassRecall implements IAdminCommandHandler
 				{
 					if (_Zone != null)
 					{
-						_Zone.allowPlayerEntry(element,30);
+						_Zone.allowPlayerEntry(element, 30);
 					}
 					Teleport(element, activeChar.getX(), activeChar.getY(), activeChar.getZ(), "Admin is teleporting your clan.");
 				}
@@ -58,7 +54,9 @@ public class AdminMassRecall implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Error in recallclan command.");
 			}
@@ -87,7 +85,7 @@ public class AdminMassRecall implements IAdminCommandHandler
 					{
 						if (_Zone != null)
 						{
-							_Zone.allowPlayerEntry(element,30);
+							_Zone.allowPlayerEntry(element, 30);
 						}
 						Teleport(element, activeChar.getX(), activeChar.getY(), activeChar.getZ(), "Admin is teleporting your ally.");
 					}
@@ -104,7 +102,7 @@ public class AdminMassRecall implements IAdminCommandHandler
 							{
 								if (_Zone != null)
 								{
-									_Zone.allowPlayerEntry(element,30);
+									_Zone.allowPlayerEntry(element, 30);
 								}
 								Teleport(element, activeChar.getX(), activeChar.getY(), activeChar.getZ(), "Admin is teleporting your ally.");
 							}
@@ -118,7 +116,9 @@ public class AdminMassRecall implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Error in recallally command.");
 			}
@@ -148,7 +148,7 @@ public class AdminMassRecall implements IAdminCommandHandler
 				{
 					if (_Zone != null)
 					{
-						_Zone.allowPlayerEntry(ppl,30);
+						_Zone.allowPlayerEntry(ppl, 30);
 					}
 					Teleport(ppl, activeChar.getX(), activeChar.getY(), activeChar.getZ(), "Admin is teleporting your party.");
 				}
@@ -158,7 +158,9 @@ public class AdminMassRecall implements IAdminCommandHandler
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				activeChar.sendMessage("Error in recallparty command.");
 			}

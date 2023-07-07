@@ -31,9 +31,6 @@ import l2jorion.game.script.ScriptEngine;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * @author Luis Arias
- */
 public class FaenorQuestParser extends FaenorParser
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(FaenorQuestParser.class);
@@ -110,7 +107,9 @@ public class FaenorQuestParser extends FaenorParser
 		catch (final NullPointerException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			throw new NullPointerException("Incorrect Drop Data");
 		}

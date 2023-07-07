@@ -57,19 +57,13 @@ import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.util.random.Rnd;
 
-/**
- * The Class DM.
- */
 public class DM implements EventTask
 {
 	
-	/** The Constant LOG. */
 	protected static final Logger LOG = LoggerFactory.getLogger(DM.class);
 	
-	/** The _joining location name. */
 	private static String _eventName = new String(), _eventDesc = new String(), _joiningLocationName = new String();
 	
-	/** The _npc spawn. */
 	private static L2Spawn _npcSpawn;
 	
 	/** The _in progress. */
@@ -85,7 +79,7 @@ public class DM implements EventTask
 	private String startEventTime;
 	
 	/** The _team event. */
-	protected static boolean _teamEvent = false; // TODO to be integrated
+	protected static boolean _teamEvent = false;
 	
 	/** The _players. */
 	public static Vector<L2PcInstance> _players = new Vector<>();
@@ -626,7 +620,6 @@ public class DM implements EventTask
 	 */
 	private static boolean checkStartJoinTeamInfo()
 	{
-		// TODO be integrated
 		return true;
 	}
 	
@@ -664,7 +657,6 @@ public class DM implements EventTask
 	 */
 	private static boolean checkOptionalEventStartJoinOk()
 	{
-		// TODO be integrated
 		return true;
 	}
 	
@@ -763,7 +755,7 @@ public class DM implements EventTask
 		
 		Announcements.getInstance().gameAnnounceToAll(_eventName + ": Recruiting levels: " + _minlvl + "-" + _maxlvl);
 		
-		if (!Config.TVT_COMMAND)
+		if (!Config.DM_COMMAND)
 		{
 			Announcements.getInstance().gameAnnounceToAll(_eventName + ": Joinable in " + _joiningLocationName);
 		}
@@ -776,10 +768,6 @@ public class DM implements EventTask
 		return true;
 	}
 	
-	/**
-	 * Start teleport.
-	 * @return true, if successful
-	 */
 	public static boolean startTeleport()
 	{
 		if (!_joining || _started || _teleport)
@@ -795,7 +783,6 @@ public class DM implements EventTask
 		}
 		else
 		{
-			// final int size = getPlayers().size();
 			synchronized (_players)
 			{
 				final int size = _players.size();
@@ -825,7 +812,6 @@ public class DM implements EventTask
 				sit();
 				afterTeleportOperations();
 				
-				// final Vector<L2PcInstance> players = getPlayers();
 				synchronized (_players)
 				{
 					for (final L2PcInstance player : _players)
@@ -909,18 +895,11 @@ public class DM implements EventTask
 		return true;
 	}
 	
-	/**
-	 * After teleport operations.
-	 */
 	protected static void afterTeleportOperations()
 	{
 		
 	}
 	
-	/**
-	 * Start event.
-	 * @return true, if successful
-	 */
 	public static boolean startEvent()
 	{
 		if (!startEventOk())
@@ -945,12 +924,8 @@ public class DM implements EventTask
 		return true;
 	}
 	
-	/**
-	 * Removes the parties.
-	 */
 	private static void removeParties()
 	{
-		// final Vector<L2PcInstance> players = getPlayers();
 		synchronized (_players)
 		{
 			
@@ -965,17 +940,11 @@ public class DM implements EventTask
 		}
 	}
 	
-	/**
-	 * After start operations.
-	 */
 	private static void afterStartOperations()
 	{
 		
 	}
 	
-	/**
-	 * Restarts Event checks if event was aborted. and if true cancels restart task
-	 */
 	public synchronized static void restartEvent()
 	{
 		LOG.info(_eventName + ": Event has been restarted...");
@@ -1007,9 +976,6 @@ public class DM implements EventTask
 		}
 	}
 	
-	/**
-	 * Finish event.
-	 */
 	public static void finishEvent()
 	{
 		if (!finishEventOk())
@@ -1042,7 +1008,8 @@ public class DM implements EventTask
 				{
 					winners = winners + " " + winner.getName();
 				}
-				Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + winners + " win the match! " + _topKills + " kills.");
+				
+				Announcements.getInstance().gameAnnounceToAll(_eventName + ": " + winners + " won the match! " + _topKills + " kills.");
 				rewardPlayer();
 				
 				if (Config.DM_STATS_LOGGER)
@@ -1053,11 +1020,10 @@ public class DM implements EventTask
 			}
 			else
 			{
-				
-				Announcements.getInstance().gameAnnounceToAll(_eventName + ": No players win the match(nobody killed).");
+				Announcements.getInstance().gameAnnounceToAll(_eventName + ": No players win the match.");
 				if (Config.DM_STATS_LOGGER)
 				{
-					LOG.info(_eventName + ": No players win the match(nobody killed).");
+					LOG.info(_eventName + ": No players win the match.");
 				}
 			}
 		}
@@ -2050,7 +2016,6 @@ public class DM implements EventTask
 	 */
 	public static void cleanDM()
 	{
-		// final Vector<L2PcInstance> players = getPlayers();
 		synchronized (_players)
 		{
 			
@@ -2125,11 +2090,6 @@ public class DM implements EventTask
 	{
 		// nothing
 	}
-	
-	/*
-	 * public static void cleanDM() { synchronized (_players){ for(L2PcInstance player : _players) { removePlayer(player); } _savePlayers = new Vector<String>(); _topPlayer = null; _npcSpawn = null; _joining = false; _teleport = false; _started = false; _inProgress = false; _sitForced = false;
-	 * _topKills = 0; _players = new Vector<L2PcInstance>(); } }
-	 */
 	
 	/**
 	 * Adds the disconnected player.
@@ -2243,22 +2203,12 @@ public class DM implements EventTask
 				_topPlayer.sendPacket(ActionFailed.STATIC_PACKET);
 			}
 		}
-		/*
-		 * if(_topPlayer != null) { _topPlayer.addItem("DM Event: " + _eventName, _rewardId, _rewardAmount, _topPlayer, true); StatusUpdate su = new StatusUpdate(_topPlayer.getObjectId()); su.addAttribute(StatusUpdate.CUR_LOAD, _topPlayer.getCurrentLoad()); _topPlayer.sendPacket(su); NpcHtmlMessage
-		 * nhm = new NpcHtmlMessage(5); TextBuilder replyMSG = new TextBuilder(""); replyMSG.append("<html><body>You won the event. Look in your inventory for the reward.</body></html>"); nhm.setHtml(replyMSG.toString()); _topPlayer.sendPacket(nhm); // Send a Server->Client ActionFailed to the
-		 * L2PcInstance in order to avoid that the client wait another packet _topPlayer.sendPacket( ActionFailed.STATIC_PACKET ); }
-		 */
 	}
 	
-	/**
-	 * Process top player.
-	 */
 	private static void processTopPlayer()
 	{
-		// final Vector<L2PcInstance> players = getPlayers();
 		synchronized (_players)
 		{
-			
 			for (final L2PcInstance player : _players)
 			{
 				if (player._countDMkills > _topKills)
@@ -2268,29 +2218,18 @@ public class DM implements EventTask
 					_topKills = player._countDMkills;
 					
 				}
-				else if (player._countDMkills == _topKills)
-				{
-					if (!_topPlayers.contains(player))
-					{
-						_topPlayers.add(player);
-					}
-				}
+				/*
+				 * else if (player._countDMkills == _topKills) { if (!_topPlayers.contains(player)) { _topPlayers.add(player); } }
+				 */
 			}
 		}
 	}
 	
-	/**
-	 * Process top team.
-	 */
 	private static void processTopTeam()
 	{
 		
 	}
 	
-	/**
-	 * Gets the _players spawn location.
-	 * @return the _players spawn location
-	 */
 	public static Location get_playersSpawnLocation()
 	{
 		final Location npc_loc = new Location(_playerX + Rnd.get(Config.DM_SPAWN_OFFSET), _playerY + Rnd.get(Config.DM_SPAWN_OFFSET), _playerZ, 0);
@@ -2298,18 +2237,6 @@ public class DM implements EventTask
 		return npc_loc;
 	}
 	
-	/**
-	 * Gets the players.
-	 * @return the players
-	 */
-	/*
-	 * protected synchronized static Vector<L2PcInstance> getPlayers() { return _players; }
-	 */
-	
-	/**
-	 * Sets the players pos.
-	 * @param activeChar the new players pos
-	 */
 	public static void setPlayersPos(final L2PcInstance activeChar)
 	{
 		_playerX = activeChar.getX();
@@ -2317,12 +2244,8 @@ public class DM implements EventTask
 		_playerZ = activeChar.getZ();
 	}
 	
-	/**
-	 * Removes the user data.
-	 */
 	public static void removeUserData()
 	{
-		// final Vector<L2PcInstance> players = getPlayers();
 		synchronized (_players)
 		{
 			for (final L2PcInstance player : _players)

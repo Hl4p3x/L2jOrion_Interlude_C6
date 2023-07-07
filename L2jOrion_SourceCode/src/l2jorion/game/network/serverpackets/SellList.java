@@ -27,8 +27,9 @@ import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2MerchantInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class SellList extends L2GameServerPacket
+public class SellList extends PacketServer
 {
 	private static final String _S__10_SELLLIST = "[S] 10 SellList";
 	

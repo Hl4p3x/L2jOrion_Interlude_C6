@@ -16,20 +16,21 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import l2jorion.game.cache.CrestCache;
-import l2jorion.game.cache.CrestCache.CrestType;
+import l2jorion.game.network.PacketServer;
 
-
-public final class PledgeCrest extends L2GameServerPacket
+public final class PledgeCrest extends PacketServer
 {
 	private static final String _S__84_PLEDGECREST = "[S] 6c PledgeCrest";
-	private final int _crestId;
-	private final byte[] _data;
 	
-	public PledgeCrest(int crestId)
+	private int _crestId;
+	private int _crestSize;
+	private byte[] _data;
+	
+	public PledgeCrest(int crestId, byte[] data)
 	{
 		_crestId = crestId;
-		_data = CrestCache.getInstance().getCrest(CrestType.PLEDGE, _crestId);
+		_data = data;
+		_crestSize = _data.length;
 	}
 	
 	@Override
@@ -37,15 +38,8 @@ public final class PledgeCrest extends L2GameServerPacket
 	{
 		writeC(0x6c);
 		writeD(_crestId);
-		if (_data != null)
-		{
-			writeD(_data.length);
-			writeB(_data);
-		}
-		else
-		{
-			writeD(0);
-		}
+		writeD(_crestSize);
+		writeB(_data);
 	}
 	
 	@Override

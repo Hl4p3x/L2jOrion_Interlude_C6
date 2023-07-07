@@ -1,21 +1,3 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.skills;
 
 import java.text.NumberFormat;
@@ -47,8 +29,6 @@ import l2jorion.game.model.entity.siege.Siege;
 import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
-import l2jorion.game.skills.conditions.ConditionPlayerState;
-import l2jorion.game.skills.conditions.ConditionPlayerState.CheckPlayerState;
 import l2jorion.game.skills.conditions.ConditionUsingItemType;
 import l2jorion.game.skills.effects.EffectTemplate;
 import l2jorion.game.skills.funcs.Func;
@@ -72,94 +52,6 @@ public final class Formulas
 	public static final byte SHIELD_DEFENSE_FAILED = 0; // no shield defense
 	public static final byte SHIELD_DEFENSE_SUCCEED = 1; // normal shield defense
 	public static final byte SHIELD_DEFENSE_PERFECT_BLOCK = 2; // perfect block
-	
-	static class FuncAddLevel3 extends Func
-	{
-		static final FuncAddLevel3[] _instancies = new FuncAddLevel3[Stats.NUM_STATS];
-		
-		static Func getInstance(final Stats stat)
-		{
-			final int pos = stat.ordinal();
-			
-			if (_instancies[pos] == null)
-			{
-				_instancies[pos] = new FuncAddLevel3(stat);
-			}
-			return _instancies[pos];
-		}
-		
-		private FuncAddLevel3(final Stats pStat)
-		{
-			super(pStat, 0x10, null);
-		}
-		
-		@Override
-		public void calc(final Env env)
-		{
-			env.value += env.player.getLevel() / 3.0;
-		}
-	}
-	
-	static class FuncMultLevelMod extends Func
-	{
-		static final FuncMultLevelMod[] _instancies = new FuncMultLevelMod[Stats.NUM_STATS];
-		
-		static Func getInstance(final Stats stat)
-		{
-			final int pos = stat.ordinal();
-			
-			if (_instancies[pos] == null)
-			{
-				_instancies[pos] = new FuncMultLevelMod(stat);
-			}
-			return _instancies[pos];
-		}
-		
-		private FuncMultLevelMod(final Stats pStat)
-		{
-			super(pStat, 0x20, null);
-		}
-		
-		@Override
-		public void calc(final Env env)
-		{
-			env.value *= env.player.getLevelMod();
-		}
-	}
-	
-	static class FuncMultRegenResting extends Func
-	{
-		static final FuncMultRegenResting[] _instancies = new FuncMultRegenResting[Stats.NUM_STATS];
-		
-		static Func getInstance(Stats stat)
-		{
-			int pos = stat.ordinal();
-			
-			if (_instancies[pos] == null)
-			{
-				_instancies[pos] = new FuncMultRegenResting(stat);
-			}
-			
-			return _instancies[pos];
-		}
-		
-		private FuncMultRegenResting(Stats pStat)
-		{
-			super(pStat, 0x20, null);
-			setCondition(new ConditionPlayerState(CheckPlayerState.RESTING, true));
-		}
-		
-		@Override
-		public void calc(Env env)
-		{
-			if (!cond.test(env))
-			{
-				return;
-			}
-			
-			env.value *= 1.45;
-		}
-	}
 	
 	static class FuncPAtkMod extends Func
 	{
@@ -363,12 +255,14 @@ public final class Formulas
 				env.value += level;
 				if (level > 77)
 				{
-					env.value += (level - 77);
+					env.value += (level - 76);
 				}
+				
 				if (level > 69)
 				{
 					env.value += (level - 69);
 				}
+				
 				if (env.player instanceof L2Summon)
 				{
 					env.value += (level < 60) ? 4 : 5;
@@ -437,9 +331,20 @@ public final class Formulas
 			env.value *= BaseStats.DEX.calcBonus(env.player);
 			
 			L2Character p = env.player;
+			
 			if (!(p instanceof L2PetInstance))
 			{
-				env.value *= 10;
+				if (p instanceof L2PcInstance)
+				{
+					if (p.getActiveWeaponInstance() != null)
+					{
+						env.value *= 10;
+					}
+				}
+				else
+				{
+					env.value *= 10;
+				}
 			}
 			
 			env.baseValue = env.value;
@@ -1692,7 +1597,6 @@ public final class Formulas
 			else
 			{
 				damage = damage * ClassDamageManager.getDamageMultiplier((L2PcInstance) attacker, (L2PcInstance) target);
-				
 			}
 		}
 		return damage;
@@ -2025,11 +1929,6 @@ public final class Formulas
 		return mRate > Rnd.get(1000);
 	}
 	
-	/**
-	 * @param target
-	 * @param dmg
-	 * @return true in case when ATTACK is canceled due to hit
-	 */
 	public final static boolean calcAtkBreak(L2Character target, double dmg)
 	{
 		if (target instanceof L2PcInstance)
@@ -2132,24 +2031,14 @@ public final class Formulas
 		return (int) (skillTime * 333 / attacker.getPAtkSpd());
 	}
 	
-	/**
-	 * @param attacker
-	 * @param target
-	 * @return true if hit missed (taget evaded)
-	 */
-	// old
 	public static boolean calcHitMiss(L2Character attacker, L2Character target)
 	{
 		int chance = (80 + (2 * (attacker.getAccuracy() - target.getEvasionRate(attacker)))) * 10;
-		// Get additional bonus from the conditions when you are attacking
+		
 		chance *= hitConditionBonus.getConditionBonus(attacker, target);
 		
 		chance = Math.max(chance, 200);
 		chance = Math.min(chance, 980);
-		
-		/*
-		 * if (attacker instanceof L2PcInstance) { Announcements _a = Announcements.getInstance(); _a.sys(attacker.getName()+" chance:"+chance+"/1000"); }
-		 */
 		
 		return chance < Rnd.get(1000);
 	}
@@ -2535,7 +2424,7 @@ public final class Formulas
 	{
 		double mAtkModifier = 1;
 		
-		if (skill.isMagic())
+		if (target != null && attacker != null && skill.isMagic())
 		{
 			double mAtk = attacker.getMAtk(target, skill);
 			
@@ -2634,14 +2523,6 @@ public final class Formulas
 		
 		double rate = (baseRate * skillStatModifier * vulnModifier * mAtkModifier * physics_mult) + lvlModifier;
 		
-		// Announcements _a = Announcements.getInstance();
-		// _a.sys("baseRate:" + skill.getPower());
-		// _a.sys("skillStatModifier:" + skillStatModifier);
-		// _a.sys("vulnModifier:" + vulnModifier);
-		// _a.sys("mAtkModifier:" + mAtkModifier);
-		// _a.sys("lvlModifier:" + mAtkModifier);
-		// _a.sys("physics_mult:" + physics_mult);
-		
 		if (rate > skill.getMaxChance())
 		{
 			rate = skill.getMaxChance();
@@ -2653,7 +2534,19 @@ public final class Formulas
 		
 		if (Config.SEND_SKILLS_CHANCE_TO_PLAYERS)
 		{
-			sendSkillChance(attacker, target, null, skill, rate);
+			if (skill.is_Debuff() && baseRate < 101)
+			{
+				if (attacker instanceof L2PcInstance)
+				{
+					((L2PcInstance) attacker).sendMessage("Skill: " + skill.getName() + " chance: " + formatChanceNumber(rate) + "%");
+				}
+				
+				// Get sys msg from player and mob
+				if (target instanceof L2PcInstance)
+				{
+					((L2PcInstance) target).sendMessage("" + attacker.getName() + "'s Skill: " + skill.getName() + " chance: " + formatChanceNumber(rate) + "%");
+				}
+			}
 		}
 		
 		return Rnd.get(100) < rate;
@@ -2734,45 +2627,30 @@ public final class Formulas
 		
 		if (Config.SEND_SKILLS_CHANCE_TO_PLAYERS)
 		{
-			sendSkillChance(attacker, target, effect, skill, rate);
+			if (effect.effectPower != 0)
+			{
+				if (attacker instanceof L2PcInstance)
+				{
+					((L2PcInstance) attacker).sendMessage("" + skill.getName() + " (" + effect.name + ") chance: " + formatChanceNumber(rate) + "%");
+				}
+				
+				// Get sys msg from player and mob
+				if (target instanceof L2PcInstance)
+				{
+					((L2PcInstance) target).sendMessage("" + attacker.getName() + "'s " + skill.getName() + " (" + effect.name + ") chance: " + formatChanceNumber(rate) + "%");
+				}
+			}
 		}
 		
 		return (Rnd.get(100) < rate);
 	}
 	
-	public void sendSkillChance(L2Character attacker, L2Character target, EffectTemplate effect, L2Skill skill, double rate)
+	public String formatChanceNumber(double rate)
 	{
 		NumberFormat defaultFormat = NumberFormat.getNumberInstance();
 		defaultFormat.setMinimumFractionDigits(2);
 		String formatedChance = defaultFormat.format(rate);
-		
-		if (effect != null)
-		{
-			if (attacker instanceof L2PcInstance)
-			{
-				((L2PcInstance) attacker).sendMessage("" + skill.getName() + " (" + effect.name + ") chance: " + formatedChance + "%");
-				
-			}
-			
-			// Get sys msg from player and mob
-			if (target instanceof L2PcInstance)
-			{
-				((L2PcInstance) target).sendMessage("" + attacker.getName() + "'s " + skill.getName() + " (" + effect.name + ") chance: " + formatedChance + "%");
-			}
-			
-			return;
-		}
-		
-		if (attacker instanceof L2PcInstance)
-		{
-			((L2PcInstance) attacker).sendMessage("Skill: " + skill.getName() + " chance: " + formatedChance + "%");
-		}
-		
-		// Get sys msg from player and mob
-		if (target instanceof L2PcInstance)
-		{
-			((L2PcInstance) target).sendMessage("" + attacker.getName() + "'s Skill: " + skill.getName() + " chance: " + formatedChance + "%");
-		}
+		return formatedChance;
 	}
 	
 	public static double calcSkillTypeVulnerability(double multiplier, L2Character target, SkillType type)
@@ -3103,18 +2981,19 @@ public final class Formulas
 	
 	/**
 	 * Calculate damage caused by falling
-	 * @param cha
+	 * @param player
 	 * @param fallHeight
 	 * @return damage
 	 */
-	public static double calcFallDam(L2Character cha, int fallHeight)
+	public static double calcFallDam(L2Character player, int fallHeight)
 	{
-		if (!Config.FALL_DAMAGE || fallHeight < 0)
+		if (!(Config.FALL_DAMAGE) || fallHeight < 0)
 		{
 			return 0;
 		}
 		
-		final double damage = cha.calcStat(Stats.FALL, fallHeight * cha.getMaxHp() / 1000, null, null);
+		final double damage = player.calcStat(Stats.FALL, fallHeight * player.getMaxHp() / 1000, null, null);
+		
 		return damage;
 	}
 	

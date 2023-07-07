@@ -25,50 +25,18 @@ import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.util.StringUtil;
 
-/**
- * Flood protector implementation.
- * @author fordfrog
- */
 public final class FloodProtectorAction
 {
-	/**
-	 * Logger
-	 */
 	private static final Logger LOG = LoggerFactory.getLogger(FloodProtectorAction.class);
-	/**
-	 * Client for this instance of flood protector.
-	 */
+	
 	private final L2GameClient client;
-	/**
-	 * Configuration of this instance of flood protector.
-	 */
 	private final FloodProtectorConfig config;
-	/**
-	 * Next game tick when new request is allowed.
-	 */
 	private volatile float _nextGameTick = GameTimeController.getInstance().getGameTicks();
-	/**
-	 * Request counter.
-	 */
 	private final AtomicInteger _count = new AtomicInteger(0);
-	/**
-	 * Flag determining whether exceeding request has been logged.
-	 */
 	private boolean _logged;
-	/**
-	 * Flag determining whether punishment application is in progress so that we do not apply punisment multiple times (flooding).
-	 */
 	private volatile boolean _punishmentInProgress;
-	/**
-	 * Count from when the floodProtector start to block next action.
-	 */
 	private final int _untilBlock = 4;
 	
-	/**
-	 * Creates new instance of FloodProtectorAction.
-	 * @param client for which flood protection is being created
-	 * @param config flood protector configuration
-	 */
 	public FloodProtectorAction(final L2GameClient client, final FloodProtectorConfig config)
 	{
 		super();
@@ -78,16 +46,13 @@ public final class FloodProtectorAction
 	
 	private final Hashtable<String, AtomicInteger> received_commands_actions = new Hashtable<>();
 	
-	/**
-	 * Checks whether the request is flood protected or not.
-	 * @param command command issued or short command description
-	 * @return true if action is allowed, otherwise false
-	 */
 	public boolean tryPerformAction(final String command)
 	{
 		// Ignore flood protector for GM char
 		if (client != null && client.getActiveChar() != null && client.getActiveChar().isGM())
+		{
 			return true;
+		}
 		
 		if (!config.ALTERNATIVE_METHOD)
 		{
@@ -133,7 +98,9 @@ public final class FloodProtectorAction
 				{
 					// _untilBlock value is 4
 					if (_count.get() > _untilBlock)
+					{
 						return false;
+					}
 					
 					return true;
 				}
@@ -232,9 +199,13 @@ public final class FloodProtectorAction
 	private void kickPlayer()
 	{
 		if (client.getActiveChar() != null)
+		{
 			client.getActiveChar().logout();
+		}
 		else
+		{
 			client.closeNow();
+		}
 		
 		LOGGER("Client " + client.toString() + " kicked for flooding");
 		
@@ -258,7 +229,9 @@ public final class FloodProtectorAction
 					newChatBanTime += activeChar.getPunishTimer();
 				}
 				else
+				{
 					newChatBanTime = activeChar.getPunishTimer();
+				}
 				
 			}
 			
@@ -268,9 +241,6 @@ public final class FloodProtectorAction
 		
 	}
 	
-	/**
-	 * Bans char account and logs out the char.
-	 */
 	private void banAccount()
 	{
 		if (client.getActiveChar() != null)
@@ -282,12 +252,11 @@ public final class FloodProtectorAction
 			client.getActiveChar().logout();
 		}
 		else
+		{
 			LOGGER(" unable to ban account: no active player");
+		}
 	}
 	
-	/**
-	 * Jails char.
-	 */
 	private void jailChar()
 	{
 		if (client.getActiveChar() != null)
@@ -297,7 +266,9 @@ public final class FloodProtectorAction
 			LOG.warn(client.getActiveChar().getName() + " jailed for flooding");
 		}
 		else
+		{
 			LOGGER(" unable to jail: no active player");
+		}
 	}
 	
 	private void LOGGER(final String... lines)
@@ -307,7 +278,9 @@ public final class FloodProtectorAction
 		try
 		{
 			if (!client.isDetached())
+			{
 				address = client.getConnection().getInetAddress().getHostAddress();
+			}
 		}
 		catch (final Exception e)
 		{
@@ -323,10 +296,14 @@ public final class FloodProtectorAction
 				}
 			case AUTHED:
 				if (client.getAccountName() != null)
+				{
 					StringUtil.append(output, client.getAccountName(), " ");
+				}
 			case CONNECTED:
 				if (address != null)
+				{
 					StringUtil.append(output, address);
+				}
 				break;
 			default:
 				throw new IllegalStateException("Missing state on switch");

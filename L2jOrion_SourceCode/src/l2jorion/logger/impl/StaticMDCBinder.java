@@ -26,43 +26,40 @@ package l2jorion.logger.impl;
 
 import l2jorion.logger.spi.MDCAdapter;
 
-/**
- * This class is only a stub. Real implementations are found in 
- * each SLF4J binding project, e.g. slf4j-nop, slf4j-log4j12 etc.
- *
- * @author Ceki G&uuml;lc&uuml;
- */
-public class StaticMDCBinder {
-
-    /**
-     * The unique instance of this class.
-     */
-    public static final StaticMDCBinder SINGLETON = new StaticMDCBinder();
-
-    private StaticMDCBinder() {
-        throw new UnsupportedOperationException("This code should never make it into the jar");
-    }
-
-    /**
-     * Return the singleton of this class.
-     * 
-     * @return the StaticMDCBinder singleton
-     * @since 1.7.14
-     */
-    public static final StaticMDCBinder getSingleton() {
-        return SINGLETON;
-    }
-
-    /**
-     * Currently this method always returns an instance of 
-     * {@link StaticMDCBinder}.
-     * @return 
-     */
-    public MDCAdapter getMDCA() {
-        throw new UnsupportedOperationException("This code should never make it into the jar");
-    }
-
-    public String getMDCAdapterClassStr() {
-        throw new UnsupportedOperationException("This code should never make it into the jar");
-    }
+public class StaticMDCBinder
+{
+	
+	/**
+	 * The unique instance of this class.
+	 */
+	public static final StaticMDCBinder SINGLETON = new StaticMDCBinder();
+	
+	private StaticMDCBinder()
+	{
+		throw new UnsupportedOperationException("This code should never make it into the jar");
+	}
+	
+	/**
+	 * Return the singleton of this class.
+	 * @return the StaticMDCBinder singleton
+	 * @since 1.7.14
+	 */
+	public static final StaticMDCBinder getSingleton()
+	{
+		return SINGLETON;
+	}
+	
+	/**
+	 * Currently this method always returns an instance of {@link StaticMDCBinder}.
+	 * @return
+	 */
+	public MDCAdapter getMDCA()
+	{
+		throw new UnsupportedOperationException("This code should never make it into the jar");
+	}
+	
+	public String getMDCAdapterClassStr()
+	{
+		throw new UnsupportedOperationException("This code should never make it into the jar");
+	}
 }

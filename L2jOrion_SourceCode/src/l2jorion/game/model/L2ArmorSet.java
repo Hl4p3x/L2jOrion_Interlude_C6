@@ -24,9 +24,6 @@ package l2jorion.game.model;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author Luno
- */
 public final class L2ArmorSet
 {
 	private final int _chest;

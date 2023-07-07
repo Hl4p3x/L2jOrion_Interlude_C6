@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
+import l2jorion.game.network.PacketServer;
 
-public class ExFishingStartCombat extends L2GameServerPacket
+public class ExFishingStartCombat extends PacketServer
 {
 	private static final String _S__FE_15_EXFISHINGSTARTCOMBAT = "[S] FE:15 ExFishingStartCombat";
 	private final L2Character _activeChar;

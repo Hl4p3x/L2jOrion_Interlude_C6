@@ -24,6 +24,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.Future;
 
 import l2jorion.Config;
+import l2jorion.bots.FakePlayer;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.managers.DuelManager;
 import l2jorion.game.model.L2Attackable;
@@ -151,13 +152,6 @@ public class CharStatus
 		
 		if (value > 0) // Reduce Hp if any
 		{
-			// If we're dealing with an L2Attackable Instance and the attacker hit it with an over-hit enabled skill, set the over-hit values.
-			// Anything else, clear the over-hit flag
-			/*
-			 * if (getActiveChar() instanceof L2Attackable) { Announcements _a = Announcements.getInstance(); _a.sys("6"); if (((L2Attackable) getActiveChar()).isOverhit()) { ((L2Attackable) getActiveChar()).setOverhitValues(attacker, value); } else { ((L2Attackable)
-			 * getActiveChar()).overhitEnabled(false); } }
-			 */
-			
 			value = getCurrentHp() - value; // Get diff of Hp vs value
 			
 			if (value <= 0)
@@ -212,13 +206,6 @@ public class CharStatus
 				}
 			}
 			
-			// first die (and calculate rewards), if currentHp < 0,
-			// then overhit may be calculated
-			if (Config.DEBUG)
-			{
-				LOG.debug("char is dead.");
-			}
-			
 			// Start the doDie process
 			getActiveChar().doDie(attacker);
 			
@@ -241,6 +228,11 @@ public class CharStatus
 	 */
 	public final void reduceMp(double value)
 	{
+		if (getActiveChar() instanceof FakePlayer)
+		{
+			return;
+		}
+		
 		value = getCurrentMp() - value;
 		
 		if (value < 0)
@@ -316,11 +308,6 @@ public class CharStatus
 		}
 	}
 	
-	// =========================================================
-	// Method - Private
-	
-	// =========================================================
-	// Property - Public
 	/**
 	 * Gets the active char.
 	 * @return the active char
@@ -367,19 +354,8 @@ public class CharStatus
 		setCurrentCp(newCp, broadcastPacket, false);
 	}
 	
-	/**
-	 * Sets the current cp.
-	 * @param newCp the new cp
-	 * @param broadcastPacket the broadcast packet
-	 * @param direct the direct
-	 */
 	public final void setCurrentCp(double newCp, final boolean broadcastPacket, final boolean direct)
 	{
-		if (getActiveChar().isInvul())
-		{
-			return;
-		}
-		
 		synchronized (this)
 		{
 			// Get the Max CP of the L2Character
@@ -598,16 +574,6 @@ public class CharStatus
 		}
 	}
 	
-	/**
-	 * Return the list of L2Character that must be informed of HP/MP updates of this L2Character.<BR>
-	 * <BR>
-	 * <B><U> Concept</U> :</B><BR>
-	 * <BR>
-	 * Each L2Character owns a list called <B>_statusListener</B> that contains all L2PcInstance to inform of HP/MP updates. Players who must be informed are players that target this L2Character. When a RegenTask is in progress sever just need to go through this list to send Server->Client packet
-	 * StatusUpdate.<BR>
-	 * <BR>
-	 * @return The list of L2Character to inform or null if empty
-	 */
 	public final Set<L2Character> getStatusListener()
 	{
 		if (_StatusListener == null)
@@ -618,8 +584,6 @@ public class CharStatus
 		return _StatusListener;
 	}
 	
-	// =========================================================
-	// Runnable
 	/**
 	 * Task of HP/MP/CP regeneration.
 	 */
@@ -663,8 +627,6 @@ public class CharStatus
 				{
 					getActiveChar().broadcastStatusUpdate(); // send the StatusUpdate packet
 				}
-				
-				// charstat = null;
 			}
 			catch (final Throwable e)
 			{

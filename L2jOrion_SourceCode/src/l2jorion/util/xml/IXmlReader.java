@@ -569,10 +569,6 @@ public interface IXmlReader
 		return XML_FILTER;
 	}
 	
-	/**
-	 * Simple XML error handler.
-	 * @author Zoey76
-	 */
 	static class XMLErrorHandler implements ErrorHandler
 	{
 		@Override

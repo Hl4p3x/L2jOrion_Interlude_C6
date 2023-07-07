@@ -33,9 +33,6 @@ import l2jorion.game.network.serverpackets.SetupGauge;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2NpcTemplate;
 
-/**
- * @author littlecrow Admin commands handler for controllable mobs
- */
 public class AdminMobGroup implements IAdminCommandHandler
 {
 	private static final String[] ADMIN_COMMANDS =

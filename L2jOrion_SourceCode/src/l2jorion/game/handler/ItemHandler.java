@@ -1,26 +1,9 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.handler;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import l2jorion.Config;
 import l2jorion.game.GameServer;
 import l2jorion.game.handler.item.AccessLevelCustomItem;
 import l2jorion.game.handler.item.AugmentItem;
@@ -33,13 +16,20 @@ import l2jorion.game.handler.item.BreakingArrow;
 import l2jorion.game.handler.item.CharChangePotions;
 import l2jorion.game.handler.item.ChestKey;
 import l2jorion.game.handler.item.ChristmasTree;
+import l2jorion.game.handler.item.ClanLevel8CustomItem;
+import l2jorion.game.handler.item.ClanPointCustomItem;
+import l2jorion.game.handler.item.ClanSkillsCustomItem;
 import l2jorion.game.handler.item.CrystalCarol;
 import l2jorion.game.handler.item.Crystals;
+import l2jorion.game.handler.item.CustomAugmentationSystem;
 import l2jorion.game.handler.item.CustomItemForFighter;
 import l2jorion.game.handler.item.CustomItemForMage;
 import l2jorion.game.handler.item.CustomPotions;
 import l2jorion.game.handler.item.EnchantScrolls;
 import l2jorion.game.handler.item.EnergyStone;
+import l2jorion.game.handler.item.Expire_Ip_access;
+import l2jorion.game.handler.item.Expire_buff_slots;
+import l2jorion.game.handler.item.Expire_hour_buffs;
 import l2jorion.game.handler.item.ExtractableItems;
 import l2jorion.game.handler.item.Firework;
 import l2jorion.game.handler.item.FishShots;
@@ -134,6 +124,21 @@ public class ItemHandler
 		registerItemHandler(new ChristmasTree());
 		registerItemHandler(new Crystals());
 		registerItemHandler(new HsItems());
+		registerItemHandler(new ClanPointCustomItem());
+		registerItemHandler(new ClanSkillsCustomItem());
+		registerItemHandler(new ClanLevel8CustomItem());
+		
+		if (Config.L2UNLIMITED_CUSTOM)
+		{
+			registerItemHandler(new CustomAugmentationSystem());
+		}
+		
+		if (Config.RON_CUSTOM)
+		{
+			registerItemHandler(new Expire_Ip_access());
+			registerItemHandler(new Expire_hour_buffs());
+			registerItemHandler(new Expire_buff_slots());
+		}
 		
 		LOG.info("ItemHandler: Loaded " + _datatable.size() + " handlers");
 	}

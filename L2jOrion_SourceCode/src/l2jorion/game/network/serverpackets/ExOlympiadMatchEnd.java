@@ -1,6 +1,8 @@
 package l2jorion.game.network.serverpackets;
 
-public class ExOlympiadMatchEnd extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExOlympiadMatchEnd extends PacketServer
 {
 	private static final String _S__FE_2C_OLYMPIADMATCHEND = "[S] FE:2C ExOlympiadMatchEnd";
 	

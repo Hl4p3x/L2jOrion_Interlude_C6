@@ -19,6 +19,8 @@
  */
 package l2jorion.game.model;
 
+import java.util.ArrayList;
+
 import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.util.random.Rnd;
@@ -100,7 +102,7 @@ public class L2DropCategory
 	 */
 	public synchronized L2DropData dropSeedAllowedDropsOnly()
 	{
-		FastList<L2DropData> drops = new FastList<>();
+		ArrayList<L2DropData> drops = new ArrayList<>();
 		int subCatChance = 0;
 		for (final L2DropData drop : getAllDrops())
 		{

@@ -30,14 +30,14 @@ import l2jorion.game.datatables.GameServerTable.GameServerInfo;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.login.L2LoginClient;
-import l2jorion.login.LoginController;
 import l2jorion.login.L2LoginClient.LoginClientState;
+import l2jorion.login.LoginController;
 import l2jorion.login.LoginController.AuthLoginResult;
 import l2jorion.login.network.serverpackets.AccountKicked;
-import l2jorion.login.network.serverpackets.LoginOk;
-import l2jorion.login.network.serverpackets.ServerList;
 import l2jorion.login.network.serverpackets.AccountKicked.AccountKickedReason;
 import l2jorion.login.network.serverpackets.LoginFail.LoginFailReason;
+import l2jorion.login.network.serverpackets.LoginOk;
+import l2jorion.login.network.serverpackets.ServerList;
 
 public class RequestAuthLogin extends L2LoginClientPacket
 {
@@ -107,6 +107,7 @@ public class RequestAuthLogin extends L2LoginClientPacket
 		
 		LoginController lc = LoginController.getInstance();
 		L2LoginClient client = getClient();
+		
 		final InetAddress address = getClient().getConnection().getInetAddress();
 		if (address == null)
 		{
@@ -123,6 +124,7 @@ public class RequestAuthLogin extends L2LoginClientPacket
 				client.setAccount(_user);
 				client.setState(LoginClientState.AUTHED_LOGIN);
 				client.setSessionKey(lc.assignSessionKeyToClient(_user, client));
+				
 				if (Config.SHOW_LICENCE)
 				{
 					client.sendPacket(new LoginOk(getClient().getSessionKey()));
@@ -140,6 +142,7 @@ public class RequestAuthLogin extends L2LoginClientPacket
 				break;
 			case ALREADY_ON_LS:
 				L2LoginClient oldClient;
+				
 				if ((oldClient = lc.getAuthedClient(_user)) != null)
 				{
 					// kick the other client

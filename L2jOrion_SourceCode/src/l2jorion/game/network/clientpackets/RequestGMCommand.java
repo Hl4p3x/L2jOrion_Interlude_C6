@@ -22,6 +22,7 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.GMViewCharacterInfo;
 import l2jorion.game.network.serverpackets.GMViewItemList;
 import l2jorion.game.network.serverpackets.GMViewPledgeInfo;
@@ -31,7 +32,7 @@ import l2jorion.game.network.serverpackets.GMViewWarehouseWithdrawList;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestGMCommand extends L2GameClientPacket
+public final class RequestGMCommand extends PacketClient
 {
 	static Logger LOG = LoggerFactory.getLogger(RequestGMCommand.class);
 	

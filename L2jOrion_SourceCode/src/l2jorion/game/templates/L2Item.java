@@ -23,12 +23,13 @@ package l2jorion.game.templates;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javolution.util.FastList;
-import javolution.util.FastMap;
 import l2jorion.Config;
+import l2jorion.game.datatables.sql.ItemTable;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.L2Skill;
@@ -37,6 +38,7 @@ import l2jorion.game.skills.Env;
 import l2jorion.game.skills.effects.EffectTemplate;
 import l2jorion.game.skills.funcs.Func;
 import l2jorion.game.skills.funcs.FuncTemplate;
+import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
 public abstract class L2Item
@@ -142,31 +144,9 @@ public abstract class L2Item
 	protected EffectTemplate[] _effectTemplates;
 	protected L2Skill[] _skills;
 	
-	private boolean _isfakeArmor;
-	private boolean _isfakeWeapon;
-	
 	private static final Func[] _emptyFunctionSet = new Func[0];
 	protected static final L2Effect[] _emptyEffectSet = new L2Effect[0];
 	
-	/**
-	 * Constructor of the L2Item that fill class variables.<BR>
-	 * <BR>
-	 * <U><I>Variables filled :</I></U><BR>
-	 * <LI>type</LI>
-	 * <LI>_itemId</LI>
-	 * <LI>_name</LI>
-	 * <LI>_type1 & _type2</LI>
-	 * <LI>_weight</LI>
-	 * <LI>_crystallizable</LI>
-	 * <LI>_stackable</LI>
-	 * <LI>_crystalType & _crystlaCount</LI>
-	 * <LI>_duration</LI>
-	 * <LI>_bodypart</LI>
-	 * <LI>_referencePrice</LI>
-	 * <LI>_sellable</LI>
-	 * @param type : Enum designating the type of the item
-	 * @param set : StatsSet corresponding to a set of couples (key,value) for description of the item
-	 */
 	protected L2Item(final Enum<?> type, final StatsSet set)
 	{
 		_type = type;
@@ -188,19 +168,11 @@ public abstract class L2Item
 		_tradeable = set.getBool("tradeable", true);
 	}
 	
-	/**
-	 * Returns the itemType.
-	 * @return Enum
-	 */
 	public Enum<?> getItemType()
 	{
 		return _type;
 	}
 	
-	/**
-	 * Returns the duration of the item
-	 * @return int
-	 */
 	public final int getDuration()
 	{
 		return _duration;
@@ -217,77 +189,41 @@ public abstract class L2Item
 	
 	public abstract int getItemMask();
 	
-	/**
-	 * Returns the type 2 of the item
-	 * @return int
-	 */
 	public final int getType2()
 	{
 		return _type2;
 	}
 	
-	/**
-	 * Returns the weight of the item
-	 * @return int
-	 */
 	public final int getWeight()
 	{
 		return _weight;
 	}
 	
-	/**
-	 * Returns if the item is crystallizable
-	 * @return boolean
-	 */
 	public final boolean isCrystallizable()
 	{
 		return _crystallizable;
 	}
 	
-	/**
-	 * Return the type of crystal if item is crystallizable
-	 * @return int
-	 */
 	public final int getCrystalType()
 	{
 		return _crystalType;
 	}
 	
-	/**
-	 * Return the type of crystal if item is crystallizable
-	 * @return int
-	 */
 	public final int getCrystalItemId()
 	{
 		return crystalItemId[_crystalType];
 	}
 	
-	/**
-	 * Returns the grade of the item.<BR>
-	 * <BR>
-	 * <U><I>Concept :</I></U><BR>
-	 * In fact, this fucntion returns the type of crystal of the item.
-	 * @return int
-	 */
 	public final int getItemGrade()
 	{
 		return getCrystalType();
 	}
 	
-	/**
-	 * Returns the quantity of crystals for crystallization
-	 * @return int
-	 */
 	public final int getCrystalCount()
 	{
 		return _crystalCount;
 	}
 	
-	/**
-	 * Returns the quantity of crystals for crystallization on specific enchant level
-	 * @param enchantLevel
-	 * @return int
-	 */
 	public final int getCrystalCount(final int enchantLevel)
 	{
 		if (enchantLevel > 3)
@@ -322,82 +258,46 @@ public abstract class L2Item
 		}
 	}
 	
-	/**
-	 * Returns the name of the item
-	 * @return String
-	 */
 	public final String getName()
 	{
 		return _name;
 	}
 	
-	/**
-	 * Return the part of the body used with the item.
-	 * @return int
-	 */
 	public final int getBodyPart()
 	{
 		return _bodyPart;
 	}
 	
-	/**
-	 * Returns the type 1 of the item
-	 * @return int
-	 */
 	public final int getType1()
 	{
 		return _type1;
 	}
 	
-	/**
-	 * Returns if the item is stackable
-	 * @return boolean
-	 */
 	public final boolean isStackable()
 	{
 		return _stackable;
 	}
 	
-	/**
-	 * Returns if the item is consumable
-	 * @return boolean
-	 */
 	public boolean isConsumable()
 	{
 		return false;
 	}
 	
-	/**
-	 * Returns the price of reference of the item
-	 * @return int
-	 */
 	public final int getReferencePrice()
 	{
 		return isConsumable() ? (int) (_referencePrice * Config.RATE_CONSUMABLE_COST) : _referencePrice;
 	}
 	
-	/**
-	 * Returns if the item can be sold
-	 * @return boolean
-	 */
 	public final boolean isSellable()
 	{
 		return _sellable;
 	}
 	
-	/**
-	 * Returns if the item can dropped
-	 * @return boolean
-	 */
 	public final boolean isDropable()
 	{
 		return _dropable;
 	}
 	
-	/**
-	 * Returns if the item can destroy
-	 * @return boolean
-	 */
 	public final boolean isDestroyable()
 	{
 		return _destroyable;
@@ -563,7 +463,6 @@ public abstract class L2Item
 	 */
 	public void attach(final FuncTemplate f)
 	{
-		// If _functTemplates is empty, create it and add the FuncTemplate f in it
 		if (_funcTemplates == null)
 		{
 			_funcTemplates = new FuncTemplate[]
@@ -575,18 +474,12 @@ public abstract class L2Item
 		{
 			final int len = _funcTemplates.length;
 			final FuncTemplate[] tmp = new FuncTemplate[len + 1];
-			// Definition : arraycopy(array source, begins copy at this position of source, array destination, begins copy at this position in dest,
-			// number of components to be copied)
 			System.arraycopy(_funcTemplates, 0, tmp, 0, len);
 			tmp[len] = f;
 			_funcTemplates = tmp;
 		}
 	}
 	
-	/**
-	 * Add the EffectTemplate effect to the list of effects generated by the item
-	 * @param effect : EffectTemplate
-	 */
 	public void attach(final EffectTemplate effect)
 	{
 		if (_effectTemplates == null)
@@ -600,18 +493,12 @@ public abstract class L2Item
 		{
 			final int len = _effectTemplates.length;
 			final EffectTemplate[] tmp = new EffectTemplate[len + 1];
-			// Definition : arraycopy(array source, begins copy at this position of source, array destination, begins copy at this position in dest,
-			// number of components to be copied)
 			System.arraycopy(_effectTemplates, 0, tmp, 0, len);
 			tmp[len] = effect;
 			_effectTemplates = tmp;
 		}
 	}
 	
-	/**
-	 * Add the L2Skill skill to the list of skills generated by the item
-	 * @param skill : L2Skill
-	 */
 	public void attach(final L2Skill skill)
 	{
 		if (_skills == null)
@@ -625,18 +512,12 @@ public abstract class L2Item
 		{
 			final int len = _skills.length;
 			final L2Skill[] tmp = new L2Skill[len + 1];
-			// Definition : arraycopy(array source, begins copy at this position of source, array destination, begins copy at this position in dest,
-			// number of components to be copied)
 			System.arraycopy(_skills, 0, tmp, 0, len);
 			tmp[len] = skill;
 			_skills = tmp;
 		}
 	}
 	
-	/**
-	 * Returns the name of the item
-	 * @return String
-	 */
 	@Override
 	public String toString()
 	{
@@ -648,7 +529,26 @@ public abstract class L2Item
 		return (getItemType() == L2EtcItemType.QUEST);
 	}
 	
-	public String getItemIcon(int itemId)
+	public static String getItemNameById(int itemId)
+	{
+		L2Item item = ItemTable.getInstance().getTemplate(itemId);
+		
+		String itemName = "NoName";
+		
+		if (itemId != 0)
+		{
+			itemName = item.getName();
+		}
+		
+		return itemName;
+	}
+	
+	public boolean isHeroItem()
+	{
+		return ((_itemId >= 6611 && _itemId <= 6621) || (_itemId >= 9388 && _itemId <= 9390) || _itemId == 6842);
+	}
+	
+	public static String getItemIcon(int itemId)
 	{
 		if (_Icons != null && !_Icons.isEmpty())
 		{
@@ -664,12 +564,12 @@ public abstract class L2Item
 	
 	private static void loadIcons()
 	{
-		_Icons = new FastMap<>();
+		_Icons = new HashMap<>();
 		Connection con = null;
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
-			PreparedStatement statement = con.prepareStatement("Select * From market_icons");
+			PreparedStatement statement = con.prepareStatement("SELECT * FROM item_icons");
 			ResultSet rset = statement.executeQuery();
 			
 			while (rset.next())
@@ -688,33 +588,7 @@ public abstract class L2Item
 		}
 		finally
 		{
-			try
-			{
-				if (con != null)
-				{
-					con.close();
-				}
-			}
-			catch (Exception e)
-			{
-			}
+			CloseUtil.close(con);
 		}
-	}
-	
-	public boolean isFakeArmor()
-	{
-		if (Config.FAKE_ARMORS)
-		{
-			if (Config.LIST_FAKE_ARMOR_ITEMS.contains(getItemId()))
-			{
-				return true;
-			}
-		}
-		return _isfakeArmor;
-	}
-	
-	public boolean isFakeWeapon()
-	{
-		return _isfakeWeapon;
 	}
 }

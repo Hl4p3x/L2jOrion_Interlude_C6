@@ -24,9 +24,10 @@ import l2jorion.game.idfactory.IdFactory;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.model.quest.Quest;
 import l2jorion.game.network.SystemMessageId;
+import l2jorion.game.network.serverpackets.ExShowScreenMessage;
 import l2jorion.game.network.serverpackets.ItemList;
+import l2jorion.game.network.serverpackets.PlaySound;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.thread.ThreadPoolManager;
@@ -36,13 +37,12 @@ import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-public final class TaskItemDonate extends Quest implements Runnable
+public final class TaskItemDonate implements Runnable
 {
 	private static final Logger LOG = LoggerFactory.getLogger(TaskItemDonate.class);
 	
 	public TaskItemDonate()
 	{
-		super(-1, "DonateItems", "ai");
 		ThreadPoolManager.getInstance().scheduleEffectAtFixedRate(this, 1000, 3000);
 	}
 	
@@ -103,6 +103,10 @@ public final class TaskItemDonate extends Quest implements Runnable
 		item.setEnchantLevel(enchantLevel);
 		
 		target.getInventory().addItem("DonateItem", item, target, null);
+		
+		target.sendMessage("Donation items transferred to your character.. Thank you, " + target.getName() + "!");
+		target.sendPacket(new ExShowScreenMessage("Donation items transferred to your character. Thank you, " + target.getName() + "!", 2000, 2, false));
+		target.sendPacket(new PlaySound("ItemSound3.sys_exchange_success"));
 		
 		if (enchantLevel > 0)
 		{

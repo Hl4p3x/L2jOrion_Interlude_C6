@@ -29,8 +29,9 @@ import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.CastleManorManager.CropProcure;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class SellListProcure extends L2GameServerPacket
+public class SellListProcure extends PacketServer
 {
 	private static final String _S__E9_SELLLISTPROCURE = "[S] E9 SellListProcure";
 	

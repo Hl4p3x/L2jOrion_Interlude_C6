@@ -31,6 +31,7 @@ import l2jorion.game.model.L2Manor;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2ManorManagerInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
@@ -40,7 +41,7 @@ import l2jorion.game.templates.L2Item;
 import l2jorion.game.util.Util;
 
 @SuppressWarnings("unused")
-public class RequestBuyProcure extends L2GameClientPacket
+public class RequestBuyProcure extends PacketClient
 {
 	private int _listId;
 	private int _count;

@@ -23,18 +23,15 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2Clan.RankPrivs;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.PledgePowerGradeList;
 
-/**
- * Format: (ch)
- * @author -Wooden-
- */
-public final class RequestPledgePowerGradeList extends L2GameClientPacket
+public final class RequestPledgePowerGradeList extends PacketClient
 {
 	@Override
 	protected void readImpl()
 	{
-		// trigger
+		
 	}
 	
 	@Override
@@ -47,7 +44,6 @@ public final class RequestPledgePowerGradeList extends L2GameClientPacket
 		{
 			final RankPrivs[] privs = clan.getAllRankPrivs();
 			player.sendPacket(new PledgePowerGradeList(privs));
-			// LOG.warn("plegdepowergradelist send, privs length: "+privs.length);
 		}
 	}
 	

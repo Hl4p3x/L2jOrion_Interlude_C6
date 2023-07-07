@@ -22,11 +22,12 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.templates.L2Item;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class EquipUpdate extends L2GameServerPacket
+public class EquipUpdate extends PacketServer
 {
 	private static final String _S__5E_EQUIPUPDATE = "[S] 4b EquipUpdate";
 	

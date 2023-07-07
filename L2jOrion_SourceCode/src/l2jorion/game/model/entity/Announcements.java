@@ -39,6 +39,7 @@ import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.script.DateRange;
+import l2jorion.log.Log;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
@@ -115,7 +116,6 @@ public class Announcements
 		{
 			CreatureSay cs = new CreatureSay(0, Say2.ANNOUNCEMENT, activeChar.getName(), _announcements.get(i).replace("%name%", activeChar.getName()));
 			activeChar.sendPacket(cs);
-			cs = null;
 		}
 		
 		for (int i = 0; i < _eventAnnouncements.size(); i++)
@@ -319,6 +319,7 @@ public class Announcements
 				player.sendPacket(cs);
 			}
 		}
+		Log.add(text, "System");
 	}
 	
 	// Colored Announcements 8D
@@ -339,6 +340,11 @@ public class Announcements
 	
 	public void pvpAnnounceToAll(String text)
 	{
+		if (Config.L2UNLIMITED_CUSTOM)
+		{
+			return;
+		}
+		
 		CreatureSay cs = new CreatureSay(0, 18, "", "Announcements: " + text);
 		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{

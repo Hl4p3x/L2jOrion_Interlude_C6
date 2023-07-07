@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.cache;
 
 import java.io.File;
@@ -36,9 +16,10 @@ public class CrestCache
 	private static final Logger LOG = LoggerFactory.getLogger(CrestCache.class);
 	
 	private static final String CRESTS_DIR = "./data/crests/";
+	private static final String BOT_CRESTS_DIR = "./config/bots/crests/";
 	
-	private final Map<Integer, byte[]> _crests;
-	private final FileFilter _ddsFilter;
+	private Map<Integer, byte[]> _crests;
+	private FileFilter _ddsFilter;
 	
 	public static enum CrestType
 	{
@@ -67,6 +48,14 @@ public class CrestCache
 		_ddsFilter = new DdsFilter();
 		
 		load();
+	}
+	
+	public void CrestCacheForBots()
+	{
+		_crests = new HashMap<>();
+		_ddsFilter = new DdsFilter();
+		
+		loadBotCrests();
 	}
 	
 	public final void reload()
@@ -111,6 +100,41 @@ public class CrestCache
 		LOG.info("CrestCache: Loaded " + _crests.size() + " crest files");
 	}
 	
+	public final void loadBotCrests()
+	{
+		final File directory = new File(BOT_CRESTS_DIR);
+		directory.mkdirs();
+		
+		for (File file : directory.listFiles(_ddsFilter))
+		{
+			byte[] data;
+			try (RandomAccessFile f = new RandomAccessFile(file, "r"))
+			{
+				data = new byte[(int) f.length()];
+				f.readFully(data);
+			}
+			catch (Exception e)
+			{
+				LOG.warn("CrestCache: Error loading crest file: " + file.getName());
+				continue;
+			}
+			
+			final String fileName = file.getName();
+			
+			for (CrestType type : CrestType.values())
+			{
+				if (!fileName.startsWith(type._prefix))
+				{
+					continue;
+				}
+				
+				_crests.put(Integer.valueOf(fileName.substring(type._prefix.length(), fileName.length() - 4)), data);
+			}
+		}
+		
+		LOG.info("BotEngine: Loaded " + _crests.size() + " crest files");
+	}
+	
 	public final byte[] getCrest(CrestType type, int id)
 	{
 		// get crest data
@@ -118,7 +142,9 @@ public class CrestCache
 		
 		// crest data is not required type, return
 		if (data == null || data.length != type._size)
+		{
 			return null;
+		}
 		
 		return data;
 	}
@@ -130,7 +156,9 @@ public class CrestCache
 		
 		// crest data is not required type, return
 		if (data == null || data.length != type._size)
+		{
 			return;
+		}
 		
 		// remove from cache
 		_crests.remove(id);
@@ -138,7 +166,9 @@ public class CrestCache
 		// delete file
 		final File file = new File(CRESTS_DIR + type._prefix + id + ".bmp");
 		if (!file.delete())
+		{
 			LOG.warn("Crest Cache: Error deleting crest file: " + file.getName());
+		}
 	}
 	
 	public final boolean saveCrest(CrestType type, int id, byte[] data)

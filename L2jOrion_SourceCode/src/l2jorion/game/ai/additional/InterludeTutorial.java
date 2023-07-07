@@ -49,18 +49,22 @@ public class InterludeTutorial extends Quest implements Runnable
 					if (onlyone != 2)
 					{
 						quest.set("onlyone", "2");
-						if (player.getClassId().isMage())
-						{
-							quest.giveItems(SPIRITSHOT_NOVICE, 100);
-						}
-						else
-						{
-							quest.giveItems(SOULSHOT_NOVICE, 200);
-						}
 						
-						if (!Config.GGAMES_EU_CUSTOM)
+						if (!Config.RON_CUSTOM)
 						{
-							quest.giveItems(TOKEN, 12);
+							if (player.getClassId().isMage())
+							{
+								quest.giveItems(SPIRITSHOT_NOVICE, 100);
+							}
+							else
+							{
+								quest.giveItems(SOULSHOT_NOVICE, 200);
+							}
+							
+							if (!Config.GGAMES_EU_CUSTOM)
+							{
+								quest.giveItems(TOKEN, 12);
+							}
 						}
 					}
 					

@@ -70,8 +70,8 @@ public class PetStat extends SummonStat
 			addLevel((byte) (level - getLevel()));
 		}
 		
-		getActiveChar().broadcastPacket(new PetInfo(getActiveChar()));
-		getActiveChar().updateEffectIcons(true);
+		getActiveChar().getOwner().sendPacket(new PetInfo(getActiveChar()));
+		getActiveChar().getOwner().updateEffectIcons(true);
 		
 		return true;
 	}
@@ -86,7 +86,6 @@ public class PetStat extends SummonStat
 		
 		SystemMessage sm = new SystemMessage(SystemMessageId.PET_EARNED_S1_EXP);
 		sm.addNumber((int) addToExp);
-		
 		getActiveChar().getOwner().sendPacket(sm);
 		
 		return true;

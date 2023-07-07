@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public abstract class AbstractServerBasePacket extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public abstract class AbstractServerBasePacket extends PacketServer
 {
 	@Override
 	abstract public void runImpl();

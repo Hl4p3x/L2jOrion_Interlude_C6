@@ -22,8 +22,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class CharSelected extends L2GameServerPacket
+public class CharSelected extends PacketServer
 {
 	private static final String _S__21_CHARSELECTED = "[S] 15 CharSelected";
 	
@@ -42,12 +43,12 @@ public class CharSelected extends L2GameServerPacket
 		writeC(0x15);
 		
 		writeS(_activeChar.getName());
-		writeD(_activeChar.getCharId()); // ??
+		writeD(_activeChar.getCharId());
 		writeS(_activeChar.getTitle());
 		writeD(_sessionId);
 		writeD(_activeChar.getClanId());
 		
-		writeD(0x00); // unknown
+		writeD(0x00);
 		
 		writeD(_activeChar.getAppearance().getSex() ? 1 : 0);
 		writeD(_activeChar.getRace().ordinal());
@@ -78,20 +79,19 @@ public class CharSelected extends L2GameServerPacket
 			writeD(0x00);
 		}
 		
-		writeD(0x00); // c3 work
-		writeD(0x00); // c3 work
+		writeD(0x00);
+		writeD(0x00);
 		
-		// extra info
-		writeD(GameTimeController.getInstance().getGameTime()); // in-game time
+		writeD(GameTimeController.getInstance().getGameTime()); // In game time
 		
-		writeD(0x00); //
+		writeD(0x00);
 		
 		writeD(_activeChar.getClassId().getId());
 		
-		writeD(0x00); // c3 InspectorBin
-		writeD(0x00); // c3
-		writeD(0x00); // c3
-		writeD(0x00); // c3
+		writeD(0x00);
+		writeD(0x00);
+		writeD(0x00);
+		writeD(0x00);
 	}
 	
 	@Override

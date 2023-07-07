@@ -20,6 +20,7 @@
  */
 package l2jorion.game.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javolution.util.FastList;
@@ -27,12 +28,8 @@ import l2jorion.game.model.actor.instance.L2NpcInstance;
 
 public class L2SiegeClan
 {
-	// ==========================================================================================
-	// Instance
-	// ===============================================================
-	// Data Field
 	private int _clanId = 0;
-	private List<L2NpcInstance> _flag = new FastList<>();
+	private List<L2NpcInstance> _flag = new ArrayList<>();
 	private int _numFlagsAdded = 0;
 	private SiegeClanType _type;
 	
@@ -44,17 +41,12 @@ public class L2SiegeClan
 		DEFENDER_PENDING
 	}
 	
-	// =========================================================
-	// Constructor
-	
 	public L2SiegeClan(final int clanId, final SiegeClanType type)
 	{
 		_clanId = clanId;
 		_type = type;
 	}
 	
-	// =========================================================
-	// Method - Public
 	public int getNumFlags()
 	{
 		return _numFlagsAdded;
@@ -69,7 +61,9 @@ public class L2SiegeClan
 	public boolean removeFlag(final L2NpcInstance flag)
 	{
 		if (flag == null)
+		{
 			return false;
+		}
 		
 		final boolean ret = getFlag().remove(flag);
 		
@@ -121,8 +115,6 @@ public class L2SiegeClan
 		}
 	}
 	
-	// =========================================================
-	// Property
 	public final int getClanId()
 	{
 		return _clanId;

@@ -1,22 +1,3 @@
-/*
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.ai;
 
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_ATTACK;
@@ -34,6 +15,7 @@ import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2MonsterInstance;
+import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.AutoAttackStart;
@@ -49,17 +31,25 @@ import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-abstract class AbstractAI implements Ctrl
+public abstract class AbstractAI implements Ctrl
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(AbstractAI.class);
 	
-	protected Future<?> _followTask = null;
-	private static final int FOLLOW_INTERVAL = 1000;
-	private static final int ATTACK_FOLLOW_INTERVAL = 500;
+	private NextAction _nextAction;
+	
+	public NextAction getNextAction()
+	{
+		return _nextAction;
+	}
+	
+	public void setNextAction(NextAction nextAction)
+	{
+		_nextAction = nextAction;
+	}
 	
 	private class FollowTask implements Runnable
 	{
-		protected int _range = 70;
+		protected int _range = 30;
 		
 		public FollowTask()
 		{
@@ -98,16 +88,15 @@ abstract class AbstractAI implements Ctrl
 					return;
 				}
 				
-				// if (!_actor.isInsideRadius(followTarget, _range, true, false))
 				if (!Util.checkIfInRange(_range, _actor, followTarget, true))
 				{
-					// if (!_actor.isInsideRadius(followTarget, 15000, true, false))
 					if (!Util.checkIfInRange(15000, _actor, followTarget, true))
 					{
 						if (_actor instanceof L2Summon)
 						{
 							((L2Summon) _actor).setFollowStatus(false);
 						}
+						
 						setIntention(AI_INTENTION_IDLE);
 						return;
 					}
@@ -120,7 +109,6 @@ abstract class AbstractAI implements Ctrl
 							return;
 						}
 					}
-					
 					moveToPawn(followTarget, _range);
 				}
 			}
@@ -139,14 +127,16 @@ abstract class AbstractAI implements Ctrl
 	protected Object _intentionArg0 = null;
 	protected Object _intentionArg1 = null;
 	
-	protected boolean _clientMoving;
-	protected boolean _clientAutoAttacking;
+	protected volatile boolean _clientMoving;
+	protected volatile boolean _clientAutoAttacking;
 	protected int _clientMovingToPawnOffset;
 	
 	private L2Object _target;
-	private L2Character _castTarget;
-	protected L2Character _attackTarget;
 	protected L2Character _followTarget;
+	
+	protected Future<?> _followTask = null;
+	private static final int FOLLOW_INTERVAL = Config.FOLLOW_INTERVAL;
+	private static final int ATTACK_FOLLOW_INTERVAL = Config.ATTACK_FOLLOW_INTERVAL;
 	
 	L2Skill _skill;
 	
@@ -163,7 +153,7 @@ abstract class AbstractAI implements Ctrl
 		return _actor;
 	}
 	
-	public synchronized void changeIntention(CtrlIntention intention, Object arg0, Object arg1)
+	synchronized void changeIntention(CtrlIntention intention, Object arg0, Object arg1)
 	{
 		_intention = intention;
 		_intentionArg0 = arg0;
@@ -225,6 +215,12 @@ abstract class AbstractAI implements Ctrl
 				onIntentionInteract((L2Object) arg0);
 				break;
 		}
+		
+		// If do move or follow intention drop next action.
+		if ((_nextAction != null) && _nextAction.getIntentions().contains(intention))
+		{
+			_nextAction = null;
+		}
 	}
 	
 	@Override
@@ -234,13 +230,13 @@ abstract class AbstractAI implements Ctrl
 	}
 	
 	@Override
-	public final void notifyEvent(final CtrlEvent evt, final Object arg0)
+	public final void notifyEvent(CtrlEvent evt, Object arg0)
 	{
 		notifyEvent(evt, arg0, null);
 	}
 	
 	@Override
-	public final void notifyEvent(final CtrlEvent evt, final Object arg0, final Object arg1)
+	public final void notifyEvent(CtrlEvent evt, Object... args)
 	{
 		if ((!_actor.isVisible() && !_actor.isTeleporting()) || !_actor.hasAI())
 		{
@@ -253,25 +249,27 @@ abstract class AbstractAI implements Ctrl
 				onEvtThink();
 				break;
 			case EVT_ATTACKED:
-				onEvtAttacked((L2Character) arg0);
+				onEvtAttacked((L2Character) args[0]);
 				break;
 			case EVT_AGGRESSION:
-				onEvtAggression((L2Character) arg0, ((Number) arg1).intValue());
+				onEvtAggression((L2Character) args[0], ((Number) args[1]).intValue());
 				break;
 			case EVT_STUNNED:
-				onEvtStunned((L2Character) arg0);
+				onEvtStunned((L2Character) args[0]);
 				break;
+			case EVT_PARALYZED:
+				onEvtParalyzed((L2Character) args[0]);
 			case EVT_SLEEPING:
-				onEvtSleeping((L2Character) arg0);
+				onEvtSleeping((L2Character) args[0]);
 				break;
 			case EVT_ROOTED:
-				onEvtRooted((L2Character) arg0);
+				onEvtRooted((L2Character) args[0]);
 				break;
 			case EVT_CONFUSED:
-				onEvtConfused((L2Character) arg0);
+				onEvtConfused((L2Character) args[0]);
 				break;
 			case EVT_MUTED:
-				onEvtMuted((L2Character) arg0);
+				onEvtMuted((L2Character) args[0]);
 				break;
 			case EVT_READY_TO_ACT:
 				if (!_actor.isCastingNow())
@@ -280,19 +278,25 @@ abstract class AbstractAI implements Ctrl
 				}
 				break;
 			case EVT_USER_CMD:
-				onEvtUserCmd(arg0, arg1);
+				onEvtUserCmd(args[0], args[1]);
 				break;
 			case EVT_ARRIVED:
-				onEvtArrived();
+				if (!_actor.isCastingNow())
+				{
+					onEvtArrived();
+				}
 				break;
 			case EVT_ARRIVED_REVALIDATE:
-				onEvtArrivedRevalidate();
+				if (_actor.isMoving())
+				{
+					onEvtArrivedRevalidate();
+				}
 				break;
 			case EVT_ARRIVED_BLOCKED:
-				onEvtArrivedBlocked((Location) arg0);
+				onEvtArrivedBlocked((Location) args[0]);
 				break;
 			case EVT_FORGET_OBJECT:
-				onEvtForgetObject((L2Object) arg0);
+				onEvtForgetObject((L2Object) args[0]);
 				break;
 			case EVT_CANCEL:
 				onEvtCancel();
@@ -306,6 +310,12 @@ abstract class AbstractAI implements Ctrl
 			case EVT_FINISH_CASTING:
 				onEvtFinishCasting();
 				break;
+		}
+		
+		// Do next action.
+		if ((_nextAction != null) && _nextAction.getEvents().contains(evt))
+		{
+			_nextAction.doAction();
 		}
 	}
 	
@@ -334,6 +344,8 @@ abstract class AbstractAI implements Ctrl
 	protected abstract void onEvtAggression(L2Character target, int aggro);
 	
 	protected abstract void onEvtStunned(L2Character attacker);
+	
+	protected abstract void onEvtParalyzed(L2Character attacker);
 	
 	protected abstract void onEvtSleeping(L2Character attacker);
 	
@@ -372,6 +384,11 @@ abstract class AbstractAI implements Ctrl
 				offset = 10;
 			}
 			
+			if (pawn instanceof L2NpcInstance && ((L2NpcInstance) pawn).getNpcId() == 29025)
+			{
+				offset = 150; // it needs for baium npc correction
+			}
+			
 			if (_clientMoving && getTarget() == pawn)
 			{
 				if (_clientMovingToPawnOffset == offset)
@@ -383,7 +400,6 @@ abstract class AbstractAI implements Ctrl
 				}
 				else if (_actor.isOnGeodataPath())
 				{
-					// minimum time to calculate new route is 2 seconds
 					if (GameTimeController.getInstance().getGameTicks() < (_moveToPawnTimeout + 10))
 					{
 						return;
@@ -394,7 +410,7 @@ abstract class AbstractAI implements Ctrl
 			_clientMoving = true;
 			_clientMovingToPawnOffset = offset;
 			_moveToPawnTimeout = GameTimeController.getInstance().getGameTicks();
-			_moveToPawnTimeout += 1000 / GameTimeController.MILLIS_IN_TICK;
+			_moveToPawnTimeout += Config.MOVE_TO_PAWN_TIMEOUT / GameTimeController.MILLIS_IN_TICK;
 			
 			if (pawn == null)
 			{
@@ -444,14 +460,27 @@ abstract class AbstractAI implements Ctrl
 		{
 			_clientMoving = true;
 			_clientMovingToPawnOffset = 0;
-			
 			_actor.moveToLocation(x, y, z, 0);
-			
 			_actor.broadcastPacket(new CharMoveToLocation(_actor));
 		}
 		else
 		{
-			_actor.sendPacket(ActionFailed.STATIC_PACKET);
+			clientActionFailed();
+		}
+	}
+	
+	public void moveTo(int x, int y, int z, int offset)
+	{
+		if (!_actor.isMovementDisabled())
+		{
+			_clientMoving = true;
+			_clientMovingToPawnOffset = 0;
+			_actor.moveToLocation(x, y, z, offset);
+			_actor.broadcastPacket(new CharMoveToLocation(_actor));
+		}
+		else
+		{
+			clientActionFailed();
 		}
 	}
 	
@@ -486,6 +515,7 @@ abstract class AbstractAI implements Ctrl
 			_clientMovingToPawnOffset = 0;
 			_actor.broadcastPacket(new StopMove(_actor));
 		}
+		
 		_clientMoving = false;
 	}
 	
@@ -509,6 +539,7 @@ abstract class AbstractAI implements Ctrl
 			}
 			
 			_actor.broadcastPacket(new AutoAttackStart(_actor.getObjectId()));
+			
 			setAutoAttacking(true);
 		}
 		
@@ -549,9 +580,6 @@ abstract class AbstractAI implements Ctrl
 		
 		setIntention(AI_INTENTION_IDLE);
 		setTarget(null);
-		setAttackTarget(null);
-		setCastTarget(null);
-		
 		stopFollow();
 	}
 	
@@ -617,65 +645,25 @@ abstract class AbstractAI implements Ctrl
 		return _followTarget;
 	}
 	
-	protected L2Object getTarget()
+	@Override
+	public L2Object getTarget()
 	{
 		return _target;
 	}
 	
-	protected void setTarget(final L2Object target)
+	protected void setTarget(L2Object target)
 	{
 		_target = target;
 	}
 	
-	protected void setCastTarget(final L2Character target)
-	{
-		_castTarget = target;
-	}
-	
-	public L2Character getCastTarget()
-	{
-		return _castTarget;
-	}
-	
-	protected void setAttackTarget(final L2Character target)
-	{
-		_attackTarget = target;
-	}
-	
-	@Override
-	public L2Character getAttackTarget()
-	{
-		return _attackTarget;
-	}
-	
-	public synchronized boolean isAutoAttacking()
+	public boolean isAutoAttacking()
 	{
 		return _clientAutoAttacking;
 	}
 	
-	public synchronized void setAutoAttacking(boolean isAutoAttacking)
+	public void setAutoAttacking(boolean isAutoAttacking)
 	{
 		_clientAutoAttacking = isAutoAttacking;
-	}
-	
-	public synchronized Object get_intentionArg0()
-	{
-		return _intentionArg0;
-	}
-	
-	public synchronized void set_intentionArg0(final Object intentionArg0)
-	{
-		_intentionArg0 = intentionArg0;
-	}
-	
-	public synchronized Object get_intentionArg1()
-	{
-		return _intentionArg1;
-	}
-	
-	public synchronized void set_intentionArg1(final Object intentionArg1)
-	{
-		_intentionArg1 = intentionArg1;
 	}
 	
 	public void stopAITask()
@@ -684,7 +672,7 @@ abstract class AbstractAI implements Ctrl
 	}
 	
 	@Override
-	public synchronized CtrlIntention getIntention()
+	public CtrlIntention getIntention()
 	{
 		return _intention;
 	}
@@ -696,5 +684,4 @@ abstract class AbstractAI implements Ctrl
 			_actor.sendPacket(ActionFailed.STATIC_PACKET);
 		}
 	}
-	
 }

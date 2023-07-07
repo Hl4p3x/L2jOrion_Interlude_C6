@@ -23,7 +23,6 @@ package l2jorion.game.model.actor.instance;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.templates.L2NpcTemplate;
 
@@ -38,52 +37,40 @@ public class L2SiegeNpcInstance extends L2FolkInstance
 	public void onAction(final L2PcInstance player)
 	{
 		if (!canTarget(player))
+		{
 			return;
+		}
 		
-		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
 		{
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
-			
-			// Send a Server->Client packet MyTargetSelected to the L2PcInstance player
-			MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
-			player.sendPacket(my);
 		}
 		else
 		{
-			// Calculate the distance between the L2PcInstance and the L2NpcInstance
 			if (!canInteract(player))
 			{
-				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 			}
 			else
 			{
-				// Like L2OFF player must rotate to the Npc
+				if (player.isMoving())
+				{
+					player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+				}
+				
 				player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
 				
 				showSiegeInfoWindow(player);
 			}
 		}
-		// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
-	/**
-	 * If siege is in progress shows the Busy HTML<BR>
-	 * else Shows the SiegeInfo window
-	 * @param player
-	 */
 	public void showSiegeInfoWindow(final L2PcInstance player)
 	{
 		if (validateCondition(player))
 		{
 			getCastle().getSiege().listRegisterClan(player);
-			/*if (getClanHall() != null)
-			{
-				((SiegableHall) getClanHall()).showSiegeInfo(player);
-			}*/
 		}
 		else
 		{
@@ -100,9 +87,9 @@ public class L2SiegeNpcInstance extends L2FolkInstance
 	{
 		if (getCastle().getSiege().getIsInProgress())
 		{
-			return false; // Busy because of siege
+			return false;
 		}
-			
+		
 		return true;
 	}
 }

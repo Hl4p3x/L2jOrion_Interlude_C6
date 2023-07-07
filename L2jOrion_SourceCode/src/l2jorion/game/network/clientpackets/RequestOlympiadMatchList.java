@@ -24,10 +24,11 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.olympiad.Olympiad;
 import l2jorion.game.model.olympiad.OlympiadGameManager;
 import l2jorion.game.model.olympiad.OlympiadGameTask;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.util.StringUtil;
 
-public final class RequestOlympiadMatchList extends L2GameClientPacket
+public final class RequestOlympiadMatchList extends PacketClient
 {
 	private static final String _C__D0_13_REQUESTOLYMPIADMATCHLIST = "[C] D0:13 RequestOlympiadMatchList";
 	

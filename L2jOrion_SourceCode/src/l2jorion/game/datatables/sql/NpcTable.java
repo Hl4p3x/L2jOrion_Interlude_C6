@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.datatables.sql;
 
 import java.sql.Connection;
@@ -238,7 +218,7 @@ public class NpcTable
 					if (npcDat.race == null && skillId == 4416)
 					{
 						npcDat.setRace(level);
-						continue;
+						// continue;
 					}
 					
 					npcSkill = SkillTable.getInstance().getInfo(skillId, level);
@@ -301,7 +281,9 @@ public class NpcTable
 						dropDat.setChance(dropData.getInt("chance"));
 						dropDat.setMinEnchant(dropData.getInt("enchantMin"));
 						dropDat.setMaxEnchant(dropData.getInt("enchantMax"));
+						
 						final int category = dropData.getInt("category");
+						dropDat.setCategory(category);
 						
 						npcDat.addDropData(dropDat, category);
 						cCount++;
@@ -365,7 +347,9 @@ public class NpcTable
 					dropDat.setChance(dropData.getInt("chance"));
 					dropDat.setMinEnchant(dropData.getInt("enchantMin"));
 					dropDat.setMaxEnchant(dropData.getInt("enchantMax"));
+					
 					final int category = dropData.getInt("category");
+					dropDat.setCategory(category);
 					
 					npcDat.addDropData(dropDat, category);
 				}
@@ -506,8 +490,8 @@ public class NpcTable
 					
 				}
 					break;
-				case 29022:
-				{ // zaken
+				case 29022: // zaken
+				{
 					
 					if (Config.ZAKEN_LEVEL > 0)
 					{
@@ -605,32 +589,26 @@ public class NpcTable
 			}
 			else
 			{
-				
 				switch (id)
 				{
-					case 29001:
-					{// queenAnt
-						
+					case 29001: // Queen Ant
+					{
 						if (Config.QA_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.QA_POWER_MULTIPLIER;
 						}
-						
 					}
 						break;
-					case 29022:
-					{ // zaken
-						
+					case 29022: // Zaken
+					{
 						if (Config.ZAKEN_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.ZAKEN_POWER_MULTIPLIER;
 						}
-						
 					}
 						break;
-					case 29014:
-					{// orfen
-						
+					case 29014: // Orfen
+					{
 						if (Config.ORFEN_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.ORFEN_POWER_MULTIPLIER;
@@ -638,39 +616,34 @@ public class NpcTable
 						
 					}
 						break;
-					case 29006:
-					{ // core
-						
+					case 29006: // Core
+					{
 						if (Config.CORE_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.CORE_POWER_MULTIPLIER;
 						}
-						
 					}
 						break;
-					case 29019:
-					{ // antharas
+					case 29019: // Antharas
+					{
 						
 						if (Config.ANTHARAS_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.ANTHARAS_POWER_MULTIPLIER;
 						}
-						
 					}
 						break;
-					case 29028:
-					{ // valakas
+					case 29028: // Valakas
+					{
 						
 						if (Config.VALAKAS_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.VALAKAS_POWER_MULTIPLIER;
 						}
-						
 					}
 						break;
-					case 29020:
-					{ // baium
-						
+					case 29020: // Baium
+					{
 						if (Config.BAIUM_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.BAIUM_POWER_MULTIPLIER;
@@ -678,21 +651,15 @@ public class NpcTable
 						
 					}
 						break;
-					case 29045:
-					{ // frintezza
-						
+					case 29045: // Frintezza
+					{
 						if (Config.FRINTEZZA_POWER_MULTIPLIER > 0)
 						{
 							multi_value = multi_value * Config.FRINTEZZA_POWER_MULTIPLIER;
 						}
 						
 					}
-						break;
-					default:
-					{
-					}
 				}
-				
 			}
 			
 			npcDat.set("rewardExp", NpcData.getInt("exp") * multi_value);
@@ -715,7 +682,6 @@ public class NpcTable
 			npcDat.set("baseWalkSpd", NpcData.getInt("walkspd"));
 			npcDat.set("baseRunSpd", NpcData.getInt("runspd"));
 			
-			// constants, until we have stats in DB
 			// constants, until we have stats in DB
 			npcDat.safeSet("baseSTR", NpcData.getInt("str"), 0, BaseStats.MAX_STAT_VALUE, "Loading npc template id: " + NpcData.getInt("idTemplate"));
 			npcDat.safeSet("baseCON", NpcData.getInt("con"), 0, BaseStats.MAX_STAT_VALUE, "Loading npc template id: " + NpcData.getInt("idTemplate"));
@@ -795,11 +761,7 @@ public class NpcTable
 				npcAIDat.setSpiritShotChance(rset.getInt("spschance"));
 				npcAIDat.setSoulShotChance(rset.getInt("sschance"));
 				npcAIDat.setIsChaos(rset.getInt("is_chaos"));
-				npcAIDat.setAggro(rset.getInt("aggro"));
-				npcAIDat.setClan(rset.getString("clan"));
-				npcAIDat.setClanRange(rset.getInt("clan_range"));
-				npcAIDat.setEnemyClan(rset.getString("enemy_clan"));
-				npcAIDat.setEnemyRange(rset.getInt("enemy_range"));
+				npcAIDat.setLongerHelprange(rset.getInt("longerHelpRange"));
 				npcAIDat.setAi(rset.getString("ai_type"));
 				
 				npcDat.setAIData(npcAIDat);
@@ -809,7 +771,7 @@ public class NpcTable
 			rset.close();
 			statement.close();
 			
-			LOG.info("NpcTable: Loaded " + cnt + " npc ai data");
+			LOG.info("NpcTable: Loaded " + cnt + " npcs ai data");
 		}
 		catch (Exception e)
 		{

@@ -18,7 +18,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExMailArrived extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExMailArrived extends PacketServer
 {
 	private static final String _S__FE_2D_EXMAILARRIVED = "[S] FE:2D ExMailArrived";
 	

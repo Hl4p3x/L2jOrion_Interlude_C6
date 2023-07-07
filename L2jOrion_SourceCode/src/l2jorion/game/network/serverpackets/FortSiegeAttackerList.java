@@ -20,33 +20,9 @@ import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2SiegeClan;
 import l2jorion.game.model.entity.siege.Fort;
+import l2jorion.game.network.PacketServer;
 
-/**
- * Populates the Siege Attacker List in the SiegeInfo Window<BR>
- * <BR>
- * packet type id 0xca<BR>
- * format: cddddddd + dSSdddSSd<BR>
- * <BR>
- * c = ca<BR>
- * d = FortID<BR>
- * d = unknow (0x00)<BR>
- * d = unknow (0x01)<BR>
- * d = unknow (0x00)<BR>
- * d = Number of Attackers Clans?<BR>
- * d = Number of Attackers Clans<BR>
- * { //repeats<BR>
- * d = ClanID<BR>
- * S = ClanName<BR>
- * S = ClanLeaderName<BR>
- * d = ClanCrestID<BR>
- * d = signed time (seconds)<BR>
- * d = AllyID<BR>
- * S = AllyName<BR>
- * S = AllyLeaderName<BR>
- * d = AllyCrestID<BR>
- * @author programmos, scoria dev
- */
-public final class FortSiegeAttackerList extends L2GameServerPacket
+public final class FortSiegeAttackerList extends PacketServer
 {
 	private static final String _S__CA_SiegeAttackerList = "[S] ca SiegeAttackerList";
 	

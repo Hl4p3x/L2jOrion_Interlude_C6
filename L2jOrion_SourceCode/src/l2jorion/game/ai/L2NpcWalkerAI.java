@@ -1,22 +1,3 @@
-/* L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.ai;
 
 import java.util.List;
@@ -83,10 +64,6 @@ public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 		}
 	}
 	
-	/**
-	 * If npc can't walk to it's target then just teleport to next point
-	 * @param blocked_at_pos ignoring it
-	 */
 	@Override
 	protected void onEvtArrivedBlocked(final Location blocked_at_pos)
 	{
@@ -138,17 +115,11 @@ public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 			}
 			chat = null;
 			
-			// time in millis
 			long delay = _route.get(_currentPos).getDelay() * 1000;
 			
-			// sleeps between each move
 			if (delay < 0)
 			{
 				delay = DEFAULT_MOVE_DELAY;
-				if (Config.DEVELOPER)
-				{
-					LOG.warn("Wrong Delay Set in Npc Walker Functions = " + delay + " secs, using default delay: " + DEFAULT_MOVE_DELAY + " secs instead.");
-				}
 			}
 			
 			_nextMoveTime = System.currentTimeMillis() + delay;
@@ -174,9 +145,6 @@ public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 		
 		final boolean moveType = _route.get(_currentPos).getRunning();
 		
-		/**
-		 * false - walking true - Running
-		 */
 		if (moveType)
 		{
 			getActor().setRunning();
@@ -186,12 +154,10 @@ public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 			getActor().setWalking();
 		}
 		
-		// now we define destination
 		final int destinationX = _route.get(_currentPos).getMoveX();
 		final int destinationY = _route.get(_currentPos).getMoveY();
 		final int destinationZ = _route.get(_currentPos).getMoveZ();
 		
-		// notify AI of MOVE_TO
 		setWalkingToNextPoint(true);
 		
 		setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new Location(destinationX, destinationY, destinationZ, 0));

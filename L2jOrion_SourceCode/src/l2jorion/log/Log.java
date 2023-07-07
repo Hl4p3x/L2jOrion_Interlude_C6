@@ -18,11 +18,6 @@
  * http://www.gnu.org/copyleft/gpl.html
  */
 
-/**
- @author ProGramMoS, scoria dev
- version 0.1.1, 2009-04-08
- */
-
 package l2jorion.log;
 
 import java.io.File;
@@ -49,7 +44,7 @@ public class Log
 		try
 		{
 			save = new FileWriter(file, true);
-			String out = "[" + date + "]    :    " + text + "\n";
+			String out = "[" + date + "]    >    " + text + "\n";
 			save.write(out);
 			save.flush();
 		}
@@ -85,7 +80,7 @@ public class Log
 		try
 		{
 			save = new FileWriter(file, true);
-			String out = "[" + date + "]    :    " + text + "\n";
+			String out = "[" + date + "]    >    " + text + "\n";
 			save.write(out);
 			save.flush();
 		}

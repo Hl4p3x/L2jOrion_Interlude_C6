@@ -22,9 +22,6 @@ package l2jorion.login.network.serverpackets;
 
 import l2jorion.login.SessionKey;
 
-/**
- * Format: dddddddd f: the session key d: ? d: ? d: ? d: ? d: ? d: ? b: 16 bytes - unknown
- */
 public final class LoginOk extends L2LoginServerPacket
 {
 	private final int _loginOk1, _loginOk2;
@@ -50,10 +47,6 @@ public final class LoginOk extends L2LoginServerPacket
 		writeB(new byte[16]);
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see L2jOrion.loginserver.network.serverpackets.L2LoginServerPacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

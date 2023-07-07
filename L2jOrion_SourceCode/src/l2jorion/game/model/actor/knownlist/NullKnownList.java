@@ -24,70 +24,41 @@ import l2jorion.game.model.L2Object;
 
 public class NullKnownList extends ObjectKnownList
 {
-	
-	/**
-	 * @param activeObject
-	 */
 	public NullKnownList(final L2Object activeObject)
 	{
 		super(activeObject);
-		// TODO Auto-generated constructor stub
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.knownlist.ObjectKnownList#addKnownObject(l2jorion.game.model.L2Object)
-	 */
 	@Override
 	public boolean addKnownObject(final L2Object object)
 	{
 		return false;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.knownlist.ObjectKnownList#getActiveObject()
-	 */
 	@Override
 	public L2Object getActiveObject()
 	{
 		return super.getActiveObject();
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.knownlist.ObjectKnownList#getDistanceToForgetObject(l2jorion.game.model.L2Object)
-	 */
 	@Override
 	public int getDistanceToForgetObject(final L2Object object)
 	{
 		return 0;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.knownlist.ObjectKnownList#getDistanceToWatchObject(l2jorion.game.model.L2Object)
-	 */
 	@Override
 	public int getDistanceToWatchObject(final L2Object object)
 	{
 		return 0;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.knownlist.ObjectKnownList#removeAllKnownObjects() no-op
-	 */
 	@Override
 	public void removeAllKnownObjects()
 	{
 		// null
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.model.actor.knownlist.ObjectKnownList#removeKnownObject(l2jorion.game.model.L2Object)
-	 */
 	@Override
 	public boolean removeKnownObject(L2Object object)
 	{

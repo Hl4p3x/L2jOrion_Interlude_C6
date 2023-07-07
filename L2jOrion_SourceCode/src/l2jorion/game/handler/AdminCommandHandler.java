@@ -1,32 +1,14 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.handler;
 
 import java.util.Arrays;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.AdminCommandAccessRights;
 import l2jorion.game.handler.admin.AdminAdmin;
 import l2jorion.game.handler.admin.AdminAnnouncements;
 import l2jorion.game.handler.admin.AdminBan;
-import l2jorion.game.handler.admin.AdminBanHwid;
 import l2jorion.game.handler.admin.AdminBuffs;
 import l2jorion.game.handler.admin.AdminCHSiege;
 import l2jorion.game.handler.admin.AdminCTFEngine;
@@ -46,7 +28,7 @@ import l2jorion.game.handler.admin.AdminEffects;
 import l2jorion.game.handler.admin.AdminEnchant;
 import l2jorion.game.handler.admin.AdminEventEngine;
 import l2jorion.game.handler.admin.AdminExpSp;
-import l2jorion.game.handler.admin.AdminFakeOnline;
+import l2jorion.game.handler.admin.AdminFakePlayers;
 import l2jorion.game.handler.admin.AdminFightCalculator;
 import l2jorion.game.handler.admin.AdminFortSiege;
 import l2jorion.game.handler.admin.AdminGeodata;
@@ -69,9 +51,9 @@ import l2jorion.game.handler.admin.AdminMonsterRace;
 import l2jorion.game.handler.admin.AdminNoble;
 import l2jorion.game.handler.admin.AdminPForge;
 import l2jorion.game.handler.admin.AdminPetition;
-import l2jorion.game.handler.admin.AdminPhantom;
 import l2jorion.game.handler.admin.AdminPledge;
 import l2jorion.game.handler.admin.AdminPolymorph;
+import l2jorion.game.handler.admin.AdminPremium;
 import l2jorion.game.handler.admin.AdminQuest;
 import l2jorion.game.handler.admin.AdminReload;
 import l2jorion.game.handler.admin.AdminRepairChar;
@@ -102,7 +84,7 @@ public class AdminCommandHandler
 	
 	private static AdminCommandHandler _instance;
 	
-	private FastMap<String, IAdminCommandHandler> _datatable;
+	private Map<String, IAdminCommandHandler> _datatable = new ConcurrentHashMap<>();
 	
 	public static AdminCommandHandler getInstance()
 	{
@@ -115,19 +97,11 @@ public class AdminCommandHandler
 	
 	private AdminCommandHandler()
 	{
-		_datatable = new FastMap<>();
-		
-		if (Config.L2JGUARD_PROTECTION)
-		{
-			registerAdminCommandHandler(new AdminBanHwid());
-		}
-		
 		registerAdminCommandHandler(new AdminAdmin());
 		registerAdminCommandHandler(new AdminInvul());
 		registerAdminCommandHandler(new AdminCHSiege());
 		registerAdminCommandHandler(new AdminDelete());
 		registerAdminCommandHandler(new AdminKill());
-		registerAdminCommandHandler(new AdminFakeOnline());
 		registerAdminCommandHandler(new AdminTarget());
 		registerAdminCommandHandler(new AdminShop());
 		registerAdminCommandHandler(new AdminCTFEngine());
@@ -152,7 +126,6 @@ public class AdminCommandHandler
 		registerAdminCommandHandler(new AdminChristmas());
 		registerAdminCommandHandler(new AdminBan());
 		registerAdminCommandHandler(new AdminPolymorph());
-		// registerAdminCommandHandler(new AdminBanChat());
 		registerAdminCommandHandler(new AdminReload());
 		registerAdminCommandHandler(new AdminKick());
 		registerAdminCommandHandler(new AdminMonsterRace());
@@ -191,7 +164,9 @@ public class AdminCommandHandler
 		registerAdminCommandHandler(new AdminCharSupervision());
 		registerAdminCommandHandler(new AdminWho());
 		registerAdminCommandHandler(new Hero());
-		registerAdminCommandHandler(new AdminPhantom());
+		// registerAdminCommandHandler(new AdminPhantom());
+		registerAdminCommandHandler(new AdminFakePlayers());
+		registerAdminCommandHandler(new AdminPremium());
 		
 		LOG.info("AdminCommandHandler: Loaded " + _datatable.size() + " handlers");
 		
@@ -220,6 +195,7 @@ public class AdminCommandHandler
 		String[] ids = handler.getAdminCommandList();
 		for (String element : ids)
 		{
+			
 			if (Config.DEBUG)
 			{
 				LOG.info("Adding handler for command " + element);
@@ -243,11 +219,6 @@ public class AdminCommandHandler
 		if (adminCommand.indexOf(" ") != -1)
 		{
 			command = adminCommand.substring(0, adminCommand.indexOf(" "));
-		}
-		
-		if (Config.DEBUG)
-		{
-			LOG.info("getting handler for command: " + command + " -> " + (_datatable.get(command) != null));
 		}
 		
 		return _datatable.get(command);

@@ -29,6 +29,7 @@ public class ItemRequest
 	int _enchant;
 	int _count;
 	int _price;
+	int _id;
 	
 	public ItemRequest(final int objectId, final int count, final int price)
 	{
@@ -84,11 +85,18 @@ public class ItemRequest
 		return _enchant;
 	}
 	
-	/**
-	 * @param enchant
-	 */
 	public void setEnchant(final int enchant)
 	{
 		_enchant = enchant;
+	}
+	
+	public int getId()
+	{
+		return _id;
+	}
+	
+	public void setId(final int id)
+	{
+		_id = id;
 	}
 }

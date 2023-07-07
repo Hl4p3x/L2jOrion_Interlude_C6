@@ -20,18 +20,27 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class MyTargetSelected extends L2GameServerPacket
+import l2jorion.game.model.L2Character;
+import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
+
+public class MyTargetSelected extends PacketServer
 {
 	private static final String _S__BF_MYTARGETSELECTED = "[S] a6 MyTargetSelected";
 	
 	private final int _objectId;
-	
 	private final int _color;
 	
-	public MyTargetSelected(final int objectId, final int color)
+	public MyTargetSelected(int objectId, int color)
 	{
 		_objectId = objectId;
 		_color = color;
+	}
+	
+	public MyTargetSelected(L2PcInstance player, L2Character target)
+	{
+		_objectId = target.getObjectId();
+		_color = target.isAutoAttackable(player) ? (player.getLevel() - target.getLevel()) : 0;
 	}
 	
 	@Override

@@ -28,6 +28,7 @@ import l2jorion.game.model.actor.instance.L2FolkInstance;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.EnchantResult;
@@ -40,7 +41,7 @@ import l2jorion.game.templates.L2EtcItemType;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class SendWareHouseDepositList extends L2GameClientPacket
+public final class SendWareHouseDepositList extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(SendWareHouseDepositList.class);
 	
@@ -89,12 +90,7 @@ public final class SendWareHouseDepositList extends L2GameClientPacket
 		{
 			return;
 		}
-		if (player.isSubmitingPin())
-		{
-			player.sendMessage("Unable to do any action while PIN is not submitted");
-			player.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
+		
 		final ItemContainer warehouse = player.getActiveWarehouse();
 		
 		if (!PowerPackConfig.GMSHOP_USECOMMAND && warehouse == null)
@@ -259,7 +255,7 @@ public final class SendWareHouseDepositList extends L2GameClientPacket
 				continue;
 			}
 			
-			final L2ItemInstance newItem = player.getInventory().transferItem("Warehouse", objectId, count, warehouse, player, player.getLastFolkNPC());
+			final L2ItemInstance newItem = player.getInventory().transferItem("WarehouseDeposit", objectId, count, warehouse, player, player.getLastFolkNPC());
 			if (newItem == null)
 			{
 				LOG.warn("Error depositing a warehouse object for char " + player.getName() + " (newitem == null)");

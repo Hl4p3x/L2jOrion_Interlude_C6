@@ -37,14 +37,8 @@ import l2jorion.game.skills.Formulas;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.util.random.Rnd;
 
-/**
- * This class handles following admin commands: - gm = turns gm mode on/off
- * @version $Revision: 1.1.2.1 $ $Date: 2005/03/15 21:32:48 $
- */
 public class AdminFightCalculator implements IAdminCommandHandler
 {
-	// private static Logger LOG = LoggerFactory.getLogger(AdminFightCalculator.class);
-	
 	private static final String[] ADMIN_COMMANDS =
 	{
 		"admin_fight_calculator",
@@ -52,15 +46,9 @@ public class AdminFightCalculator implements IAdminCommandHandler
 		"admin_fcs",
 	};
 	
-	// TODO: remove from gm list etc etc
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		try
 		{
 			if (command.startsWith("admin_fight_calculator_show"))
@@ -79,7 +67,9 @@ public class AdminFightCalculator implements IAdminCommandHandler
 		catch (final StringIndexOutOfBoundsException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		return true;
 	}

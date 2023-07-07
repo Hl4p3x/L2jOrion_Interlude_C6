@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class GameGuardQuery extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class GameGuardQuery extends PacketServer
 {
 	private static final String _S__F9_GAMEGUARDQUERY = "[S] F9 GameGuardQuery";
 	

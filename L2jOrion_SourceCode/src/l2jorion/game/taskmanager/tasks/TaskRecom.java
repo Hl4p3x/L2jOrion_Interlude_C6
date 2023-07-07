@@ -24,32 +24,19 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.UserInfo;
 import l2jorion.game.taskmanager.Task;
 import l2jorion.game.taskmanager.TaskManager;
-import l2jorion.game.taskmanager.TaskTypes;
 import l2jorion.game.taskmanager.TaskManager.ExecutedTask;
-import l2jorion.log.Log;
+import l2jorion.game.taskmanager.TaskTypes;
 
-/**
- * @author Layane
- */
 public class TaskRecom extends Task
 {
-	//private static final Logger LOG = LoggerFactory.getLogger(TaskRecom.class);
 	private static final String NAME = "sp_recommendations";
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.taskmanager.Task#getName()
-	 */
 	@Override
 	public String getName()
 	{
 		return NAME;
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.taskmanager.Task#onTimeElapsed(l2jorion.game.taskmanager.TaskManager.ExecutedTask)
-	 */
 	@Override
 	public void onTimeElapsed(final ExecutedTask task)
 	{
@@ -58,9 +45,6 @@ public class TaskRecom extends Task
 			player.restartRecom();
 			player.sendPacket(new UserInfo(player));
 		}
-		//LOG.info("[GlobalTask] Restart Recommendation launched.");
-		final String text = "Restart Recommendation launched.";
-		Log.add(text, "Global_Task");
 	}
 	
 	@Override

@@ -23,8 +23,9 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.TradeList;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class PrivateStoreManageListBuy extends L2GameServerPacket
+public class PrivateStoreManageListBuy extends PacketServer
 {
 	private static final String _S__D0_PRIVATESELLLISTBUY = "[S] b7 PrivateSellListBuy";
 	
@@ -32,11 +33,24 @@ public class PrivateStoreManageListBuy extends L2GameServerPacket
 	private int _playerAdena;
 	private final L2ItemInstance[] _itemList;
 	private final TradeList.TradeItem[] _buyList;
+	private int _sellItemId;
 	
 	public PrivateStoreManageListBuy(final L2PcInstance player)
 	{
 		_activeChar = player;
 		_playerAdena = _activeChar.getAdena();
+		player.getBuyList().setSellBuyItemId(57);
+		_sellItemId = 57;
+		_itemList = _activeChar.getInventory().getUniqueItems(false, true, true);
+		_buyList = _activeChar.getBuyList().getItems();
+	}
+	
+	public PrivateStoreManageListBuy(final L2PcInstance player, int sellItemId)
+	{
+		_activeChar = player;
+		_playerAdena = player.getItemCount(sellItemId, -1);
+		player.getBuyList().setSellBuyItemId(sellItemId);
+		_sellItemId = sellItemId;
 		_itemList = _activeChar.getInventory().getUniqueItems(false, true, true);
 		_buyList = _activeChar.getBuyList().getItems();
 	}
@@ -58,7 +72,8 @@ public class PrivateStoreManageListBuy extends L2GameServerPacket
 			writeD(item.getCount());
 			writeD(item.getReferencePrice());
 			writeH(0x00);
-			writeD(item.getItem().getBodyPart());
+			// writeD(item.getItem().getBodyPart());
+			writeD(_sellItemId);
 			writeH(item.getItem().getType2());
 		}
 		
@@ -71,7 +86,8 @@ public class PrivateStoreManageListBuy extends L2GameServerPacket
 			writeD(item.getCount());
 			writeD(item.getItem().getReferencePrice());
 			writeH(0x00);
-			writeD(item.getItem().getBodyPart());
+			// writeD(item.getItem().getBodyPart());
+			writeD(_sellItemId);
 			writeH(item.getItem().getType2());
 			writeD(item.getPrice());// your price
 			writeD(item.getItem().getReferencePrice());// fixed store price

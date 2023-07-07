@@ -20,6 +20,7 @@
  */
 package l2jorion.game.handler.admin;
 
+import l2jorion.Config;
 import l2jorion.game.datatables.sql.SpawnTable;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.managers.GrandBossManager;
@@ -65,27 +66,32 @@ public class AdminDelete implements IAdminCommandHandler
 			target.deleteMe();
 			
 			L2Spawn spawn = target.getSpawn();
-			if (spawn != null)
+			
+			if (!(Config.ALT_DEV_NO_SPAWNS))
 			{
-				spawn.stopRespawn();
-				if (RaidBossSpawnManager.getInstance().isDefined(spawn.getNpcid()) && !spawn.is_customBossInstance())
+				if (spawn != null)
 				{
-					RaidBossSpawnManager.getInstance().deleteSpawn(spawn, true);
-				}
-				else
-				{
-					boolean update_db = true;
-					if (GrandBossManager.getInstance().isDefined(spawn.getNpcid()) && spawn.is_customBossInstance()) // if custom grandboss instance, it's not saved on database
-					{
-						update_db = false;
-					}
+					spawn.stopRespawn();
 					
-					SpawnTable.getInstance().deleteSpawn(spawn, update_db);
+					if (RaidBossSpawnManager.getInstance().isDefined(spawn.getNpcid()) && !spawn.is_customBossInstance())
+					{
+						RaidBossSpawnManager.getInstance().deleteSpawn(spawn, false);
+					}
+					else
+					{
+						boolean update_db = true;
+						if (GrandBossManager.getInstance().isDefined(spawn.getNpcid()) && spawn.is_customBossInstance()) // if custom grandboss instance, it's not saved on database
+						{
+							update_db = false;
+						}
+						
+						SpawnTable.getInstance().deleteSpawn(spawn, update_db);
+					}
 				}
 			}
 			
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
-			sm.addString("Deleted " + target.getName() + " from " + target.getObjectId() + ".");
+			sm.addString("Deleted: " + target.getName() + " Object Id: " + target.getObjectId());
 			activeChar.sendPacket(sm);
 		}
 		else

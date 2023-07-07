@@ -61,10 +61,6 @@ public final class LoginFail extends L2LoginServerPacket
 		writeD(_reason.getCode());
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see L2jOrion.loginserver.network.serverpackets.L2LoginServerPacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

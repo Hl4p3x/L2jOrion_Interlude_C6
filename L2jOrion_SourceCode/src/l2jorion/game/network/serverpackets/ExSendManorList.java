@@ -21,12 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import javolution.util.FastList;
+import l2jorion.game.network.PacketServer;
 
-/**
- * Format : (h) d [dS] h sub id d: number of manors [ d: id S: manor name ]
- * @author l3x
- */
-public class ExSendManorList extends L2GameServerPacket
+public class ExSendManorList extends PacketServer
 {
 	private static final String _S__FE_1B_EXSENDMANORLIST = "[S] FE:1B ExSendManorList";
 	

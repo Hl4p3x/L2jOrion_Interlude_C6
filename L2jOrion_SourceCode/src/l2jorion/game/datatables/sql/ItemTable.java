@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.datatables.sql;
 
 import java.sql.Connection;
@@ -127,7 +107,6 @@ public class ItemTable
 	
 	private static ItemTable _instance;
 	
-	/** Table of SQL request in order to obtain items from tables [etcitem], [armor], [weapon] */
 	private static final String[] SQL_ITEM_SELECTS =
 	{
 		"SELECT item_id, name, crystallizable, item_type, weight, consume_type, crystal_type, duration, price, crystal_count, sellable, dropable, destroyable, tradeable FROM etcitem",
@@ -148,17 +127,10 @@ public class ItemTable
 			+ " sellable, dropable, destroyable, tradeable, item_skill_id, item_skill_lvl,enchant4_skill_id,enchant4_skill_lvl, onCast_skill_id, onCast_skill_lvl," + " onCast_skill_chance, onCrit_skill_id, onCrit_skill_lvl, onCrit_skill_chance FROM custom_weapon"
 	};
 	
-	/** List of etcItem */
 	private static final Map<Integer, Item> itemData = new FastMap<>();
-	/** List of weapons */
 	private static final Map<Integer, Item> weaponData = new FastMap<>();
-	/** List of armor */
 	private static final Map<Integer, Item> armorData = new FastMap<>();
 	
-	/**
-	 * Returns instance of ItemTable
-	 * @return ItemTable
-	 */
 	public static ItemTable getInstance()
 	{
 		if (_instance == null)
@@ -168,18 +140,11 @@ public class ItemTable
 		return _instance;
 	}
 	
-	/**
-	 * Returns a new object Item
-	 * @return
-	 */
 	public Item newItem()
 	{
 		return new Item();
 	}
 	
-	/**
-	 * Constructor.
-	 */
 	public ItemTable()
 	{
 		final Map<Integer, L2EtcItem> etcItems = new FastMap<>();
@@ -195,7 +160,6 @@ public class ItemTable
 				final PreparedStatement statement = con.prepareStatement(selectQuery);
 				final ResultSet rset = statement.executeQuery();
 				
-				// Add item in correct FastMap
 				while (rset.next())
 				{
 					if (selectQuery.endsWith("etcitem"))
@@ -237,8 +201,6 @@ public class ItemTable
 				{
 					final PreparedStatement statement = con.prepareStatement(selectQuery);
 					final ResultSet rset = statement.executeQuery();
-					
-					// Add item in correct FastMap
 					while (rset.next())
 					{
 						if (selectQuery.endsWith("etcitem"))
@@ -308,18 +270,9 @@ public class ItemTable
 		}
 		LOG.info("ItemTable: Loaded " + weapons.size() + " Weapons");
 		
-		// fillEtcItemsTable();
-		// fillArmorsTable();
-		// FillWeaponsTable();
 		buildFastLookupTable(armors, weapons, etcItems);
 	}
 	
-	/**
-	 * Returns object Item from the record of the database
-	 * @param rset : ResultSet designating a record of the [weapon] table of database
-	 * @return Item : object created from the database record
-	 * @throws SQLException
-	 */
 	private Item readWeapon(final ResultSet rset) throws SQLException
 	{
 		final Item item = new Item();
@@ -408,12 +361,6 @@ public class ItemTable
 		return item;
 	}
 	
-	/**
-	 * Returns object Item from the record of the database
-	 * @param rset : ResultSet designating a record of the [armor] table of database
-	 * @return Item : object created from the database record
-	 * @throws SQLException
-	 */
 	private Item readArmor(final ResultSet rset) throws SQLException
 	{
 		final Item item = new Item();
@@ -560,7 +507,6 @@ public class ItemTable
 				item.type = L2EtcItemType.OTHER;
 				break;
 		}
-		itemType = null;
 		
 		final String consume = rset.getString("consume_type");
 		switch (consume)
@@ -592,21 +538,11 @@ public class ItemTable
 		return item;
 	}
 	
-	/**
-	 * Returns if ItemTable initialized
-	 * @return boolean
-	 */
 	public boolean isInitialized()
 	{
 		return _initialized;
 	}
 	
-	/**
-	 * Builds a variable in which all items are putting in in function of their ID.
-	 * @param armors
-	 * @param weapons
-	 * @param etcItems
-	 */
 	private void buildFastLookupTable(final Map<Integer, L2Armor> armors, final Map<Integer, L2Weapon> weapons, final Map<Integer, L2EtcItem> etcItems)
 	{
 		int highestId = 0;
@@ -636,7 +572,6 @@ public class ItemTable
 			}
 		}
 		
-		// Create a FastLookUp Table called _allTemplates of size : value of the highest item ID
 		LOG.info("ItemTable: Highest item id " + highestId);
 		
 		_allTemplates = new L2Item[highestId + 1];
@@ -758,14 +693,6 @@ public class ItemTable
 		return createItem(process, itemId, count, actor, null);
 	}
 	
-	/**
-	 * Returns a dummy (fr = factice) item.<BR>
-	 * <BR>
-	 * <U><I>Concept :</I></U><BR>
-	 * Dummy item is created by setting the ID of the object in the world at null value
-	 * @param itemId : int designating the item
-	 * @return L2ItemInstance designating the dummy item created
-	 */
 	public L2ItemInstance createDummyItem(final int itemId)
 	{
 		final L2Item item = getTemplate(itemId);
@@ -787,8 +714,6 @@ public class ItemTable
 			{
 				e.printStackTrace();
 			}
-			
-			// this can happen if the item templates were not initialized
 		}
 		
 		if (temp.getItem() == null)
@@ -799,20 +724,6 @@ public class ItemTable
 		return temp;
 	}
 	
-	/**
-	 * Destroys the L2ItemInstance.<BR>
-	 * <BR>
-	 * <B><U> Actions</U> :</B><BR>
-	 * <BR>
-	 * <li>Sets L2ItemInstance parameters to be unusable</li>
-	 * <li>Removes the L2ItemInstance object to _allObjects of L2world</li>
-	 * <li>Logs Item delettion according to LOGGER settings</li><BR>
-	 * <BR>
-	 * @param process : String Identifier of process triggering this action
-	 * @param item
-	 * @param actor : L2PcInstance Player requesting the item destroy
-	 * @param reference : L2Object Object referencing current action like NPC selling item or previous item in transformation
-	 */
 	public void destroyItem(final String process, final L2ItemInstance item, final L2PcInstance actor, final L2Object reference)
 	{
 		synchronized (item)

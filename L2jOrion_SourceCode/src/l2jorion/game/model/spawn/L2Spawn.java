@@ -66,6 +66,7 @@ public class L2Spawn
 	private int _instanceId = 0;
 	
 	private boolean _isNoRandom = false;
+	private boolean _isRandomWalk = true;
 	
 	private boolean _customSpawn;
 	private boolean _customBossInstance = false;
@@ -115,14 +116,19 @@ public class L2Spawn
 		// The Name of the L2NpcInstance type managed by this L2Spawn
 		String implementationName = _template.type; // implementing class name
 		
-		if (mobTemplate.npcId == 30995)
+		if (mobTemplate.getNpcId() == 30995)
 		{
 			implementationName = "L2RaceManager";
 		}
 		
-		if (mobTemplate.npcId >= 31046 && mobTemplate.npcId <= 31053)
+		if (mobTemplate.getNpcId() >= 31046 && mobTemplate.getNpcId() <= 31053)
 		{
 			implementationName = "L2SymbolMaker";
+		}
+		
+		if (mobTemplate.getNpcId() == 70013) // quick fix
+		{
+			implementationName = "L2Npc";
 		}
 		
 		// Create the generic constructor of L2NpcInstance managed by this L2Spawn
@@ -265,6 +271,16 @@ public class L2Spawn
 		return _isNoRandom;
 	}
 	
+	public void setRandomWalk(boolean value)
+	{
+		_isRandomWalk = value;
+	}
+	
+	public boolean isRandomWalk()
+	{
+		return _isRandomWalk;
+	}
+	
 	public boolean is_customBossInstance()
 	{
 		return _customBossInstance;
@@ -293,6 +309,7 @@ public class L2Spawn
 		{
 			doSpawn();
 		}
+		
 		_doRespawn = true;
 		
 		return _currentCount;
@@ -318,14 +335,12 @@ public class L2Spawn
 		L2NpcInstance mob = null;
 		try
 		{
-			// Check if the L2Spawn is not a L2Pet or L2Minion spawn
-			if (_template.type.equalsIgnoreCase("L2Pet") || _template.type.equalsIgnoreCase("L2Minion"))
+			if (_template.type.equalsIgnoreCase("L2Pet") || _template.type.equalsIgnoreCase("L2Minion") && _template.getNpcId() != 27189 && _template.getNpcId() != 20768 && _template.getNpcId() != 20769 && _template.getNpcId() != 20770)
 			{
 				_currentCount++;
 				return mob;
 			}
 			
-			// Get L2NpcInstance Init parameters and its generate an Identifier
 			final Object[] parameters =
 			{
 				IdFactory.getInstance().getNextId(),
@@ -333,11 +348,8 @@ public class L2Spawn
 			};
 			
 			final Object tmp = _constructor.newInstance(parameters);
-			
-			// Must be done before object is spawned into visible world
 			((L2Object) tmp).setInstanceId(_instanceId);
 			
-			// Check if the Instance is a L2NpcInstance
 			if (!(tmp instanceof L2NpcInstance))
 			{
 				return mob;
@@ -354,7 +366,7 @@ public class L2Spawn
 				e.printStackTrace();
 			}
 			
-			LOG.warn("NPC " + _template.npcId + " class not found", e);
+			LOG.warn("NPC " + _template.npcId + " class not found.", e);
 		}
 		return mob;
 	}
@@ -371,11 +383,8 @@ public class L2Spawn
 			};
 			
 			final Object tmp = _constructor.newInstance(parameters);
-			
-			// Must be done before object is spawned into visible world
 			((L2Object) tmp).setInstanceId(_instanceId);
 			
-			// Check if the Instance is a L2NpcInstance
 			if (!(tmp instanceof L2NpcInstance))
 			{
 				return mob;
@@ -392,10 +401,11 @@ public class L2Spawn
 				e.printStackTrace();
 			}
 		}
+		
 		return mob;
 	}
 	
-	private L2NpcInstance intializeNpcInstance(final L2NpcInstance mob)
+	private L2NpcInstance intializeNpcInstance(L2NpcInstance mob)
 	{
 		int newlocx = 0;
 		int newlocy = 0;
@@ -408,7 +418,6 @@ public class L2Spawn
 				return mob;
 			}
 			
-			// Calculate the random position in the location area
 			final Location location = TerritoryTable.getInstance().getRandomPoint(getLocation());
 			
 			if (location != null)
@@ -429,10 +438,8 @@ public class L2Spawn
 		{
 			mob.stopAllEffects();
 			
-			// Set the HP and MP of the L2NpcInstance to the max
 			mob.setCurrentHpMp(mob.getMaxHp(), mob.getMaxMp());
 			
-			// Set the heading of the L2NpcInstance (random heading if not defined)
 			if (getHeading() == -1)
 			{
 				mob.setHeading(Rnd.nextInt(61794));
@@ -445,6 +452,8 @@ public class L2Spawn
 			// Reset decay info
 			mob.setDecayed(false);
 			
+			mob.setNpcValue(0);
+			
 			// Link the L2NpcInstance to this L2Spawn
 			mob.setSpawn(this);
 			
@@ -453,23 +462,7 @@ public class L2Spawn
 				quest.notifySpawn(mob);
 			}
 			
-			if (Config.L2JMOD_CHAMPION_ENABLE)
-			{
-				if (mob instanceof L2Attackable && Config.L2JMOD_CHAMPION_FREQUENCY > 0 && mob.getLevel() >= Config.L2JMOD_CHAMP_MIN_LVL && mob.getLevel() <= Config.L2JMOD_CHAMP_MAX_LVL)
-				{
-					switch (mob.getNpcId())
-					{
-						case 29004:
-						case 29005:
-						{
-							((L2Attackable) mob).setIsRaidMinion(true);
-							break;
-						}
-					}
-				}
-			}
-			
-			if (!isNoRandomLoc() && mob instanceof L2MonsterInstance && !(mob instanceof L2FeedableBeastInstance) && !(mob instanceof L2GourdInstance) && !mob.isRaid() && !mob.isRaidMinion() && !mob.isBossInstance())
+			if (!isNoRandomLoc() && mob instanceof L2MonsterInstance && !(mob instanceof L2FeedableBeastInstance) && !(mob instanceof L2GourdInstance) && !(mob.isMinion()) && !(mob.isRaid()) && !(mob.isRaidMinion()) && !(mob.isBossInstance()))
 			{
 				int x1 = mob.getSpawn().getLocx();
 				int y1 = mob.getSpawn().getLocy();
@@ -495,14 +488,27 @@ public class L2Spawn
 				mob.spawnMe(newlocx, newlocy, newlocz);
 			}
 			
-			switch (mob.getNpcId())
+			if (mob instanceof L2Attackable)
 			{
-				case 31027:
-				case 31028:
-				case 31029:
-				case 31030:
-					mob.startAbnormalEffect(L2Character.ABNORMAL_EFFECT_MAGIC_CIRCLE);
-					break;
+				switch (mob.getNpcId())
+				{
+					case 27185:
+					case 27186:
+					case 27187:
+					case 27188:
+						mob.setIsAttackDisabled(true);
+						break;
+					case 29004:
+					case 29005:
+						((L2Attackable) mob).setIsRaidMinion(true);
+						break;
+					case 31027:
+					case 31028:
+					case 31029:
+					case 31030:
+						mob.startAbnormalEffect(L2Character.ABNORMAL_EFFECT_MAGIC_CIRCLE);
+						break;
+				}
 			}
 			
 			L2Spawn.notifyNpcSpawned(mob);
@@ -511,6 +517,7 @@ public class L2Spawn
 			
 			_currentCount++;
 		}
+		
 		return mob;
 	}
 	

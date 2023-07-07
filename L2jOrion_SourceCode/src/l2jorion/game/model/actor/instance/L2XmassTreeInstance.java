@@ -30,9 +30,6 @@ import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author Drunkard Zabb0x Lets drink2code!
- */
 public class L2XmassTreeInstance extends L2NpcInstance
 {
 	private final ScheduledFuture<?> _aiTask;
@@ -67,11 +64,8 @@ public class L2XmassTreeInstance extends L2NpcInstance
 				
 				MagicSkillUser msu = new MagicSkillUser(_caster, player, skill.getId(), 1, skill.getHitTime(), 0);
 				broadcastPacket(msu);
-				skill = null;
-				msu = null;
 				return true;
 			}
-			skill = null;
 			return false;
 		}
 		

@@ -115,26 +115,26 @@ public class AdminSiege implements IAdminCommandHandler
 							
 							if (!clanhall.isSiegableHall())
 							{
-								ClanHallManager.getInstance().setOwner(clanhall.getId(), clan);
-								if (AuctionManager.getInstance().getAuction(clanhall.getId()) != null)
+								ClanHallManager.getInstance().setOwner(clanhall.getClanHallId(), clan);
+								if (AuctionManager.getInstance().getAuction(clanhall.getClanHallId()) != null)
 								{
-									AuctionManager.getInstance().getAuction(clanhall.getId()).deleteAuctionFromDB();
+									AuctionManager.getInstance().getAuction(clanhall.getClanHallId()).deleteAuctionFromDB();
 								}
 							}
 							else
 							{
 								clanhall.setOwner(clan);
-								clan.setHasHideout(clanhall.getId());
+								clan.setHasHideout(clanhall.getClanHallId());
 							}
 							break;
 						case "admin_clanhalldel":
 							
 							if (!clanhall.isSiegableHall())
 							{
-								if (!ClanHallManager.getInstance().isFree(clanhall.getId()))
+								if (!ClanHallManager.getInstance().isFree(clanhall.getClanHallId()))
 								{
-									ClanHallManager.getInstance().setFree(clanhall.getId());
-									AuctionManager.getInstance().initNPC(clanhall.getId());
+									ClanHallManager.getInstance().setFree(clanhall.getClanHallId());
+									AuctionManager.getInstance().initNPC(clanhall.getClanHallId());
 								}
 								else
 								{
@@ -197,6 +197,7 @@ public class AdminSiege implements IAdminCommandHandler
 						{
 							castle.getSiege().registerAttacker(player, true);
 						}
+						showSiegePage(activeChar, castle.getName());
 						break;
 					case "admin_add_defender":
 						if (player == null)
@@ -207,6 +208,7 @@ public class AdminSiege implements IAdminCommandHandler
 						{
 							castle.getSiege().registerDefender(player, true);
 						}
+						showSiegePage(activeChar, castle.getName());
 						break;
 					case "admin_add_guard":
 						if (st.hasMoreTokens())
@@ -223,12 +225,15 @@ public class AdminSiege implements IAdminCommandHandler
 						break;
 					case "admin_clear_siege_list":
 						castle.getSiege().clearSiegeClan();
+						showSiegePage(activeChar, castle.getName());
 						break;
 					case "admin_endsiege":
 						castle.getSiege().endSiege();
+						showSiegePage(activeChar, castle.getName());
 						break;
 					case "admin_list_siege_clans":
 						castle.getSiege().listRegisterClan(activeChar);
+						showSiegePage(activeChar, castle.getName());
 						break;
 					case "admin_move_defenders":
 						activeChar.sendMessage("Not implemented yet.");
@@ -242,6 +247,7 @@ public class AdminSiege implements IAdminCommandHandler
 						{
 							castle.setOwner(player.getClan());
 						}
+						showSiegePage(activeChar, castle.getName());
 						break;
 					case "admin_removecastle":
 						final L2Clan clan = ClanTable.getInstance().getClan(castle.getOwnerId());
@@ -253,6 +259,7 @@ public class AdminSiege implements IAdminCommandHandler
 						{
 							activeChar.sendMessage("Unable to remove castle.");
 						}
+						showSiegePage(activeChar, castle.getName());
 						break;
 					case "admin_setsiegetime":
 						if (st.hasMoreTokens())
@@ -318,9 +325,11 @@ public class AdminSiege implements IAdminCommandHandler
 						break;
 					case "admin_spawn_doors":
 						castle.spawnDoor();
+						showSiegePage(activeChar, castle.getName());
 						break;
 					case "admin_startsiege":
 						castle.getSiege().startSiege();
+						showSiegePage(activeChar, castle.getName());
 						break;
 					default:
 						showSiegePage(activeChar, castle.getName());
@@ -366,7 +375,7 @@ public class AdminSiege implements IAdminCommandHandler
 		{
 			if (hall != null)
 			{
-				StringUtil.append(cList, "<td fixwidth=90><a action=\"bypass -h admin_chsiege_siegablehall ", String.valueOf(hall.getId()), "\">", hall.getName(), "</a></td>");
+				StringUtil.append(cList, "<td fixwidth=90><a action=\"bypass -h admin_chsiege_siegablehall ", String.valueOf(hall.getClanHallId()), "\">", hall.getName(), "</a></td>");
 				i++;
 			}
 			if (i > 1)
@@ -382,7 +391,7 @@ public class AdminSiege implements IAdminCommandHandler
 		{
 			if (clanhall != null)
 			{
-				StringUtil.append(cList, "<td fixwidth=134><a action=\"bypass -h admin_clanhall ", String.valueOf(clanhall.getId()), "\">", clanhall.getName(), "</a></td>");
+				StringUtil.append(cList, "<td fixwidth=134><a action=\"bypass -h admin_clanhall ", String.valueOf(clanhall.getClanHallId()), "\">", clanhall.getName(), "</a></td>");
 				i++;
 			}
 			if (i > 1)
@@ -398,7 +407,7 @@ public class AdminSiege implements IAdminCommandHandler
 		{
 			if (clanhall != null)
 			{
-				StringUtil.append(cList, "<td fixwidth=134><a action=\"bypass -h admin_clanhall ", String.valueOf(clanhall.getId()), "\">", clanhall.getName(), "</a></td>");
+				StringUtil.append(cList, "<td fixwidth=134><a action=\"bypass -h admin_clanhall ", String.valueOf(clanhall.getClanHallId()), "\">", clanhall.getName(), "</a></td>");
 				i++;
 			}
 			if (i > 1)
@@ -481,7 +490,7 @@ public class AdminSiege implements IAdminCommandHandler
 		final NpcHtmlMessage adminReply = new NpcHtmlMessage(1);
 		adminReply.setFile("data/html/admin/clanhall.htm");
 		adminReply.replace("%clanhallName%", clanhall.getName());
-		adminReply.replace("%clanhallId%", String.valueOf(clanhall.getId()));
+		adminReply.replace("%clanhallId%", String.valueOf(clanhall.getClanHallId()));
 		final L2Clan owner = ClanTable.getInstance().getClan(clanhall.getOwnerId());
 		adminReply.replace("%clanhallOwner%", (owner == null) ? "None" : owner.getName());
 		activeChar.sendPacket(adminReply);
@@ -496,7 +505,7 @@ public class AdminSiege implements IAdminCommandHandler
 	{
 		final NpcHtmlMessage msg = new NpcHtmlMessage(1);
 		msg.setFile("data/html/admin/siegablehall.htm");
-		msg.replace("%clanhallId%", String.valueOf(hall.getId()));
+		msg.replace("%clanhallId%", String.valueOf(hall.getClanHallId()));
 		msg.replace("%clanhallName%", hall.getName());
 		if (hall.getOwnerId() > 0)
 		{

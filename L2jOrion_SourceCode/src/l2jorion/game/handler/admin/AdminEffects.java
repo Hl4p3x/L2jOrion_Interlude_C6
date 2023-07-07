@@ -32,11 +32,11 @@ import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ChestInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.CharInfo;
 import l2jorion.game.network.serverpackets.Earthquake;
 import l2jorion.game.network.serverpackets.ExRedSky;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.PlaySound;
 import l2jorion.game.network.serverpackets.SignsSky;
@@ -96,11 +96,6 @@ public class AdminEffects implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		final StringTokenizer st = new StringTokenizer(command);
 		st.nextToken();
 		
@@ -147,8 +142,6 @@ public class AdminEffects implements IAdminCommandHandler
 				final int duration = Integer.parseInt(val2);
 				final Earthquake eq = new Earthquake(activeChar.getX(), activeChar.getY(), activeChar.getZ(), intensity, duration);
 				activeChar.broadcastPacket(eq);
-				val1 = null;
-				val2 = null;
 			}
 			catch (final Exception e)
 			{
@@ -205,8 +198,6 @@ public class AdminEffects implements IAdminCommandHandler
 						return false;
 					}
 				}
-				
-				target = null;
 			}
 			catch (final Exception e)
 			{
@@ -278,7 +269,7 @@ public class AdminEffects implements IAdminCommandHandler
 						player.startAbnormalEffect(0x0800);
 					}
 					
-					player.setIsParalyzed(true);
+					player.startParalyze();
 					final StopMove sm = new StopMove(player);
 					player.sendPacket(sm);
 					player.broadcastPacket(sm);
@@ -316,7 +307,7 @@ public class AdminEffects implements IAdminCommandHandler
 					if (!player.isGM())
 					{
 						player.startAbnormalEffect(0x0400);
-						player.setIsParalyzed(true);
+						player.startParalyze();
 						final StopMove sm = new StopMove(player);
 						player.sendPacket(sm);
 						player.broadcastPacket(sm);
@@ -352,7 +343,7 @@ public class AdminEffects implements IAdminCommandHandler
 					if (!player.isGM())
 					{
 						player.startAbnormalEffect(0x0400);
-						player.setIsParalyzed(true);
+						player.startParalyze();
 						final StopMove sm = new StopMove(player);
 						player.sendPacket(sm);
 						player.broadcastPacket(sm);
@@ -391,9 +382,6 @@ public class AdminEffects implements IAdminCommandHandler
 					player = (L2Character) target;
 					player.startAbnormalEffect(0x2000);
 				}
-				
-				target = null;
-				player = null;
 			}
 			catch (final Exception e)
 			{
@@ -476,10 +464,6 @@ public class AdminEffects implements IAdminCommandHandler
 				activeChar.broadcastPacket(info1);
 				UserInfo info2 = new UserInfo(activeChar);
 				activeChar.sendPacket(info2);
-				
-				info1 = null;
-				info2 = null;
-				id = null;
 			}
 			catch (final Exception e)
 			{
@@ -502,9 +486,6 @@ public class AdminEffects implements IAdminCommandHandler
 				activeChar.broadcastPacket(info1);
 				UserInfo info2 = new UserInfo(activeChar);
 				activeChar.sendPacket(info2);
-				
-				info1 = null;
-				info2 = null;
 			}
 			catch (final Exception e)
 			{
@@ -553,14 +534,11 @@ public class AdminEffects implements IAdminCommandHandler
 							SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 							sm.addString("You have joined team " + teamVal);
 							player.sendPacket(sm);
-							sm = null;
 						}
 						
 						player.broadcastUserInfo();
 					}
 				}
-				
-				val = null;
 			}
 			catch (final Exception e)
 			{
@@ -596,14 +574,9 @@ public class AdminEffects implements IAdminCommandHandler
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 				sm.addString("You have joined team " + teamVal);
 				player.sendPacket(sm);
-				sm = null;
 			}
 			
 			player.broadcastUserInfo();
-			
-			val = null;
-			target = null;
-			player = null;
 		}
 		
 		else if (command.startsWith("admin_social"))
@@ -656,8 +629,6 @@ public class AdminEffects implements IAdminCommandHandler
 								activeChar.sendMessage("Incorrect parameter");
 							}
 						}
-						
-						player = null;
 					}
 				}
 				else if (st.countTokens() == 1)
@@ -682,9 +653,6 @@ public class AdminEffects implements IAdminCommandHandler
 				{
 					activeChar.sendMessage("Usage: //social <social_id> [player_name|radius]");
 				}
-				
-				target = null;
-				obj = null;
 			}
 			catch (final Exception e)
 			{
@@ -708,9 +676,6 @@ public class AdminEffects implements IAdminCommandHandler
 					player.stopAllEffects();
 					activeChar.sendMessage("Effects has been cleared from " + player + ".");
 				}
-				
-				target = null;
-				player = null;
 			}
 			catch (final Exception e)
 			{
@@ -777,11 +742,7 @@ public class AdminEffects implements IAdminCommandHandler
 								activeChar.sendMessage("Usage: //abnormal <hex_abnormal_mask> [player|radius]");
 							}
 						}
-						
-						player = null;
 					}
-					
-					parm = null;
 				}
 				else if (st.countTokens() == 1)
 				{
@@ -805,9 +766,6 @@ public class AdminEffects implements IAdminCommandHandler
 				{
 					activeChar.sendMessage("Usage: //abnormal <abnormal_mask> [player_name|radius]");
 				}
-				
-				target = null;
-				obj = null;
 			}
 			catch (final Exception e)
 			{
@@ -874,11 +832,6 @@ public class AdminEffects implements IAdminCommandHandler
 		return true;
 	}
 	
-	/**
-	 * @param action bitmask that should be applied over target's abnormal
-	 * @param target
-	 * @return <i>true</i> if target's abnormal state was affected , <i>false</i> otherwise.
-	 */
 	private boolean performAbnormal(final int action, final L2Object target)
 	{
 		if (target instanceof L2Character)
@@ -893,8 +846,6 @@ public class AdminEffects implements IAdminCommandHandler
 			{
 				character.startAbnormalEffect(action);
 			}
-			
-			character = null;
 			
 			return true;
 		}
@@ -930,7 +881,6 @@ public class AdminEffects implements IAdminCommandHandler
 				
 				L2Character character = (L2Character) target;
 				character.broadcastPacket(new SocialAction(target.getObjectId(), action));
-				character = null;
 			}
 			else
 			{
@@ -947,14 +897,9 @@ public class AdminEffects implements IAdminCommandHandler
 		return true;
 	}
 	
-	/**
-	 * @param type - atmosphere type (signssky,sky)
-	 * @param state - atmosphere state(night,day)
-	 * @param activeChar
-	 */
 	private void adminAtmosphere(final String type, final String state, final L2PcInstance activeChar)
 	{
-		L2GameServerPacket packet = null;
+		PacketServer packet = null;
 		
 		switch (type)
 		{
@@ -994,8 +939,6 @@ public class AdminEffects implements IAdminCommandHandler
 				player.sendPacket(packet);
 			}
 		}
-		
-		packet = null;
 	}
 	
 	private void playAdminSound(final L2PcInstance activeChar, final String sound)
@@ -1004,7 +947,6 @@ public class AdminEffects implements IAdminCommandHandler
 		activeChar.sendPacket(_snd);
 		activeChar.broadcastPacket(_snd);
 		activeChar.sendMessage("Playing " + sound + ".");
-		_snd = null;
 	}
 	
 	@Override
@@ -1027,6 +969,5 @@ public class AdminEffects implements IAdminCommandHandler
 		}
 		
 		AdminHelpPage.showHelpPage(activeChar, filename + ".htm");
-		filename = null;
 	}
 }

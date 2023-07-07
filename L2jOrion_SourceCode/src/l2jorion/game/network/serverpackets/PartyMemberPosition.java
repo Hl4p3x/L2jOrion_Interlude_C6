@@ -26,8 +26,9 @@ import javolution.util.FastMap;
 import l2jorion.game.model.L2Party;
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class PartyMemberPosition extends L2GameServerPacket
+public class PartyMemberPosition extends PacketServer
 {
 	Map<Integer, Location> locations = new FastMap<>();
 	

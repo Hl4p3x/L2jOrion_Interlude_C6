@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExQuestInfo extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExQuestInfo extends PacketServer
 {
 	private static final String _S__FE_19_EXQUESTINFO = "[S] FE:19 EXQUESTINFO";
 	

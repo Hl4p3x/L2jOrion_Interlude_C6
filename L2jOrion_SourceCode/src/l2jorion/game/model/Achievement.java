@@ -66,6 +66,11 @@ public class Achievement
 		}
 	}
 	
+	public void cleanUp()
+	{
+		_data.clear();
+	}
+	
 	public void store(AchType type, int level, int count)
 	{
 		try (Connection con = L2DatabaseFactory.getInstance().getConnection();
@@ -85,10 +90,15 @@ public class Achievement
 	
 	public void increase(AchType type)
 	{
-		increase(type, 1, true, true); // Increase count by current count + 1 and reset count to 0 on level up.
+		increase(type, 1, true, true, false, 0); // Increase count by current count + 1 and reset count to 0 on level up.
 	}
 	
-	public void increase(AchType type, int count, boolean increase, boolean reset)
+	public void increase(AchType type, boolean daily, int id)
+	{
+		increase(type, 1, false, false, daily, id); // Increase count by current count + 1 and reset count to 0 on level up.
+	}
+	
+	public void increase(AchType type, int count, boolean increase, boolean reset, boolean daily, int id)
 	{
 		if (!Config.ACHIEVEMENT_ENABLE)
 		{
@@ -100,18 +110,47 @@ public class Achievement
 			return;
 		}
 		
+		if (AchievementManager.getInstance().getAchievements().get(type) == null)
+		{
+			return;
+		}
+		
 		if (_data.containsKey(type) && AchievementManager.getInstance().getStages(type).size() < _data.get(type).getId())
 		{
 			return;
 		}
 		
+		// It needs for daily missions only to get the correct data
+		AchievementHolder achDaily = AchievementManager.getInstance().getAchievements().get(type).get(0);
+		if (daily)
+		{
+			if (achDaily.getNpcId() != 0 && !(String.valueOf(achDaily.getNpcId()).contains(String.valueOf(id))))
+			{
+				return;
+			}
+			
+			if (achDaily.getItemId() != 0 && !(String.valueOf(achDaily.getItemId()).contains(String.valueOf(id))))
+			{
+				return;
+			}
+			
+			if (type == AchType.DAILY_ONLINE)
+			{
+				if (achDaily.getRequired() != getCount(AchType.DAILY_ONLINE))
+				{
+					return;
+				}
+			}
+		}
+		
 		_data.put(type, !_data.containsKey(type) ? new IntIntHolder(1, count) : new IntIntHolder(_data.get(type).getId(), increase ? _data.get(type).getValue() + count : count));
 		
 		final AchievementHolder ach = AchievementManager.getInstance().getAchievements().get(type).get(_data.get(type).getId() - 1);
-		if (ach.getLevel() == _data.get(type).getId() && ach.getRequired() <= _data.get(type).getValue())
+		
+		if ((daily || ach.getLevel() == _data.get(type).getId()) && ach.getRequired() <= _data.get(type).getValue())
 		{
 			_player.broadcastPacket(new MagicSkillUser(_player, _player, 5103, 1, 1000, 0));
-			_player.sendMessage("Lv " + ach.getLevel() + " " + ach.getName() + " achievement completed.");
+			_player.sendMessage((daily ? "" : "Lv " + ach.getLevel()) + " " + ach.getName() + " achievement completed.");
 			_player.addItem("Reward", ach.getRewardId(), ach.getRewardCount(), _player, true);
 			_data.put(type, new IntIntHolder(_data.get(type).getId() + 1, reset ? 0 : _data.get(type).getValue()));
 		}
@@ -137,5 +176,4 @@ public class Achievement
 	{
 		return _player;
 	}
-	
 }

@@ -23,7 +23,6 @@ package l2jorion.game.skills;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import javolution.util.FastList;
 import l2jorion.game.skills.funcs.Func;
 
 /**
@@ -137,13 +136,12 @@ public final class Calculator
 		}
 		
 		_functions = tmp_arraylist.toArray(new Func[tmp_arraylist.size()]);
-		
 	}
 	
-	public synchronized FastList<Stats> removeOwner(final Object owner)
+	public synchronized ArrayList<Stats> removeOwner(final Object owner)
 	{
 		final Func[] funcs = _functions;
-		final FastList<Stats> modifiedStats = new FastList<>();
+		final ArrayList<Stats> modifiedStats = new ArrayList<>();
 		
 		for (final Func func : funcs)
 		{

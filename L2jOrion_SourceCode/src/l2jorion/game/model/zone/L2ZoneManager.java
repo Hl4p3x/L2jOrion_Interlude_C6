@@ -26,10 +26,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * This class manages all zones for a given world region
- * @author durgus
- */
 public class L2ZoneManager
 {
 	private final Logger LOG = LoggerFactory.getLogger(L2ZoneManager.class);

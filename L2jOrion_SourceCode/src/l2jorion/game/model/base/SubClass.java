@@ -23,11 +23,6 @@ package l2jorion.game.model.base;
 import l2jorion.Config;
 import l2jorion.game.datatables.xml.ExperienceData;
 
-/**
- * Character Sub-Class Definition.<br>
- * Used to store key information about a character's sub-class.
- * @author programmos, L2jOrion dev
- */
 public final class SubClass
 {
 	private PlayerClass _class;
@@ -143,6 +138,7 @@ public final class SubClass
 		{
 			return;
 		}
+		
 		_level--;
 		setExp(ExperienceData.getInstance().getExpForLevel(getLevel()));
 	}

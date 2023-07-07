@@ -94,7 +94,9 @@ public class FortSiegeManager
 	public final boolean checkIfOkToSummon(final L2Character activeChar, final boolean isCheckOnly)
 	{
 		if (activeChar == null || !(activeChar instanceof L2PcInstance))
+		{
 			return false;
+		}
 		
 		SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 		L2PcInstance player = (L2PcInstance) activeChar;
@@ -113,7 +115,9 @@ public class FortSiegeManager
 			sm.addString("You can only summon this as a registered attacker.");
 		}
 		else
+		{
 			return true;
+		}
 		
 		if (!isCheckOnly)
 		{
@@ -137,10 +141,14 @@ public class FortSiegeManager
 	public final boolean checkIsRegistered(final L2Clan clan, final int fortid)
 	{
 		if (clan == null)
+		{
 			return false;
+		}
 		
 		if (clan.getHasFort() > 0)
+		{
 			return true;
+		}
 		
 		Connection con = null;
 		boolean register = false;
@@ -184,9 +192,10 @@ public class FortSiegeManager
 	
 	// =========================================================
 	// Method - Private
+	@SuppressWarnings("unused")
 	private final void load()
 	{
-		//LOG.info("Initializing FortSiegeManager");
+		// LOG.info("Initializing FortSiegeManager");
 		InputStream is = null;
 		try
 		{
@@ -237,7 +246,9 @@ public class FortSiegeManager
 					catch (final Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 						
 						LOG.warn("Error while loading commander(s) for " + fort.getName() + " fort.");
 					}
@@ -268,7 +279,9 @@ public class FortSiegeManager
 					catch (final Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 						
 						LOG.warn("Error while loading flag(s) for " + fort.getName() + " fort.");
 					}
@@ -304,14 +317,18 @@ public class FortSiegeManager
 	public final FastList<SiegeSpawn> getCommanderSpawnList(final int _fortId)
 	{
 		if (_commanderSpawnList.containsKey(_fortId))
+		{
 			return _commanderSpawnList.get(_fortId);
+		}
 		return null;
 	}
 	
 	public final FastList<SiegeSpawn> getFlagList(final int _fortId)
 	{
 		if (_flagList.containsKey(_fortId))
+		{
 			return _flagList.get(_fortId);
+		}
 		return null;
 	}
 	
@@ -353,8 +370,12 @@ public class FortSiegeManager
 	public final FortSiege getSiege(final int x, final int y, final int z)
 	{
 		for (final Fort fort : FortManager.getInstance().getForts())
+		{
 			if (fort.getSiege().checkIfInZone(x, y, z))
+			{
 				return fort.getSiege();
+			}
+		}
 		return null;
 	}
 	

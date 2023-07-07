@@ -49,15 +49,25 @@ public class LoginStatusThread extends Thread
 	private void telnetOutput(final int type, final String text)
 	{
 		if (type == 1)
+		{
 			LOG.info("TELNET | " + text);
+		}
 		else if (type == 2)
+		{
 			System.out.print("TELNET | " + text);
+		}
 		else if (type == 3)
+		{
 			System.out.print(text);
+		}
 		else if (type == 4)
+		{
 			LOG.info(text);
+		}
 		else
+		{
 			LOG.info("TELNET | " + text);
+		}
 	}
 	
 	private boolean isValidIP(final Socket client)
@@ -72,7 +82,9 @@ public class LoginStatusThread extends Thread
 		
 		// read and loop thru list of IPs, compare with newIP
 		if (Config.DEVELOPER)
+		{
 			telnetOutput(2, "");
+		}
 		
 		InputStream telnetIS = null;
 		try
@@ -84,7 +96,9 @@ public class LoginStatusThread extends Thread
 			final String HostList = telnetSettings.getProperty("ListOfHosts", "127.0.0.1,localhost,::1");
 			
 			if (Config.DEVELOPER)
+			{
 				telnetOutput(3, "Comparing ip to list...");
+			}
 			
 			// compare
 			String ipToCompare = null;
@@ -94,16 +108,22 @@ public class LoginStatusThread extends Thread
 				{
 					ipToCompare = InetAddress.getByName(ip).getHostAddress();
 					if (clientStringIP.equals(ipToCompare))
+					{
 						result = true;
+					}
 					if (Config.DEVELOPER)
+					{
 						telnetOutput(3, clientStringIP + " = " + ipToCompare + "(" + ip + ") = " + result);
+					}
 				}
 			}
 		}
 		catch (final IOException e)
 		{
 			if (Config.DEVELOPER)
+			{
 				telnetOutput(4, "");
+			}
 			telnetOutput(1, "Error: " + e);
 		}
 		finally
@@ -122,7 +142,9 @@ public class LoginStatusThread extends Thread
 		}
 		
 		if (Config.DEVELOPER)
+		{
 			telnetOutput(4, "Allow IP: " + result);
+		}
 		return result;
 	}
 	
@@ -201,7 +223,6 @@ public class LoginStatusThread extends Thread
 				}
 				else if (_usrCommand.equals("status"))
 				{
-					// TODO enhance the output
 					_print.println("Registered Server Count: " + GameServerTable.getInstance().getRegisteredGameServers().size());
 				}
 				else if (_usrCommand.startsWith("unblock"))

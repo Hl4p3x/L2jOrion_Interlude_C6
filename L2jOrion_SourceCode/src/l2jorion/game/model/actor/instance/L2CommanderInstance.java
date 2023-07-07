@@ -26,10 +26,6 @@ import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * @author programmos
- */
-
 public class L2CommanderInstance extends L2Attackable
 {
 	private static Logger LOG = LoggerFactory.getLogger(L2CommanderInstance.class);
@@ -43,15 +39,9 @@ public class L2CommanderInstance extends L2Attackable
 		getKnownList(); // init knownlist
 	}
 	
-	/**
-	 * Return True if a siege is in progress and the L2Character attacker isn't a Defender.<BR>
-	 * <BR>
-	 * @param attacker The L2Character that the L2CommanderInstance try to attack
-	 */
 	@Override
 	public boolean isAutoAttackable(final L2Character attacker)
 	{
-		// Attackable during siege by all except defenders
 		return attacker != null && attacker instanceof L2PcInstance && getFort() != null && getFort().getFortId() > 0 && getFort().getSiege().getIsInProgress() && !getFort().getSiege().checkIsDefender(((L2PcInstance) attacker).getClan());
 	}
 	

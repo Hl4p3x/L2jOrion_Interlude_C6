@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.clientpackets;
 
-public final class RequestWriteHeroWords extends L2GameClientPacket
+import l2jorion.game.network.PacketClient;
+
+public final class RequestWriteHeroWords extends PacketClient
 {
 	@SuppressWarnings("unused")
 	private String _heroWords;

@@ -24,8 +24,9 @@ import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class GMViewPledgeInfo extends L2GameServerPacket
+public class GMViewPledgeInfo extends PacketServer
 {
 	private static final String _S__A9_GMVIEWPLEDGEINFO = "[S] 90 GMViewPledgeInfo";
 	private final L2Clan _clan;

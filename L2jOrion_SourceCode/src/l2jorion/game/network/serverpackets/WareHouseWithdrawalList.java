@@ -23,10 +23,11 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class WareHouseWithdrawalList extends L2GameServerPacket
+public class WareHouseWithdrawalList extends PacketServer
 {
 	private static Logger LOG = LoggerFactory.getLogger(WareHouseWithdrawalList.class);
 	

@@ -16,8 +16,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
+import l2jorion.game.network.PacketServer;
 
-public final class FlyToLocation extends L2GameServerPacket
+public final class FlyToLocation extends PacketServer
 {
 	private static final String _S__C5_FLYTOLOCATION = "[S] c5 FlyToLocation";
 	

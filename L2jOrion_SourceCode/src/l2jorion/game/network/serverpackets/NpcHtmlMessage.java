@@ -23,16 +23,16 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.Config;
 import l2jorion.game.cache.HtmCache;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.clientpackets.RequestBypassToServer;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class NpcHtmlMessage extends L2GameServerPacket
+public class NpcHtmlMessage extends PacketServer
 {
 	private static final String _S__1B_NPCHTMLMESSAGE = "[S] 0f NpcHtmlMessage";
 	
-	private static Logger LOG = LoggerFactory.getLogger(RequestBypassToServer.class);
+	private static Logger LOG = LoggerFactory.getLogger(NpcHtmlMessage.class);
 	
 	private final int _npcObjId;
 	private String _html;
@@ -74,7 +74,7 @@ public class NpcHtmlMessage extends L2GameServerPacket
 	{
 		if (text == null)
 		{
-			_html = "<html><body>No data! Report it for an admin. Thank you.</body></html>";
+			_html = "<html><body>No data! Report it to an admin. Thank you.</body></html>";
 			return;
 		}
 		
@@ -212,9 +212,23 @@ public class NpcHtmlMessage extends L2GameServerPacket
 	@Override
 	protected final void writeImpl()
 	{
+		L2PcInstance player = getClient().getActiveChar();
+		if (player == null)
+		{
+			return;
+		}
+		
 		writeC(0x0f);
 		
 		writeD(_npcObjId);
+		
+		/*
+		 * _html = ImagesCache.getInstance().sendUsedImages(_html, player); if (_html.startsWith("CREST")) { _html = _html.substring(5); }
+		 */
+		
+		player.cleanBypasses(false);
+		_html = player.encodeBypasses(_html, false);
+		
 		writeS(_html);
 		writeD(0x00);
 	}

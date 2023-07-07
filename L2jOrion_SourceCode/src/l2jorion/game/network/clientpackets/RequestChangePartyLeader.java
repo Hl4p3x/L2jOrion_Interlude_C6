@@ -21,12 +21,13 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 
 /**
  * This class ...
  * @version $Revision: 1.3.4.2 $ $Date: 2005/03/27 15:29:30 $
  */
-public final class RequestChangePartyLeader extends L2GameClientPacket
+public final class RequestChangePartyLeader extends PacketClient
 {
 	private String _name;
 	

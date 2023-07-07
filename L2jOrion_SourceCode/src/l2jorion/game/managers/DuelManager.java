@@ -23,7 +23,7 @@ import javolution.util.FastList;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.Duel;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
+import l2jorion.game.network.PacketServer;
 
 public class DuelManager
 {
@@ -206,7 +206,7 @@ public class DuelManager
 	 * @param player
 	 * @param packet
 	 */
-	public void broadcastToOppositTeam(final L2PcInstance player, final L2GameServerPacket packet)
+	public void broadcastToOppositTeam(final L2PcInstance player, final PacketServer packet)
 	{
 		if (player == null || !player.isInDuel())
 		{

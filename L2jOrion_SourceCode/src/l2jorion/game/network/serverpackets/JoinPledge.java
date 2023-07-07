@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class JoinPledge extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class JoinPledge extends PacketServer
 {
 	private static final String _S__45_JOINPLEDGE = "[S] 33 JoinPledge";
 	

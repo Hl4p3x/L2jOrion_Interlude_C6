@@ -1,0 +1,47 @@
+<html>
+<body>
+<center><font color=3399ff>Autofarm bot v1.0</font></center>
+<br><br>
+<center>Your set of skills on the <font color=009900>10th</font> shortcut skill bar:<br1>
+(<font color=ff0000>ATTENTION: It works only on the 10th shortcut skill bar.</font>)
+<img src="Autofarm.Unlimited.SkillBar" width="300" height="57">
+<br>
+<br>
+<font color=009900>Settings:</font><br1>
+<table width="200">
+<tr>
+<td>
+Attack Mode:
+</td>
+<td>
+Radius (200-3000):
+</td>
+</tr>
+<tr>
+<td>
+<combobox width="90" var="mode" list="Random;Radius;">
+</td>
+<td>
+<edit var="range" width="90" height="12" type="number" length="4">
+</td>
+</tr>
+<tr>
+<td><center>%mode%</center></td>
+<td><center>%radius%</center></td>
+</tr>
+</table>
+<br>
+
+<table width="140">
+<tr>
+<td><button value="Start" action="bypass -h custom_autofarm $mode $range" width=65 height=20 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+<td><button value="Stop" action="bypass -h custom_autofarm_stop" width=65 height=20 back="L2UI_ch3.smallbutton2_over" fore="L2UI_ch3.smallbutton2"></td>
+</tr>
+</table>
+<br>
+<font color=009900>About attack mode:</font><br1>
+</center>
+Random - Zone is not limited (kills everyone around and <br1>moves very wide).<br1>
+Radius - Zone is limited (character kills all around and <br1>moves by radius from point you started the farm).
+</body>
+</html>

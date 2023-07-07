@@ -21,13 +21,10 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ExMPCCShowPartyMemberInfo;
 
-/**
- * Format:(ch) h
- * @author -Wooden-
- */
-public final class RequestExMPCCShowPartyMembersInfo extends L2GameClientPacket
+public final class RequestExMPCCShowPartyMembersInfo extends PacketClient
 {
 	private int _partyLeaderId;
 	
@@ -42,11 +39,15 @@ public final class RequestExMPCCShowPartyMembersInfo extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		final L2PcInstance player = L2World.getInstance().getPlayer(_partyLeaderId);
 		if (player != null && player.getParty() != null)
+		{
 			activeChar.sendPacket(new ExMPCCShowPartyMemberInfo(player.getParty()));
+		}
 	}
 	
 	@Override

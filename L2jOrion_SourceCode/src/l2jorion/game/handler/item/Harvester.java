@@ -32,16 +32,12 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * @author l3x
- */
 public class Harvester implements IItemHandler
 {
 	
 	private static final int[] ITEM_IDS =
 	{
 		5125
-	/* Harvester */
 	};
 	L2PcInstance _activeChar;
 	L2MonsterInstance _target;
@@ -50,10 +46,14 @@ public class Harvester implements IItemHandler
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance _item)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		if (CastleManorManager.getInstance().isDisabled())
+		{
 			return;
+		}
 		
 		_activeChar = (L2PcInstance) playable;
 		if (_activeChar.getTarget() == null || !(_activeChar.getTarget() instanceof L2MonsterInstance))

@@ -71,7 +71,7 @@ public class L2SkillDrain extends L2Skill
 			}
 			
 			final boolean mcrit = Formulas.calcMCrit(activeChar.getMCriticalHit(target, this));
-			final int damage = (int) Formulas.calcMagicDam(activeChar, target, this, sps, bss, mcrit);
+			int damage = (int) Formulas.calcMagicDam(activeChar, target, this, sps, bss, mcrit);
 			
 			int _drain = 0;
 			final int _cp = (int) target.getStatus().getCurrentCp();
@@ -116,8 +116,6 @@ public class L2SkillDrain extends L2Skill
 					target.breakCast();
 				}
 				
-				activeChar.sendDamageMessage(target, damage, mcrit, false, false);
-				
 				if (hasEffects() && getTargetType() != SkillTargetType.TARGET_CORPSE_MOB)
 				{
 					if (target.reflectSkill(this))
@@ -135,6 +133,16 @@ public class L2SkillDrain extends L2Skill
 						if (Formulas.getInstance().calcSkillSuccess(activeChar, target, this, false, sps, bss))
 						{
 							getEffects(activeChar, target, false, sps, bss);
+							
+							switch (getId())
+							{
+								case 1343:
+									// recalculate dmg if effect is succeed
+									damage = (int) Formulas.calcMagicDam(activeChar, target, this, sps, bss, mcrit);
+									break;
+								default:
+									break;
+							}
 						}
 						else
 						{
@@ -147,6 +155,7 @@ public class L2SkillDrain extends L2Skill
 				}
 				
 				target.reduceCurrentHp(damage, activeChar);
+				activeChar.sendDamageMessage(target, damage, mcrit, false, false);
 			}
 			
 			// Check to see if we should do the decay right after the cast

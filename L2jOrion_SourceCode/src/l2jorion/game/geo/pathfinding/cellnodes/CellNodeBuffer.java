@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2004-2016 L2J Server
- * 
- * This file is part of L2J Server.
- * 
- * L2J Server is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * L2J Server is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package l2jorion.game.geo.pathfinding.cellnodes;
 
 import java.util.LinkedList;
@@ -60,10 +42,13 @@ public class CellNodeBuffer
 		_timeStamp = System.currentTimeMillis();
 		_baseX = x + ((tx - x - _mapSize) / 2); // middle of the line (x,y) - (tx,ty)
 		_baseY = y + ((ty - y - _mapSize) / 2); // will be in the center of the buffer
+		
 		_targetX = tx;
 		_targetY = ty;
 		_targetZ = tz;
+		
 		_current = getNode(x, y, z);
+		
 		_current.setCost(getCost(x, y, z, Config.HIGH_WEIGHT));
 		
 		for (int count = 0; count < MAX_ITERATIONS; count++)
@@ -74,6 +59,7 @@ public class CellNodeBuffer
 			}
 			
 			getNeighbors();
+			
 			if (_current.getNext() == null)
 			{
 				return null; // no more ways
@@ -298,6 +284,7 @@ public class CellNodeBuffer
 		
 		CellNode node = _current;
 		int count = 0;
+		
 		while ((node.getNext() != null) && (count < (MAX_ITERATIONS * 4)))
 		{
 			count++;
@@ -309,6 +296,7 @@ public class CellNodeBuffer
 			}
 			node = node.getNext();
 		}
+		
 		if (count == (MAX_ITERATIONS * 4))
 		{
 			System.err.println("Pathfinding: too long loop detected, cost:" + newNode.getCost());
@@ -331,6 +319,7 @@ public class CellNodeBuffer
 		{
 			return true;
 		}
+		
 		if (Math.abs(result.getLoc().getZ() - z) > 16)
 		{
 			return true;

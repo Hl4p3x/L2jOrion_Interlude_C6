@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.datatables.sql;
 
 import java.sql.Connection;
@@ -191,7 +171,6 @@ public class CharTemplateTable
 			while (rset.next())
 			{
 				StatsSet set = new StatsSet();
-				// ClassId classId = ClassId.values()[rset.getInt("id")];
 				set.set("classId", rset.getInt("id"));
 				set.set("className", rset.getString("className"));
 				set.set("raceId", rset.getInt("raceId"));
@@ -215,11 +194,11 @@ public class CharTemplateTable
 				set.set("basePAtk", rset.getInt("p_atk"));
 				set.set("basePDef", rset.getInt("p_def"));
 				set.set("baseMAtk", rset.getInt("m_atk"));
-				set.set("baseMDef", rset.getInt("char_templates.m_def"));
+				set.set("baseMDef", rset.getInt("m_def"));
 				set.set("classBaseLevel", rset.getInt("class_lvl"));
 				set.set("basePAtkSpd", rset.getInt("p_spd"));
-				set.set("baseMAtkSpd", rset.getInt("char_templates.m_spd"));
-				set.set("baseCritRate", rset.getInt("char_templates.critical") / 10);
+				set.set("baseMAtkSpd", rset.getInt("m_spd"));
+				set.set("baseCritRate", rset.getInt("critical")/* / 10 */);
 				set.set("baseRunSpd", rset.getInt("move_spd"));
 				set.set("baseWalkSpd", 0);
 				set.set("baseShldDef", 0);
@@ -230,12 +209,13 @@ public class CharTemplateTable
 				set.set("spawnY", rset.getInt("y"));
 				set.set("spawnZ", rset.getInt("z"));
 				
-				L2PcTemplate ct;
-				
 				set.set("collision_radius", rset.getDouble("m_col_r"));
 				set.set("collision_height", rset.getDouble("m_col_h"));
-				ct = new L2PcTemplate(set);
-				// 5items must go here
+				
+				set.set("collision_radius_female", rset.getDouble("f_col_r"));
+				set.set("collision_height_female", rset.getDouble("f_col_h"));
+				
+				L2PcTemplate ct = new L2PcTemplate(set);
 				for (int x = 1; x < 13; x++)
 				{
 					if (rset.getInt("items" + x) != 0)
@@ -243,6 +223,7 @@ public class CharTemplateTable
 						ct.addItem(rset.getInt("items" + x));
 					}
 				}
+				
 				_templates.put(ct.classId.getId(), ct);
 			}
 			
@@ -283,7 +264,7 @@ public class CharTemplateTable
 		return CHAR_CLASSES[classId];
 	}
 	
-	public static final int getClassIdByName(final String className)
+	public static final int getClassIdByName(String className)
 	{
 		int currId = 1;
 		

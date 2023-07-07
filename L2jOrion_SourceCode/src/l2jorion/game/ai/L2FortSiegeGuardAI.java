@@ -20,10 +20,10 @@ import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_ATTACK;
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_IDLE;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.geo.GeoData;
@@ -32,8 +32,8 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
-import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.L2Skill.SkillType;
+import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.actor.instance.L2CommanderInstance;
 import l2jorion.game.model.actor.instance.L2DoorInstance;
 import l2jorion.game.model.actor.instance.L2FolkInstance;
@@ -51,11 +51,11 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(L2FortSiegeGuardAI.class);
 	
-	// SelfAnalisis ))
-	public List<L2Skill> pdamSkills = new FastList<>();
-	public List<L2Skill> mdamSkills = new FastList<>();
-	public List<L2Skill> healSkills = new FastList<>();
-	public List<L2Skill> rootSkills = new FastList<>();
+	// SelfAnalisis
+	public List<L2Skill> pdamSkills = new ArrayList<>();
+	public List<L2Skill> mdamSkills = new ArrayList<>();
+	public List<L2Skill> healSkills = new ArrayList<>();
+	public List<L2Skill> rootSkills = new ArrayList<>();
 	
 	public boolean hasPDam = false;
 	public boolean hasMDam = false;
@@ -90,21 +90,33 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 	 * <BR>
 	 * <B><U> Actor is a L2GuardInstance</U> :</B><BR>
 	 * <BR>
-	 * <li>The target isn't a Folk or a Door</li> <li>The target isn't dead, isn't invulnerable, isn't in silent moving mode AND too far (>100)</li> <li>The target is in the actor Aggro range and is at the same height</li> <li>The L2PcInstance target has karma (=PK)</li> <li>The L2MonsterInstance
-	 * target is aggressive</li><BR>
+	 * <li>The target isn't a Folk or a Door</li>
+	 * <li>The target isn't dead, isn't invulnerable, isn't in silent moving mode AND too far (>100)</li>
+	 * <li>The target is in the actor Aggro range and is at the same height</li>
+	 * <li>The L2PcInstance target has karma (=PK)</li>
+	 * <li>The L2MonsterInstance target is aggressive</li><BR>
 	 * <BR>
 	 * <B><U> Actor is a L2SiegeGuardInstance</U> :</B><BR>
 	 * <BR>
-	 * <li>The target isn't a Folk or a Door</li> <li>The target isn't dead, isn't invulnerable, isn't in silent moving mode AND too far (>100)</li> <li>The target is in the actor Aggro range and is at the same height</li> <li>A siege is in progress</li> <li>The L2PcInstance target isn't a Defender</li>
-	 * <BR>
+	 * <li>The target isn't a Folk or a Door</li>
+	 * <li>The target isn't dead, isn't invulnerable, isn't in silent moving mode AND too far (>100)</li>
+	 * <li>The target is in the actor Aggro range and is at the same height</li>
+	 * <li>A siege is in progress</li>
+	 * <li>The L2PcInstance target isn't a Defender</li> <BR>
 	 * <BR>
 	 * <B><U> Actor is a L2FriendlyMobInstance</U> :</B><BR>
 	 * <BR>
-	 * <li>The target isn't a Folk, a Door or another L2NpcInstance</li> <li>The target isn't dead, isn't invulnerable, isn't in silent moving mode AND too far (>100)</li> <li>The target is in the actor Aggro range and is at the same height</li> <li>The L2PcInstance target has karma (=PK)</li><BR>
+	 * <li>The target isn't a Folk, a Door or another L2NpcInstance</li>
+	 * <li>The target isn't dead, isn't invulnerable, isn't in silent moving mode AND too far (>100)</li>
+	 * <li>The target is in the actor Aggro range and is at the same height</li>
+	 * <li>The L2PcInstance target has karma (=PK)</li><BR>
 	 * <BR>
 	 * <B><U> Actor is a L2MonsterInstance</U> :</B><BR>
 	 * <BR>
-	 * <li>The target isn't a Folk, a Door or another L2NpcInstance</li> <li>The target isn't dead, isn't invulnerable, isn't in silent moving mode AND too far (>100)</li> <li>The target is in the actor Aggro range and is at the same height</li> <li>The actor is Aggressive</li><BR>
+	 * <li>The target isn't a Folk, a Door or another L2NpcInstance</li>
+	 * <li>The target isn't dead, isn't invulnerable, isn't in silent moving mode AND too far (>100)</li>
+	 * <li>The target is in the actor Aggro range and is at the same height</li>
+	 * <li>The actor is Aggressive</li><BR>
 	 * <BR>
 	 * @param target The targeted L2Object
 	 * @return
@@ -124,7 +136,9 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 				player = ((L2Summon) target).getOwner();
 			}
 			if ((player == null) || (player.getClan() != null) && player.getClan().getHasFort() == ((L2NpcInstance) _actor).getFort().getFortId())
+			{
 				return false;
+			}
 		}
 		
 		// Check if the target isn't invulnerable
@@ -132,9 +146,13 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 		{
 			// However EffectInvincible requires to check GMs specially
 			if (target instanceof L2PcInstance && ((L2PcInstance) target).isGM())
+			{
 				return false;
+			}
 			if (target instanceof L2Summon && ((L2Summon) target).getOwner().isGM())
+			{
 				return false;
+			}
 		}
 		
 		// Get the owner if the target is a summon
@@ -152,7 +170,9 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 		{
 			// Check if the target isn't in silent move mode AND too far (>100)
 			if (((L2PcInstance) target).isSilentMoving() && !_actor.isInsideRadius(target, 250, false, false))
+			{
 				return false;
+			}
 		}
 		// Los Check Here
 		return _actor.isAutoAttackable(target) && GeoData.getInstance().canSeeTarget(_actor, target);
@@ -239,8 +259,9 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 	 * <BR>
 	 * <B><U> Actions</U> :</B><BR>
 	 * <BR>
-	 * <li>Update every 1s the _globalAggro counter to come close to 0</li> <li>If the actor is Aggressive and can attack, add all autoAttackable L2Character in its Aggro Range to its _aggroList, chose a target and order to attack it</li> <li>If the actor can't attack, order to it to return to its
-	 * home location</li>
+	 * <li>Update every 1s the _globalAggro counter to come close to 0</li>
+	 * <li>If the actor is Aggressive and can attack, add all autoAttackable L2Character in its Aggro Range to its _aggroList, chose a target and order to attack it</li>
+	 * <li>If the actor can't attack, order to it to return to its home location</li>
 	 */
 	private void thinkActive()
 	{
@@ -286,7 +307,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 			L2Character hated;
 			if (_actor.isConfused())
 			{
-				hated = getAttackTarget(); // Force mobs to attack anybody if confused
+				hated = (L2Character) getTarget(); // Force mobs to attack anybody if confused
 			}
 			else
 			{
@@ -331,23 +352,8 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 		return;
 	}
 	
-	/**
-	 * Manage AI attack thinks of a L2Attackable (called by onEvtThink).<BR>
-	 * <BR>
-	 * <B><U> Actions</U> :</B><BR>
-	 * <BR>
-	 * <li>Update the attack timeout if actor is running</li> <li>If target is dead or timeout is expired, stop this attack and set the Intention to AI_INTENTION_ACTIVE</li> <li>Call all L2Object of its Faction inside the Faction Range</li> <li>Chose a target and order to attack it with magic skill
-	 * or physical attack</li><BR>
-	 * <BR>
-	 * TODO: Manage casting rules to healer mobs (like Ant Nurses)
-	 */
 	private void thinkAttack()
 	{
-		if (Config.DEBUG)
-		{
-			LOG.info("L2FortSiegeGuardAI.thinkAttack(); timeout=" + (_attackTimeout - GameTimeController.getInstance().getGameTicks()));
-		}
-		
 		if (_attackTimeout < GameTimeController.getInstance().getGameTicks())
 		{
 			// Check if the actor is running
@@ -361,7 +367,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 			}
 		}
 		
-		final L2Character attackTarget = getAttackTarget();
+		final L2Character attackTarget = (L2Character) getTarget();
 		// Check if target is dead or if timeout is expired to stop this attack
 		if (attackTarget == null || attackTarget.isAlikeDead() || _attackTimeout < GameTimeController.getInstance().getGameTicks())
 		{
@@ -374,7 +380,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 			
 			// Cancel target and timeout
 			_attackTimeout = Integer.MAX_VALUE;
-			setAttackTarget(null);
+			setTarget(null);
 			
 			// Set the AI Intention to AI_INTENTION_ACTIVE
 			setIntention(AI_INTENTION_ACTIVE, null, null);
@@ -389,17 +395,23 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 	
 	private final void factionNotifyAndSupport()
 	{
-		final L2Character target = getAttackTarget();
+		final L2Character target = (L2Character) getTarget();
 		// Call all L2Object of its Faction inside the Faction Range
 		if (((L2NpcInstance) _actor).getFactionId() == null || target == null)
+		{
 			return;
+		}
 		
 		if (target.isInvul())
+		{
 			return; // speeding it up for siege guards
-			
+		}
+		
 		if (Rnd.get(10) > 4)
+		{
 			return; // test for reducing CPU load
-			
+		}
+		
 		final String faction_id = ((L2NpcInstance) _actor).getFactionId();
 		
 		// SalfAnalisis ))
@@ -494,18 +506,20 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 				continue;
 			}
 			
-			if (npc.getAI() != null) // TODO: possibly check not needed
+			if (npc.getAI() != null)
 			{
 				if (!npc.isDead() && Math.abs(target.getZ() - npc.getZ()) < 600
-				// && _actor.getAttackByList().contains(getAttackTarget())
-				&& (npc.getAI().getIntention() == CtrlIntention.AI_INTENTION_IDLE || npc.getAI().getIntention() == CtrlIntention.AI_INTENTION_ACTIVE)
-				// limiting aggro for siege guards
-				&& target.isInsideRadius(npc, 1500, true, false) && GeoData.getInstance().canSeeTarget(npc, target))
+				// && _actor.getAttackByList().contains(getTarget())
+					&& (npc.getAI().getIntention() == CtrlIntention.AI_INTENTION_IDLE || npc.getAI().getIntention() == CtrlIntention.AI_INTENTION_ACTIVE)
+					// limiting aggro for siege guards
+					&& target.isInsideRadius(npc, 1500, true, false) && GeoData.getInstance().canSeeTarget(npc, target))
 				{
 					// Notify the L2Object AI with EVT_AGGRESSION
 					final L2CharacterAI ai = npc.getAI();
 					if (ai != null)
-						ai.notifyEvent(CtrlEvent.EVT_AGGRESSION, getAttackTarget(), 1);
+					{
+						ai.notifyEvent(CtrlEvent.EVT_AGGRESSION, getTarget(), 1);
+					}
 				}
 				// heal friends
 				if (/* _selfAnalysis.hasHealOrResurrect && */!_actor.isAttackingDisabled() && npc.getCurrentHp() < npc.getMaxHp() * 0.6 && _actor.getCurrentHp() > _actor.getMaxHp() / 2 && _actor.getCurrentMp() > _actor.getMaxMp() / 2 && npc.isInCombat())
@@ -555,7 +569,7 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 		int range = 0;
 		L2FortSiegeGuardInstance sGuard;
 		sGuard = (L2FortSiegeGuardInstance) _actor;
-		L2Character attackTarget = getAttackTarget();
+		L2Character attackTarget = (L2Character) getTarget();
 		
 		try
 		{
@@ -571,7 +585,9 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 		catch (final NullPointerException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			// LOG.warn("AttackableAI: Attack target is NULL.");
 			_actor.setTarget(null);
@@ -679,7 +695,9 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 						// if (_selfAnalysis.isMage)
 						// range = _selfAnalysis.maxCastRange - 50;
 						if (_actor.getWalkSpeed() <= 0)
+						{
 							return;
+						}
 						if (attackTarget.isMoving())
 						{
 							moveToPawn(attackTarget, range - 70);
@@ -706,7 +724,9 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 				// if (_selfAnalysis.isMage)
 				// range = _selfAnalysis.maxCastRange - 50;
 				if (_actor.getWalkSpeed() <= 0)
+				{
 					return;
+				}
 				if (attackTarget.isMoving())
 				{
 					moveToPawn(attackTarget, range - 70);
@@ -805,7 +825,9 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 		
 		// Check if the actor can't use skills and if a thinking action isn't already in progress
 		if (_thinking || _actor.isCastingNow() || _actor.isAllSkillsDisabled())
+		{
 			return;
+		}
 		
 		// Start thinking action
 		_thinking = true;
@@ -834,8 +856,9 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 	 * <BR>
 	 * <B><U> Actions</U> :</B><BR>
 	 * <BR>
-	 * <li>Init the attack : Calculate the attack timeout, Set the _globalAggro to 0, Add the attacker to the actor _aggroList</li> <li>Set the L2Character movement type to run and send Server->Client packet ChangeMoveType to all others L2PcInstance</li> <li>Set the Intention to AI_INTENTION_ATTACK</li>
-	 * <BR>
+	 * <li>Init the attack : Calculate the attack timeout, Set the _globalAggro to 0, Add the attacker to the actor _aggroList</li>
+	 * <li>Set the L2Character movement type to run and send Server->Client packet ChangeMoveType to all others L2PcInstance</li>
+	 * <li>Set the Intention to AI_INTENTION_ATTACK</li> <BR>
 	 * <BR>
 	 * @param attacker The L2Character that attacks the actor
 	 */
@@ -874,7 +897,8 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 	 * <BR>
 	 * <B><U> Actions</U> :</B><BR>
 	 * <BR>
-	 * <li>Add the target to the actor _aggroList or update hate if already present</li> <li>Set the actor Intention to AI_INTENTION_ATTACK (if actor is L2GuardInstance check if it isn't too far from its home location)</li><BR>
+	 * <li>Add the target to the actor _aggroList or update hate if already present</li>
+	 * <li>Set the actor Intention to AI_INTENTION_ATTACK (if actor is L2GuardInstance check if it isn't too far from its home location)</li><BR>
 	 * <BR>
 	 * @param target The L2Character that attacks
 	 * @param aggro The value of hate to add to the actor against the target
@@ -883,7 +907,9 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 	protected void onEvtAggression(final L2Character target, int aggro)
 	{
 		if (_actor == null)
+		{
 			return;
+		}
 		final L2Attackable me = (L2Attackable) _actor;
 		
 		if (target != null)
@@ -930,7 +956,9 @@ public class L2FortSiegeGuardAI extends L2CharacterAI implements Runnable
 		{
 			// currently only for setting lower general aggro
 			if (aggro >= 0)
+			{
 				return;
+			}
 			
 			final L2Character mostHated = me.getMostHated();
 			if (mostHated == null)

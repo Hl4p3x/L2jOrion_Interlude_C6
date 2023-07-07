@@ -33,8 +33,8 @@ import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.datatables.sql.TeleportLocationTable;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.managers.AchievementManager;
+import l2jorion.game.managers.AuctionManager;
 import l2jorion.game.managers.DatatablesManager;
-import l2jorion.game.managers.Manager;
 import l2jorion.game.managers.QuestManager;
 import l2jorion.game.managers.ZoneManager;
 import l2jorion.game.model.actor.instance.L2PcInstance;
@@ -105,7 +105,13 @@ public class AdminReload implements IAdminCommandHandler
 				}
 				else if (type.startsWith("instancemanager"))
 				{
-					Manager.reloadAll();
+					AuctionManager.getInstance().reload();
+					
+					if (!Config.ALT_DEV_NO_QUESTS)
+					{
+						QuestManager.getInstance();
+						QuestManager.reload();
+					}
 					sendReloadPage(activeChar);
 					activeChar.sendMessage("All instance manager has been reloaded");
 				}

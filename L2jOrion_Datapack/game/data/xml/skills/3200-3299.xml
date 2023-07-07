@@ -16,7 +16,7 @@
   <set name="staticReuse" val="true"/>
   <set name="staticHitTime" val="true"/>
   <for>
-    <effect count="1" name="Buff" time="120" val="0" stackOrder="1" stackType="agument">
+    <effect count="1" name="Buff" time="120" val="0" stackOrder="1" stackType="augment">
       <mul order="0x30" stat="mReuse" val="#mReuseRate"/>
     </effect>
   </for>
@@ -37,7 +37,7 @@
   <set name="staticReuse" val="true"/>
   <set name="staticHitTime" val="true"/>
   <for>
-    <effect count="1" name="Buff" time="120" val="0" stackOrder="1" stackType="agument">
+    <effect count="1" name="Buff" time="120" val="0" stackOrder="1" stackType="augment">
       <mul order="0x30" stat="pReuse" val="#pReuseRate"/><!-- add core support to songs/dances -->
     </effect>
   </for>
@@ -58,7 +58,7 @@
   <set name="staticReuse" val="true"/>
   <set name="staticHitTime" val="true"/>
   <for>
-    <effect count="1" name="Buff" time="120" val="0" stackOrder="1" stackType="agument">
+    <effect count="1" name="Buff" time="120" val="0" stackOrder="1" stackType="augment">
       <mul order="0x30" stat="mReuse" val="#reuseRate"/>
 	  <mul order="0x30" stat="pReuse" val="#reuseRate"/>
     </effect>
@@ -97,7 +97,7 @@
   <set name="staticReuse" val="true"/>
   <set name="staticHitTime" val="true"/>
   <for>
-    <effect count="1" name="Buff" time="120" val="0" stackOrder="1" stackType="agument">
+    <effect count="1" name="Buff" time="120" val="0" stackOrder="1" stackType="augment">
       <add order="0x40" stat="reflectDam" val="#power"/>
     </effect>
   </for>

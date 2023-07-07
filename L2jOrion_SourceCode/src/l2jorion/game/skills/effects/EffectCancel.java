@@ -42,7 +42,6 @@ final class EffectCancel extends L2Effect
 		return EffectType.CANCEL;
 	}
 	
-	/** Notify started */
 	@Override
 	public void onStart()
 	{
@@ -69,7 +68,6 @@ final class EffectCancel extends L2Effect
 				{
 					if (e.getSkill().getSkillType() == SkillType.BUFF)
 					{
-						// TODO Fix cancel debuffs
 						if (e.getSkill().getSkillType() != SkillType.DEBUFF)
 						{
 							

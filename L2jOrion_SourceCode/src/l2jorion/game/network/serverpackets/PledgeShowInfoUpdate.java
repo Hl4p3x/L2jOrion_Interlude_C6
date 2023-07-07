@@ -22,8 +22,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
+import l2jorion.game.network.PacketServer;
 
-public class PledgeShowInfoUpdate extends L2GameServerPacket
+public class PledgeShowInfoUpdate extends PacketServer
 {
 	private static final String _S__A1_PLEDGESHOWINFOUPDATE = "[S] 88 PledgeShowInfoUpdate";
 	

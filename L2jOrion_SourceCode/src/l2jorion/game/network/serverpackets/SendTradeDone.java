@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class SendTradeDone extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class SendTradeDone extends PacketServer
 {
 	private static final String _S__32_SENDTRADEDONE = "[S] 22 SendTradeDone";
 	

@@ -21,10 +21,12 @@ import java.util.Random;
 
 import l2jorion.Config;
 import l2jorion.game.model.L2World;
+import l2jorion.game.network.PacketServer;
 
-public final class SendStatus extends L2GameServerPacket
+public final class SendStatus extends PacketServer
 {
 	private static final String _S__00_STATUS = "[S] 00 rWho";
+	
 	private int online_players = 0;
 	private int max_online = 0;
 	private int online_priv_store = 0;

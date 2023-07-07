@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class PetDelete extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class PetDelete extends PacketServer
 {
 	private static final String _S__CF_PETDELETE = "[S] b6 PetDelete";
 	private final int _petId;

@@ -42,16 +42,15 @@ import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.BuyList;
 import l2jorion.game.network.serverpackets.ClanHallDecoration;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
+import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.network.serverpackets.SystemMessage;
-import l2jorion.game.network.serverpackets.ValidateLocation;
 import l2jorion.game.network.serverpackets.WareHouseDepositList;
 import l2jorion.game.network.serverpackets.WareHouseWithdrawalList;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.game.util.Broadcast;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
+import l2jorion.util.random.Rnd;
 
 public class L2ClanHallManagerInstance extends L2FolkInstance
 {
@@ -62,6 +61,7 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 	protected static final int COND_BUSY_BECAUSE_OF_SIEGE = 2;
 	protected static final int COND_OWNER = 3;
 	
+	private L2PcInstance _player = null;
 	private int _clanHallId = -1;
 	
 	public L2ClanHallManagerInstance(final int objectId, final L2NpcTemplate template)
@@ -72,6 +72,8 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 	@Override
 	public void onBypassFeedback(final L2PcInstance player, final String command)
 	{
+		_player = player; // for the test of clan hall
+		
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		final int condition = validateCondition(player);
 		if (condition <= COND_ALL_FALSE)
@@ -176,6 +178,11 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 					else
 					{
 						html.setFile("data/html/clanHallManager/tele" + getClanHall().getLocation() + getClanHall().getFunction(ClanHall.FUNC_TELEPORT).getLvl() + ".htm");
+						
+						if (Config.L2LIMIT_CUSTOM)
+						{
+							html.setFile("data/html/gatekeeper/clanhall.htm");
+						}
 					}
 					sendHtmlMessage(player, html);
 				}
@@ -194,7 +201,7 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 						return;
 					}
 					
-					player.setTempAccessBuy(false);
+					player.setTempAccess(false);
 					
 					int valbuy = Integer.parseInt(st.nextToken()) + getClanHall().getFunction(ClanHall.FUNC_ITEM_CREATE).getLvl() * 100000;
 					showBuyWindow(player, valbuy);
@@ -848,38 +855,32 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 			return;
 		}
 		
-		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
 		{
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
 			
-			// Send a Server->Client packet MyTargetSelected to the L2PcInstance player
-			MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
-			player.sendPacket(my);
-			
-			// Send a Server->Client packet ValidateLocation to correct the L2NpcInstance position and heading on the client
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
-			// Calculate the distance between the L2PcInstance and the L2NpcInstance
 			if (!canInteract(player))
 			{
-				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 			}
 			else
 			{
-				// Like L2OFF player must rotate to the Npc
-				MoveToPawn sp = new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE);
-				player.sendPacket(sp);
-				Broadcast.toKnownPlayers(player, sp);
+				if (player.isMoving())
+				{
+					player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+				}
+				
+				player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
+				
+				broadcastPacket(new SocialAction(getObjectId(), Rnd.get(8)));
 				
 				showMessageWindow(player);
 			}
 		}
-		// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
+		
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
@@ -936,20 +937,27 @@ public class L2ClanHallManagerInstance extends L2FolkInstance
 	{
 		if (_clanHallId < 0)
 		{
-			ClanHall temp = ClanHallManager.getInstance().getNearbyClanHall(getX(), getY(), 500);
-			if (temp == null)
+			ClanHall clanHallId = ClanHallManager.getInstance().getNearbyClanHall(getX(), getY(), 500);
+			if (clanHallId == null)
 			{
-				temp = CHSiegeManager.getInstance().getNearbyClanHall(this);
+				clanHallId = CHSiegeManager.getInstance().getNearbyClanHall(this);
 			}
 			
-			if (temp != null)
+			if (clanHallId != null)
 			{
-				_clanHallId = temp.getId();
+				_clanHallId = clanHallId.getClanHallId();
 			}
 			
 			if (_clanHallId < 0)
 			{
-				return null;
+				if (_player != null && _player.getClan() != null)
+				{
+					_clanHallId = _player.getClan().getHasHideout(); // Re-check the last time
+				}
+				else
+				{
+					return null;
+				}
 			}
 		}
 		return ClanHallManager.getInstance().getClanHallsById(_clanHallId);

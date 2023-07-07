@@ -54,7 +54,7 @@ public class Vote implements IVoicedCommandHandler
 		restoreVotedData(player, player.getClient().getConnection().getInetAddress().getHostAddress());
 		
 		final L2Item item = ItemTable.getInstance().getTemplate(Config.VOTE_REWARD_ITEM_ID);
-		String itemIcon = item.getItemIcon(Config.VOTE_REWARD_ITEM_ID);
+		String itemIcon = L2Item.getItemIcon(Config.VOTE_REWARD_ITEM_ID);
 		
 		NpcHtmlMessage htm = new NpcHtmlMessage(1);
 		htm.setFile("data/html/mods/vote.htm");
@@ -125,6 +125,7 @@ public class Vote implements IVoicedCommandHandler
 		{
 			htm.replace("%L2TopOnline%", String.format("<font color=00ff00>Voted</font> (" + player.getVoteCountdownL2TopOnline() + ")"));
 		}
+		
 		player.sendPacket(htm);
 		return;
 	}
@@ -273,14 +274,13 @@ public class Vote implements IVoicedCommandHandler
 		player.sendMessage("Thank you! You've got reward for the vote.");
 		player.sendPacket(new ExShowScreenMessage("Thank you! You've got reward for the vote.", 4000, 0x02, false));
 		player.sendPacket(new PlaySound("ItemSound.quest_fanfare_1"));
-		player.broadcastUserInfo();
+		// player.broadcastUserInfo();
 		
 		int itemcount = Rnd.get(Config.VOTE_REWARD_ITEM_COUNT_MIN, Config.VOTE_REWARD_ITEM_COUNT_MAX);
 		L2ItemInstance newitem = player.getInventory().addItem("VoteItem", Config.VOTE_REWARD_ITEM_ID, itemcount, player, null);
 		InventoryUpdate playerIU = new InventoryUpdate();
 		playerIU.addItem(newitem);
 		player.sendPacket(playerIU);
-		
 		if (itemcount > 1)
 		{
 			SystemMessage sm = new SystemMessage(SystemMessageId.EARNED_S2_S1_S);
@@ -294,6 +294,7 @@ public class Vote implements IVoicedCommandHandler
 			sm.addItemName(Config.VOTE_REWARD_ITEM_ID);
 			player.sendPacket(sm);
 		}
+		
 		showHtm(player);
 		return;
 	}

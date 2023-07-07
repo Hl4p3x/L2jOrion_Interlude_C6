@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class Ride extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class Ride extends PacketServer
 {
 	private static final String _S__86_Ride = "[S] 86 Ride";
 	

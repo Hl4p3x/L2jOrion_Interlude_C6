@@ -26,7 +26,6 @@ import l2jorion.log.Log;
 
 public final class TaskRestart extends Task
 {
-	//private static final Logger LOG = LoggerFactory.getLogger(TaskRestart.class);
 	public static final String NAME = "restart";
 	
 	@Override
@@ -38,9 +37,8 @@ public final class TaskRestart extends Task
 	@Override
 	public void onTimeElapsed(final ExecutedTask task)
 	{
-		//LOG.info("[GlobalTask] Server Restart launched.");
 		final String text = "Server Restart launched.";
-		Log.add(text, "Global_Task");
+		Log.add(text, "Global_task");
 		
 		final Shutdown handler = new Shutdown(Integer.valueOf(task.getParams()[2]), true);
 		handler.start();

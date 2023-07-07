@@ -20,10 +20,9 @@
  */
 package l2jorion.game.network.clientpackets;
 
-/**
- * @author programmos
- */
-public class RequestPledgeExtendedInfo extends L2GameClientPacket
+import l2jorion.game.network.PacketClient;
+
+public class RequestPledgeExtendedInfo extends PacketClient
 {
 	@SuppressWarnings("unused")
 	private String _name;

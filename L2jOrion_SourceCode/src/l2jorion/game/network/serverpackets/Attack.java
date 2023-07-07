@@ -22,9 +22,20 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
+import l2jorion.game.network.PacketServer;
 
-public class Attack extends L2GameServerPacket
+public class Attack extends PacketServer
 {
+	private static final String _S__06_ATTACK = "[S] 06 Attack";
+	
+	protected final int _attackerObjId;
+	public final boolean soulshot;
+	protected int _grade;
+	private final int _x;
+	private final int _y;
+	private final int _z;
+	private Hit[] _hits;
+	
 	private class Hit
 	{
 		protected int _targetId;
@@ -59,16 +70,6 @@ public class Attack extends L2GameServerPacket
 		}
 	}
 	
-	private static final String _S__06_ATTACK = "[S] 06 Attack";
-	
-	protected final int _attackerObjId;
-	public final boolean soulshot;
-	protected int _grade;
-	private final int _x;
-	private final int _y;
-	private final int _z;
-	private Hit[] _hits;
-	
 	public Attack(final L2Character attacker, final boolean ss, final int grade)
 	{
 		_attackerObjId = attacker.getObjectId();
@@ -82,13 +83,10 @@ public class Attack extends L2GameServerPacket
 	
 	public void addHit(final L2Object target, final int damage, final boolean miss, final boolean crit, final boolean shld)
 	{
-		// Get the last position in the hits table
 		final int pos = _hits.length;
 		
-		// Create a new Hit object
 		final Hit[] tmp = new Hit[pos + 1];
 		
-		// Add the new Hit object to hits table
 		System.arraycopy(_hits, 0, tmp, 0, _hits.length);
 		tmp[pos] = new Hit(target, damage, miss, crit, shld);
 		_hits = tmp;
@@ -97,6 +95,11 @@ public class Attack extends L2GameServerPacket
 	public boolean hasHits()
 	{
 		return _hits.length > 0;
+	}
+	
+	public boolean hasSoulshot()
+	{
+		return soulshot;
 	}
 	
 	@Override
@@ -111,6 +114,7 @@ public class Attack extends L2GameServerPacket
 		writeD(_x);
 		writeD(_y);
 		writeD(_z);
+		
 		writeH(_hits.length - 1);
 		for (int i = 1; i < _hits.length; i++)
 		{

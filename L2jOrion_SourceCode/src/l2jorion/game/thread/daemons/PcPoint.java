@@ -11,7 +11,8 @@ import l2jorion.util.random.Rnd;
 
 public class PcPoint implements Runnable
 {
-	Logger LOG = LoggerFactory.getLogger(PcPoint.class);
+	private static Logger LOG = LoggerFactory.getLogger(PcPoint.class);
+	
 	private static PcPoint _instance;
 	
 	public static PcPoint getInstance()
@@ -37,7 +38,7 @@ public class PcPoint implements Runnable
 		for (L2PcInstance activeChar : L2World.getInstance().getAllPlayers().values())
 		{
 			
-			if (activeChar.isOnline() == 1 && activeChar.getLevel() > Config.PCB_MIN_LEVEL && !activeChar.isInOfflineMode())
+			if (activeChar.isOnline() == 1 && activeChar.getLevel() >= Config.PCB_MIN_LEVEL && !activeChar.isInOfflineMode())
 			{
 				score = Rnd.get(Config.PCB_POINT_MIN, Config.PCB_POINT_MAX);
 				
@@ -50,7 +51,6 @@ public class PcPoint implements Runnable
 					SystemMessage sm = new SystemMessage(SystemMessageId.DOUBLE_POINTS_YOU_GOT_$51_GLASSES_PC);
 					sm.addNumber(score);
 					activeChar.sendPacket(sm);
-
 					
 					activeChar.updatePcBangWnd(score, true, true);
 				}

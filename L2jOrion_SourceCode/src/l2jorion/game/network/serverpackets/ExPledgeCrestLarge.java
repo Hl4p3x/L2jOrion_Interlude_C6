@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExPledgeCrestLarge extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExPledgeCrestLarge extends PacketServer
 {
 	private static final String _S__FE_28_EXPLEDGECRESTLARGE = "[S] FE:28 ExPledgeCrestLarge";
 	
@@ -42,9 +44,7 @@ public class ExPledgeCrestLarge extends L2GameServerPacket
 		writeD(0x00);
 		writeD(_crestId);
 		writeD(_data.length);
-		
 		writeB(_data);
-		
 	}
 	
 	@Override

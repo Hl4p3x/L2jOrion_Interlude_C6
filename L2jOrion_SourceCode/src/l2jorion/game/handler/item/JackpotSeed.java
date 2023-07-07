@@ -31,10 +31,6 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2NpcTemplate;
 
-/**
- * @author L2jOrion dev.
- */
-
 public class JackpotSeed implements IItemHandler
 {
 	private L2GourdInstance _gourd = null;
@@ -42,63 +38,90 @@ public class JackpotSeed implements IItemHandler
 	private static int[] _itemIds =
 	{
 		6389, // small seed
-		6390
-	// large seed
+		6390, // large seed
+		5922,
+		5923,
+		5924,
+		5925,
+		5926
 	};
 	
 	private static int[] _npcIds =
 	{
 		12774, // Young Pumpkin
-		12777
-	// Large Young Pumpkin
+		12777, // Large Young Pumpkin
+		21316,
+		21317,
+		21318,
+		21319,
+		21320
 	};
 	
 	@Override
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		L2PcInstance activeChar = (L2PcInstance) playable;
-		L2NpcTemplate template1 = null;
+		
+		if (activeChar.getInstanceId() != 0)
+		{
+			activeChar.sendMessage("You can't use item in this zone.");
+			return;
+		}
+		
+		if (_gourd != null && activeChar.getName().equalsIgnoreCase(_gourd.getOwner()))
+		{
+			activeChar.sendMessage("At first, kill your first one.");
+			return;
+		}
+		
+		L2NpcTemplate template = null;
 		final int itemId = item.getItemId();
+		
 		for (int i = 0; i < _itemIds.length; i++)
 		{
 			if (_itemIds[i] == itemId)
 			{
-				template1 = NpcTable.getInstance().getTemplate(_npcIds[i]);
+				template = NpcTable.getInstance().getTemplate(_npcIds[i]);
 				break;
 			}
 		}
 		
-		if (template1 == null)
+		if (template == null)
+		{
 			return;
+		}
 		
 		try
 		{
-			final L2Spawn spawn = new L2Spawn(template1);
+			final L2Spawn spawn = new L2Spawn(template);
 			spawn.setId(IdFactory.getInstance().getNextId());
+			
 			spawn.setLocx(activeChar.getX());
 			spawn.setLocy(activeChar.getY());
 			spawn.setLocz(activeChar.getZ());
+			
 			_gourd = (L2GourdInstance) spawn.spawnOne();
 			L2World.getInstance().storeObject(_gourd);
 			_gourd.setOwner(activeChar.getName());
+			
 			activeChar.destroyItem("Consume", item.getObjectId(), 1, null, false);
+			
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
-			sm.addString("Created " + template1.name + " at x: " + spawn.getLocx() + " y: " + spawn.getLocy() + " z: " + spawn.getLocz());
+			sm.addString("Created " + template.getName() + " at x: " + spawn.getLocx() + " y: " + spawn.getLocy() + " z: " + spawn.getLocz());
 			activeChar.sendPacket(sm);
-			sm = null;
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 			sm.addString("Target is not ingame.");
 			activeChar.sendPacket(sm);
-			sm = null;
 		}
-		activeChar = null;
-		template1 = null;
+		
 	}
 	
 	@Override

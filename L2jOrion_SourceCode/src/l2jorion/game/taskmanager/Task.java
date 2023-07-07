@@ -28,7 +28,7 @@ import l2jorion.logger.LoggerFactory;
 
 public abstract class Task
 {
-	private static Logger LOG = LoggerFactory.getLogger(Task.class);
+	public static Logger LOG = LoggerFactory.getLogger(Task.class);
 	
 	public void initializate()
 	{

@@ -28,7 +28,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
-import javolution.util.FastList;
 import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.datatables.csv.DoorTable;
@@ -69,10 +68,10 @@ public class Castle extends AbstractResidence
 	
 	private final List<L2DoorInstance> _doors = new ArrayList<>();
 	
-	private FastList<CropProcure> _procure = new FastList<>();
-	private FastList<SeedProduction> _production = new FastList<>();
-	private FastList<CropProcure> _procureNext = new FastList<>();
-	private FastList<SeedProduction> _productionNext = new FastList<>();
+	private ArrayList<CropProcure> _procure = new ArrayList<>();
+	private ArrayList<SeedProduction> _production = new ArrayList<>();
+	private ArrayList<CropProcure> _procureNext = new ArrayList<>();
+	private ArrayList<SeedProduction> _productionNext = new ArrayList<>();
 	private boolean _isNextPeriodApproved = false;
 	private boolean _isTimeRegistrationOver = true;
 	
@@ -187,8 +186,6 @@ public class Castle extends AbstractResidence
 				
 				amount -= runeTax;
 			}
-			
-			rune = null;
 		}
 		if (!_name.equalsIgnoreCase("aden") && !_name.equalsIgnoreCase("Rune") && !_name.equalsIgnoreCase("Schuttgart") && !_name.equalsIgnoreCase("Goddard")) // If current castle instance is not Aden, Rune, Goddard or Schuttgart.
 		{
@@ -205,8 +202,6 @@ public class Castle extends AbstractResidence
 				
 				amount -= adenTax; // Subtract Aden's income from current castle instance's income
 			}
-			
-			aden = null;
 		}
 		
 		addToTreasuryNoTax(amount);
@@ -256,7 +251,6 @@ public class Castle extends AbstractResidence
 			statement.setInt(2, getCastleId());
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 		}
 		catch (final Exception e)
 		{
@@ -265,7 +259,6 @@ public class Castle extends AbstractResidence
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 		return true;
 	}
@@ -464,7 +457,6 @@ public class Castle extends AbstractResidence
 			statement.setInt(2, getCastleId());
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 		}
 		catch (final Exception e)
 		{
@@ -473,7 +465,6 @@ public class Castle extends AbstractResidence
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
@@ -497,7 +488,7 @@ public class Castle extends AbstractResidence
 				door.closeMe();
 			}
 			
-			// door.broadcastStatusUpdate();
+			door.broadcastStatusUpdate();
 		}
 		
 		loadDoorUpgrade();
@@ -722,12 +713,9 @@ public class Castle extends AbstractResidence
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
-	// =========================================================
-	// Property
 	public final int getCastleId()
 	{
 		return _castleId;
@@ -748,8 +736,6 @@ public class Castle extends AbstractResidence
 			{
 				return door;
 			}
-			
-			door = null;
 		}
 		return null;
 	}
@@ -813,17 +799,17 @@ public class Castle extends AbstractResidence
 		return _treasury;
 	}
 	
-	public FastList<SeedProduction> getSeedProduction(final int period)
+	public ArrayList<SeedProduction> getSeedProduction(final int period)
 	{
 		return period == CastleManorManager.PERIOD_CURRENT ? _production : _productionNext;
 	}
 	
-	public FastList<CropProcure> getCropProcure(final int period)
+	public ArrayList<CropProcure> getCropProcure(final int period)
 	{
 		return period == CastleManorManager.PERIOD_CURRENT ? _procure : _procureNext;
 	}
 	
-	public void setSeedProduction(final FastList<SeedProduction> seed, final int period)
+	public void setSeedProduction(final ArrayList<SeedProduction> seed, final int period)
 	{
 		if (period == CastleManorManager.PERIOD_CURRENT)
 		{
@@ -835,7 +821,7 @@ public class Castle extends AbstractResidence
 		}
 	}
 	
-	public void setCropProcure(final FastList<CropProcure> crop, final int period)
+	public void setCropProcure(final ArrayList<CropProcure> crop, final int period)
 	{
 		if (period == CastleManorManager.PERIOD_CURRENT)
 		{
@@ -873,8 +859,8 @@ public class Castle extends AbstractResidence
 	
 	public int getManorCost(final int period)
 	{
-		FastList<CropProcure> procure;
-		FastList<SeedProduction> production;
+		ArrayList<CropProcure> procure;
+		ArrayList<SeedProduction> production;
 		
 		if (period == CastleManorManager.PERIOD_CURRENT)
 		{
@@ -1020,9 +1006,8 @@ public class Castle extends AbstractResidence
 			statement.setInt(2, period);
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 			
-			FastList<SeedProduction> prod = null;
+			ArrayList<SeedProduction> prod = null;
 			prod = getSeedProduction(period);
 			
 			if (prod != null)
@@ -1047,14 +1032,8 @@ public class Castle extends AbstractResidence
 					statement = con.prepareStatement(query);
 					statement.execute();
 					DatabaseUtils.close(statement);
-					statement = null;
 				}
-				
-				query = null;
-				values = null;
 			}
-			
-			prod = null;
 		}
 		catch (final Exception e)
 		{
@@ -1068,7 +1047,6 @@ public class Castle extends AbstractResidence
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
@@ -1085,7 +1063,6 @@ public class Castle extends AbstractResidence
 			statement.setInt(1, getCastleId());
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 			
 			if (_procure != null)
 			{
@@ -1112,11 +1089,7 @@ public class Castle extends AbstractResidence
 					statement = con.prepareStatement(query);
 					statement.execute();
 					DatabaseUtils.close(statement);
-					statement = null;
 				}
-				
-				query = null;
-				values = null;
 			}
 			
 			if (_procureNext != null)
@@ -1142,11 +1115,7 @@ public class Castle extends AbstractResidence
 					statement = con.prepareStatement(query);
 					statement.execute();
 					DatabaseUtils.close(statement);
-					statement = null;
 				}
-				
-				query = null;
-				values = null;
 			}
 		}
 		catch (final Exception e)
@@ -1161,7 +1130,6 @@ public class Castle extends AbstractResidence
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
@@ -1179,9 +1147,8 @@ public class Castle extends AbstractResidence
 			statement.setInt(2, period);
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 			
-			FastList<CropProcure> proc = null;
+			ArrayList<CropProcure> proc = null;
 			proc = getCropProcure(period);
 			
 			if (proc != null)
@@ -1209,13 +1176,8 @@ public class Castle extends AbstractResidence
 					statement = con.prepareStatement(query);
 					statement.execute();
 					DatabaseUtils.close(statement);
-					statement = null;
 				}
-				
-				query = null;
 			}
-			
-			proc = null;
 		}
 		catch (final Exception e)
 		{
@@ -1229,7 +1191,6 @@ public class Castle extends AbstractResidence
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
@@ -1248,7 +1209,6 @@ public class Castle extends AbstractResidence
 			statement.setInt(4, period);
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 		}
 		catch (final Exception e)
 		{
@@ -1262,7 +1222,6 @@ public class Castle extends AbstractResidence
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
@@ -1281,7 +1240,6 @@ public class Castle extends AbstractResidence
 			statement.setInt(4, period);
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 		}
 		catch (final Exception e)
 		{
@@ -1295,7 +1253,6 @@ public class Castle extends AbstractResidence
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
@@ -1323,14 +1280,26 @@ public class Castle extends AbstractResidence
 				if (owner != null)
 				{
 					owner.setReputationScore(owner.getReputationScore() + Math.min(1000, maxreward), true);
+					
+					if (Config.L2LIMIT_CUSTOM)
+					{
+						owner.setReputationScore(_formerOwner.getReputationScore() + 5000, true);
+						owner.getLeader().getPlayerInstance().addItem("Gift", 6622, 10, null, true);
+						owner.getLeader().getPlayerInstance().addItem("Gift", 6577, 5, null, true);
+					}
+					
 					owner.broadcastToOnlineMembers(new PledgeShowInfoUpdate(owner));
 				}
-				
-				owner = null;
 			}
 			else
 			{
 				_formerOwner.setReputationScore(_formerOwner.getReputationScore() + 500, true);
+				if (Config.L2LIMIT_CUSTOM)
+				{
+					_formerOwner.setReputationScore(_formerOwner.getReputationScore() + 5000, true);
+					_formerOwner.getLeader().getPlayerInstance().addItem("Gift", 6622, 10, null, true);
+					_formerOwner.getLeader().getPlayerInstance().addItem("Gift", 6577, 5, null, true);
+				}
 			}
 			
 			_formerOwner.broadcastToOnlineMembers(new PledgeShowInfoUpdate(_formerOwner));
@@ -1344,8 +1313,6 @@ public class Castle extends AbstractResidence
 				owner.setReputationScore(owner.getReputationScore() + 1000, true);
 				owner.broadcastToOnlineMembers(new PledgeShowInfoUpdate(owner));
 			}
-			
-			owner = null;
 		}
 	}
 	
@@ -1356,16 +1323,10 @@ public class Castle extends AbstractResidence
 		_gate[2] = z;
 	}
 	
-	/** Optimized as much as possible. */
 	public void destroyClanGate()
 	{
 		_gate[0] = Integer.MIN_VALUE;
 	}
-	
-	/**
-	 * This method must always be called before using gate coordinate retrieval methods! Optimized as much as possible.
-	 * @return is a Clan Gate available
-	 */
 	
 	public boolean isGateOpen()
 	{
@@ -1414,9 +1375,6 @@ public class Castle extends AbstractResidence
 		getTeleZone().oustAllPlayers();
 	}
 	
-	/**
-	 * @return
-	 */
 	public boolean isSiegeInProgress()
 	{
 		if (_siege != null)

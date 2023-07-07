@@ -33,9 +33,6 @@ import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author evill33t
- */
 public class SummonTreasureKey implements ISkillHandler
 {
 	static Logger LOG = LoggerFactory.getLogger(SummonTreasureKey.class);
@@ -48,7 +45,9 @@ public class SummonTreasureKey implements ISkillHandler
 	public void useSkill(final L2Character activeChar, final L2Skill skill, final L2Object[] targets)
 	{
 		if (activeChar == null || !(activeChar instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2PcInstance player = (L2PcInstance) activeChar;
 		
@@ -101,7 +100,9 @@ public class SummonTreasureKey implements ISkillHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("Error using skill summon Treasure Key:" + e);
 		}

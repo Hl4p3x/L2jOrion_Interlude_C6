@@ -22,8 +22,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Party;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public final class PartySmallWindowAdd extends L2GameServerPacket
+public final class PartySmallWindowAdd extends PacketServer
 {
 	private static final String _S__64_PARTYSMALLWINDOWADD = "[S] 4f PartySmallWindowAdd";
 	

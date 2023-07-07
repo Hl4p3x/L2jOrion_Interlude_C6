@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <list>
 <skill id="2200" levels="3" name="Item - Jade Treasue Box">
   <table name="#itemConsumeId">6495 6496 6497</table>
@@ -494,8 +494,8 @@
   <set name="operateType" val="OP_PASSIVE"/>
   <set name="castRange" val="40"/>
   <set name="bestowTriggered" val="true"/>
-  <set name="triggeredId" val="4991"/>
-  <set name="triggeredLevel" val="1"/>
+  <!--set name="triggeredId" val="4991"/>
+  <set name="triggeredLevel" val="1"/-->
   <for>
     <sub order="0x30" stat="mAtkSpd" val="0.5"/>
 	<sub order="0x30" stat="pAtkSpd" val="0.5"/>

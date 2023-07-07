@@ -234,8 +234,6 @@ public class L2Fishing implements Runnable
 			{
 				_fisher.sendPacket(efhr);
 			}
-			
-			efhr = null;
 		}
 	}
 	
@@ -273,8 +271,6 @@ public class L2Fishing implements Runnable
 				
 				_goodUse = 1;
 				changeHp(dmg, pen);
-				
-				sm = null;
 			}
 			else
 			{
@@ -284,8 +280,6 @@ public class L2Fishing implements Runnable
 				_fisher.sendPacket(sm);
 				_goodUse = 2;
 				changeHp(-dmg, pen);
-				
-				sm = null;
 			}
 		}
 		else
@@ -298,8 +292,6 @@ public class L2Fishing implements Runnable
 				_fisher.sendPacket(sm);
 				_goodUse = 2;
 				changeHp(-dmg, pen);
-				
-				sm = null;
 			}
 			else
 			{
@@ -317,8 +309,6 @@ public class L2Fishing implements Runnable
 				
 				_goodUse = 1;
 				changeHp(dmg, pen);
-				
-				sm = null;
 			}
 		}
 	}
@@ -358,8 +348,6 @@ public class L2Fishing implements Runnable
 				
 				_goodUse = 1;
 				changeHp(dmg, pen);
-				
-				sm = null;
 			}
 			else
 			{
@@ -369,8 +357,6 @@ public class L2Fishing implements Runnable
 				_fisher.sendPacket(sm);
 				_goodUse = 2;
 				changeHp(-dmg, pen);
-				
-				sm = null;
 			}
 		}
 		else
@@ -383,7 +369,6 @@ public class L2Fishing implements Runnable
 				_fisher.sendPacket(sm);
 				_goodUse = 2;
 				changeHp(-dmg, pen);
-				sm = null;
 			}
 			else
 			{
@@ -401,8 +386,6 @@ public class L2Fishing implements Runnable
 				
 				_goodUse = 1;
 				changeHp(dmg, pen);
-				
-				sm = null;
 			}
 		}
 	}
@@ -461,14 +444,11 @@ public class L2Fishing implements Runnable
 				spawn.setHeading(_fisher.getHeading());
 				spawn.stopRespawn();
 				((L2PenaltyMonsterInstance) spawn.doSpawn()).setPlayerToKill(_fisher);
-				spawn = null;
 			}
 			catch (final Exception e)
 			{
 				// Nothing
 			}
 		}
-		
-		temp = null;
 	}
 }

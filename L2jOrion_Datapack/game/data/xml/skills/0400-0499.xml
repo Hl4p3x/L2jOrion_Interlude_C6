@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <list>
 <skill id="400" levels="10" name="Tribunal" enchantLevels1="30" enchantLevels2="30">
   <table name="#enchantMagicLvl">76 76 76 77 77 77 78 78 78 79 79 79 80 80 80 81 81 81 82 82 82 82 83 83 83 84 84 85 85 85</table>
@@ -263,7 +263,7 @@
   <table name="#ench2MpConsume">74 73 72 70 69 68 67 65 64 63 62 60 59 58 57 55 54 53 51 50 49 48 46 45 44 43 41 40 39 38</table>
   <table name="#mpConsume">55 59 62 63 66 68 70 72 74 76</table>
   <table name="#power">1832 2091 2272 2460 2653 2850 3050 3252 3453 3653</table>
-  <table name="#rate">1.1 1.1 1.1 1.15 1.15 1.2 1.2 1.25 1.25 1.3</table> 
+  <table name="#rate">1.1 1.1 1.1 1.20 1.20 1.3 1.3 1.40 1.40 1.50</table> 
   <set name="weaponsAllowed" val="16"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="power" val="#power"/>
@@ -271,7 +271,7 @@
   <set name="condition" val="16"/>
   <set name="reuseDelay" val="90000"/>
   <set name="hitTime" val="1300"/>
-  <set name="coolTime" val="700"/>
+  <set name="coolTime" val="720"/>
   <set name="skillType" val="BLOW"/>
   <set name="lethal1" val="10"/>
   <set name="lethal2" val="10"/>
@@ -284,9 +284,6 @@
   <for>
     <effect self="1" count="1" name="Buff" time="15" val="0">
       <mul order="0x30" stat="blowRate" val="#rate"/>
-	  <mul order="0x30" stat="rCrit" val="#rate"/>
-      <!-- Must be confirmed -->
-      <mul order="0x30" stat="lethalRate" val="1.5"/>
    </effect>
   </for>
 </skill>
@@ -900,8 +897,8 @@
 <skill id="444" levels="1" name="Festive Sweeper">
   <set name="mpConsume" val="12"/>
   <set name="magicLvl" val="78" />
-  <set name="skillRadius" val="85"/>
   <set name="target" val="TARGET_AREA_CORPSE_MOB"/>
+  <set name="skillRadius" val="200"/>
   <set name="skillType" val="SWEEP"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="reuseDelay" val="23000"/>
@@ -1094,7 +1091,7 @@
   <set name="target" val="TARGET_SELF"/>
   <set name="skillType" val="SIGNET"/>
   <set name="operateType" val="OP_ACTIVE"/>
-  <set name="hitTime" val="5000"/>
+  <set name="hitTime" val="3000"/>
   <set name="staticHitTime" val="true"/>
   <set name="reuseDelay" val="3600000"/>
   <set name="skillRadius" val="180"/>
@@ -1108,9 +1105,9 @@
   <set name="itemConsumeCount" val="1"/>
   <set name="mpInitialConsume" val="36"/>
   <set name="mpConsume" val="44"/>
-  <cond msg="Symbol of Noise cannot be used due to unsuitable terms.">
+  <cond msg="Symbol of Defense cannot be used due to unsuitable terms.">
     <player battle_force="2"/> 
-  </cond>
+  </cond> 
   <for>
     <effect count="24" name="Signet" time="5" val="0"/>
   </for>

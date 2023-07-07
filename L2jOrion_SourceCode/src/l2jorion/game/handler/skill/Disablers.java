@@ -37,16 +37,19 @@ import l2jorion.game.model.L2Skill.SkillType;
 import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2SiegeSummonInstance;
+import l2jorion.game.model.base.CancelReturn;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.skills.Formulas;
 import l2jorion.game.skills.Stats;
+import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
 public class Disablers implements ISkillHandler
 {
+	
 	private static final SkillType[] SKILL_IDS =
 	{
 		L2Skill.SkillType.STUN,
@@ -395,11 +398,38 @@ public class Disablers implements ISkillHandler
 									continue;
 							}
 							
+							if (Config.L2LIMIT_CUSTOM || Config.RON_CUSTOM)
+							{
+								if (target instanceof L2PcInstance)
+								{
+									if (!((L2PcInstance) target).getCancelledBuffs().containsKey(e.getSkill()))
+									{
+										((L2PcInstance) target).getCancelledBuffs().put(e.getSkill(), new int[]
+										{
+											e.getCount(),
+											e.getTime()
+										});
+									}
+								}
+							}
+							
 							e.exit(true);
+							
 							buffsNumber--;
 							if (buffsNumber == 0)
 							{
 								break;
+							}
+						}
+						
+						if (Config.L2LIMIT_CUSTOM || Config.RON_CUSTOM)
+						{
+							if (target instanceof L2PcInstance)
+							{
+								if (((L2PcInstance) target).getCancelledBuffs().size() > 0)
+								{
+									ThreadPoolManager.getInstance().scheduleGeneral(new CancelReturn((L2PcInstance) target, ((L2PcInstance) target).getCancelledBuffs()), 15 * 1000);
+								}
 							}
 						}
 					}

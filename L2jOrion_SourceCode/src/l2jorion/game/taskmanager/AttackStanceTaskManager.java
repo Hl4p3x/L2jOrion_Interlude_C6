@@ -85,20 +85,24 @@ public class AttackStanceTaskManager
 	
 	public boolean getAttackStanceTask(L2Character actor)
 	{
-		if (actor instanceof L2Summon)
+		if (actor != null)
 		{
-			final L2Summon summon = (L2Summon) actor;
-			actor = summon.getOwner();
+			if (actor instanceof L2Summon)
+			{
+				final L2Summon summon = (L2Summon) actor;
+				actor = summon.getOwner();
+			}
+			
+			return _attackStanceTasks.containsKey(actor);
 		}
 		
-		return _attackStanceTasks.containsKey(actor);
+		return false;
 	}
 	
 	private class FightModeScheduler implements Runnable
 	{
 		protected FightModeScheduler()
 		{
-			// Do nothing
 		}
 		
 		@Override

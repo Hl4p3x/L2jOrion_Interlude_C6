@@ -20,12 +20,14 @@ import l2jorion.Config;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Summon;
+import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.templates.L2NpcTemplate;
 
-public final class SystemMessage extends L2GameServerPacket
+public final class SystemMessage extends PacketServer
 {
 	private static final int TYPE_ZONE_NAME = 7;
 	private static final int TYPE_SKILL_NAME = 4;
@@ -132,6 +134,11 @@ public final class SystemMessage extends L2GameServerPacket
 			return addString(tpl.name);
 		}
 		return addNpcName(tpl.npcId);
+	}
+	
+	public SystemMessage addItemName(L2ItemInstance item)
+	{
+		return addItemName(item.getItemId());
 	}
 	
 	public SystemMessage addItemName(int id)

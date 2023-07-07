@@ -142,8 +142,8 @@ class Quest (JQuest) :
             if len(PartyQuestMembers) == 0 : return
             st = PartyQuestMembers[Rnd.get(len(PartyQuestMembers))]
             if st.getQuestItemsCount(Totem2) > 0 :
-                st.takeItems(Totem2,1)
-            st.giveItems(Ice_Heart,1) 
+                st.takeItems(Totem2,1,npc)
+            st.giveItems(Ice_Heart,1,npc) 
             st.set("cond","3")
             st.set("id","3")
             st.playSound("ItemSound.quest_middle")

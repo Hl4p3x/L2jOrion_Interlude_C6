@@ -14,7 +14,6 @@
  */
 package l2jorion.game.handler.skill;
 
-import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.handler.ISkillHandler;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
@@ -23,16 +22,13 @@ import l2jorion.game.model.L2Skill.SkillType;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.FlyToLocation;
+import l2jorion.game.network.serverpackets.FlyToLocation.FlyType;
+import l2jorion.game.network.serverpackets.StopMove;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.network.serverpackets.ValidateLocation;
-import l2jorion.game.network.serverpackets.FlyToLocation.FlyType;
 import l2jorion.game.skills.Formulas;
 import l2jorion.game.util.Util;
 
-
-/**
- * @author Damon, L2jOrion
- */
 public class InstantJump implements ISkillHandler
 {
 	private static final SkillType[] SKILL_IDS =
@@ -72,13 +68,14 @@ public class InstantJump implements ISkillHandler
 		y = (int) (py + (25 * Math.sin(ph)));
 		z = target.getZ();
 		
-		activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-		activeChar.broadcastPacket(new FlyToLocation(activeChar, x, y, z, FlyType.DUMMY));
+		activeChar.stopMove(null);
 		activeChar.abortAttack();
 		activeChar.abortCast();
 		
+		activeChar.broadcastPacket(new FlyToLocation(activeChar, x, y, z, FlyType.DUMMY));
 		activeChar.setXYZ(x, y, z);
 		activeChar.broadcastPacket(new ValidateLocation(activeChar));
+		activeChar.broadcastPacket(new StopMove(activeChar));
 	}
 	
 	@Override

@@ -190,8 +190,6 @@ public class AdminTeleport implements IAdminCommandHandler
 				}
 				
 				teleportToCharacter(activeChar, player);
-				val = null;
-				player = null;
 				return true;
 				
 			}
@@ -248,7 +246,7 @@ public class AdminTeleport implements IAdminCommandHandler
 				
 				for (final L2PcInstance partyMember : player.getParty().getPartyMembers())
 				{
-					partyMember.sendMessage("You party teleported by Admin.");
+					partyMember.sendMessage("Your party teleported by Admin.");
 					teleportTo(partyMember, activeChar.getX(), activeChar.getY(), activeChar.getZ());
 				}
 				return true;
@@ -256,7 +254,6 @@ public class AdminTeleport implements IAdminCommandHandler
 			}
 			case admin_move_to:
 			{
-				
 				int x = 0;
 				int y = 0;
 				int z = 0;
@@ -282,7 +279,6 @@ public class AdminTeleport implements IAdminCommandHandler
 						AdminHelpPage.showHelpPage(activeChar, "teleports.htm");
 						return false;
 					}
-					
 				}
 				else
 				{
@@ -300,7 +296,6 @@ public class AdminTeleport implements IAdminCommandHandler
 				
 				teleportTo(activeChar, x, y, z);
 				return true;
-				
 			}
 			case admin_teleport_character:
 			{
@@ -412,6 +407,9 @@ public class AdminTeleport implements IAdminCommandHandler
 					_Zone.allowPlayerEntry(player, 30);
 				}
 				teleportTo(player, activeChar.getX(), activeChar.getY(), activeChar.getZ());
+				
+				player.sendMessage("You have been teleported by " + activeChar.getName());
+				activeChar.sendMessage(player.getName() + " is teleporting to you.");
 				return true;
 				
 			}
@@ -510,7 +508,7 @@ public class AdminTeleport implements IAdminCommandHandler
 							break;
 					}
 					
-					activeChar.teleToLocation(x, y, z, heading, false, false);
+					activeChar.teleToLocation(x, y, z, heading, false, false, false);
 					showTeleportWindow(activeChar);
 					
 					return true;
@@ -550,12 +548,12 @@ public class AdminTeleport implements IAdminCommandHandler
 						activeChar.setTeleMode(0);
 						break;
 					default:
-						activeChar.sendMessage("Defined mode not allowed..");
+						activeChar.sendMessage("Defined mode not allowed.");
 						return false;
 				}
 				
+				showTeleportWindow(activeChar);
 				return true;
-				
 			}
 			
 		}
@@ -569,9 +567,8 @@ public class AdminTeleport implements IAdminCommandHandler
 		return ADMIN_COMMANDS;
 	}
 	
-	private void teleportTo(final L2PcInstance activeChar, final int x, final int y, final int z)
+	private void teleportTo(L2PcInstance activeChar, final int x, final int y, final int z)
 	{
-		
 		activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
 		activeChar.teleToLocation(x, y, z, false);
 		
@@ -619,24 +616,16 @@ public class AdminTeleport implements IAdminCommandHandler
 		
 		adminReply.setHtml(replyMSG.toString());
 		activeChar.sendPacket(adminReply);
-		
-		adminReply = null;
-		replyMSG = null;
-		player = null;
-		target = null;
 	}
 	
 	private void teleportToCharacter(final L2PcInstance activeChar, final L2Object target)
 	{
 		L2PcInstance player = null;
-		// L2NpcInstance npc = null;
 		
 		if (target != null && target instanceof L2PcInstance)
 		{
 			player = (L2PcInstance) target;
-		} /*
-			 * else if(target != null && target instanceof L2NpcInstance){ npc = (L2NpcInstance) target; }
-			 */
+		}
 		else
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.INCORRECT_TARGET));

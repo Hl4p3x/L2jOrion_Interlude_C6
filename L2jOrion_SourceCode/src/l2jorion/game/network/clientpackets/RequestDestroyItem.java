@@ -26,8 +26,8 @@ import l2jorion.game.datatables.sql.L2PetDataTable;
 import l2jorion.game.managers.CursedWeaponsManager;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.ItemList;
 import l2jorion.game.network.serverpackets.StatusUpdate;
@@ -38,7 +38,7 @@ import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
-public final class RequestDestroyItem extends L2GameClientPacket
+public final class RequestDestroyItem extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestDestroyItem.class.getName());
 	
@@ -58,13 +58,6 @@ public final class RequestDestroyItem extends L2GameClientPacket
 		L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
 		{
-			return;
-		}
-		
-		if (activeChar.isSubmitingPin())
-		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 		
@@ -122,10 +115,13 @@ public final class RequestDestroyItem extends L2GameClientPacket
 			return;
 		}
 		
-		if (itemToRemove.isWear() || !itemToRemove.isDestroyable() || CursedWeaponsManager.getInstance().isCursed(itemId))
+		if (!activeChar.isGM())
 		{
-			activeChar.sendPacket(new SystemMessage(SystemMessageId.CANNOT_DISCARD_THIS_ITEM));
-			return;
+			if (itemToRemove.isWear() || !itemToRemove.isDestroyable() || CursedWeaponsManager.getInstance().isCursed(itemId))
+			{
+				activeChar.sendPacket(new SystemMessage(SystemMessageId.CANNOT_DISCARD_THIS_ITEM));
+				return;
+			}
 		}
 		
 		if (!itemToRemove.isStackable() && count > 1)
@@ -174,8 +170,6 @@ public final class RequestDestroyItem extends L2GameClientPacket
 				statement.setInt(1, _objectId);
 				statement.execute();
 				statement.close();
-				
-				statement = null;
 			}
 			catch (Exception e)
 			{
@@ -189,7 +183,6 @@ public final class RequestDestroyItem extends L2GameClientPacket
 			finally
 			{
 				CloseUtil.close(con);
-				con = null;
 			}
 		}
 		

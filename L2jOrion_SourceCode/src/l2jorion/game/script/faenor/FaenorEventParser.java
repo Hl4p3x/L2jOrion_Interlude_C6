@@ -36,36 +36,30 @@ import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * @author Luis Arias
- */
 public class FaenorEventParser extends FaenorParser
 {
 	static Logger LOG = LoggerFactory.getLogger(FaenorEventParser.class);
+	
 	private DateRange _eventDates = null;
 	
 	@Override
-	public void parseScript(final Node eventNode, final ScriptContext context)
+	public void parseScript(Node eventNode, ScriptContext context)
 	{
 		final String ID = attribute(eventNode, "ID");
-		
-		if (DEBUG)
-		{
-			LOG.debug("Parsing Event \"" + ID + "\"");
-		}
 		
 		_eventDates = DateRange.parse(attribute(eventNode, "Active"), DATE_FORMAT);
 		
 		final Date currentDate = new Date();
 		if (_eventDates.getEndDate().before(currentDate))
 		{
-			LOG.info("Event ID: (" + ID + ") has passed... Ignored.");
+			LOG.info("Event ID: (" + ID + ") has passed... Ignored");
 			return;
 		}
 		
 		if (_eventDates.getStartDate().after(currentDate))
 		{
-			LOG.info("Event ID: (" + ID + ") is not active yet... Ignored.");
+			LOG.info("Event ID: (" + ID + ") is not active yet... Ignored");
+			
 			ThreadPoolManager.getInstance().scheduleGeneral(new Runnable()
 			{
 				@Override
@@ -74,6 +68,7 @@ public class FaenorEventParser extends FaenorParser
 					parseEventDropAndMessage(eventNode);
 				}
 			}, _eventDates.getStartDate().getTime() - currentDate.getTime());
+			
 			return;
 		}
 		
@@ -99,11 +94,6 @@ public class FaenorEventParser extends FaenorParser
 	
 	private void parseEventMessage(final Node sysMsg)
 	{
-		if (DEBUG)
-		{
-			LOG.debug("Parsing Event Message.");
-		}
-		
 		try
 		{
 			final String type = attribute(sysMsg, "Type");
@@ -123,11 +113,6 @@ public class FaenorEventParser extends FaenorParser
 	
 	private void parseEventDropList(final Node dropList)
 	{
-		if (DEBUG)
-		{
-			LOG.debug("Parsing Droplist.");
-		}
-		
 		for (Node node = dropList.getFirstChild(); node != null; node = node.getNextSibling())
 		{
 			if (isNodeName(node, "AllDrop"))
@@ -139,11 +124,6 @@ public class FaenorEventParser extends FaenorParser
 	
 	private void parseEventDrop(final Node drop)
 	{
-		if (DEBUG)
-		{
-			LOG.debug("Parsing Drop.");
-		}
-		
 		try
 		{
 			final int[] items = IntList.parse(attribute(drop, "Items"));
@@ -155,7 +135,9 @@ public class FaenorEventParser extends FaenorParser
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("ERROR(parseEventDrop):" + e.getMessage());
 		}

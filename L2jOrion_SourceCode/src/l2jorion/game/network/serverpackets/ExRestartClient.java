@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExRestartClient extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExRestartClient extends PacketServer
 {
 	private static final String _S__FE_47_EXRESTARTCLIENT = "[S] FE:47 ExRestartClient";
 	

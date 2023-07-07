@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <list>
 <skill id="4600" levels="12" name="Reducing P. Def Shock">
   <table name="#mpConsume">25 41 57 77 100 123 143 153 161 166 170 172</table>
@@ -25,18 +25,18 @@
   <table name="#mAtkSpd">1.15 1.23 1.3</table>
   <table name="#rCrit">1.2 1.25 1.3</table>
   <table name="#magicLvl">20 40 60</table>
+  <table name="#stackOrder">1 2 3</table>
   <set name="magicLvl" val="#magicLvl"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="target" val="TARGET_CLAN"/>
   <set name="skillType" val="BUFF"/>
+  <set name="skillRadius" val="900"/>
   <set name="hitTime" val="2000"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="isMagic" val="true"/>
-  <set name="castRange" val="-1"/>
-  <set name="effectRange" val="-1"/>
   <set name="aggroPoints" val="100"/>
   <for>
-    <effect count="1" name="Buff" time="120" val="0">
+    <effect count="1" name="Buff" time="120" val="0" stackOrder="#stackOrder" stackType="multi_buff">
       <mul order="0x30" stat="rCrit" val="#rCrit"/>
 	  <mul order="0x30" stat="mAtkSpd" val="#mAtkSpd"/>
     </effect>
@@ -170,18 +170,18 @@
   <table name="#mDef">0.9 0.84</table>
   <table name="#mpConsume">20 49</table>
   <table name="#magicLvl">30 70</table>
+  <table name="#stackOrder">1 2</table>
   <set name="magicLvl" val="#magicLvl"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="target" val="TARGET_CLAN"/>
   <set name="skillType" val="BUFF"/>
   <set name="hitTime" val="2000"/>
+  <set name="skillRadius" val="900"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="isMagic" val="true"/>
-  <set name="castRange" val="-1"/>
-  <set name="effectRange" val="-1"/>
   <set name="aggroPoints" val="100"/>
   <for>
-    <effect count="1" name="Buff" time="120" val="0">
+    <effect count="1" name="Buff" time="120" val="0" stackOrder="#stackOrder" stackType="berserker">
        <mul order="0x30" stat="pAtk" val="#val"/>
        <mul order="0x30" stat="pAtkSpd" val="#val"/>
        <mul order="0x30" stat="mAtk" val="#mAtk"/>
@@ -196,18 +196,18 @@
   <table name="#mpConsume">15 27 42 49</table>
   <table name="#absorbDam">6 7 8 9</table>
   <table name="#magicLvl">20 40 60 70</table>
+  <table name="#stackOrder">1 2 3 4</table>
   <set name="magicLvl" val="#magicLvl"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="target" val="TARGET_CLAN"/>
+  <set name="skillRadius" val="900"/>
   <set name="skillType" val="BUFF"/>
   <set name="hitTime" val="2000"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="isMagic" val="true"/>
-  <set name="castRange" val="-1"/>
-  <set name="effectRange" val="-1"/>
   <set name="aggroPoints" val="100"/>
   <for>
-    <effect count="1" name="Buff" time="120" val="0">
+    <effect count="1" name="Buff" time="120" val="0" stackOrder="#stackOrder" stackType="vampiric_attack">
       <add order="0x40" stat="absorbDam" val="#absorbDam"/>
     </effect>
   </for>
@@ -216,18 +216,18 @@
   <table name="#rCrit">1.2 1.25 1.3</table>
   <table name="#mpConsume">15 27 49</table>
   <table name="#magicLvl">20 40 60</table>
+  <table name="#stackOrder">1 2 3</table>
   <set name="magicLvl" val="#magicLvl"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="target" val="TARGET_CLAN"/>
   <set name="skillType" val="BUFF"/>
+  <set name="skillRadius" val="900"/>
   <set name="hitTime" val="2000"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="isMagic" val="true"/>
-  <set name="castRange" val="-1"/>
-  <set name="effectRange" val="-1"/>
   <set name="aggroPoints" val="100"/>
   <for>
-    <effect count="1" name="Buff" time="120" val="0" stackOrder="#rCrit" stackType="rCrit">
+    <effect count="1" name="Buff" time="120" val="0" stackOrder="#stackOrder" stackType="critical_prob_up">
       <mul order="0x30" stat="rCrit" val="#rCrit"/>
     </effect>
   </for>
@@ -236,18 +236,18 @@
   <table name="#cAtk">1.3 1.4 1.5</table>
   <table name="#mpConsume">15 27 49</table>
   <table name="#magicLvl">20 40 60</table>
+  <table name="#stackOrder">1 2 3</table>
   <set name="magicLvl" val="#magicLvl"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="target" val="TARGET_CLAN"/>
   <set name="skillType" val="BUFF"/>
+  <set name="skillRadius" val="900"/>
   <set name="hitTime" val="2000"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="isMagic" val="true"/>
-  <set name="castRange" val="-1"/>
-  <set name="effectRange" val="-1"/>
   <set name="aggroPoints" val="100"/>
   <for>
-    <effect count="1" name="Buff" time="120" val="0">
+    <effect count="1" name="Buff" time="120" val="0" stackOrder="#stackOrder" stackType="critical_dmg_up">
       <mul order="0x30" stat="cAtk" val="#cAtk"/>
     </effect>
   </for>
@@ -772,18 +772,18 @@
   <table name="#mCritRate">3 4 4</table>
   <table name="#mpConsume">43 79 124</table>
   <table name="#magicLvl">20 40 60</table>
+  <table name="#stackOrder">1 2 3</table>
   <set name="magicLvl" val="#magicLvl"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="target" val="TARGET_CLAN"/>
   <set name="skillType" val="BUFF"/>
+  <set name="skillRadius" val="900"/>
   <set name="hitTime" val="2000"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="isMagic" val="true"/>
-  <set name="castRange" val="-1"/>
-  <set name="effectRange" val="-1"/>
   <set name="aggroPoints" val="100"/>
   <for>
-    <effect count="1" name="Buff" time="120" val="0">
+    <effect count="1" name="Buff" time="120" val="0" stackOrder="#stackOrder" stackType="multi_buff">
       <mul order="0x30" stat="mAtk" val="#mAtk"/>
       <mul order="0x30" stat="mAtkSpd" val="#mAtkSpd"/>
       <add order="0x40" stat="mCritRate" val="#mCritRate"/>
@@ -800,18 +800,18 @@
   <table name="#mDef">0.9 0.9 0.84</table>
   <table name="#mpConsume">43 79 124</table>
   <table name="#magicLvl">20 40 60</table>
+  <table name="#stackOrder">1 2 3</table>
   <set name="magicLvl" val="#magicLvl"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="target" val="TARGET_CLAN"/>
   <set name="skillType" val="BUFF"/>
+  <set name="skillRadius" val="900"/>
   <set name="hitTime" val="2000"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="isMagic" val="true"/>
-  <set name="castRange" val="-1"/>
-  <set name="effectRange" val="-1"/>
   <set name="aggroPoints" val="100"/>
   <for>
-    <effect count="1" name="Buff" time="120" val="0">
+    <effect count="1" name="Buff" time="120" val="0" stackOrder="#stackOrder" stackType="multi_buff">
       <mul order="0x30" stat="pAtk" val="#pAtk"/>
       <mul order="0x30" stat="pAtkSpd" val="#pAtkSpd"/>
       <mul order="0x30" stat="mAtk" val="#mAtk"/>
@@ -1370,14 +1370,10 @@
   <set name="magicLvl" val="40"/>
   <set name="operateType" val="OP_ACTIVE"/>
   <set name="target" val="TARGET_ONE"/>
-  <!--<set name="skillType" val="BUFF"/>-->
   <set name="skillType" val="INSTANT_JUMP"/>
   <set name="castRange" val="1500"/>
   <set name="effectRange" val="2000"/>
   <set name="reuseDelay" val="6000"/>
-  <for>
-    <effect count="1" name="TargetMe" time="0" val="0"/>
-  </for>
 </skill>
 <skill id="4672" levels="1" name="NPC Corpse Remove">
   <set name="target" val="TARGET_SELF"/>

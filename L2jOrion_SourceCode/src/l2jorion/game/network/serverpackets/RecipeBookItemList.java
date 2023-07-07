@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2RecipeList;
+import l2jorion.game.network.PacketServer;
 
-public class RecipeBookItemList extends L2GameServerPacket
+public class RecipeBookItemList extends PacketServer
 {
 	private static final String _S__D6_RECIPEBOOKITEMLIST = "[S] D6 RecipeBookItemList";
 	

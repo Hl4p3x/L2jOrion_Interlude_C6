@@ -23,9 +23,10 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 
-public class AllyInfo extends L2GameServerPacket
+public class AllyInfo extends PacketServer
 {
 	private static final String _S__7A_FRIENDLIST = "[S] 7a AllyInfo";
 	

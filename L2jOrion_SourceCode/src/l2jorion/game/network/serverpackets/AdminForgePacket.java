@@ -24,7 +24,9 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminForgePacket extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class AdminForgePacket extends PacketServer
 {
 	private final List<Part> _parts = new ArrayList<>();
 	

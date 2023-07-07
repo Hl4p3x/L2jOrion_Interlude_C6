@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class CharDeleteOk extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class CharDeleteOk extends PacketServer
 {
 	private static final String _S__33_CHARDELETEOK = "[S] 23 CharDeleteOk";
 	

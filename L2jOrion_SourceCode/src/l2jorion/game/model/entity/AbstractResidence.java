@@ -57,7 +57,6 @@ public abstract class AbstractResidence
 		return _name;
 	}
 	
-	// TODO: Remove it later when both castles and forts are loaded from same table.
 	public final void setName(String name)
 	{
 		_name = name;

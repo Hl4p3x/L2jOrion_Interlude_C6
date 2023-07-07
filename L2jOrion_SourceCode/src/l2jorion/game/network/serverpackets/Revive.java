@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Object;
+import l2jorion.game.network.PacketServer;
 
-public class Revive extends L2GameServerPacket
+public class Revive extends PacketServer
 {
 	private static final String _S__0C_REVIVE = "[S] 07 Revive";
 	

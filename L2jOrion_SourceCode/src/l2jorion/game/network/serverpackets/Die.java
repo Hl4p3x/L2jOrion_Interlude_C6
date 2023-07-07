@@ -31,8 +31,9 @@ import l2jorion.game.model.entity.event.TvT;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.model.entity.siege.Fort;
 import l2jorion.game.model.zone.ZoneId;
+import l2jorion.game.network.PacketServer;
 
-public class Die extends L2GameServerPacket
+public class Die extends PacketServer
 {
 	private static final String _S__0B_DIE = "[S] 06 Die";
 	

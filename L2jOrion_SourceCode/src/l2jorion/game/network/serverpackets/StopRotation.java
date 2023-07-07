@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
+import l2jorion.game.network.PacketServer;
 
-public class StopRotation extends L2GameServerPacket
+public class StopRotation extends PacketServer
 {
 	private static final String _S__78_STOPROTATION = "[S] 63 StopRotation";
 	

@@ -23,17 +23,11 @@ package l2jorion.login.network.gameserverpackets;
 import l2jorion.login.SessionKey;
 import l2jorion.login.network.clientpackets.ClientBasePacket;
 
-/**
- * @author -Wooden-
- */
 public class PlayerAuthRequest extends ClientBasePacket
 {
 	private final String _account;
 	private final SessionKey _sessionKey;
 	
-	/**
-	 * @param decrypt
-	 */
 	public PlayerAuthRequest(final byte[] decrypt)
 	{
 		super(decrypt);

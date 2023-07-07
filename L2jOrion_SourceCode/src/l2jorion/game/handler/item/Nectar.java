@@ -41,7 +41,9 @@ public class Nectar implements IItemHandler
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		
@@ -63,10 +65,8 @@ public class Nectar implements IItemHandler
 		final int itemId = item.getItemId();
 		if (itemId == 6391)
 		{
-			activeChar.useMagic(SkillTable.getInstance().getInfo(9998, 1), false, false);
+			activeChar.useMagic(SkillTable.getInstance().getInfo(9000, 1), false, false);
 		}
-		
-		activeChar = null;
 	}
 	
 	@Override

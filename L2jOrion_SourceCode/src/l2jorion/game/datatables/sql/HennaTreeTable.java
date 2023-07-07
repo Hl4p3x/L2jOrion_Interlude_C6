@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.datatables.sql;
 
 import java.sql.Connection;
@@ -42,6 +22,7 @@ import l2jorion.util.database.L2DatabaseFactory;
 public class HennaTreeTable
 {
 	private static Logger LOG = LoggerFactory.getLogger(HennaTreeTable.class);
+	
 	private static final HennaTreeTable _instance = new HennaTreeTable();
 	private final Map<ClassId, List<L2HennaInstance>> _hennaTrees;
 	private final boolean _initialized = true;
@@ -64,9 +45,6 @@ public class HennaTreeTable
 			final PreparedStatement statement = con.prepareStatement("SELECT class_name, id, parent_id FROM class_list ORDER BY id");
 			final ResultSet classlist = statement.executeQuery();
 			List<L2HennaInstance> list;
-			
-			// int parentClassId;
-			// L2Henna henna;
 			
 			classlist:
 			while (classlist.next())
@@ -113,7 +91,9 @@ public class HennaTreeTable
 				
 				count += list.size();
 				if (Config.DEBUG)
+				{
 					LOG.info("Henna Tree for Class: " + classId + " has " + list.size() + " henna templates");
+				}
 			}
 			
 			classlist.close();
@@ -138,7 +118,6 @@ public class HennaTreeTable
 		final List<L2HennaInstance> henna = _hennaTrees.get(classId);
 		if (henna == null)
 		{
-			// the hennatree for this class is undefined, so we give an empty list
 			LOG.warn("Hennatree for class {} is not defined !" + " " + classId);
 			return new L2HennaInstance[0];
 		}

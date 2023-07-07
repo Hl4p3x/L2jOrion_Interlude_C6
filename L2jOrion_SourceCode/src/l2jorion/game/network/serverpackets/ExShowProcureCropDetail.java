@@ -5,8 +5,9 @@ import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.CastleManorManager;
 import l2jorion.game.managers.CastleManorManager.CropProcure;
 import l2jorion.game.model.entity.siege.Castle;
+import l2jorion.game.network.PacketServer;
 
-public class ExShowProcureCropDetail extends L2GameServerPacket
+public class ExShowProcureCropDetail extends PacketServer
 {
 	private static final String _S__FE_22_EXSHOWPROCURECROPDETAIL = "[S] FE:22 ExShowProcureCropDetail";
 	

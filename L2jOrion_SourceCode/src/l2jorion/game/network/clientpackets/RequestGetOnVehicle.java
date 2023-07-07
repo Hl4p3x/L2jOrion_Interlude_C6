@@ -24,10 +24,11 @@ import l2jorion.game.managers.BoatManager;
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2BoatInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.GetOnVehicle;
 
-public final class RequestGetOnVehicle extends L2GameClientPacket
+public final class RequestGetOnVehicle extends PacketClient
 {
 	private int _boatId;
 	private Location _pos;

@@ -102,6 +102,18 @@ public final class L2GrandBossInstance extends L2MonsterInstance
 			broadcastPacket(new PlaySound("systemmsg_e.1209"));
 			broadcastPacket(msg);
 			
+			if (Config.L2LIMIT_CUSTOM)
+			{
+				if (getLevel() >= 40)
+				{
+					if (player.getClan() != null)
+					{
+						player.getClan().setReputationScore(player.getClan().getReputationScore() + Rnd.get(50, 100), true);
+					}
+					player.addItem("AutoLoot", 6392, 1, this, true);
+				}
+			}
+			
 			if (player.getParty() != null)
 			{
 				for (L2PcInstance member : player.getParty().getPartyMembers())
@@ -112,6 +124,14 @@ public final class L2GrandBossInstance extends L2MonsterInstance
 					{
 						member.getAchievement().increase(type);
 					}
+					
+					// Daily
+					member.getAchievement().increase(AchType.DAILY_BOSS, 1, true, true, true, getNpcId());
+					
+					if (Config.L2LIMIT_CUSTOM)
+					{
+						member.setWeeklyBoardRaidPoints(member.getWeeklyBoardRaidPoints() + ((getLevel() / 2) + Rnd.get(-5, 5)));
+					}
 				}
 			}
 			else
@@ -121,6 +141,14 @@ public final class L2GrandBossInstance extends L2MonsterInstance
 				if (type != null)
 				{
 					player.getAchievement().increase(type);
+				}
+				
+				// Daily
+				player.getAchievement().increase(AchType.DAILY_BOSS, 1, true, true, true, getNpcId());
+				
+				if (Config.L2LIMIT_CUSTOM)
+				{
+					player.setWeeklyBoardRaidPoints(player.getWeeklyBoardRaidPoints() + ((getLevel() / 2) + Rnd.get(-5, 5)));
 				}
 			}
 		}
@@ -139,7 +167,7 @@ public final class L2GrandBossInstance extends L2MonsterInstance
 	}
 	
 	@Override
-	protected void manageMinions()
+	protected void manageMaintenance()
 	{
 		_minionList.spawnMinions();
 		
@@ -175,7 +203,7 @@ public final class L2GrandBossInstance extends L2MonsterInstance
 				}
 				
 				_minionList.maintainMinions();
-			}, 60000, getMaintenanceInterval());
+			}, 1000, getMaintenanceInterval());
 		}
 	}
 	
@@ -183,5 +211,11 @@ public final class L2GrandBossInstance extends L2MonsterInstance
 	{
 		super.setCurrentHp(super.getMaxHp());
 		super.setCurrentMp(super.getMaxMp());
+	}
+	
+	@Override
+	public boolean isMonster()
+	{
+		return false;
 	}
 }

@@ -24,12 +24,13 @@ import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.model.entity.sevensigns.SevenSignsFestival;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.templates.StatsSet;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class SSQStatus extends L2GameServerPacket
+public class SSQStatus extends PacketServer
 {
 	private static Logger LOG = LoggerFactory.getLogger(SSQStatus.class);
 	

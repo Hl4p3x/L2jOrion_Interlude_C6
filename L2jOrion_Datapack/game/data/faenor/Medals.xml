@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Event ID="Medals Event" Active="24 Dec 2006-26 Dec 2018" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xml/xsd/faenor.xsd">
+<Event ID="Medals Event" Active="24 Dec 2006-26 Dec 2022" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xml/xsd/faenor.xsd">
    <Droplist> 
       <AllDrop Items="6392" Count="1,4" Chance="40%" />
    </Droplist> 

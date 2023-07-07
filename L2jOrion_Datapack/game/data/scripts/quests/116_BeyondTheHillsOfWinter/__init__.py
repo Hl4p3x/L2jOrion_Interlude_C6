@@ -1,13 +1,3 @@
-# Rewritten by RayzoR
-
-#----------------------------------------------------------------------------
-# This quest starts in the Dwarven Village in the Elder Council with
-# Gray Pillar Member Filaur. He asks you to bring 20 bandages,
-# 5 Energy Stones and 10 "skeleton keys" which are just Key of Thief.
-# You can get these at the Grocery store nearby, it cost me 15,590 to do so.
-# Reward: 1650 SSD or 16500 adena
-#----------------------------------------------------------------------------
-
 import sys
 from l2jorion import Config
 from l2jorion.game.model.quest import State

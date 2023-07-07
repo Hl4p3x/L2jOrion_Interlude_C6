@@ -20,17 +20,15 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+
 import l2jorion.Config;
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.CastleManorManager;
 import l2jorion.game.managers.CastleManorManager.SeedProduction;
+import l2jorion.game.network.PacketClient;
 
-/**
- * Format: (ch) dd [ddd] d - manor id d - size [ d - seed id d - sales d - price ]
- * @author l3x
- */
-public class RequestSetSeed extends L2GameClientPacket
+public class RequestSetSeed extends PacketClient
 {
 	private int _size;
 	private int _manorId;
@@ -65,9 +63,11 @@ public class RequestSetSeed extends L2GameClientPacket
 	protected void runImpl()
 	{
 		if (_size < 1)
+		{
 			return;
+		}
 		
-		final FastList<SeedProduction> seeds = new FastList<>();
+		final ArrayList<SeedProduction> seeds = new ArrayList<>();
 		
 		for (int i = 0; i < _size; i++)
 		{

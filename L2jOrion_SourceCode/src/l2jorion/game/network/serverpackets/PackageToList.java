@@ -22,7 +22,9 @@ package l2jorion.game.network.serverpackets;
 
 import java.util.Map;
 
-public class PackageToList extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class PackageToList extends PacketServer
 {
 	private static final String _S__C2_PACKAGETOLIST = "[S] C2 PackageToList";
 	private final Map<Integer, String> _players;

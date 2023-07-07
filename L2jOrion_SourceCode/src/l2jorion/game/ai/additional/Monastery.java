@@ -1,18 +1,3 @@
-
-/*
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package l2jorion.game.ai.additional;
 
 import java.util.Collection;
@@ -40,7 +25,7 @@ public class Monastery extends Quest implements Runnable
 {
 	private static int HasSpawned;
 	private static FastSet<Integer> myTrackingSet = new FastSet<>(); // Used to track instances of npcs
-	static final int[] mobs1 =
+	public static final int[] mobs1 =
 	{
 		22124,
 		22125,
@@ -48,17 +33,19 @@ public class Monastery extends Quest implements Runnable
 		22127,
 		22129
 	};
-	static final int[] mobs2 =
+	
+	public static final int[] mobs2 =
 	{
 		22134,
 		22135
 	};
-	static final int[] mobs3 =
+	
+	public static final int[] mobs3 =
 	{
 		22128
 	};
 	
-	static final String[] text =
+	public static final String[] text =
 	{
 		"You cannot carry a weapon without authorization!",
 		"name, why would you choose the path of darkness?!",
@@ -70,9 +57,7 @@ public class Monastery extends Quest implements Runnable
 		super(questId, name, descr);
 		
 		registerMobs(mobs1, QuestEventType.ON_AGGRO_RANGE_ENTER, QuestEventType.ON_SPAWN, QuestEventType.ON_SPELL_FINISHED);
-		
 		registerMobs(mobs2, QuestEventType.ON_SPELL_FINISHED);
-		
 		registerMobs(mobs3, QuestEventType.ON_ATTACK);
 	}
 	

@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExAutoSoulShot extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExAutoSoulShot extends PacketServer
 {
 	private static final String _S__FE_12_EXAUTOSOULSHOT = "[S] FE:12 ExAutoSoulShot";
 	private final int _itemId;

@@ -29,9 +29,6 @@ import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 
-/**
- * @author Blaze
- */
 public class AdminWalker implements IAdminCommandHandler
 {
 	private static int _npcid = 0;
@@ -53,11 +50,6 @@ public class AdminWalker implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		try
 		{
 			String[] parts = command.split(" ");
@@ -105,7 +97,9 @@ public class AdminWalker implements IAdminCommandHandler
 					catch (final Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 					}
 					finally
 					{
@@ -118,7 +112,9 @@ public class AdminWalker implements IAdminCommandHandler
 				catch (final NumberFormatException e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					activeChar.sendMessage("The incorrect identifier");
 				}
@@ -208,7 +204,9 @@ public class AdminWalker implements IAdminCommandHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		finally
 		{

@@ -20,10 +20,10 @@
  */
 package l2jorion.game.handler.admin;
 
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import javolution.text.TextBuilder;
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.managers.CastleManager;
@@ -34,11 +34,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 
-/**
- * Admin comand handler for Manor System This class handles following admin commands: - manor_info = shows info about current manor state - manor_approve = approves settings for the next manor period - manor_setnext = changes manor settings to the next day's - manor_reset castle = resets all manor
- * data for specified castle (or all) - manor_setmaintenance = sets manor system under maintenance mode - manor_save = saves all manor data into database - manor_disable = disables manor system
- * @author l3x
- */
 public class AdminManor implements IAdminCommandHandler
 {
 	private static final String[] _adminCommands =
@@ -52,11 +47,6 @@ public class AdminManor implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		StringTokenizer st = new StringTokenizer(command);
 		command = st.nextToken();
 		
@@ -75,16 +65,18 @@ public class AdminManor implements IAdminCommandHandler
 				catch (final Exception e)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 				}
 				
 				if (castleId > 0)
 				{
 					final Castle castle = CastleManager.getInstance().getCastleById(castleId);
-					castle.setCropProcure(new FastList<CropProcure>(), CastleManorManager.PERIOD_CURRENT);
-					castle.setCropProcure(new FastList<CropProcure>(), CastleManorManager.PERIOD_NEXT);
-					castle.setSeedProduction(new FastList<SeedProduction>(), CastleManorManager.PERIOD_CURRENT);
-					castle.setSeedProduction(new FastList<SeedProduction>(), CastleManorManager.PERIOD_NEXT);
+					castle.setCropProcure(new ArrayList<CropProcure>(), CastleManorManager.PERIOD_CURRENT);
+					castle.setCropProcure(new ArrayList<CropProcure>(), CastleManorManager.PERIOD_NEXT);
+					castle.setSeedProduction(new ArrayList<SeedProduction>(), CastleManorManager.PERIOD_CURRENT);
+					castle.setSeedProduction(new ArrayList<SeedProduction>(), CastleManorManager.PERIOD_NEXT);
 					
 					if (Config.ALT_MANOR_SAVE_ALL_ACTIONS)
 					{
@@ -98,10 +90,10 @@ public class AdminManor implements IAdminCommandHandler
 				{
 					for (final Castle castle : CastleManager.getInstance().getCastles())
 					{
-						castle.setCropProcure(new FastList<CropProcure>(), CastleManorManager.PERIOD_CURRENT);
-						castle.setCropProcure(new FastList<CropProcure>(), CastleManorManager.PERIOD_NEXT);
-						castle.setSeedProduction(new FastList<SeedProduction>(), CastleManorManager.PERIOD_CURRENT);
-						castle.setSeedProduction(new FastList<SeedProduction>(), CastleManorManager.PERIOD_NEXT);
+						castle.setCropProcure(new ArrayList<CropProcure>(), CastleManorManager.PERIOD_CURRENT);
+						castle.setCropProcure(new ArrayList<CropProcure>(), CastleManorManager.PERIOD_NEXT);
+						castle.setSeedProduction(new ArrayList<SeedProduction>(), CastleManorManager.PERIOD_CURRENT);
+						castle.setSeedProduction(new ArrayList<SeedProduction>(), CastleManorManager.PERIOD_NEXT);
 						
 						if (Config.ALT_MANOR_SAVE_ALL_ACTIONS)
 						{

@@ -24,15 +24,12 @@ import l2jorion.Config;
 import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.managers.PetitionManager;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * Format: (c) d
- * @author -Wooden-, TempyIncursion
- */
-public final class RequestPetitionCancel extends L2GameClientPacket
+public final class RequestPetitionCancel extends PacketClient
 {
 	// private int _unknown;
 	
@@ -47,7 +44,9 @@ public final class RequestPetitionCancel extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		if (PetitionManager.getInstance().isPlayerInConsultation(activeChar))
 		{

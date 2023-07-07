@@ -1,4 +1,3 @@
-# Rewritten by RayzoR
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
@@ -55,8 +54,7 @@ class Quest (JQuest) :
                     st.setState(STARTED)
                     st.playSound("ItemSound.quest_accept")
                     st.set("cond","1")
-                    htmltext = "<html><body>Mercenary Captain Pierce:<br>I sent out a scout a while ago, and he hasn't reported back yet. \
-                    Please follow his trail and discover his fate.</body></html>" #this is custom, if someone knows this html from retail, please contribute it.
+                    htmltext = "<html><body>Mercenary Captain Pierce:<br>I sent out a scout a while ago, and he hasn't reported back yet. Please follow his trail and discover his fate.</body></html>" 
                 else :
                     htmltext = "31553-00.htm"
                     st.exitQuest(1)

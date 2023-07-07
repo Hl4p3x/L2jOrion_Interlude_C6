@@ -26,13 +26,14 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.TradeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestPrivateStoreSell extends L2GameClientPacket
+public final class RequestPrivateStoreSell extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestPrivateStoreSell.class);
 	
@@ -59,7 +60,7 @@ public final class RequestPrivateStoreSell extends L2GameClientPacket
 			final int objectId = readD();
 			final int itemId = readD();
 			final int enchant = readH();
-			readH(); // TODO analyse this
+			readH();
 			final long count = readD();
 			final int price = readD();
 			
@@ -84,40 +85,18 @@ public final class RequestPrivateStoreSell extends L2GameClientPacket
 			return;
 		}
 		
-		if (Config.DEBUG)
-		{
-			
-			LOG.info("Player " + getClient().getActiveChar().getName() + " requested to sell to storeId " + _storePlayerId + " Items Number: " + _count);
-			
-			for (int i = 0; i < _count; i++)
-			{
-				LOG.info("Requested Item ObjectID: " + _items[i].getObjectId());
-				LOG.info("Requested Item Id: " + _items[i].getItemId());
-				LOG.info("Requested Item count: " + _items[i].getCount());
-				LOG.info("Requested Item enchant: " + _items[i].getCount());
-				LOG.info("Requested Item price: " + _items[i].getPrice());
-				
-			}
-		}
-		
 		_price = (int) priceTotal;
 	}
 	
 	@Override
 	protected void runImpl()
 	{
-		
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
 		{
 			return;
 		}
-		if (player.isSubmitingPin())
-		{
-			player.sendMessage("Unable to do any action while PIN is not submitted");
-			player.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
+		
 		if (!getClient().getFloodProtectors().getTransaction().tryPerformAction("privatestoresell"))
 		{
 			player.sendMessage("You selling items too fast");

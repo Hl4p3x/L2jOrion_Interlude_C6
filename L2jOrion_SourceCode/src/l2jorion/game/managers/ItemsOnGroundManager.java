@@ -52,7 +52,6 @@ public class ItemsOnGroundManager
 	
 	ItemsOnGroundManager()
 	{
-		// If SaveDroppedItem is false, may want to delete all items previously stored to avoid add old items on reactivate
 		if (!Config.SAVE_DROPPED_ITEM)
 		{
 			if (Config.CLEAR_DROPPED_ITEM_TABLE)
@@ -80,7 +79,6 @@ public class ItemsOnGroundManager
 	
 	private void load()
 	{
-		// if DestroyPlayerDroppedItem was previously false, items curently protected will be added to ItemsAutoDestroy
 		if (Config.DESTROY_DROPPED_PLAYER_ITEM)
 		{
 			Connection con = null;
@@ -185,7 +183,6 @@ public class ItemsOnGroundManager
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 		if (Config.EMPTY_DROPPED_ITEM_TABLE_AFTER_LOAD)
 		{
@@ -237,7 +234,6 @@ public class ItemsOnGroundManager
 			PreparedStatement del = conn.prepareStatement("delete from itemsonground");
 			del.execute();
 			del.close();
-			del = null;
 		}
 		catch (final Exception e1)
 		{
@@ -247,7 +243,6 @@ public class ItemsOnGroundManager
 		finally
 		{
 			CloseUtil.close(conn);
-			conn = null;
 		}
 	}
 	

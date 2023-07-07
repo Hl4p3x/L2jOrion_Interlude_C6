@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.handler;
 
 import java.sql.Connection;
@@ -50,6 +30,7 @@ import l2jorion.util.random.Rnd;
 public class AutoChatHandler implements SpawnListener
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(AutoChatHandler.class);
+	
 	private static AutoChatHandler _instance;
 	
 	private static final long DEFAULT_CHAT_DELAY = 30000; // 30 secs by default
@@ -295,12 +276,6 @@ public class AutoChatHandler implements SpawnListener
 		}
 	}
 	
-	/**
-	 * Auto Chat Instance <BR>
-	 * <BR>
-	 * Manages the auto chat instances for a specific registered NPC ID.
-	 * @author Tempy
-	 */
 	public class AutoChatInstance
 	{
 		protected int _npcId;
@@ -592,13 +567,6 @@ public class AutoChatHandler implements SpawnListener
 			}
 		}
 		
-		/**
-		 * Auto Chat Definition <BR>
-		 * <BR>
-		 * Stores information about specific chat data for an instance of the NPC ID specified by the containing auto chat instance. <BR>
-		 * Each NPC instance of this type should be stored in a subsequent AutoChatDefinition class.
-		 * @author Tempy
-		 */
 		private class AutoChatDefinition
 		{
 			protected int _chatIndex = 0;
@@ -714,12 +682,6 @@ public class AutoChatHandler implements SpawnListener
 			}
 		}
 		
-		/**
-		 * Auto Chat Runner <BR>
-		 * <BR>
-		 * Represents the auto chat scheduled task for each chat instance.
-		 * @author Tempy
-		 */
 		private class AutoChatRunner implements Runnable
 		{
 			private final int _runnerNpcId;

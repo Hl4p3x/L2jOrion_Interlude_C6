@@ -24,8 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class ExOlympiadSpelledInfo extends L2GameServerPacket
+public class ExOlympiadSpelledInfo extends PacketServer
 {
 	private static final String _S__FE_2A_OLYMPIADSPELLEDINFO = "[S] FE:2A ExOlympiadSpelledInfo";
 	

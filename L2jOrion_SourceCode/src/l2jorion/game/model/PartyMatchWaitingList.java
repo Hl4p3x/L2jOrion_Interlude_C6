@@ -21,9 +21,6 @@ import java.util.List;
 import javolution.util.FastList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author Gnacik
- */
 public class PartyMatchWaitingList
 {
 	private final List<L2PcInstance> _members;
@@ -36,13 +33,17 @@ public class PartyMatchWaitingList
 	public void addPlayer(final L2PcInstance player)
 	{
 		if (!_members.contains(player))
+		{
 			_members.add(player);
+		}
 	}
 	
 	public void removePlayer(final L2PcInstance player)
 	{
 		if (_members.contains(player))
+		{
 			_members.remove(player);
+		}
 	}
 	
 	public List<L2PcInstance> getPlayers()

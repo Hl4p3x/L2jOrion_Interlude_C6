@@ -25,9 +25,10 @@ import l2jorion.game.cache.CrestCache.CrestType;
 import l2jorion.game.idfactory.IdFactory;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 
-public final class RequestSetPledgeCrest extends L2GameClientPacket
+public final class RequestSetPledgeCrest extends PacketClient
 {
 
 	private int _length;

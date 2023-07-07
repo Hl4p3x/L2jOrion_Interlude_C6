@@ -23,8 +23,9 @@ package l2jorion.game.network.serverpackets;
 import java.util.List;
 
 import javolution.util.FastList;
+import l2jorion.game.network.PacketServer;
 
-public class AquireSkillList extends L2GameServerPacket
+public class AquireSkillList extends PacketServer
 {
 	public enum skillType
 	{

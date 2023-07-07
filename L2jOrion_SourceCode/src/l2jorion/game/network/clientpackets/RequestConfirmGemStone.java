@@ -22,16 +22,13 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExConfirmVariationGemstone;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 
-/**
- * Format:(ch) dddd
- * @author -Wooden-
- */
-public final class RequestConfirmGemStone extends L2GameClientPacket
+public final class RequestConfirmGemStone extends PacketClient
 {
 	private int _targetItemObjId;
 	private int _refinerItemObjId;
@@ -51,17 +48,21 @@ public final class RequestConfirmGemStone extends L2GameClientPacket
 	protected void runImpl()
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
-
+		
 		if (!getClient().getFloodProtectors().getUseAugItem().tryPerformAction("use confirm aug gem"))
+		{
 			return;
-
+		}
+		
 		final L2ItemInstance targetItem = (L2ItemInstance) L2World.getInstance().findObject(_targetItemObjId);
 		final L2ItemInstance refinerItem = (L2ItemInstance) L2World.getInstance().findObject(_refinerItemObjId);
 		final L2ItemInstance gemstoneItem = (L2ItemInstance) L2World.getInstance().findObject(_gemstoneItemObjId);
 		
 		if (targetItem == null || refinerItem == null || gemstoneItem == null)
+		{
 			return;
-
+		}
+		
 		// Make sure the item is a gemstone
 		final int gemstoneItemId = gemstoneItem.getItem().getItemId();
 		

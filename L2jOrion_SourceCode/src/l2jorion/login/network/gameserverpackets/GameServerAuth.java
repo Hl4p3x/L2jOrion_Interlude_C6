@@ -24,13 +24,10 @@ import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.login.network.clientpackets.ClientBasePacket;
 
-/**
- * Format: cccddb c desired ID c accept alternative ID c reserve Host s ExternalHostName s InetranlHostName d max players d hexid size b hexid
- * @author -Wooden-
- */
 public class GameServerAuth extends ClientBasePacket
 {
 	protected static Logger LOG = LoggerFactory.getLogger(GameServerAuth.class);
+	
 	private final byte[] _hexId;
 	private final int _desiredId;
 	private final boolean _hostReserved;

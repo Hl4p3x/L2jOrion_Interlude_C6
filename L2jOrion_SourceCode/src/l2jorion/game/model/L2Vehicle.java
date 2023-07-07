@@ -27,9 +27,9 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.knownlist.VehicleKnownList;
 import l2jorion.game.model.actor.stat.VehicleStat;
 import l2jorion.game.model.zone.ZoneId;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.templates.L2CharTemplate;
 import l2jorion.game.templates.L2Weapon;
 import l2jorion.game.thread.ThreadPoolManager;
@@ -280,7 +280,7 @@ public abstract class L2Vehicle extends L2Character
 		return _passengers;
 	}
 	
-	public void broadcastToPassengers(L2GameServerPacket sm)
+	public void broadcastToPassengers(PacketServer sm)
 	{
 		for (L2PcInstance player : _passengers)
 		{

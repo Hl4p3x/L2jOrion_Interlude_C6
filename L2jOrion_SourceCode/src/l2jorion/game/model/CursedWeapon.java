@@ -40,6 +40,7 @@ import l2jorion.game.network.serverpackets.ItemList;
 import l2jorion.game.network.serverpackets.Ride;
 import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.game.powerpack.gatekeeper.Gatekeeper;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.logger.Logger;
@@ -76,8 +77,6 @@ public class CursedWeapon
 	private int _playerKarma = 0;
 	private int _playerPkKills = 0;
 	
-	// =========================================================
-	// Constructor
 	public CursedWeapon(final int itemId, final int skillId, final String name)
 	{
 		_name = name;
@@ -86,8 +85,6 @@ public class CursedWeapon
 		_skillMaxLevel = SkillTable.getInstance().getMaxLevel(_skillId, 0);
 	}
 	
-	// =========================================================
-	// Private
 	public void endOfLife()
 	{
 		if (_isActivated)
@@ -102,6 +99,14 @@ public class CursedWeapon
 				_player.setCursedWeaponEquipedId(0);
 				removeSkill();
 				
+				if (Config.RON_CUSTOM)
+				{
+					_player.setHeroAura(false);
+					_player.setArmorSkinOption(0);
+					_player.setHairSkinOption(0);
+					_player.setIsTryingSkin(false);
+				}
+				
 				// Remove and destroy
 				_player.getInventory().unEquipItemInBodySlotAndRecord(L2Item.SLOT_LR_HAND);
 				_player.getInventory().destroyItemByItemId("", _itemId, 1, _player, null);
@@ -113,8 +118,6 @@ public class CursedWeapon
 			}
 			else
 			{
-				// Remove from Db
-				// LOG.info(_name + " being removed offline.");
 				Connection con = null;
 				try
 				{
@@ -131,7 +134,6 @@ public class CursedWeapon
 					}
 					
 					DatabaseUtils.close(statement);
-					statement = null;
 					
 					// Restore the karma
 					statement = con.prepareStatement("UPDATE characters SET karma=?, pkkills=? WHERE obj_id=?");
@@ -145,7 +147,6 @@ public class CursedWeapon
 					}
 					
 					DatabaseUtils.close(statement);
-					statement = null;
 				}
 				catch (final Exception e)
 				{
@@ -154,7 +155,6 @@ public class CursedWeapon
 				finally
 				{
 					CloseUtil.close(con);
-					con = null;
 				}
 			}
 		}
@@ -288,10 +288,6 @@ public class CursedWeapon
 			_player.broadcastUserInfo();
 			
 			sm.addZoneName(_player.getX(), _player.getY(), _player.getZ()); // Region Name
-			
-			// EndTime: if dropped from player, the endTime is the same then before
-			// cancelTask();
-			// _endTime = 0;
 		}
 		
 		sm.addItemName(_itemId);
@@ -354,8 +350,6 @@ public class CursedWeapon
 		_player.sendSkillList();
 	}
 	
-	// =========================================================
-	// Public
 	public void reActivate()
 	{
 		_isActivated = true;
@@ -383,6 +377,22 @@ public class CursedWeapon
 			
 			_removeTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(new RemoveTask(), _durationLost * 12000L, _durationLost * 12000L);
 			
+			if (Config.RON_CUSTOM)
+			{
+				if (player.isCwPopUpMenuOn())
+				{
+					for (L2PcInstance character : L2World.getInstance().getAllPlayers().values())
+					{
+						if (character == null)
+						{
+							continue;
+						}
+						
+						Gatekeeper.showCWinfo(character);
+					}
+				}
+			}
+			
 			return true;
 		}
 		
@@ -405,8 +415,7 @@ public class CursedWeapon
 			}
 			else
 			{
-				// TODO: correct this custom message.
-				player.sendMessage("You may not pick up this item while riding in this territory");
+				player.sendMessage("You may not pick up this item while riding in this territory.");
 				return;
 			}
 		}
@@ -478,23 +487,27 @@ public class CursedWeapon
 		_player.broadcastUserInfo();
 		
 		SocialAction atk = new SocialAction(_player.getObjectId(), 17);
-		
 		_player.broadcastPacket(atk);
+		
+		if (Config.RON_CUSTOM)
+		{
+			_player.setHeroAura(true);
+			_player.setArmorSkinOption(13);
+			_player.setHairSkinOption(66);
+			_player.setIsTryingSkin(true);
+		}
 		
 		sm = new SystemMessage(SystemMessageId.THE_OWNER_OF_S2_HAS_APPEARED_IN_THE_S1_REGION);
 		sm.addZoneName(_player.getX(), _player.getY(), _player.getZ()); // Region Name
 		sm.addItemName(_item.getItemId());
+		
 		_player.getAchievement().increase(AchType.CURSED_WEAPON);
+		
 		CursedWeaponsManager.announce(sm);
 	}
 	
 	public void saveData()
 	{
-		if (Config.DEBUG)
-		{
-			LOG.info("CursedWeapon: Saving data to disk.");
-		}
-		
 		Connection con = null;
 		
 		try
@@ -519,7 +532,6 @@ public class CursedWeapon
 			}
 			
 			DatabaseUtils.close(statement);
-			statement = null;
 		}
 		catch (final SQLException e)
 		{
@@ -528,7 +540,6 @@ public class CursedWeapon
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
@@ -570,8 +581,6 @@ public class CursedWeapon
 		saveData();
 	}
 	
-	// =========================================================
-	// Setter
 	public void setDisapearChance(final int disapearChance)
 	{
 		_disapearChance = disapearChance;
@@ -643,8 +652,6 @@ public class CursedWeapon
 		_item = item;
 	}
 	
-	// =========================================================
-	// Getter
 	public boolean isActivated()
 	{
 		return _isActivated;

@@ -1,5 +1,3 @@
-#Newbie Weapon/Accesories Coupons for the Hellbound opening event.
-#written by Vice, based in the Miss Queen script.
 import sys
 from l2jorion.game.model.multisell import L2Multisell
 from l2jorion.game.model.quest import State

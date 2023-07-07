@@ -18,8 +18,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2CommandChannel;
 import l2jorion.game.model.L2Party;
+import l2jorion.game.network.PacketServer;
 
-public class ExMultiPartyCommandChannelInfo extends L2GameServerPacket
+public class ExMultiPartyCommandChannelInfo extends PacketServer
 {
 	private final L2CommandChannel _channel;
 	

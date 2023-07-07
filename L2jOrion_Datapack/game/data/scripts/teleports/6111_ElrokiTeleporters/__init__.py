@@ -1,12 +1,9 @@
-# contributed by kerberos_20 to the Official L2J Datapack Project.
-# Visit http://forum.l2jdp.com for more details.
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
 
 qn = "6111_ElrokiTeleporters"
-#print "6111. Elroki Teleporters"
 
 class Quest (JQuest) :
 

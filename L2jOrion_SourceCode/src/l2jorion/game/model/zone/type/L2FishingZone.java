@@ -22,9 +22,6 @@ package l2jorion.game.model.zone.type;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.zone.L2ZoneType;
 
-/**
- * @author Damon
- */
 public class L2FishingZone extends L2ZoneType
 {
 	public L2FishingZone(int id)
@@ -51,7 +48,7 @@ public class L2FishingZone extends L2ZoneType
 	public void onReviveInside(final L2Character character)
 	{
 	}
-
+	
 	public int getWaterZ()
 	{
 		return getZone().getHighZ();

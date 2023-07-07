@@ -370,7 +370,6 @@ public final class L2ScriptEngineManager
 					engine.getContext().removeAttribute(ScriptEngine.FILENAME, ScriptContext.ENGINE_SCOPE);
 					engine.getContext().removeAttribute("mainClass", ScriptContext.ENGINE_SCOPE);
 				}
-				
 			}
 		}
 		catch (IOException e)

@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExConfirmVariationItem extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExConfirmVariationItem extends PacketServer
 {
 	private static final String _S__FE_52_EXCONFIRMVARIATIONITEM = "[S] FE:52 ExConfirmVariationItem";
 	

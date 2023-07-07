@@ -20,8 +20,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class ExDuelUpdateUserInfo extends L2GameServerPacket
+public class ExDuelUpdateUserInfo extends PacketServer
 {
 	private static final String _S__FE_4F_EXDUELUPDATEUSERINFO = "[S] FE:4F ExDuelUpdateUserInfo";
 	

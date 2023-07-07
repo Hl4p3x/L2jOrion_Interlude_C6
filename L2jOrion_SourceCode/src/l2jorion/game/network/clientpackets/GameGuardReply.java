@@ -17,10 +17,11 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
+import l2jorion.game.network.PacketClient;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class GameGuardReply extends L2GameClientPacket
+public class GameGuardReply extends PacketClient
 {
 	private final int[] _reply = new int[4];
 	private static final Logger LOG = LoggerFactory.getLogger(GameGuardReply.class);

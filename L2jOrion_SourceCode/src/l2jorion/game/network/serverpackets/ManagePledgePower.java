@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Clan;
+import l2jorion.game.network.PacketServer;
 
-public class ManagePledgePower extends L2GameServerPacket
+public class ManagePledgePower extends PacketServer
 {
 	private static final String _S__30_MANAGEPLEDGEPOWER = "[S] 30 ManagePledgePower";
 	

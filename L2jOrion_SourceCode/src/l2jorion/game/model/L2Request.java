@@ -21,15 +21,11 @@
 package l2jorion.game.model;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.clientpackets.L2GameClientPacket;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.thread.ThreadPoolManager;
 
-/**
- * This class manages requests (transactions) between two L2PcInstance.
- * @author kriau
- */
 public class L2Request
 {
 	private static final int REQUEST_TIMEOUT = 15; // in secs
@@ -38,7 +34,7 @@ public class L2Request
 	protected L2PcInstance _partner;
 	protected boolean _isRequestor;
 	protected boolean _isAnswerer;
-	protected L2GameClientPacket _requestPacket;
+	protected PacketClient _requestPacket;
 	
 	public L2Request(final L2PcInstance player)
 	{
@@ -75,7 +71,7 @@ public class L2Request
 	 * Set the packet incomed from requester.
 	 * @param packet
 	 */
-	private synchronized void setRequestPacket(final L2GameClientPacket packet)
+	private synchronized void setRequestPacket(final PacketClient packet)
 	{
 		_requestPacket = packet;
 	}
@@ -83,7 +79,7 @@ public class L2Request
 	/**
 	 * @return the packet originally incomed from requester.
 	 */
-	public L2GameClientPacket getRequestPacket()
+	public PacketClient getRequestPacket()
 	{
 		return _requestPacket;
 	}
@@ -94,7 +90,7 @@ public class L2Request
 	 * @param packet
 	 * @return
 	 */
-	public synchronized boolean setRequest(final L2PcInstance partner, final L2GameClientPacket packet)
+	public synchronized boolean setRequest(final L2PcInstance partner, final PacketClient packet)
 	{
 		if (partner == null)
 		{

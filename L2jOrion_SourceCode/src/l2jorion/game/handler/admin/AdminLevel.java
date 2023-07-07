@@ -9,7 +9,9 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.network.SystemMessageId;
+import l2jorion.game.network.serverpackets.EtcStatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
+import l2jorion.game.network.serverpackets.UserInfo;
 
 public class AdminLevel implements IAdminCommandHandler
 {
@@ -84,27 +86,26 @@ public class AdminLevel implements IAdminCommandHandler
 					{
 						targetPlayer.getStat().addExpAndSp(tXp - pXp, 0);
 					}
+					
+					if (targetPlayer instanceof L2PcInstance)
+					{
+						if (Config.CHECK_SKILLS_ON_ENTER && !Config.ALT_GAME_SKILL_LEARN)
+						{
+							((L2PcInstance) targetChar).checkAllowedSkills();
+						}
+						
+						((L2PcInstance) targetPlayer).refreshOverloaded();
+						((L2PcInstance) targetPlayer).refreshExpertisePenalty();
+						((L2PcInstance) targetPlayer).refreshMasteryPenality();
+						((L2PcInstance) targetPlayer).refreshMasteryWeapPenality();
+						targetPlayer.sendPacket(new EtcStatusUpdate((L2PcInstance) targetPlayer));
+						targetPlayer.sendPacket(new UserInfo((L2PcInstance) targetPlayer));
+					}
 				}
 				else
 				{
 					activeChar.sendMessage("You must specify level between 1 and " + ExperienceData.getInstance().getMaxLevel() + ".");
 					return false;
-				}
-				
-				if (targetChar instanceof L2PcInstance)
-				{
-					// ((L2PcInstance) targetChar).sendPacket(new EtcStatusUpdate(activeChar));
-					
-					if (Config.CHECK_SKILLS_ON_ENTER && !Config.ALT_GAME_SKILL_LEARN)
-					{
-						((L2PcInstance) targetChar).checkAllowedSkills();
-					}
-					
-					((L2PcInstance) targetChar).refreshOverloaded();
-					((L2PcInstance) targetChar).refreshExpertisePenalty();
-					((L2PcInstance) targetChar).refreshMasteryPenality();
-					((L2PcInstance) targetChar).refreshMasteryWeapPenality();
-					((L2PcInstance) targetChar).broadcastUserInfo();
 				}
 			}
 			catch (final NumberFormatException e)

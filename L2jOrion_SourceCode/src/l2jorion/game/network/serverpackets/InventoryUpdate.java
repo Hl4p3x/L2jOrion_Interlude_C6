@@ -25,14 +25,12 @@ import java.util.List;
 import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.model.ItemInfo;
-import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
-import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.templates.L2Item;
+import l2jorion.game.network.PacketServer;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class InventoryUpdate extends L2GameServerPacket
+public class InventoryUpdate extends PacketServer
 {
 	private static Logger LOG = LoggerFactory.getLogger(InventoryUpdate.class);
 	
@@ -115,16 +113,6 @@ public class InventoryUpdate extends L2GameServerPacket
 		}
 	}
 	
-	private static boolean isBodypart(L2Item item)
-	{
-		if (item.getBodyPart() == L2Item.SLOT_HEAD || item.getBodyPart() == L2Item.SLOT_FULL_ARMOR || item.getBodyPart() == L2Item.SLOT_CHEST || item.getBodyPart() == L2Item.SLOT_LEGS || item.getBodyPart() == L2Item.SLOT_GLOVES || item.getBodyPart() == L2Item.SLOT_FEET)
-		{
-			return true;
-		}
-		
-		return false;
-	}
-	
 	@Override
 	protected final void writeImpl()
 	{
@@ -133,8 +121,6 @@ public class InventoryUpdate extends L2GameServerPacket
 		writeH(count);
 		for (final ItemInfo item : _items)
 		{
-			L2PcInstance activeChar = L2World.getInstance().getPlayer(item.getOwnerId());
-			
 			writeH(item.getChange()); // Update type : 01-add, 02-modify,
 			writeH(item.getItem().getType1()); // Item Type 1 :
 			writeD(item.getObjectId()); // ObjectId
@@ -143,46 +129,8 @@ public class InventoryUpdate extends L2GameServerPacket
 			writeH(item.getItem().getType2()); // Item Type 2 : 00-weapon,
 			writeH(item.getCustomType1()); // Filler (always 0)
 			
-			// writeH(item.getEquipped()); // Equipped : 00-No, 01-yes
-			// writeD(item.getItem().getBodyPart()); // Slot : 0006-lr.ear,
-			
-			if (activeChar != null)
-			{
-				if (activeChar.getFakeArmorObjectId() > 0)
-				{
-					if (item.getObjectId() == activeChar.getFakeArmorObjectId())
-					{
-						writeH(0x01);
-					}
-					else
-					{
-						writeH(item.getEquipped());
-					}
-					
-					if (item.getObjectId() == activeChar.getFakeArmorObjectId())
-					{
-						writeD(item.getItem().isFakeArmor() ? L2Item.SLOT_ALLDRESS : item.getItem().getBodyPart());
-					}
-					else if (isBodypart(item.getItem()) && item.getEquipped() == 1 && activeChar.getFakeArmorObjectId() > 0)
-					{
-						writeD(99);
-					}
-					else
-					{
-						writeD(item.getItem().getBodyPart());
-					}
-				}
-				else
-				{
-					writeH(item.getEquipped());
-					writeD(item.getItem().getBodyPart());
-				}
-			}
-			else
-			{
-				writeH(item.getEquipped());
-				writeD(item.getItem().getBodyPart());
-			}
+			writeH(item.getEquipped()); // Equipped : 00-No, 01-yes
+			writeD(item.getItem().getBodyPart()); // Slot : 0006-lr.ear,
 			
 			writeH(item.getEnchant()); // Enchant level (pet level shown in
 			writeH(item.getCustomType2()); // Pet name exists or not shown

@@ -1,20 +1,16 @@
-# Rewritten by RayzoR
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
 
-
 qn = "112_WalkOfFate"
 
-# ~~~~~ npcId list: ~~~~~
+# npcId list:
 Livina            = 30572
 Karuda            = 32017
-# ~~~~~~~~~~~~~~~~~~~~~~~
 
-# ~~~~~~ itemId list: ~~~~~~
+# itemId list:
 EnchantD            = 956
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 class Quest (JQuest) : 
 

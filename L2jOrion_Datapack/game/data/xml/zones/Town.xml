@@ -63,7 +63,7 @@
 		<node X="13891" Y="13025" />
 		<node X="15542" Y="15230" />
 	</zone>
-	<zone name="Talking Island" id="11022" type="TownZone" shape="NPoly" minZ="-3800" maxZ="-3700">
+	<zone name="Talking Island" id="11022" type="TownZone" shape="NPoly" minZ="-3900" maxZ="-3500">
 		<stat name="townId" val="2" />
 		<stat name="taxById" val="1" />
 		<node X="-83739" Y="245733" />

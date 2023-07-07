@@ -22,7 +22,6 @@ package l2jorion.game.model.actor.instance;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.model.Location;
 import l2jorion.game.network.serverpackets.ActionFailed;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.util.random.Rnd;
@@ -48,24 +47,16 @@ public class L2TownPetInstance extends L2NpcInstance
 		
 		if (this != player.getTarget())
 		{
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
-			
-			// Send a Server->Client packet MyTargetSelected to the L2PcInstance player
-			// The color to display in the select window is White
-			final MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
-			player.sendPacket(my);
 		}
 		else
 		{
-			// Calculate the distance between the L2PcInstance and the L2NpcInstance
 			if (!canInteract(player))
 			{
-				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 			}
 		}
-		// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
+		
 		player.sendPacket(new ActionFailed());
 	}
 	

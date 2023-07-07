@@ -46,15 +46,15 @@ public class EffectTargetMe extends L2Effect
 				return;
 			}
 			
-			if (getEffected().getTarget() != getEffector())
+			if (getEffected().getTarget() == getEffector())
 			{
-				
-				getEffected().setTarget(getEffector());
-				final MyTargetSelected my = new MyTargetSelected(getEffector().getObjectId(), 0);
-				getEffected().sendPacket(my);
-				getEffected().getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
+				getEffected().getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, getEffector());
 			}
-			getEffected().getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, getEffector());
+			else
+			{
+				getEffected().setTarget(getEffector());
+				getEffected().sendPacket(new MyTargetSelected(getEffector().getObjectId(), 0));
+			}
 		}
 	}
 	

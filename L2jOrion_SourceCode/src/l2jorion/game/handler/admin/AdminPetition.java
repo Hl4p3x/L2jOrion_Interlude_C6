@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.handler.admin;
 
 import java.util.StringTokenizer;
@@ -28,10 +8,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * This class handles commands for GMs to respond to petitions.
- * @author Tempy
- */
 public class AdminPetition implements IAdminCommandHandler
 {
 	private static final String[] ADMIN_COMMANDS =
@@ -60,7 +36,9 @@ public class AdminPetition implements IAdminCommandHandler
 		final CommandEnum comm = CommandEnum.valueOf(st.nextToken());
 		
 		if (comm == null)
+		{
 			return false;
+		}
 		
 		switch (comm)
 		{
@@ -71,12 +49,10 @@ public class AdminPetition implements IAdminCommandHandler
 			}
 			case admin_view_petition:
 			{
-				
 				int petitionId = -1;
 				
 				if (st.hasMoreTokens())
 				{
-					
 					try
 					{
 						petitionId = Integer.parseInt(st.nextToken());
@@ -86,7 +62,6 @@ public class AdminPetition implements IAdminCommandHandler
 						activeChar.sendMessage("Usage: //admin_view_petition petition_id");
 						return false;
 					}
-					
 				}
 				
 				PetitionManager.getInstance().viewPetition(activeChar, petitionId);
@@ -95,7 +70,6 @@ public class AdminPetition implements IAdminCommandHandler
 			}
 			case admin_accept_petition:
 			{
-				
 				if (PetitionManager.getInstance().isPlayerInConsultation(activeChar))
 				{
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.ONLY_ONE_ACTIVE_PETITION_AT_TIME));
@@ -106,7 +80,6 @@ public class AdminPetition implements IAdminCommandHandler
 				
 				if (st.hasMoreTokens())
 				{
-					
 					try
 					{
 						petitionId = Integer.parseInt(st.nextToken());
@@ -116,7 +89,6 @@ public class AdminPetition implements IAdminCommandHandler
 						activeChar.sendMessage("Usage: //admin_accept_petition petition_id");
 						return false;
 					}
-					
 				}
 				
 				if (PetitionManager.getInstance().isPetitionInProcess(petitionId))
@@ -130,16 +102,15 @@ public class AdminPetition implements IAdminCommandHandler
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.NOT_UNDER_PETITION_CONSULTATION));
 					return false;
 				}
+				
 				return true;
 			}
 			case admin_reject_petition:
 			{
-				
 				int petitionId = -1;
 				
 				if (st.hasMoreTokens())
 				{
-					
 					try
 					{
 						petitionId = Integer.parseInt(st.nextToken());
@@ -149,7 +120,6 @@ public class AdminPetition implements IAdminCommandHandler
 						activeChar.sendMessage("Usage: //admin_reject_petition petition_id");
 						return false;
 					}
-					
 				}
 				
 				if (!PetitionManager.getInstance().rejectPetition(activeChar, petitionId))
@@ -157,8 +127,8 @@ public class AdminPetition implements IAdminCommandHandler
 					activeChar.sendPacket(new SystemMessage(SystemMessageId.FAILED_CANCEL_PETITION_TRY_LATER));
 					return false;
 				}
-				return true;
 				
+				return true;
 			}
 			case admin_reset_petitions:
 			{
@@ -180,5 +150,4 @@ public class AdminPetition implements IAdminCommandHandler
 	{
 		return ADMIN_COMMANDS;
 	}
-	
 }

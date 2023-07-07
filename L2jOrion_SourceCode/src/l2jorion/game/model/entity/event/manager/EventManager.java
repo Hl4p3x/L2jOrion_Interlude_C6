@@ -28,12 +28,15 @@ import java.util.Properties;
 import l2jorion.game.model.entity.event.CTF;
 import l2jorion.game.model.entity.event.DM;
 import l2jorion.game.model.entity.event.TvT;
+import l2jorion.game.model.entity.event.dungeon.Dungeon;
+import l2jorion.game.model.entity.event.partyzone.PartyZone;
+import l2jorion.game.model.entity.event.tournament.Tournament;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
 public class EventManager
 {
-	protected static final Logger LOG = LoggerFactory.getLogger(EventManager.class.getName());
+	protected static final Logger LOG = LoggerFactory.getLogger(EventManager.class);
 	
 	private final static String EVENT_MANAGER_CONFIGURATION_FILE = "./config/events/eventmanager.ini";
 	
@@ -45,6 +48,15 @@ public class EventManager
 	
 	public static boolean DM_EVENT_ENABLED;
 	public static ArrayList<String> DM_TIMES_LIST;
+	
+	public static boolean TM_EVENT_ENABLED;
+	public static ArrayList<String> TM_TIMES_LIST;
+	
+	public static boolean DG_EVENT_ENABLED;
+	public static ArrayList<String> DG_TIMES_LIST;
+	
+	public static boolean PZ_EVENT_ENABLED;
+	public static ArrayList<String> PZ_TIMES_LIST;
 	
 	public static boolean POLL_ENABLED;
 	
@@ -100,6 +112,30 @@ public class EventManager
 				DM_TIMES_LIST.add(time);
 			}
 			
+			TM_EVENT_ENABLED = Boolean.parseBoolean(eventSettings.getProperty("TournamentEventEnabled", "false"));
+			TM_TIMES_LIST = new ArrayList<>();
+			propertySplit = eventSettings.getProperty("TournamentStartTime", "").split(";");
+			for (String time : propertySplit)
+			{
+				TM_TIMES_LIST.add(time);
+			}
+			
+			DG_EVENT_ENABLED = Boolean.parseBoolean(eventSettings.getProperty("DungeonEventEnabled", "false"));
+			DG_TIMES_LIST = new ArrayList<>();
+			propertySplit = eventSettings.getProperty("DungeonStartTime", "").split(";");
+			for (String time : propertySplit)
+			{
+				DG_TIMES_LIST.add(time);
+			}
+			
+			PZ_EVENT_ENABLED = Boolean.parseBoolean(eventSettings.getProperty("PartyZoneEventEnabled", "false"));
+			PZ_TIMES_LIST = new ArrayList<>();
+			propertySplit = eventSettings.getProperty("PartyZoneStartTime", "").split(";");
+			for (String time : propertySplit)
+			{
+				PZ_TIMES_LIST.add(time);
+			}
+			
 			POLL_ENABLED = Boolean.parseBoolean(eventSettings.getProperty("PollEnabled", "false"));
 		}
 		catch (Exception e)
@@ -139,6 +175,21 @@ public class EventManager
 		if (DM_EVENT_ENABLED)
 		{
 			registerDM();
+		}
+		
+		if (TM_EVENT_ENABLED)
+		{
+			registerTM();
+		}
+		
+		if (DG_EVENT_ENABLED)
+		{
+			registerDG();
+		}
+		
+		if (PZ_EVENT_ENABLED)
+		{
+			registerPZ();
 		}
 	}
 	
@@ -199,6 +250,42 @@ public class EventManager
 		for (String time : DM_TIMES_LIST)
 		{
 			DM newInstance = DM.getNewInstance();
+			newInstance.setEventStartTime(time);
+			EventsGlobalTask.getInstance().registerNewEventTask(newInstance);
+		}
+	}
+	
+	public static void registerTM()
+	{
+		EventsGlobalTask.getInstance().clearEventTasksByEventName(Tournament.get_eventName());
+		
+		for (String time : TM_TIMES_LIST)
+		{
+			Tournament newInstance = Tournament.getNewInstance();
+			newInstance.setEventStartTime(time);
+			EventsGlobalTask.getInstance().registerNewEventTask(newInstance);
+		}
+	}
+	
+	public static void registerDG()
+	{
+		EventsGlobalTask.getInstance().clearEventTasksByEventName(Dungeon.get_eventName());
+		
+		for (String time : DG_TIMES_LIST)
+		{
+			Dungeon newInstance = Dungeon.getNewInstance();
+			newInstance.setEventStartTime(time);
+			EventsGlobalTask.getInstance().registerNewEventTask(newInstance);
+		}
+	}
+	
+	public static void registerPZ()
+	{
+		EventsGlobalTask.getInstance().clearEventTasksByEventName(PartyZone.get_eventName());
+		
+		for (String time : PZ_TIMES_LIST)
+		{
+			PartyZone newInstance = PartyZone.getNewInstance();
 			newInstance.setEventStartTime(time);
 			EventsGlobalTask.getInstance().registerNewEventTask(newInstance);
 		}

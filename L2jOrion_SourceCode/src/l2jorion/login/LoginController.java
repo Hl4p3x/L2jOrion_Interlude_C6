@@ -34,22 +34,22 @@ import java.util.Map;
 import javax.crypto.Cipher;
 
 import javolution.util.FastCollection.Record;
+import javolution.util.FastList;
+import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.crypt.Base64;
 import l2jorion.crypt.ScrambledKeyPair;
 import l2jorion.game.datatables.GameServerTable;
 import l2jorion.game.datatables.GameServerTable.GameServerInfo;
-import l2jorion.login.network.gameserverpackets.ServerStatus;
-import l2jorion.login.network.serverpackets.LoginFail.LoginFailReason;
 import l2jorion.log.Log;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
+import l2jorion.login.network.gameserverpackets.ServerStatus;
+import l2jorion.login.network.serverpackets.LoginFail.LoginFailReason;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.Util;
 import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.util.random.Rnd;
-import javolution.util.FastList;
-import javolution.util.FastMap;
 
 public class LoginController
 {
@@ -58,113 +58,122 @@ public class LoginController
 		@Override
 		public void run()
 		{
-			for(;;)
+			for (;;)
 			{
 				long now = System.currentTimeMillis();
-				if(_stopNow) break;
-				for(final L2LoginClient cl : _clients) try
+				if (_stopNow)
 				{
-					if (cl!=null && now - cl.getConnectionStartTime() > Config.SESSION_TTL)
-					{
-						LOG.info("Closing "+cl.getIntetAddress()+" because idle time too long");
-						cl.close(LoginFailReason.REASON_TEMP_PASS_EXPIRED);
-					}
-					else
-					{
-						_clients.remove(cl);
-					}
+					break;
 				}
-				catch(Exception e)
+				for (final L2LoginClient cl : _clients)
 				{
-					if(Config.ENABLE_ALL_EXCEPTIONS)
-						e.printStackTrace();
-					
+					try
+					{
+						if (cl != null && now - cl.getConnectionStartTime() > Config.SESSION_TTL)
+						{
+							LOG.info("Closing " + cl.getIntetAddress() + " because idle time too long.");
+							cl.close(LoginFailReason.REASON_TEMP_PASS_EXPIRED);
+						}
+						else
+						{
+							_clients.remove(cl);
+						}
+					}
+					catch (Exception e)
+					{
+						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
+							e.printStackTrace();
+						}
+						
+					}
 				}
 				try
-				{ 
+				{
 					Thread.sleep(2500);
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
-					if(Config.ENABLE_ALL_EXCEPTIONS)
+					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 				}
 			}
 		}
 	}
+	
 	protected static final Logger LOG = LoggerFactory.getLogger(LoginController.class);
-
+	
 	private static LoginController _instance;
 	
 	/** Time before kicking the client if he didnt logged yet */
 	private final static int LOGIN_TIMEOUT = 60 * 1000;
-
+	
 	/** Clients that are on the LS but arent assocated with a account yet */
 	protected FastList<L2LoginClient> _clients = new FastList<>();
-
+	
 	/** Authed Clients on LoginServer */
 	protected FastMap<String, L2LoginClient> _loginServerClients = new FastMap<String, L2LoginClient>().shared();
-
+	
 	private Map<InetAddress, BanInfo> _bannedIps = new FastMap<InetAddress, BanInfo>().shared();
-
+	
 	private Map<InetAddress, FailedLoginAttempt> _hackProtection;
 	protected ScrambledKeyPair[] _keyPairs;
-
+	
 	protected byte[][] _blowfishKeys;
 	private static final int BLOWFISH_KEYS = 20;
-
+	
 	public static void load() throws GeneralSecurityException
 	{
-		if(_instance == null)
+		if (_instance == null)
 		{
 			_instance = new LoginController();
 		}
 		else
+		{
 			throw new IllegalStateException("LoginController can only be loaded a single time.");
+		}
 	}
-
+	
 	public static LoginController getInstance()
 	{
 		return _instance;
 	}
-
+	
 	private LoginController() throws GeneralSecurityException
 	{
 		Util.printSection("LoginController");
-
+		
 		_hackProtection = new FastMap<>();
-
+		
 		_keyPairs = new ScrambledKeyPair[10];
 		KeyPairGenerator keygen = null;
-
+		
 		keygen = KeyPairGenerator.getInstance("RSA");
 		RSAKeyGenParameterSpec spec = new RSAKeyGenParameterSpec(1024, RSAKeyGenParameterSpec.F4);
 		keygen.initialize(spec);
-
-		//generate the initial set of keys
-		for(int i = 0; i < 10; i++)
+		
+		// generate the initial set of keys
+		for (int i = 0; i < 10; i++)
 		{
 			_keyPairs[i] = new ScrambledKeyPair(keygen.generateKeyPair());
 		}
-
+		
 		LOG.info("Cached 10 KeyPairs for RSA communication");
-
+		
 		testCipher((RSAPrivateKey) _keyPairs[0]._pair.getPrivate());
-
+		
 		// Store keys for blowfish communication
 		generateBlowFishKeys();
-
-		spec = null;
-		keygen = null;
+		
 		new ConnectionChecker().start();
 	}
-
+	
 	/**
-	 * This is mostly to force the initialization of the Crypto Implementation, avoiding it being done on runtime when
-	 * its first needed.<BR>
+	 * This is mostly to force the initialization of the Crypto Implementation, avoiding it being done on runtime when its first needed.<BR>
 	 * In short it avoids the worst-case execution time on runtime by doing it on loading.
-	 * 
 	 * @param key Any private RSA Key just for testing purposes.
 	 * @throws GeneralSecurityException if a underlying exception was thrown by the Cipher
 	 */
@@ -175,7 +184,7 @@ public class LoginController
 		rsaCipher.init(Cipher.DECRYPT_MODE, key);
 		rsaCipher = null;
 	}
-
+	
 	protected boolean _stopNow = false;
 	
 	public void shutdown()
@@ -183,29 +192,33 @@ public class LoginController
 		_stopNow = true;
 		try
 		{
-		Thread.sleep(10000);
-		} catch(Exception e)
+			Thread.sleep(10000);
+		}
+		catch (Exception e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 		}
 	}
-
+	
 	private void generateBlowFishKeys()
 	{
 		_blowfishKeys = new byte[BLOWFISH_KEYS][16];
-
-		for(int i = 0; i < BLOWFISH_KEYS; i++)
+		
+		for (int i = 0; i < BLOWFISH_KEYS; i++)
 		{
-			for(int j = 0; j < _blowfishKeys[i].length; j++)
+			for (int j = 0; j < _blowfishKeys[i].length; j++)
 			{
 				_blowfishKeys[i][j] = (byte) (Rnd.nextInt(255) + 1);
 			}
 		}
-		LOG.info("Stored " + _blowfishKeys.length + " keys for Blowfish communication");
+		
+		LOG.info("Stored " + _blowfishKeys.length + " keys for Blowfish communication.");
 	}
-
+	
 	/**
 	 * @return Returns a random key
 	 */
@@ -213,20 +226,25 @@ public class LoginController
 	{
 		return _blowfishKeys[(int) (Math.random() * BLOWFISH_KEYS)];
 	}
-
+	
 	public void addLoginClient(L2LoginClient client)
 	{
 		if (_clients.size() >= Config.MAX_LOGINSESSIONS)
 		{
-			for (L2LoginClient cl : _clients) try
+			for (L2LoginClient cl : _clients)
 			{
-				cl.close(LoginFailReason.REASON_DUAL_BOX);
-			}
-			catch(Exception e)
-			{
-				if(Config.ENABLE_ALL_EXCEPTIONS)
-					e.printStackTrace();
-				
+				try
+				{
+					cl.close(LoginFailReason.REASON_DUAL_BOX);
+				}
+				catch (Exception e)
+				{
+					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
+						e.printStackTrace();
+					}
+					
+				}
 			}
 		}
 		synchronized (_clients)
@@ -234,56 +252,65 @@ public class LoginController
 			_clients.add(client);
 		}
 	}
-
+	
 	public void removeLoginClient(L2LoginClient client)
 	{
-		if(_clients.contains(client))
-		synchronized (_clients)
+		if (_clients.contains(client))
 		{
-		try
-		{
-			_clients.remove(client);
-		}
-		catch(Exception e)
-		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
-				e.printStackTrace();
-			
-		}
+			synchronized (_clients)
+			{
+				try
+				{
+					_clients.remove(client);
+				}
+				catch (Exception e)
+				{
+					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
+						e.printStackTrace();
+					}
+					
+				}
+			}
 		}
 	}
-
+	
 	public SessionKey assignSessionKeyToClient(String account, L2LoginClient client)
 	{
 		SessionKey key;
-
+		
 		key = new SessionKey(Rnd.nextInt(), Rnd.nextInt(), Rnd.nextInt(), Rnd.nextInt());
 		_loginServerClients.put(account, client);
 		return key;
 	}
-
+	
 	public void removeAuthedLoginClient(String account)
 	{
-		try {
+		try
+		{
 			_loginServerClients.remove(account);
 			
-		} catch(Exception e) {
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+		}
+		catch (Exception e)
+		{
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 		}
 	}
-
+	
 	public boolean isAccountInLoginServer(String account)
 	{
 		return _loginServerClients.containsKey(account);
 	}
-
+	
 	public L2LoginClient getAuthedClient(String account)
 	{
 		return _loginServerClients.get(account);
 	}
-
+	
 	public static enum AuthLoginResult
 	{
 		INVALID_PASSWORD,
@@ -310,7 +337,7 @@ public class LoginController
 				// dont allow 2 simultaneous login
 				synchronized (_loginServerClients)
 				{
-					if(!_loginServerClients.containsKey(account))
+					if (!_loginServerClients.containsKey(account))
 					{
 						_loginServerClients.put(account, client);
 						ret = AuthLoginResult.AUTH_SUCCESS;
@@ -323,32 +350,30 @@ public class LoginController
 		}
 		else
 		{
-			if(client.getAccessLevel() < 0)
+			if (client.getAccessLevel() < 0)
 			{
 				ret = AuthLoginResult.ACCOUNT_BANNED;
 			}
 		}
 		return ret;
 	}
-
+	
 	/**
 	 * Adds the address to the ban list of the login server, with the given duration.
-	 * 
 	 * @param address The Address to be banned.
 	 * @param expiration Timestamp in miliseconds when this ban expires
 	 * @throws UnknownHostException if the address is invalid.
 	 */
 	public void addBanForAddress(String address, long expiration) throws UnknownHostException
 	{
-
+		
 		InetAddress netAddress = InetAddress.getByName(address);
 		_bannedIps.put(netAddress, new BanInfo(netAddress, expiration));
 		netAddress = null;
 	}
-
+	
 	/**
 	 * Adds the address to the ban list of the login server, with the given duration.
-	 * 
 	 * @param address The Address to be banned.
 	 * @param duration is miliseconds
 	 */
@@ -356,13 +381,13 @@ public class LoginController
 	{
 		_bannedIps.put(address, new BanInfo(address, System.currentTimeMillis() + duration));
 	}
-
+	
 	public boolean isBannedAddress(InetAddress address)
 	{
 		BanInfo bi = _bannedIps.get(address);
-		if(bi != null)
+		if (bi != null)
 		{
-			if(bi.hasExpired())
+			if (bi.hasExpired())
 			{
 				_bannedIps.remove(address);
 				return false;
@@ -371,15 +396,14 @@ public class LoginController
 		}
 		return false;
 	}
-
+	
 	public Map<InetAddress, BanInfo> getBannedIps()
 	{
 		return _bannedIps;
 	}
-
+	
 	/**
 	 * Remove the specified address from the ban list
-	 * 
 	 * @param address The address to be removed from the ban list
 	 * @return true if the ban was removed, false if there was no ban for this ip
 	 */
@@ -387,10 +411,9 @@ public class LoginController
 	{
 		return _bannedIps.remove(address) != null;
 	}
-
+	
 	/**
 	 * Remove the specified address from the ban list
-	 * 
 	 * @param address The address to be removed from the ban list
 	 * @return true if the ban was removed, false if there was no ban for this ip or the address was invalid.
 	 */
@@ -400,10 +423,12 @@ public class LoginController
 		{
 			return this.removeBanForAddress(InetAddress.getByName(address));
 		}
-		catch(UnknownHostException e)
+		catch (UnknownHostException e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			return false;
 		}
@@ -413,8 +438,10 @@ public class LoginController
 	{
 		L2LoginClient client = _loginServerClients.get(account);
 		
-		if(client != null)
+		if (client != null)
+		{
 			return client.getSessionKey();
+		}
 		
 		return null;
 	}
@@ -423,79 +450,86 @@ public class LoginController
 	{
 		GameServerInfo gsi = GameServerTable.getInstance().getRegisteredGameServerById(serverId);
 		
-		if(gsi != null && gsi.isAuthed())
+		if (gsi != null && gsi.isAuthed())
+		{
 			return gsi.getCurrentPlayerCount();
+		}
 		
 		return 0;
 	}
-
+	
 	public boolean isAccountInAnyGameServer(String account)
 	{
 		Collection<GameServerInfo> serverList = GameServerTable.getInstance().getRegisteredGameServers().values();
 		
-		for(GameServerInfo gsi : serverList)
+		for (GameServerInfo gsi : serverList)
 		{
 			GameServerThread gst = gsi.getGameServerThread();
 			
 			if (gst != null && gst.hasAccountOnGameServer(account))
+			{
 				return true;
+			}
 		}
 		return false;
 	}
-
+	
 	public GameServerInfo getAccountOnGameServer(String account)
 	{
 		Collection<GameServerInfo> serverList = GameServerTable.getInstance().getRegisteredGameServers().values();
 		
-		for(GameServerInfo gsi : serverList)
+		for (GameServerInfo gsi : serverList)
 		{
 			GameServerThread gst = gsi.getGameServerThread();
 			
-			if(gst != null && gst.hasAccountOnGameServer(account))
+			if (gst != null && gst.hasAccountOnGameServer(account))
+			{
 				return gsi;
-
+			}
 		}
 		return null;
 	}
-
+	
 	public int getTotalOnlinePlayerCount()
 	{
 		int total = 0;
 		Collection<GameServerInfo> serverList = GameServerTable.getInstance().getRegisteredGameServers().values();
 		
-		for(GameServerInfo gsi : serverList)
+		for (GameServerInfo gsi : serverList)
 		{
-			if(gsi.isAuthed())
+			if (gsi.isAuthed())
 			{
 				total += gsi.getCurrentPlayerCount();
 			}
 		}
 		return total;
 	}
-
+	
 	public int getMaxAllowedOnlinePlayers(int id)
 	{
 		GameServerInfo gsi = GameServerTable.getInstance().getRegisteredGameServerById(id);
-
-		if(gsi != null)
+		
+		if (gsi != null)
+		{
 			return gsi.getMaxPlayers();
+		}
 		
 		return 0;
 	}
 	
 	/**
-	 * @param client 
-	 * @param serverId 
+	 * @param client
+	 * @param serverId
 	 * @return
 	 */
 	public boolean isLoginPossible(L2LoginClient client, int serverId)
 	{
 		GameServerInfo gsi = GameServerTable.getInstance().getRegisteredGameServerById(serverId);
 		int access = client.getAccessLevel();
-		if(gsi != null && gsi.isAuthed())
+		if (gsi != null && gsi.isAuthed())
 		{
 			boolean loginOk = gsi.getCurrentPlayerCount() < gsi.getMaxPlayers() && gsi.getStatus() != ServerStatus.STATUS_GM_ONLY || access >= 100;
-			if(loginOk && client.getLastServer() != serverId)
+			if (loginOk && client.getLastServer() != serverId)
 			{
 				Connection con = null;
 				
@@ -511,10 +545,12 @@ public class LoginController
 					statement.close();
 					statement = null;
 				}
-				catch(Exception e)
+				catch (Exception e)
 				{
-					if(Config.ENABLE_ALL_EXCEPTIONS)
+					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						e.printStackTrace();
+					}
 					
 					LOG.warn("Could not set lastServer: " + e);
 				}
@@ -528,36 +564,36 @@ public class LoginController
 		}
 		return false;
 	}
-
+	
 	public void setAccountAccessLevel(String account, int banLevel)
 	{
 		Connection con = null;
 		try
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
-
+			
 			String stmt = "UPDATE accounts SET access_level=? WHERE login=?";
 			PreparedStatement statement = con.prepareStatement(stmt);
 			statement.setInt(1, banLevel);
 			statement.setString(2, account);
 			statement.executeUpdate();
 			statement.close();
-			statement = null;
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("Could not set accessLevel: " + e);
 		}
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
-
+	
 	public boolean isGM(String user)
 	{
 		boolean ok = false;
@@ -568,26 +604,26 @@ public class LoginController
 			PreparedStatement statement = con.prepareStatement("SELECT access_level FROM accounts WHERE login=?");
 			statement.setString(1, user);
 			ResultSet rset = statement.executeQuery();
-
-			if(rset.next())
+			
+			if (rset.next())
 			{
 				int accessLevel = rset.getInt(1);
-
-				if(accessLevel >= 100)
+				
+				if (accessLevel >= 100)
 				{
 					ok = true;
 				}
 			}
-
+			
 			rset.close();
 			statement.close();
-			statement = null;
-			rset = null;
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("could not check gm state:" + e);
 			ok = false;
@@ -595,30 +631,26 @@ public class LoginController
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 		return ok;
 	}
-
+	
 	/**
 	 * <p>
-	 * This method returns one of the cached {@link ScrambledKeyPair ScrambledKeyPairs} for communication with Login
-	 * Clients.
+	 * This method returns one of the cached {@link ScrambledKeyPair ScrambledKeyPairs} for communication with Login Clients.
 	 * </p>
-	 * 
 	 * @return a scrambled keypair
 	 */
 	public ScrambledKeyPair getScrambledRSAKeyPair()
 	{
 		return _keyPairs[Rnd.nextInt(10)];
 	}
-
+	
 	/**
 	 * user name is not case sensitive any more
-	 * 
 	 * @param user
 	 * @param password
-	 * @param client 
+	 * @param client
 	 * @return
 	 */
 	public synchronized boolean loginValid(String user, String password, L2LoginClient client)
@@ -630,7 +662,9 @@ public class LoginController
 		
 		// player disconnected meanwhile
 		if (address == null)
+		{
 			return false;
+		}
 		
 		Connection con = null;
 		try
@@ -667,10 +701,9 @@ public class LoginController
 			
 			rset.close();
 			statement.close();
-			rset = null;
 			statement = null;
 			
-			// if account doesnt exists
+			// If account doesnt exists
 			if (expected == null)
 			{
 				if (Config.AUTO_CREATE_ACCOUNTS)
@@ -685,41 +718,36 @@ public class LoginController
 						statement.setString(5, address.getHostAddress());
 						statement.execute();
 						statement.close();
-						statement = null;
-						//LOG.info("Created new account : " + user + " on IP : " + address.getHostAddress());
+						
 						String text = "Account: " + user + " IP: " + address.getHostAddress();
 						Log.add(text, "NewAccounts");
 						CloseUtil.close(con);
-						con = null;
 						return true;
-
 					}
+					
 					LOG.warn("Invalid username creation/use attempt: " + user);
 					CloseUtil.close(con);
-					con = null;
 					return false;
 				}
 				
-				LOG.warn("Account missing for user "+user+" IP: "+address.getHostAddress());
+				LOG.warn("Account missing for user " + user + " IP: " + address.getHostAddress());
 				CloseUtil.close(con);
-				con = null;
 				return false;
 			}
 			
-			// is this account banned?
+			// Is this account banned?
 			if (access < 0)
 			{
 				client.setAccessLevel(access);
 				CloseUtil.close(con);
-				con = null;
 				return false;
 			}
 			
-			// check password hash
+			// Check password hash
 			ok = true;
 			for (int i = 0; i < expected.length; i++)
 			{
-				if(hash[i] != expected[i])
+				if (hash[i] != expected[i])
 				{
 					ok = false;
 					break;
@@ -729,6 +757,7 @@ public class LoginController
 			PreparedStatement preparedstatement1 = con.prepareStatement(new StringBuilder().append(new StringBuilder().append("SELECT * FROM accounts WHERE login='")).append(user).append("';".toString()).toString());
 			ResultSet resultset1 = preparedstatement1.executeQuery();
 			resultset1.next();
+			
 			if ((!address.getHostAddress().equalsIgnoreCase(resultset1.getString("lastIP"))) && (resultset1.getBoolean("IPBlock")))
 			{
 				ok = false;
@@ -745,13 +774,14 @@ public class LoginController
 				statement.setString(3, user);
 				statement.execute();
 				statement.close();
-				statement = null;
 			}
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("Could not check password:" + e);
 			ok = false;
@@ -759,17 +789,16 @@ public class LoginController
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
-
-		if(!ok)
+		
+		if (!ok)
 		{
 			Log.add("'" + user + "' " + address.getHostAddress(), "logins_ip_fails");
-
+			
 			FailedLoginAttempt failedAttempt = _hackProtection.get(address);
-
+			
 			int failedCount;
-			if(failedAttempt == null)
+			if (failedAttempt == null)
 			{
 				_hackProtection.put(address, new FailedLoginAttempt(address, password));
 				failedCount = 1;
@@ -779,30 +808,26 @@ public class LoginController
 				failedAttempt.increaseCounter(password);
 				failedCount = failedAttempt.getCount();
 			}
-
+			
 			if (failedCount >= Config.LOGIN_TRY_BEFORE_BAN)
 			{
 				LOG.info("Banning '" + address.getHostAddress() + "' for " + Config.LOGIN_BLOCK_AFTER_BAN + " seconds due to " + failedCount + " invalid user/pass attempts");
 				this.addBanForAddress(address, Config.LOGIN_BLOCK_AFTER_BAN * 1000);
 			}
-
-			failedAttempt = null;
 		}
 		else
 		{
 			_hackProtection.remove(address);
 			Log.add("'" + user + "' " + address.getHostAddress(), "logins_ip");
 		}
-
-		address = null;
-
+		
 		return ok;
 	}
-
+	
 	public boolean loginBanned(String user)
 	{
 		boolean ok = false;
-
+		
 		Connection con = null;
 		try
 		{
@@ -810,28 +835,29 @@ public class LoginController
 			PreparedStatement statement = con.prepareStatement("SELECT access_level FROM accounts WHERE login=?");
 			statement.setString(1, user);
 			ResultSet rset = statement.executeQuery();
-
-			if(rset.next())
+			
+			if (rset.next())
 			{
 				int accessLevel = rset.getInt(1);
-
-				if(accessLevel < 0)
+				
+				if (accessLevel < 0)
 				{
 					ok = true;
 				}
 			}
-
+			
 			rset.close();
 			statement.close();
 			rset = null;
 			statement = null;
 		}
-		catch(Exception e)
+		catch (Exception e)
 		{
-			if(Config.ENABLE_ALL_EXCEPTIONS)
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
-			// digest algo not found ??
 			// out of bounds should not be possible
 			LOG.warn("could not check ban state:" + e);
 			ok = false;
@@ -839,33 +865,32 @@ public class LoginController
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
-
+		
 		return ok;
 	}
-
+	
 	class FailedLoginAttempt
 	{
-		//private InetAddress _ipAddress;
+		// private InetAddress _ipAddress;
 		private int _count;
 		private long _lastAttempTime;
 		private String _lastPassword;
-
+		
 		public FailedLoginAttempt(InetAddress address, String lastPassword)
 		{
-			//_ipAddress = address;
+			// _ipAddress = address;
 			_count = 1;
 			_lastAttempTime = System.currentTimeMillis();
 			_lastPassword = lastPassword;
 		}
-
+		
 		public void increaseCounter(String password)
 		{
-			if(!_lastPassword.equals(password))
+			if (!_lastPassword.equals(password))
 			{
 				// check if theres a long time since last wrong try
-				if(System.currentTimeMillis() - _lastAttempTime < 300 * 1000)
+				if (System.currentTimeMillis() - _lastAttempTime < 300 * 1000)
 				{
 					_count++;
 				}
@@ -873,13 +898,13 @@ public class LoginController
 				{
 					// restart the status
 					_count = 1;
-
+					
 				}
 				_lastPassword = password;
 				_lastAttempTime = System.currentTimeMillis();
 			}
 			else
-			//trying the same password is not brute force
+			// trying the same password is not brute force
 			{
 				_lastAttempTime = System.currentTimeMillis();
 			}
@@ -919,14 +944,14 @@ public class LoginController
 		@Override
 		public void run()
 		{
-			for(;;)
+			for (;;)
 			{
 				synchronized (_clients)
 				{
-					for(Record e = _clients.head(), end = _clients.tail(); (e = e.getNext()) != end;)
+					for (Record e = _clients.head(), end = _clients.tail(); (e = e.getNext()) != end;)
 					{
 						L2LoginClient client = _clients.valueOf(e);
-						if(client.getConnectionStartTime() + LOGIN_TIMEOUT >= System.currentTimeMillis())
+						if (client.getConnectionStartTime() + LOGIN_TIMEOUT >= System.currentTimeMillis())
 						{
 							client.close(LoginFailReason.REASON_ACCESS_FAILED);
 						}
@@ -935,10 +960,10 @@ public class LoginController
 				
 				synchronized (_loginServerClients)
 				{
-					for(FastMap.Entry<String, L2LoginClient> e = _loginServerClients.head(), end = _loginServerClients.tail(); (e = e.getNext()) != end;)
+					for (FastMap.Entry<String, L2LoginClient> e = _loginServerClients.head(), end = _loginServerClients.tail(); (e = e.getNext()) != end;)
 					{
 						L2LoginClient client = e.getValue();
-						if(client.getConnectionStartTime() + LOGIN_TIMEOUT >= System.currentTimeMillis())
+						if (client.getConnectionStartTime() + LOGIN_TIMEOUT >= System.currentTimeMillis())
 						{
 							client.close(LoginFailReason.REASON_ACCESS_FAILED);
 						}
@@ -949,7 +974,7 @@ public class LoginController
 				{
 					Thread.sleep(2 * LOGIN_TIMEOUT);
 				}
-				catch(InterruptedException e)
+				catch (InterruptedException e)
 				{
 					e.printStackTrace();
 				}

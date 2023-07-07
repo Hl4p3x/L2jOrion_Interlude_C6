@@ -236,7 +236,7 @@ public abstract class L2Effect
 	{
 		if (_currentFuture != null)
 		{
-			if (newfirsttime > _period) // sanity check
+			if (newfirsttime > _period)
 			{
 				newfirsttime = _period;
 			}
@@ -250,6 +250,35 @@ public abstract class L2Effect
 			final int duration = _period - _periodfirsttime;
 			
 			_currentTask = new EffectTask(duration * 1000, -1);
+			
+			if (Config.PREMIUM_BUFF_MULTIPLIER > 1 || Config.RON_CUSTOM)
+			{
+				if (getEffected() instanceof L2PcInstance)
+				{
+					L2PcInstance player = (L2PcInstance) getEffected();
+					
+					float multipier = Config.PREMIUM_BUFF_MULTIPLIER;
+					
+					if (Config.RON_CUSTOM)
+					{
+						if (player.getHourBuffs() == 1 || player.getPremiumService() >= 2)
+						{
+							multipier = 4;
+						}
+					}
+					
+					if (Config.ENABLE_MODIFY_SKILL_DURATION && (player.getPremiumService() >= 1 || player.getHourBuffs() == 1))
+					{
+						if (Config.SKILL_DURATION_LIST.containsKey(_skill.getId()))
+						{
+							int time = (int) (duration * 1000 * multipier);
+							_currentFuture = ThreadPoolManager.getInstance().scheduleEffect(_currentTask, time);
+							return;
+						}
+					}
+				}
+			}
+			
 			_currentFuture = ThreadPoolManager.getInstance().scheduleEffect(_currentTask, duration * 1000);
 		}
 	}
@@ -486,12 +515,31 @@ public abstract class L2Effect
 				
 				if (_period > 0)
 				{
-					if (Config.ENABLE_MODIFY_SKILL_DURATION && Config.PREMIUM_BUFF_MULTIPLIER > 1 && getEffected().getPremiumService() == 1)
+					if (Config.PREMIUM_BUFF_MULTIPLIER > 1 || Config.RON_CUSTOM)
 					{
-						if (Config.SKILL_DURATION_LIST.containsKey(_skill.getId()))
+						if (getEffected() instanceof L2PcInstance)
 						{
-							startEffectTask((int) (_period * 1000 * Config.PREMIUM_BUFF_MULTIPLIER));
-							return;
+							L2PcInstance player = (L2PcInstance) getEffected();
+							
+							float multipier = Config.PREMIUM_BUFF_MULTIPLIER;
+							
+							if (Config.RON_CUSTOM)
+							{
+								if (player.getHourBuffs() == 1 || player.getPremiumService() >= 2)
+								{
+									multipier = 4;
+								}
+							}
+							
+							if (Config.ENABLE_MODIFY_SKILL_DURATION && player.getPremiumService() >= 1 && !player.isEnteringToWorld() || player.getHourBuffs() == 1)
+							{
+								if (Config.SKILL_DURATION_LIST.containsKey(_skill.getId()))
+								{
+									int time = (int) (_period * 1000 * multipier);
+									startEffectTask(time);
+									return;
+								}
+							}
 						}
 					}
 					
@@ -722,10 +770,4 @@ public abstract class L2Effect
 	{
 		return _template.showIcon;
 	}
-	
-	public EffectState get_state()
-	{
-		return _state;
-	}
-	
 }

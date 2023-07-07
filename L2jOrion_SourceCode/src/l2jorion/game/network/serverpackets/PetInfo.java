@@ -23,8 +23,9 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2SummonInstance;
+import l2jorion.game.network.PacketServer;
 
-public class PetInfo extends L2GameServerPacket
+public class PetInfo extends PacketServer
 {
 	private static final String _S__CA_PETINFO = "[S] b1 PetInfo";
 	
@@ -78,13 +79,16 @@ public class PetInfo extends L2GameServerPacket
 		writeD(_summon.getSummonType());
 		writeD(_summon.getObjectId());
 		writeD(_summon.getTemplate().idTemplate + 1000000);
+		
 		writeD(0); // 1=attackable
 		
 		writeD(_x);
 		writeD(_y);
 		writeD(_z);
 		writeD(_heading);
+		
 		writeD(0);
+		
 		writeD(_mAtkSpd);
 		writeD(_pAtkSpd);
 		writeD(_runSpd);
@@ -98,12 +102,16 @@ public class PetInfo extends L2GameServerPacket
 		
 		writeF(1);
 		writeF(1);
+		
 		writeF(_summon.getTemplate().collisionRadius);
 		writeF(_summon.getTemplate().collisionHeight);
+		
 		writeD(0); // right hand weapon
-		writeD(0);
+		writeD(0); // chest
 		writeD(0); // left hand weapon
-		writeC(1); // name above char 1=true ... ??
+		
+		writeC(1); // name above char 1=true
+		
 		writeC(_summon.isRunning() ? 1 : 0); // running=1
 		writeC(_summon.isInCombat() ? 1 : 0); // attacking 1=true
 		writeC(_summon.isAlikeDead() ? 1 : 0); // dead 1=true

@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.LineNumberReader;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import javolution.util.FastList;
@@ -34,10 +35,6 @@ import l2jorion.game.templates.L2Item;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * Service class for manor
- * @author l3x
- */
 public class L2Manor
 {
 	private static Logger LOG = LoggerFactory.getLogger(L2Manor.class);
@@ -235,9 +232,9 @@ public class L2Manor
 	 * @param castleId
 	 * @return
 	 */
-	public FastList<Integer> getCropsForCastle(final int castleId)
+	public ArrayList<Integer> getCropsForCastle(final int castleId)
 	{
-		final FastList<Integer> crops = new FastList<>();
+		final ArrayList<Integer> crops = new ArrayList<>();
 		
 		for (final SeedData seed : _seeds.values())
 		{
@@ -255,9 +252,9 @@ public class L2Manor
 	 * @param castleId - id of the castle
 	 * @return seedIds - list of seed ids
 	 */
-	public FastList<Integer> getSeedsForCastle(final int castleId)
+	public ArrayList<Integer> getSeedsForCastle(final int castleId)
 	{
-		final FastList<Integer> seedsID = new FastList<>();
+		final ArrayList<Integer> seedsID = new ArrayList<>();
 		
 		for (final SeedData seed : _seeds.values())
 		{

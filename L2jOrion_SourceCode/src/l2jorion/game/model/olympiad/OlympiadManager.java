@@ -274,10 +274,6 @@ public class OlympiadManager
 		}
 	}
 	
-	/**
-	 * @param player - messages will be sent to this Player
-	 * @return true if all requirements are met
-	 */
 	private final boolean checkNoble(L2PcInstance player)
 	{
 		if (!player.isNoble())
@@ -285,6 +281,12 @@ public class OlympiadManager
 			player.sendPacket(SystemMessageId.ONLY_NOBLESS_CAN_PARTICIPATE_IN_THE_OLYMPIAD);
 			return false;
 		}
+		
+		/*
+		 * if (!(Config.LIST_OLY_RESTRICTED_ITEMS.contains(0))) { for (final L2ItemInstance item : player.getInventory().getItems()) { if (Config.LIST_OLY_RESTRICTED_ITEMS.contains(item.getItemId())) { player.sendMessage("You cannot participate in the Grand Olympiad Games with restricted items.");
+		 * return false; } } }
+		 */
+		player.checkItemRestriction();
 		
 		if (player.isSubClassActive())
 		{

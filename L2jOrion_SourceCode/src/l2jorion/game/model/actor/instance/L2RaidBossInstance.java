@@ -20,6 +20,7 @@ package l2jorion.game.model.actor.instance;
 
 import l2jorion.Config;
 import l2jorion.game.enums.AchType;
+import l2jorion.game.managers.GrandBossManager;
 import l2jorion.game.managers.RaidBossPointsManager;
 import l2jorion.game.managers.RaidBossSpawnManager;
 import l2jorion.game.model.L2Character;
@@ -28,6 +29,7 @@ import l2jorion.game.model.entity.Announcements;
 import l2jorion.game.model.spawn.AutoSpawn;
 import l2jorion.game.model.spawn.L2Spawn;
 import l2jorion.game.model.zone.ZoneId;
+import l2jorion.game.model.zone.type.L2BossZone;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.PlaySound;
 import l2jorion.game.network.serverpackets.SystemMessage;
@@ -40,6 +42,7 @@ public final class L2RaidBossInstance extends L2MonsterInstance
 	private static final int RAIDBOSS_MAINTENANCE_INTERVAL = 20000;
 	
 	private RaidBossSpawnManager.StatusEnum _raidStatus;
+	protected static L2BossZone _zone;
 	
 	public L2RaidBossInstance(int objectId, L2NpcTemplate template)
 	{
@@ -89,24 +92,62 @@ public final class L2RaidBossInstance extends L2MonsterInstance
 				}
 			}
 			
+			if (Config.L2LIMIT_CUSTOM)
+			{
+				if (getLevel() >= 40)
+				{
+					if (player.getClan() != null)
+					{
+						player.getClan().setReputationScore(player.getClan().getReputationScore() + Rnd.get(50, 100), true);
+					}
+					player.addItem("AutoLoot", 6392, 1, this, true);
+				}
+			}
+			
 			if (player.getParty() != null)
 			{
 				for (L2PcInstance member : player.getParty().getPartyMembers())
 				{
 					RaidBossPointsManager.addPoints(member, getNpcId(), (getLevel() / 2) + Rnd.get(-5, 5));
 					member.getAchievement().increase(AchType.RAIDBOSS);
+					
+					// Daily
+					member.getAchievement().increase(AchType.DAILY_BOSS, 1, true, true, true, getNpcId());
+					
+					if (Config.L2LIMIT_CUSTOM)
+					{
+						member.setWeeklyBoardRaidPoints(member.getWeeklyBoardRaidPoints() + ((getLevel() / 2) + Rnd.get(-5, 5)));
+					}
 				}
 			}
 			else
 			{
 				RaidBossPointsManager.addPoints(player, getNpcId(), (getLevel() / 2) + Rnd.get(-5, 5));
 				player.getAchievement().increase(AchType.RAIDBOSS);
+				
+				// Daily
+				player.getAchievement().increase(AchType.DAILY_BOSS, 1, true, true, true, getNpcId());
+				
+				if (Config.L2LIMIT_CUSTOM)
+				{
+					player.setWeeklyBoardRaidPoints(player.getWeeklyBoardRaidPoints() + ((getLevel() / 2) + Rnd.get(-5, 5)));
+				}
 			}
 		}
 		
 		if (!getSpawn().is_customBossInstance())
 		{
 			RaidBossSpawnManager.getInstance().updateStatus(this, true);
+			
+			if (Config.RON_CUSTOM)
+			{
+				_zone = GrandBossManager.getInstance().getZone(getX(), getY(), getZ());
+				if (_zone != null)
+				{
+					_zone.updateZoneStatusForCharactersInside();
+					_zone.setZoneEnabled(false, false);
+				}
+			}
 		}
 		
 		// Check auto spawn instance
@@ -116,7 +157,7 @@ public final class L2RaidBossInstance extends L2MonsterInstance
 	}
 	
 	@Override
-	protected void manageMinions()
+	protected void manageMaintenance()
 	{
 		_minionList.spawnMinions();
 		
@@ -151,24 +192,19 @@ public final class L2RaidBossInstance extends L2MonsterInstance
 					}
 				}
 				
+				callMinionsBack();
+				
 				_minionList.maintainMinions();
-			}, 60000, getMaintenanceInterval());
+				
+			}, 1000, getMaintenanceInterval());
 		}
 	}
 	
-	/**
-	 * Sets the raid status.
-	 * @param status the new raid status
-	 */
 	public void setRaidStatus(RaidBossSpawnManager.StatusEnum status)
 	{
 		_raidStatus = status;
 	}
 	
-	/**
-	 * Gets the raid status.
-	 * @return the raid status
-	 */
 	public RaidBossSpawnManager.StatusEnum getRaidStatus()
 	{
 		return _raidStatus;
@@ -178,5 +214,11 @@ public final class L2RaidBossInstance extends L2MonsterInstance
 	{
 		super.setCurrentHp(super.getMaxHp());
 		super.setCurrentMp(super.getMaxMp());
+	}
+	
+	@Override
+	public boolean isMonster()
+	{
+		return false;
 	}
 }

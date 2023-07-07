@@ -22,10 +22,11 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.L2Weapon;
 
-public class GMViewWarehouseWithdrawList extends L2GameServerPacket
+public class GMViewWarehouseWithdrawList extends PacketServer
 {
 	private static final String _S__95_GMViewWarehouseWithdrawList = "[S] 95 GMViewWarehouseWithdrawList";
 	

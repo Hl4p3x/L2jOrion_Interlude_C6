@@ -36,7 +36,7 @@ import l2jorion.logger.LoggerFactory;
 
 public class TaskRaidPointsReset extends Task
 {
-	private static final Logger LOG = LoggerFactory.getLogger(TaskRaidPointsReset.class.getName());
+	private static final Logger LOG = LoggerFactory.getLogger(TaskRaidPointsReset.class);
 	public static final String NAME = "raid_points_reset";
 	
 	@Override

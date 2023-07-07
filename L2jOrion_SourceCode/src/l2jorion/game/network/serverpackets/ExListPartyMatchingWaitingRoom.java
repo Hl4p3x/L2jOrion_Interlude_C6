@@ -21,8 +21,9 @@ import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.PartyMatchWaitingList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class ExListPartyMatchingWaitingRoom extends L2GameServerPacket
+public class ExListPartyMatchingWaitingRoom extends PacketServer
 {
 	private final L2PcInstance _activeChar;
 	

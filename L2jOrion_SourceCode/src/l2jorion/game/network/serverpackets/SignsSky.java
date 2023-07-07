@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
+import l2jorion.game.network.PacketServer;
 
-public class SignsSky extends L2GameServerPacket
+public class SignsSky extends PacketServer
 {
 	private static final String _S__F8_SignsSky = "[S] F8 SignsSky";
 	

@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class SunRise extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class SunRise extends PacketServer
 {
 	private static final String _S__28_SUNRISE = "[S] 1c SunRise";
 	

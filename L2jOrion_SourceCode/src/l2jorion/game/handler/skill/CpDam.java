@@ -80,7 +80,6 @@ public class CpDam implements ISkillHandler
 			
 			final int damage = (int) (target.getCurrentCp() * (1 - skill.getPower()));
 			
-			// Manage attack or cast break of the target (calculating rate, sending message...)
 			if (!target.isRaid() && Formulas.calcAtkBreak(target, damage))
 			{
 				target.breakAttack();
@@ -91,7 +90,7 @@ public class CpDam implements ISkillHandler
 			activeChar.sendDamageMessage(target, damage, false, false, false);
 			target.setCurrentCp(target.getCurrentCp() - damage);
 			
-			if (target.getScreentxt())
+			if (target instanceof L2PcInstance && ((L2PcInstance) target).getScreentxt())
 			{
 				SystemMessage smsg = new SystemMessage(SystemMessageId.S1_GAVE_YOU_S2_DMG);
 				smsg.addString(activeChar.getName());

@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ServerClose extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ServerClose extends PacketServer
 {
 	private static final String _S__26_SERVERCLOSE = "[S] 26 ServerClose";
 	

@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class PledgeShowMemberListDelete extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class PledgeShowMemberListDelete extends PacketServer
 {
 	private static final String _S__6B_PLEDGESHOWMEMBERLISTDELETE = "[S] 56 PledgeShowMemberListDelete";
 	

@@ -20,18 +20,27 @@
  */
 package l2jorion.game.network.serverpackets;
 
+import l2jorion.game.idfactory.IdFactory;
+import l2jorion.game.model.L2Skill;
+import l2jorion.game.model.L2World;
 import l2jorion.game.model.TradeList;
+import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class PrivateStoreManageListSell extends L2GameServerPacket
+public class PrivateStoreManageListSell extends PacketServer
 {
 	private static final String _S__B3_PRIVATESELLLISTSELL = "[S] 9a PrivateSellListSell";
 	
 	private final int _objId;
 	private int _playerAdena;
 	private final boolean _packageSale;
-	private final TradeList.TradeItem[] _itemList;
-	private final TradeList.TradeItem[] _sellList;
+	
+	private TradeList.TradeItem[] _itemList;
+	private TradeList.TradeItem[] _sellList;
+	private int _sellItemId;
+	
+	private boolean _buffs = false;
 	
 	public PrivateStoreManageListSell(L2PcInstance player)
 	{
@@ -39,48 +48,169 @@ public class PrivateStoreManageListSell extends L2GameServerPacket
 		_playerAdena = player.getAdena();
 		player.getSellList().updateItems();
 		_packageSale = player.getSellList().isPackaged();
+		
+		player.getSellList().setBuffer(false);
+		player.getSellList().setSellBuyItemId(57);
+		_sellItemId = 57;
+		
 		_itemList = player.getInventory().getAvailableItems(player.getSellList());
 		_sellList = player.getSellList().getItems();
+	}
+	
+	public PrivateStoreManageListSell(L2PcInstance player, int sellItemId)
+	{
+		_objId = player.getObjectId();
+		
+		_playerAdena = player.getItemCount(sellItemId, -1);
+		
+		player.getSellList().updateItems();
+		_packageSale = player.getSellList().isPackaged();
+		
+		player.getSellList().setBuffer(false);
+		player.getSellList().setSellBuyItemId(sellItemId);
+		_sellItemId = sellItemId;
+		
+		_itemList = player.getInventory().getAvailableItems(player.getSellList());
+		_sellList = player.getSellList().getItems();
+	}
+	
+	public PrivateStoreManageListSell(L2PcInstance player, boolean buffs, int sellItemId)
+	{
+		_objId = player.getObjectId();
+		
+		_playerAdena = player.getItemCount(sellItemId, -1);
+		
+		_packageSale = player.getSellList().isPackaged();
+		_buffs = buffs;
+		
+		player.getSellList().setSellBuyItemId(sellItemId);
+		
+		_sellItemId = sellItemId;
+		
+		_itemList = getAvailableItems(player, player.getSellList());
+		
+		_sellList = player.getSellList().getItems();
+	}
+	
+	public TradeList.TradeItem[] getAvailableItems(L2PcInstance player, TradeList tradeList)
+	{
+		tradeList.setBuffer(true);
+		
+		player.getSellList().list.clear();
+		
+		for (L2Skill skill : tradeList.getBuffs())
+		{
+			L2ItemInstance item = new L2ItemInstance(IdFactory.getInstance().getNextId(), skill.getId());
+			
+			item.setEnchantLevel(skill.getLevel());
+			L2World.getInstance().storeObject(item);
+			
+			final TradeList.TradeItem adjItem = tradeList.adjustFakeItem(item);
+			if (adjItem != null)
+			{
+				adjItem.setId(skill.getId());
+				adjItem.setCount(1);
+				adjItem.setObjectId(item.getObjectId());
+				adjItem.setEnchant(skill.getLevel());
+				
+				player.getSellList().list.add(adjItem);
+			}
+		}
+		
+		return player.getSellList().list.toArray(new TradeList.TradeItem[player.getSellList().list.size()]);
 	}
 	
 	@Override
 	protected final void writeImpl()
 	{
 		writeC(0x9a);
+		
 		// section 1
 		writeD(_objId);
-		writeD(_packageSale ? 1 : 0); // Package sell
+		
+		if (_buffs)
+		{
+			writeD(_packageSale ? 2 : 3);
+		}
+		else
+		{
+			writeD(_packageSale ? 1 : 0);
+		}
+		
 		writeD(_playerAdena);
 		
 		// section2
-		writeD(_itemList.length); // for potential sells
-		for (final TradeList.TradeItem item : _itemList)
+		if (_buffs)
 		{
-			writeD(item.getItem().getType2());
-			writeD(item.getObjectId());
-			writeD(item.getItem().getItemId());
-			writeD(item.getCount());
-			writeH(0x00);
-			writeH(item.getEnchant());// enchant lvl
-			writeH(0x00);
-			writeD(item.getItem().getBodyPart());
-			writeD(item.getPrice()); // store price
+			writeD(_itemList.length);
+			for (final TradeList.TradeItem item : _itemList)
+			{
+				writeD(0); // item type
+				writeD(item.getObjectId()); // obj id
+				writeD(item.getId()); // skill id
+				writeD(1); // count
+				writeH(0x00);
+				writeH(item.getEnchant()); // skill level
+				writeH(0x00);
+				writeD(_sellItemId); // sell item id
+				writeD(item.getPrice()); // store price
+			}
 		}
+		else
+		{
+			writeD(_itemList.length); // for potential sells
+			for (final TradeList.TradeItem item : _itemList)
+			{
+				writeD(item.getItem().getType2());
+				writeD(item.getObjectId());
+				writeD(item.getItem().getItemId());
+				writeD(item.getCount()); // count
+				writeH(0x00);
+				writeH(item.getEnchant());// enchant lvl
+				writeH(0x00);
+				// writeD(item.getItem().getBodyPart());
+				writeD(_sellItemId); // sell item id
+				writeD(item.getPrice()); // store price
+			}
+		}
+		
 		// section 3
-		writeD(_sellList.length); // count for any items already added for sell
-		for (final TradeList.TradeItem item : _sellList)
+		if (_buffs)
 		{
-			writeD(item.getItem().getType2());
-			writeD(item.getObjectId());
-			writeD(item.getItem().getItemId());
-			writeD(item.getCount());
-			writeH(0x00);
-			writeH(item.getEnchant());// enchant lvl
-			writeH(0x00);
-			writeD(item.getItem().getBodyPart());
-			writeD(item.getPrice());// your price
-			writeD(item.getItem().getReferencePrice()); // store price
+			writeD(_sellList.length);
+			for (final TradeList.TradeItem item : _sellList)
+			{
+				writeD(0);
+				writeD(item.getObjectId());
+				writeD(item.getId());
+				writeD(1); // count
+				writeH(0x00);
+				writeH(item.getEnchant());// enchant lvl
+				writeH(0x00);
+				writeD(_sellItemId); // sell item id
+				writeD(item.getPrice());// your price
+				writeD(item.getItem().getReferencePrice()); // store price
+			}
 		}
+		else
+		{
+			writeD(_sellList.length);
+			for (final TradeList.TradeItem item : _sellList)
+			{
+				writeD(item.getItem().getType2());
+				writeD(item.getObjectId());
+				writeD(item.getItem().getItemId());
+				writeD(item.getCount());
+				writeH(0x00);
+				writeH(item.getEnchant());// enchant lvl
+				writeH(0x00);
+				// writeD(item.getItem().getBodyPart());
+				writeD(_sellItemId); // sell item id
+				writeD(item.getPrice());// your price
+				writeD(item.getItem().getReferencePrice()); // store price
+			}
+		}
+		
 	}
 	
 	@Override

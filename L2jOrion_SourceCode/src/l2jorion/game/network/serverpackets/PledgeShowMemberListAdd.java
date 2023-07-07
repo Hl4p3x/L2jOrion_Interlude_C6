@@ -23,8 +23,9 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.Config;
 import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class PledgeShowMemberListAdd extends L2GameServerPacket
+public class PledgeShowMemberListAdd extends PacketServer
 {
 	private static final String _S__55_PLEDGESHOWMEMBERLISTADD = "[S] 55 PledgeShowMemberListAdd";
 	

@@ -23,8 +23,9 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.quest.Quest;
 import l2jorion.game.model.quest.QuestState;
+import l2jorion.game.network.PacketServer;
 
-public class QuestList extends L2GameServerPacket
+public class QuestList extends PacketServer
 {
 	private static final String _S__98_QUESTLIST = "[S] 80 QuestList";
 	
@@ -46,7 +47,7 @@ public class QuestList extends L2GameServerPacket
 	{
 		writeC(0x80);
 		
-		writeH(_quests.length);
+		writeH(_quests == null ? 0 : _quests.length);
 		
 		for (Quest q : _quests)
 		{

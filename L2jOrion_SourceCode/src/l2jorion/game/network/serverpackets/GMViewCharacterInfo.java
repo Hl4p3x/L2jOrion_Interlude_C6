@@ -22,8 +22,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.Inventory;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class GMViewCharacterInfo extends L2GameServerPacket
+public class GMViewCharacterInfo extends PacketServer
 {
 	private static final String _S__8F_GMVIEWCHARINFO = "[S] 8F GMViewCharacterInfo";
 	
@@ -169,8 +170,8 @@ public class GMViewCharacterInfo extends L2GameServerPacket
 		writeD(_walkSpd);
 		writeF(moveMultiplier);
 		writeF(_activeChar.getAttackSpeedMultiplier()); // 2.9);//
-		writeF(_activeChar.getTemplate().collisionRadius); // scale
-		writeF(_activeChar.getTemplate().collisionHeight); // y offset ??!? fem dwarf 4033
+		writeF(_activeChar.getCollisionRadius()); // scale
+		writeF(_activeChar.getCollisionHeight()); // y offset ??!? fem dwarf 4033
 		writeD(_activeChar.getAppearance().getHairStyle());
 		writeD(_activeChar.getAppearance().getHairColor());
 		writeD(_activeChar.getAppearance().getFace());

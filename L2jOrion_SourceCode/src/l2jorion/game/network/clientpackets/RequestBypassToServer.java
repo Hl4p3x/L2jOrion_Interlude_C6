@@ -18,22 +18,23 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.text.NumberFormat;
+import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javolution.text.TextBuilder;
 import l2jorion.Config;
-import l2jorion.game.community.CommunityBoard;
+import l2jorion.game.cache.HtmCache;
+import l2jorion.game.community.CommunityBoardManager;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.datatables.sql.AdminCommandAccessRights;
 import l2jorion.game.datatables.sql.ItemTable;
+import l2jorion.game.datatables.xml.DressMeData;
 import l2jorion.game.handler.AdminCommandHandler;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.handler.custom.CustomBypassHandler;
-import l2jorion.game.handler.voice.DressMe;
 import l2jorion.game.handler.voice.Vote;
 import l2jorion.game.handler.vote.Brasil;
 import l2jorion.game.handler.vote.Hopzone;
@@ -41,7 +42,8 @@ import l2jorion.game.handler.vote.L2TopGr;
 import l2jorion.game.handler.vote.L2TopOnline;
 import l2jorion.game.handler.vote.Network;
 import l2jorion.game.handler.vote.Topzone;
-import l2jorion.game.model.Inventory;
+import l2jorion.game.managers.BypassManager.DecodedBypass;
+import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2DropCategory;
 import l2jorion.game.model.L2DropData;
 import l2jorion.game.model.L2Object;
@@ -56,13 +58,14 @@ import l2jorion.game.model.actor.instance.L2OlympiadManagerInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2RaidBossInstance;
 import l2jorion.game.model.actor.instance.L2SymbolMakerInstance;
-import l2jorion.game.model.custom.DressMeData;
+import l2jorion.game.model.base.SkinPackage;
 import l2jorion.game.model.entity.event.CTF;
 import l2jorion.game.model.entity.event.DM;
 import l2jorion.game.model.entity.event.L2Event;
 import l2jorion.game.model.entity.event.TvT;
 import l2jorion.game.model.entity.event.VIP;
 import l2jorion.game.model.olympiad.OlympiadManager;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ExShowScreenMessage;
@@ -71,37 +74,40 @@ import l2jorion.game.network.serverpackets.OpenUrl;
 import l2jorion.game.network.serverpackets.PlaySound;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
+import l2jorion.game.templates.L2WeaponType;
+import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.GMAudit;
 import l2jorion.game.util.Util;
 import l2jorion.log.Log;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
-import l2jorion.util.CloseUtil;
-import l2jorion.util.database.L2DatabaseFactory;
 
-public final class RequestBypassToServer extends L2GameClientPacket
+public final class RequestBypassToServer extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestBypassToServer.class.getName());
 	
-	private String _command;
+	private DecodedBypass bp = null;
 	
 	@Override
 	protected void readImpl()
 	{
-		_command = readS();
+		String bypass = readS();
+		if (!bypass.isEmpty())
+		{
+			bp = getClient().getActiveChar().decodeBypass(bypass);
+		}
 	}
 	
 	@Override
 	protected void runImpl()
 	{
 		L2PcInstance activeChar = getClient().getActiveChar();
-		
-		if (activeChar == null)
+		if (activeChar == null || bp == null)
 		{
 			return;
 		}
 		
-		if (!getClient().getFloodProtectors().getServerBypass().tryPerformAction(_command))
+		if (!getClient().getFloodProtectors().getServerBypass().tryPerformAction(bp.bypass))
 		{
 			activeChar.sendMessage("You're doing that too fast.");
 			return;
@@ -109,26 +115,26 @@ public final class RequestBypassToServer extends L2GameClientPacket
 		
 		try
 		{
-			if (_command.startsWith("admin_"))
+			if (bp.bypass.startsWith("admin_"))
 			{
 				String command;
-				if (_command.indexOf(" ") != -1)
+				if (bp.bypass.indexOf(" ") != -1)
 				{
-					command = _command.substring(0, _command.indexOf(" "));
+					command = bp.bypass.substring(0, bp.bypass.indexOf(" "));
 				}
 				else
 				{
-					command = _command;
+					command = bp.bypass;
 				}
 				
 				IAdminCommandHandler ach = AdminCommandHandler.getInstance().getAdminCommandHandler(command);
-				
 				if (ach == null)
 				{
 					if (activeChar.isGM())
 					{
 						activeChar.sendMessage("The command " + command + " does not exist.");
 					}
+					
 					String text = "No handler registered for admin command '" + command + "'";
 					Log.add(text, "Wrong_admin_commands");
 					return;
@@ -137,23 +143,19 @@ public final class RequestBypassToServer extends L2GameClientPacket
 				if (!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel()))
 				{
 					activeChar.sendMessage("You don't have the access right to use this command.");
-					if (Config.DEBUG)
-					{
-						LOG.warn("Character " + activeChar.getName() + " tried to use admin command " + command + ", but doesn't have access to it!");
-					}
 					return;
 				}
 				
 				if (Config.GMAUDIT)
 				{
-					GMAudit.auditGMAction(activeChar.getName() + " [" + activeChar.getObjectId() + "]", command, (activeChar.getTarget() != null ? activeChar.getTarget().getName() : "no-target"), _command.replace(command, ""));
+					GMAudit.auditGMAction(activeChar.getName() + " [" + activeChar.getObjectId() + "]", command, (activeChar.getTarget() != null ? activeChar.getTarget().getName() : "no-target"), bp.bypass.replace(command, ""));
 				}
 				
-				ach.useAdminCommand(_command, activeChar);
+				ach.useAdminCommand(bp.bypass, activeChar);
 			}
-			else if (_command.startsWith("answer "))
+			else if (bp.bypass.startsWith("answer "))
 			{
-				String answer = _command.substring(7);
+				String answer = bp.bypass.substring(7);
 				switch (answer)
 				{
 					case "100001":
@@ -173,9 +175,9 @@ public final class RequestBypassToServer extends L2GameClientPacket
 						break;
 				}
 			}
-			else if (_command.startsWith("buffspage"))
+			else if (bp.bypass.startsWith("buffspage"))
 			{
-				String[] val = _command.split(" ");
+				String[] val = bp.bypass.split(" ");
 				String x = val[1];
 				int page = Integer.parseInt(x);
 				
@@ -192,14 +194,14 @@ public final class RequestBypassToServer extends L2GameClientPacket
 				
 				activeChar.sellBuffsMenu(target, page);
 			}
-			else if (_command.startsWith("buff"))
+			else if (bp.bypass.startsWith("buff"))
 			{
 				if (!Config.SELLBUFF_SYSTEM)
 				{
 					return;
 				}
 				
-				String[] val = _command.split(" ");
+				String[] val = bp.bypass.split(" ");
 				String x = val[1];
 				String y = val[2];
 				String p = val[3];
@@ -220,7 +222,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 					return;
 				}
 				
-				if (activeChar.getInventory().getItemByItemId(57) == null || activeChar.getInventory().getItemByItemId(57).getCount() < ((L2PcInstance) activeChar.getTarget()).getBuffPrize())
+				if (activeChar.getInventory().getItemByItemId(57) == null || activeChar.getInventory().getItemByItemId(57).getCount() < target.getBuffPrize())
 				{
 					activeChar.sendMessage("You don't have enough adena.");
 					return;
@@ -245,6 +247,26 @@ public final class RequestBypassToServer extends L2GameClientPacket
 						}
 					}
 					
+					// Gift of Seraphim
+					L2Skill skill1 = SkillTable.getInstance().getInfo(4703, 13);
+					// Blessing of Seraphim
+					L2Skill skill2 = SkillTable.getInstance().getInfo(4702, 13);
+					
+					// Gift of Queen
+					L2Skill skill3 = SkillTable.getInstance().getInfo(4700, 13);
+					// Blessing of Queen
+					L2Skill skill4 = SkillTable.getInstance().getInfo(4699, 13);
+					
+					if (target.BuffsList.contains(skill1) && target.BuffsList.contains(skill2) && (target.getClassId().getId() == 28 || target.getClassId().getId() == 104))
+					{
+						isOK = true;
+					}
+					
+					if (target.BuffsList.contains(skill3) && target.BuffsList.contains(skill4) && (target.getClassId().getId() == 14 || target.getClassId().getId() == 96))
+					{
+						isOK = true;
+					}
+					
 					if (isOK)
 					{
 						bufferSkill.getEffects(activeChar, activeChar);
@@ -263,9 +285,9 @@ public final class RequestBypassToServer extends L2GameClientPacket
 					e.printStackTrace();
 				}
 			}
-			else if (_command.startsWith("actr"))
+			else if (bp.bypass.startsWith("actr"))
 			{
-				String l = _command.substring(5);
+				String l = bp.bypass.substring(5);
 				
 				int p = 0;
 				
@@ -291,19 +313,19 @@ public final class RequestBypassToServer extends L2GameClientPacket
 				activeChar.broadcastUserInfo();
 				activeChar.broadcastTitleInfo();
 			}
-			else if (_command.startsWith("player_help "))
+			else if (bp.bypass.startsWith("player_help "))
 			{
-				playerHelp(activeChar, _command.substring(12));
+				playerHelp(activeChar, bp.bypass.substring(12));
 			}
-			else if (_command.startsWith("open_url "))
+			else if (bp.bypass.startsWith("open_url "))
 			{
-				activeChar.sendPacket(new OpenUrl(_command.substring(9)));
+				activeChar.sendPacket(new OpenUrl(bp.bypass.substring(9)));
 			}
-			else if (_command.startsWith("vote "))
+			else if (bp.bypass.startsWith("vote "))
 			{
 				Vote.restoreVotedData(activeChar, activeChar.getClient().getConnection().getInetAddress().getHostAddress());
 				
-				String voteSiteName = _command.substring(5);
+				String voteSiteName = bp.bypass.substring(5);
 				switch (voteSiteName)
 				{
 					case "hopzone":
@@ -434,36 +456,36 @@ public final class RequestBypassToServer extends L2GameClientPacket
 						break;
 				}
 			}
-			else if (_command.startsWith("npc_"))
+			else if (bp.bypass.startsWith("npc_"))
 			{
-				if (!activeChar.validateBypass(_command))
+				if (!activeChar.validateBypass(bp.bypass))
 				{
 					return;
 				}
 				
-				int endOfId = _command.indexOf('_', 5);
+				int endOfId = bp.bypass.indexOf('_', 5);
 				String id;
 				
 				if (endOfId > 0)
 				{
-					id = _command.substring(4, endOfId);
+					id = bp.bypass.substring(4, endOfId);
 				}
 				else
 				{
-					id = _command.substring(4);
+					id = bp.bypass.substring(4);
 				}
 				
 				try
 				{
 					L2Object object = L2World.getInstance().findObject(Integer.parseInt(id));
 					
-					if (_command.substring(endOfId + 1).startsWith("event_participate"))
+					if (bp.bypass.substring(endOfId + 1).startsWith("event_participate"))
 					{
 						L2Event.inscribePlayer(activeChar);
 					}
-					else if (_command.substring(endOfId + 1).startsWith("tvt_player_join "))
+					else if (bp.bypass.substring(endOfId + 1).startsWith("tvt_player_join "))
 					{
-						String teamName = _command.substring(endOfId + 1).substring(16);
+						String teamName = bp.bypass.substring(endOfId + 1).substring(16);
 						
 						if (TvT.is_joining())
 						{
@@ -475,7 +497,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 						}
 					}
 					
-					else if (_command.substring(endOfId + 1).startsWith("tvt_player_leave"))
+					else if (bp.bypass.substring(endOfId + 1).startsWith("tvt_player_leave"))
 					{
 						if (TvT.is_joining())
 						{
@@ -487,7 +509,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 						}
 					}
 					
-					else if (_command.substring(endOfId + 1).startsWith("dmevent_player_join"))
+					else if (bp.bypass.substring(endOfId + 1).startsWith("dmevent_player_join"))
 					{
 						if (DM.is_joining())
 						{
@@ -499,7 +521,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 						}
 					}
 					
-					else if (_command.substring(endOfId + 1).startsWith("dmevent_player_leave"))
+					else if (bp.bypass.substring(endOfId + 1).startsWith("dmevent_player_leave"))
 					{
 						if (DM.is_joining())
 						{
@@ -511,9 +533,9 @@ public final class RequestBypassToServer extends L2GameClientPacket
 						}
 					}
 					
-					else if (_command.substring(endOfId + 1).startsWith("ctf_player_join "))
+					else if (bp.bypass.substring(endOfId + 1).startsWith("ctf_player_join "))
 					{
-						String teamName = _command.substring(endOfId + 1).substring(16);
+						String teamName = bp.bypass.substring(endOfId + 1).substring(16);
 						if (CTF.is_joining())
 						{
 							CTF.addPlayer(activeChar, teamName);
@@ -524,7 +546,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 						}
 					}
 					
-					else if (_command.substring(endOfId + 1).startsWith("ctf_player_leave"))
+					else if (bp.bypass.substring(endOfId + 1).startsWith("ctf_player_leave"))
 					{
 						if (CTF.is_joining())
 						{
@@ -536,83 +558,78 @@ public final class RequestBypassToServer extends L2GameClientPacket
 						}
 					}
 					
-					if (_command.substring(endOfId + 1).startsWith("vip_joinVIPTeam"))
+					if (bp.bypass.substring(endOfId + 1).startsWith("vip_joinVIPTeam"))
 					{
 						VIP.addPlayerVIP(activeChar);
 					}
 					
-					if (_command.substring(endOfId + 1).startsWith("vip_joinNotVIPTeam"))
+					if (bp.bypass.substring(endOfId + 1).startsWith("vip_joinNotVIPTeam"))
 					{
 						VIP.addPlayerNotVIP(activeChar);
 					}
 					
-					if (_command.substring(endOfId + 1).startsWith("vip_finishVIP"))
+					if (bp.bypass.substring(endOfId + 1).startsWith("vip_finishVIP"))
 					{
 						VIP.vipWin(activeChar);
 					}
 					
-					if (_command.substring(endOfId + 1).startsWith("event_participate"))
+					if (bp.bypass.substring(endOfId + 1).startsWith("event_participate"))
 					{
 						L2Event.inscribePlayer(activeChar);
 					}
 					
 					else if ((Config.ALLOW_CLASS_MASTERS && Config.ALLOW_REMOTE_CLASS_MASTERS && object instanceof L2ClassMasterInstance) || (object instanceof L2NpcInstance && endOfId > 0 && Util.checkIfInRange(L2NpcInstance.INTERACTION_DISTANCE, activeChar, object, true)))
 					{
-						((L2NpcInstance) object).onBypassFeedback(activeChar, _command.substring(endOfId + 1));
+						((L2NpcInstance) object).onBypassFeedback(activeChar, bp.bypass.substring(endOfId + 1));
 					}
 					
 					activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 				}
-				catch (NumberFormatException nfe)
+				catch (NumberFormatException e)
 				{
-					if (Config.ENABLE_ALL_EXCEPTIONS)
-					{
-						nfe.printStackTrace();
-					}
-					
+					LOG.info(this.getClass().getSimpleName() + ": (" + activeChar.getName() + ") error: " + e);
 				}
 			}
-			// Draw a Symbol
-			else if (_command.equals("Draw"))
+			else if (bp.bypass.equals("Draw"))
 			{
 				L2Object object = activeChar.getTarget();
 				if (object instanceof L2NpcInstance)
 				{
-					((L2SymbolMakerInstance) object).onBypassFeedback(activeChar, _command);
+					((L2SymbolMakerInstance) object).onBypassFeedback(activeChar, bp.bypass);
 				}
 			}
-			else if (_command.equals("RemoveList"))
+			else if (bp.bypass.equals("RemoveList"))
 			{
 				L2Object object = activeChar.getTarget();
 				if (object instanceof L2NpcInstance)
 				{
-					((L2SymbolMakerInstance) object).onBypassFeedback(activeChar, _command);
+					((L2SymbolMakerInstance) object).onBypassFeedback(activeChar, bp.bypass);
 				}
 			}
-			else if (_command.equals("Remove "))
+			else if (bp.bypass.equals("Remove "))
 			{
 				L2Object object = activeChar.getTarget();
 				
 				if (object instanceof L2NpcInstance)
 				{
-					((L2SymbolMakerInstance) object).onBypassFeedback(activeChar, _command);
+					((L2SymbolMakerInstance) object).onBypassFeedback(activeChar, bp.bypass);
 				}
 			}
-			else if (_command.startsWith("manor_menu_select?"))
+			else if (bp.bypass.startsWith("manor_menu_select?"))
 			{
 				L2Object object = activeChar.getTarget();
 				if (object instanceof L2NpcInstance)
 				{
-					((L2NpcInstance) object).onBypassFeedback(activeChar, _command);
+					((L2NpcInstance) object).onBypassFeedback(activeChar, bp.bypass);
 				}
 			}
-			else if (_command.startsWith("bbs_") || _command.startsWith("_bbs") || _command.startsWith("_friend") || _command.startsWith("_mail") || _command.startsWith("_block"))
+			else if (bp.bypass.startsWith("bbs_") || bp.bypass.startsWith("_bbs") || bp.bypass.startsWith("_friend") || bp.bypass.startsWith("_mail") || bp.bypass.startsWith("_block"))
 			{
-				CommunityBoard.getInstance().handleCommands(getClient(), _command);
+				CommunityBoardManager.getInstance().onBypassCommand(getClient(), bp.bypass);
 			}
-			else if (_command.startsWith("Quest "))
+			else if (bp.bypass.startsWith("Quest "))
 			{
-				if (!activeChar.validateBypass(_command))
+				if (!activeChar.validateBypass(bp.bypass))
 				{
 					return;
 				}
@@ -623,7 +640,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 					return;
 				}
 				
-				String p = _command.substring(6).trim();
+				String p = bp.bypass.substring(6).trim();
 				int idx = p.indexOf(' ');
 				
 				if (idx < 0)
@@ -635,116 +652,12 @@ public final class RequestBypassToServer extends L2GameClientPacket
 					player.processQuestEvent(p.substring(0, idx), p.substring(idx).trim());
 				}
 			}
-			else if (_command.startsWith("submitpin"))
-			{
-				try
-				{
-					String value = _command.substring(8);
-					StringTokenizer s = new StringTokenizer(value, " ");
-					int pin = activeChar.getPin();
-					
-					Connection con = null;
-					try
-					{
-						pin = Integer.parseInt(s.nextToken());
-						if (Integer.toString(pin).length() != 4)
-						{
-							activeChar.sendMessage("You have to fill the pin box with 4 numbers. Not more, not less.");
-							activeChar.showCreatePinHtml();
-							return;
-						}
-						con = L2DatabaseFactory.getInstance().getConnection();
-						PreparedStatement statement = con.prepareStatement("UPDATE characters SET pin=? WHERE obj_Id=?");
-						statement.setInt(1, pin);
-						statement.setInt(2, activeChar.getObjectId());
-						statement.execute();
-						statement.close();
-						
-						activeChar.setPincheck(false);
-						activeChar.updatePincheck();
-						activeChar.sendMessage("You successfully submitted your pin code. You will need it in order to login.");
-						activeChar.sendMessage("Your Pin Code is: " + pin);
-						activeChar.setIsImobilised(false);
-						activeChar.setIsSubmitingPin(false);
-						statement = null;
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-						activeChar.sendMessage("The Pin Code must be 4 numbers.");
-						activeChar.showCreatePinHtml();
-					}
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-					activeChar.sendMessage("The Pin Code must be 4 numbers.");
-					activeChar.showCreatePinHtml();
-				}
-				
-			}
-			else if (_command.startsWith("enterpin"))
-			{
-				try
-				{
-					String value = _command.substring(8);
-					StringTokenizer s = new StringTokenizer(value, " ");
-					int dapin = 0;
-					int pin = 0;
-					
-					dapin = Integer.parseInt(s.nextToken());
-					Connection con = null;
-					try
-					{
-						con = L2DatabaseFactory.getInstance().getConnection();
-						PreparedStatement statement = con.prepareStatement("SELECT pin FROM characters WHERE obj_Id=?");
-						statement.setInt(1, activeChar.getObjectId());
-						
-						ResultSet rset = statement.executeQuery();
-						
-						while (rset.next())
-						{
-							pin = rset.getInt("pin");
-						}
-						statement.execute();
-						statement.close();
-						statement = null;
-						if (pin == dapin)
-						{
-							activeChar.sendMessage("Pin Code Authenticated Successfully. You are now free to move.");
-							activeChar.setIsImobilised(false);
-							activeChar.setIsSubmitingPin(false);
-						}
-						else
-						{
-							activeChar.sendMessage("Pin Code does not match with the submitted one. You will now get disconnected!");
-							Util.handleIllegalPlayerAction(activeChar, activeChar.getName() + " wrong Pin Code.", Config.DEFAULT_PUNISH);
-						}
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-						activeChar.sendMessage("The Pin Code must be 4 numbers.");
-						activeChar.showEnterPinHtml();
-					}
-					finally
-					{
-						CloseUtil.close(con);
-					}
-				}
-				catch (Exception e)
-				{
-					e.printStackTrace();
-					activeChar.sendMessage("The Pin Code MUST be 4 numbers.");
-					activeChar.showEnterPinHtml();
-				}
-			}
-			else if (_command.startsWith("custom_"))
+			else if (bp.bypass.startsWith("custom_"))
 			{
 				L2PcInstance player = getClient().getActiveChar();
-				CustomBypassHandler.getInstance().handleBypass(player, _command);
+				CustomBypassHandler.getInstance().handleBypass(player, bp.bypass);
 			}
-			else if (_command.startsWith("arenachange")) // change
+			else if (bp.bypass.startsWith("arenachange")) // change
 			{
 				final boolean isManager = activeChar.getTarget() != null && activeChar.getTarget() instanceof L2OlympiadManagerInstance;
 				if (!isManager)
@@ -762,12 +675,17 @@ public final class RequestBypassToServer extends L2GameClientPacket
 					return;
 				}
 				
-				final int arenaId = Integer.parseInt(_command.substring(12).trim());
+				final int arenaId = Integer.parseInt(bp.bypass.substring(12).trim());
 				activeChar.enterOlympiadObserverMode(arenaId);
 			}
-			else if (_command.startsWith("dropInfo"))
+			else if (bp.bypass.startsWith("dropInfo"))
 			{
-				final String[] val = _command.split(" ");
+				if (activeChar.getTarget() == null || !(activeChar.getTarget() instanceof L2NpcInstance))
+				{
+					return;
+				}
+				
+				final String[] val = bp.bypass.split(" ");
 				
 				int index = Integer.parseInt(val[1]);
 				if (index < 1)
@@ -832,39 +750,122 @@ public final class RequestBypassToServer extends L2GameClientPacket
 								name = name.substring(0, 45) + "...";
 							}
 							
-							float chance = Float.parseFloat("" + drop.getChance()) / 1000000 * 100;
+							float chance = drop.getChance();
+							int deepBlueDrop = 1;
+							int levelModifier = 0;
 							
-							if (target instanceof L2RaidBossInstance)
+							if (Config.DEEPBLUE_DROP_RULES)
 							{
-								chance *= Config.ITEMS_RAID;
+								levelModifier = calculateLevelModifierForDrop(activeChar, target);
+								
+								if (levelModifier > 0)
+								{
+									deepBlueDrop = 3;
+								}
+								
+								chance = ((chance - ((chance * levelModifier) / 100)) / deepBlueDrop);
 							}
-							else if (target instanceof L2GrandBossInstance)
+							
+							if ((drop.getItemId() == 57 || drop.getItemId() >= 6360 && drop.getItemId() <= 6362))
 							{
-								chance *= Config.ITEMS_BOSS;
-							}
-							else if (target instanceof L2MinionInstance)
-							{
-								chance *= Config.ITEMS_MINON;
+								// like l2off must be drop chance x1 no matter what
+								chance *= 1;
 							}
 							else
 							{
-								chance *= Config.RATE_DROP_ITEMS;
-								
-								if (activeChar.getPremiumService() == 1)
+								if (target instanceof L2RaidBossInstance)
 								{
-									chance *= Config.PREMIUM_DROP_RATE;
+									chance *= Config.ITEMS_RAID;
+								}
+								else if (target instanceof L2GrandBossInstance)
+								{
+									chance *= Config.ITEMS_BOSS;
+								}
+								else if (target instanceof L2MinionInstance)
+								{
+									chance *= Config.ITEMS_MINION;
+								}
+								else
+								{
+									chance *= Config.RATE_DROP_ITEMS;
+									
+									if (activeChar.getPremiumService() >= 1)
+									{
+										chance *= Config.PREMIUM_DROP_RATE;
+									}
 								}
 							}
+							
+							int minDrop = drop.getMinDrop();
+							int maxDrop = drop.getMaxDrop();
+							
+							if (drop.getItemId() >= 6360 && drop.getItemId() <= 6362)
+							{
+								minDrop *= Config.RATE_DROP_SEAL_STONES;
+								maxDrop *= Config.RATE_DROP_SEAL_STONES;
+								if (activeChar.getPremiumService() >= 1)
+								{
+									minDrop *= Config.PREMIUM_SS_RATE;
+									maxDrop *= Config.PREMIUM_SS_RATE;
+								}
+							}
+							else if (drop.getItemId() == 57)
+							{
+								if (target instanceof L2RaidBossInstance)
+								{
+									minDrop *= Config.ADENA_RAID;
+									maxDrop *= Config.ADENA_RAID;
+								}
+								else if (target instanceof L2GrandBossInstance)
+								{
+									minDrop *= Config.ADENA_BOSS;
+									maxDrop *= Config.ADENA_BOSS;
+								}
+								else if (target instanceof L2MinionInstance)
+								{
+									minDrop *= Config.ADENA_MINION;
+									maxDrop *= Config.ADENA_MINION;
+								}
+								else
+								{
+									minDrop *= Config.RATE_DROP_ADENA;
+									maxDrop *= Config.RATE_DROP_ADENA;
+									
+									if (activeChar.getPremiumService() >= 1)
+									{
+										minDrop *= Config.PREMIUM_ADENA_RATE;
+										maxDrop *= Config.PREMIUM_ADENA_RATE;
+									}
+								}
+							}
+							
+							String itemIcon = L2Item.getItemIcon(drop.getItemId());
+							
+							chance = (chance / 1000000) * 100;
 							
 							if (chance >= 100)
 							{
 								chance = 100;
 							}
 							
-							L2Item item = ItemTable.getInstance().getTemplate(drop.getItemId());
-							String itemIcon = item.getItemIcon(drop.getItemId());
+							if (Config.L2UNLIMITED_CUSTOM)
+							{
+								if (chance < 2)
+								{
+									chance = 2;
+								}
+							}
+							else
+							{
+								if (chance < 0)
+								{
+									chance = 0;
+								}
+							}
+							
 							String formatedIntAndChance = formatIntAndColor(chance);
-							String dropCount = (drop.getMaxDrop() > 1 ? "<font color=LEVEL>" + Util.formatItem(drop.getMinDrop()) + "</font>-<font color=LEVEL>" + Util.formatItem(drop.getMaxDrop()) + "</font>" : "<font color=LEVEL>" + Util.formatItem(drop.getMinDrop()) + "</font>");
+							
+							String dropCount = (maxDrop > 1 ? "<font color=LEVEL>" + Util.formatItem(minDrop) + "</font>-<font color=LEVEL>" + Util.formatItem(maxDrop) + "</font>" : "<font color=LEVEL>" + Util.formatItem(minDrop) + "</font>");
 							
 							if (i++ >= ((index - 1) * maxPages))
 							{
@@ -929,50 +930,341 @@ public final class RequestBypassToServer extends L2GameClientPacket
 					activeChar.sendPacket(html);
 				}
 			}
-			else if (_command.equals("bp_changedressmestatus"))
+			else if (bp.bypass.startsWith("dressme"))
 			{
-				if (activeChar.isDressMeEnabled())
+				if (!Config.ALLOW_DRESS_ME_IN_OLY && activeChar.isInOlympiadMode())
 				{
-					activeChar.setDressMeEnabled(false);
-					activeChar.broadcastUserInfo();
-				}
-				else
-				{
-					activeChar.setDressMeEnabled(true);
-					activeChar.broadcastUserInfo();
+					activeChar.sendMessage("DressMe can't be used on The Olympiad game.");
+					return;
 				}
 				
-				DressMe.sendMainWindow(activeChar);
-			}
-			else if (_command.startsWith("bp_editWindow"))
-			{
-				String bp = _command.substring(14);
-				StringTokenizer st = new StringTokenizer(bp);
+				StringTokenizer st = new StringTokenizer(bp.bypass, " ");
+				st.nextToken();
+				if (!st.hasMoreTokens())
+				{
+					showDressMeMainPage(activeChar);
+					return;
+				}
+				int page = Integer.parseInt(st.nextToken());
 				
-				sendEditWindow(activeChar, st.nextToken());
-			}
-			else if (_command.startsWith("bp_setpart"))
-			{
-				String bp = _command.substring(11);
-				StringTokenizer st = new StringTokenizer(bp);
-				
-				String part = st.nextToken();
-				String type = st.nextToken();
-				
-				setPart(activeChar, part, type);
-			}
-			else if (_command.startsWith("bp_gettarget"))
-			{
-				String bp = _command.substring(13);
-				StringTokenizer st = new StringTokenizer(bp);
-				
-				String part = st.nextToken();
-				
-				stealTarget(activeChar, part);
-			}
-			else if (_command.equals("bp_main"))
-			{
-				DressMe.sendMainWindow(activeChar);
+				if (!st.hasMoreTokens())
+				{
+					showDressMeMainPage(activeChar);
+					return;
+				}
+				String next = st.nextToken();
+				if (next.startsWith("skinlist"))
+				{
+					String type = st.nextToken();
+					showSkinList(activeChar, type, page);
+				}
+				else if (next.startsWith("myskinlist"))
+				{
+					showMySkinList(activeChar, page);
+				}
+				if (next.equals("clean"))
+				{
+					String type = st.nextToken();
+					
+					if (activeChar.isTryingSkin())
+					{
+						activeChar.sendMessage("You can't do this while trying a skin.");
+						activeChar.sendPacket(new ExShowScreenMessage("You can't do this while trying a skin.", 2000, 2, false));
+						activeChar.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
+						showDressMeMainPage(activeChar);
+						return;
+					}
+					
+					switch (type.toLowerCase())
+					{
+						case "armor":
+							activeChar.setArmorSkinOption(0);
+							break;
+						case "weapon":
+							activeChar.setWeaponSkinOption(0);
+							break;
+						case "hair":
+							activeChar.setHairSkinOption(0);
+							break;
+						case "face":
+							activeChar.setFaceSkinOption(0);
+							break;
+					}
+					
+					activeChar.broadcastUserInfo();
+					showMySkinList(activeChar, page);
+				}
+				else if (next.startsWith("buyskin"))
+				{
+					if (!st.hasMoreTokens())
+					{
+						showDressMeMainPage(activeChar);
+						return;
+					}
+					
+					int skinId = Integer.parseInt(st.nextToken());
+					String type = st.nextToken();
+					int itemId = Integer.parseInt(st.nextToken());
+					
+					SkinPackage sp = null;
+					
+					switch (type.toLowerCase())
+					{
+						case "armor":
+							sp = DressMeData.getInstance().getArmorSkinsPackage(skinId);
+							break;
+						case "weapon":
+							sp = DressMeData.getInstance().getWeaponSkinsPackage(skinId);
+							
+							if (activeChar.getActiveWeaponItem() == null)
+							{
+								activeChar.sendMessage("You can't buy this skin without a weapon.");
+								activeChar.sendPacket(new ExShowScreenMessage("You can't buy this skin without a weapon.", 2000, 2, false));
+								activeChar.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
+								showSkinList(activeChar, type, page);
+								return;
+							}
+							
+							L2ItemInstance skinWeapon = null;
+							if (ItemTable.getInstance().getTemplate(itemId) != null)
+							{
+								skinWeapon = ItemTable.getInstance().createDummyItem(itemId);
+								
+								if (!checkWeapons(activeChar, skinWeapon, L2WeaponType.BOW, L2WeaponType.BOW) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.SWORD, L2WeaponType.SWORD) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.BLUNT, L2WeaponType.BLUNT) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.DAGGER, L2WeaponType.DAGGER) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.POLE, L2WeaponType.POLE) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.DUAL, L2WeaponType.DUAL) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.DUALFIST, L2WeaponType.DUALFIST) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.BIGSWORD, L2WeaponType.BIGSWORD) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.FIST, L2WeaponType.FIST) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.BIGBLUNT, L2WeaponType.BIGBLUNT))
+								{
+									activeChar.sendMessage("This skin is not suitable for your weapon type.");
+									activeChar.sendPacket(new ExShowScreenMessage("This skin is not suitable for your weapon type.", 2000, 2, false));
+									activeChar.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
+									showSkinList(activeChar, type, page);
+									return;
+								}
+							}
+							break;
+						case "hair":
+							sp = DressMeData.getInstance().getHairSkinsPackage(skinId);
+							break;
+						case "face":
+							sp = DressMeData.getInstance().getFaceSkinsPackage(skinId);
+							break;
+					}
+					
+					if (sp == null)
+					{
+						activeChar.sendMessage("There is no such skin.");
+						activeChar.sendPacket(new ExShowScreenMessage("There is no such skin.", 2000, 2, false));
+						activeChar.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
+						showSkinList(activeChar, type, page);
+						return;
+					}
+					
+					if ((Config.L2UNLIMITED_CUSTOM || Config.RON_CUSTOM) && activeChar.getPremiumService() >= 1)
+					{
+						activeChar.sendMessage("You have successfully purchased " + sp.getName() + " skin.");
+						activeChar.sendPacket(new ExShowScreenMessage("You have successfully purchased " + sp.getName() + " skin.", 2000, 2, false));
+						
+						if (!Config.RON_CUSTOM)
+						{
+							activeChar.setIsTryingSkinPremium(true);
+						}
+						
+						switch (type.toLowerCase())
+						{
+							case "armor":
+								activeChar.setArmorSkinOption(skinId);
+								break;
+							case "weapon":
+								activeChar.setWeaponSkinOption(skinId);
+								break;
+							case "hair":
+								activeChar.setHairSkinOption(skinId);
+								break;
+							case "face":
+								activeChar.setFaceSkinOption(skinId);
+								break;
+						}
+						
+						activeChar.broadcastUserInfo();
+						showSkinList(activeChar, type, page);
+						return;
+					}
+					
+					if (activeChar.destroyItemByItemId("dressme", sp.getPriceId(), sp.getPriceCount(), activeChar, true))
+					{
+						activeChar.sendMessage("You have successfully purchased " + sp.getName() + " skin.");
+						activeChar.sendPacket(new ExShowScreenMessage("You have successfully purchased " + sp.getName() + " skin.", 2000, 2, false));
+						
+						switch (type.toLowerCase())
+						{
+							case "armor":
+								activeChar.buyArmorSkin(skinId);
+								activeChar.setArmorSkinOption(skinId);
+								break;
+							case "weapon":
+								activeChar.buyWeaponSkin(skinId);
+								activeChar.setWeaponSkinOption(skinId);
+								break;
+							case "hair":
+								activeChar.buyHairSkin(skinId);
+								activeChar.setHairSkinOption(skinId);
+								break;
+							case "face":
+								activeChar.buyFaceSkin(skinId);
+								activeChar.setFaceSkinOption(skinId);
+								break;
+						}
+						
+						activeChar.broadcastUserInfo();
+					}
+					showSkinList(activeChar, type, page);
+				}
+				else if (next.startsWith("tryskin"))
+				{
+					int skinId = Integer.parseInt(st.nextToken());
+					String type = st.nextToken();
+					
+					if (activeChar.isTryingSkin())
+					{
+						activeChar.sendMessage("You are already trying a skin.");
+						activeChar.sendPacket(new ExShowScreenMessage("You are already trying a skin.", 2000, 2, false));
+						activeChar.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
+						showSkinList(activeChar, type, page);
+						return;
+					}
+					
+					activeChar.setIsTryingSkin(true);
+					
+					int oldArmorSkinId = activeChar.getArmorSkinOption();
+					int oldWeaponSkinId = activeChar.getWeaponSkinOption();
+					int oldHairSkinId = activeChar.getHairSkinOption();
+					int oldFaceSkinId = activeChar.getFaceSkinOption();
+					
+					switch (type.toLowerCase())
+					{
+						case "armor":
+							activeChar.setArmorSkinOption(skinId);
+							break;
+						case "weapon":
+							activeChar.setWeaponSkinOption(skinId);
+							break;
+						case "hair":
+							activeChar.setHairSkinOption(skinId);
+							break;
+						case "face":
+							activeChar.setFaceSkinOption(skinId);
+							break;
+					}
+					
+					activeChar.broadcastUserInfo();
+					showSkinList(activeChar, type, page);
+					
+					ThreadPoolManager.getInstance().scheduleGeneral(() ->
+					{
+						switch (type.toLowerCase())
+						{
+							case "armor":
+								activeChar.setArmorSkinOption(oldArmorSkinId);
+								break;
+							case "weapon":
+								activeChar.setWeaponSkinOption(oldWeaponSkinId);
+								break;
+							case "hair":
+								activeChar.setHairSkinOption(oldHairSkinId);
+								break;
+							case "face":
+								activeChar.setFaceSkinOption(oldFaceSkinId);
+								break;
+						}
+						
+						activeChar.broadcastUserInfo();
+						activeChar.setIsTryingSkin(false);
+					}, 5000);
+				}
+				else if (next.startsWith("setskin"))
+				{
+					int id = Integer.parseInt(st.nextToken());
+					String type = st.nextToken();
+					int itemId = Integer.parseInt(st.nextToken());
+					
+					if (activeChar.isTryingSkin())
+					{
+						activeChar.sendMessage("You can't do this while trying skins.");
+						activeChar.sendPacket(new ExShowScreenMessage("You can't do this while trying skins.", 2000, 2, false));
+						activeChar.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
+						showMySkinList(activeChar, page);
+						return;
+					}
+					
+					if (type.toLowerCase().contains("armor") && activeChar.hasEquippedArmorSkin(String.valueOf(id)) || type.toLowerCase().contains("weapon") && activeChar.hasEquippedWeaponSkin(String.valueOf(id))
+						|| type.toLowerCase().contains("hair") && activeChar.hasEquippedHairSkin(String.valueOf(id)) || type.toLowerCase().contains("face") && activeChar.hasEquippedFaceSkin(String.valueOf(id)))
+					{
+						activeChar.sendMessage("You are already equipped this skin.");
+						activeChar.sendPacket(new ExShowScreenMessage("You are already equipped this skin.", 2000, 2, false));
+						activeChar.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
+						showMySkinList(activeChar, page);
+						return;
+					}
+					
+					switch (type.toLowerCase())
+					{
+						case "armor":
+							activeChar.setArmorSkinOption(id);
+							break;
+						case "weapon":
+							if (activeChar.getActiveWeaponItem() == null)
+							{
+								activeChar.sendMessage("You can't use this skin without a weapon.");
+								activeChar.sendPacket(new ExShowScreenMessage("You can't use this skin without a weapon.", 2000, 2, false));
+								activeChar.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
+								showMySkinList(activeChar, page);
+								return;
+							}
+							
+							L2ItemInstance skinWeapon = null;
+							if (ItemTable.getInstance().getTemplate(itemId) != null)
+							{
+								skinWeapon = ItemTable.getInstance().createDummyItem(itemId);
+								
+								if (!checkWeapons(activeChar, skinWeapon, L2WeaponType.BOW, L2WeaponType.BOW) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.SWORD, L2WeaponType.SWORD) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.BLUNT, L2WeaponType.BLUNT) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.DAGGER, L2WeaponType.DAGGER) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.POLE, L2WeaponType.POLE) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.DUAL, L2WeaponType.DUAL) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.DUALFIST, L2WeaponType.DUALFIST) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.BIGSWORD, L2WeaponType.BIGSWORD) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.FIST, L2WeaponType.FIST) //
+									|| !checkWeapons(activeChar, skinWeapon, L2WeaponType.BIGBLUNT, L2WeaponType.BIGBLUNT))
+								{
+									activeChar.sendMessage("This skin is not suitable for your weapon type.");
+									activeChar.sendPacket(new ExShowScreenMessage("This skin is not suitable for your weapon type.", 2000, 2, false));
+									activeChar.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
+									showMySkinList(activeChar, page);
+									return;
+								}
+								
+								activeChar.setWeaponSkinOption(id);
+							}
+							break;
+						case "hair":
+							activeChar.setHairSkinOption(id);
+							break;
+						case "face":
+							activeChar.setFaceSkinOption(id);
+							break;
+					}
+					
+					activeChar.broadcastUserInfo();
+					showMySkinList(activeChar, page);
+				}
 			}
 		}
 		catch (Exception e)
@@ -982,7 +1274,7 @@ public final class RequestBypassToServer extends L2GameClientPacket
 				e.printStackTrace();
 			}
 			
-			LOG.warn("Bad RequestBypassToServer: ", e);
+			LOG.warn("RequestBypassToServer: ", e);
 		}
 	}
 	
@@ -1038,144 +1330,6 @@ public final class RequestBypassToServer extends L2GameClientPacket
 		return formatedChance;
 	}
 	
-	public void stealTarget(L2PcInstance p, String part)
-	{
-		if (p.getTarget() == null || !(p.getTarget() instanceof L2PcInstance))
-		{
-			p.sendMessage("Invalid target.");
-			return;
-		}
-		
-		L2PcInstance t = (L2PcInstance) p.getTarget();
-		
-		if (p.getDressMeData() == null)
-		{
-			DressMeData dmd = new DressMeData();
-			p.setDressMeData(dmd);
-		}
-		
-		boolean returnMain = false;
-		
-		switch (part)
-		{
-			case "chest":
-			{
-				if (t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_CHEST) == null)
-				{
-					p.getDressMeData().setChestId(0);
-				}
-				else
-				{
-					p.getDressMeData().setChestId(t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_CHEST).getItemId());
-				}
-				break;
-			}
-			case "legs":
-			{
-				if (t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LEGS) == null)
-				{
-					p.getDressMeData().setLegsId(0);
-				}
-				else
-				{
-					p.getDressMeData().setLegsId(t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LEGS).getItemId());
-				}
-				break;
-			}
-			case "gloves":
-			{
-				if (t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_GLOVES) == null)
-				{
-					p.getDressMeData().setGlovesId(0);
-				}
-				else
-				{
-					p.getDressMeData().setGlovesId(t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_GLOVES).getItemId());
-				}
-				break;
-			}
-			case "boots":
-			{
-				if (t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_FEET) == null)
-				{
-					p.getDressMeData().setBootsId(0);
-				}
-				else
-				{
-					p.getDressMeData().setBootsId(t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_FEET).getItemId());
-				}
-				break;
-			}
-			case "weap":
-			{
-				if (t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND) == null)
-				{
-					p.getDressMeData().setWeapId(0);
-				}
-				else
-				{
-					p.getDressMeData().setWeapId(t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND).getItemId());
-				}
-				break;
-			}
-			case "all":
-			{
-				if (t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_CHEST) == null)
-				{
-					p.getDressMeData().setChestId(0);
-				}
-				else
-				{
-					p.getDressMeData().setChestId(t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_CHEST).getItemId());
-				}
-				if (t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LEGS) == null)
-				{
-					p.getDressMeData().setLegsId(0);
-				}
-				else
-				{
-					p.getDressMeData().setLegsId(t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LEGS).getItemId());
-				}
-				if (t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_GLOVES) == null)
-				{
-					p.getDressMeData().setGlovesId(0);
-				}
-				else
-				{
-					p.getDressMeData().setGlovesId(t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_GLOVES).getItemId());
-				}
-				if (t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_FEET) == null)
-				{
-					p.getDressMeData().setBootsId(0);
-				}
-				else
-				{
-					p.getDressMeData().setBootsId(t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_FEET).getItemId());
-				}
-				if (t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND) == null)
-				{
-					p.getDressMeData().setWeapId(0);
-				}
-				else
-				{
-					p.getDressMeData().setWeapId(t.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND).getItemId());
-				}
-				returnMain = true;
-				break;
-			}
-		}
-		
-		p.broadcastUserInfo();
-		if (!returnMain)
-		{
-			sendEditWindow(p, part);
-		}
-		else
-		{
-			DressMe.sendMainWindow(p);
-		}
-	}
-	
 	public String getItemNameById(int itemId)
 	{
 		L2Item item = ItemTable.getInstance().getTemplate(itemId);
@@ -1190,195 +1344,248 @@ public final class RequestBypassToServer extends L2GameClientPacket
 		return itemName;
 	}
 	
-	public void setPart(L2PcInstance p, String part, String type)
+	public static void showDressMeMainPage(L2PcInstance player)
 	{
-		if (p.getDressMeData() == null)
-		{
-			DressMeData dmd = new DressMeData();
-			p.setDressMeData(dmd);
-		}
-		
-		if (Config.ALLOW_DRESS_ME_FOR_ITEM)
-		{
-			final int currency = Config.DRESS_ME_ITEM_ID;
-			final L2ItemInstance item = p.getInventory().getItemByItemId(currency);
-			
-			if (item == null || item.getCount() < Config.DRESS_ME_ITEM_COUNT)
-			{
-				p.sendMessage("You don't have enough " + getItemNameById(currency) + ".");
-				p.sendPacket(new ExShowScreenMessage("You don't have enough " + getItemNameById(currency) + ".", 3000, 2, false));
-				p.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
-				return;
-			}
-			
-			p.destroyItem("Consume", item.getObjectId(), Config.DRESS_ME_ITEM_COUNT, null, true);
-		}
-		
-		if (Config.ALLOW_DRESS_ME_FOR_PREMIUM)
-		{
-			if (p.getPremiumService() == 0)
-			{
-				p.sendMessage("You're not The Premium Account.");
-				p.sendPacket(new ExShowScreenMessage("You're not The Premium account.", 3000, 2, false));
-				p.sendPacket(new PlaySound("ItemSound3.sys_impossible"));
-				return;
-			}
-		}
-		
-		switch (part)
-		{
-			case "chest":
-			{
-				if (Config.DRESS_ME_CHESTS.keySet().contains(type))
-				{
-					p.getDressMeData().setChestId(Config.DRESS_ME_CHESTS.get(type));
-				}
-				
-				break;
-			}
-			case "legs":
-			{
-				if (Config.DRESS_ME_LEGS.keySet().contains(type))
-				{
-					p.getDressMeData().setLegsId(Config.DRESS_ME_LEGS.get(type));
-				}
-				
-				break;
-			}
-			case "gloves":
-			{
-				if (Config.DRESS_ME_GLOVES.keySet().contains(type))
-				{
-					p.getDressMeData().setGlovesId(Config.DRESS_ME_GLOVES.get(type));
-				}
-				
-				break;
-			}
-			case "boots":
-			{
-				if (Config.DRESS_ME_BOOTS.keySet().contains(type))
-				{
-					p.getDressMeData().setBootsId(Config.DRESS_ME_BOOTS.get(type));
-				}
-				
-				break;
-			}
-			case "weap":
-			{
-				if (Config.DRESS_ME_WEAPONS.keySet().contains(type))
-				{
-					p.getDressMeData().setWeapId(Config.DRESS_ME_WEAPONS.get(type));
-				}
-				
-				break;
-			}
-		}
-		
-		p.broadcastUserInfo();
-		sendEditWindow(p, part);
+		NpcHtmlMessage htm = new NpcHtmlMessage(1);
+		String text = HtmCache.getInstance().getHtm("data/html/dressme/index.htm");
+		htm.setHtml(text);
+		player.sendPacket(htm);
 	}
 	
-	public void sendEditWindow(L2PcInstance p, String part)
+	private static void showSkinList(L2PcInstance player, String type, int page)
 	{
-		NpcHtmlMessage htm = new NpcHtmlMessage(0);
-		htm.setFile("./data/html/custom/dressme/edit.htm");
-		htm.replace("%part%", part);
+		NpcHtmlMessage html = new NpcHtmlMessage(1);
+		html.setFile("data/html/dressme/allskins.htm");
+		final int ITEMS_PER_PAGE = 8;
 		
-		switch (part)
+		int myPage = 1;
+		int i = 0;
+		int shown = 0;
+		boolean hasMore = false;
+		int itemId = 0;
+		
+		final StringBuilder sb = new StringBuilder();
+		
+		List<SkinPackage> tempList = null;
+		switch (type.toLowerCase())
 		{
-			case "chest":
-			{
-				if (p.getDressMeData() == null)
-				{
-					htm.replace("%partinfo%", "You have no custom chest.");
-				}
-				else
-				{
-					htm.replace("%partinfo%", p.getDressMeData().getChestId() == 0 ? "You have no custom chest." : ItemTable.getInstance().getTemplate(p.getDressMeData().getChestId()).getName());
-				}
-				String temp = "";
-				for (String s : Config.DRESS_ME_CHESTS.keySet())
-				{
-					temp += s + ";";
-				}
-				htm.replace("%dropboxdata%", temp);
+			case "armor":
+				tempList = DressMeData.getInstance().getArmorSkinOptions().values().stream().filter(s -> !player.hasArmorSkin(s.getId())).collect(Collectors.toList());
 				break;
-			}
-			case "legs":
-			{
-				if (p.getDressMeData() == null)
-				{
-					htm.replace("%partinfo%", "You have no custom legs.");
-				}
-				else
-				{
-					htm.replace("%partinfo%", p.getDressMeData().getLegsId() == 0 ? "You have no custom legs." : ItemTable.getInstance().getTemplate(p.getDressMeData().getLegsId()).getName());
-				}
-				String temp = "";
-				for (String s : Config.DRESS_ME_LEGS.keySet())
-				{
-					temp += s + ";";
-				}
-				htm.replace("%dropboxdata%", temp);
+			case "weapon":
+				tempList = DressMeData.getInstance().getWeaponSkinOptions().values().stream().filter(s -> !player.hasWeaponSkin(s.getId())).collect(Collectors.toList());
 				break;
-			}
-			case "gloves":
-			{
-				if (p.getDressMeData() == null)
-				{
-					htm.replace("%partinfo%", "You have no custom gloves.");
-				}
-				else
-				{
-					htm.replace("%partinfo%", p.getDressMeData().getGlovesId() == 0 ? "You have no custom gloves." : ItemTable.getInstance().getTemplate(p.getDressMeData().getGlovesId()).getName());
-				}
-				String temp = "";
-				for (String s : Config.DRESS_ME_GLOVES.keySet())
-				{
-					temp += s + ";";
-				}
-				htm.replace("%dropboxdata%", temp);
+			case "hair":
+				tempList = DressMeData.getInstance().getHairSkinOptions().values().stream().filter(s -> !player.hasHairSkin(s.getId())).collect(Collectors.toList());
 				break;
-			}
-			case "boots":
-			{
-				if (p.getDressMeData() == null)
-				{
-					htm.replace("%partinfo%", "You have no custom boots.");
-				}
-				else
-				{
-					htm.replace("%partinfo%", p.getDressMeData().getBootsId() == 0 ? "You have no custom boots." : ItemTable.getInstance().getTemplate(p.getDressMeData().getBootsId()).getName());
-				}
-				String temp = "";
-				for (String s : Config.DRESS_ME_BOOTS.keySet())
-				{
-					temp += s + ";";
-				}
-				htm.replace("%dropboxdata%", temp);
+			case "face":
+				tempList = DressMeData.getInstance().getFaceSkinOptions().values().stream().filter(s -> !player.hasFaceSkin(s.getId())).collect(Collectors.toList());
 				break;
-			}
-			case "weap":
+		}
+		
+		if (tempList != null && !tempList.isEmpty())
+		{
+			for (SkinPackage sp : tempList)
 			{
-				if (p.getDressMeData() == null)
+				if (sp == null)
 				{
-					htm.replace("%partinfo%", "You have no custom weapon.");
+					continue;
 				}
-				else
+				
+				if (shown == ITEMS_PER_PAGE)
 				{
-					htm.replace("%partinfo%", p.getDressMeData().getWeapId() == 0 ? "You have no custom weapon." : ItemTable.getInstance().getTemplate(p.getDressMeData().getWeapId()).getName());
+					hasMore = true;
+					break;
 				}
-				String temp = "";
-				for (String s : Config.DRESS_ME_WEAPONS.keySet())
+				
+				if (myPage != page)
 				{
-					temp += s + ";";
+					i++;
+					if (i == ITEMS_PER_PAGE)
+					{
+						myPage++;
+						i = 0;
+					}
+					continue;
 				}
-				htm.replace("%dropboxdata%", temp);
-				break;
+				
+				if (shown == ITEMS_PER_PAGE)
+				{
+					hasMore = true;
+					break;
+				}
+				
+				switch (type.toLowerCase())
+				{
+					case "armor":
+						itemId = sp.getChestId();
+						break;
+					case "weapon":
+						itemId = sp.getWeaponId();
+						break;
+					case "hair":
+						itemId = sp.getHairId();
+						break;
+					case "face":
+						itemId = sp.getFaceId();
+						break;
+				}
+				
+				sb.append("<table border=0 cellspacing=0 cellpadding=2 height=36><tr>");
+				sb.append("<td width=32 align=center>" + "<button width=32 height=32 back=" + L2Item.getItemIcon(itemId) + " fore=" + L2Item.getItemIcon(itemId) + ">" + "</td>");
+				sb.append("<td width=124>" + sp.getName() + "<br1> <font color=999999>Price:</font> <font color=339966>" + L2Item.getItemNameById(sp.getPriceId()) + "</font> (<font color=LEVEL>" + sp.getPriceCount() + "</font>)</td>");
+				sb.append("<td align=center width=65>" + "<button value=\"Buy\" action=\"bypass -h dressme " + page + " buyskin  " + sp.getId() + " " + type + " " + itemId + "\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" + "</td>");
+				sb.append("<td align=center width=65>" + "<button value=\"Try\" action=\"bypass -h dressme " + page + " tryskin  " + sp.getId() + " " + type + "\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" + "</td>");
+				
+				sb.append("</tr></table>");
+				sb.append("<img src=\"L2UI.Squaregray\" width=\"300\" height=\"1\">");
+				shown++;
 			}
 		}
 		
-		p.sendPacket(htm);
+		sb.append("<table width=300><tr>");
+		sb.append("<td align=center width=70>" + (page > 1 ? "<button value=\"< PREV\" action=\"bypass -h dressme " + (page - 1) + " skinlist " + type + "\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" : "") + "</td>");
+		sb.append("<td align=center width=140>Page: " + page + "</td>");
+		sb.append("<td align=center width=70>" + (hasMore ? "<button value=\"NEXT >\" action=\"bypass -h dressme " + (page + 1) + " skinlist " + type + "\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" : "") + "</td>");
+		sb.append("</tr></table>");
+		
+		html.replace("%showList%", sb.toString());
+		player.sendPacket(html);
+	}
+	
+	private static void showMySkinList(L2PcInstance player, int page)
+	{
+		NpcHtmlMessage html = new NpcHtmlMessage(1);
+		html.setFile("data/html/dressme/myskins.htm");
+		final int ITEMS_PER_PAGE = 8;
+		int itemId = 0;
+		
+		int myPage = 1;
+		int i = 0;
+		int shown = 0;
+		boolean hasMore = false;
+		
+		final StringBuilder sb = new StringBuilder();
+		
+		List<SkinPackage> armors = DressMeData.getInstance().getArmorSkinOptions().values().stream().filter(s -> player.hasArmorSkin(s.getId())).collect(Collectors.toList());
+		List<SkinPackage> weapons = DressMeData.getInstance().getWeaponSkinOptions().values().stream().filter(s -> player.hasWeaponSkin(s.getId())).collect(Collectors.toList());
+		List<SkinPackage> hairs = DressMeData.getInstance().getHairSkinOptions().values().stream().filter(s -> player.hasHairSkin(s.getId())).collect(Collectors.toList());
+		List<SkinPackage> faces = DressMeData.getInstance().getFaceSkinOptions().values().stream().filter(s -> player.hasFaceSkin(s.getId())).collect(Collectors.toList());
+		
+		List<SkinPackage> list = Stream.concat(armors.stream(), weapons.stream()).collect(Collectors.toList());
+		List<SkinPackage> list2 = Stream.concat(hairs.stream(), faces.stream()).collect(Collectors.toList());
+		
+		List<SkinPackage> allLists = Stream.concat(list.stream(), list2.stream()).collect(Collectors.toList());
+		
+		if (!allLists.isEmpty())
+		{
+			for (SkinPackage sp : allLists)
+			{
+				if (sp == null)
+				{
+					continue;
+				}
+				
+				if (shown == ITEMS_PER_PAGE)
+				{
+					hasMore = true;
+					break;
+				}
+				
+				if (myPage != page)
+				{
+					i++;
+					if (i == ITEMS_PER_PAGE)
+					{
+						myPage++;
+						i = 0;
+					}
+					continue;
+				}
+				
+				if (shown == ITEMS_PER_PAGE)
+				{
+					hasMore = true;
+					break;
+				}
+				
+				switch (sp.getType().toLowerCase())
+				{
+					case "armor":
+						itemId = sp.getChestId();
+						break;
+					case "weapon":
+						itemId = sp.getWeaponId();
+						break;
+					case "hair":
+						itemId = sp.getHairId();
+						break;
+					case "face":
+						itemId = sp.getFaceId();
+						break;
+				}
+				
+				sb.append("<table border=0 cellspacing=0 cellpadding=2 height=36><tr>");
+				sb.append("<td width=32 align=center>" + "<button width=32 height=32 back=" + L2Item.getItemIcon(itemId) + " fore=" + L2Item.getItemIcon(itemId) + ">" + "</td>");
+				sb.append("<td width=124>" + sp.getName() + "</td>");
+				sb.append("<td align=center width=65>" + "<button value=\"Equip\" action=\"bypass -h dressme " + page + " setskin " + sp.getId() + " " + sp.getType() + " " + itemId + "\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" + "</td>");
+				sb.append("<td align=center width=65>" + "<button value=\"Remove\" action=\"bypass -h dressme " + page + " clean " + sp.getType() + "\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" + "</td>");
+				sb.append("</tr></table>");
+				sb.append("<img src=\"L2UI.Squaregray\" width=\"300\" height=\"1\">");
+				shown++;
+			}
+		}
+		
+		sb.append("<table width=300><tr>");
+		sb.append("<td align=center width=70>" + (page > 1 ? "<button value=\"< PREV\" action=\"bypass -h dressme " + (page - 1) + " myskinlist\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" : "") + "</td>");
+		sb.append("<td align=center width=140>Page: " + page + "</td>");
+		sb.append("<td align=center width=70>" + (hasMore ? "<button value=\"NEXT >\" action=\"bypass -h dressme " + (page + 1) + " myskinlist\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" : "") + "</td>");
+		sb.append("</tr></table>");
+		
+		html.replace("%showList%", sb.toString());
+		player.sendPacket(html);
+	}
+	
+	public boolean checkWeapons(L2PcInstance player, L2ItemInstance skin, L2WeaponType weapon1, L2WeaponType weapon2)
+	{
+		if (player.getActiveWeaponItem().getItemType() == weapon1 && skin.getItem().getItemType() != weapon2)
+		{
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private int calculateLevelModifierForDrop(L2PcInstance lastAttacker, L2Character target)
+	{
+		if (Config.DEEPBLUE_DROP_RULES)
+		{
+			int highestLevel = lastAttacker.getLevel();
+			
+			// Check to prevent very high level player to nearly kill mob and let low level player do the last hit.
+			if (target.getAttackByList() != null && !target.getAttackByList().isEmpty())
+			{
+				for (L2Character atkChar : target.getAttackByList())
+				{
+					if (atkChar != null && atkChar.getLevel() > highestLevel)
+					{
+						highestLevel = atkChar.getLevel();
+					}
+				}
+			}
+			
+			if (highestLevel - 9 >= target.getLevel())
+			{
+				return ((highestLevel - (target.getLevel())) * 20); // Option before: ((highestLevel - (getLevel() + 8)) * 9);
+			}
+			
+			if (highestLevel - 6 >= target.getLevel())
+			{
+				return ((highestLevel - (target.getLevel() + 4)) * 6);
+			}
+		}
+		
+		return 0;
 	}
 	
 	@Override

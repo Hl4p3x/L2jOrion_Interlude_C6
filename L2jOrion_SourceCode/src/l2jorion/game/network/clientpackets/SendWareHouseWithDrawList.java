@@ -28,6 +28,7 @@ import l2jorion.game.model.actor.instance.L2FolkInstance;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.EnchantResult;
@@ -39,7 +40,7 @@ import l2jorion.game.powerpack.PowerPackConfig;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class SendWareHouseWithDrawList extends L2GameClientPacket
+public final class SendWareHouseWithDrawList extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(SendWareHouseWithDrawList.class);
 	
@@ -82,13 +83,10 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket
 	{
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
-			return;
-		if (player.isSubmitingPin())
 		{
-			player.sendMessage("Unable to do any action while PIN is not submitted");
-			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		if (!getClient().getFloodProtectors().getTransaction().tryPerformAction("withdraw"))
 		{
 			player.sendMessage("You withdrawing items too fast.");
@@ -105,14 +103,18 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket
 		
 		final ItemContainer warehouse = player.getActiveWarehouse();
 		if (!PowerPackConfig.GMSHOP_USECOMMAND && warehouse == null)
+		{
 			return;
+		}
 		
 		final L2FolkInstance manager = player.getLastFolkNPC();
 		
 		if (!PowerPackConfig.GMSHOP_USECOMMAND)
 		{
 			if ((manager == null || !player.isInsideRadius(manager, L2NpcInstance.INTERACTION_DISTANCE, false, false)) && !player.isGM())
+			{
 				return;
+			}
 		}
 		
 		if (warehouse instanceof ClanWarehouse && !player.getAccessLevel().allowTransaction())
@@ -124,12 +126,16 @@ public final class SendWareHouseWithDrawList extends L2GameClientPacket
 		
 		// Alt game - Karma punishment
 		if (!Config.ALT_GAME_KARMA_PLAYER_CAN_USE_WAREHOUSE && player.getKarma() > 0)
+		{
 			return;
+		}
 		
 		if (Config.ALT_MEMBERS_CAN_WITHDRAW_FROM_CLANWH)
 		{
 			if (warehouse instanceof ClanWarehouse && (player.getClanPrivileges() & L2Clan.CP_CL_VIEW_WAREHOUSE) != L2Clan.CP_CL_VIEW_WAREHOUSE)
+			{
 				return;
+			}
 		}
 		else
 		{

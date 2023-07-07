@@ -32,12 +32,9 @@ import l2jorion.login.network.clientpackets.ClientBasePacket;
 public class BlowFishKey extends ClientBasePacket
 {
 	byte[] _key;
+	
 	protected static final Logger LOG = LoggerFactory.getLogger(BlowFishKey.class);
 	
-	/**
-	 * @param decrypt
-	 * @param privateKey
-	 */
 	public BlowFishKey(final byte[] decrypt, final RSAPrivateKey privateKey)
 	{
 		super(decrypt);
@@ -75,11 +72,6 @@ public class BlowFishKey extends ClientBasePacket
 			LOG.error("Error While decrypting blowfish key (RSA)", e);
 			e.printStackTrace();
 		}
-		/*
-		 * catch(IOException ioe) { //TODO: manage }
-		 */
-		
-		tempKey = null;
 	}
 	
 	public byte[] getKey()

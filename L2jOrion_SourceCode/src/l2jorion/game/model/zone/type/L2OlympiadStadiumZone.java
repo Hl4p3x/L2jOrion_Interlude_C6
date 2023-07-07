@@ -26,10 +26,10 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.olympiad.OlympiadGameTask;
 import l2jorion.game.model.zone.L2ZoneRespawn;
 import l2jorion.game.model.zone.ZoneId;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExOlympiadMatchEnd;
 import l2jorion.game.network.serverpackets.ExOlympiadUserInfo;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
 public class L2OlympiadStadiumZone extends L2ZoneRespawn
@@ -157,7 +157,7 @@ public class L2OlympiadStadiumZone extends L2ZoneRespawn
 		}
 	}
 	
-	public final void broadcastPacketToObservers(L2GameServerPacket packet)
+	public final void broadcastPacketToObservers(PacketServer packet)
 	{
 		for (L2PcInstance player : getKnownTypeInside(L2PcInstance.class))
 		{

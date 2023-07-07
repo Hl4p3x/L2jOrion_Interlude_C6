@@ -15,12 +15,6 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- *
- * @author: FBIagent / fixed by SqueezeD
- *
- */
-
 package l2jorion.game.handler.admin;
 
 import java.util.StringTokenizer;
@@ -75,81 +69,114 @@ public class AdminTvTEngine implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		if (command.equals("admin_tvt"))
+		{
 			showMainPage(activeChar);
+		}
 		else if (command.startsWith("admin_tvt_name "))
 		{
 			if (TvT.set_eventName(command.substring(15)))
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot perform requested operation, event in progress");
+			}
 			
 		}
 		else if (command.startsWith("admin_tvt_desc "))
 		{
 			if (TvT.set_eventDesc(command.substring(15)))
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot perform requested operation, event in progress");
+			}
 			
 		}
 		else if (command.startsWith("admin_tvt_minlvl "))
 		{
 			if (!TvT.checkMinLevel(Integer.valueOf(command.substring(17))))
+			{
 				return false;
+			}
 			
 			if (TvT.set_minlvl(Integer.valueOf(command.substring(17))))
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot perform requested operation, event in progress");
+			}
 			
 		}
 		else if (command.startsWith("admin_tvt_maxlvl "))
 		{
 			if (!TvT.checkMaxLevel(Integer.valueOf(command.substring(17))))
+			{
 				return false;
+			}
 			
 			if (TvT.set_maxlvl(Integer.valueOf(command.substring(17))))
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot perform requested operation, event in progress");
+			}
 			
 		}
 		else if (command.startsWith("admin_tvt_minplayers "))
 		{
 			if (TvT.set_minPlayers(Integer.valueOf(command.substring(21))))
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot perform requested operation, event in progress");
+			}
 			
 		}
 		else if (command.startsWith("admin_tvt_maxplayers "))
 		{
 			if (TvT.set_maxPlayers(Integer.valueOf(command.substring(21))))
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot perform requested operation, event in progress");
+			}
 			
 		}
 		else if (command.startsWith("admin_tvt_join_loc "))
 		{
 			if (TvT.set_joiningLocationName(command.substring(19)))
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot perform requested operation, event in progress");
+			}
 			
 		}
 		else if (command.startsWith("admin_tvt_npc "))
 		{
 			if (TvT.set_npcId(Integer.valueOf(command.substring(14))))
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot perform requested operation, event in progress");
+			}
 			
 		}
 		else if (command.equals("admin_tvt_npc_pos"))
@@ -160,41 +187,61 @@ public class AdminTvTEngine implements IAdminCommandHandler
 		else if (command.startsWith("admin_tvt_reward "))
 		{
 			if (TvT.set_rewardId(Integer.valueOf(command.substring(17))))
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot perform requested operation, event in progress");
+			}
 			
 		}
 		else if (command.startsWith("admin_tvt_reward_amount "))
 		{
 			if (TvT.set_rewardAmount(Integer.valueOf(command.substring(24))))
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot perform requested operation, event in progress");
+			}
 			
 		}
 		else if (command.startsWith("admin_tvt_jointime "))
 		{
 			if (TvT.set_joinTime(Integer.valueOf(command.substring(19))))
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot perform requested operation, event in progress");
+			}
 			
 		}
 		else if (command.startsWith("admin_tvt_eventtime "))
 		{
 			if (TvT.set_eventTime(Integer.valueOf(command.substring(20))))
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot perform requested operation, event in progress");
+			}
 			
 		}
 		else if (command.startsWith("admin_tvt_interval "))
 		{
 			if (TvT.set_intervalBetweenMatchs(Integer.valueOf(command.substring(20))))
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot perform requested operation, event in progress");
+			}
 			
 		}
 		else if (command.startsWith("admin_tvt_team_add "))
@@ -236,9 +283,13 @@ public class AdminTvTEngine implements IAdminCommandHandler
 		else if (command.equals("admin_tvt_join"))
 		{
 			if (TvT.startJoin())
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot startJoin, check LOGGER for info..");
+			}
 		}
 		else if (command.equals("admin_tvt_teleport"))
 		{
@@ -248,9 +299,13 @@ public class AdminTvTEngine implements IAdminCommandHandler
 		else if (command.equals("admin_tvt_start"))
 		{
 			if (TvT.startEvent())
+			{
 				showMainPage(activeChar);
+			}
 			else
+			{
 				activeChar.sendMessage("Cannot startEvent, check LOGGER for info..");
+			}
 		}
 		else if (command.equals("admin_tvt_startevent"))
 		{
@@ -282,9 +337,13 @@ public class AdminTvTEngine implements IAdminCommandHandler
 		else if (command.equals("admin_tvt_autoevent"))
 		{
 			if (TvT.get_joinTime() > 0 && TvT.get_eventTime() > 0)
+			{
 				TvT.autoEvent();
+			}
 			else
+			{
 				activeChar.sendMessage("Wrong usege: join time or event time invalid.");
+			}
 			
 			showMainPage(activeChar);
 		}
@@ -294,7 +353,9 @@ public class AdminTvTEngine implements IAdminCommandHandler
 			showMainPage(activeChar);
 		}
 		else if (command.equals("admin_tvt_dump"))
+		{
 			TvT.dumpData();
+		}
 		else if (command.startsWith("admin_tvtkick"))
 		{
 			final StringTokenizer st = new StringTokenizer(command);
@@ -309,7 +370,9 @@ public class AdminTvTEngine implements IAdminCommandHandler
 					activeChar.sendMessage("You kicked " + playerToKick.getName() + " from the TvT.");
 				}
 				else
+				{
 					activeChar.sendMessage("Wrong usege: //tvtkick <player>");
+				}
 			}
 		}
 		return true;
@@ -399,11 +462,15 @@ public class AdminTvTEngine implements IAdminCommandHandler
 			replyMSG.append("<tr><td width=\"100\"><font color=\"LEVEL\">" + team + "</font>");
 			
 			if (Config.TVT_EVEN_TEAMS.equals("NO") || Config.TVT_EVEN_TEAMS.equals("BALANCE"))
+			{
 				replyMSG.append("&nbsp;(" + TvT.teamPlayersCount(team) + " joined)");
+			}
 			else if (Config.TVT_EVEN_TEAMS.equals("SHUFFLE"))
 			{
 				if (TvT.is_teleport() || TvT.is_started())
+				{
 					replyMSG.append("&nbsp;(" + TvT.teamPlayersCount(team) + " in)");
+				}
 			}
 			
 			replyMSG.append("</td></tr><tr><td>");

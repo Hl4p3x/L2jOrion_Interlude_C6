@@ -108,8 +108,6 @@ public class Wedding implements IVoicedCommandHandler
 			}
 		}
 		
-		partner = null;
-		
 		CoupleManager.getInstance().deleteCouple(_coupleId);
 		return true;
 	}
@@ -208,7 +206,7 @@ public class Wedding implements IVoicedCommandHandler
 		}
 		
 		ptarget.setEngageRequest(true, activeChar.getObjectId());
-		ConfirmDlg dlg = new ConfirmDlg(614);
+		ConfirmDlg dlg = new ConfirmDlg(713);
 		dlg.addString(activeChar.getName() + " asking you to engage. Do you want to start a new relationship?");
 		ptarget.sendPacket(dlg);
 		
@@ -372,9 +370,8 @@ public class Wedding implements IVoicedCommandHandler
 		activeChar.getInventory().reduceAdena("Wedding", Config.L2JMOD_WEDDING_TELEPORT_PRICE, activeChar, null);
 		
 		activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-		// SoE Animation section
+		
 		activeChar.setTarget(activeChar);
-		activeChar.disableAllSkills();
 		
 		MagicSkillUser msk = new MagicSkillUser(activeChar, 1050, 1, teleportTimer, 0);
 		activeChar.broadcastPacket(msk);
@@ -383,7 +380,7 @@ public class Wedding implements IVoicedCommandHandler
 		activeChar.sendPacket(sg);
 		
 		EscapeFinalizer ef = new EscapeFinalizer(activeChar, partner.getX(), partner.getY(), partner.getZ(), partner.isIn7sDungeon());
-		// continue execution later
+		
 		activeChar.setSkillCast(ThreadPoolManager.getInstance().scheduleGeneral(ef, teleportTimer));
 		activeChar.setSkillCastEndTime(10 + GameTimeController.getInstance().getGameTicks() + teleportTimer / GameTimeController.MILLIS_IN_TICK);
 		
@@ -416,7 +413,6 @@ public class Wedding implements IVoicedCommandHandler
 			}
 			
 			_activeChar.setIsIn7sDungeon(_to7sDungeon);
-			_activeChar.enableAllSkills();
 			
 			try
 			{

@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ShowCalculator extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ShowCalculator extends PacketServer
 {
 	private static final String _S__DC_SHOWCALCULATOR = "[S] dc ShowCalculator";
 	

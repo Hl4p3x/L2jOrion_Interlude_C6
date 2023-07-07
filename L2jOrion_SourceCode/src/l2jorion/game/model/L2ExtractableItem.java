@@ -21,9 +21,6 @@ package l2jorion.game.model;
 
 import java.util.List;
 
-/**
- * @author -Nemesiss-
- */
 public class L2ExtractableItem
 {
 	private final int _itemId;

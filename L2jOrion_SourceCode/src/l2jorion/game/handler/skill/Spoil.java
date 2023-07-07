@@ -20,6 +20,7 @@
  */
 package l2jorion.game.handler.skill;
 
+import l2jorion.Config;
 import l2jorion.game.ai.CtrlEvent;
 import l2jorion.game.enums.AchType;
 import l2jorion.game.handler.ISkillHandler;
@@ -68,10 +69,13 @@ public class Spoil implements ISkillHandler
 				continue;
 			}
 			
-			if (target.getSpoilerId() != 0)
+			if (!Config.RON_CUSTOM)
 			{
-				activeChar.sendPacket(new SystemMessage(SystemMessageId.ALREADY_SPOILED));
-				continue;
+				if (target.getSpoilerId() != 0)
+				{
+					activeChar.sendPacket(new SystemMessage(SystemMessageId.ALREADY_SPOILED));
+					continue;
+				}
 			}
 			
 			if (!target.isDead())

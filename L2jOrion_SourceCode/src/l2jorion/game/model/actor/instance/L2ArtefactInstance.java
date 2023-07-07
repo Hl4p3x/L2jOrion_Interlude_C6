@@ -24,7 +24,6 @@ import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.templates.L2NpcTemplate;
 
 public final class L2ArtefactInstance extends L2NpcInstance
@@ -57,7 +56,6 @@ public final class L2ArtefactInstance extends L2NpcInstance
 		if (this != player.getTarget())
 		{
 			player.setTarget(this);
-			player.sendPacket(new MyTargetSelected(getObjectId(), 0));
 		}
 		else
 		{
@@ -67,6 +65,11 @@ public final class L2ArtefactInstance extends L2NpcInstance
 			}
 			else
 			{
+				if (player.isMoving())
+				{
+					player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+				}
+				
 				player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
 			}
 		}

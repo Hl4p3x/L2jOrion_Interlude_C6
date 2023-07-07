@@ -19,10 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * @author chris_00 opens the CommandChannel Information window
- */
-public class ExOpenMPCC extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExOpenMPCC extends PacketServer
 {
 	
 	@Override

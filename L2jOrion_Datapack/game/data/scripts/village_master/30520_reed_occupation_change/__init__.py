@@ -1,14 +1,11 @@
-#
-# Created by DraX on 2005.08.08 modified by Ariakas on 2005.09.19
-#
-
 import sys
 
 from l2jorion.game.model.quest        import State
 from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
+
 qn = "30520_reed_occupation_change"
-#print "30520. Reed occupation change"
+
 WAREHOUSE_CHIEF_REED = 30520
 
 class Quest (JQuest) :

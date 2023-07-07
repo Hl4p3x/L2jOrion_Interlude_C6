@@ -31,9 +31,13 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2WorldRegion;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.util.Util;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 
 public class ObjectKnownList
 {
+	protected static final Logger LOG = LoggerFactory.getLogger(ObjectKnownList.class);
+	
 	protected L2Object _activeObject;
 	
 	private Map<Integer, L2Object> _knownObjects;
@@ -46,6 +50,11 @@ public class ObjectKnownList
 	public boolean addKnownObject(L2Object object)
 	{
 		if (object == null)
+		{
+			return false;
+		}
+		
+		if (object.getInstanceId() != getActiveObject().getInstanceId())
 		{
 			return false;
 		}
@@ -143,12 +152,9 @@ public class ObjectKnownList
 				continue;
 			}
 			
-			if (object instanceof L2Character)
+			if (!fullCheck && !(object instanceof L2PlayableInstance) && !object.isDead())
 			{
-				if (!fullCheck && !((L2Character) object).isDead())
-				{
-					continue;
-				}
+				continue;
 			}
 			
 			if (!object.isVisible() || !Util.checkIfInRange(getDistanceToForgetObject(object), getActiveObject(), object, true))
@@ -163,12 +169,12 @@ public class ObjectKnownList
 		return _activeObject;
 	}
 	
-	public int getDistanceToForgetObject(final L2Object object)
+	public int getDistanceToForgetObject(L2Object object)
 	{
 		return 0;
 	}
 	
-	public int getDistanceToWatchObject(final L2Object object)
+	public int getDistanceToWatchObject(L2Object object)
 	{
 		return 0;
 	}
@@ -189,10 +195,13 @@ public class ObjectKnownList
 		
 		for (L2Object obj : getKnownObjects().values())
 		{
-			if (type.isAssignableFrom(obj.getClass()))
+			if (obj == getActiveObject() || !type.isAssignableFrom(obj.getClass()))
 			{
-				result.add((A) obj);
+				continue;
 			}
+			
+			result.add((A) obj);
+			
 		}
 		return result;
 	}
@@ -204,10 +213,12 @@ public class ObjectKnownList
 		
 		for (L2Object obj : getKnownObjects().values())
 		{
-			if (type.isAssignableFrom(obj.getClass()) && Util.checkIfInRange(radius, getActiveObject(), obj, true))
+			if (obj == getActiveObject() || !type.isAssignableFrom(obj.getClass()) || !Util.checkIfInRange(radius, getActiveObject(), obj, true))
 			{
-				result.add((A) obj);
+				continue;
 			}
+			
+			result.add((A) obj);
 		}
 		return result;
 	}

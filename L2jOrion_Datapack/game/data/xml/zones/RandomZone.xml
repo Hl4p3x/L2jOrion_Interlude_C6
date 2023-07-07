@@ -1,20 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <list enabled="true" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../xsd/zones.xsd">
 <!-- Random Zones -->
-	<zone name="Gludin Arena" type="RandomZone" shape="Cuboid" minZ="-3752" maxZ="-352">
-		<stat name="id" val="1" />
-		<stat name="time" val="30" /> <!-- time in seconds -->
-		<stat name="autoPvpFlag" val="true"/>
-		<stat name="locs" val="-88339,141802,-3649;-87894,142231,-3649" /> <!-- spawn / respawn  locations -->
-		<node X="-88411" Y="141732" />
-		<node X="-87429" Y="142708" />
-	</zone>
-	<zone name="Giran Arena" type="RandomZone" shape="Cuboid" minZ="-3850" maxZ="-350">
-		<stat name="id" val="2" />
-		<stat name="time" val="30" /> <!-- time in seconds -->
-		<stat name="autoPvpFlag" val="true"/>
-		<stat name="locs" val="73306,142440,-3775;72646,142403,-3775" /> <!-- spawn / respawn  locations -->
-		<node X="72493" Y="142263" />
-		<node X="73493" Y="143261" />
-	</zone>
+ <zone name="Hot Springs" type='RandomZone' shape='NPoly' minZ='-4000' maxZ='-3000'>
+	<stat name="id" val="1" />
+	<stat name="time" val="2700" /> <!-- time in seconds -->
+	<stat name="autoPvpFlag" val="true"/>
+	<stat name="locs" val="145306,-104989,-3672;142467,-104346,-3616;140612,-105614,-3632;143578,-107317,-3432;141718,-109453,-3592;144337,-109732,-3512;143326,-105889,-3488;141409,-107460,-3576;" /> <!-- spawn / respawn  locations -->
+	<node X="144495" Y="-112310" />
+	<node X="148289" Y="-105933" />
+	<node X="141687" Y="-102026" />
+	<node X="139412" Y="-105413" />
+	<node X="140120" Y="-109970" />
+</zone>
+	<zone name="Castle" type='RandomZone' shape='NPoly' minZ='-4000' maxZ='-2000'>
+	<stat name="id" val="2" />
+	<stat name="time" val="2700" /> <!-- time in seconds -->
+	<stat name="autoPvpFlag" val="true"/>
+	<stat name="locs" val="-21399,220300,-2792;-23514,221653,-3208;-23094,219394,-2520;-23622,218313,-3232;-21259,218840,-3160;" /> <!-- spawn / respawn  locations -->
+	<node X="-18860" Y="216657" />
+	<node X="-26330" Y="216942" />
+	<node X="-25872" Y="220974" />
+	<node X="-20689" Y="223247" />
+	<node X="-19067" Y="221093" />
+</zone>
+<zone name="Lake" type='RandomZone' shape='NPoly' minZ='-4000' maxZ='-3000'>
+	<stat name="id" val="3" />
+	<stat name="time" val="2700" /> <!-- time in seconds -->
+	<stat name="autoPvpFlag" val="true"/>
+	<stat name="locs" val="-63318,117068,-3544;-65231,114490,-3528;-67295,117231,-3616;-67274,120176,-3640;-64689,120432,-3608;" /> <!-- spawn / respawn  locations -->
+	<node X="-68230" Y="124351" />
+	<node X="-72501" Y="120203" />
+	<node X="-72324" Y="116632" />
+	<node X="-67345" Y="113244" />
+	<node X="-62383" Y="110613" />
+	<node X="-60426" Y="113755" />
+	<node X="-57229" Y="120093" />
+	<node X="-62769" Y="122752" />
+</zone>
+<zone name="Valley Lords" type='RandomZone' shape='NPoly' minZ='-4000' maxZ='-300'>
+	<stat name="id" val="4" />
+	<stat name="time" val="2700" /> <!-- time in seconds -->
+	<stat name="autoPvpFlag" val="true"/>
+	<stat name="locs" val="25399,-125449,-712;22705,-126290,-920;26031,-126873,-664;24343,-123008,-696;27699,-124120,-784;" /> <!-- spawn / respawn  locations -->
+	<node X="29955" Y="-123991" />
+	<node X="21659" Y="-120299" />
+	<node X="18734" Y="-128227" />
+	<node X="20296" Y="-133432" />
+	<node X="25976" Y="-128536" />
+</zone>
+<zone name="Talking Harbor" type='RandomZone' shape='NPoly' minZ='-4000' maxZ='-2000'>
+	<stat name="id" val="5" />
+	<stat name="time" val="2700" /> <!-- time in seconds -->
+	<stat name="autoPvpFlag" val="true"/>
+	<stat name="locs" val="-95450,257702,-3272;-98027,256212,-3472;-95995,253536,-3560;-97420,258033,-3536;-93454,254646,-3296;" /> <!-- spawn / respawn  locations -->
+	<node X="-87740" Y="262134" />
+	<node X="-102808" Y="260205" />
+	<node X="-103906" Y="253744" />
+	<node X="-101904" Y="247834" />
+	<node X="-94211" Y="248824" />
+	<node X="-88789" Y="252585" />
+</zone>
+<zone name="Frozen Land" type='RandomZone' shape='NPoly' minZ='-4000' maxZ='-1000'>
+	<stat name="id" val="6" />
+	<stat name="time" val="2700" /> <!-- time in seconds -->
+	<stat name="autoPvpFlag" val="true"/>
+	<stat name="locs" val="114818,-153871,-1528;112196,-156637,-1528;111743,-153750,-1528;113528,-155255,-1528;114739,-157008,-1568;114030,-152669,-1528;" /> <!-- spawn / respawn  locations -->
+	<node X="121660" Y="-160523" />
+	<node X="122809" Y="-154985" />
+	<node X="120536" Y="-150909" />
+	<node X="117474" Y="-148175" />
+	<node X="112405" Y="-148684" />
+	<node X="107819" Y="-150940" />
+	<node X="103759" Y="-144321" />
+	<node X="104803" Y="-154886" />
+	<node X="108722" Y="-161979" />
+	<node X="115220" Y="-163949" />
+</zone>
+<zone name="Sea of Spores" type='RandomZone' shape='NPoly' minZ='-4000' maxZ='-1000'>
+	<stat name="id" val="7" />
+	<stat name="time" val="2700" /> <!-- time in seconds -->
+	<stat name="autoPvpFlag" val="true"/>
+	<stat name="locs" val="63730,31142,-3744;61497,31657,-3760;63228,29144,-3784;66122,31328,-3736;63692,33427,-3688;" /> <!-- spawn / respawn  locations -->
+	<node X="59735" Y="31439" />
+	<node X="58232" Y="31592" />
+	<node X="56584" Y="31437" />
+	<node X="56094" Y="31856" />
+	<node X="59868" Y="34583" />
+	<node X="61839" Y="34167" />
+	<node X="63199" Y="35142" />
+	<node X="65857" Y="34402" />
+	<node X="66665" Y="32051" />
+	<node X="68087" Y="31091" />
+	<node X="67100" Y="27975" />
+	<node X="63800" Y="25448" />
+</zone>
 </list>

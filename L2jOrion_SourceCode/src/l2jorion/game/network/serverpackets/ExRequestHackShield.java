@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExRequestHackShield extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExRequestHackShield extends PacketServer
 {
 	private static final String _S__FE_48_EXREQUESTHACKSHIELD = "[S] FE:48 ExRequestHackShield";
 	

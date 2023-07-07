@@ -21,11 +21,12 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ShowMiniMap;
 import l2jorion.game.powerpack.bossInfo.RaidInfoHandler;
 import l2jorion.game.thread.ThreadPoolManager;
 
-public final class RequestShowMiniMap extends L2GameClientPacket
+public final class RequestShowMiniMap extends PacketClient
 {
 	@Override
 	protected void readImpl()

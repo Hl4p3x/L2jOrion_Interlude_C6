@@ -16,7 +16,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class TutorialEnableClientEvent extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class TutorialEnableClientEvent extends PacketServer
 {
 	private static final String _S__A2_TUTORIALENABLECLIENTEVENT = "[S] a2 TutorialEnableClientEvent";
 	

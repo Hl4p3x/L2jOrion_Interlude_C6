@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.TradeList;
+import l2jorion.game.network.PacketServer;
 
-public class TradeOwnAdd extends L2GameServerPacket
+public class TradeOwnAdd extends PacketServer
 {
 	private static final String _S__30_TRADEOWNADD = "[S] 20 TradeOwnAdd";
 	

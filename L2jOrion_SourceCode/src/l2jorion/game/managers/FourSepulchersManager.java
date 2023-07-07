@@ -404,7 +404,6 @@ public class FourSepulchersManager extends GrandBossManager
 	protected void spawnManagers()
 	{
 		_managers = new FastList<>();
-		// L2Spawn spawnDat;
 		
 		int i = 31921;
 		for (L2Spawn spawnDat; i <= 31924; i++)
@@ -596,13 +595,9 @@ public class FourSepulchersManager extends GrandBossManager
 				}
 			}
 			
-			spawnDat = null;
-			template1 = null;
-			
 			DatabaseUtils.close(rset);
 			DatabaseUtils.close(statement);
-			rset = null;
-			statement = null;
+			
 			if (Config.DEBUG)
 			{
 				LOG.info("FourSepulchersManager: loaded " + _mysteriousBoxSpawns.size() + " Mysterious-Box spawns.");
@@ -1225,7 +1220,7 @@ public class FourSepulchersManager extends GrandBossManager
 			List<L2PcInstance> members = new FastList<>();
 			for (final L2PcInstance mem : player.getParty().getPartyMembers())
 			{
-				if (!mem.isDead() && Util.checkIfInRange(700, player, mem, true))
+				if (!mem.isDead() && Util.checkIfInRange(Config.ALT_PARTY_RANGE, player, mem, true))
 				{
 					members.add(mem);
 				}
@@ -1263,7 +1258,7 @@ public class FourSepulchersManager extends GrandBossManager
 			List<L2PcInstance> members = new FastList<>();
 			for (final L2PcInstance mem : player.getParty().getPartyMembers())
 			{
-				if (!mem.isDead() && Util.checkIfInRange(700, player, mem, true))
+				if (!mem.isDead() && Util.checkIfInRange(Config.ALT_PARTY_RANGE, player, mem, true))
 				{
 					members.add(mem);
 				}
@@ -1363,6 +1358,7 @@ public class FourSepulchersManager extends GrandBossManager
 		{
 			boolean spawnKeyBoxMob = false;
 			boolean spawnedKeyBoxMob = false;
+			
 			L2SepulcherMonsterInstance mob = null;
 			
 			for (L2Spawn spawnDat : monsterList)
@@ -1382,8 +1378,6 @@ public class FourSepulchersManager extends GrandBossManager
 							if (Rnd.get(48) == 0)
 							{
 								spawnKeyBoxMob = true;
-								spawnedKeyBoxMob = true;
-								// LOG.info("key box spawned");
 							}
 							break;
 						default:
@@ -1404,6 +1398,7 @@ public class FourSepulchersManager extends GrandBossManager
 							keyBoxMobSpawn.setLocy(spawnDat.getLocy());
 							keyBoxMobSpawn.setLocz(spawnDat.getLocz());
 							keyBoxMobSpawn.setHeading(spawnDat.getHeading());
+							keyBoxMobSpawn.setNoRandomLoc(true);
 							keyBoxMobSpawn.setRespawnDelay(3600);
 							SpawnTable.getInstance().addNewSpawn(keyBoxMobSpawn, false);
 							mob = (L2SepulcherMonsterInstance) keyBoxMobSpawn.doSpawn();
@@ -1423,11 +1418,12 @@ public class FourSepulchersManager extends GrandBossManager
 				}
 				else
 				{
-					if (!spawnedKeyBoxMob)
-					{
-						mob = (L2SepulcherMonsterInstance) spawnDat.doSpawn();
-						spawnDat.stopRespawn();
-					}
+					spawnDat.setNoRandomLoc(true);
+					spawnDat.setRandomWalk(false);
+					mob = (L2SepulcherMonsterInstance) spawnDat.doSpawn();
+					spawnDat.stopRespawn();
+					// Announcements _a = Announcements.getInstance();
+					// _a.sys("spawned...");
 				}
 				
 				if (mob != null)
@@ -1508,6 +1504,7 @@ public class FourSepulchersManager extends GrandBossManager
 		return true;
 	}
 	
+	// Key Box spawn
 	public void spawnKeyBox(L2NpcInstance activeChar)
 	{
 		if (!isAttackTime())
@@ -1523,6 +1520,7 @@ public class FourSepulchersManager extends GrandBossManager
 			spawnDat.setLocy(activeChar.getY());
 			spawnDat.setLocz(activeChar.getZ());
 			spawnDat.setHeading(activeChar.getHeading());
+			spawnDat.setNoRandomLoc(true);
 			spawnDat.setRespawnDelay(3600);
 			_allMobs.add(spawnDat.doSpawn());
 			spawnDat.stopRespawn();
@@ -1545,6 +1543,7 @@ public class FourSepulchersManager extends GrandBossManager
 			spawnDat.setLocy(activeChar.getY());
 			spawnDat.setLocz(activeChar.getZ());
 			spawnDat.setHeading(activeChar.getHeading());
+			spawnDat.setNoRandomLoc(true);
 			spawnDat.setRespawnDelay(3600);
 			_allMobs.add(spawnDat.doSpawn());
 			spawnDat.stopRespawn();
@@ -1599,7 +1598,6 @@ public class FourSepulchersManager extends GrandBossManager
 				_allMobs.add(spawnDat.doSpawn());
 				spawnDat.stopRespawn();
 			}
-			monsterList = null;
 		}
 	}
 	

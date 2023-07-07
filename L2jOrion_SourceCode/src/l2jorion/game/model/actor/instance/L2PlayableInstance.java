@@ -35,7 +35,6 @@ public abstract class L2PlayableInstance extends L2Character
 	private boolean _isPhoenixBlessed = false; // for Soul of The Phoenix or Salvation buffs
 	private boolean _ProtectionBlessing = false;
 	private String _lastTownName = null;
-	private int _hitmanTarget = 0;
 	
 	public L2PlayableInstance(final int objectId, final L2CharTemplate template)
 	{
@@ -314,16 +313,6 @@ public abstract class L2PlayableInstance extends L2Character
 	public String getLastTownName()
 	{
 		return _lastTownName;
-	}
-	
-	public void setHitmanTarget(int hitmanTarget)
-	{
-		_hitmanTarget = hitmanTarget;
-	}
-	
-	public int getHitmanTarget()
-	{
-		return _hitmanTarget;
 	}
 	
 	public abstract boolean destroyItemByItemId(String process, int itemId, int count, L2Object reference, boolean sendMessage);

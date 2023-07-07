@@ -265,9 +265,7 @@ public class L2EffectZone extends L2ZoneType
 								{
 									if (temp.getFirstEffect(e.getKey()) == null)
 									{
-										
 										skill.getEffects(temp, temp);
-										
 									}
 								}
 							}

@@ -28,13 +28,10 @@ import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.actor.instance.L2FolkInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ExEnchantSkillInfo;
 
-/**
- * Format chdd c: (id) 0xD0 h: (subid) 0x06 d: skill id d: skill lvl
- * @author -Wooden-
- */
-public final class RequestExEnchantSkillInfo extends L2GameClientPacket
+public final class RequestExEnchantSkillInfo extends PacketClient
 {
 	private int _skillId;
 	private int _skillLvl;
@@ -49,36 +46,54 @@ public final class RequestExEnchantSkillInfo extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		if (_skillId <= 0 || _skillLvl <= 0) // minimal sanity check
-			return;
-		
-		final L2PcInstance activeChar = getClient().getActiveChar();
-		if (activeChar == null)
-			return;
-		
-		if (activeChar.getLevel() < 76)
-			return;
-		
-		final L2FolkInstance trainer = activeChar.getLastFolkNPC();
-		if (trainer == null)
+		if (_skillId <= 0 || _skillLvl <= 0)
 		{
 			return;
 		}
 		
-		if (!activeChar.isInsideRadius(trainer, L2NpcInstance.INTERACTION_DISTANCE, false, false) && !activeChar.isGM())
+		final L2PcInstance activeChar = getClient().getActiveChar();
+		if (activeChar == null)
 		{
 			return;
+		}
+		
+		if (activeChar.getLevel() < 76)
+		{
+			return;
+		}
+		
+		L2FolkInstance trainer = null;
+		
+		if (!activeChar.hasTempAccess())
+		{
+			trainer = activeChar.getLastFolkNPC();
+			if (trainer == null)
+			{
+				return;
+			}
+			
+			if (!activeChar.isInsideRadius(trainer, L2NpcInstance.INTERACTION_DISTANCE, false, false))
+			{
+				return;
+			}
 		}
 		
 		boolean canteach = false;
 		
 		final L2Skill skill = SkillTable.getInstance().getInfo(_skillId, _skillLvl);
 		if (skill == null || skill.getId() != _skillId)
+		{
 			return;
+		}
 		
-		if (!trainer.getTemplate().canTeach(activeChar.getClassId()))
-			return; // cheater
-			
+		if (!activeChar.hasTempAccess() && trainer != null)
+		{
+			if (!trainer.getTemplate().canTeach(activeChar.getClassId()))
+			{
+				return; // cheater
+			}
+		}
+		
 		final L2EnchantSkillLearn[] skills = SkillTreeTable.getInstance().getAvailableEnchantSkills(activeChar);
 		
 		for (final L2EnchantSkillLearn s : skills)
@@ -91,8 +106,10 @@ public final class RequestExEnchantSkillInfo extends L2GameClientPacket
 		}
 		
 		if (!canteach)
+		{
 			return; // cheater
-			
+		}
+		
 		final int requiredSp = SkillTreeTable.getInstance().getSkillSpCost(activeChar, skill);
 		final int requiredExp = SkillTreeTable.getInstance().getSkillExpCost(activeChar, skill);
 		final byte rate = SkillTreeTable.getInstance().getSkillRate(activeChar, skill);

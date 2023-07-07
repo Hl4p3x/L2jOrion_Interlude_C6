@@ -84,13 +84,11 @@ public class SiegeManager
 	
 	private int _siege_delay = 14;
 	
-	private SiegeManager()
+	public SiegeManager()
 	{
 		load();
 	}
 	
-	// =========================================================
-	// Method - Public
 	public final void addSiegeSkills(final L2PcInstance character)
 	{
 		character.addSkill(SkillTable.getInstance().getInfo(246, 1), false);
@@ -339,11 +337,9 @@ public class SiegeManager
 			// _initialized = false;
 			LOG.error("Error while loading siege data.");
 			e.printStackTrace();
-			
 		}
 		finally
 		{
-			
 			if (is != null)
 			{
 				try
@@ -546,7 +542,6 @@ public class SiegeManager
 		return _flameTowers.get(castleId);
 	}
 	
-	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder
 	{
 		protected static final SiegeManager _instance = new SiegeManager();

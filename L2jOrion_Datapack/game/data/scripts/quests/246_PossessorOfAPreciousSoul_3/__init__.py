@@ -1,4 +1,3 @@
-# Made by disKret
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
@@ -148,7 +147,7 @@ class Quest (JQuest) :
             pst = partyMember.getQuestState(qn)
             if pst :
                 if pst.getInt("cond") == 4 and pst.getQuestItemsCount(RAIN_SONG) < 1 :
-                    pst.giveItems(RAIN_SONG,1)
+                    pst.giveItems(RAIN_SONG,1,npc)
                     pst.playSound("ItemSound.quest_middle")
                     pst.set("cond","5")
      else :

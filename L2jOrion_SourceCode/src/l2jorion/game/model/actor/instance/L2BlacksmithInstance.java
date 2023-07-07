@@ -23,9 +23,6 @@ package l2jorion.game.model.actor.instance;
 import l2jorion.game.model.multisell.L2Multisell;
 import l2jorion.game.templates.L2NpcTemplate;
 
-/**
- * @author zabbix Lets drink to code!
- */
 public class L2BlacksmithInstance extends L2FolkInstance
 {
 	public L2BlacksmithInstance(final int objectId, final L2NpcTemplate template)

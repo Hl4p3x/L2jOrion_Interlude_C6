@@ -20,13 +20,10 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import l2jorion.game.community.CommunityBoard;
+import l2jorion.game.community.CommunityBoardManager;
+import l2jorion.game.network.PacketClient;
 
-/**
- * Format SSSSSS
- * @author -Wooden-
- */
-public class RequestBBSwrite extends L2GameClientPacket
+public class RequestBBSwrite extends PacketClient
 {
 	private String _url;
 	private String _arg1;
@@ -49,7 +46,7 @@ public class RequestBBSwrite extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		CommunityBoard.getInstance().handleWriteCommands(getClient(), _url, _arg1, _arg2, _arg3, _arg4, _arg5);
+		CommunityBoardManager.getInstance().handleWriteCommands(getClient(), _url, _arg1, _arg2, _arg3, _arg4, _arg5);
 	}
 	
 	@Override

@@ -386,6 +386,7 @@ public class GrandBossManager
 				
 				double hp = boss.getCurrentHp();
 				double mp = boss.getCurrentMp();
+				
 				if (boss.isDead())
 				{
 					hp = boss.getMaxHp();
@@ -394,6 +395,7 @@ public class GrandBossManager
 				
 				statement.setDouble(8, hp);
 				statement.setDouble(9, mp);
+				
 				statement.setInt(10, _bossStatus.get(bossId));
 				statement.setInt(11, bossId);
 			}
@@ -402,7 +404,7 @@ public class GrandBossManager
 		}
 		catch (SQLException e)
 		{
-			LOG.warn("GrandBossManager: Couldn't update grandbosses to database:" + e.getMessage(), e);
+			LOG.warn("GrandBossManager: Couldn't update grandbosses data in database (boss id:" + bossId + "):" + e.getMessage(), e);
 		}
 		finally
 		{

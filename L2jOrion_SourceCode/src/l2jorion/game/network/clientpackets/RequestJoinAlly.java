@@ -23,12 +23,12 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.AskJoinAlly;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestJoinAlly extends L2GameClientPacket
+public final class RequestJoinAlly extends PacketClient
 {
 	private int _id;
 	
@@ -44,13 +44,10 @@ public final class RequestJoinAlly extends L2GameClientPacket
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		
 		if (activeChar == null)
-			return;
-		if (activeChar.isSubmitingPin())
 		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		if (!(L2World.getInstance().findObject(_id) instanceof L2PcInstance))
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.YOU_HAVE_INVITED_THE_WRONG_TARGET));
@@ -67,10 +64,14 @@ public final class RequestJoinAlly extends L2GameClientPacket
 		final L2Clan clan = activeChar.getClan();
 		
 		if (!clan.checkAllyJoinCondition(activeChar, target))
+		{
 			return;
+		}
 		
 		if (!activeChar.getRequest().setRequest(target, this))
+		{
 			return;
+		}
 		
 		SystemMessage sm = new SystemMessage(SystemMessageId.S2_ALLIANCE_LEADER_OF_S1_REQUESTED_ALLIANCE);
 		sm.addString(activeChar.getClan().getAllyName());

@@ -22,8 +22,9 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 
-public class RequestRecipeShopMessageSet extends L2GameClientPacket
+public class RequestRecipeShopMessageSet extends PacketClient
 {
 	private String _name;
 	

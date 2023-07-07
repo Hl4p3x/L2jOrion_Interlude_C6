@@ -48,7 +48,9 @@ public class Topic
 		TopicBBSManager.getInstance().addTopic(this);
 		
 		if (constructorType == ConstructorType.CREATE)
+		{
 			insertIntoDb();
+		}
 	}
 	
 	public int getID()

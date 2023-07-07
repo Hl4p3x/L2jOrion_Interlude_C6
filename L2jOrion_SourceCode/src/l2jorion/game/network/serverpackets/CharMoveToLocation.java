@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
+import l2jorion.game.network.PacketServer;
 
-public class CharMoveToLocation extends L2GameServerPacket
+public class CharMoveToLocation extends PacketServer
 {
 	private static final String _S__01_CHARMOVETOLOCATION = "[S] 01 CharMoveToLocation";
 	

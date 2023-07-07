@@ -14,8 +14,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.datatables.sql.CharNameTable;
 import l2jorion.game.model.L2World;
+import l2jorion.game.network.PacketServer;
 
-public class FriendStatus extends L2GameServerPacket
+public class FriendStatus extends PacketServer
 {
 	private final boolean _online;
 	private final int _objid;

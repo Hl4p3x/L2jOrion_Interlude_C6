@@ -284,7 +284,6 @@ public class AdminSkill implements IAdminCommandHandler
 	
 	private void removeSkillsPage(final L2PcInstance activeChar, int page)
 	{
-		// TODO: Externalize HTML
 		L2Object target = activeChar.getTarget();
 		L2PcInstance player = null;
 		
@@ -364,12 +363,6 @@ public class AdminSkill implements IAdminCommandHandler
 		replyMSG.append("</body></html>");
 		adminReply.setHtml(replyMSG.toString());
 		activeChar.sendPacket(adminReply);
-		
-		replyMSG = null;
-		adminReply = null;
-		skills = null;
-		player = null;
-		target = null;
 	}
 	
 	private void showMainPage(final L2PcInstance activeChar)

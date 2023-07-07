@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class SocialAction extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class SocialAction extends PacketServer
 {
 	private static final String _S__3D_SOCIALACTION = "[S] 2D SocialAction";
 	

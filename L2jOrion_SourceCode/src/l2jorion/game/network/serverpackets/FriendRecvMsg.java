@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class FriendRecvMsg extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class FriendRecvMsg extends PacketServer
 {
 	private static final String _S__FD_FRIENDRECVMSG = "[S] FD FriendRecvMsg";
 	

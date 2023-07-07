@@ -32,9 +32,6 @@ import l2jorion.game.model.spawn.L2GroupSpawn;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author littlecrow
- */
 public final class MobGroup
 {
 	private final L2NpcTemplate _npcTemplate;
@@ -118,7 +115,9 @@ public final class MobGroup
 			}
 			
 			if (groupMember.getObjectId() == mobInst.getObjectId())
+			{
 				return true;
+			}
 		}
 		
 		return false;
@@ -126,8 +125,10 @@ public final class MobGroup
 	
 	public void spawnGroup(final int x, final int y, final int z)
 	{
-		if (getActiveMobCount() > 0) // can't spawn mob if already done
+		if (getActiveMobCount() > 0)
+		{
 			return;
+		}
 		
 		try
 		{
@@ -147,7 +148,6 @@ public final class MobGroup
 				
 				SpawnTable.getInstance().addNewSpawn(spawn, false);
 				getMobs().add((L2ControllableMobInstance) spawn.doGroupSpawn());
-				spawn = null;
 			}
 		}
 		catch (final ClassNotFoundException e)
@@ -194,7 +194,9 @@ public final class MobGroup
 		removeDead();
 		
 		if (getActiveMobCount() == 0)
+		{
 			return null;
+		}
 		
 		final int choice = Rnd.nextInt(getActiveMobCount());
 		
@@ -206,7 +208,9 @@ public final class MobGroup
 		removeDead();
 		
 		if (getActiveMobCount() == 0)
+		{
 			return;
+		}
 		
 		for (final L2ControllableMobInstance mobInst : getMobs())
 		{
@@ -378,10 +382,12 @@ public final class MobGroup
 		List<L2ControllableMobInstance> deadMobs = new FastList<>();
 		
 		for (final L2ControllableMobInstance mobInst : getMobs())
+		{
 			if (mobInst != null && mobInst.isDead())
 			{
 				deadMobs.add(mobInst);
 			}
+		}
 		
 		getMobs().removeAll(deadMobs);
 		deadMobs = null;
@@ -392,10 +398,12 @@ public final class MobGroup
 		removeDead();
 		
 		for (final L2ControllableMobInstance mobInst : getMobs())
+		{
 			if (mobInst != null)
 			{
 				mobInst.setInvul(invulState);
 			}
+		}
 	}
 	
 	public void setAttackGroup(final MobGroup otherGrp)

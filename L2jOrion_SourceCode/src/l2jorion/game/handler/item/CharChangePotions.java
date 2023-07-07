@@ -29,10 +29,6 @@ import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.UserInfo;
 
-/**
- * Itemhhandler for Character Appearance Change Potions
- * @author Tempy
- */
 public class CharChangePotions implements IItemHandler
 {
 	private static final int[] ITEM_IDS =
@@ -51,7 +47,7 @@ public class CharChangePotions implements IItemHandler
 		5246,
 		5247,
 		5248
-	// Hair Style
+		// Hair Style
 	};
 	
 	@Override
@@ -70,7 +66,9 @@ public class CharChangePotions implements IItemHandler
 			activeChar = ((L2PetInstance) playable).getOwner();
 		}
 		else
+		{
 			return;
+		}
 		
 		if (activeChar.isAllSkillsDisabled())
 		{
@@ -127,7 +125,6 @@ public class CharChangePotions implements IItemHandler
 		// Create a summon effect!
 		MagicSkillUser MSU = new MagicSkillUser(playable, activeChar, 2003, 1, 1, 0);
 		activeChar.broadcastPacket(MSU);
-		MSU = null;
 		
 		// Update the changed stat for the character in the DB.
 		activeChar.store();
@@ -138,9 +135,6 @@ public class CharChangePotions implements IItemHandler
 		// Broadcast the changes to the char and all those nearby.
 		UserInfo ui = new UserInfo(activeChar);
 		activeChar.broadcastPacket(ui);
-		
-		ui = null;
-		activeChar = null;
 	}
 	
 	@Override

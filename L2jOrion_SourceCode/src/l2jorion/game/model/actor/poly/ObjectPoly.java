@@ -23,32 +23,21 @@ import l2jorion.game.model.L2Object;
 
 public class ObjectPoly
 {
-	// =========================================================
-	// Data Field
 	private final L2Object _activeObject;
 	private int _polyId;
 	private String _polyType;
 	
-	// =========================================================
-	// Constructor
 	public ObjectPoly(final L2Object activeObject)
 	{
 		_activeObject = activeObject;
 	}
 	
-	// =========================================================
-	// Method - Public
 	public void setPolyInfo(final String polyType, final String polyId)
 	{
 		setPolyId(Integer.parseInt(polyId));
 		setPolyType(polyType);
 	}
 	
-	// =========================================================
-	// Method - Private
-	
-	// =========================================================
-	// Property - Public
 	public final L2Object getActiveObject()
 	{
 		return _activeObject;

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<skin type="armor"> <!-- Armors -->
+		<type id="1" name="Draconic Armor" chestId="6379" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="100"/>
+		<type id="2" name="Blue Wolf Leather Armor" chestId="2391" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="100"/>
+	</skin>
+	<skin type="weapon"> <!-- Weapons -->
+		<type id="1" name="Draconic Bow" weaponId="7575" priceId="57" priceCount="100"/>
+		<type id="2" name="Arcana Mace" weaponId="6608"  priceId="57" priceCount="100"/>
+		<type id="3" name="Keshanberk*Keshanberk" weaponId="5704" priceId="57" priceCount="100"/>
+	</skin>
+	<skin type="hair"> <!-- Hairs -->
+		<type id="1" name="Cat Ear" hairId="6843" priceId="57" priceCount="100"/>
+	</skin>
+	<skin type="face"> <!-- Faces -->
+		<type id="1" name="Party Mask" faceId="5808" priceId="57" priceCount="100"/>
+	</skin>
+</list>

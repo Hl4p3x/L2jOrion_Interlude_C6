@@ -1,8 +1,3 @@
-# Created by DrLecter, based on DraX' scripts
-# This script is part of the L2J Datapack Project
-# Visit us at http://www.l2jdp.com/
-# See readme-dp.txt and gpl.txt for license and distribution details
-# Let us know if you did not receive a copy of such files.
 import sys
 
 from l2jorion.game.model.quest        import State
@@ -12,6 +7,7 @@ from l2jorion.game.network.serverpackets import SystemMessage
 from l2jorion.game.network import SystemMessageId
 
 qn = "elven_human_fighters_2"
+
 #Quest items
 MARK_OF_CHALLENGER  = 2627
 MARK_OF_DUTY        = 2633

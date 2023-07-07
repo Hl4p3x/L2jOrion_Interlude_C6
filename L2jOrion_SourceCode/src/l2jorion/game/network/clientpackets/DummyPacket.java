@@ -16,7 +16,9 @@
  */
 package l2jorion.game.network.clientpackets;
 
-public final class DummyPacket extends L2GameClientPacket
+import l2jorion.game.network.PacketClient;
+
+public final class DummyPacket extends PacketClient
 {
 	@Override
 	protected void readImpl()

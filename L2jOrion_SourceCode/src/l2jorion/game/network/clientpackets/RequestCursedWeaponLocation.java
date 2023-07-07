@@ -19,10 +19,11 @@ import l2jorion.game.managers.CursedWeaponsManager;
 import l2jorion.game.model.CursedWeapon;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.Location;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ExCursedWeaponLocation;
 import l2jorion.game.network.serverpackets.ExCursedWeaponLocation.CursedWeaponInfo;
 
-public final class RequestCursedWeaponLocation extends L2GameClientPacket
+public final class RequestCursedWeaponLocation extends PacketClient
 {
 	@Override
 	protected void readImpl()

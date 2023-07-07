@@ -20,8 +20,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class TitleUpdate extends L2GameServerPacket
+public class TitleUpdate extends PacketServer
 {
 	private static final String _S__CC_TITLE_UPDATE = "[S] cc TitleUpdate";
 	

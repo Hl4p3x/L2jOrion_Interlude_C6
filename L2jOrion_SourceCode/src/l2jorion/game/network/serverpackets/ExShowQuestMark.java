@@ -1,6 +1,8 @@
 package l2jorion.game.network.serverpackets;
 
-public class ExShowQuestMark extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExShowQuestMark extends PacketServer
 {
 	private final int _questId;
 	

@@ -25,13 +25,14 @@ import l2jorion.game.managers.BoatManager;
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2BoatInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToLocationInVehicle;
 import l2jorion.game.network.serverpackets.StopMoveInVehicle;
 import l2jorion.game.templates.L2WeaponType;
 
-public final class RequestMoveToLocationInVehicle extends L2GameClientPacket
+public final class RequestMoveToLocationInVehicle extends PacketClient
 {
 	private int _boatId;
 	private int _targetX, _targetY, _targetZ;

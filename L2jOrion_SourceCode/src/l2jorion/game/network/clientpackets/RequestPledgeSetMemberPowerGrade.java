@@ -23,12 +23,9 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 
-/**
- * Format: (ch) Sd
- * @author -Wooden-
- */
-public final class RequestPledgeSetMemberPowerGrade extends L2GameClientPacket
+public final class RequestPledgeSetMemberPowerGrade extends PacketClient
 {
 	private int _powerGrade;
 	private String _member;
@@ -45,20 +42,25 @@ public final class RequestPledgeSetMemberPowerGrade extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		final L2Clan clan = activeChar.getClan();
 		if (clan == null)
+		{
 			return;
+		}
 		
 		final L2ClanMember member = clan.getClanMember(_member);
 		if (member == null)
+		{
 			return;
+		}
 		
 		if (member.getPledgeType() == L2Clan.SUBUNIT_ACADEMY)
 		{
-			// also checked from client side
-			activeChar.sendMessage("You cannot change academy member grade");
+			activeChar.sendMessage("You cannot change academy member grade.");
 			return;
 		}
 		

@@ -28,8 +28,6 @@ import l2jorion.game.model.actor.instance.L2ItemInstance.ItemLocation;
 
 public class PcFreight extends ItemContainer
 {
-	// private static final Logger LOG = LoggerFactory.getLogger(PcFreight.class);
-	
 	private final L2PcInstance _owner; // This is the L2PcInstance that owns this Freight;
 	private int _activeLocationId;
 	
@@ -60,10 +58,6 @@ public class PcFreight extends ItemContainer
 		return _activeLocationId;
 	}
 	
-	/**
-	 * Returns the quantity of items in the inventory
-	 * @return int
-	 */
 	@Override
 	public int getSize()
 	{
@@ -79,10 +73,6 @@ public class PcFreight extends ItemContainer
 		return size;
 	}
 	
-	/**
-	 * Returns the list of items in inventory
-	 * @return L2ItemInstance : items in inventory
-	 */
 	@Override
 	public L2ItemInstance[] getItems()
 	{
@@ -99,11 +89,6 @@ public class PcFreight extends ItemContainer
 		return list.toArray(new L2ItemInstance[list.size()]);
 	}
 	
-	/**
-	 * Returns the item from inventory by using its <B>itemId</B>
-	 * @param itemId : int designating the ID of the item
-	 * @return L2ItemInstance designating the item or null if not found in inventory
-	 */
 	@Override
 	public L2ItemInstance getItemByItemId(final int itemId)
 	{
@@ -114,10 +99,6 @@ public class PcFreight extends ItemContainer
 		return null;
 	}
 	
-	/**
-	 * Adds item to PcFreight for further adjustments.
-	 * @param item : L2ItemInstance to be added from inventory
-	 */
 	@Override
 	protected void addItem(final L2ItemInstance item)
 	{
@@ -128,9 +109,6 @@ public class PcFreight extends ItemContainer
 		}
 	}
 	
-	/**
-	 * Get back items in PcFreight from database
-	 */
 	@Override
 	public void restore()
 	{

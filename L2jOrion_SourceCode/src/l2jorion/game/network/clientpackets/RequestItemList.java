@@ -20,9 +20,10 @@
  */
 package l2jorion.game.network.clientpackets;
 
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ItemList;
 
-public final class RequestItemList extends L2GameClientPacket
+public final class RequestItemList extends PacketClient
 {
 	@Override
 	protected void readImpl()

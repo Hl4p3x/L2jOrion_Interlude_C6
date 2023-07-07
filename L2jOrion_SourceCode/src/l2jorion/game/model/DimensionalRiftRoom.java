@@ -116,9 +116,6 @@ public final class DimensionalRiftRoom
 			spawn.doSpawn();
 			spawn.startRespawn();
 		}
-		
-		// Announcements _a = Announcements.getInstance();
-		// _a.sys("Spawned: " + _roomSpawns.size());
 	}
 	
 	public DimensionalRiftRoom unspawn()
@@ -136,26 +133,15 @@ public final class DimensionalRiftRoom
 			}
 			
 			spawn.decreaseCount(null);
-			
-			// Announcements _a = Announcements.getInstance();
-			// _a.sys(count + " removed: " + spawn.getNpcid());
 		}
 		return this;
 	}
 	
-	/**
-	 * Returns if party is inside the room.
-	 * @return {@code true} if there is a party inside, {@code false} otherwise
-	 */
 	public boolean isPartyInside()
 	{
 		return _partyInside;
 	}
 	
-	/**
-	 * Sets the party inside.
-	 * @param partyInside
-	 */
 	public void setPartyInside(boolean partyInside)
 	{
 		_partyInside = partyInside;

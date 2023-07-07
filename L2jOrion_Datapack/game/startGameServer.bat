@@ -2,7 +2,7 @@
 title L2jOrion: Game Server Console
 :start
 
-java -Djava.util.logging.manager=l2jorion.util.L2LogManager -Xms2g -Xmx2g -cp ./../libs/*;l2jorion-core.jar l2jorion.game.GameServer
+java -Djava.util.logging.manager=l2jorion.util.L2LogManager -Xms1g -Xmx2g -cp ./../libs/*;l2jorion-core.jar l2jorion.game.GameServer
 
 if ERRORLEVEL 7 goto telldown
 if ERRORLEVEL 6 goto tellrestart

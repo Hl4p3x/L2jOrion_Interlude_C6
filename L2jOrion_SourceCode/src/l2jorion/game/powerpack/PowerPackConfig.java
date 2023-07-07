@@ -44,6 +44,7 @@ public class PowerPackConfig
 	public static int BANK_SYSTEM_WITHDRAW;
 	public static int BANK_SYSTEM_WITHDRAW_COUNT;
 	
+	public static boolean VOTEREWARD;
 	public static boolean RESPAWN_BOSS;
 	public static boolean RESPAWN_BOSS_ONLY_FOR_LORD;
 	public static String RAID_INFO_IDS;
@@ -66,7 +67,7 @@ public class PowerPackConfig
 	public static List<String> BUFFER_EXCLUDE_ON = new FastList<>();
 	public static String BUFFER_COMMAND;
 	public static int BUFFER_FREE_LVL;
-	public static String BUFFER_COMMAND2;
+	public static int BUFFER_PREMIUM_ITEM_ID;
 	public static int BUFFER_PRICE;
 	public static boolean BUFFER_USEBBS;
 	public static boolean BUFFER_USECOMMAND;
@@ -75,19 +76,21 @@ public class PowerPackConfig
 	public static FastMap<Integer, Integer> MAGE_SKILL_LIST;
 	
 	public static int NPCBUFFER_MAX_SCHEMES;
-	public static int NPCBUFFER_MAX_SKILLS;
+	// public static int NPCBUFFER_MAX_SKILLS;
 	public static boolean NPCBUFFER_STORE_SCHEMES;
 	public static int NPCBUFFER_STATIC_BUFF_COST;
 	
 	public static List<String> GLOBALGK_EXCLUDE_ON;
-	public static boolean GLOBALGK_ENABDLED;
+	public static boolean GLOBALGK_ENABLED;
 	public static boolean GLOBALGK_USEBBS;
-	public static int GLOBALGK_NPC;
+	public static int GLOBALGK_NPC_ID;
 	public static int GLOBALGK_PRICE;
 	public static int GLOBALGK_TIMEOUT;
 	public static String GLOBALGK_COMMAND;
 	public static boolean GLOBALGK_USECOMMAND;
 	public static int GLOBALGK_CUSTOM_ITEM_PRICE;
+	public static int GLOBALGK_CW_ITEM_ID;
+	public static int GLOBALGK_CW_ITEM_PRICE;
 	
 	public static int GMSHOP_NPC;
 	public static boolean GMSHOP_ENABLED;
@@ -95,6 +98,9 @@ public class PowerPackConfig
 	public static String GMSHOP_COMMAND;
 	public static List<String> GMSHOP_EXCLUDE_ON;
 	public static boolean GMSHOP_USECOMMAND;
+	public static int GMSHOP_ENCHNANT_ITEM_ID;
+	public static int GMSHOP_ENCHNANT_ITEM_ID_COUNT;
+	public static int GMSHOP_ENCHNANT_MAX;
 	
 	public static int MARKET_NPC;
 	public static boolean MARKET_ENABLED;
@@ -118,6 +124,8 @@ public class PowerPackConfig
 			BANK_SYSTEM_DEPOSIT = Integer.parseInt(p.getProperty("DepositItemId", "3470"));
 			BANK_SYSTEM_WITHDRAW = Integer.parseInt(p.getProperty("WithdrawItemId", "57"));
 			BANK_SYSTEM_WITHDRAW_COUNT = Integer.parseInt(p.getProperty("WithdrawItemCount", "1"));
+			
+			VOTEREWARD = Boolean.parseBoolean(p.getProperty("VoteReward", "True"));
 			
 			RESPAWN_BOSS = Boolean.parseBoolean(p.getProperty("BossRespawnCommand", "False"));
 			RESPAWN_BOSS_ONLY_FOR_LORD = Boolean.parseBoolean(p.getProperty("BossRespawnCommandOnlyForLord", "False"));
@@ -199,8 +207,8 @@ public class PowerPackConfig
 				BUFFER_EXCLUDE_ON.add(st.nextToken());
 			}
 			BUFFER_COMMAND = p.getProperty("BufferCommand", "buffs");
-			BUFFER_COMMAND2 = p.getProperty("BufferCommand2", "buff");
 			BUFFER_FREE_LVL = Integer.parseInt(p.getProperty("BufferFreeTillLvl", "40"));
+			BUFFER_PREMIUM_ITEM_ID = Integer.parseInt(p.getProperty("BufferPremiumItemId", "0"));
 			BUFFER_NPC = Integer.parseInt(p.getProperty("BufferNpcId", "2"));
 			BUFFER_PRICE = Integer.parseInt(p.getProperty("BufferPrice", "-1"));
 			BUFFER_USEBBS = Boolean.parseBoolean(p.getProperty("BufferUseBBS", "false"));
@@ -272,12 +280,12 @@ public class PowerPackConfig
 			}
 			
 			NPCBUFFER_MAX_SCHEMES = Integer.parseInt(p.getProperty("NPCBufferMaxSchemesPerChar", "4"));
-			NPCBUFFER_MAX_SKILLS = Integer.parseInt(p.getProperty("NPCBufferMaxSkllsperScheme", "24"));
+			// NPCBUFFER_MAX_SKILLS = Integer.parseInt(p.getProperty("NPCBufferMaxSkllsperScheme", "24"));
 			NPCBUFFER_STORE_SCHEMES = Boolean.parseBoolean(p.getProperty("NPCBufferStoreSchemes", "True"));
 			NPCBUFFER_STATIC_BUFF_COST = Integer.parseInt(p.getProperty("NPCBufferStaticCostPerBuff", "-1"));
 			
-			GLOBALGK_NPC = Integer.parseInt(p.getProperty("GKNpcId", "7077"));
-			GLOBALGK_ENABDLED = Boolean.parseBoolean(p.getProperty("GKEnabled", "false"));
+			GLOBALGK_NPC_ID = Integer.parseInt(p.getProperty("GKNpcId", "7077"));
+			GLOBALGK_ENABLED = Boolean.parseBoolean(p.getProperty("GKEnabled", "false"));
 			GLOBALGK_COMMAND = p.getProperty("GKCommand", "teleport");
 			GLOBALGK_TIMEOUT = Integer.parseInt(p.getProperty("GKTimeout", "10"));
 			GLOBALGK_PRICE = Integer.parseInt(p.getProperty("GKPrice", "-1"));
@@ -290,12 +298,18 @@ public class PowerPackConfig
 				GLOBALGK_EXCLUDE_ON.add(st.nextToken().toUpperCase());
 			}
 			GLOBALGK_CUSTOM_ITEM_PRICE = Integer.parseInt(p.getProperty("CustomTeleportId", "6393"));
+			GLOBALGK_CW_ITEM_ID = Integer.parseInt(p.getProperty("CustomTeleporItemIdToCw", "6393"));
+			GLOBALGK_CW_ITEM_PRICE = Integer.parseInt(p.getProperty("CustomTeleporItemCountToCw", "1"));
 			
 			GMSHOP_NPC = Integer.parseInt(p.getProperty("GMShopNpcId", "53"));
 			GMSHOP_ENABLED = Boolean.parseBoolean(p.getProperty("GMShopEnabled", "false"));
 			GMSHOP_COMMAND = p.getProperty("GMShopCommand", "gmshop");
 			GMSHOP_USEBBS = Boolean.parseBoolean(p.getProperty("GMShopUseBBS", "false"));
 			GMSHOP_USECOMMAND = Boolean.parseBoolean(p.getProperty("GMShopUseCommand", "false"));
+			
+			GMSHOP_ENCHNANT_ITEM_ID = Integer.parseInt(p.getProperty("GMShopEnchantPriceItemId", "57"));
+			GMSHOP_ENCHNANT_ITEM_ID_COUNT = Integer.parseInt(p.getProperty("GMShopEnchantPriceItemIdCount", "100"));
+			GMSHOP_ENCHNANT_MAX = Integer.parseInt(p.getProperty("GMShopEnchantMax", "6"));
 			GMSHOP_EXCLUDE_ON = new FastList<>();
 			st = new StringTokenizer(p.getProperty("GMShopExcludeOn", ""), " ");
 			while (st.hasMoreTokens())

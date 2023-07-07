@@ -18,11 +18,12 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class DlgAnswer extends L2GameClientPacket
+public final class DlgAnswer extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(DlgAnswer.class);
 	private int _messageId, _answer, _requestId;
@@ -76,8 +77,16 @@ public final class DlgAnswer extends L2GameClientPacket
 		{
 			activeChar.EngageAnswer(_answer);
 		}
+		else if (_messageId == 1326)
+		{
+			if (activeChar.dialogAugmentation != null)
+			{
+				activeChar.dialogAugmentation.onDlgAnswer(activeChar, _answer);
+				activeChar.dialogAugmentation = null;
+			}
+		}
 		else if (_messageId == SystemMessageId.S1.getId())
-		{	
+		{
 			if (activeChar.dialog != null)
 			{
 				activeChar.dialog.onDlgAnswer(activeChar);

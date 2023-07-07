@@ -55,8 +55,8 @@ import l2jorion.game.datatables.sql.ItemTable;
 import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.datatables.sql.SpawnTable;
 import l2jorion.game.datatables.sql.TeleportLocationTable;
+import l2jorion.game.managers.AuctionManager;
 import l2jorion.game.managers.DayNightSpawnManager;
-import l2jorion.game.managers.Manager;
 import l2jorion.game.managers.QuestManager;
 import l2jorion.game.managers.RaidBossSpawnManager;
 import l2jorion.game.managers.ZoneManager;
@@ -225,7 +225,7 @@ public class GameStatusThread extends Thread
 		if (isValidIP(client))
 		{
 			telnetOutput(1, client.getInetAddress().getHostAddress() + " accepted.");
-			_print.println("Welcome To The L2J Telnet Session.");
+			_print.println("Welcome To Telnet Session.");
 			_print.println("Please Insert Your Password!");
 			_print.print("Password: ");
 			_print.flush();
@@ -249,7 +249,7 @@ public class GameStatusThread extends Thread
 				else
 				{
 					_print.println("Password Correct!");
-					_print.println("[L2J Game Server]");
+					_print.println("[Game Server]");
 					_print.print("");
 					_print.flush();
 				}
@@ -439,10 +439,6 @@ public class GameStatusThread extends Thread
 						_print.println(gmList);
 					}
 				}
-				/*
-				 * else if (_usrCommand.startsWith("unblock")) { try { _usrCommand = _usrCommand.substring(8); if (LoginServer.getInstance().unblockIp(_usrCommand)) { LOG.warn("IP removed via TELNET by host: " + _csocket.getInetAddress().getHostAddress()); _print.println("The IP " + _usrCommand +
-				 * " has been removed from the hack protection list!"); } else { _print.println("IP not found in hack protection list..."); } //TODO: with packet } catch (StringIndexOutOfBoundsException e) { _print.println("Please Enter the IP to Unblock!"); } }
-				 */
 				else if (_usrCommand.startsWith("kick"))
 				{
 					try
@@ -451,14 +447,14 @@ public class GameStatusThread extends Thread
 						final L2PcInstance player = L2World.getInstance().getPlayer(_usrCommand);
 						if (player != null)
 						{
-							player.sendMessage("You are kicked by gm");
+							player.sendMessage("You are kicked by gm.");
 							player.logout();
 							_print.println("Player kicked");
 						}
 					}
 					catch (StringIndexOutOfBoundsException e)
 					{
-						_print.println("Please enter player name to kick");
+						_print.println("Please enter player name to kick.");
 					}
 				}
 				else if (_usrCommand.startsWith("shutdown"))
@@ -503,7 +499,7 @@ public class GameStatusThread extends Thread
 					_print.println("OK! - Shutdown/Restart Aborted.");
 				}
 				else if (_usrCommand.equals("quit"))
-				{ /* Do Nothing :p - Just here to save us from the "Command Not Understood" Text */
+				{
 				}
 				else if (_usrCommand.startsWith("give"))
 				{
@@ -644,7 +640,6 @@ public class GameStatusThread extends Thread
 						catch (NoSuchElementException nsee)
 						{
 						}
-						// L2PcInstance playerObj = L2World.getInstance().getPlayer(player);
 						
 						if (playerObj != null)
 						{
@@ -852,7 +847,13 @@ public class GameStatusThread extends Thread
 						else if (type.equals("instancemanager"))
 						{
 							_print.print("Reloading instance managers... ");
-							Manager.reloadAll();
+							AuctionManager.getInstance().reload();
+							
+							if (!Config.ALT_DEV_NO_QUESTS)
+							{
+								QuestManager.getInstance();
+								QuestManager.reload();
+							}
 							_print.println("done");
 						}
 						else if (type.equals("zone"))
@@ -894,7 +895,6 @@ public class GameStatusThread extends Thread
 						if (type.equals("privatestore"))
 						{
 							Collection<L2PcInstance> pls = L2World.getInstance().getAllPlayers().values();
-							// synchronized (L2World.getInstance().getAllPlayers().values())
 							{
 								for (L2PcInstance player : pls)
 								{
@@ -994,7 +994,6 @@ public class GameStatusThread extends Thread
 			activeChar.sendPacket(iu);
 			activeChar.broadcastPacket(new CharInfo(activeChar));
 			activeChar.sendPacket(new UserInfo(activeChar));
-			// activeChar.broadcastPacket(new ExBrExtraUserInfo(activeChar));
 			
 			// informations
 			activeChar.sendMessage("Changed enchantment of " + activeChar.getName() + "'s " + itemInstance.getItem().getName() + " from " + curEnchant + " to " + ench + ".");
@@ -1170,8 +1169,7 @@ public class GameStatusThread extends Thread
 					monsterCount++;
 					if (((L2MonsterInstance) obj).hasMinions())
 					{
-						minionCount += ((L2MonsterInstance) obj).getSpawnedMinions().size(); /* .countSpawnedMinions(); */
-						// minionsGroupCount += ((L2MonsterInstance) obj).getMinionList().lazyCountSpawnedMinionsGroups();
+						minionCount += ((L2MonsterInstance) obj).getSpawnedMinions().size();
 					}
 				}
 				else if (obj instanceof L2NpcInstance)
@@ -1234,9 +1232,6 @@ public class GameStatusThread extends Thread
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append(sdf.format(cal.getTime()));
-		// sb.append("\n\nL2J Server Version: " + Config.SERVER_VERSION);
-		// sb.append("\nDP Revision: " + Config.DATAPACK_VERSION);
-		// sb.append("\n\n");
 		sb.append(this.getServerStatus());
 		sb.append("\n\n");
 		sb.append("\n## Java Platform Information ##");

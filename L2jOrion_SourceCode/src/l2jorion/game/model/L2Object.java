@@ -47,16 +47,10 @@ public abstract class L2Object
 	private ObjectPosition _position;
 	private int _instanceId = 0;
 	private BaseExtender _extender = null;
-	public boolean isPlayer;
 	
 	public L2Object(final int objectId)
 	{
 		_objectId = objectId;
-		
-		if (this instanceof L2PcInstance)
-		{
-			isPlayer = true;
-		}
 		
 		if (Config.EXTENDERS.get(this.getClass().getName()) != null)
 		{
@@ -218,7 +212,7 @@ public abstract class L2Object
 		}
 	}
 	
-	public final void pickupMe(final L2Character player) // NOTE: Should move this function into L2ItemInstance because it does not apply to L2Character
+	public final void pickupMe(final L2Character player)
 	{
 		if (Config.ASSERT)
 		{
@@ -232,9 +226,7 @@ public abstract class L2Object
 		
 		L2WorldRegion oldregion = getPosition().getWorldRegion();
 		
-		// Create a server->client GetItem packet to pick up the L2ItemInstance
-		GetItem gi = new GetItem((L2ItemInstance) this, player.getObjectId());
-		player.broadcastPacket(gi);
+		player.broadcastPacket(new GetItem((L2ItemInstance) this, player.getObjectId()));
 		
 		synchronized (this)
 		{
@@ -278,9 +270,9 @@ public abstract class L2Object
 			getPosition().getWorldRegion().addVisibleObject(this);
 		}
 		
-		L2World.getInstance().addVisibleObject(this, getPosition().getWorldRegion());
-		
 		onSpawn();
+		
+		L2World.getInstance().addVisibleObject(this, getPosition().getWorldRegion());
 	}
 	
 	public final void spawnMe(int x, int y, final int z)
@@ -299,9 +291,9 @@ public abstract class L2Object
 			getPosition().getWorldRegion().addVisibleObject(this);
 		}
 		
-		L2World.getInstance().addVisibleObject(this, getPosition().getWorldRegion());
+		onSpawn(); // moved up because of pvp zone
 		
-		onSpawn();
+		L2World.getInstance().addVisibleObject(this, getPosition().getWorldRegion());
 	}
 	
 	public boolean isAttackable()
@@ -341,7 +333,7 @@ public abstract class L2Object
 		return _knownList;
 	}
 	
-	public final void setKnownList(final ObjectKnownList value)
+	public final void setKnownList(ObjectKnownList value)
 	{
 		_knownList = value;
 	}
@@ -371,6 +363,10 @@ public abstract class L2Object
 		return _poly;
 	}
 	
+	public void removeStatusListener(L2Character object)
+	{
+	}
+	
 	public L2WorldRegion getWorldRegion()
 	{
 		return getPosition().getWorldRegion();
@@ -388,14 +384,11 @@ public abstract class L2Object
 		// If we change it for visible objects, me must clear & revalidates knownlists
 		if (_isVisible && _knownList != null)
 		{
-			if (this instanceof L2PcInstance)
+			if (!(this instanceof L2PcInstance))
 			{
 				// We don't want some ugly looking disappear/appear effects, so don't update
 				// the knownlist here, but players usually enter instancezones through teleporting
 				// and the teleport will do the revalidation for us.
-			}
-			else
-			{
 				decayMe();
 				spawnMe();
 			}
@@ -453,6 +446,11 @@ public abstract class L2Object
 		return false;
 	}
 	
+	public boolean isPlayer()
+	{
+		return false;
+	}
+	
 	public boolean isItem()
 	{
 		return false;
@@ -497,6 +495,40 @@ public abstract class L2Object
 	{
 		final double distance = Math.pow(x - getX(), 2) + Math.pow(y - getY(), 2) + (includeZAxis ? Math.pow(z - getZ(), 2) : 0);
 		return (squared) ? distance : Math.sqrt(distance);
+	}
+	
+	public boolean isDead()
+	{
+		return false;
+	}
+	
+	public boolean isBot()
+	{
+		return false;
+	}
+	
+	public boolean isInsideRadius(int x, int y, int z, int radius, boolean checkZ, boolean strictCheck)
+	{
+		double dx = x - getX();
+		double dy = y - getY();
+		double dz = z - getZ();
+		
+		if (strictCheck)
+		{
+			if (checkZ)
+			{
+				return ((dx * dx) + (dy * dy) + (dz * dz)) < (radius * radius);
+			}
+			
+			return ((dx * dx) + (dy * dy)) < (radius * radius);
+		}
+		
+		if (checkZ)
+		{
+			return ((dx * dx) + (dy * dy) + (dz * dz)) <= (radius * radius);
+		}
+		
+		return ((dx * dx) + (dy * dy)) <= (radius * radius);
 	}
 	
 	public void sendInfo(L2PcInstance activeChar)

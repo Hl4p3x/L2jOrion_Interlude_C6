@@ -1,4 +1,3 @@
-#Made by Kerb
 import sys 
 
 from java.lang import System
@@ -139,7 +138,7 @@ class Quest (JQuest) :
             if len(PartyQuestMembers) == 0 : return
             st = PartyQuestMembers[Rnd.get(len(PartyQuestMembers))]
             if st.getQuestItemsCount(S_SUMMON) > 0 :
-                st.takeItems(S_SUMMON,1)
+                st.takeItems(S_SUMMON,1,npc)
             st.giveItems(ESSENCE,1) 
             st.set("cond","3") 
             st.playSound("ItemSound.quest_middle")

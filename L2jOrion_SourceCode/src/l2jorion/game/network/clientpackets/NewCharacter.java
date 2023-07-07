@@ -18,10 +18,11 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.datatables.sql.CharTemplateTable;
 import l2jorion.game.model.base.ClassId;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.CharTemplates;
 import l2jorion.game.templates.L2PcTemplate;
 
-public final class NewCharacter extends L2GameClientPacket
+public final class NewCharacter extends PacketClient
 {
 	@Override
 	protected void readImpl()

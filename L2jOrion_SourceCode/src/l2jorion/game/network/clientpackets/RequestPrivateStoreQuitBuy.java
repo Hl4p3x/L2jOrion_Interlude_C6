@@ -21,8 +21,9 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 
-public class RequestPrivateStoreQuitBuy extends L2GameClientPacket
+public class RequestPrivateStoreQuitBuy extends PacketClient
 {
 	@Override
 	protected void readImpl()

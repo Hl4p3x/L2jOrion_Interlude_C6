@@ -30,13 +30,13 @@ import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.idfactory.IdFactory;
 import l2jorion.game.managers.FortSiegeGuardManager;
 import l2jorion.game.managers.FortSiegeManager;
-import l2jorion.game.managers.MercTicketManager;
 import l2jorion.game.managers.FortSiegeManager.SiegeSpawn;
+import l2jorion.game.managers.MercTicketManager;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2SiegeClan;
-import l2jorion.game.model.L2World;
 import l2jorion.game.model.L2SiegeClan.SiegeClanType;
+import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ArtefactInstance;
 import l2jorion.game.model.actor.instance.L2CommanderInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
@@ -57,61 +57,33 @@ import l2jorion.util.database.L2DatabaseFactory;
 
 public class FortSiege
 {
-	
-	/** The Constant LOG. */
 	protected static final Logger LOG = LoggerFactory.getLogger(FortSiege.class);
 	
-	/**
-	 * The Enum TeleportWhoType.
-	 */
 	public static enum TeleportWhoType
 	{
-		
-		/** The All. */
 		All,
-		
-		/** The Attacker. */
 		Attacker,
-		
-		/** The Defender not owner. */
 		DefenderNotOwner,
-		
-		/** The Owner. */
 		Owner,
-		
-		/** The Spectator. */
 		Spectator
 	}
 	
-	// ===============================================================
-	// Schedule task
-	/**
-	 * The Class ScheduleEndSiegeTask.
-	 */
 	public class ScheduleEndSiegeTask implements Runnable
 	{
-		
-		/** The _fort inst. */
 		private final Fort _fortInst;
 		
-		/**
-		 * Instantiates a new schedule end siege task.
-		 * @param pFort the fort
-		 */
 		public ScheduleEndSiegeTask(final Fort pFort)
 		{
 			_fortInst = pFort;
 		}
 		
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Runnable#run()
-		 */
 		@Override
 		public void run()
 		{
 			if (!getIsInProgress())
+			{
 				return;
+			}
 			
 			try
 			{
@@ -155,24 +127,17 @@ public class FortSiege
 			catch (final Throwable t)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					t.printStackTrace();
+				}
 			}
 		}
 	}
 	
-	/**
-	 * The Class ScheduleStartSiegeTask.
-	 */
 	public class ScheduleStartSiegeTask implements Runnable
 	{
-		
-		/** The _fort inst. */
 		private final Fort _fortInst;
 		
-		/**
-		 * Instantiates a new schedule start siege task.
-		 * @param pFort the fort
-		 */
 		public ScheduleStartSiegeTask(final Fort pFort)
 		{
 			_fortInst = pFort;
@@ -182,7 +147,9 @@ public class FortSiege
 		public void run()
 		{
 			if (getIsInProgress())
+			{
 				return;
+			}
 			
 			try
 			{
@@ -237,78 +204,41 @@ public class FortSiege
 			catch (final Throwable t)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					t.printStackTrace();
+				}
 			}
 		}
 	}
 	
-	// =========================================================
-	// Data Field
-	// Attacker and Defender
-	/** The _attacker clans. */
 	private final List<L2SiegeClan> _attackerClans = new FastList<>(); // L2SiegeClan
-	
-	/** The _defender clans. */
 	private final List<L2SiegeClan> _defenderClans = new FastList<>(); // L2SiegeClan
-	
-	/** The _defender waiting clans. */
 	private final List<L2SiegeClan> _defenderWaitingClans = new FastList<>(); // L2SiegeClan
-	
-	/** The _defender respawn delay penalty. */
 	private int _defenderRespawnDelayPenalty;
 	
-	// Fort setting
-	/** The _commanders. */
 	private List<L2CommanderInstance> _commanders = new FastList<>();
-	
-	/** The _combatflag. */
 	private List<L2ArtefactInstance> _combatflag = new FastList<>();
-	
-	/** The _fort. */
 	private final Fort[] _fort;
 	
-	/** The _is in progress. */
 	private boolean _isInProgress = false;
-	
-	/** The _is scheduled. */
 	private boolean _isScheduled = false;
-	
-	/** The _is normal side. */
 	private boolean _isNormalSide = true; // true = Atk is Atk, false = Atk is Def
-	
-	/** The _is registration over. */
 	protected boolean _isRegistrationOver = false;
 	
-	/** The _siege end date. */
 	protected Calendar _siegeEndDate;
 	
-	/** The _siege guard manager. */
 	private FortSiegeGuardManager _siegeGuardManager;
 	
-	/** The _siege registration end date. */
 	protected Calendar _siegeRegistrationEndDate;
 	
-	// =========================================================
-	// Constructor
-	/**
-	 * Instantiates a new fort siege.
-	 * @param fort the fort
-	 */
 	public FortSiege(final Fort[] fort)
 	{
 		_fort = fort;
 		// _siegeGuardManager = new SiegeGuardManager(getFort());
 		
-		checkAutoTask();
+		// checkAutoTask();
 	}
 	
-	// =========================================================
-	// Siege phases
-	/**
-	 * When siege ends<BR>
-	 * <BR>
-	 * .
-	 */
 	public void endSiege()
 	{
 		if (getIsInProgress())
@@ -392,7 +322,9 @@ public class FortSiege
 	private void addDefender(final L2SiegeClan sc, final SiegeClanType type)
 	{
 		if (sc == null)
+		{
 			return;
+		}
 		
 		sc.setType(type);
 		getDefenderClans().add(sc);
@@ -405,7 +337,9 @@ public class FortSiege
 	private void addAttacker(final L2SiegeClan sc)
 	{
 		if (sc == null)
+		{
 			return;
+		}
 		
 		sc.setType(SiegeClanType.ATTACKER);
 		getAttackerClans().add(sc);
@@ -599,7 +533,9 @@ public class FortSiege
 	public void approveSiegeDefenderClan(final int clanId)
 	{
 		if (clanId <= 0)
+		{
 			return;
+		}
 		
 		saveSiegeClan(ClanTable.getInstance().getClan(clanId), 0, true);
 		loadSiegeClan();
@@ -893,12 +829,16 @@ public class FortSiege
 	public void killedFlag(final L2NpcInstance flag)
 	{
 		if (flag == null)
+		{
 			return;
+		}
 		
 		for (int i = 0; i < getAttackerClans().size(); i++)
 		{
 			if (getAttackerClan(i).removeFlag(flag))
+			{
 				return;
+			}
 		}
 	}
 	
@@ -931,7 +871,9 @@ public class FortSiege
 	{
 		
 		if (player.getClan() == null)
+		{
 			return;
+		}
 		
 		int allyId = 0;
 		
@@ -1055,7 +997,9 @@ public class FortSiege
 	public void removeSiegeClan(final L2Clan clan)
 	{
 		if (clan == null || clan.getHasFort() == getFort().getFortId() || !FortSiegeManager.getInstance().checkIsRegistered(clan, getFort().getFortId()))
+		{
 			return;
+		}
 		
 		removeSiegeClan(clan.getClanId());
 	}
@@ -1239,7 +1183,9 @@ public class FortSiege
 			player.sendMessage("You are already registered in a Siege.");
 		}
 		else
+		{
 			return true;
+		}
 		
 		return false;
 	}
@@ -1253,10 +1199,8 @@ public class FortSiege
 		newDate.add(Calendar.MINUTE, 60);
 		getFort().setSiegeDate(newDate);
 		saveSiegeDate();
-		newDate = null;
 	}
 	
-	/** Load siege clans. */
 	private void loadSiegeClan()
 	{
 		Connection con = null;
@@ -1303,8 +1247,6 @@ public class FortSiege
 			
 			rs.close();
 			DatabaseUtils.close(statement);
-			statement = null;
-			rs = null;
 		}
 		catch (final Exception e)
 		{
@@ -1314,11 +1256,9 @@ public class FortSiege
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
-	/** Remove artifacts spawned. */
 	private void removeCommander()
 	{
 		if (_commanders != null)
@@ -1335,7 +1275,6 @@ public class FortSiege
 		}
 	}
 	
-	/** Remove all flags. */
 	private void removeFlags()
 	{
 		for (final L2SiegeClan sc : getAttackerClans())
@@ -1354,7 +1293,6 @@ public class FortSiege
 		}
 	}
 	
-	/** Save fort siege related to database. */
 	private void saveFortSiege()
 	{
 		clearSiegeDate(); // clear siege date
@@ -1362,7 +1300,6 @@ public class FortSiege
 		setIsScheduled(false);
 	}
 	
-	/** Save siege date to database. */
 	private void saveSiegeDate()
 	{
 		Connection con = null;
@@ -1375,9 +1312,8 @@ public class FortSiege
 			statement.execute();
 			
 			DatabaseUtils.close(statement);
-			statement = null;
 		}
-		catch (final Exception e)
+		catch (Exception e)
 		{
 			LOG.warn("Exception: saveSiegeDate(): " + e.getMessage());
 			e.printStackTrace();
@@ -1385,21 +1321,15 @@ public class FortSiege
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
-	/**
-	 * Save registration to database.<BR>
-	 * <BR>
-	 * @param clan The L2Clan of player
-	 * @param typeId -1 = owner 0 = defender, 1 = attacker, 2 = defender waiting
-	 * @param isUpdateRegistration the is update registration
-	 */
 	private void saveSiegeClan(final L2Clan clan, final int typeId, final boolean isUpdateRegistration)
 	{
 		if (clan.getHasFort() > 0)
+		{
 			return;
+		}
 		
 		Connection con = null;
 		try
@@ -1407,12 +1337,16 @@ public class FortSiege
 			if (typeId == 0 || typeId == 2 || typeId == -1)
 			{
 				if (getDefenderClans().size() + getDefenderWaitingClans().size() >= FortSiegeManager.getInstance().getDefenderMaxClans())
+				{
 					return;
+				}
 			}
 			else
 			{
 				if (getAttackerClans().size() >= FortSiegeManager.getInstance().getAttackerMaxClans())
+				{
 					return;
+				}
 			}
 			
 			con = L2DatabaseFactory.getInstance().getConnection();
@@ -1588,7 +1522,9 @@ public class FortSiege
 	public final L2SiegeClan getAttackerClan(final L2Clan clan)
 	{
 		if (clan == null)
+		{
 			return null;
+		}
 		
 		return getAttackerClan(clan.getClanId());
 	}
@@ -1601,8 +1537,12 @@ public class FortSiege
 	public final L2SiegeClan getAttackerClan(final int clanId)
 	{
 		for (final L2SiegeClan sc : getAttackerClans())
+		{
 			if (sc != null && sc.getClanId() == clanId)
+			{
 				return sc;
+			}
+		}
 		
 		return null;
 	}
@@ -1614,7 +1554,9 @@ public class FortSiege
 	public final List<L2SiegeClan> getAttackerClans()
 	{
 		if (_isNormalSide)
+		{
 			return _attackerClans;
+		}
 		
 		return _defenderClans;
 	}
@@ -1635,7 +1577,9 @@ public class FortSiege
 	public final Fort getFort()
 	{
 		if (_fort == null || _fort.length <= 0)
+		{
 			return null;
+		}
 		
 		return _fort[0];
 	}
@@ -1648,7 +1592,9 @@ public class FortSiege
 	public final L2SiegeClan getDefenderClan(final L2Clan clan)
 	{
 		if (clan == null)
+		{
 			return null;
+		}
 		
 		return getDefenderClan(clan.getClanId());
 	}
@@ -1661,8 +1607,12 @@ public class FortSiege
 	public final L2SiegeClan getDefenderClan(final int clanId)
 	{
 		for (final L2SiegeClan sc : getDefenderClans())
+		{
 			if (sc != null && sc.getClanId() == clanId)
+			{
 				return sc;
+			}
+		}
 		
 		return null;
 	}
@@ -1674,7 +1624,9 @@ public class FortSiege
 	public final List<L2SiegeClan> getDefenderClans()
 	{
 		if (_isNormalSide)
+		{
 			return _defenderClans;
+		}
 		
 		return _attackerClans;
 	}
@@ -1687,7 +1639,9 @@ public class FortSiege
 	public final L2SiegeClan getDefenderWaitingClan(final L2Clan clan)
 	{
 		if (clan == null)
+		{
 			return null;
+		}
 		
 		return getDefenderWaitingClan(clan.getClanId());
 	}
@@ -1700,8 +1654,12 @@ public class FortSiege
 	public final L2SiegeClan getDefenderWaitingClan(final int clanId)
 	{
 		for (final L2SiegeClan sc : getDefenderWaitingClans())
+		{
 			if (sc != null && sc.getClanId() == clanId)
+			{
 				return sc;
+			}
+		}
 		
 		return null;
 	}
@@ -1780,7 +1738,9 @@ public class FortSiege
 		{
 			final L2SiegeClan sc = getAttackerClan(clan);
 			if (sc != null)
+			{
 				return sc.getFlag();
+			}
 		}
 		
 		return null;

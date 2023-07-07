@@ -21,8 +21,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
+import l2jorion.game.network.PacketServer;
 
-public class PledgeReceiveWarList extends L2GameServerPacket
+public class PledgeReceiveWarList extends PacketServer
 {
 	private static final String _S__FE_3E_PLEDGERECEIVEWARELIST = "[S] FE:3E PledgeReceiveWarList";
 	

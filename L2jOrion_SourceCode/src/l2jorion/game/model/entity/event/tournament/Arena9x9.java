@@ -1360,8 +1360,8 @@ public class Arena9x9 implements Runnable
 				{
 					this.arena = arena;
 					arena.setFree(false);
-					pairOne.teleportTo(arena.x - 850, arena.y, arena.z);
-					pairTwo.teleportTo(arena.x + 850, arena.y, arena.z);
+					pairOne.teleportTo(arena.x - Config.TM_DISTANCE, arena.y, arena.z);
+					pairTwo.teleportTo(arena.x + Config.TM_DISTANCE, arena.y, arena.z);
 					pairOne.setImobilised(true);
 					pairTwo.setImobilised(true);
 					pairOne.setInTournamentEvent(true);
@@ -1409,7 +1409,6 @@ public class Arena9x9 implements Runnable
 		{
 			if (_player.isOnline() == 1)
 			{
-				
 				switch (_time)
 				{
 					case 300:
@@ -1417,40 +1416,27 @@ public class Arena9x9 implements Runnable
 					case 180:
 					case 120:
 					case 60:
-						_player.sendMessage(_time + " second(s) to start the battle.");
-						break;
 					case 45:
-						_player.sendMessage(_time + " second(s) to start the battle!");
-						break;
 					case 30:
-						_player.sendMessage(_time + " second(s) to start the battle!");
-						break;
 					case 20:
-						_player.sendMessage(_time + " second(s) to start the battle!");
-						break;
 					case 15:
-						_player.sendMessage(_time + " second(s) to start the battle!");
-						break;
 					case 10:
-						_player.sendMessage(_time + " second(s) to start the battle!");
+						_player.sendMessage(_time + " seconds to start the battle!");
 						break;
 					case 5:
-						_player.sendMessage(_time + " second(s) to start the battle!");
-						break;
 					case 4:
-						_player.sendMessage(_time + " second(s) to start the battle!");
-						break;
 					case 3:
-						_player.sendMessage(_time + " second(s) to start the battle!");
-						break;
 					case 2:
-						_player.sendMessage(_time + " second(s) to start the battle!");
+						_player.sendMessage(_time + " seconds to start the battle!");
+						_player.sendPacket(new ExShowScreenMessage(_time + " seconds to start the battle!", 1 * 1000));
 						break;
 					case 1:
-						_player.sendMessage(_time + " second(s) to start the battle!");
+						_player.sendMessage(_time + " second to start the battle!");
+						_player.sendPacket(new ExShowScreenMessage(_time + " second to start the battle!", 1 * 1000));
 						break;
 				}
-				if (_time > 1)
+				
+				if (_time > 0)
 				{
 					ThreadPoolManager.getInstance().scheduleGeneral(new Countdown(_player, _time - 1), 1000);
 				}

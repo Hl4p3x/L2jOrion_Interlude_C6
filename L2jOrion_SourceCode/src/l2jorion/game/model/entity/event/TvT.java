@@ -78,7 +78,7 @@ public class TvT implements EventTask
 	private String startEventTime;
 	
 	/** The _team event. */
-	private static boolean _teamEvent = true; // TODO to be integrated
+	private static boolean _teamEvent = true;
 	
 	/** The _players. */
 	public static Vector<L2PcInstance> _players = new Vector<>();
@@ -643,8 +643,6 @@ public class TvT implements EventTask
 	 */
 	private static boolean checkStartJoinPlayerInfo()
 	{
-		
-		// TODO be integrated
 		return true;
 		
 	}
@@ -670,8 +668,6 @@ public class TvT implements EventTask
 	 */
 	private static boolean checkOptionalEventStartJoinOk()
 	{
-		
-		// TODO be integrated
 		return true;
 		
 	}
@@ -993,7 +989,6 @@ public class TvT implements EventTask
 				
 				if (_topKills != 0)
 				{
-					
 					playKneelAnimation(_topTeam);
 					
 					if (Config.TVT_ANNOUNCE_TEAM_STATS)
@@ -1023,6 +1018,7 @@ public class TvT implements EventTask
 					{
 						Announcements.getInstance().gameAnnounceToAll(_eventName + ": The event finished with a TIE: " + _topKills + " kills by each team!");
 					}
+					
 					rewardTeam(_topTeam, bestKiller, looser);
 					
 					if (Config.TVT_STATS_LOGGER)
@@ -1044,10 +1040,8 @@ public class TvT implements EventTask
 							LOG.info("Top looser: " + looser.getName() + " - Dies: " + looser._countTvTdies);
 						}
 						
-						LOG.info(_eventName + ": " + _topTeam + "'s win the match! " + _topKills + " kills.");
-						
+						LOG.info(_eventName + ": " + _topTeam + "'s win the match! " + _topKills + " kills");
 					}
-					
 				}
 				else
 				{
@@ -1944,7 +1938,6 @@ public class TvT implements EventTask
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
@@ -1996,7 +1989,6 @@ public class TvT implements EventTask
 				if (index == -1)
 				{
 					CloseUtil.close(con);
-					con = null;
 					return;
 				}
 				statement = con.prepareStatement("INSERT INTO tvt_teams (teamId ,teamName, teamX, teamY, teamZ, teamColor) VALUES (?, ?, ?, ?, ?, ?)");
@@ -2023,7 +2015,6 @@ public class TvT implements EventTask
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
@@ -2478,30 +2469,24 @@ public class TvT implements EventTask
 					{
 						player.addItem(_eventName + " Event: " + _eventName, _rewardId, _rewardAmount, player, true);
 						player.addItem(_eventName + " Event: " + _eventName, Config.TVT_TOP_KILLER_REWARD, Config.TVT_TOP_KILLER_QTY, player, true);
-						
 					}
 					else if (teamName != null && (player._teamNameTvT.equals(teamName)))
 					{
-						
 						player.addItem(_eventName + " Event: " + _eventName, _rewardId, _rewardAmount, player, true);
 						
-						final NpcHtmlMessage nhm = new NpcHtmlMessage(5);
+						final NpcHtmlMessage htm = new NpcHtmlMessage(5);
 						final TextBuilder replyMSG = new TextBuilder("");
-						
 						replyMSG.append("<html><body>");
 						replyMSG.append("<font color=\"FFFF00\">Your team wins the event. Look in your inventory for the reward.</font>");
 						replyMSG.append("</body></html>");
+						htm.setHtml(replyMSG.toString());
+						player.sendPacket(htm);
 						
-						nhm.setHtml(replyMSG.toString());
-						player.sendPacket(nhm);
-						
-						// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
 						player.sendPacket(ActionFailed.STATIC_PACKET);
-						
 					}
 					else if (teamName == null)
-					{ // TIE
-						
+					{
+						// TIE
 						int minus_reward = 0;
 						if (_topKills != 0)
 						{
@@ -2515,19 +2500,15 @@ public class TvT implements EventTask
 						
 						player.addItem(_eventName + " Event: " + _eventName, _rewardId, minus_reward, player, true);
 						
-						final NpcHtmlMessage nhm = new NpcHtmlMessage(5);
+						final NpcHtmlMessage htm = new NpcHtmlMessage(5);
 						final TextBuilder replyMSG = new TextBuilder("");
-						
 						replyMSG.append("<html><body>");
 						replyMSG.append("<font color=\"FFFF00\">Your team had a tie in the event. Look in your inventory for the reward.</font>");
 						replyMSG.append("</body></html>");
+						htm.setHtml(replyMSG.toString());
+						player.sendPacket(htm);
 						
-						nhm.setHtml(replyMSG.toString());
-						player.sendPacket(nhm);
-						
-						// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
 						player.sendPacket(ActionFailed.STATIC_PACKET);
-						
 					}
 				}
 			}
@@ -2960,7 +2941,9 @@ public class TvT implements EventTask
 		{
 			return null;
 		}
+		
 		L2PcInstance bestKiller = null;
+		
 		for (final L2PcInstance player : players)
 		{
 			if ((bestKiller == null) || (bestKiller._countTvTkills < player._countTvTkills))
@@ -2968,6 +2951,7 @@ public class TvT implements EventTask
 				bestKiller = player;
 			}
 		}
+		
 		return bestKiller;
 	}
 	

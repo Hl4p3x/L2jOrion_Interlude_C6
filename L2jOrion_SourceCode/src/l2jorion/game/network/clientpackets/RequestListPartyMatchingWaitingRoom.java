@@ -17,12 +17,10 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ExListPartyMatchingWaitingRoom;
 
-/**
- * @author Gnacik
- */
-public class RequestListPartyMatchingWaitingRoom extends L2GameClientPacket
+public class RequestListPartyMatchingWaitingRoom extends PacketClient
 {
 	private static int _page;
 	private static int _minlvl;
@@ -44,7 +42,9 @@ public class RequestListPartyMatchingWaitingRoom extends L2GameClientPacket
 	{
 		final L2PcInstance _activeChar = getClient().getActiveChar();
 		if (_activeChar == null)
+		{
 			return;
+		}
 		
 		_activeChar.sendPacket(new ExListPartyMatchingWaitingRoom(_activeChar, _page, _minlvl, _maxlvl, _mode));
 	}

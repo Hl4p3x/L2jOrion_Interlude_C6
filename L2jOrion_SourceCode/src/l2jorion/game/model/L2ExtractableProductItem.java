@@ -19,9 +19,6 @@
  */
 package l2jorion.game.model;
 
-/**
- * @author -Nemesiss-
- */
 public class L2ExtractableProductItem
 {
 	private final int _id;

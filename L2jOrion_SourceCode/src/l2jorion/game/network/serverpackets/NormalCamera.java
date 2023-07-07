@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class NormalCamera extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class NormalCamera extends PacketServer
 {
 	private static final String _S__C8_NORMALCAMERA = "[S] C8 NormalCamera";
 	

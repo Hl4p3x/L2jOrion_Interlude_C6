@@ -48,7 +48,7 @@ public class FaenorInterface implements EngineInterface
 		return SingletonHolder._instance;
 	}
 	
-	private FaenorInterface()
+	protected FaenorInterface()
 	{
 	}
 	
@@ -57,10 +57,6 @@ public class FaenorInterface implements EngineInterface
 		return null;
 	}
 	
-	/**
-	 * Adds a new Quest Drop to an NPC
-	 * @see l2jorion.game.script.EngineInterface#addQuestDrop(int, int, int, int, int, String, String[])
-	 */
 	@Override
 	public void addQuestDrop(final int npcID, final int itemID, final int min, final int max, final int chance, final String questID, final String[] states)
 	{
@@ -80,17 +76,6 @@ public class FaenorInterface implements EngineInterface
 		addDrop(npc, drop, false);
 	}
 	
-	/**
-	 * Adds a new Drop to an NPC
-	 * @param npcID
-	 * @param itemID
-	 * @param min
-	 * @param max
-	 * @param sweep
-	 * @param chance
-	 * @throws NullPointerException
-	 * @see l2jorion.game.script.EngineInterface#addQuestDrop(int, int, int, int, int, String, String[])
-	 */
 	public void addDrop(final int npcID, final int itemID, final int min, final int max, final boolean sweep, final int chance) throws NullPointerException
 	{
 		final L2NpcTemplate npc = npcTable.getTemplate(npcID);
@@ -111,12 +96,6 @@ public class FaenorInterface implements EngineInterface
 		addDrop(npc, drop, sweep);
 	}
 	
-	/**
-	 * Adds a new drop to an NPC. If the drop is sweep, it adds it to the NPC's Sweep category If the drop is non-sweep, it creates a new category for this drop.
-	 * @param npc
-	 * @param drop
-	 * @param sweep
-	 */
 	public void addDrop(final L2NpcTemplate npc, final L2DropData drop, final boolean sweep)
 	{
 		if (sweep)
@@ -143,21 +122,11 @@ public class FaenorInterface implements EngineInterface
 		
 	}
 	
-	/**
-	 * Adds a new drop to an NPC, in the specified category. If the category does not exist, it is created.
-	 * @param npc
-	 * @param drop
-	 * @param category
-	 */
 	public void addDrop(final L2NpcTemplate npc, final L2DropData drop, final int category)
 	{
 		npc.addDropData(drop, category);
 	}
 	
-	/**
-	 * @param npcID
-	 * @return Returns the _questDrops.
-	 */
 	public List<L2DropData> getQuestDrops(final int npcID)
 	{
 		final L2NpcTemplate npc = npcTable.getTemplate(npcID);
@@ -216,7 +185,6 @@ public class FaenorInterface implements EngineInterface
 		}
 	}
 	
-	@SuppressWarnings("synthetic-access")
 	private static class SingletonHolder
 	{
 		protected static final FaenorInterface _instance = new FaenorInterface();

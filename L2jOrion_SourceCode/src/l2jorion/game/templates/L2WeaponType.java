@@ -22,7 +22,7 @@ package l2jorion.game.templates;
 
 public enum L2WeaponType
 {
-	NONE(1, "Shield"), // Shields!!!
+	NONE(1, "Shield"), // Shields
 	SWORD(2, "Sword"),
 	BLUNT(3, "Blunt"),
 	DAGGER(4, "Dagger"),
@@ -40,34 +40,20 @@ public enum L2WeaponType
 	private final int _id;
 	private final String _name;
 	
-	/**
-	 * Constructor of the L2WeaponType.
-	 * @param id : int designating the ID of the WeaponType
-	 * @param name : String designating the name of the WeaponType
-	 */
 	private L2WeaponType(final int id, final String name)
 	{
 		_id = id;
 		_name = name;
 	}
 	
-	/**
-	 * Returns the ID of the item after applying the mask.
-	 * @return int : ID of the item
-	 */
 	public int mask()
 	{
 		return 1 << _id;
 	}
 	
-	/**
-	 * Returns the name of the WeaponType
-	 * @return String
-	 */
 	@Override
 	public String toString()
 	{
 		return _name;
 	}
-	
 }

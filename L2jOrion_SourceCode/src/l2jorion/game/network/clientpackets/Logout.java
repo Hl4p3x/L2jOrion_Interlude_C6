@@ -21,6 +21,7 @@ import l2jorion.game.model.L2Party;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.sevensigns.SevenSignsFestival;
 import l2jorion.game.model.olympiad.OlympiadManager;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
@@ -28,7 +29,7 @@ import l2jorion.game.taskmanager.AttackStanceTaskManager;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class Logout extends L2GameClientPacket
+public final class Logout extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(Logout.class);
 	

@@ -22,14 +22,8 @@ package l2jorion.login.network.loginserverpackets;
 
 import l2jorion.login.network.serverpackets.ServerBasePacket;
 
-/**
- * @author -Wooden-
- */
 public class LoginServerFail extends ServerBasePacket
 {
-	/**
-	 * @param reason
-	 */
 	public LoginServerFail(final int reason)
 	{
 		writeC(0x01);

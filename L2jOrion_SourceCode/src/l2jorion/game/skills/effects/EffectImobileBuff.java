@@ -43,11 +43,6 @@ final class EffectImobileBuff extends L2Effect
 	}
 	
 	@Override
-	public void onExit()
-	{
-	}
-	
-	@Override
 	public boolean onActionTime()
 	{
 		getEffector().setIsImobilised(false);

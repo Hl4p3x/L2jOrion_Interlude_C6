@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExVariationCancelResult extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExVariationCancelResult extends PacketServer
 {
 	private static final String _S__FE_57_EXVARIATIONCANCELRESULT = "[S] FE:57 ExVariationCancelResult";
 	

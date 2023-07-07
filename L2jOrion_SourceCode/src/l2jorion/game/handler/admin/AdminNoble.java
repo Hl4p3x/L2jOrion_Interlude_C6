@@ -34,9 +34,6 @@ import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
-/**
- * @author L2jOrion
- */
 public class AdminNoble implements IAdminCommandHandler
 {
 	private static String[] ADMIN_COMMANDS =
@@ -49,13 +46,11 @@ public class AdminNoble implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
 		
 		if (activeChar == null)
+		{
 			return false;
+		}
 		
 		if (command.startsWith("admin_setnoble"))
 		{
@@ -82,18 +77,13 @@ public class AdminNoble implements IAdminCommandHandler
 					updateDatabase(targetPlayer, false);
 					sendMessages(false, targetPlayer, activeChar, true, true);
 				}
-				
-				targetPlayer = null;
 			}
 			else
 			{
 				activeChar.sendMessage("Impossible to set a non Player Target as noble.");
 				LOG.info("GM: " + activeChar.getName() + " is trying to set a non Player Target as noble.");
-				
 				return false;
 			}
-			
-			target = null;
 		}
 		
 		return true;
@@ -123,10 +113,6 @@ public class AdminNoble implements IAdminCommandHandler
 		}
 	}
 	
-	/**
-	 * @param player
-	 * @param newNoble
-	 */
 	private void updateDatabase(final L2PcInstance player, final boolean newNoble)
 	{
 		Connection con = null;
@@ -136,7 +122,9 @@ public class AdminNoble implements IAdminCommandHandler
 			// prevents any NPE.
 			// ----------------
 			if (player == null)
+			{
 				return;
+			}
 			
 			// Database Connection
 			// --------------------------------
@@ -155,7 +143,6 @@ public class AdminNoble implements IAdminCommandHandler
 				stmt.setInt(5, player.isDonator() ? 1 : 0);
 				stmt.execute();
 				stmt.close();
-				stmt = null;
 			}
 			else
 			// deletes from database
@@ -163,13 +150,14 @@ public class AdminNoble implements IAdminCommandHandler
 				stmt.setInt(1, player.getObjectId());
 				stmt.execute();
 				stmt.close();
-				stmt = null;
 			}
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Error: could not update database: ", e);
 		}
@@ -184,9 +172,6 @@ public class AdminNoble implements IAdminCommandHandler
 	String INSERT_DATA = "REPLACE INTO characters_custom_data (obj_Id, char_name, hero, noble, donator) VALUES (?,?,?,?,?)";
 	String DEL_DATA = "UPDATE characters_custom_data SET noble = 0 WHERE obj_Id=?";
 	
-	/**
-	 * @return
-	 */
 	@Override
 	public String[] getAdminCommandList()
 	{

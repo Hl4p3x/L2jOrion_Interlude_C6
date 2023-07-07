@@ -29,6 +29,7 @@ public final class Env
 {
 	public L2Character player;
 	public L2Character target;
+	
 	public L2ItemInstance item;
 	public L2Skill skill;
 	

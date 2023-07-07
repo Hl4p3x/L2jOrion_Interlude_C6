@@ -22,7 +22,9 @@ package l2jorion.game.network.serverpackets;
 
 import java.util.List;
 
-public class ExCursedWeaponList extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExCursedWeaponList extends PacketServer
 {
 	private static final String _S__FE_45_EXCURSEDWEAPONLIST = "[S] FE:45 ExCursedWeaponList";
 	

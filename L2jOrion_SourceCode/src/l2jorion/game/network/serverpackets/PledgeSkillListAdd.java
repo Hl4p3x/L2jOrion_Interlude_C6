@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class PledgeSkillListAdd extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class PledgeSkillListAdd extends PacketServer
 {
 	private static final String _S__FE_3A_PLEDGESKILLLISTADD = "[S] FE:3A PledgeSkillListAdd";
 	

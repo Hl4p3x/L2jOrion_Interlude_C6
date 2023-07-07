@@ -22,11 +22,12 @@ import java.util.Map;
 
 import l2jorion.game.managers.RaidBossPointsManager;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ExGetBossRecord;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestGetBossRecord extends L2GameClientPacket
+public final class RequestGetBossRecord extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestGetBossRecord.class);
 	private int _bossId;

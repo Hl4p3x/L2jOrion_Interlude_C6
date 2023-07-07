@@ -1,15 +1,11 @@
-#
-# Created by DraX on 2005.07.27. updated by DrLecter.
-#
 import sys
 
 from l2jorion.game.model.actor.instance import L2PcInstance
 from l2jorion.game.model.quest          import State
 from l2jorion.game.model.quest          import QuestState
 from l2jorion.game.model.quest.jython   import QuestJython as JQuest
-qn = "1101_teleport_to_race_track"
 
-#print "1101. Teleport to race track"
+qn = "1101_teleport_to_race_track"
 
 RACE_MANAGER = 30995
 

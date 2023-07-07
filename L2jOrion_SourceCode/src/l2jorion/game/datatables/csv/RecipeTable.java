@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.datatables.csv;
 
 import java.io.BufferedReader;
@@ -37,12 +17,10 @@ import l2jorion.game.model.actor.instance.L2RecipeInstance;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * @author programmos
- */
 public class RecipeTable extends RecipeController
 {
 	private static final Logger LOG = LoggerFactory.getLogger(RecipeTable.class);
+	
 	private final Map<Integer, L2RecipeList> _lists;
 	
 	private static RecipeTable instance;
@@ -144,7 +122,6 @@ public class RecipeTable extends RecipeController
 		}
 	}
 	
-	// TODO XMLize the recipe list
 	private void parseList(final String line)
 	{
 		try
@@ -188,10 +165,7 @@ public class RecipeTable extends RecipeController
 				final int quantity = Integer.parseInt(st3.nextToken());
 				L2RecipeInstance rp = new L2RecipeInstance(rpItemId, quantity);
 				recipePartList.add(rp);
-				rp = null;
-				st3 = null;
 			}
-			st2 = null;
 			
 			final int itemId = Integer.parseInt(st.nextToken());
 			final int count = Integer.parseInt(st.nextToken());
@@ -209,10 +183,6 @@ public class RecipeTable extends RecipeController
 				recipeList.addRecipe(recipePart);
 			}
 			_lists.put(Integer.valueOf(_lists.size()), recipeList);
-			
-			recipeList = null;
-			recipeName = null;
-			st = null;
 		}
 		catch (final Exception e)
 		{

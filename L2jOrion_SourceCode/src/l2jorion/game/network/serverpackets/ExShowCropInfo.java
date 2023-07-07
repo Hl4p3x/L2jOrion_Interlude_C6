@@ -19,24 +19,26 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+
 import l2jorion.game.managers.CastleManorManager.CropProcure;
 import l2jorion.game.model.L2Manor;
+import l2jorion.game.network.PacketServer;
 
-public class ExShowCropInfo extends L2GameServerPacket
+public class ExShowCropInfo extends PacketServer
 {
 	private static final String _S__FE_1C_EXSHOWSEEDINFO = "[S] FE:1D ExShowCropInfo";
 	
-	private FastList<CropProcure> _crops;
+	private ArrayList<CropProcure> _crops;
 	private final int _manorId;
 	
-	public ExShowCropInfo(final int manorId, final FastList<CropProcure> crops)
+	public ExShowCropInfo(final int manorId, final ArrayList<CropProcure> crops)
 	{
 		_manorId = manorId;
 		_crops = crops;
 		if (_crops == null)
 		{
-			_crops = new FastList<>();
+			_crops = new ArrayList<>();
 		}
 	}
 	

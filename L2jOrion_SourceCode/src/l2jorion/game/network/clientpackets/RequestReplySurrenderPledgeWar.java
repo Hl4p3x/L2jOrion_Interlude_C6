@@ -21,8 +21,9 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 
-public final class RequestReplySurrenderPledgeWar extends L2GameClientPacket
+public final class RequestReplySurrenderPledgeWar extends PacketClient
 {
 	private String _reqName;
 	private int _answer;

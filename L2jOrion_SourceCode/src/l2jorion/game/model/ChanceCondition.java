@@ -17,13 +17,14 @@
 package l2jorion.game.model;
 
 import l2jorion.game.templates.StatsSet;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author kombat
- */
 public final class ChanceCondition
 {
+	protected static final Logger LOG = LoggerFactory.getLogger(ChanceCondition.class);
+	
 	public static final int EVT_HIT = 1;
 	public static final int EVT_CRIT = 2;
 	public static final int EVT_CAST = 4;
@@ -95,12 +96,16 @@ public final class ChanceCondition
 		try
 		{
 			final TriggerType trigger = set.getEnum("chanceType", TriggerType.class);
+			
 			final int chance = set.getInteger("activationChance", 0);
 			if (trigger != null && chance > 0)
+			{
 				return new ChanceCondition(trigger, chance);
+			}
 		}
 		catch (final Exception e)
 		{
+			LOG.info("" + set.toString());
 			e.printStackTrace();
 		}
 		return null;

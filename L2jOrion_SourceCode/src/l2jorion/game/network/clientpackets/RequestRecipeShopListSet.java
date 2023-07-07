@@ -23,29 +23,30 @@ import l2jorion.game.model.L2ManufactureItem;
 import l2jorion.game.model.L2ManufactureList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.ZoneId;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.RecipeShopMsg;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestRecipeShopListSet extends L2GameClientPacket
+public final class RequestRecipeShopListSet extends PacketClient
 {
 	private int _count;
 	private int[] _items; // count*2
-
+	
 	@Override
 	protected void readImpl()
 	{
 		_count = readD();
-
-		if(_count < 0 || _count * 8 > _buf.remaining() || _count > Config.MAX_ITEM_IN_PACKET)
+		
+		if (_count < 0 || _count * 8 > _buf.remaining() || _count > Config.MAX_ITEM_IN_PACKET)
 		{
 			_count = 0;
 		}
-
+		
 		_items = new int[_count * 2];
-
-		for(int x = 0; x < _count; x++)
+		
+		for (int x = 0; x < _count; x++)
 		{
 			int recipeID = readD();
 			_items[x * 2 + 0] = recipeID;
@@ -53,7 +54,7 @@ public final class RequestRecipeShopListSet extends L2GameClientPacket
 			_items[x * 2 + 1] = cost;
 		}
 	}
-
+	
 	@Override
 	protected void runImpl()
 	{
@@ -62,7 +63,7 @@ public final class RequestRecipeShopListSet extends L2GameClientPacket
 		{
 			return;
 		}
-
+		
 		if (player.isInDuel())
 		{
 			player.sendPacket(new SystemMessage(SystemMessageId.CANT_CRAFT_DURING_COMBAT));
@@ -70,13 +71,20 @@ public final class RequestRecipeShopListSet extends L2GameClientPacket
 			return;
 		}
 		
-		if (player.isInsideZone(ZoneId.ZONE_NOSTORE))
+		if (Config.RON_CUSTOM && !player.isInsideZone(ZoneId.ZONE_PEACE))
 		{
-			player.sendMessage("Private manufacture are disable here. Try in another place.");
+			player.sendPacket(SystemMessageId.NO_PRIVATE_STORE_HERE);
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
-
+		
+		if (player.isInsideZone(ZoneId.ZONE_NOSTORE))
+		{
+			player.sendPacket(SystemMessageId.NO_PRIVATE_STORE_HERE);
+			player.sendPacket(ActionFailed.STATIC_PACKET);
+			return;
+		}
+		
 		if (_count == 0)
 		{
 			player.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_NONE);
@@ -86,8 +94,8 @@ public final class RequestRecipeShopListSet extends L2GameClientPacket
 		else
 		{
 			L2ManufactureList createList = new L2ManufactureList();
-
-			for(int x = 0; x < _count; x++)
+			
+			for (int x = 0; x < _count; x++)
 			{
 				int recipeID = _items[x * 2 + 0];
 				int cost = _items[x * 2 + 1];
@@ -95,7 +103,7 @@ public final class RequestRecipeShopListSet extends L2GameClientPacket
 			}
 			createList.setStoreName(player.getCreateList() != null ? player.getCreateList().getStoreName() : "");
 			player.setCreateList(createList);
-
+			
 			player.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_MANUFACTURE);
 			player.sitDown();
 			player.broadcastUserInfo();
@@ -103,11 +111,11 @@ public final class RequestRecipeShopListSet extends L2GameClientPacket
 			player.broadcastPacket(new RecipeShopMsg(player));
 		}
 	}
-
+	
 	@Override
 	public String getType()
 	{
 		return "[C] b2 RequestRecipeShopListSet";
 	}
-
+	
 }

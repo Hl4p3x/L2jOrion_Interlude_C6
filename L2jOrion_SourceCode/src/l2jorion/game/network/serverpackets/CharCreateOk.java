@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class CharCreateOk extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class CharCreateOk extends PacketServer
 {
 	private static final String _S__25_CHARCREATEOK = "[S] 19 CharCreateOk";
 	

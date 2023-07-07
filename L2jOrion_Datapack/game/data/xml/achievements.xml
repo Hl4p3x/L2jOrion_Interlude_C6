@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<list>
+	<achievement type="MONSTER" name="Monster Killer" icon="icon.skill0018" desc="Kill %required% monsters.">
+		<stage lvl="1" required="500" reward="57" count="1000"/>
+		<stage lvl="2" required="1000" reward="57" count="1000"/>
+		<stage lvl="3" required="2500" reward="57" count="1000"/>
+		<stage lvl="4" required="5000" reward="57" count="1000"/>
+		<stage lvl="5" required="10000" reward="57" count="1000"/>
+		<stage lvl="6" required="25000" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="MONSTER_CHAMPION" name="Champion Killer" icon="icon.skill1300" desc="Kill %required% champion monsters.">
+		<stage lvl="1" required="100" reward="57" count="1000"/>
+		<stage lvl="2" required="200" reward="57" count="1000"/>
+		<stage lvl="3" required="300" reward="57" count="1000"/>
+		<stage lvl="4" required="400" reward="57" count="1000"/>
+		<stage lvl="5" required="500" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="SPOIL" name="Spoil" icon="icon.skill0254" desc="Spoil %required% monsters."><!-- Hidden for player without spoil skill -->
+		<stage lvl="1" required="500" reward="57" count="1000"/>
+		<stage lvl="2" required="1000" reward="57" count="1000"/>
+		<stage lvl="3" required="2500" reward="57" count="1000"/>
+		<stage lvl="4" required="5000" reward="57" count="1000"/>
+		<stage lvl="5" required="10000" reward="57" count="1000"/>
+		<stage lvl="6" required="25000" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="PVP" name="PvP Killer" icon="icon.skill0223" desc="Kill %required% flagged players.">
+		<stage lvl="1" required="100" reward="57" count="1000"/>
+		<stage lvl="2" required="250" reward="57" count="1000"/>
+		<stage lvl="3" required="500" reward="57" count="1000"/>
+		<stage lvl="4" required="1000" reward="57" count="1000"/>
+		<stage lvl="5" required="2500" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="PK" name="PK Killer" icon="icon.skill0046" desc="Execute %required% players.">
+		<stage lvl="1" required="100" reward="57" count="1000"/>
+		<stage lvl="2" required="250" reward="57" count="1000"/>
+		<stage lvl="3" required="500" reward="57" count="1000"/>
+		<stage lvl="4" required="1000" reward="57" count="1000"/>
+		<stage lvl="5" required="2500" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="KARMA" name="Karma" icon="icon.skill0096" desc="Reach %required% karma as higher value."><!-- Not count when Cursed Weapons Equipped -->
+		<stage lvl="1" required="5000" reward="57" count="1000"/>
+		<stage lvl="2" required="10000" reward="57" count="1000"/>
+		<stage lvl="3" required="25000" reward="57" count="1000"/>
+		<stage lvl="4" required="50000" reward="57" count="1000"/>
+		<stage lvl="5" required="100000" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="DEATHS" name="Zombie Player" icon="icon.skill0060" desc="Reach %required% deaths.">
+		<stage lvl="1" required="100" reward="57" count="1000"/>
+		<stage lvl="2" required="250" reward="57" count="1000"/>
+		<stage lvl="3" required="500" reward="57" count="1000"/>
+		<stage lvl="4" required="1000" reward="57" count="1000"/>
+		<stage lvl="5" required="2500" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="GUARD" name="Guard Killer" icon="icon.mticket_bow_fix_i00" desc="Kill %required% Guards NPC's.">
+		<stage lvl="1" required="100" reward="57" count="1000"/>
+		<stage lvl="2" required="250" reward="57" count="1000"/>
+		<stage lvl="3" required="500" reward="57" count="1000"/>
+		<stage lvl="4" required="1000" reward="57" count="1000"/>
+		<stage lvl="5" required="2500" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="DUAL_WON" name="Dual Fighter" icon="icon.skill0340" desc="Win %required% dual fights.">
+		<stage lvl="1" required="50" reward="57" count="1000"/>
+		<stage lvl="2" required="100" reward="57" count="1000"/>
+		<stage lvl="3" required="250" reward="57" count="1000"/>
+		<stage lvl="4" required="500" reward="57" count="1000"/>
+		<stage lvl="5" required="1000" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="CURSED_WEAPON" name="Cursed Fighter" icon="icon.weapon_unique_zariche_i00" desc="Be owner of cursed weapon for %required% times.">
+		<stage lvl="1" required="3" reward="57" count="1000"/>
+		<stage lvl="2" required="5" reward="57" count="1000"/>
+		<stage lvl="3" required="10" reward="57" count="1000"/>
+		<stage lvl="4" required="15" reward="57" count="1000"/>
+		<stage lvl="5" required="25" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="SUBCLASS" name="Subclass" icon="icon.skill0430" desc="Complete %required% subclasses.">
+		<stage lvl="1" required="1" reward="57" count="1000"/>
+		<stage lvl="2" required="2" reward="57" count="1000"/>
+		<stage lvl="3" required="3" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="NOBLE" name="Noblessed" icon="icon.skill1323" desc="Become a nobless player."><!-- One Time Achievement -->
+		<stage reward="57" count="1000"/>
+	</achievement>
+	<achievement type="MARRIED" name="Married" icon="icon.armor_t2000_ul_i00" desc="Become a married player."><!-- One Time Achievement -->
+		<stage reward="57" count="1000"/>
+	</achievement>
+	<achievement type="OLYMPIAD_FIGHT" name="Olympiad Fighter" icon="icon.accessory_hero_cap_i00" desc="Fight %required% grand olympiad game(s).">
+		<stage lvl="1" required="5" reward="57" count="1000"/>
+		<stage lvl="2" required="10" reward="57" count="1000"/>
+		<stage lvl="3" required="25" reward="57" count="1000"/>
+		<stage lvl="4" required="50" reward="57" count="1000"/>
+		<stage lvl="5" required="100" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="OLYMPIAD_FIGHT_WON" name="Olympiad Winner" icon="icon.etc_nobless_teleport_coupon_i00" desc="Become a hero player %required% time(s).">
+		<stage lvl="1" required="5" reward="57" count="1000"/>
+		<stage lvl="2" required="10" reward="57" count="1000"/>
+		<stage lvl="3" required="25" reward="57" count="1000"/>
+		<stage lvl="4" required="50" reward="57" count="1000"/>
+		<stage lvl="5" required="100" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="OLYMPIAD_FIGHT_LOST" name="Olympiad Loser" icon="icon.skill0106" desc="Become a hero player %required% time(s).">
+		<stage lvl="1" required="5" reward="57" count="1000"/>
+		<stage lvl="2" required="10" reward="57" count="1000"/>
+		<stage lvl="3" required="25" reward="57" count="1000"/>
+		<stage lvl="4" required="50" reward="57" count="1000"/>
+		<stage lvl="5" required="100" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="HEROIC" name="Heroic" icon="icon.weapon_the_mace_of_hero_i00" desc="Become a hero player %required% time(s).">
+		<stage lvl="1" required="1" reward="57" count="1000"/>
+		<stage lvl="2" required="3" reward="57" count="1000"/>
+		<stage lvl="3" required="10" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="LEADER" name="Leader" icon="icon.skill0378" desc="Become a leader of a clan"><!-- One Time Achievement -->
+		<stage reward="57" count="1000"/>
+	</achievement>
+	<achievement type="ACADEMY" name="Academy" icon="icon.accessory_academy_i00" desc="Complete clan academy training."><!-- One Time Achievement -->
+		<stage reward="57" count="1000"/>
+	</achievement>
+	<achievement type="CLAN_LEVEL_UP" name="Clan Leveling" icon="icon.skill0370" desc="Raise your clan level %required%."><!-- Hidden for non leader player -->
+		<stage lvl="1" required="5" reward="57" count="1000"/>
+		<stage lvl="2" required="6" reward="57" count="1000"/>
+		<stage lvl="3" required="7" reward="57" count="1000"/>
+		<stage lvl="4" required="8" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="CASTLE" name="Castle" icon="icon.skill0391" desc="Become lord of castle castle."><!-- One Time Achievement - Hidden for non leader player -->
+		<stage reward="57" count="1000"/>
+	</achievement>
+	<achievement type="ENCHANT_SKILL" name="Enchant Skill" icon="icon.etc_codex_of_giant_i00" desc="Enchant a skill up to +%required%.">
+		<stage lvl="1" required="9" reward="57" count="1000"/>
+		<stage lvl="2" required="12" reward="57" count="1000"/>
+		<stage lvl="3" required="15" reward="57" count="1000"/>
+		<stage lvl="4" required="20" reward="57" count="1000"/>
+		<stage lvl="5" required="30" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="ENCHANT_WEAPON" name="Enchant Weapon" icon="icon.weapon_shining_bow_i00" desc="Enchant an weapon item up to +%required%.">
+		<stage lvl="1" required="7" reward="57" count="1000"/>
+		<stage lvl="2" required="13" reward="57" count="1000"/>
+		<stage lvl="3" required="16" reward="57" count="1000"/>
+		<stage lvl="4" required="20" reward="57" count="1000"/>
+		<stage lvl="5" required="25" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="ENCHANT_OTHER" name="Enchant Item" icon="icon.armor_t81_ul_i00" desc="Enchant an non-weapon item up to +%required%.">
+		<stage lvl="1" required="7" reward="57" count="1000"/>
+		<stage lvl="2" required="13" reward="57" count="1000"/>
+		<stage lvl="3" required="16" reward="57" count="1000"/>
+		<stage lvl="4" required="20" reward="57" count="1000"/>
+		<stage lvl="5" required="25" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="ENCHANT_SUCCESS" name="Enchant Success" icon="icon.etc_blessed_scrl_of_ench_wp_s_i05" desc="Success %required% enchant scrolls.">
+		<stage lvl="1" required="100" reward="57" count="1000"/>
+		<stage lvl="2" required="250" reward="57" count="1000"/>
+		<stage lvl="3" required="500" reward="57" count="1000"/>
+		<stage lvl="4" required="1000" reward="57" count="1000"/>
+		<stage lvl="5" required="2500" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="ENCHANT_FAILED" name="Enchant Failed" icon="icon.etc_crystal_gold_i00" desc="Fail %required% enchant scrolls.">
+		<stage lvl="1" required="50" reward="57" count="1000"/>
+		<stage lvl="2" required="100" reward="57" count="1000"/>
+		<stage lvl="3" required="250" reward="57" count="1000"/>
+		<stage lvl="4" required="500" reward="57" count="1000"/>
+		<stage lvl="5" required="1000" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="AUGMENT" name="Life Stone" icon="icon.etc_mineral_unique_i03" desc="Use %required% lifestones.">
+		<stage lvl="1" required="25" reward="57" count="1000"/>
+		<stage lvl="2" required="50" reward="57" count="1000"/>
+		<stage lvl="3" required="100" reward="57" count="1000"/>
+		<stage lvl="4" required="250" reward="57" count="1000"/>
+		<stage lvl="5" required="500" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="OPEN_CHEST" name="Chests" icon="icon.etc_old_key_i00" desc="Succes open %required% chests.">
+		<stage lvl="1" required="10" reward="57" count="1000"/>
+		<stage lvl="2" required="25" reward="57" count="1000"/>
+		<stage lvl="3" required="50" reward="57" count="1000"/>
+		<stage lvl="4" required="100" reward="57" count="1000"/>
+		<stage lvl="5" required="250" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="RECIPE_LEARN" name="Learn Recipe" icon="icon.etc_recipe_black_i00" desc="Learn %required% recipes.">
+		<stage lvl="1" required="3" reward="57" count="1000"/>
+		<stage lvl="2" required="5" reward="57" count="1000"/>
+		<stage lvl="3" required="10" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="RECIPE_SUCCESS" name="Success Craft" icon="icon.etc_blacksmiths_frame_i00" desc="Success caft %required% item(s).">
+		<stage lvl="1" required="5" reward="57" count="1000"/>
+		<stage lvl="2" required="10" reward="57" count="1000"/>
+		<stage lvl="3" required="15" reward="57" count="1000"/>
+		<stage lvl="4" required="20" reward="57" count="1000"/>
+		<stage lvl="5" required="25" reward="57" count="1000"/>
+		<stage lvl="6" required="50" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="RECIPE_FAIL" name="Fail Craft" icon="icon.etc_mithril_ore_i00" desc="Fail to caft %required% item(s).">
+		<stage lvl="1" required="5" reward="57" count="1000"/>
+		<stage lvl="2" required="10" reward="57" count="1000"/>
+		<stage lvl="3" required="15" reward="57" count="1000"/>
+		<stage lvl="4" required="20" reward="57" count="1000"/>
+		<stage lvl="5" required="25" reward="57" count="1000"/>
+		<stage lvl="6" required="50" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="FISHING" name="Fisherman" icon="icon.skill1315" desc="Succes fishing %required% time(s).">
+		<stage lvl="1" required="5" reward="57" count="1000"/>
+		<stage lvl="2" required="10" reward="57" count="1000"/>
+		<stage lvl="3" required="25" reward="57" count="1000"/>
+		<stage lvl="4" required="50" reward="57" count="1000"/>
+		<stage lvl="5" required="100" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="LOTTERY_WIN" name="Lottery" icon="icon.etc_lottery_card_i00" desc="Win %required% lottery games(s).">
+		<stage lvl="1" required="5" reward="57" count="1000"/>
+		<stage lvl="2" required="10" reward="57" count="1000"/>
+		<stage lvl="3" required="25" reward="57" count="1000"/>
+		<stage lvl="4" required="50" reward="57" count="1000"/>
+		<stage lvl="5" required="100" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="FEED_BEAST" name="Feeder" icon="icon.etc_pouch_yellow_i00" desc="Feed %required% feedable beast(s).">
+		<stage lvl="1" required="100" reward="57" count="1000"/>
+		<stage lvl="2" required="150" reward="57" count="1000"/>
+		<stage lvl="3" required="250" reward="57" count="1000"/>
+		<stage lvl="4" required="500" reward="57" count="1000"/>
+		<stage lvl="5" required="750" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="RECOMMEND" name="Recommend" icon="icon.action040" desc="Recommend a player %required% time(s).">
+		<stage lvl="1" required="25" reward="57" count="1000"/>
+		<stage lvl="2" required="50" reward="57" count="1000"/>
+		<stage lvl="3" required="100" reward="57" count="1000"/>
+		<stage lvl="4" required="175" reward="57" count="1000"/>
+		<stage lvl="5" required="255" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="RECOMMENDED" name="Honored" icon="icon.etc_lesser_potion_blue_i00" desc="Be recommended from player %required% time(s).">
+		<stage lvl="1" required="25" reward="57" count="1000"/>
+		<stage lvl="2" required="50" reward="57" count="1000"/>
+		<stage lvl="3" required="100" reward="57" count="1000"/>
+		<stage lvl="4" required="250" reward="57" count="1000"/>
+		<stage lvl="5" required="500" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="RESSURECT" name="Ressurect" icon="icon.etc_scroll_of_resurrection_i00" desc="Ressurect dead player %required% time(s).">
+		<stage lvl="1" required="25" reward="57" count="1000"/>
+		<stage lvl="2" required="50" reward="57" count="1000"/>
+		<stage lvl="3" required="100" reward="57" count="1000"/>
+		<stage lvl="4" required="175" reward="57" count="1000"/>
+		<stage lvl="5" required="255" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="RESSURECTED" name="Ressurected" icon="icon.skill1016" desc="Be ressurected from player %required% time(s).">
+		<stage lvl="1" required="25" reward="57" count="1000"/>
+		<stage lvl="2" required="50" reward="57" count="1000"/>
+		<stage lvl="3" required="100" reward="57" count="1000"/>
+		<stage lvl="4" required="250" reward="57" count="1000"/>
+		<stage lvl="5" required="500" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="ENTER_RIFT" name="Rift Fighter" icon="icon.etc_broken_crystal_blue_i00" desc="Enter on Dimensional Rift %required% time(s).">
+		<stage lvl="1" required="5" reward="57" count="1000"/>
+		<stage lvl="2" required="10" reward="57" count="1000"/>
+		<stage lvl="3" required="25" reward="57" count="1000"/>
+		<stage lvl="4" required="50" reward="57" count="1000"/>
+		<stage lvl="5" required="100" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="SPAWN_CHRISTMAS_TREE" name="Christmas Tree" icon="icon.etc_x_mas_tree_i00" desc="Spawn %required% special christmas tree(s).">
+		<stage lvl="1" required="5" reward="57" count="1000"/>
+		<stage lvl="2" required="10" reward="57" count="1000"/>
+		<stage lvl="3" required="25" reward="57" count="1000"/>
+		<stage lvl="4" required="50" reward="57" count="1000"/>
+		<stage lvl="5" required="100" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="QUEST_COMPLETE" name="Quest" icon="icon.etc_scroll_gray_i00" desc="Complete %required% amount of quest(s).">
+		<stage lvl="1" required="5" reward="57" count="1000"/>
+		<stage lvl="2" required="10" reward="57" count="1000"/>
+		<stage lvl="3" required="25" reward="57" count="1000"/>
+		<stage lvl="4" required="50" reward="57" count="1000"/>
+		<stage lvl="5" required="100" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="RAIDBOSS" name="Raidboss Killer" icon="icon.skill4111" desc="Kill %required% total raidboss.">
+		<stage lvl="1" required="10" reward="57" count="1000"/>
+		<stage lvl="2" required="25" reward="57" count="1000"/>
+		<stage lvl="3" required="50" reward="57" count="1000"/>
+		<stage lvl="4" required="100" reward="57" count="1000"/>
+		<stage lvl="5" required="250" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="GRANDBOSS" name="Grandboss Killer" icon="icon.skill4108" desc="Kill %required% total grandboss.">
+		<stage lvl="1" required="5" reward="57" count="1000"/>
+		<stage lvl="2" required="10" reward="57" count="1000"/>
+		<stage lvl="3" required="25" reward="57" count="1000"/>
+		<stage lvl="4" required="50" reward="57" count="1000"/>
+		<stage lvl="5" required="100" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="TYRANNOSAURUS" name="Tyrannosaurus" icon="icon.skill5083" desc="Kill Tyrannosaurus %required% time(s).">
+		<stage lvl="1" required="1" reward="57" count="1000"/>
+		<stage lvl="2" required="1" reward="57" count="1000"/>
+		<stage lvl="3" required="1" reward="57" count="1000"/>
+		<stage lvl="4" required="1" reward="57" count="1000"/>
+		<stage lvl="5" required="1" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="QUEEN_ANT" name="Queen Ant" icon="icon.accessory_ring_of_queen_ant_i00" desc="Kill Queen Ant %required% time(s).">
+		<stage lvl="1" required="1" reward="57" count="1000"/>
+		<stage lvl="2" required="3" reward="57" count="1000"/>
+		<stage lvl="3" required="5" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="CORE" name="Core" icon="icon.accessory_ring_of_core_i00" desc="Kill Core %required% time(s).">
+		<stage lvl="1" required="1" reward="57" count="1000"/>
+		<stage lvl="2" required="3" reward="57" count="1000"/>
+		<stage lvl="3" required="5" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="ORFEN" name="Orfen" icon="icon.accessory_earring_of_orfen_i00" desc="Kill Orfen %required% time(s).">
+		<stage lvl="1" required="1" reward="57" count="1000"/>
+		<stage lvl="2" required="3" reward="57" count="1000"/>
+		<stage lvl="3" required="5" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="ZAKEN" name="Zaken" icon="icon.accessory_earring_of_zaken_i00" desc="Kill Zaken %required% time(s).">
+		<stage lvl="1" required="1" reward="57" count="1000"/>
+		<stage lvl="2" required="3" reward="57" count="1000"/>
+		<stage lvl="3" required="5" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="BAIUM" name="Baium" icon="icon.accessory_ring_of_baium_i00" desc="Kill Baium %required% time(s).">
+		<stage lvl="1" required="1" reward="57" count="1000"/>
+		<stage lvl="2" required="3" reward="57" count="1000"/>
+		<stage lvl="3" required="5" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="HALISHA" name="Halisha" icon="icon.accessory_necklace_of_frintessa_i00" desc="Kill Halisha %required% time(s).">
+		<stage lvl="1" required="1" reward="57" count="1000"/>
+		<stage lvl="2" required="3" reward="57" count="1000"/>
+		<stage lvl="3" required="5" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="ANTHARAS" name="Antharas" icon="icon.accessory_earring_of_antaras_i00" desc="Kill Antharas %required% time(s).">
+		<stage lvl="1" required="1" reward="57" count="1000"/>
+		<stage lvl="2" required="3" reward="57" count="1000"/>
+		<stage lvl="3" required="5" reward="57" count="1000"/>
+	</achievement>
+	<achievement type="VALAKAS" name="Valakas" icon="icon.accessory_necklace_of_valakas_i00" desc="Kill Valakas %required% time(s).">
+		<stage lvl="1" required="1" reward="57" count="1000"/>
+		<stage lvl="2" required="3" reward="57" count="1000"/>
+		<stage lvl="3" required="5" reward="57" count="1000"/>
+	</achievement>
+</list>

@@ -1,8 +1,3 @@
-# Created by DrLecter, based on DraX' scripts
-# This script is part of the L2J Official Datapack Project
-# Visit us at http://www.l2jdp.com/
-# See readme-dp.txt and gpl.txt for license and distribution details
-# Let us know if you did not receive a copy of such files.
 import sys
 
 from l2jorion.game.model.quest        import State
@@ -10,7 +5,6 @@ from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
 
 qn = "orc_occupation_change_2"
-#print "Orc occupation change 2"
 
 MARK_OF_CHALLENGER   = 2627
 MARK_OF_PILGRIM      = 2721

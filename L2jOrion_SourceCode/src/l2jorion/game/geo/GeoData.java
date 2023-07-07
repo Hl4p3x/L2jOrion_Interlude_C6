@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.geo;
 
 import java.nio.file.Files;
@@ -25,14 +5,16 @@ import java.nio.file.Path;
 
 import l2jorion.Config;
 import l2jorion.game.datatables.csv.DoorTable;
-import l2jorion.game.geodriver.Cell;
-import l2jorion.game.geodriver.GeoDriver;
+import l2jorion.game.datatables.xml.FenceData;
+import l2jorion.game.geo.geodriver.Cell;
+import l2jorion.game.geo.geodriver.GeoDriver;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.Location;
 import l2jorion.game.util.GeoUtils;
 import l2jorion.game.util.LinePointIterator;
 import l2jorion.game.util.LinePointIterator3D;
+import l2jorion.game.util.LinePointIteratorTest;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
@@ -52,7 +34,6 @@ public class GeoData
 		int loadedRegions = 0;
 		try
 		{
-			// LOG.info("GeoEngine: Loading...");
 			for (int regionX = L2World.TILE_X_MIN; regionX <= L2World.TILE_X_MAX; regionX++)
 			{
 				for (int regionY = L2World.TILE_Y_MIN; regionY <= L2World.TILE_Y_MAX; regionY++)
@@ -178,7 +159,7 @@ public class GeoData
 	 * Gets the spawn height.
 	 * @param x the x coordinate
 	 * @param y the y coordinate
-	 * @param z the the z coordinate
+	 * @param z the z coordinate
 	 * @return the spawn height
 	 */
 	public int getSpawnHeight(int x, int y, int z)
@@ -192,6 +173,7 @@ public class GeoData
 		}
 		
 		int nextLowerZ = getNextLowerZ(geoX, geoY, z + 20);
+		
 		return Math.abs(nextLowerZ - z) <= SPAWN_Z_DELTA_LIMIT ? nextLowerZ : z;
 	}
 	
@@ -214,6 +196,11 @@ public class GeoData
 	public boolean canSeeTarget(L2Object cha, L2Object target)
 	{
 		if (target == null)
+		{
+			return false;
+		}
+		
+		if (!FenceData.canSeeTarget(cha, target.getX(), target.getY()))
 		{
 			return false;
 		}
@@ -258,6 +245,7 @@ public class GeoData
 		{
 			return false;
 		}
+		
 		return canSeeTarget(x, y, z, instanceId, tx, ty, tz);
 	}
 	
@@ -317,7 +305,7 @@ public class GeoData
 		z = getNearestZ(geoX, geoY, z);
 		tz = getNearestZ(tGeoX, tGeoY, tz);
 		
-		// fastpath
+		// Fastpath
 		if ((geoX == tGeoX) && (geoY == tGeoY))
 		{
 			if (hasGeoPos(tGeoX, tGeoY))
@@ -435,6 +423,46 @@ public class GeoData
 		return true;
 	}
 	
+	public boolean canSeeGround(int fromX, int fromY, int fromZ, int toX, int toY, int toZ, int instanceId)
+	{
+		int geoX = getGeoX(fromX);
+		int geoY = getGeoY(fromY);
+		fromZ = getNearestZ(geoX, geoY, fromZ);
+		int tGeoX = getGeoX(toX);
+		int tGeoY = getGeoY(toY);
+		toZ = getNearestZ(tGeoX, tGeoY, toZ);
+		
+		LinePointIteratorTest pointIter = new LinePointIteratorTest(geoX, geoY, tGeoX, tGeoY);
+		
+		// First point is guaranteed to be available
+		pointIter.next();
+		int prevX = pointIter.x();
+		int prevY = pointIter.y();
+		int prevZ = fromZ;
+		
+		while (pointIter.next())
+		{
+			int curX = pointIter.x();
+			int curY = pointIter.y();
+			int curZ = getNearestZ(curX, curY, prevZ);
+			
+			if (hasGeoPos(prevX, prevY))
+			{
+				int nswe = GeoUtils.computeNswe(prevX, prevY, curX, curY);
+				if (!checkNearestNsweAntiCornerCut(prevX, prevY, prevZ, nswe))
+				{
+					return false;
+				}
+			}
+			
+			prevX = curX;
+			prevY = curY;
+			prevZ = curZ;
+		}
+		
+		return true;
+	}
+	
 	/**
 	 * Verifies if the is a path between origin's location and destination, if not returns the closest location.
 	 * @param origin the origin
@@ -459,6 +487,11 @@ public class GeoData
 	 */
 	public Location moveCheck(int x, int y, int z, int tx, int ty, int tz, int instanceId)
 	{
+		// if (!FenceData.canSeeTarget(x, y, tx, ty))
+		// {
+		// return new Location(x, y, z);
+		// }
+		
 		int geoX = getGeoX(x);
 		int geoY = getGeoY(y);
 		z = getNearestZ(geoX, geoY, z);
@@ -490,7 +523,6 @@ public class GeoData
 				int nswe = GeoUtils.computeNswe(prevX, prevY, curX, curY);
 				if (!checkNearestNsweAntiCornerCut(prevX, prevY, prevZ, nswe))
 				{
-					// can't move, return previous location
 					return new Location(getWorldX(prevX), getWorldY(prevY), prevZ);
 				}
 			}
@@ -500,8 +532,8 @@ public class GeoData
 			prevZ = curZ;
 		}
 		
-		// different floors, return start location
-		if (hasGeoPos(prevX, prevY) && (prevZ != tz) && prevZ != 712 && tz != -32) // quick fix for Rune town too (boss floors)
+		// Different floors, return start location
+		if (hasGeoPos(prevX, prevY) && (prevZ != tz) && Math.abs(prevZ - tz) > 1000)
 		{
 			return new Location(x, y, z);
 		}
@@ -509,17 +541,6 @@ public class GeoData
 		return new Location(tx, ty, tz);
 	}
 	
-	/**
-	 * Checks if its possible to move from one location to another.
-	 * @param fromX the X coordinate to start checking from
-	 * @param fromY the Y coordinate to start checking from
-	 * @param fromZ the Z coordinate to start checking from
-	 * @param toX the X coordinate to end checking at
-	 * @param toY the Y coordinate to end checking at
-	 * @param toZ the Z coordinate to end checking at
-	 * @param instanceId the instance ID
-	 * @return {@code true} if the character at start coordinates can move to end coordinates, {@code false} otherwise
-	 */
 	public boolean canMove(int fromX, int fromY, int fromZ, int toX, int toY, int toZ, int instanceId)
 	{
 		int geoX = getGeoX(fromX);
@@ -536,7 +557,7 @@ public class GeoData
 		
 		LinePointIterator pointIter = new LinePointIterator(geoX, geoY, tGeoX, tGeoY);
 		
-		// first point is guaranteed to be available
+		// First point is guaranteed to be available
 		pointIter.next();
 		int prevX = pointIter.x();
 		int prevY = pointIter.y();
@@ -564,7 +585,7 @@ public class GeoData
 		
 		if (hasGeoPos(prevX, prevY) && (prevZ != toZ))
 		{
-			// different floors
+			// Different floors
 			return false;
 		}
 		
@@ -580,7 +601,8 @@ public class GeoData
 		int tGeoY = getGeoY(ty);
 		
 		LinePointIterator pointIter = new LinePointIterator(geoX, geoY, tGeoX, tGeoY);
-		// first point is guaranteed to be available
+		
+		// First point is guaranteed to be available
 		pointIter.next();
 		int prevZ = z;
 		

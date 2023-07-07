@@ -23,12 +23,13 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.handler.IUserCommandHandler;
 import l2jorion.game.handler.UserCommandHandler;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class RequestUserCommand extends L2GameClientPacket
+public class RequestUserCommand extends PacketClient
 {
 	static Logger LOG = LoggerFactory.getLogger(RequestUserCommand.class);
 	

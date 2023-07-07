@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class TargetSelected extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class TargetSelected extends PacketServer
 {
 	private static final String _S__39_TARGETSELECTED = "[S] 29 TargetSelected";
 	
@@ -30,13 +32,6 @@ public class TargetSelected extends L2GameServerPacket
 	private final int _y;
 	private final int _z;
 	
-	/**
-	 * @param objectId
-	 * @param targetId
-	 * @param x
-	 * @param y
-	 * @param z
-	 */
 	public TargetSelected(final int objectId, final int targetId, final int x, final int y, final int z)
 	{
 		_objectId = objectId;

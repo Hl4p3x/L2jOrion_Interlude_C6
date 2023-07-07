@@ -32,14 +32,11 @@ import l2jorion.game.scripting.L2ScriptEngineManager;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * @author KidZor
- */
-
 public class AdminScript implements IAdminCommandHandler
 {
-	private static final File SCRIPT_FOLDER = new File(Config.DATAPACK_ROOT.getAbsolutePath(), "data/scripts");
 	private static final Logger LOG = LoggerFactory.getLogger(AdminScript.class);
+	
+	private static final File SCRIPT_FOLDER = new File(Config.DATAPACK_ROOT.getAbsolutePath(), "data/scripts");
 	
 	private static final String[] ADMIN_COMMANDS =
 	{

@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <list>
 <skill id="4001" levels="12" name="NPC Wind Strike">
   <table name="#mpConsume">13 20 27 35 45 55 65 69 73 75 77 78</table>
@@ -106,7 +106,6 @@
   <for>
     <mul order="0x30" stat="holyVuln" val="0.8"/>
     <mul order="0x30" stat="darkVuln" val="1.2"/>
-    <!-- Needs core support for Patk against unholy -->
   </for>
 </skill>
 <skill id="4008" levels="1" name="Insect Skin">
@@ -398,9 +397,10 @@
   <table name="#pAtk">1.08 1.12 1.15</table>
   <table name="#mpConsume">10 18 33</table>
   <table name="#magicLvl">20 40 70</table>
+  <table name="#stackOrder">1 2 3</table>
   <set name="magicLvl" val="#magicLvl"/>
   <set name="mpConsume" val="#mpConsume"/>
-  <set name="target" val="TARGET_SELF"/>
+  <set name="target" val="TARGET_ONE"/>
   <set name="reuseDelay" val="8000"/>
   <set name="hitTime" val="1800"/>
   <set name="skillType" val="BUFF"/>
@@ -410,16 +410,16 @@
   <set name="aggroPoints" val="100"/>
   <set name="nextActionAttack" val="false" />
   <for>
-    <effect name="Buff" time="1200" count="1" val="0" stackOrder="#pAtk" stackType="pAtk">
+    <effect name="Grow" time="1200" count="1" val="0" stackOrder="#stackOrder" stackType="pAtk">
       <mul order="0x30" stat="pAtk" val="#pAtk"/>
     </effect>
-	<effect count="1" name="Grow" time="1200" val="0"/>
   </for>
 </skill>
 <skill id="4029" levels="3" name="NPC Shield">
   <table name="#pDef">1.08 1.12 1.15</table>
   <table name="#mpConsume">10 18 33</table>
   <table name="#magicLvl">20 40 70</table>
+  <table name="#stackOrder">1 2 3</table>
   <set name="magicLvl" val="#magicLvl"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="target" val="TARGET_SELF"/>
@@ -431,16 +431,16 @@
   <set name="effectRange" val="-1"/>
   <set name="aggroPoints" val="100"/>
   <for>
-    <effect name="Buff" time="1200" count="1" val="0" stackOrder="#pDef" stackType="pDef">
+    <effect name="Buff" time="1200" count="1" val="0" stackOrder="#stackOrder" stackType="pDef">
       <mul order="0x30" stat="pDef" val="#pDef"/>
     </effect>
   </for>
 </skill>
 <skill id="4030" levels="3" name="NPC Clan Might">
-  <!-- SHOULD BUFF FACTION MOBS -->
   <table name="#pAtk">1.08 1.12 1.15</table>
   <table name="#mpConsume">10 18 33</table>
   <table name="#magicLvl">20 40 70</table>
+  <table name="#stackOrder">1 2 3</table>
   <set name="magicLvl" val="#magicLvl"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="target" val="TARGET_CLAN"/>
@@ -453,7 +453,7 @@
   <set name="effectRange" val="900"/>
   <set name="aggroPoints" val="100"/>
   <for>
-    <effect count="1" name="Buff" time="1200" val="0" stackOrder="#pAtk" stackType="pAtk">
+    <effect count="1" name="Buff" time="1200" val="0" stackOrder="#stackOrder" stackType="pAtk">
       <mul order="0x30" stat="pAtk" val="#pAtk"/>
     </effect>
   </for>
@@ -462,6 +462,7 @@
   <table name="#pDef">1.08 1.12 1.15</table>
   <table name="#mpConsume">10 18 33</table>
   <table name="#magicLvl">20 40 70</table>
+  <table name="#stackOrder">1 2 3</table>
   <set name="magicLvl" val="#magicLvl"/>
   <set name="mpConsume" val="#mpConsume"/>
   <set name="target" val="TARGET_CLAN"/>
@@ -474,7 +475,7 @@
   <set name="effectRange" val="900"/>
   <set name="aggroPoints" val="100"/>
   <for>
-    <effect count="1" name="Buff" time="1200" val="0" stackOrder="#pDef" stackType="pDef">
+    <effect count="1" name="Buff" time="1200" val="0" stackOrder="#stackOrder" stackType="pDef">
       <mul order="0x30" stat="pDef" val="#pDef"/>
     </effect>
   </for>
@@ -1533,7 +1534,7 @@
   <set name="magicLvl" val="#magicLvl"/>
   <set name="lvlDepend" val="1"/>
   <set name="mpConsume" val="#mpConsume"/>
-  <set name="power" val="20"/>
+  <set name="power" val="80"/>
   <set name="target" val="TARGET_ONE"/>
   <set name="reuseDelay" val="300000"/>
   <set name="hitTime" val="6000"/>

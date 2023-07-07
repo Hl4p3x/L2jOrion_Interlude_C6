@@ -54,29 +54,13 @@ public final class L2Weapon extends L2Item
 	private final int _atkReuse;
 	private final int _mpConsume;
 	private final int _mDam;
-	private L2Skill _itemSkill = null; // for passive skill
+	private L2Skill _itemSkill = null; // passive skill
 	private L2Skill _enchant4Skill = null; // skill that activates when item is enchanted +4 (for duals)
 	
 	// Attached skills for Special Abilities
 	protected L2Skill[] _skillsOnCast;
 	protected L2Skill[] _skillsOnCrit;
 	
-	/**
-	 * Constructor for Weapon.<BR>
-	 * <BR>
-	 * <U><I>Variables filled :</I></U><BR>
-	 * <LI>_soulShotCount & _spiritShotCount</LI>
-	 * <LI>_pDam & _mDam & _rndDam</LI>
-	 * <LI>_critical</LI>
-	 * <LI>_hitModifier</LI>
-	 * <LI>_avoidModifier</LI>
-	 * <LI>_shieldDes & _shieldDefRate</LI>
-	 * <LI>_atkSpeed & _AtkReuse</LI>
-	 * <LI>_mpConsume</LI>
-	 * @param type : L2ArmorType designating the type of armor
-	 * @param set : StatsSet designating the set of couples (key,value) caracterizing the armor
-	 * @see L2Item constructor
-	 */
 	public L2Weapon(L2WeaponType type, StatsSet set)
 	{
 		super(type, set);
@@ -129,20 +113,12 @@ public final class L2Weapon extends L2Item
 		}
 	}
 	
-	/**
-	 * Returns the type of Weapon
-	 * @return L2WeaponType
-	 */
 	@Override
 	public L2WeaponType getItemType()
 	{
 		return (L2WeaponType) super._type;
 	}
 	
-	/**
-	 * Returns the ID of the Etc item after applying the mask.
-	 * @return int : ID of the Weapon
-	 */
 	@Override
 	public int getItemMask()
 	{
@@ -371,9 +347,6 @@ public final class L2Weapon extends L2Item
 			return output;
 		}
 		
-		// return _emptyEffectSet;
-		// List<L2Effect> effects = new FastList<L2Effect>();
-		
 		for (L2Skill skill : _skillsOnCast)
 		{
 			if (trigger.isOffensive() != skill.isOffensive())
@@ -442,10 +415,6 @@ public final class L2Weapon extends L2Item
 				}
 			}
 		}
-		// if(effects.size() == 0)
-		// return _emptyEffectSet;
-		// return effects.toArray(new L2Effect[effects.size()]);
-		
 		return output;
 	}
 	

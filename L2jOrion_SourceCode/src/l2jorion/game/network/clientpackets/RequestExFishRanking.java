@@ -20,21 +20,17 @@
  */
 package l2jorion.game.network.clientpackets;
 
+import l2jorion.game.network.PacketClient;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * Format: (ch) just a trigger
- * @author -Wooden-
- */
-public final class RequestExFishRanking extends L2GameClientPacket
+public final class RequestExFishRanking extends PacketClient
 {
 	private final Logger LOG = LoggerFactory.getLogger(RequestExFishRanking.class);
 	
 	@Override
 	protected void readImpl()
 	{
-		// trigger
 	}
 	
 	@Override

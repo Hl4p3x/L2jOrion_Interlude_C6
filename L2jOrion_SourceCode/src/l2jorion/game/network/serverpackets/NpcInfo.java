@@ -30,8 +30,9 @@ import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2SummonInstance;
 import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.model.zone.type.L2TownZone;
+import l2jorion.game.network.PacketServer;
 
-public class NpcInfo extends L2GameServerPacket
+public class NpcInfo extends PacketServer
 {
 	private static final String _S__22_NPCINFO = "[S] 16 NpcInfo";
 	
@@ -72,6 +73,14 @@ public class NpcInfo extends L2GameServerPacket
 		if (cha.getTemplate().serverSideName)
 		{
 			_name = cha.getTemplate().name;
+		}
+		
+		switch (_idTemplate)
+		{
+			case 31170: // Crest of Dawn
+			case 31171: // Crest of Dusk
+				_name = " "; // remove names
+				break;
 		}
 		
 		if (Config.L2JMOD_CHAMPION_ENABLE && cha.isChampion())
@@ -216,7 +225,9 @@ public class NpcInfo extends L2GameServerPacket
 		writeC(_activeChar.isInCombat() ? 1 : 0);
 		writeC(_activeChar.isAlikeDead() ? 1 : 0);
 		writeC(_isSummoned ? 2 : 0);
+		
 		writeS(_name);
+		
 		writeS(_title);
 		
 		if (_activeChar instanceof L2Summon)

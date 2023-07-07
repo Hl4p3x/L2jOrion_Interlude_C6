@@ -1,21 +1,3 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.datatables.csv;
 
 import java.util.HashMap;
@@ -336,19 +318,23 @@ public class MapRegionTable implements IXmlReader
 				}
 				catch (Exception e)
 				{
-					if (player.isFlying())
-					{
-						return _regions.get("union_base_of_kserth").getChaoticSpawnLoc();
-					}
-					
 					return _regions.get(defaultRespawn).getChaoticSpawnLoc();
 				}
 			}
 			
 		}
+		
 		// Get the nearest town
 		try
 		{
+			if (activeChar instanceof L2PcInstance)
+			{
+				if (getMapRegion(activeChar).getBannedRace().containsKey(((L2PcInstance) activeChar).getRace()))
+				{
+					return getRestartRegion(activeChar, getMapRegion(activeChar).getBannedRace().get(((L2PcInstance) activeChar).getRace())).getSpawnLoc();
+				}
+			}
+			
 			L2RespawnZone zone = ZoneManager.getInstance().getZone(activeChar, L2RespawnZone.class);
 			if (zone != null)
 			{
@@ -359,9 +345,8 @@ public class MapRegionTable implements IXmlReader
 		}
 		catch (Exception e)
 		{
-			LOG.warn("ZoneManager:", e);
+			LOG.warn("MapRegionTable:", e);
 			
-			// Port to the default respawn if no closest town found.
 			return _regions.get(defaultRespawn).getSpawnLoc();
 		}
 	}
@@ -373,7 +358,7 @@ public class MapRegionTable implements IXmlReader
 			L2PcInstance player = ((L2PcInstance) activeChar);
 			L2MapRegion region = _regions.get(point);
 			
-			if (region != null && region.getBannedRace().containsKey(player.getRace()))
+			if (region.getBannedRace().containsKey(player.getRace()))
 			{
 				getRestartRegion(player, region.getBannedRace().get(player.getRace()));
 			}

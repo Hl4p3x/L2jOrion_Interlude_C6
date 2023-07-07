@@ -1,6 +1,8 @@
 package l2jorion.game.network.serverpackets;
 
-public final class NpcSay extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public final class NpcSay extends PacketServer
 {
 	private static final String _S__02_NPCSAY = "[S] 02 NpcSay";
 	

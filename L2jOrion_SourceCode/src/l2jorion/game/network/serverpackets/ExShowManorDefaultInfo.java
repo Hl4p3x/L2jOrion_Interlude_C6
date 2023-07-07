@@ -22,8 +22,9 @@ package l2jorion.game.network.serverpackets;
 
 import javolution.util.FastList;
 import l2jorion.game.model.L2Manor;
+import l2jorion.game.network.PacketServer;
 
-public class ExShowManorDefaultInfo extends L2GameServerPacket
+public class ExShowManorDefaultInfo extends PacketServer
 {
 	private static final String _S__FE_1C_EXSHOWSEEDINFO = "[S] FE:1E ExShowManorDefaultInfo";
 	

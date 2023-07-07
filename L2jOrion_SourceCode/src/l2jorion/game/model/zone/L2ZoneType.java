@@ -29,7 +29,7 @@ import javolution.util.FastMap;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
+import l2jorion.game.network.PacketServer;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
@@ -64,9 +64,6 @@ public abstract class L2ZoneType
 		_maxLvl = 0xFF;
 		
 		_classType = 0;
-		
-		_race = null;
-		_class = null;
 	}
 	
 	public int getId()
@@ -154,11 +151,6 @@ public abstract class L2ZoneType
 	{
 	}
 	
-	/**
-	 * Checks if the given character is affected by this zone
-	 * @param character
-	 * @return
-	 */
 	private boolean isAffected(L2Character character)
 	{
 		// Check lvl
@@ -237,10 +229,6 @@ public abstract class L2ZoneType
 		_zone = zone;
 	}
 	
-	/**
-	 * Returns this zones zone form
-	 * @return
-	 */
 	public L2ZoneForm getZone()
 	{
 		return _zone;
@@ -251,23 +239,11 @@ public abstract class L2ZoneType
 		return _zone.isInsideZone(x, y, _zone.getHighZ());
 	}
 	
-	/**
-	 * Checks if the given coordinates are within the zone
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return
-	 */
 	public boolean isInsideZone(int x, int y, int z)
 	{
 		return _zone.isInsideZone(x, y, z);
 	}
 	
-	/**
-	 * Checks if the given object is inside the zone.
-	 * @param object
-	 * @return
-	 */
 	public boolean isInsideZone(L2Object object)
 	{
 		return isInsideZone(object.getX(), object.getY(), object.getZ());
@@ -303,18 +279,10 @@ public abstract class L2ZoneType
 		}
 		else
 		{
-			if (_characterList.containsKey(character.getObjectId()))
-			{
-				_characterList.remove(character.getObjectId());
-				onExit(character);
-			}
+			removeCharacter(character);
 		}
 	}
 	
-	/**
-	 * Force fully removes a character from the zone Should use during teleport / logoff
-	 * @param character
-	 */
 	public void removeCharacter(L2Character character)
 	{
 		if (_characterList.containsKey(character.getObjectId()))
@@ -324,14 +292,8 @@ public abstract class L2ZoneType
 		}
 	}
 	
-	/**
-	 * Will scan the zones char list for the character
-	 * @param character
-	 * @return
-	 */
 	public boolean isCharacterInZone(L2Character character)
 	{
-		// re validate zone is not always performed, so better both checks
 		if (character != null)
 		{
 			return _characterList.containsKey(character.getObjectId()) || isInsideZone(character.getX(), character.getY(), character.getZ());
@@ -349,11 +311,7 @@ public abstract class L2ZoneType
 	
 	public abstract void onReviveInside(L2Character character);
 	
-	/**
-	 * Broadcasts packet to all players inside the zone
-	 * @param packet
-	 */
-	public void broadcastPacket(L2GameServerPacket packet)
+	public void broadcastPacket(PacketServer packet)
 	{
 		if (_characterList.isEmpty())
 		{

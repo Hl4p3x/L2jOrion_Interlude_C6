@@ -1,5 +1,3 @@
-# Created by CubicVirtuoso
-# Any problems feel free to drop by #l2j-datapack on irc.freenode.net
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState

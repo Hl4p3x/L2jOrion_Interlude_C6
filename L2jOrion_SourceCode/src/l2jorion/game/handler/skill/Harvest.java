@@ -89,7 +89,6 @@ public class Harvest implements ISkillHandler
 			int total = 0;
 			int cropId = 0;
 			
-			// TODO: check items and amount of items player harvest
 			if (_target.isSeeded())
 			{
 				if (calcSuccess())

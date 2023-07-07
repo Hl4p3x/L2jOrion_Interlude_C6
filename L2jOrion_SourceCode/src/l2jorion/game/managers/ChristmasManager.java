@@ -42,11 +42,6 @@ import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * control for sequence of Christmas.
- * @version 1.00
- * @author Darki699
- */
 public class ChristmasManager
 {
 	private static final Logger LOG = LoggerFactory.getLogger(ChristmasManager.class);
@@ -128,51 +123,51 @@ public class ChristmasManager
 		"May you have the best of Christmas this year and all your dreams come true.",
 		"May the miracle of Christmas fill your heart with warmth and love. Merry Christmas!"
 	},
-	
-	sender =
-	{
-		"Santa Claus",
-		"Papai Noel",
-		"Shengdan Laoren",
-		"Santa",
-		"Viejo Pascuero",
-		"Sinter Klaas",
-		"Father Christmas",
-		"Saint Nicholas",
-		"Joulupukki",
-		"Pere Noel",
-		"Saint Nikolaus",
-		"Kanakaloka",
-		"De Kerstman",
-		"Winter grandfather",
-		"Babbo Natale",
-		"Hoteiosho",
-		"Kaledu Senelis",
-		"Black Peter",
-		"Kerstman",
-		"Julenissen",
-		"Swiety Mikolaj",
-		"Ded Moroz",
-		"Julenisse",
-		"El Nino Jesus",
-		"Jultomten",
-		"Reindeer Dasher",
-		"Reindeer Dancer",
-		"Christmas Spirit",
-		"Reindeer Prancer",
-		"Reindeer Vixen",
-		"Reindeer Comet",
-		"Reindeer Cupid",
-		"Reindeer Donner",
-		"Reindeer Donder",
-		"Reindeer Dunder",
-		"Reindeer Blitzen",
-		"Reindeer Bliksem",
-		"Reindeer Blixem",
-		"Reindeer Rudolf",
-		"Christmas Elf"
-	};
-	
+		
+		sender =
+		{
+			"Santa Claus",
+			"Papai Noel",
+			"Shengdan Laoren",
+			"Santa",
+			"Viejo Pascuero",
+			"Sinter Klaas",
+			"Father Christmas",
+			"Saint Nicholas",
+			"Joulupukki",
+			"Pere Noel",
+			"Saint Nikolaus",
+			"Kanakaloka",
+			"De Kerstman",
+			"Winter grandfather",
+			"Babbo Natale",
+			"Hoteiosho",
+			"Kaledu Senelis",
+			"Black Peter",
+			"Kerstman",
+			"Julenissen",
+			"Swiety Mikolaj",
+			"Ded Moroz",
+			"Julenisse",
+			"El Nino Jesus",
+			"Jultomten",
+			"Reindeer Dasher",
+			"Reindeer Dancer",
+			"Christmas Spirit",
+			"Reindeer Prancer",
+			"Reindeer Vixen",
+			"Reindeer Comet",
+			"Reindeer Cupid",
+			"Reindeer Donner",
+			"Reindeer Donder",
+			"Reindeer Dunder",
+			"Reindeer Blitzen",
+			"Reindeer Bliksem",
+			"Reindeer Blixem",
+			"Reindeer Rudolf",
+			"Christmas Elf"
+		};
+		
 	// Presents List:
 	protected int[] presents =
 	{
@@ -241,7 +236,7 @@ public class ChristmasManager
 		8936, /* Santa's Antlers Hat */
 		6394, /* Red Party Mask */
 		5808
-	/* Black Party Mask */
+		/* Black Party Mask */
 	};
 	
 	// The message task sent at fixed rate
@@ -400,10 +395,12 @@ public class ChristmasManager
 					_iterator++;
 					
 					if (obj != null && obj instanceof L2Attackable)
+					{
 						if (rand.nextInt(100) > 10)
 						{
 							obj = null;
 						}
+					}
 				}
 				
 				if (rand.nextInt(100) > 50)
@@ -414,7 +411,9 @@ public class ChristmasManager
 			catch (final Throwable t)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					t.printStackTrace();
+				}
 			}
 			
 			if (_iterator >= last)
@@ -451,7 +450,9 @@ public class ChristmasManager
 		public void run()
 		{
 			if (objectQueue == null || objectQueue.isEmpty())
+			{
 				return;
+			}
 			
 			for (final L2NpcInstance deleted : objectQueue)
 			{
@@ -470,7 +471,9 @@ public class ChristmasManager
 				catch (final Throwable t)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						t.printStackTrace();
+					}
 					continue;
 				}
 			}
@@ -515,7 +518,9 @@ public class ChristmasManager
 		catch (final Throwable t)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				t.printStackTrace();
+			}
 		}
 	}
 	
@@ -542,13 +547,7 @@ public class ChristmasManager
 	{
 		SendXMasMessage XMasMessage = new SendXMasMessage();
 		_XMasMessageTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(XMasMessage, 60000, _IntervalOfChristmas);
-		XMasMessage = null;
 	}
-	
-	/**
-	 * Sends X-Mas messages to all world players.
-	 * @author Darki699
-	 */
 	
 	class SendXMasMessage implements Runnable
 	{
@@ -574,7 +573,9 @@ public class ChristmasManager
 			catch (final Throwable t)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					t.printStackTrace();
+				}
 			}
 		}
 	}
@@ -608,13 +609,6 @@ public class ChristmasManager
 	{
 		return message[rand.nextInt(message.length)];
 	}
-	
-	/******************************* - give special items trees - ********************************/
-	// Trees , Carols , Tokens of love, Fireworks, Santa Hats.
-	
-	/**
-	 * Starts X-Mas Santa presents sent to all players, and initialize the thread.
-	 */
 	
 	private void givePresentsAtFixedRate()
 	{
@@ -669,7 +663,9 @@ public class ChristmasManager
 			catch (final Throwable t)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					t.printStackTrace();
+				}
 			}
 		}
 	}
@@ -741,7 +737,9 @@ public class ChristmasManager
 			catch (final Throwable t)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					t.printStackTrace();
+				}
 			}
 			
 			if (_iterator >= last)

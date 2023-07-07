@@ -23,22 +23,18 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.datatables.sql.HennaTreeTable;
 import l2jorion.game.model.actor.instance.L2HennaInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.HennaEquipList;
 
-/**
- * RequestHennaList - 0xba
- * @author Tempy
- */
-public final class RequestHennaList extends L2GameClientPacket
+public final class RequestHennaList extends PacketClient
 {
-	// This is just a trigger packet...
 	@SuppressWarnings("unused")
 	private int _unknown;
 	
 	@Override
 	protected void readImpl()
 	{
-		_unknown = readD(); // ??
+		_unknown = readD();
 	}
 	
 	@Override
@@ -47,7 +43,9 @@ public final class RequestHennaList extends L2GameClientPacket
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		final L2HennaInstance[] henna = HennaTreeTable.getInstance().getAvailableHenna(activeChar.getClassId());
 		final HennaEquipList he = new HennaEquipList(activeChar, henna);

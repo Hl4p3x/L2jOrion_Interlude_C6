@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2004-2016 L2J Server
- *
- * This file is part of L2J Server.
- *
- * L2J Server is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * L2J Server is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package l2jorion.game.util;
 
 public final class LinePointIterator3D
@@ -41,12 +23,15 @@ public final class LinePointIterator3D
 		_srcX = srcX;
 		_srcY = srcY;
 		_srcZ = srcZ;
+		
 		_dstX = dstX;
 		_dstY = dstY;
 		_dstZ = dstZ;
+		
 		_dx = Math.abs((long) dstX - srcX);
 		_dy = Math.abs((long) dstY - srcY);
 		_dz = Math.abs((long) dstZ - srcZ);
+		
 		_sx = srcX < dstX ? 1 : -1;
 		_sy = srcY < dstY ? 1 : -1;
 		_sz = srcZ < dstZ ? 1 : -1;

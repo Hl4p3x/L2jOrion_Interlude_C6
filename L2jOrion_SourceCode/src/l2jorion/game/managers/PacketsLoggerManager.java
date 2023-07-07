@@ -26,12 +26,10 @@ import java.util.List;
 
 import l2jorion.log.Log;
 
-/**
- * @author Shyla
- */
 public class PacketsLoggerManager
 {
 	private final List<String> _monitored_characters = new ArrayList<>();
+	
 	private final Hashtable<String, List<String>> _character_blocked_packets = new Hashtable<>();
 	
 	protected PacketsLoggerManager()
@@ -44,7 +42,9 @@ public class PacketsLoggerManager
 	{
 		
 		if (!_monitored_characters.contains(character))
+		{
 			_monitored_characters.add(character);
+		}
 		
 	}
 	
@@ -52,7 +52,9 @@ public class PacketsLoggerManager
 	{
 		
 		if (_monitored_characters.contains(character))
+		{
 			_monitored_characters.remove(character);
+		}
 		
 	}
 	

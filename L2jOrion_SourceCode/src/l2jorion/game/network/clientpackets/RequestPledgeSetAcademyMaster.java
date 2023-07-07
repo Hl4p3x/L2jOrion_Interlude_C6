@@ -23,10 +23,11 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2ClanMember;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestPledgeSetAcademyMaster extends L2GameClientPacket
+public final class RequestPledgeSetAcademyMaster extends PacketClient
 {
 	private String _currPlayerName;
 	private int _set; // 1 set, 0 delete

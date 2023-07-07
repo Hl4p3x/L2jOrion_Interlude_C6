@@ -35,6 +35,7 @@ import l2jorion.game.model.actor.instance.L2MercManagerInstance;
 import l2jorion.game.model.actor.instance.L2MerchantInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ItemList;
@@ -46,7 +47,7 @@ import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestBuyItem extends L2GameClientPacket
+public final class RequestBuyItem extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestBuyItem.class);
 	
@@ -102,7 +103,7 @@ public final class RequestBuyItem extends L2GameClientPacket
 		
 		final L2Object target = player.getTarget();
 		
-		if (!player.hasTempAccessBuy())
+		if (!player.hasTempAccess())
 		{
 			if (!player.isGM() && (target == null 
 					|| !(target instanceof L2MerchantInstance 
@@ -159,7 +160,7 @@ public final class RequestBuyItem extends L2GameClientPacket
 		}
 		else if (!ok && !player.isGM())
 		{
-			if (!player.hasTempAccessBuy())
+			if (!player.hasTempAccess())
 			{
 				player.sendMessage("Invalid Target: Seller must be targetted.");
 				return;

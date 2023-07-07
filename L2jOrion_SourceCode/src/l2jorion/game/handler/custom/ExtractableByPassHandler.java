@@ -30,12 +30,10 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * @author Nick
- */
 public class ExtractableByPassHandler implements ICustomByPassHandler
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(ExtractableByPassHandler.class);
+	
 	private static String[] _IDS =
 	{
 		"extractOne",
@@ -48,7 +46,6 @@ public class ExtractableByPassHandler implements ICustomByPassHandler
 		return _IDS;
 	}
 	
-	// custom_extractOne <objectID> custom_extractAll <objectID>
 	@Override
 	public void handleCommand(final String command, final L2PcInstance player, final String parameters)
 	{
@@ -57,10 +54,14 @@ public class ExtractableByPassHandler implements ICustomByPassHandler
 			final int objId = Integer.parseInt(parameters);
 			final L2ItemInstance item = player.getInventory().getItemByObjectId(objId);
 			if (item == null)
+			{
 				return;
+			}
 			final IItemHandler ih = ItemHandler.getInstance().getItemHandler(item.getItemId());
 			if (ih == null || !(ih instanceof ExtractableItems))
+			{
 				return;
+			}
 			if (command.compareTo(_IDS[0]) == 0)
 			{
 				((ExtractableItems) ih).doExtract(player, item, 1);
@@ -73,7 +74,9 @@ public class ExtractableByPassHandler implements ICustomByPassHandler
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("ExtractableByPassHandler: Error while running ", e);
 		}

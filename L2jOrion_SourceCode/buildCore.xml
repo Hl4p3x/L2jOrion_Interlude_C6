@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Orion" default="BUILD" basedir=".">
+	
+	<scriptdef name="substring" language="javascript">
+		<attribute name="text" />
+		<attribute name="start" />
+		<attribute name="end" />
+		<attribute name="property" />
+		<![CDATA[
+		var text = attributes.get("text");
+		var start = attributes.get("start");
+		var end = attributes.get("end") || text.length();
+		project.setProperty(attributes.get("property"), text.substring(start, end));
+		]]>
+	</scriptdef>
+	
+	<property name="src" location="src" />
+	<property name="src-lib" location="lib" />
+
+	<target name="prepare-final" description="Prepare the final folders properties">
+		<property name="build.classes" location="${build}/classes" />
+		<property name="build.dist" location="${build}/dist" />
+		<property name="build.dist.login" location="${build.dist}/loginserver" />
+		<property name="build.dist.login.lib" location="${build.dist.login}/lib" />
+		<property name="build.dist.game" location="${build.dist}/gameserver" />
+		<property name="build.dist.game.lib" location="${build.dist.game}/lib" />
+	</target>
+
+	<path id="classpath">
+		<fileset dir="${src-lib}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	
+	<target name="VERSION" description="Create Version file">
+		<tstamp>
+			<format property="stamp" pattern="yyyy-MM-dd HH:mm:ss" />
+		</tstamp>
+
+		<exec dir="." executable="./svn/svnversion" outputproperty="revision" failifexecutionfails="false" />
+		<substring text="${revision}" start="4" end="7" property="rev" />
+		<echo>Revision: ${rev}        Build time: ${stamp}</echo>
+	</target>
+	
+	<target name="BUILD" depends="VERSION"
+		description="Generate core jar into 'build-core' folder">
+		<property name="build" location="build" />
+		<property name="build.classes" location="${build}/classes" />
+		<delete dir="${build.classes}" />
+		<delete file="${build}/l2jorion-core.jar" />
+		<mkdir dir="${build}" />
+		<mkdir dir="${build.classes}" />
+
+		<javac destdir="${build.classes}" includeantruntime="false"
+			optimize="on" debug="on" source="1.8" target="1.8" encoding="UTF-8"
+			nowarn="off">
+			<src path="${src}" />
+			<classpath refid="classpath" />
+		</javac>
+
+		<copy todir="${build.classes}/META-INF/services">
+			<fileset dir="${src}/META-INF/services" />
+		</copy>
+
+		<jar destfile="${build}/l2jorion-core.jar">
+			<fileset dir="${build.classes}" />
+		</jar>
+		
+		<delete dir="${build.classes}" />
+	</target>
+
+</project>

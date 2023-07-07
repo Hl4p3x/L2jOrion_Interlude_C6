@@ -25,6 +25,7 @@ import l2jorion.game.model.actor.instance.L2CabaleBufferInstance;
 import l2jorion.game.model.actor.instance.L2FestivalGuideInstance;
 import l2jorion.game.model.actor.instance.L2FolkInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
+import l2jorion.game.model.actor.instance.L2NpcWalkerInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 
 public class NpcKnownList extends CharKnownList
@@ -43,6 +44,11 @@ public class NpcKnownList extends CharKnownList
 	@Override
 	public int getDistanceToForgetObject(final L2Object object)
 	{
+		if (getActiveChar() instanceof L2NpcWalkerInstance && object instanceof L2PlayableInstance)
+		{
+			return -1;
+		}
+		
 		return 2 * getDistanceToWatchObject(object);
 	}
 	
@@ -64,9 +70,9 @@ public class NpcKnownList extends CharKnownList
 			return 900;
 		}
 		
-		if (object instanceof L2PlayableInstance)
+		if (getActiveChar() instanceof L2NpcWalkerInstance && object instanceof L2PlayableInstance)
 		{
-			return 1500;
+			return -1;
 		}
 		
 		return 500;

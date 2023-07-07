@@ -1,4 +1,3 @@
-# Linnaeus Special Bait - a seamless merge from Next and DooMita contributions
 import sys
 from l2jorion import Config
 from l2jorion.game.model.quest import State

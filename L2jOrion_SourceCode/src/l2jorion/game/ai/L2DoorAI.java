@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.ai;
 
 import l2jorion.game.model.L2Character;
@@ -40,61 +20,51 @@ public class L2DoorAI extends L2CharacterAI
 	@Override
 	protected void onIntentionIdle()
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onIntentionActive()
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onIntentionRest()
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onIntentionAttack(final L2Character target)
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onIntentionCast(final L2Skill skill, final L2Object target)
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onIntentionMoveTo(final Location destination)
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onIntentionFollow(final L2Character target)
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onIntentionPickUp(final L2Object item)
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onIntentionInteract(final L2Object object)
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onEvtThink()
 	{
-		// null;
 	}
 	
 	@Override
@@ -107,73 +77,61 @@ public class L2DoorAI extends L2CharacterAI
 	@Override
 	protected void onEvtAggression(final L2Character target, final int aggro)
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onEvtStunned(final L2Character attacker)
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onEvtSleeping(final L2Character attacker)
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onEvtRooted(final L2Character attacker)
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onEvtReadyToAct()
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onEvtUserCmd(final Object arg0, final Object arg1)
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onEvtArrived()
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onEvtArrivedRevalidate()
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onEvtArrivedBlocked(final Location blocked_at_pos)
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onEvtForgetObject(final L2Object object)
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onEvtCancel()
 	{
-		// null;
 	}
 	
 	@Override
 	protected void onEvtDead()
 	{
-		// null;
 	}
 	
 	private class onEventAttackedDoorTask implements Runnable

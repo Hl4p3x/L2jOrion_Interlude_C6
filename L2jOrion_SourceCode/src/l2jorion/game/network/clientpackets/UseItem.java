@@ -19,10 +19,12 @@
 package l2jorion.game.network.clientpackets;
 
 import java.util.Arrays;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import l2jorion.Config;
+import l2jorion.game.ai.CtrlEvent;
 import l2jorion.game.ai.CtrlIntention;
+import l2jorion.game.ai.NextAction;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.handler.IItemHandler;
 import l2jorion.game.handler.ItemHandler;
@@ -34,24 +36,42 @@ import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
-import l2jorion.game.network.serverpackets.EtcStatusUpdate;
-import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.ItemList;
 import l2jorion.game.network.serverpackets.ShowCalculator;
 import l2jorion.game.network.serverpackets.SystemMessage;
-import l2jorion.game.network.serverpackets.UserInfo;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.templates.L2Weapon;
 import l2jorion.game.templates.L2WeaponType;
+import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class UseItem extends L2GameClientPacket
+public final class UseItem extends PacketClient
 {
 	public static Logger LOG = LoggerFactory.getLogger(UseItem.class.getName());
+	
+	private static class WeaponEquipTask implements Runnable
+	{
+		private final L2ItemInstance item;
+		private final L2PcInstance activeChar;
+		
+		protected WeaponEquipTask(L2ItemInstance it, L2PcInstance character)
+		{
+			item = it;
+			activeChar = character;
+		}
+		
+		@Override
+		public void run()
+		{
+			// Equip or unEquip
+			activeChar.useEquippableItem(item, false);
+		}
+	}
 	
 	private int _objectId;
 	
@@ -114,18 +134,6 @@ public final class UseItem extends L2GameClientPacket
 			3950,
 			3951,
 			3952,
-			10000, // Soulshot: D-grade
-			10001, // Soulshot: C-grade
-			10002, // Soulshot: B-grade
-			10003, // Soulshot: A-grade
-			10004, // Soulshot: S-grade
-			10005, // Blessed Spiritshot: D-Grade
-			10006, // Blessed Spiritshot: C-Grade
-			10007, // Blessed Spiritshot: B-Grade
-			10008, // Blessed Spiritshot: A-Grade
-			10009, // Blessed Spiritshot: S Grade
-			10010,
-			10011
 		};
 		
 		if (activeChar.isSitting() && Arrays.toString(shots_ids).contains(String.valueOf(item.getItemId())))
@@ -381,308 +389,75 @@ public final class UseItem extends L2GameClientPacket
 				}
 			}
 			
-			if (item.isFakeArmor())
+			// Don't allow weapon/shield equipment if a cursed weapon is equiped
+			if (activeChar.isCursedWeaponEquiped() && (bodyPart == L2Item.SLOT_LR_HAND || bodyPart == L2Item.SLOT_L_HAND || bodyPart == L2Item.SLOT_R_HAND))
 			{
-				// Don't allowed use fake items over the formal wear.
-				List<L2ItemInstance> formal = activeChar.getInventory().getItemsByItemId(6408);
-				for (L2ItemInstance tmp : formal)
-				{
-					if (tmp.isEquipped())
-					{
-						activeChar.sendPacket(SystemMessageId.CANNOT_EQUIP_ITEM_DUE_TO_BAD_CONDITION);
-						return;
-					}
-				}
+				return;
+			}
+			
+			// Don't allow weapon/shield hero equipment during Olimpiad
+			if (activeChar.isInOlympiadMode()
+				&& ((bodyPart == L2Item.SLOT_LR_HAND || bodyPart == L2Item.SLOT_L_HAND || bodyPart == L2Item.SLOT_R_HAND) && (item.getItemId() >= 6611 && item.getItemId() <= 6621 || item.getItemId() == 6842) || Config.LIST_OLY_RESTRICTED_ITEMS.contains(item.getItemId())))
+			{
+				return;
+			}
+			
+			// Don't allow Hero items equipment if not a hero
+			if (!activeChar.isHero() && (item.getItemId() >= 6611 && item.getItemId() <= 6621 || item.getItemId() == 6842) && !activeChar.isGM())
+			{
+				return;
+			}
+			
+			if (activeChar.isMoving() && activeChar.isAttackingNow() && (bodyPart == L2Item.SLOT_LR_HAND || bodyPart == L2Item.SLOT_L_HAND || bodyPart == L2Item.SLOT_R_HAND))
+			{
+				L2Object target = activeChar.getTarget();
+				activeChar.setTarget(null);
+				activeChar.stopMove(null);
+				activeChar.setTarget(target);
 				
-				if (activeChar.getFakeArmorObjectId() == item.getObjectId())
+				activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK);
+			}
+			
+			// Don't allow to put formal wear
+			if ((activeChar.getFakeArmorObjectId() > 0 && bodyPart != L2Item.SLOT_LR_HAND && bodyPart != L2Item.SLOT_L_HAND && bodyPart != L2Item.SLOT_R_HAND || activeChar.isCursedWeaponEquipped() && itemId == 6408))
+			{
+				activeChar.sendPacket(SystemMessageId.CANNOT_EQUIP_ITEM_DUE_TO_BAD_CONDITION);
+				return;
+			}
+			
+			// Elrokian Trap like L2OFF, add skills
+			if (itemId == 8763)
+			{
+				if (!item.isEquipped())
 				{
-					activeChar.setFakeArmorObjectId(0);
-					activeChar.setFakeArmorItemId(0);
+					activeChar.addSkill(SkillTable.getInstance().getInfo(3626, 1));
+					activeChar.addSkill(SkillTable.getInstance().getInfo(3627, 1));
+					activeChar.addSkill(SkillTable.getInstance().getInfo(3628, 1));
+					activeChar.sendSkillList();
 				}
-				else
+			}
+			
+			if (Config.TOMASZ_B_CUSTOM)
+			{
+				// cloak
+				if (itemId == 10107)
 				{
-					activeChar.setFakeArmorObjectId(item.getObjectId());
-					activeChar.setFakeArmorItemId(item.getItemId());
+					activeChar.startAbnormalEffect(L2Character.ABNORMAL_EFFECT_FLAME);
 				}
-				
-				activeChar.broadcastUserInfo();
-				activeChar.sendPacket(new ItemList(activeChar, false));
+			}
+			
+			if (activeChar.isCastingNow())
+			{
+				final NextAction nextAction = new NextAction(CtrlEvent.EVT_FINISH_CASTING, CtrlIntention.AI_INTENTION_CAST, () -> activeChar.useEquippableItem(item, true));
+				activeChar.getAI().setNextAction(nextAction);
+			}
+			else if (activeChar.isAttackingNow())
+			{
+				ThreadPoolManager.getInstance().scheduleGeneral(new WeaponEquipTask(item, activeChar), TimeUnit.MILLISECONDS.convert(activeChar.getAttackEndTime() - System.nanoTime(), TimeUnit.NANOSECONDS));
 			}
 			else
 			{
-				
-				// Don't allow weapon/shield equipment if a cursed weapon is equiped
-				if (activeChar.isCursedWeaponEquiped() && (bodyPart == L2Item.SLOT_LR_HAND || bodyPart == L2Item.SLOT_L_HAND || bodyPart == L2Item.SLOT_R_HAND))
-				{
-					return;
-				}
-				
-				// Don't allow weapon/shield hero equipment during Olimpia
-				if (activeChar.isInOlympiadMode()
-					&& ((bodyPart == L2Item.SLOT_LR_HAND || bodyPart == L2Item.SLOT_L_HAND || bodyPart == L2Item.SLOT_R_HAND) && (item.getItemId() >= 6611 && item.getItemId() <= 6621 || item.getItemId() == 6842) || Config.LIST_OLY_RESTRICTED_ITEMS.contains(item.getItemId())))
-				{
-					return;
-				}
-				
-				// Don't allow Hero items equipment if not a hero
-				if (!activeChar.isHero() && (item.getItemId() >= 6611 && item.getItemId() <= 6621 || item.getItemId() == 6842) && !activeChar.isGM())
-				{
-					return;
-				}
-				
-				if (activeChar.isMoving() && activeChar.isAttackingNow() && (bodyPart == L2Item.SLOT_LR_HAND || bodyPart == L2Item.SLOT_L_HAND || bodyPart == L2Item.SLOT_R_HAND))
-				{
-					L2Object target = activeChar.getTarget();
-					activeChar.setTarget(null);
-					activeChar.stopMove(null);
-					activeChar.setTarget(target);
-					activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK);
-				}
-				
-				// Don't allow to put formal wear
-				if ((activeChar.getFakeArmorObjectId() > 0 && bodyPart != L2Item.SLOT_LR_HAND && bodyPart != L2Item.SLOT_L_HAND && bodyPart != L2Item.SLOT_R_HAND || activeChar.isCursedWeaponEquipped() && itemId == 6408))
-				{
-					activeChar.sendPacket(SystemMessageId.CANNOT_EQUIP_ITEM_DUE_TO_BAD_CONDITION);
-					return;
-				}
-				
-				// Elrokian Trap like L2OFF, add skills
-				if (itemId == 8763)
-				{
-					if (!item.isEquipped())
-					{
-						activeChar.addSkill(SkillTable.getInstance().getInfo(3626, 1));
-						activeChar.addSkill(SkillTable.getInstance().getInfo(3627, 1));
-						activeChar.addSkill(SkillTable.getInstance().getInfo(3628, 1));
-						activeChar.sendSkillList();
-					}
-				}
-				
-				if (Config.TOMASZ_B_CUSTOM)
-				{
-					// cloak
-					if (itemId == 10107)
-					{
-						activeChar.startAbnormalEffect(L2Character.ABNORMAL_EFFECT_FLAME);
-					}
-				}
-				
-				// Equip or unEquip
-				L2ItemInstance[] items = null;
-				boolean isEquiped = item.isEquipped();
-				SystemMessage sm = null;
-				
-				if (item.getItem().getType2() == L2Item.TYPE2_WEAPON)
-				{
-					// if used item is a weapon
-					L2ItemInstance wep = activeChar.getInventory().getPaperdollItem(Inventory.PAPERDOLL_LRHAND);
-					if (wep == null)
-					{
-						wep = activeChar.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND);
-					}
-					
-					activeChar.checkSSMatch(item, wep);
-				}
-				
-				// Remove the item if it's equiped
-				if (isEquiped)
-				{
-					// Elrokian Trap like L2OFF, remove skills
-					if (itemId == 8763)
-					{
-						activeChar.removeSkill(3626, true);
-						activeChar.removeSkill(3627, true);
-						activeChar.removeSkill(3628, true);
-						activeChar.sendSkillList();
-					}
-					
-					if (item.getEnchantLevel() > 0)
-					{
-						sm = new SystemMessage(SystemMessageId.EQUIPMENT_S1_S2_REMOVED);
-						sm.addNumber(item.getEnchantLevel());
-						sm.addItemName(itemId);
-					}
-					else
-					{
-						sm = new SystemMessage(SystemMessageId.S1_DISARMED);
-						sm.addItemName(itemId);
-					}
-					
-					activeChar.sendPacket(sm);
-					
-					// Remove augementation bonus on unequipment
-					if (item.isAugmented())
-					{
-						item.getAugmentation().removeBoni(activeChar);
-					}
-					
-					int slot = activeChar.getInventory().getSlotFromItem(item);
-					
-					// remove cupid's bow skills on unequip
-					if (item.isCupidBow())
-					{
-						if (item.getItemId() == 9140)
-						{
-							activeChar.removeSkill(SkillTable.getInstance().getInfo(3261, 1));
-						}
-						else
-						{
-							activeChar.removeSkill(SkillTable.getInstance().getInfo(3260, 0));
-							activeChar.removeSkill(SkillTable.getInstance().getInfo(3262, 0));
-						}
-					}
-					
-					items = activeChar.getInventory().unEquipItemInBodySlotAndRecord(slot);
-				}
-				else
-				{
-					// Restrict bow weapon for class except Cupid bow.
-					if (item.getItem() instanceof L2Weapon && ((L2Weapon) item.getItem()).getItemType() == L2WeaponType.BOW && !item.isCupidBow())
-					{
-						
-						if (Config.DISABLE_BOW_CLASSES.contains(activeChar.getClassId().getId()) && !activeChar.isInOlympiadMode())
-						{
-							activeChar.sendMessage("This item can not be equipped by your class!");
-							activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-							return;
-						}
-					}
-					
-					int tempBodyPart = item.getItem().getBodyPart();
-					L2ItemInstance tempItem = activeChar.getInventory().getPaperdollItemByL2ItemId(tempBodyPart);
-					
-					// remove augmentation stats for replaced items
-					// currently weapons only..
-					if (tempItem != null && tempItem.isAugmented())
-					{
-						tempItem.getAugmentation().removeBoni(activeChar);
-					}
-					
-					// check if the item replaces a wear-item
-					if (tempItem != null && tempItem.isWear())
-					{
-						return;
-					}
-					else if (tempBodyPart == 0x4000) // left+right hand equipment
-					{
-						// this may not remove left OR right hand equipment
-						tempItem = activeChar.getInventory().getPaperdollItem(7);
-						if (tempItem != null && tempItem.isWear())
-						{
-							return;
-						}
-						
-						tempItem = activeChar.getInventory().getPaperdollItem(8);
-						if (tempItem != null && tempItem.isWear())
-						{
-							return;
-						}
-					}
-					else if (tempBodyPart == 0x8000) // fullbody armor
-					{
-						// this may not remove chest or leggins
-						tempItem = activeChar.getInventory().getPaperdollItem(10);
-						if (tempItem != null && tempItem.isWear())
-						{
-							return;
-						}
-						
-						tempItem = activeChar.getInventory().getPaperdollItem(11);
-						if (tempItem != null && tempItem.isWear())
-						{
-							return;
-						}
-					}
-					
-					// Left hand
-					tempItem = activeChar.getInventory().getPaperdollItem(7);
-					
-					// Elrokian Trap like L2OFF, remove skills
-					if (tempItem != null && tempItem.getItemId() == 8763)
-					{
-						activeChar.removeSkill(3626, true);
-						activeChar.removeSkill(3627, true);
-						activeChar.removeSkill(3628, true);
-						activeChar.sendSkillList();
-					}
-					
-					if (Config.TOMASZ_B_CUSTOM)
-					{
-						// cloack
-						if (itemId == 10107)
-						{
-							if (activeChar.getAbnormalEffect() == L2Character.ABNORMAL_EFFECT_FLAME)
-							{
-								activeChar.stopAbnormalEffect(L2Character.ABNORMAL_EFFECT_FLAME);
-							}
-						}
-					}
-					
-					if (item.getEnchantLevel() > 0)
-					{
-						sm = new SystemMessage(SystemMessageId.S1_S2_EQUIPPED);
-						sm.addNumber(item.getEnchantLevel());
-						sm.addItemName(itemId);
-					}
-					else
-					{
-						sm = new SystemMessage(SystemMessageId.S1_EQUIPPED);
-						sm.addItemName(itemId);
-					}
-					activeChar.sendPacket(sm);
-					
-					// Apply augementation boni on equip
-					if (item.isAugmented())
-					{
-						item.getAugmentation().applyBoni(activeChar);
-					}
-					
-					// Apply cupid's bow skills on equip
-					if (item.isCupidBow())
-					{
-						if (item.getItemId() == 9140)
-						{
-							activeChar.addSkill(SkillTable.getInstance().getInfo(3261, 1));
-						}
-						else
-						{
-							activeChar.addSkill(SkillTable.getInstance().getInfo(3260, 0));
-						}
-						
-						activeChar.addSkill(SkillTable.getInstance().getInfo(3262, 0));
-					}
-					
-					items = activeChar.getInventory().equipItemAndRecord(item);
-					
-					if (item.getItem() instanceof L2Weapon)
-					{
-						// charge Soulshot/Spiritshot like L2OFF
-						activeChar.rechargeAutoSoulShot(true, true, false);
-					}
-					// Consume mana - will start a task if required; returns if item is not a shadow item
-					item.decreaseMana(false);
-				}
-				
-				activeChar.abortAttack();
-				activeChar.sendPacket(new EtcStatusUpdate(activeChar));
-				
-				// if an "invisible" item has changed (Jewels, helmet),
-				// we dont need to send broadcast packet to all other users
-				if (!((item.getItem().getBodyPart() & L2Item.SLOT_HEAD) > 0 || (item.getItem().getBodyPart() & L2Item.SLOT_NECK) > 0 || (item.getItem().getBodyPart() & L2Item.SLOT_L_EAR) > 0 || (item.getItem().getBodyPart() & L2Item.SLOT_R_EAR) > 0
-					|| (item.getItem().getBodyPart() & L2Item.SLOT_L_FINGER) > 0 || (item.getItem().getBodyPart() & L2Item.SLOT_R_FINGER) > 0))
-				{
-					activeChar.broadcastUserInfo();
-					InventoryUpdate iu = new InventoryUpdate();
-					iu.addItems(Arrays.asList(items));
-					activeChar.sendPacket(iu);
-				}
-				else
-				{
-					InventoryUpdate iu = new InventoryUpdate();
-					iu.addItems(Arrays.asList(items));
-					activeChar.sendPacket(iu);
-					activeChar.sendPacket(new UserInfo(activeChar));
-				}
+				activeChar.useEquippableItem(item, true);
 			}
 		}
 		else

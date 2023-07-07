@@ -21,10 +21,11 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.BeginRotation;
 
-public final class StartRotating extends L2GameClientPacket
+public final class StartRotating extends PacketClient
 {
 	private int _degree;
 	private int _side;

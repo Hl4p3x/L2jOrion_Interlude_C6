@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class GetOffVehicle extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class GetOffVehicle extends PacketServer
 {
 	private final int _charObjId, _boatObjId, _x, _y, _z;
 	

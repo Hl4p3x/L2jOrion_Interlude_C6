@@ -38,7 +38,7 @@ public class VoteForEvent implements IVoicedCommandHandler, ICustomByPassHandler
 	{
 		"event"
 	};
-
+	
 	@Override
 	public boolean useVoicedCommand(String command, L2PcInstance activeChar, String parameters)
 	{
@@ -74,7 +74,7 @@ public class VoteForEvent implements IVoicedCommandHandler, ICustomByPassHandler
 	@Override
 	public String[] getByPassCommands()
 	{
-		return new String [] 
+		return new String[]
 		{
 			"event_menu",
 			"event_tvt",
@@ -188,7 +188,7 @@ public class VoteForEvent implements IVoicedCommandHandler, ICustomByPassHandler
 				case 900:
 				case 600:
 				case 300:
-					Announcements.getInstance().gameAnnounceToAll("SYS: Vote for the event! Command: .event ");
+					Announcements.getInstance().gameAnnounceToAll("SYS: Vote for the event! Command: .event");
 					for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 					{
 						player.setVotedForEvent(false);
@@ -208,10 +208,12 @@ public class VoteForEvent implements IVoicedCommandHandler, ICustomByPassHandler
 				case 10:
 				case 3:
 				case 2:
-					Announcements.getInstance().gameAnnounceToAll("SYS: " + seconds + " second(s) till voting finish!");
+					Announcements.getInstance().gameAnnounceToAll("SYS: " + seconds + " seconds till voting finish!");
 					break;
 				case 1:
 					Announcements.getInstance().gameAnnounceToAll("SYS: " + seconds + " second till voting finish!");
+					break;
+				case 0:
 					Announcements.getInstance().gameAnnounceToAll("SYS: Voting finished! Starting the event...");
 					startEvent();
 					break;
@@ -252,9 +254,9 @@ public class VoteForEvent implements IVoicedCommandHandler, ICustomByPassHandler
 		}
 		else
 		{
-			int getRandom = Rnd.get(1,3);
+			int getRandom = Rnd.get(1, 3);
 			
-			switch(getRandom)
+			switch (getRandom)
 			{
 				case 1:
 					TvT.autoEvent();

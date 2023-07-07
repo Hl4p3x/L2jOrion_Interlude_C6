@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2004-2016 L2J Server
- * 
- * This file is part of L2J Server.
- * 
- * L2J Server is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * L2J Server is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package l2jorion.game.geo.pathfinding.geonodes;
 
 import java.io.File;
@@ -93,14 +75,12 @@ public class GeoPathFinding extends PathFinding
 			return null;
 		}
 		
-		// TODO: Find closest path node we CAN access. Now only checks if we can not reach the closest
 		Location temp = GeoData.getInstance().moveCheck(x, y, z, start.getLoc().getX(), start.getLoc().getY(), start.getLoc().getZ(), instanceId);
 		if ((temp.getX() != start.getLoc().getX()) || (temp.getY() != start.getLoc().getY()))
 		{
 			return null; // cannot reach closest...
 		}
 		
-		// TODO: Find closest path node around target, now only checks if final location can be reached
 		temp = GeoData.getInstance().moveCheck(tx, ty, tz, end.getLoc().getX(), end.getLoc().getY(), end.getLoc().getZ(), instanceId);
 		if ((temp.getX() != end.getLoc().getX()) || (temp.getY() != end.getLoc().getY()))
 		{

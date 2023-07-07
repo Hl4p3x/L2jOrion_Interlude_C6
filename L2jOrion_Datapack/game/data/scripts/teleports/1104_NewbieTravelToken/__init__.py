@@ -1,12 +1,11 @@
-# Newbie Travel Token Teleport - by DrLecter
 import sys
-
 from l2jorion.game.model.actor.instance import      L2PcInstance
 from l2jorion.game.model.quest        import State
 from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
+
 qn = "1104_NewbieTravelToken"
-#print "1104. Newbie Travel Token"
+
 TOKEN = 8542
 
 DATA={

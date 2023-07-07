@@ -30,43 +30,33 @@ import java.util.concurrent.ConcurrentMap;
 import l2jorion.logger.ILoggerFactory;
 import l2jorion.logger.Logger;
 
-/**
- * JDK14LoggerFactory is an implementation of {@link ILoggerFactory} returning
- * the appropriately named {@link JDK14LoggerAdapter} instance.
- * 
- * @author Ceki G&uuml;lc&uuml;
- */
-public class JDK14LoggerFactory implements ILoggerFactory {
-
-    // key: name (String), value: a JDK14LoggerAdapter;
-    ConcurrentMap<String, Logger> loggerMap;
-
-    public JDK14LoggerFactory() {
-        loggerMap = new ConcurrentHashMap<>();
-        // ensure jul initialization. see SLF4J-359 
-        // note that call to java.util.logging.LogManager.getLogManager() fails on the Google App Engine platform. See SLF4J-363
-        java.util.logging.Logger.getLogger("");
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see alogger.ILoggerFactory#getLogger(java.lang.String)
-     */
-    @Override
-	public Logger getLogger(String name) {
-        // the root logger is called "" in JUL
-        if (name.equalsIgnoreCase(Logger.ROOT_LOGGER_NAME)) {
-            name = "";
-        }
-
-        Logger slf4jLogger = loggerMap.get(name);
-        if (slf4jLogger != null)
-            return slf4jLogger;
-        
+public class JDK14LoggerFactory implements ILoggerFactory
+{
+	ConcurrentMap<String, Logger> loggerMap;
+	
+	public JDK14LoggerFactory()
+	{
+		loggerMap = new ConcurrentHashMap<>();
+		java.util.logging.Logger.getLogger("");
+	}
+	
+	@Override
+	public Logger getLogger(String name)
+	{
+		if (name.equalsIgnoreCase(Logger.ROOT_LOGGER_NAME))
+		{
+			name = "";
+		}
+		
+		Logger slf4jLogger = loggerMap.get(name);
+		if (slf4jLogger != null)
+		{
+			return slf4jLogger;
+		}
+		
 		java.util.logging.Logger julLogger = java.util.logging.Logger.getLogger(name);
 		Logger newInstance = new JDK14LoggerAdapter(julLogger);
 		Logger oldInstance = loggerMap.putIfAbsent(name, newInstance);
 		return oldInstance == null ? newInstance : oldInstance;
-    }
+	}
 }

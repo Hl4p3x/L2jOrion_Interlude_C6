@@ -18,7 +18,9 @@
  */
 package l2jorion.game.model.zone.type;
 
+import l2jorion.Config;
 import l2jorion.game.model.L2Character;
+import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.ZoneId;
 
 public final class L2CastleZone extends L2ResidenceZone
@@ -46,12 +48,28 @@ public final class L2CastleZone extends L2ResidenceZone
 	protected void onEnter(L2Character character)
 	{
 		character.setInsideZone(ZoneId.ZONE_CASTLE, true);
+		
+		if (character instanceof L2PcInstance)
+		{
+			if (Config.BOT_PROTECTOR)
+			{
+				((L2PcInstance) character).stopBotChecker();
+			}
+		}
 	}
 	
 	@Override
 	protected void onExit(L2Character character)
 	{
 		character.setInsideZone(ZoneId.ZONE_CASTLE, false);
+		
+		if (character instanceof L2PcInstance)
+		{
+			if (Config.BOT_PROTECTOR)
+			{
+				((L2PcInstance) character).startBotChecker();
+			}
+		}
 	}
 	
 	@Override

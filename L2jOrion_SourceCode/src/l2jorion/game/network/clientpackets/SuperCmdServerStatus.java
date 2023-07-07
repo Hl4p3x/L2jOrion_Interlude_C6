@@ -20,22 +20,18 @@
  */
 package l2jorion.game.network.clientpackets;
 
-/**
- * Format ch c: (id) 0x39 h: (subid) 0x02
- * @author -Wooden-
- */
-public final class SuperCmdServerStatus extends L2GameClientPacket
+import l2jorion.game.network.PacketClient;
+
+public final class SuperCmdServerStatus extends PacketClient
 {
 	@Override
 	protected void readImpl()
 	{
-		// trigger packet
 	}
 	
 	@Override
 	protected void runImpl()
 	{
-		
 	}
 	
 	@Override

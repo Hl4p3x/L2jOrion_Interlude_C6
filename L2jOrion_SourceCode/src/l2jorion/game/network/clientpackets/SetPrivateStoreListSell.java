@@ -22,6 +22,7 @@ import l2jorion.Config;
 import l2jorion.game.model.TradeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.ZoneId;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.PrivateStoreManageListBuy;
@@ -30,7 +31,7 @@ import l2jorion.game.network.serverpackets.PrivateStoreMsgSell;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.util.Util;
 
-public class SetPrivateStoreListSell extends L2GameClientPacket
+public class SetPrivateStoreListSell extends PacketClient
 {
 	private int _count;
 	private boolean _packageSale;
@@ -79,13 +80,6 @@ public class SetPrivateStoreListSell extends L2GameClientPacket
 			return;
 		}
 		
-		if (player.isSubmitingPin())
-		{
-			player.sendMessage("Unable to do any action while PIN is not submitted.");
-			player.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-		
 		if (!player.getAccessLevel().allowTransaction())
 		{
 			player.sendPacket(SystemMessageId.YOU_ARE_NOT_AUTHORIZED_TO_DO_THAT);
@@ -97,6 +91,14 @@ public class SetPrivateStoreListSell extends L2GameClientPacket
 		{
 			player.sendMessage("You cannot start store now.");
 			player.sendPacket(new PrivateStoreManageListSell(player));
+			player.sendPacket(ActionFailed.STATIC_PACKET);
+			return;
+		}
+		
+		if (Config.RON_CUSTOM && !player.isInsideZone(ZoneId.ZONE_PEACE))
+		{
+			player.sendPacket(new PrivateStoreManageListSell(player));
+			player.sendPacket(SystemMessageId.NO_PRIVATE_STORE_HERE);
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
@@ -145,7 +147,14 @@ public class SetPrivateStoreListSell extends L2GameClientPacket
 				return;
 			}
 			
-			tradeList.addItem(objectId, count, price);
+			if (tradeList.isBuffer())
+			{
+				tradeList.addBuff(objectId, 1, price);
+			}
+			else
+			{
+				tradeList.addItem(objectId, count, price);
+			}
 		}
 		
 		if (_count <= 0)
@@ -163,11 +172,14 @@ public class SetPrivateStoreListSell extends L2GameClientPacket
 		}
 		
 		// Check maximum number of allowed slots for pvt shops
-		if (_count > player.GetPrivateSellStoreLimit())
+		if (!tradeList.isBuffer())
 		{
-			player.sendPacket(new PrivateStoreManageListSell(player));
-			player.sendPacket(new SystemMessage(SystemMessageId.YOU_HAVE_EXCEEDED_QUANTITY_THAT_CAN_BE_INPUTTED));
-			return;
+			if (_count > player.GetPrivateSellStoreLimit())
+			{
+				player.sendPacket(new PrivateStoreManageListSell(player));
+				player.sendPacket(new SystemMessage(SystemMessageId.YOU_HAVE_EXCEEDED_QUANTITY_THAT_CAN_BE_INPUTTED));
+				return;
+			}
 		}
 		
 		player.sitDown();

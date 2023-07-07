@@ -25,6 +25,7 @@ import l2jorion.game.enums.AchType;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExVariationResult;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
@@ -33,7 +34,7 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.util.Util;
 
-public final class RequestRefine extends L2GameClientPacket
+public final class RequestRefine extends PacketClient
 {
 	private int _targetItemObjId;
 	private int _refinerItemObjId;
@@ -164,7 +165,6 @@ public final class RequestRefine extends L2GameClientPacket
 		}
 		
 		// must be a weapon, must be > d grade
-		// TODO: can do better? : currently: using isdestroyable() as a check for hero / cursed weapons
 		if (itemGrade < L2Item.CRYSTAL_C || itemType != L2Item.TYPE2_WEAPON || !targetItem.isDestroyable())
 		{
 			return false;

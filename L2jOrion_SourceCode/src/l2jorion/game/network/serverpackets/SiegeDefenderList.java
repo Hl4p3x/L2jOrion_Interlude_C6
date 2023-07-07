@@ -24,8 +24,9 @@ import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2SiegeClan;
 import l2jorion.game.model.entity.siege.Castle;
+import l2jorion.game.network.PacketServer;
 
-public class SiegeDefenderList extends L2GameServerPacket
+public class SiegeDefenderList extends PacketServer
 {
 	private static final String _S__CA_SiegeDefenderList = "[S] cb SiegeDefenderList";
 	

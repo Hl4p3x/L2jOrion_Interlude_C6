@@ -24,11 +24,12 @@ import l2jorion.Config;
 import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.PledgeInfo;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestPledgeInfo extends L2GameClientPacket
+public final class RequestPledgeInfo extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestPledgeInfo.class);
 	

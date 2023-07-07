@@ -1,4 +1,3 @@
-# Made by disKret
 import sys
 from l2jorion.util.random import Rnd
 from l2jorion.game.model.quest import State

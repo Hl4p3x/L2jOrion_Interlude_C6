@@ -265,12 +265,12 @@ public class AdminCreateItem implements IAdminCommandHandler
 		
 		if (activeChar.getName().equalsIgnoreCase(Player.getName()))
 		{
-			activeChar.sendMessage("You have spawned: " + getItemNameById(id) + " (" + id + ") " + num + " item(s)  in your inventory.");
+			activeChar.sendMessage("You have spawned: " + L2Item.getItemNameById(id) + " (" + id + ") " + num + " item(s)  in your inventory.");
 		}
 		else
 		{
-			activeChar.sendMessage("You have spawned: " + getItemNameById(id) + " (" + id + ") " + num + " item(s)  in your inventory.");
-			Player.sendMessage("Admin has spawned: " + getItemNameById(id) + "  " + num + " item(s)  in your inventory.");
+			activeChar.sendMessage("You have spawned: " + L2Item.getItemNameById(id) + " (" + id + ") " + num + " item(s)  in your inventory.");
+			Player.sendMessage("Admin has spawned: " + L2Item.getItemNameById(id) + "  " + num + " item(s)  in your inventory.");
 		}
 		AdminHelpPage.showHelpPage(activeChar, "itemcreation.htm");
 	}
@@ -293,7 +293,7 @@ public class AdminCreateItem implements IAdminCommandHandler
 		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{
 			player.sendMessage("Admin is rewarding all online players.");
-			player.sendMessage("Admin rewarded you: " + getItemNameById(id) + " " + num + " item(s)  in your inventory.");
+			player.sendMessage("Admin rewarded you: " + L2Item.getItemNameById(id) + " " + num + " item(s)  in your inventory.");
 			
 			item = player.getInventory().addItem("Admin", id, num, null, null);
 			
@@ -307,8 +307,8 @@ public class AdminCreateItem implements IAdminCommandHandler
 			player.sendPacket(sm);
 			i++;
 		}
-		activeChar.sendMessage("Mass-created items in the inventory of " + i + " player(s).");
 		
+		activeChar.sendMessage("Mass-created items in the inventory of " + i + " player(s).");
 		LOG.info("GM " + activeChar.getName() + " mass_created item Id: " + id + " (" + num + ")");
 		
 		AdminHelpPage.showHelpPage(activeChar, "itemcreation.htm");
@@ -337,19 +337,5 @@ public class AdminCreateItem implements IAdminCommandHandler
 		activeChar.sendMessage(Player.getName() + "'s inventory has been cleaned.");
 		
 		AdminHelpPage.showHelpPage(activeChar, "itemcreation.htm");
-	}
-	
-	public String getItemNameById(int itemId)
-	{
-		L2Item item = ItemTable.getInstance().getTemplate(itemId);
-		
-		String itemName = "No Item";
-		
-		if (item != null && itemId != 0)
-		{
-			itemName = item.getName();
-		}
-		
-		return itemName;
 	}
 }

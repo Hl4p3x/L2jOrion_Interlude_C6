@@ -23,10 +23,11 @@ import l2jorion.game.model.L2Clan;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToPawn;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
+import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.network.serverpackets.WareHouseDepositList;
 import l2jorion.game.network.serverpackets.WareHouseWithdrawalList;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.game.util.Broadcast;
+import l2jorion.util.random.Rnd;
 
 /**
  * Fortress Foreman implementation used for: Area Teleports, Support Magic, Clan Warehouse, Exp Loss Reduction
@@ -52,60 +53,60 @@ public class L2FortManagerInstance extends L2MerchantInstance
 		html.replace("%objectId%", String.valueOf(getObjectId()));
 		html.replace("%npcId%", String.valueOf(getNpcId()));
 		player.sendPacket(html);
-		html = null;
 	}
 	
 	@Override
 	public void onAction(final L2PcInstance player)
 	{
 		if (!canTarget(player))
+		{
 			return;
+		}
 		
 		player.setLastFolkNPC(this);
 		
-		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
 		{
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
 		}
 		else
 		{
-			// Calculate the distance between the L2PcInstance and the L2NpcInstance
 			if (!canInteract(player))
 			{
-				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 			}
 			else
 			{
-				// Like L2OFF player must rotate to the Npc
-				MoveToPawn sp = new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE);
-				player.sendPacket(sp);
-				Broadcast.toKnownPlayers(player, sp);
+				if (player.isMoving())
+				{
+					player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+				}
+				
+				player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
+				
+				broadcastPacket(new SocialAction(getObjectId(), Rnd.get(8)));
 				
 				showMessageWindow(player);
 			}
 		}
-		// Send a Server->Client ActionFailed to the L2PcInstance in order to
-		// avoid that the client wait another packet
+		
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
 	@Override
 	public void onBypassFeedback(final L2PcInstance player, final String command)
 	{
-		// SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm"); //not used???
-		
 		final int condition = validateCondition(player);
 		
-		// BypassValidation Exploit plug.
 		if (player.getLastFolkNPC().getObjectId() != getObjectId())
+		{
 			return;
+		}
 		
 		if (condition <= COND_ALL_FALSE || condition == COND_BUSY_BECAUSE_OF_SIEGE)
+		{
 			return;
-		
+		}
 		else if (condition == COND_OWNER)
 		{
 			StringTokenizer st = new StringTokenizer(command, " ");
@@ -210,10 +211,6 @@ public class L2FortManagerInstance extends L2MerchantInstance
 			{
 				super.onBypassFeedback(player, command);
 			}
-			
-			st = null;
-			actualCommand = null;
-			val = null;
 		}
 	}
 	
@@ -279,9 +276,13 @@ public class L2FortManagerInstance extends L2MerchantInstance
 			if (player.getClan() != null)
 			{
 				if (getFort().getSiege().getIsInProgress())
+				{
 					return COND_BUSY_BECAUSE_OF_SIEGE; // Busy because of siege
-				else if (getFort().getOwnerId() == player.getClanId()) // Clan owns fortress
+				}
+				else if (getFort().getOwnerId() == player.getClanId())
+				{
 					return COND_OWNER; // Owner
+				}
 			}
 		}
 		return COND_ALL_FALSE;

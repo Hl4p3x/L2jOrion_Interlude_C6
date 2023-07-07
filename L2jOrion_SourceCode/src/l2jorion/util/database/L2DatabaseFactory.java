@@ -33,10 +33,9 @@ import l2jorion.logger.LoggerFactory;
 
 public class L2DatabaseFactory
 {
-	private static final Logger LOG = LoggerFactory.getLogger(Config.class);
+	private final Logger LOG = LoggerFactory.getLogger(L2DatabaseFactory.class);
 	
 	private static L2DatabaseFactory _instance;
-	
 	private final ComboPooledDataSource _source;
 	
 	public L2DatabaseFactory()
@@ -95,7 +94,7 @@ public class L2DatabaseFactory
 		}
 		catch (final Exception e)
 		{
-			LOG.error("",e);
+			LOG.error("", e);
 		}
 	}
 	
@@ -157,7 +156,7 @@ public class L2DatabaseFactory
 		}
 		return con;
 	}
-
+	
 	public Connection getConnection(boolean checkclose)
 	{
 		Connection con = null;

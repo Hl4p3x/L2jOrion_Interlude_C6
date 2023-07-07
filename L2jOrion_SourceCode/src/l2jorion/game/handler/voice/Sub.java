@@ -202,7 +202,7 @@ public class Sub implements IVoicedCommandHandler, ICustomByPassHandler
 				return;
 			}
 			case sub_1:
-				if (player.getTotalSubClasses() == Config.ALLOWED_SUBCLASS)
+				if (player.getTotalSubClasses() == Config.ALLOWED_SUBCLASS && !player.isGM())
 				{
 					player.sendMessage("You can now only change one of your current sub classes.");
 					return;

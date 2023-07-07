@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExConfirmVariationGemstone extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExConfirmVariationGemstone extends PacketServer
 {
 	private static final String _S__FE_54_EXCONFIRMVARIATIONGEMSTONE = "[S] FE:54 ExConfirmVariationGemstone";
 	

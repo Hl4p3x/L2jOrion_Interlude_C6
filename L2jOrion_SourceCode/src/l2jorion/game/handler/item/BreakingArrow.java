@@ -41,8 +41,12 @@ public class BreakingArrow implements IItemHandler
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		final int itemId = item.getItemId();
+		
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
+		
 		final L2PcInstance activeChar = (L2PcInstance) playable;
 		final L2Object target = activeChar.getTarget();
 		if (!(target instanceof L2GrandBossInstance))

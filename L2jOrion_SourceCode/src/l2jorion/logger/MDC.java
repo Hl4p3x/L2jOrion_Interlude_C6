@@ -27,26 +27,11 @@ package l2jorion.logger;
 import java.io.Closeable;
 import java.util.Map;
 
-import l2jorion.logger.helpers.BasicMDCAdapter;
 import l2jorion.logger.helpers.NOPMDCAdapter;
 import l2jorion.logger.helpers.Util;
 import l2jorion.logger.impl.StaticMDCBinder;
 import l2jorion.logger.spi.MDCAdapter;
 
-/**
- * This class hides and serves as a substitute for the underlying logging system's MDC implementation.
- * <p>
- * If the underlying logging system offers MDC functionality, then SLF4J's MDC, i.e. this class, will delegate to the underlying system's MDC. Note that at this time, only two logging systems, namely log4j and logback, offer MDC functionality. For java.util.logging which does not support MDC,
- * {@link BasicMDCAdapter} will be used. For other systems, i.e. slf4j-simple and slf4j-nop, {@link NOPMDCAdapter} will be used.
- * <p>
- * Thus, as a SLF4J user, you can take advantage of MDC in the presence of log4j, logback, or java.util.logging, but without forcing these systems as dependencies upon your users.
- * <p>
- * For more information on MDC please see the <a href="http://logback.qos.ch/manual/mdc.html">chapter on MDC</a> in the logback manual.
- * <p>
- * Please note that all methods in this class are static.
- * @author Ceki G&uuml;lc&uuml;
- * @since 1.4.1
- */
 public class MDC
 {
 	

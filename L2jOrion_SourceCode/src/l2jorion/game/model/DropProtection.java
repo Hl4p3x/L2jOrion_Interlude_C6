@@ -22,9 +22,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.thread.ThreadPoolManager;
 
-/**
- * @author DrHouse
- */
 public class DropProtection implements Runnable
 {
 	private volatile boolean _isProtected = false;
@@ -54,16 +51,24 @@ public class DropProtection implements Runnable
 	public synchronized boolean tryPickUp(final L2PcInstance actor)
 	{
 		if (!_isProtected)
+		{
 			return true;
+		}
 		
 		if (_owner == actor)
+		{
 			return true;
+		}
 		
 		if (_owner.getParty() != null && _owner.getParty() == actor.getParty())
+		{
 			return true;
+		}
 		
 		if (_owner.getClan() != null && _owner.getClan() == actor.getClan())
+		{
 			return true;
+		}
 		
 		return false;
 	}
@@ -76,7 +81,9 @@ public class DropProtection implements Runnable
 	public synchronized void unprotect()
 	{
 		if (_task != null)
+		{
 			_task.cancel(false);
+		}
 		
 		_isProtected = false;
 		_owner = null;
@@ -90,7 +97,9 @@ public class DropProtection implements Runnable
 		_isProtected = true;
 		
 		if ((_owner = player) == null)
+		{
 			throw new NullPointerException("Trying to protect dropped item to null owner");
+		}
 		
 		_task = ThreadPoolManager.getInstance().scheduleGeneral(this, PROTECTED_MILLIS_TIME);
 	}

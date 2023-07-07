@@ -23,10 +23,6 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.zone.L2ZoneType;
 
-/**
- * Bighead zones give entering players big heads
- * @author durgus
- */
 public class L2BigheadZone extends L2ZoneType
 {
 	public L2BigheadZone(final int id)

@@ -40,6 +40,7 @@ import l2jorion.game.managers.CHSiegeManager;
 import l2jorion.game.managers.ZoneManager;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Clan;
+import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Party;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.Location;
@@ -463,7 +464,6 @@ public final class RainbowSpringsChateau extends ClanHallSiegeEngine
 				}
 			}
 		}
-		// TODO: Rewrite this to prevent exploits...
 		else if (event.startsWith("getItem"))
 		{
 			if (!_pendingItemToGet.containsKey(clan))
@@ -544,7 +544,7 @@ public final class RainbowSpringsChateau extends ClanHallSiegeEngine
 	}
 	
 	@Override
-	public String onItemUse(L2NpcInstance npc, L2PcInstance player, L2ItemInstance item)
+	public String onItemUse(L2Object npc, L2PcInstance player, L2ItemInstance item)
 	{
 		if (!_rainbow.isInSiege())
 		{
@@ -556,7 +556,7 @@ public final class RainbowSpringsChateau extends ClanHallSiegeEngine
 			return null;
 		}
 		
-		if (!isYetiTarget(npc.getNpcId()))
+		if (!isYetiTarget(((L2NpcInstance) npc).getNpcId()))
 		{
 			return null;
 		}
@@ -1015,7 +1015,7 @@ public final class RainbowSpringsChateau extends ClanHallSiegeEngine
 			{
 				_rainbow.setOwner(_winner);
 				
-				_winner.setHasHideout(_rainbow.getId());
+				_winner.setHasHideout(_rainbow.getClanHallId());
 				finalMsg = SystemMessage.getSystemMessage(SystemMessageId.CLAN_S1_VICTORIOUS_OVER_S2_S_SIEGE);
 				finalMsg.addString(_winner.getName());
 				finalMsg.addString(_rainbow.getName());

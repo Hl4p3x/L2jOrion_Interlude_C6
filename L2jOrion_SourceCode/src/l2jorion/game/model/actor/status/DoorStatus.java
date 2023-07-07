@@ -23,24 +23,11 @@ import l2jorion.game.model.actor.instance.L2DoorInstance;
 
 public class DoorStatus extends CharStatus
 {
-	// =========================================================
-	// Data Field
-	
-	// =========================================================
-	// Constructor
 	public DoorStatus(final L2DoorInstance activeChar)
 	{
 		super(activeChar);
 	}
 	
-	// =========================================================
-	// Method - Public
-	
-	// =========================================================
-	// Method - Private
-	
-	// =========================================================
-	// Property - Public
 	@Override
 	public L2DoorInstance getActiveChar()
 	{

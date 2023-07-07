@@ -1,4 +1,3 @@
-# Created by L2Emu Team
 import sys
 from l2jorion.game.managers           import GrandBossManager
 from l2jorion.game.model.quest        import State

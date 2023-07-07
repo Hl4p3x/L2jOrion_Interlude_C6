@@ -26,12 +26,13 @@ import l2jorion.game.datatables.sql.AdminCommandAccessRights;
 import l2jorion.game.handler.AdminCommandHandler;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.util.GMAudit;
 import l2jorion.log.Log;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class SendBypassBuildCmd extends L2GameClientPacket
+public final class SendBypassBuildCmd extends PacketClient
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(SendBypassBuildCmd.class);
 	public final static int GM_MESSAGE = 9;

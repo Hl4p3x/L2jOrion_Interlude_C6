@@ -14,9 +14,10 @@
  */
 package l2jorion.game.network.serverpackets;
 
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 
-public class ExShowScreenMessage extends L2GameServerPacket
+public class ExShowScreenMessage extends PacketServer
 {
 	public static enum SMPOS
 	{
@@ -118,8 +119,8 @@ public class ExShowScreenMessage extends L2GameServerPacket
 		writeD(_position); // message position
 		writeD(_hide ? 1 : 0); // hide
 		writeD(_size); // font size 0 - normal, 1 - small
-		writeD(_unk2); // ?
-		writeD(_unk3); // ?
+		writeD(_unk2); // Font type?
+		writeD(_unk3); // font color RGB?
 		writeD(_effect ? 1 : 0); // upper effect (0 - disabled, 1 enabled) - _position must be 2 (center) otherwise no effect
 		writeD(_time); // time
 		writeD(_fade ? 1 : 0); // fade effect (0 - disabled, 1 enabled)

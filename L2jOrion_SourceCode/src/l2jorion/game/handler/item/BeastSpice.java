@@ -43,7 +43,9 @@ public class BeastSpice implements IItemHandler
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		L2PcInstance activeChar = (L2PcInstance) playable;
 		
@@ -65,8 +67,6 @@ public class BeastSpice implements IItemHandler
 		{
 			activeChar.useMagic(SkillTable.getInstance().getInfo(2189, 1), false, false);
 		}
-		
-		activeChar = null;
 	}
 	
 	@Override

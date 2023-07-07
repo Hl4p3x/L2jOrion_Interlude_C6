@@ -83,6 +83,7 @@ public final class EffectTemplate
 			
 			throw new RuntimeException(e);
 		}
+		
 		try
 		{
 			_constructor = _func.getConstructor(Env.class, EffectTemplate.class);
@@ -104,28 +105,29 @@ public final class EffectTemplate
 		{
 			return null;
 		}
+		
 		try
 		{
 			final L2Effect effect = (L2Effect) _constructor.newInstance(env, this);
+			
 			return effect;
 		}
-		catch (final IllegalAccessException e)
+		catch (IllegalAccessException e)
 		{
 			e.printStackTrace();
 			return null;
 		}
-		catch (final InstantiationException e)
+		catch (InstantiationException e)
 		{
 			e.printStackTrace();
 			return null;
 		}
-		catch (final InvocationTargetException e)
+		catch (InvocationTargetException e)
 		{
-			LOG.warn("Error creating new instance of Class " + _func + " Exception was:");
-			e.getTargetException().printStackTrace();
+			LOG.warn("Error: " + _func + " effect: " + name + " skill ID: " + env.skill.getId() + " name: " + env.skill.getName() + " effector: " + env.player + " effected: " + env.target);
+			e.printStackTrace();
 			return null;
 		}
-		
 	}
 	
 	public void attach(final FuncTemplate f)

@@ -40,13 +40,14 @@ import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance.PunishLevel;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemChatChannelId;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.util.Util;
 
-public final class Say2 extends L2GameClientPacket
+public final class Say2 extends PacketClient
 {
 	protected static final Logger LOG = Logger.getLogger(Say2.class.getName());
 	private static Logger _logChat = Logger.getLogger("chat");
@@ -192,10 +193,6 @@ public final class Say2 extends L2GameClientPacket
 		
 		if (_text.length() > Config.MAX_CHAT_LENGTH)
 		{
-			if (Config.DEBUG)
-			{
-				LOG.info("Say2: Msg Type = '" + _type + "' Text length more than " + Config.MAX_CHAT_LENGTH + " truncate them.");
-			}
 			_text = _text.substring(0, Config.MAX_CHAT_LENGTH);
 		}
 		
@@ -259,7 +256,8 @@ public final class Say2 extends L2GameClientPacket
 			return;
 		}
 		
-		CreatureSay cs = new CreatureSay(activeChar.getObjectId(), _type, "" + (Config.SHOW_TIME_IN_CHAT ? "[" + fmt.format(new Date(System.currentTimeMillis())) + "]" : "") + " " + activeChar.getName(), _text);
+		CreatureSay cs = new CreatureSay(activeChar.getObjectId(), _type, "" + (Config.SHOW_TIME_IN_CHAT ? "[" + fmt.format(new Date(System.currentTimeMillis())) + "]" : "") + //
+			" " + activeChar.getName() + (Config.RON_CUSTOM && activeChar.getClan() != null ? " (" + activeChar.getClan().getName() + ")" : ""), _text);
 		
 		switch (_type)
 		{
@@ -464,7 +462,7 @@ public final class Say2 extends L2GameClientPacket
 				}
 				break;
 			case ALL:
-				if (_text.startsWith(">") && activeChar.getPremiumService() == 1)
+				if (_text.startsWith(">") && activeChar.getPremiumService() >= 1)
 				{
 					String text = _text;
 					String reformatedText = (text).substring(1);

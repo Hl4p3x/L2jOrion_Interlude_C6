@@ -19,14 +19,17 @@
  */
 package l2jorion.game.network.serverpackets;
 
+import java.util.ArrayList;
+
 import javolution.util.FastList;
 import javolution.util.FastMap;
 import l2jorion.game.managers.CastleManorManager.CropProcure;
 import l2jorion.game.model.L2Manor;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class ExShowSellCropList extends L2GameServerPacket
+public class ExShowSellCropList extends PacketServer
 {
 	private static final String _S__FE_21_EXSHOWSELLCROPLIST = "[S] FE:21 ExShowSellCropList";
 	
@@ -34,7 +37,7 @@ public class ExShowSellCropList extends L2GameServerPacket
 	private final FastMap<Integer, L2ItemInstance> _cropsItems;
 	private final FastMap<Integer, CropProcure> _castleCrops;
 	
-	public ExShowSellCropList(final L2PcInstance player, final int manorId, final FastList<CropProcure> crops)
+	public ExShowSellCropList(final L2PcInstance player, final int manorId, final ArrayList<CropProcure> crops)
 	{
 		_manorId = manorId;
 		_castleCrops = new FastMap<>();

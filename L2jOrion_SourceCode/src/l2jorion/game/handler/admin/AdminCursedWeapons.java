@@ -32,15 +32,6 @@ import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * This class handles following admin commands:<br>
- * - cw_info = displays cursed weapon status.<br>
- * - cw_remove = removes a cursed weapon from the world, item id or name must be provided.<br>
- * - cw_add = adds a cursed weapon into the world, item id or name must be provided, the target will be the wielder.<br>
- * - cw_goto = teleports GM to the specified cursed weapon.<br>
- * - cw_reload = reloads instance manager.
- * @author ProGramMoS, Zoey76
- */
 public class AdminCursedWeapons implements IAdminCommandHandler
 {
 	private static final CursedWeaponsManager cursedWeaponsManager = CursedWeaponsManager.getInstance();
@@ -247,7 +238,7 @@ public class AdminCursedWeapons implements IAdminCommandHandler
 				}
 				else
 				{
-					//end time is equal to dropped one
+					// end time is equal to dropped one
 					long endTime = System.currentTimeMillis() + cursedWeapon.getDuration() * 60000L;
 					cursedWeapon.setEndTime(endTime);
 					

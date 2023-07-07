@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class SunSet extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class SunSet extends PacketServer
 {
 	private static final String _S__29_SUNSET = "[S] 1d SunSet";
 	

@@ -3,6 +3,7 @@ package l2jorion.game.handler.vote.engine;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -57,7 +58,7 @@ public abstract class VoteBase
 		try
 		{
 			String endpoint = getApiEndpoint(player);
-			if (endpoint.startsWith("err"))
+			if (endpoint.startsWith("error"))
 			{
 				return false;
 			}
@@ -74,26 +75,36 @@ public abstract class VoteBase
 		return false;
 	}
 	
-	public boolean tryParseBool(String bool)
+	public boolean tryParseBool(String response)
 	{
-		if (bool.startsWith("1"))
+		if (response.startsWith("1"))
 		{
 			return true;
 		}
-		else if (bool.startsWith("{\"apiver\":\"0.1c\",\"voted\":true"))
+		// else if (bool.startsWith("{\"apiver\":\"0.1\",\"voted\":true"))
+		// {
+		// return true;
+		// }
+		// else if (bool.contains("{\"ok\":true,\"error_code\":0,\"description\":\"\",\"result\":{\"isVoted\":true"))
+		// else if (bool.contains("\"isVoted\":true"))
+		// {
+		// return true;
+		// }
+		else if (response.toLowerCase().contains("\"is_voted\":true"))
 		{
 			return true;
 		}
-		else if (bool.startsWith("{\"ok\":true,\"error_code\":0,\"description\":\"\",\"result\":{\"isVoted\":true"))
+		else if (response.toLowerCase().contains("\"voted\":true"))
 		{
 			return true;
 		}
-		else if (bool.contains("<status>1</status>"))
+		else if (response.contains("<status>1</status>"))
+		
 		{
 			return true;
 		}
 		
-		return Boolean.parseBoolean(bool.trim());
+		return Boolean.parseBoolean(response.trim());
 	}
 	
 	public abstract String getApiEndpoint(L2PcInstance player);
@@ -105,10 +116,13 @@ public abstract class VoteBase
 		try
 		{
 			URL url = new URL(endpoint);
+			
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			
 			connection.addRequestProperty("User-Agent", "Mozilla/5.0");
 			connection.setRequestMethod("GET");
-			connection.setReadTimeout(5 * 1000);
+			connection.setConnectTimeout(2000);
+			connection.setReadTimeout(4000);
 			connection.connect();
 			
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream())))
@@ -130,12 +144,16 @@ public abstract class VoteBase
 			
 			return stringBuilder.toString();
 		}
+		catch (SocketTimeoutException e)
+		{
+			LOG.error(getClass().getSimpleName() + ": Socket timed out");
+			return "error";
+		}
 		catch (Exception e)
 		{
-			LOG.error("Something went wrong in VoteBase.getApiResponse:");
+			LOG.error(getClass().getSimpleName() + ": Error:");
 			e.printStackTrace();
-			
-			return "err";
+			return "error";
 		}
 	}
 }

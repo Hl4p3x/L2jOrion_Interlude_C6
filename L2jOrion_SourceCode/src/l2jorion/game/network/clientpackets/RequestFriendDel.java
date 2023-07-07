@@ -24,8 +24,8 @@ import java.sql.PreparedStatement;
 import l2jorion.game.datatables.sql.CharNameTable;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.FriendList;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
@@ -33,7 +33,7 @@ import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
-public final class RequestFriendDel extends L2GameClientPacket
+public final class RequestFriendDel extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestFriendDel.class.getName());
 	
@@ -53,12 +53,7 @@ public final class RequestFriendDel extends L2GameClientPacket
 		{
 			return;
 		}
-		if (activeChar.isSubmitingPin())
-		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
+		
 		int id = CharNameTable.getInstance().getIdByName(_name);
 		
 		if (id == -1 || !activeChar.getFriendList().contains(id))

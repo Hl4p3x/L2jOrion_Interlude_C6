@@ -11,11 +11,8 @@ import l2jorion.game.handler.IItemHandler;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
-import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExShowScreenMessage;
-import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.PlaySound;
-import l2jorion.game.network.serverpackets.SystemMessage;
 
 public class NobleCustomItem implements IItemHandler
 {
@@ -29,36 +26,28 @@ public class NobleCustomItem implements IItemHandler
 				return;
 			}
 			
-			L2PcInstance activeChar = (L2PcInstance) playable;
+			L2PcInstance player = (L2PcInstance) playable;
 			
-			if (activeChar.isInOlympiadMode())
+			if (player.isInOlympiadMode())
 			{
-				activeChar.sendMessage("This item can't be used on The Olympiad game.");
+				player.sendMessage("This item can't be used on The Olympiad game.");
+				return;
 			}
 			
-			if (activeChar.isNoble())
+			if (player.isNoble())
 			{
-				activeChar.sendMessage("You're already The Nobless!");
+				player.sendMessage("You're already The Nobless!");
+				return;
 			}
-			else
-			{
-				activeChar.setNoble(true);
-				activeChar.sendMessage("Congratulations! You've got The Nobless status");
-				activeChar.sendPacket(new ExShowScreenMessage("Congratulations! You've got The Nobless status", 4000, 0x02, false));
-				PlaySound playSound = new PlaySound("ItemSound.quest_fanfare_1");
-				activeChar.sendPacket(playSound);
-				activeChar.broadcastUserInfo();
-				playable.destroyItem("Consume", item.getObjectId(), 1, null, false);
-				
-				L2ItemInstance newitem = activeChar.getInventory().addItem("Tiara", 7694, 1, activeChar, null);
-				InventoryUpdate playerIU = new InventoryUpdate();
-				playerIU.addItem(newitem);
-				activeChar.sendPacket(playerIU);
-				SystemMessage sm;
-				sm = new SystemMessage(SystemMessageId.EARNED_ITEM);
-				sm.addItemName(7694);
-				activeChar.sendPacket(sm);
-			}
+			
+			player.setNoble(true);
+			player.sendMessage("Congratulations! You've got The Nobless status.");
+			player.sendPacket(new ExShowScreenMessage("Congratulations! You've got The Nobless status.", 4000, 0x02, false));
+			PlaySound playSound = new PlaySound("ItemSound.quest_fanfare_1");
+			player.sendPacket(playSound);
+			player.broadcastUserInfo();
+			player.destroyItem("Consume", item.getObjectId(), 1, null, false);
+			player.addItem("quest", 7694, 1, player, true);
 		}
 	}
 	

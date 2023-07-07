@@ -22,7 +22,6 @@ package l2jorion.game.network.loginserverpackets;
 
 public class KickPlayer extends LoginServerBasePacket
 {
-	
 	private final String _account;
 	
 	public KickPlayer(final byte[] decrypt)

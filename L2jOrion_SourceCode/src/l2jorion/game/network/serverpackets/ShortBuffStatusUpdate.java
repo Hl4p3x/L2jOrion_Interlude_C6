@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ShortBuffStatusUpdate extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ShortBuffStatusUpdate extends PacketServer
 {
 	private static final String _S__F4_SHORTBUFFSTATUSUPDATE = "[S] F4 ShortBuffStatusUpdate";
 	

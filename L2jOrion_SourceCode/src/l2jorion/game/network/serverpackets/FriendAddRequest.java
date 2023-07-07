@@ -14,7 +14,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class FriendAddRequest extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class FriendAddRequest extends PacketServer
 {
 	private final String _requestorName;
 	

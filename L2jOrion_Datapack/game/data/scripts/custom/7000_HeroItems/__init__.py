@@ -1,4 +1,3 @@
-# Made by DrLecter
 import sys
 from l2jorion.game.datatables.sql import ItemTable
 from l2jorion.game.model.quest import State

@@ -23,14 +23,12 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.controllers.RecipeController;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.util.Util;
 
-/**
- * @author L2jOrion
- */
-public final class RequestRecipeShopMakeItem extends L2GameClientPacket
+public final class RequestRecipeShopMakeItem extends PacketClient
 {
 	private int _id;
 	private int _recipeId;
@@ -50,28 +48,35 @@ public final class RequestRecipeShopMakeItem extends L2GameClientPacket
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		if (!getClient().getFloodProtectors().getManufacture().tryPerformAction("RecipeShopMake"))
+		{
 			return;
+		}
 		
 		final L2PcInstance manufacturer = (L2PcInstance) L2World.getInstance().findObject(_id);
 		if (manufacturer == null)
+		{
 			return;
+		}
 		
 		if (activeChar.getPrivateStoreType() != 0)
 		{
-			activeChar.sendMessage("Cannot make items while trading");
+			activeChar.sendMessage("Cannot make items while trading.");
 			return;
 		}
 		
 		if (manufacturer.getPrivateStoreType() != 5)
-			// activeChar.sendMessage("Cannot make items while trading");
+		{
 			return;
+		}
 		
 		if (activeChar.isInCraftMode() || manufacturer.isInCraftMode())
 		{
-			activeChar.sendMessage("Currently in Craft Mode");
+			activeChar.sendMessage("Currently in Craft Mode.");
 			return;
 		}
 		

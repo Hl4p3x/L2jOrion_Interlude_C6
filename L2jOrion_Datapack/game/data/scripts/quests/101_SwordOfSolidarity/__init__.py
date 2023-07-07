@@ -1,5 +1,3 @@
-# Made by Mr. Have fun! - Version 0.3 by DrLecter
-
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState

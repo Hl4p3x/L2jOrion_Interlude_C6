@@ -28,14 +28,6 @@ import l2jorion.logger.helpers.BasicMarkerFactory;
 import l2jorion.logger.helpers.Util;
 import l2jorion.logger.impl.StaticMarkerBinder;
 
-/**
- * MarkerFactory is a utility class producing {@link Marker} instances as appropriate for the logging system currently in use.
- * <p>
- * This class is essentially implemented as a wrapper around an {@link IMarkerFactory} instance bound at compile time.
- * <p>
- * Please note that all methods in this class are static.
- * @author Ceki G&uuml;lc&uuml;
- */
 public class MarkerFactory
 {
 	static IMarkerFactory MARKER_FACTORY;

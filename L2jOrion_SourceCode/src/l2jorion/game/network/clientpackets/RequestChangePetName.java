@@ -25,13 +25,14 @@ import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PetInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.NpcInfo;
 import l2jorion.game.network.serverpackets.PetInfo;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestChangePetName extends L2GameClientPacket
+public final class RequestChangePetName extends PacketClient
 {
 	private String _name;
 	

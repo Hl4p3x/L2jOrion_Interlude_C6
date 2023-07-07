@@ -26,6 +26,7 @@ import l2jorion.game.datatables.sql.HennaTreeTable;
 import l2jorion.game.model.actor.instance.L2HennaInstance;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.ItemList;
@@ -33,7 +34,7 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Henna;
 import l2jorion.game.util.Util;
 
-public final class RequestHennaEquip extends L2GameClientPacket
+public final class RequestHennaEquip extends PacketClient
 {
 	private int _symbolId;
 	

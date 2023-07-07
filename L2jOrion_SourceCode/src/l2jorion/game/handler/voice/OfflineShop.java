@@ -30,10 +30,6 @@ import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.taskmanager.AttackStanceTaskManager;
 
-/**
- * Command .offline_shop
- * @author Nefer
- */
 public class OfflineShop implements IVoicedCommandHandler
 {
 	private static String[] _voicedCommands =
@@ -41,11 +37,9 @@ public class OfflineShop implements IVoicedCommandHandler
 		"offline"
 	};
 	
-	@SuppressWarnings("null")
 	@Override
 	public boolean useVoicedCommand(final String command, final L2PcInstance player, final String target)
 	{
-		
 		if (player == null)
 		{
 			return false;
@@ -67,7 +61,7 @@ public class OfflineShop implements IVoicedCommandHandler
 		}
 		
 		final TradeList storeListBuy = player.getBuyList();
-		if (storeListBuy == null && storeListBuy.getItemCount() == 0)
+		if (storeListBuy == null || storeListBuy.getItemCount() == 0)
 		{
 			player.sendMessage("Your buy list is empty.");
 			player.sendPacket(ActionFailed.STATIC_PACKET);
@@ -75,7 +69,7 @@ public class OfflineShop implements IVoicedCommandHandler
 		}
 		
 		final TradeList storeListSell = player.getSellList();
-		if (storeListSell == null && storeListSell.getItemCount() == 0)
+		if (storeListSell == null || storeListSell.getItemCount() == 0)
 		{
 			player.sendMessage("Your sell list is empty.");
 			player.sendPacket(ActionFailed.STATIC_PACKET);

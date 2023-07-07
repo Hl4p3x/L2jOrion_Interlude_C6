@@ -1,12 +1,10 @@
-# Created by Ham Wong on 2007.02.28
 import sys
-
 from l2jorion.game.model.quest        import State
 from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
 
 qn = "2400_toivortex_exit"
-#print "2400. Toivortex exit"
+
 NPC=[29055]
 
 class Quest (JQuest) :

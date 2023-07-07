@@ -16,11 +16,10 @@
  */
 package l2jorion.game.network.clientpackets;
 
-/**
- * @author programmos
- */
+import l2jorion.game.network.PacketClient;
+
 @SuppressWarnings("unused")
-public class MoveWithDelta extends L2GameClientPacket
+public class MoveWithDelta extends PacketClient
 {
 	private int _dx, _dy, _dz;
 	

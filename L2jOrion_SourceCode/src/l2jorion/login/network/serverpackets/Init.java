@@ -22,9 +22,6 @@ package l2jorion.login.network.serverpackets;
 
 import l2jorion.login.L2LoginClient;
 
-/**
- * Format: dd b dddd s d: session id d: protocol revision b: 0x90 bytes : 0x80 bytes for the scrambled RSA public key 0x10 bytes at 0x00 d: unknow d: unknow d: unknow d: unknow s: blowfish key
- */
 public final class Init extends L2LoginServerPacket
 {
 	private final int _sessionId;
@@ -64,10 +61,6 @@ public final class Init extends L2LoginServerPacket
 		writeC(0x00); // null termination ;)
 	}
 	
-	/*
-	 * (non-Javadoc)
-	 * @see L2jOrion.loginserver.network.serverpackets.L2LoginServerPacket#getType()
-	 */
 	@Override
 	public String getType()
 	{

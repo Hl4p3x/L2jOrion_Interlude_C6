@@ -33,6 +33,8 @@ L2jOrion Source https://www.l2jorion.com/index.php?/forum/21-updates/ LATEST UPD
 
 # UPDATES
 
+>Latest source updated to Revision 28, more info at: https://www.l2jorion.com/index.php?/forum/21-updates/
+
 >Some imports corrections by L2OFF information. Our priority is L2OFF and all updates are doing by this info except some modifications which possible easy turn off.
 Added a new test server system 1.05 which is closer to L2OFF and it doesn't have modifications from the newer l2 clients.
 

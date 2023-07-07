@@ -62,20 +62,11 @@ import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.util.random.Rnd;
 
-/**
- * Seven Signs Festival of Darkness Engine TODO: - Archer mobs should target healer characters over other party members. - ADDED 29 Sep: Players that leave a party during the Seven Signs Festival will now take damage and cannot be healed.
- * @author Tempy
- */
 public class SevenSignsFestival implements SpawnListener
 {
-	
-	/** The Constant LOG. */
 	protected static final Logger LOG = LoggerFactory.getLogger(SevenSignsFestival.class);
 	
-	/** The _instance. */
 	private static SevenSignsFestival _instance;
-	
-	/** The Constant GET_CLAN_NAME. */
 	private static final String GET_CLAN_NAME = "SELECT clan_name FROM clan_data WHERE clan_id = (SELECT clanid FROM characters WHERE char_name = ?)";
 	
 	/**
@@ -3391,7 +3382,7 @@ public class SevenSignsFestival implements SpawnListener
 		_managerScheduledTask = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(fm, Config.ALT_FESTIVAL_MANAGER_START, Config.ALT_FESTIVAL_CYCLE_LENGTH);
 		
 		fm = null;
-		LOG.info("SevenSignsFestival: The first Festival of Darkness cycle begins in " + Config.ALT_FESTIVAL_MANAGER_START / 60000 + " minute(s).");
+		LOG.info("SevenSignsFestival: The first Festival of Darkness cycle begins in " + Config.ALT_FESTIVAL_MANAGER_START / 60000 + " minute(s)");
 	}
 	
 	/**
@@ -3668,7 +3659,6 @@ public class SevenSignsFestival implements SpawnListener
 				sm.addString(partyMemberName);
 				sm.addNumber(100);
 				player.getClan().broadcastToOnlineMembers(sm);
-				sm = null;
 			}
 		}
 		else
@@ -4457,10 +4447,6 @@ public class SevenSignsFestival implements SpawnListener
 		}
 	}
 	
-	/**
-	 * The FestivalManager class is the main runner of all the festivals. It is used for easier integration and management of all running festivals.
-	 * @author Tempy
-	 */
 	private class FestivalManager implements Runnable
 	{
 		
@@ -4483,10 +4469,6 @@ public class SevenSignsFestival implements SpawnListener
 			setNextFestivalStart(Config.ALT_FESTIVAL_CYCLE_LENGTH - FESTIVAL_SIGNUP_TIME);
 		}
 		
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Runnable#run()
-		 */
 		@Override
 		public synchronized void run()
 		{
@@ -4732,27 +4714,11 @@ public class SevenSignsFestival implements SpawnListener
 				return null;
 			}
 			
-			/*
-			 * Compute the offset if a Dusk instance is required. ID: 0 1 2 3 4 Dusk 1: 10 11 12 13 14 Dawn 2: 20 21 22 23 24
-			 */
-			
 			festivalId += oracle == SevenSigns.CABAL_DUSK ? 10 : 20;
 			return _festivalInstances.get(festivalId);
 		}
-		
-		/**
-		 * Returns the number of currently running festivals <b>WITH</b> participants.
-		 * @return int Count
-		 */
-		/*
-		 * public final int getInstanceCount() { return _festivalInstances.size(); }
-		 */
 	}
 	
-	/**
-	 * Each running festival is represented by an L2DarknessFestival class. It contains all the spawn information and data for the running festival. All festivals are managed by the FestivalManager class, which must be initialized first.
-	 * @author Tempy
-	 */
 	private class L2DarknessFestival
 	{
 		

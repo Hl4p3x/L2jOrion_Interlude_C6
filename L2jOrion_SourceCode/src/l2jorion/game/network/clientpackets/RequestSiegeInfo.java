@@ -21,7 +21,9 @@
 
 package l2jorion.game.network.clientpackets;
 
-public class RequestSiegeInfo extends L2GameClientPacket
+import l2jorion.game.network.PacketClient;
+
+public class RequestSiegeInfo extends PacketClient
 {
 	@Override
 	protected void readImpl()

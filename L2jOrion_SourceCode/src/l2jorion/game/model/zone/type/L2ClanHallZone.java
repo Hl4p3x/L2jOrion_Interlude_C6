@@ -116,10 +116,6 @@ public class L2ClanHallZone extends L2ResidenceZone
 	{
 	}
 	
-	/**
-	 * Get the clan hall's spawn
-	 * @return
-	 */
 	public Location getSpawn()
 	{
 		return new Location(0, 0, 0);

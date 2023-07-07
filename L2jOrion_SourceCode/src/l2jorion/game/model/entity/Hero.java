@@ -217,7 +217,7 @@ public class Hero
 		}
 		
 		LOG.info("Hero: Loaded " + _heroes.size() + " heroes.");
-		LOG.info("Hero: Loaded " + _completeHeroes.size() + " all time heroes.");
+		LOG.info("Hero: Loaded " + _completeHeroes.size() + " all time heroes");
 	}
 	
 	private static String calcFightTime(long fightTime)
@@ -753,7 +753,7 @@ public class Hero
 							int clanCrest = 0;
 							int allyCrest = 0;
 							
-							if (clanId > 0)
+							if (clanId > 0 && ClanTable.getInstance().getClan(clanId) != null)
 							{
 								clanName = ClanTable.getInstance().getClan(clanId).getName();
 								clanCrest = ClanTable.getInstance().getClan(clanId).getCrestId();

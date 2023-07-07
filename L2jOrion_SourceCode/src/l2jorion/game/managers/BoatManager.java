@@ -30,7 +30,7 @@ import l2jorion.game.model.L2World;
 import l2jorion.game.model.VehiclePathPoint;
 import l2jorion.game.model.actor.instance.L2BoatInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.templates.L2CharTemplate;
 import l2jorion.game.templates.StatsSet;
 
@@ -148,7 +148,7 @@ public class BoatManager
 		}
 	}
 	
-	public void broadcastPacket(VehiclePathPoint point1, VehiclePathPoint point2, L2GameServerPacket packet)
+	public void broadcastPacket(VehiclePathPoint point1, VehiclePathPoint point2, PacketServer packet)
 	{
 		double dx, dy;
 		final Collection<L2PcInstance> players = L2World.getInstance().getAllPlayers().values();
@@ -179,7 +179,7 @@ public class BoatManager
 		}
 	}
 	
-	public void broadcastPackets(VehiclePathPoint point1, VehiclePathPoint point2, L2GameServerPacket... packets)
+	public void broadcastPackets(VehiclePathPoint point1, VehiclePathPoint point2, PacketServer... packets)
 	{
 		double dx, dy;
 		final Collection<L2PcInstance> players = L2World.getInstance().getAllPlayers().values();
@@ -195,7 +195,7 @@ public class BoatManager
 			
 			if (Math.sqrt((dx * dx) + (dy * dy)) < BOAT_BROADCAST_RADIUS)
 			{
-				for (L2GameServerPacket p : packets)
+				for (PacketServer p : packets)
 				{
 					player.sendPacket(p);
 				}
@@ -207,7 +207,7 @@ public class BoatManager
 				
 				if (Math.sqrt((dx * dx) + (dy * dy)) < BOAT_BROADCAST_RADIUS)
 				{
-					for (L2GameServerPacket p : packets)
+					for (PacketServer p : packets)
 					{
 						player.sendPacket(p);
 					}

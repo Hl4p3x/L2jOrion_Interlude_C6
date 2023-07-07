@@ -22,13 +22,14 @@ import l2jorion.Config;
 import l2jorion.game.model.BlockList;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SendTradeRequest;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.util.Util;
 
-public final class TradeRequest extends L2GameClientPacket
+public final class TradeRequest extends PacketClient
 {
 	// private static Logger LOG = LoggerFactory.getLogger(TradeRequest.class.getName());
 	
@@ -60,12 +61,6 @@ public final class TradeRequest extends L2GameClientPacket
 		if ((target == null) || !player.getKnownList().knowsObject(target) || target.getObjectId() == player.getObjectId())
 		{
 			player.sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_INCORRECT));
-			player.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-		if (player.isSubmitingPin() || target.isSubmitingPin())
-		{
-			player.sendMessage("Unable to do any action while PIN is not submitted");
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}

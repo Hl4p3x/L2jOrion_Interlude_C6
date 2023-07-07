@@ -23,6 +23,7 @@ package l2jorion.game.handler.item;
 import l2jorion.game.cache.HtmCache;
 import l2jorion.game.datatables.csv.ExtractableItemsData;
 import l2jorion.game.datatables.sql.ItemTable;
+import l2jorion.game.enums.AchType;
 import l2jorion.game.handler.IItemHandler;
 import l2jorion.game.model.L2ExtractableItem;
 import l2jorion.game.model.L2ExtractableProductItem;
@@ -36,9 +37,6 @@ import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author FBIagent 11/12/2006
- */
 public class ExtractableItems implements IItemHandler
 {
 	private static Logger LOG = LoggerFactory.getLogger(ItemTable.class);
@@ -46,17 +44,25 @@ public class ExtractableItems implements IItemHandler
 	public void doExtract(final L2PlayableInstance playable, final L2ItemInstance item, int count)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
+		
 		final L2PcInstance activeChar = (L2PcInstance) playable;
 		final int itemID = item.getItemId();
 		
 		if (count > item.getCount())
+		{
 			return;
+		}
+		
 		while (count-- > 0)
 		{
 			L2ExtractableItem exitem = ExtractableItemsData.getInstance().getExtractableItem(itemID);
 			if (exitem == null)
+			{
 				return;
+			}
 			int createItemID = 0, createAmount = 0;
 			final int rndNum = Rnd.get(100);
 			int chanceFrom = 0;
@@ -73,8 +79,6 @@ public class ExtractableItems implements IItemHandler
 				
 				chanceFrom += chance;
 			}
-			
-			exitem = null;
 			
 			if (createItemID == 0)
 			{
@@ -102,8 +106,8 @@ public class ExtractableItems implements IItemHandler
 						activeChar.addItem("Extract", createItemID, 1, item, false);
 					}
 				}
-				SystemMessage sm;
 				
+				SystemMessage sm;
 				if (createAmount > 1)
 				{
 					sm = new SystemMessage(SystemMessageId.EARNED_S2_S1_S);
@@ -115,24 +119,29 @@ public class ExtractableItems implements IItemHandler
 					sm = new SystemMessage(SystemMessageId.EARNED_ITEM);
 					sm.addItemName(createItemID);
 				}
+				
 				activeChar.sendPacket(sm);
-				sm = null;
+				
+				// Daily
+				activeChar.getAchievement().increase(AchType.DAILY_OPEN_BOX, 1, true, true, true, itemID);
 			}
 			else
 			{
-				activeChar.sendMessage("Item failed to open"); // TODO: Put a more proper message here.
+				activeChar.sendMessage("Item failed to open.");
 			}
 			
 			activeChar.destroyItemByItemId("Extract", itemID, 1, activeChar.getTarget(), true);
 		}
 	}
 	
-	// by Azagthtot
 	@Override
 	public void useItem(final L2PlayableInstance playable, final L2ItemInstance item)
 	{
 		if (!(playable instanceof L2PcInstance))
+		{
 			return;
+		}
+		
 		if (item.getCount() > 1)
 		{
 			String message = HtmCache.getInstance().getHtm("data/html/others/extractable.htm");

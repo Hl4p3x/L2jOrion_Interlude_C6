@@ -25,7 +25,6 @@ import l2jorion.game.skills.Env;
 
 final class EffectBuff extends L2Effect
 {
-	
 	public EffectBuff(final Env envbuff, final EffectTemplate template)
 	{
 		super(envbuff, template);

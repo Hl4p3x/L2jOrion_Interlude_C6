@@ -69,11 +69,13 @@ public class ScrollOfResurrection implements IItemHandler
 		}
 		
 		if (activeChar.isMovementDisabled())
+		{
 			return;
+		}
 		
 		final int itemId = item.getItemId();
 		final boolean humanScroll = itemId == 3936 || itemId == 3959 || itemId == 737;
-		//final boolean petScroll = itemId == 6387;
+		// final boolean petScroll = itemId == 6387;
 		
 		// SoR Animation section
 		L2Character target = (L2Character) activeChar.getTarget();
@@ -101,8 +103,6 @@ public class ScrollOfResurrection implements IItemHandler
 		{
 			targetPet = (L2PetInstance) target;
 		}
-		
-		target = null;
 		
 		if (targetPlayer != null || targetPet != null)
 		{

@@ -48,13 +48,13 @@ public class L2ResidenceTeleportZone extends L2ZoneRespawn
 	@Override
 	protected void onEnter(L2Character character)
 	{
-		character.setInsideZone(ZoneId.ZONE_NOSUMMONFRIEND, true); // FIXME: Custom ?
+		character.setInsideZone(ZoneId.ZONE_NOSUMMONFRIEND, true);
 	}
 	
 	@Override
 	protected void onExit(L2Character character)
 	{
-		character.setInsideZone(ZoneId.ZONE_NOSUMMONFRIEND, false); // FIXME: Custom ?
+		character.setInsideZone(ZoneId.ZONE_NOSUMMONFRIEND, false);
 	}
 	
 	public void oustAllPlayers()

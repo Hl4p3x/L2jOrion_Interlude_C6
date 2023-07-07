@@ -20,9 +20,10 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.L2GameClient;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.SkillCoolTime;
 
-public class RequestSkillCoolTime extends L2GameClientPacket
+public class RequestSkillCoolTime extends PacketClient
 {
 	L2GameClient _client;
 	

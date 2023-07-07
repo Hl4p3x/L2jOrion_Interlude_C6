@@ -44,7 +44,7 @@ public class FortManager
 	
 	public FortManager()
 	{
-		//LOG.info("Initializing FortManager");
+		// LOG.info("Initializing FortManager");
 		_forts.clear();
 		load();
 	}
@@ -115,7 +115,9 @@ public class FortManager
 		for (final Fort f : getForts())
 		{
 			if (f.getFortId() == fortId)
+			{
 				return f;
+			}
 		}
 		return null;
 	}
@@ -125,7 +127,9 @@ public class FortManager
 		for (final Fort f : getForts())
 		{
 			if (f.getOwnerId() == clan.getClanId())
+			{
 				return f;
+			}
 		}
 		return null;
 	}
@@ -135,7 +139,9 @@ public class FortManager
 		for (final Fort f : getForts())
 		{
 			if (f.getName().equalsIgnoreCase(name.trim()))
+			{
 				return f;
+			}
 		}
 		return null;
 	}
@@ -145,7 +151,9 @@ public class FortManager
 		for (final Fort f : getForts())
 		{
 			if (f.checkIfInZone(x, y, z))
+			{
 				return f;
+			}
 		}
 		return null;
 	}

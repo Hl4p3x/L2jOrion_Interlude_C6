@@ -44,7 +44,7 @@ public class SelectorHelper implements IMMOExecutor<L2LoginClient>, IClientFacto
 	}
 	
 	@Override
-	public void execute(final ReceivablePacket<L2LoginClient> packet)
+	public void execute(ReceivablePacket<L2LoginClient> packet)
 	{
 		_generalPacketsThreadPool.execute(packet);
 	}

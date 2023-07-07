@@ -19,9 +19,6 @@
  */
 package l2jorion.login.network.serverpackets;
 
-/**
- * @author KenM
- */
 public final class AccountKicked extends L2LoginServerPacket
 {
 	public static enum AccountKickedReason

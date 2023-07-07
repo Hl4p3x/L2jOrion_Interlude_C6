@@ -22,6 +22,7 @@ package l2jorion.game.model.actor.knownlist;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Vehicle;
+import l2jorion.game.model.actor.instance.L2FenceInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.network.serverpackets.DeleteObject;
 import l2jorion.game.network.serverpackets.SpawnItemPoly;
@@ -93,23 +94,16 @@ public class PcKnownList extends PlayableKnownList
 			return 8000;
 		}
 		
-		final int knownlistSize = getKnownObjects().size();
-		if (knownlistSize <= 25)
+		if (object instanceof L2FenceInstance)
 		{
-			return 4200;
+			return 8000;
 		}
 		
-		if (knownlistSize <= 35)
-		{
-			return 3600;
-		}
+		/*
+		 * final int knownlistSize = getKnownObjects().size(); if (knownlistSize <= 25) { return 4200; } if (knownlistSize <= 35) { return 3600; } if (knownlistSize <= 70) { return 3400; }
+		 */
 		
-		if (knownlistSize <= 70)
-		{
-			return 3400;
-		}
-		
-		return 3200;
+		return 6000;
 	}
 	
 	@Override
@@ -120,22 +114,15 @@ public class PcKnownList extends PlayableKnownList
 			return 8000;
 		}
 		
-		final int knownlistSize = getKnownObjects().size();
-		if (knownlistSize <= 25)
+		if (object instanceof L2FenceInstance)
 		{
-			return 4200; // empty field
+			return 8000;
 		}
 		
-		if (knownlistSize <= 35)
-		{
-			return 3600;
-		}
+		/*
+		 * final int knownlistSize = getKnownObjects().size(); if (knownlistSize <= 25) { return 4200; } if (knownlistSize <= 35) { return 3600; } if (knownlistSize <= 70) { return 3400; }
+		 */
 		
-		if (knownlistSize <= 70)
-		{
-			return 3400;
-		}
-		
-		return 3200; // Siege, TOI, city
+		return 6000;
 	}
 }

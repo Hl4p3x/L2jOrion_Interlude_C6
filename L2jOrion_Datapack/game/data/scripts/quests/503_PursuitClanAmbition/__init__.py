@@ -1,6 +1,3 @@
-# Written by
-# questdevs Team
-
 import sys
 from java.util                                 import Iterator
 from l2jorion.util.random                    import Rnd
@@ -287,7 +284,7 @@ class Quest (JQuest) :
     elif event == "30766-04.htm":
       st.set("cond","9")
       spawnedNpc=st.addSpawn(30766,160622,21230,-3710,90000)
-      spawnedNpc.broadcastPacket(CreatureSay(spawnedNpc.getObjectId(),0,spawnedNpc.getName(),"Blood and Honour."))
+      spawnedNpc.broadcastPacket(CreatureSay(spawnedNpc.getObjectId(),0,spawnedNpc.getName(),"Blood and Honor."))
       spawnedNpc=st.addSpawn(30759,160665,21209,-3710,90000)
       spawnedNpc.broadcastPacket(CreatureSay(spawnedNpc.getObjectId(),0,spawnedNpc.getName(),"Ambition and Power"))
       spawnedNpc=st.addSpawn(30758,160665,21291,-3710,90000)
@@ -481,18 +478,16 @@ class Quest (JQuest) :
 
   def onAttack(self, npc, player, damage, isPet):
     npdId = npc.getNpcId()
+    if Rnd.get(100) < 4:
+      for j in range(2):
+        for k in range(2): 
+          self.addSpawn(27180,npc.getX()+70*pow(-1,j%2),npc.getY()+70*pow(-1,k%2),npc.getZ(),0,False,1800000)
     if (npc.getMaxHp()/2) > npc.getCurrentHp():
       if Rnd.get(100) < 4:
-        if self.ImpGraveKepperStat == 1:
-          for j in range(2):
-            for k in range(2): 
-              self.addSpawn(27180,npc.getX()+70*pow(-1,j%2),npc.getY()+70*pow(-1,k%2),npc.getZ(),0,False,0)
-          self.ImpGraveKepperStat = 2
-        else:
-          players = npc.getKnownList().getKnownPlayers().values().toArray()
-          if len(players) :
-            playerToTP = players[Rnd.get(int(len(players)))]
-            playerToTP.setXYZ(185462,20342,-3250)
+        players = npc.getKnownList().getKnownPlayers().values().toArray()
+        if len(players) :
+          playerToTP = players[Rnd.get(int(len(players)))]
+          playerToTP.teleToLocation(179768, 6364, -2734)
     return
 
   def onKill(self,npc,player,isPet):

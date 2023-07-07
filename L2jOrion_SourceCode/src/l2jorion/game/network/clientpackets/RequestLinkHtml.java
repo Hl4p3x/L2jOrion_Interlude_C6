@@ -21,11 +21,12 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestLinkHtml extends L2GameClientPacket
+public final class RequestLinkHtml extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestLinkHtml.class);
 	

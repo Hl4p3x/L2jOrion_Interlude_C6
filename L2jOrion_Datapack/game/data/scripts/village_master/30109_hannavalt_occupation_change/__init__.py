@@ -1,14 +1,11 @@
-#
-# Created by DraX on 2005.08.23
-#
-
 import sys
 
 from l2jorion.game.model.quest        import State
 from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
+
 qn = "30109_hannavalt_occupation_change"
-#print "30109. Hannavalt occupation change"
+
 
 MARK_OF_CHALLENGER_ID  = 2627
 MARK_OF_DUTY_ID        = 2633

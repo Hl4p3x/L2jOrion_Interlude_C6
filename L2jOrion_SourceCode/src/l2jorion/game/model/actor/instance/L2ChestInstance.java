@@ -1,6 +1,4 @@
 /*
- *@author Julian
- *
  * L2jOrion Project - www.l2jorion.com 
  * 
  * This program is free software; you can redistribute it and/or modify
@@ -245,6 +243,12 @@ public final class L2ChestInstance extends L2MonsterInstance
 	
 	@Override
 	public boolean hasRandomAnimation()
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean isMonster()
 	{
 		return false;
 	}

@@ -18,8 +18,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.datatables.sql.CharTemplateTable;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class CustomNpcInfo extends L2GameServerPacket
+public class CustomNpcInfo extends PacketServer
 {
 	
 	private static final String _S__03_CUSTOMNPCINFO = "[S] 03 CustomNpcInfo";

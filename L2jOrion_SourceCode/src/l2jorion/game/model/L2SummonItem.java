@@ -19,9 +19,6 @@
  */
 package l2jorion.game.model;
 
-/**
- * @author -Nemesiss-
- */
 public class L2SummonItem
 {
 	private final int _itemId;

@@ -21,14 +21,14 @@
 package l2jorion.game.skills;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
 import l2jorion.game.model.Item;
 import l2jorion.game.templates.L2Armor;
 import l2jorion.game.templates.L2ArmorType;
@@ -42,22 +42,15 @@ import l2jorion.game.templates.StatsSet;
 final class DocumentItem extends DocumentBase
 {
 	private Item _currentItem = null;
-	private final List<L2Item> _itemsInFile = new FastList<>();
-	private Map<Integer, Item> _itemData = new FastMap<>();
+	private final List<L2Item> _itemsInFile = new ArrayList<>();
+	private Map<Integer, Item> _itemData = new HashMap<>();
 	
-	/**
-	 * @param pItemData
-	 * @param file
-	 */
 	public DocumentItem(final Map<Integer, Item> pItemData, final File file)
 	{
 		super(file);
 		_itemData = pItemData;
 	}
 	
-	/**
-	 * @param item
-	 */
 	private void setCurrentItem(final Item item)
 	{
 		_currentItem = item;
@@ -179,9 +172,6 @@ final class DocumentItem extends DocumentBase
 		}
 	}
 	
-	/**
-	 * @return
-	 */
 	public List<L2Item> getItemList()
 	{
 		return _itemsInFile;

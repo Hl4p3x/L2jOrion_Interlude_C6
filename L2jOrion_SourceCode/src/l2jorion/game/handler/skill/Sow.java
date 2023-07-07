@@ -54,7 +54,9 @@ public class Sow implements ISkillHandler
 	public void useSkill(final L2Character activeChar, final L2Skill skill, final L2Object[] targets)
 	{
 		if (!(activeChar instanceof L2PcInstance))
+		{
 			return;
+		}
 		
 		_activeChar = (L2PcInstance) activeChar;
 		
@@ -67,7 +69,9 @@ public class Sow implements ISkillHandler
 		for (int index = 0; index < targetList.length; index++)
 		{
 			if (!(targetList[0] instanceof L2MonsterInstance))
+			{
 				continue;
+			}
 			
 			_target = (L2MonsterInstance) targetList[0];
 			if (_target.isSeeded())
@@ -125,10 +129,7 @@ public class Sow implements ISkillHandler
 			{
 				_activeChar.getParty().broadcastToPartyMembers(sm);
 			}
-			sm = null;
-			// TODO: Mob should not agro on player, this way doesn't work really nice
 			_target.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-			
 		}
 		
 	}
@@ -140,7 +141,6 @@ public class Sow implements ISkillHandler
 			return false;
 		}
 		
-		// TODO: check all the chances
 		int basicSuccess = (L2Manor.getInstance().isAlternative(_seedId) ? 20 : 90);
 		int minlevelSeed = 0;
 		int maxlevelSeed = 0;

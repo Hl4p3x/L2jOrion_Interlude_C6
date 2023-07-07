@@ -33,6 +33,7 @@ import l2jorion.game.model.actor.instance.L2MercManagerInstance;
 import l2jorion.game.model.actor.instance.L2MerchantInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
@@ -44,7 +45,7 @@ import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestWearItem extends L2GameClientPacket
+public final class RequestWearItem extends PacketClient
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(RequestWearItem.class);
 	

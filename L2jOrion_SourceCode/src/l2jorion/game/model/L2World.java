@@ -200,14 +200,17 @@ public final class L2World
 	
 	public void addVisibleObject(L2Object object, L2WorldRegion newRegion)
 	{
+		if (newRegion == null)
+		{
+			return;
+		}
+		
 		if (!newRegion.isActive())
 		{
 			return;
 		}
 		
-		List<L2Object> visibles = getVisibleObjects(object);
-		
-		for (L2Object visible : visibles)
+		for (L2Object visible : getVisibleObjects(object))
 		{
 			if (visible == null)
 			{
@@ -226,33 +229,30 @@ public final class L2World
 			return;
 		}
 		
-		if (oldRegion != null)
+		if (oldRegion == null)
 		{
-			oldRegion.removeVisibleObject(object);
-			
-			for (L2WorldRegion reg : oldRegion.getSurroundingRegions())
+			return;
+		}
+		
+		oldRegion.removeVisibleObject(object);
+		
+		for (L2WorldRegion reg : oldRegion.getSurroundingRegions())
+		{
+			for (L2Object obj : reg.getVisibleObjects().values())
 			{
-				Collection<L2Object> vObj = reg.getVisibleObjects().values();
-				for (L2Object obj : vObj)
+				if (obj != null)
 				{
-					if (obj != null)
-					{
-						obj.getKnownList().removeKnownObject(object);
-						object.getKnownList().removeKnownObject(obj);
-					}
-				}
-			}
-			
-			object.getKnownList().removeAllKnownObjects();
-			
-			if (object instanceof L2PcInstance)
-			{
-				if (!((L2PcInstance) object).isTeleporting())
-				{
-					removeFromAllPlayers((L2PcInstance) object);
+					obj.getKnownList().removeKnownObject(object);
+					object.getKnownList().removeKnownObject(obj);
 				}
 			}
 		}
+		
+		object.getKnownList().removeAllKnownObjects();
+		
+		/*
+		 * if (object instanceof L2PcInstance) { if (!((L2PcInstance) object).isTeleporting()) { removeFromAllPlayers((L2PcInstance) object); } }
+		 */
 	}
 	
 	public void addPlayerToWorld(L2PcInstance cha)
@@ -288,9 +288,15 @@ public final class L2World
 				{
 					continue; // skip our own character
 				}
+				
+				if (obj.getInstanceId() != object.getInstanceId())
+				{
+					continue;
+				}
+				
 				if (!obj.isVisible())
 				{
-					continue; // skip dying objects
+					continue;
 				}
 				
 				result.add(obj);

@@ -21,14 +21,11 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.managers.DuelManager;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * Format:(ch) ddd
- * @author L2jOrion
- */
-public final class RequestDuelAnswerStart extends L2GameClientPacket
+public final class RequestDuelAnswerStart extends PacketClient
 {
 	private int _partyDuel;
 	@SuppressWarnings("unused")
@@ -48,12 +45,16 @@ public final class RequestDuelAnswerStart extends L2GameClientPacket
 	{
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		
 		final L2PcInstance requestor = player.getActiveRequester();
 		
 		if (requestor == null)
+		{
 			return;
+		}
 		
 		if (_response == 1)
 		{

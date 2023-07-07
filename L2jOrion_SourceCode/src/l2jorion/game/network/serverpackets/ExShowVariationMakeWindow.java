@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExShowVariationMakeWindow extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExShowVariationMakeWindow extends PacketServer
 {
 	private static final String _S__FE_50_EXSHOWVARIATIONMAKEWINDOW = "[S] FE:50 ExShowVariationMakeWindow";
 	

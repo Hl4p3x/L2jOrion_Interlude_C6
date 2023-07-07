@@ -24,11 +24,12 @@ import java.util.Arrays;
 
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExAutoSoulShot;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestAutoSoulShot extends L2GameClientPacket
+public final class RequestAutoSoulShot extends PacketClient
 {
 	private int _itemId;
 	private int _type; // 1 = on : 0 = off;

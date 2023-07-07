@@ -34,11 +34,6 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * This class handles following admin commands: - kill = kills target L2Character - kill_monster = kills target non-player - kill <radius> = If radius is specified, then ALL players only in that radius will be killed. - kill_monster <radius> = If radius is specified, then ALL non-players only in
- * that radius will be killed.
- * @version $Revision: 1.2.4.5 $ $Date: 2007/07/31 10:06:06 $
- */
 public class AdminKill implements IAdminCommandHandler
 {
 	private static Logger LOG = LoggerFactory.getLogger(AdminKill.class);
@@ -52,15 +47,10 @@ public class AdminKill implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(final String command, final L2PcInstance activeChar)
 	{
-		/*
-		 * if(!AdminCommandAccessRights.getInstance().hasAccess(command, activeChar.getAccessLevel())){ return false; } if(Config.GMAUDIT) { Logger _logAudit = Logger.getLogger("gmaudit"); LogRecord record = new LogRecord(Level.INFO, command); record.setParameters(new Object[] { "GM: " +
-		 * activeChar.getName(), " to target [" + activeChar.getTarget() + "] " }); _logAudit.LOGGER(record); }
-		 */
-		
 		if (command.startsWith("admin_kill"))
 		{
 			StringTokenizer st = new StringTokenizer(command, " ");
-			st.nextToken(); // skip command
+			st.nextToken();
 			
 			if (st.hasMoreTokens())
 			{
@@ -71,9 +61,18 @@ public class AdminKill implements IAdminCommandHandler
 				{
 					if (st.hasMoreTokens())
 					{
+						int radius = 0;
 						try
 						{
-							final int radius = Integer.parseInt(st.nextToken());
+							try
+							{
+								radius = Integer.parseInt(st.nextToken());
+							}
+							catch (NumberFormatException e)
+							{
+								activeChar.sendMessage("Wrong radius.");
+								return false;
+							}
 							
 							for (final L2Character knownChar : plyr.getKnownList().getKnownCharactersInRadius(radius))
 							{
@@ -92,7 +91,9 @@ public class AdminKill implements IAdminCommandHandler
 						catch (final NumberFormatException e)
 						{
 							if (Config.ENABLE_ALL_EXCEPTIONS)
+							{
 								e.printStackTrace();
+							}
 							
 							activeChar.sendMessage("Invalid radius.");
 							return false;
@@ -123,15 +124,14 @@ public class AdminKill implements IAdminCommandHandler
 					catch (final NumberFormatException e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
+						{
 							e.printStackTrace();
+						}
 						
 						activeChar.sendMessage("Usage: //kill <player_name | radius>");
 						return false;
 					}
 				}
-				
-				firstParam = null;
-				plyr = null;
 			}
 			else
 			{
@@ -145,11 +145,7 @@ public class AdminKill implements IAdminCommandHandler
 				{
 					kill(activeChar, (L2Character) obj);
 				}
-				
-				obj = null;
 			}
-			
-			st = null;
 		}
 		
 		return true;
@@ -159,7 +155,6 @@ public class AdminKill implements IAdminCommandHandler
 	{
 		if (target instanceof L2PcInstance)
 		{
-			// e.g. invincibility effect
 			if (!((L2PcInstance) target).isGM())
 			{
 				target.stopAllEffects();

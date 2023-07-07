@@ -18,9 +18,10 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.Config;
 import l2jorion.game.GameServer;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.CharSelectInfo;
 
-public final class CharacterRestore extends L2GameClientPacket
+public final class CharacterRestore extends PacketClient
 {
 	private int _charSlot;
 	
@@ -34,7 +35,9 @@ public final class CharacterRestore extends L2GameClientPacket
 	protected void runImpl()
 	{
 		if (!getClient().getFloodProtectors().getCharacterSelect().tryPerformAction("CharacterRestore"))
+		{
 			return;
+		}
 		
 		try
 		{
@@ -43,7 +46,9 @@ public final class CharacterRestore extends L2GameClientPacket
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 		}
 		
 		// Before the char selection, check shutdown status

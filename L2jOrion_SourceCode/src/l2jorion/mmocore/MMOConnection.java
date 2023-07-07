@@ -45,8 +45,6 @@ public class MMOConnection<T extends MMOClient<?>>
 	
 	private final SelectionKey _selectionKey;
 	
-	// private SendablePacket<T> _closePacket;
-	
 	private ByteBuffer _readBuffer;
 	
 	private ByteBuffer _primaryWriteBuffer;
@@ -111,7 +109,6 @@ public class MMOConnection<T extends MMOClient<?>>
 			}
 			catch (CancelledKeyException e)
 			{
-				// ignore
 			}
 		}
 	}
@@ -214,14 +211,9 @@ public class MMOConnection<T extends MMOClient<?>>
 		return _sendQueue;
 	}
 	
-	/*
-	 * final SendablePacket<T> getClosePacket() { return _closePacket; }
-	 */
-	
 	@SuppressWarnings("unchecked")
 	public final void close(final SendablePacket<T> sp)
 	{
-		
 		close(new SendablePacket[]
 		{
 			sp
@@ -254,10 +246,8 @@ public class MMOConnection<T extends MMOClient<?>>
 		}
 		catch (CancelledKeyException e)
 		{
-			// ignore
 		}
 		
-		// _closePacket = sp;
 		_selectorThread.closeConnection(this);
 	}
 	

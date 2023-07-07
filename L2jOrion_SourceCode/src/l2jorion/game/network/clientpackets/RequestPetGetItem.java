@@ -25,9 +25,10 @@ import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2SummonInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ActionFailed;
 
-public final class RequestPetGetItem extends L2GameClientPacket
+public final class RequestPetGetItem extends PacketClient
 {
 	private int _objectId;
 	

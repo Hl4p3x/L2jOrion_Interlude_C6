@@ -26,6 +26,7 @@ import l2jorion.game.model.L2World;
 import l2jorion.game.model.PcInventory;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
@@ -38,7 +39,7 @@ import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestCrystallizeItem extends L2GameClientPacket
+public final class RequestCrystallizeItem extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestCrystallizeItem.class);
 	
@@ -66,12 +67,6 @@ public final class RequestCrystallizeItem extends L2GameClientPacket
 		if (!getClient().getFloodProtectors().getTransaction().tryPerformAction("crystallize"))
 		{
 			activeChar.sendMessage("You crystallizing too fast.");
-			return;
-		}
-		if (activeChar.isSubmitingPin())
-		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 		
@@ -112,7 +107,9 @@ public final class RequestCrystallizeItem extends L2GameClientPacket
 			final int itemId = item.getItemId();
 			
 			if (itemId >= 6611 && itemId <= 6621 || itemId == 6842)
+			{
 				return;
+			}
 			
 			if (_count > item.getCount())
 			{
@@ -123,7 +120,9 @@ public final class RequestCrystallizeItem extends L2GameClientPacket
 		final L2ItemInstance itemToRemove = activeChar.getInventory().getItemByObjectId(_objectId);
 		
 		if (itemToRemove == null || itemToRemove.isWear())
+		{
 			return;
+		}
 		if (itemToRemove.fireEvent("CRYSTALLIZE", (Object[]) null) != null)
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.CANNOT_DISCARD_THIS_ITEM));

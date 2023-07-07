@@ -18,16 +18,15 @@ import l2jorion.game.cache.HtmCache;
 import l2jorion.game.handler.ICustomByPassHandler;
 import l2jorion.game.handler.IVoicedCommandHandler;
 import l2jorion.game.handler.item.Potions;
-import l2jorion.game.model.actor.instance.L2ClassMasterInstance;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.model.zone.ZoneId;
+import l2jorion.game.network.serverpackets.EtcStatusUpdate;
 import l2jorion.game.network.serverpackets.ExAutoSoulShot;
 import l2jorion.game.network.serverpackets.ExShowScreenMessage;
 import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.PlaySound;
-import l2jorion.game.network.serverpackets.UserInfo;
+import l2jorion.game.templates.L2Item;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
@@ -42,8 +41,7 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 	{
 		"control",
 		"ap",
-		"menu",
-		"class"
+		"menu"
 	};
 	
 	private static final float MP = (float) 0.70;
@@ -65,7 +63,6 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 	
 	final int currency = Config.CUSTOM_ITEM_ID;
 	
-	private long time;
 	String str = "";
 	
 	private String on = "<table border=0 bgcolor=00ff00><tr><td width=12 height=16></td></tr></table>";
@@ -90,31 +87,23 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				showHtm(player);
 			}
 		}
+		
 		if (command.equalsIgnoreCase("control"))
 		{
 			showHtm(player);
 		}
+		
 		if (command.equalsIgnoreCase("ap"))
 		{
 			showHtm2(player);
 		}
-		else if (command.equalsIgnoreCase("class"))
-		{
-			if (Config.ALLOW_CLASS_MASTERS && Config.ALLOW_REMOTE_CLASS_MASTERS)
-			{
-				L2ClassMasterInstance master_instance = L2ClassMasterInstance.getInstance();
-				if (master_instance != null)
-				{
-					L2ClassMasterInstance.getInstance().onTable(player);
-				}
-			}
-		}
+		
 		return true;
 	}
 	
 	private void showHtm(L2PcInstance player)
 	{
-		NpcHtmlMessage htm = new NpcHtmlMessage(player.getLastQuestNpcObject());
+		NpcHtmlMessage htm = new NpcHtmlMessage(1);
 		String text = HtmCache.getInstance().getHtm("data/html/menu/menu.htm");
 		htm.setHtml(text);
 		
@@ -124,17 +113,16 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 			off = "<img src=\"panels.off\" width=\"16\" height=\"16\">";
 		}
 		
+		// Premium
 		if (Config.USE_PREMIUMSERVICE)
 		{
 			if (player.getPremiumService() == 0)
 			{
 				htm.replace("%exptime%", "<font color=ff0000>Not activated</font>");
 			}
-			else if (player.getPremiumService() == 1)
+			else if (player.getPremiumService() >= 1)
 			{
-				getExpTimePremium(player.getAccountName());
-				
-				String datePremium = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(time));
+				String datePremium = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(player.getPremiumExpire()));
 				String todayDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
 				
 				SimpleDateFormat days = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -150,7 +138,7 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 					date = days.parse(datePremium);
 					cal2.setTime(date);
 					
-					htm.replace("%exptime%", "<font color=00FF00>" + datePremium + "</font> (<font color=00FF00>" + daysBetween(cal1.getTime(), cal2.getTime()) + "</font> days left)");
+					htm.replace("%exptime%", "<font color=00FF00>" + datePremium + "</font> (" + getFormatTime(cal1.getTime(), cal2.getTime()) + " left)");
 					
 				}
 				catch (ParseException e)
@@ -162,6 +150,104 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 		else
 		{
 			htm.replace("%exptime%", "<font color=ff0000>Not activated</font>");
+		}
+		
+		if (Config.RON_CUSTOM)
+		{
+			// getIpAccess
+			if (player.getIpAccess() == 0)
+			{
+				htm.replace("%exptime2%", "<font color=ff0000>Not activated</font>");
+			}
+			else if (player.getIpAccess() >= 1)
+			{
+				String expDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(player.getIpAccessExpire()));
+				String todayDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
+				
+				SimpleDateFormat days = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				
+				Calendar cal1 = new GregorianCalendar();
+				Calendar cal2 = new GregorianCalendar();
+				
+				Date date;
+				try
+				{
+					date = days.parse(todayDate);
+					cal1.setTime(date);
+					date = days.parse(expDate);
+					cal2.setTime(date);
+					
+					htm.replace("%exptime2%", "<font color=00FF00>" + expDate + "</font> (" + getFormatTime(cal1.getTime(), cal2.getTime()) + " left)");
+					
+				}
+				catch (ParseException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			// getBuffSlots
+			if (player.getBuffSlots() == 0)
+			{
+				htm.replace("%exptime3%", "<font color=ff0000>Not activated</font>");
+			}
+			else if (player.getBuffSlots() >= 1)
+			{
+				String expDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(player.getBuffSlotsExpire()));
+				String todayDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
+				
+				SimpleDateFormat days = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				
+				Calendar cal1 = new GregorianCalendar();
+				Calendar cal2 = new GregorianCalendar();
+				
+				Date date;
+				try
+				{
+					date = days.parse(todayDate);
+					cal1.setTime(date);
+					date = days.parse(expDate);
+					cal2.setTime(date);
+					
+					htm.replace("%exptime3%", "<font color=00FF00>" + expDate + "</font> (" + getFormatTime(cal1.getTime(), cal2.getTime()) + " left)");
+					
+				}
+				catch (ParseException e)
+				{
+					e.printStackTrace();
+				}
+			}
+			
+			// getHourBuffs
+			if (player.getHourBuffs() == 0)
+			{
+				htm.replace("%exptime4%", "<font color=ff0000>Not activated</font>");
+			}
+			else if (player.getHourBuffs() >= 1)
+			{
+				String expDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(player.getHourBuffsExpire()));
+				String todayDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
+				
+				SimpleDateFormat days = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				
+				Calendar cal1 = new GregorianCalendar();
+				Calendar cal2 = new GregorianCalendar();
+				
+				Date date;
+				try
+				{
+					date = days.parse(todayDate);
+					cal1.setTime(date);
+					date = days.parse(expDate);
+					cal2.setTime(date);
+					
+					htm.replace("%exptime4%", "<font color=00FF00>" + expDate + "</font> (" + getFormatTime(cal1.getTime(), cal2.getTime()) + " left)");
+					
+				}
+				catch (ParseException e)
+				{
+					e.printStackTrace();
+				}
+			}
 		}
 		
 		if (player.getExpOn())
@@ -264,13 +350,13 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 		{
 			htm.replace("%screentxt%", on);
 			htm.replace("%screentxt1%", "ON");
-			htm.replace("%nr8%", "1");
+			htm.replace("%nr8%", "0");
 		}
 		else
 		{
 			htm.replace("%screentxt%", off);
 			htm.replace("%screentxt1%", "OFF");
-			htm.replace("%nr8%", "0");
+			htm.replace("%nr8%", "1");
 		}
 		if (player.isAutoPot(728) || player.isAutoPot(726))
 		{
@@ -307,18 +393,6 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 			htm.replace("%cp%", off);
 			htm.replace("%cp1%", "OFF");
 			htm.replace("%nr11%", "1");
-		}
-		if (player.getGlow())
-		{
-			htm.replace("%glow%", off);
-			htm.replace("%glow1%", "OFF");
-			htm.replace("%nr12%", "0");
-		}
-		else
-		{
-			htm.replace("%glow%", on);
-			htm.replace("%glow1%", "ON");
-			htm.replace("%nr12%", "1");
 		}
 		if (player.getTeleport())
 		{
@@ -369,11 +443,9 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 			{
 				htm.replace("%exptime%", "<font color=ff0000>Not activated</font>");
 			}
-			else if (player.getPremiumService() == 1)
+			else if (player.getPremiumService() >= 1)
 			{
-				getExpTimePremium(player.getAccountName());
-				
-				String datePremium = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(time));
+				String datePremium = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(player.getPremiumExpire()));
 				String todayDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
 				
 				SimpleDateFormat days = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -389,7 +461,7 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 					date = days.parse(datePremium);
 					cal2.setTime(date);
 					
-					htm.replace("%exptime%", "<font color=00FF00>" + datePremium + "</font> (<font color=00FF00>" + daysBetween(cal1.getTime(), cal2.getTime()) + "</font> days left)");
+					htm.replace("%exptime%", "<font color=00FF00>" + datePremium + "</font> (" + getFormatTime(cal1.getTime(), cal2.getTime()) + " left)");
 					
 				}
 				catch (ParseException e)
@@ -402,6 +474,7 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 		{
 			htm.replace("%exptime%", "<font color=ff0000>Not activated</font>");
 		}
+		
 		if (player.isAutoPot(728) || player.isAutoPot(726))
 		{
 			htm.replace("%mp%", on);
@@ -459,11 +532,9 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 			{
 				htm.replace("%exptime%", "<font color=ff0000>Not activated</font>");
 			}
-			else if (player.getPremiumService() == 1)
+			else if (player.getPremiumService() >= 1)
 			{
-				getExpTimePremium(player.getAccountName());
-				
-				String datePremium = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(time));
+				String datePremium = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(player.getPremiumExpire()));
 				String todayDate = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date());
 				
 				SimpleDateFormat days = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -479,7 +550,7 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 					date = days.parse(datePremium);
 					cal2.setTime(date);
 					
-					htm.replace("%exptime%", "<font color=00FF00>" + datePremium + "</font> (<font color=00FF00>" + daysBetween(cal1.getTime(), cal2.getTime()) + "</font> days left)");
+					htm.replace("%exptime%", "<font color=00FF00>" + datePremium + "</font> (" + getFormatTime(cal1.getTime(), cal2.getTime()) + " left)");
 					
 				}
 				catch (ParseException e)
@@ -560,31 +631,6 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 			PreparedStatement preparedstatement2 = con.prepareStatement("UPDATE " + Config.LOGINSERVER_DB + ".accounts SET IPBlock = 1 WHERE login=?");
 			preparedstatement2.setString(1, player.getAccountName());
 			preparedstatement2.execute();
-		}
-		catch (Exception e)
-		{
-		}
-		finally
-		{
-			CloseUtil.close(con);
-		}
-	}
-	
-	private void getExpTimePremium(String accName)
-	{
-		Connection con = null;
-		try
-		{
-			con = L2DatabaseFactory.getInstance().getConnection();
-			PreparedStatement statement = con.prepareStatement("SELECT enddate FROM account_premium WHERE account_name=?");
-			statement.setString(1, accName);
-			ResultSet rset = statement.executeQuery();
-			while (rset.next())
-			{
-				time = rset.getLong("enddate");
-			}
-			rset.close();
-			statement.close();
 		}
 		catch (Exception e)
 		{
@@ -1215,13 +1261,13 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				int flag = Integer.parseInt(parameters.trim());
 				if (flag == 0)
 				{
-					player.setExpOn(0);
+					player.setExpOn(false);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Exp off.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Exp off.");
 				}
 				else
 				{
-					player.setExpOn(1);
+					player.setExpOn(true);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Exp on.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Exp on.");
 				}
@@ -1233,7 +1279,7 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				int flag = Integer.parseInt(parameters.trim());
 				if (flag == 0)
 				{
-					player.setTitleOn(0);
+					player.setTitleOn(false);
 					player.setTitle("");
 					player.broadcastTitleInfo();
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Title off.", 2000, 0x01, false));
@@ -1241,7 +1287,8 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				}
 				else
 				{
-					player.setTitleOn(1);
+					player.setTitleOn(true);
+					player.updateTitle();
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Title on.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Title on.");
 				}
@@ -1253,13 +1300,13 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				int flag = Integer.parseInt(parameters.trim());
 				if (flag == 0)
 				{
-					player.setBlockAllBuffs(0);
+					player.setBlockAllBuffs(false);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Block buffs off.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Block buffs off.");
 				}
 				else
 				{
-					player.setBlockAllBuffs(1);
+					player.setBlockAllBuffs(true);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Block buffs on.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Block buffs on.");
 				}
@@ -1271,13 +1318,13 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				int flag = Integer.parseInt(parameters.trim());
 				if (flag == 0)
 				{
-					player.setAutoLootEnabled(1);
+					player.setAutoLootEnabled(true);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Auto pick up on.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Auto pick up on.");
 				}
 				else
 				{
-					player.setAutoLootEnabled(0);
+					player.setAutoLootEnabled(false);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Auto pick up off.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Auto pick up off.");
 				}
@@ -1289,13 +1336,13 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				int flag = Integer.parseInt(parameters.trim());
 				if (flag == 0)
 				{
-					player.setAutoLootHerbs(0);
+					player.setAutoLootHerbs(false);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Auto loot herbs off.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Auto loot herbs off.");
 				}
 				else
 				{
-					player.setAutoLootHerbs(1);
+					player.setAutoLootHerbs(true);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Auto loot herbs on.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Auto loot herbs on.");
 				}
@@ -1307,13 +1354,13 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				int flag = Integer.parseInt(parameters.trim());
 				if (flag == 0)
 				{
-					player.setTradeRefusal(1);
+					player.setTradeRefusal(false);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Trade on.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Trade on.");
 				}
 				else
 				{
-					player.setTradeRefusal(0);
+					player.setTradeRefusal(true);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Trade off.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Trade off.");
 				}
@@ -1325,15 +1372,17 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				int flag = Integer.parseInt(parameters.trim());
 				if (flag == 0)
 				{
-					player.setMessageRefusal(1);
+					player.setMessageRefusal(false);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Private messages on.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Private messages on.");
+					player.sendPacket(new EtcStatusUpdate(player));
 				}
 				else
 				{
-					player.setMessageRefusal(0);
+					player.setMessageRefusal(true);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Private messages off.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Private messages off.");
+					player.sendPacket(new EtcStatusUpdate(player));
 				}
 				showHtm(player);
 				return;
@@ -1363,15 +1412,15 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				int flag = Integer.parseInt(parameters.trim());
 				if (flag == 0)
 				{
-					player.setScreentxt(0);
-					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Screen messages on.", 2000, 0x01, false));
-					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Screen messages on.");
+					player.setScreentxt(false);
+					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Screen messages off.", 2000, 0x01, false));
+					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Screen messages off.");
 				}
 				else
 				{
-					player.setScreentxt(1);
-					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Screen messages off.", 2000, 0x01, false));
-					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Screen messages off.");
+					player.setScreentxt(true);
+					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Screen messages on.", 2000, 0x01, false));
+					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Screen messages on.");
 				}
 				showHtm(player);
 				return;
@@ -1504,12 +1553,8 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 			}
 			case menu_back:
 			{
-				int flag = Integer.parseInt(parameters.trim());
-				if (flag == 0)
-				{
-					showHtm(player);
-					return;
-				}
+				showHtm(player);
+				return;
 			}
 			case menu2:
 			{
@@ -1580,57 +1625,18 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				// showRepairHtm(player);
 				return;
 			}
-			case menu_glow:
-			{
-				int flag = Integer.parseInt(parameters.trim());
-				
-				if (player._inEventTvT || player._inEventCTF || player._inEventDM)
-				{
-					player.sendMessage("You can't use it when you are in an event.");
-					return;
-				}
-				
-				if (player.isInCombat())
-				{
-					player.sendMessage("You can't use it when you are in combat.");
-					return;
-				}
-				
-				if (!player.isInsideZone(ZoneId.ZONE_PEACE))
-				{
-					player.sendMessage("You can't use it when you are not in peace zone.");
-					return;
-				}
-				
-				if (flag == 0)
-				{
-					player.setGlow(0);
-					player.teleToLocation(player.getX(), player.getY(), player.getZ());
-					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Auto teleport on.", 2000, 0x01, false));
-					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Auto teleport on.");
-				}
-				else
-				{
-					player.setGlow(1);
-					player.teleToLocation(player.getX(), player.getY(), player.getZ());
-					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Auto teleport off.", 2000, 0x01, false));
-					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Auto teleport off.");
-				}
-				showHtm(player);
-				return;
-			}
 			case menu_teleport:
 			{
 				int flag = Integer.parseInt(parameters.trim());
 				if (flag == 0)
 				{
-					player.setTeleport(1);
+					player.setTeleport(true);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Auto correction on.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Auto correction on.");
 				}
 				else
 				{
-					player.setTeleport(0);
+					player.setTeleport(false);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Auto correction off.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Auto correction off.");
 				}
@@ -1642,13 +1648,13 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				int flag = Integer.parseInt(parameters.trim());
 				if (flag == 0)
 				{
-					player.setEffects(1);
+					player.setEffects(true);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Effects on.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Hide effects on.");
 				}
 				else
 				{
-					player.setEffects(0);
+					player.setEffects(false);
 					player.sendPacket(new ExShowScreenMessage("" + Config.ALT_Server_Menu_Name + ": Effects off.", 2000, 0x01, false));
 					player.sendMessage("" + Config.ALT_Server_Menu_Name + ": Hide effects off.");
 				}
@@ -1667,11 +1673,11 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				
 				if (item == null || player.getInventory().getItemByItemId(currency).getCount() < price)
 				{
-					player.sendMessage("You don't have enough " + Config.ALT_SERVER_CUSTOM_ITEM_NAME + ".");
+					player.sendMessage("You don't have enough " + L2Item.getItemNameById(Config.CUSTOM_ITEM_ID) + ".");
 					return;
 				}
 				
-				if (player.getPremiumService() == 1)
+				if (player.getPremiumService() >= 1)
 				{
 					player.sendMessage("You already have The Premium Account!");
 				}
@@ -1684,11 +1690,16 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 					player.sendPacket(new ExShowScreenMessage("Congratulation! You're The Premium account now.", 4000, 0x07, false));
 					PlaySound playSound = new PlaySound("ItemSound.quest_fanfare_1");
 					player.sendPacket(playSound);
-					if (Config.PREMIUM_NAME_COLOR_ENABLED && player.getPremiumService() == 1)
+					if (Config.PREMIUM_NAME_COLOR_ENABLED && player.getPremiumService() >= 1)
 					{
 						player.getAppearance().setTitleColor(Config.PREMIUM_TITLE_COLOR);
 					}
-					player.sendPacket(new UserInfo(player));
+					
+					if (Config.PREMIUM_BUFF_MULTIPLIER > 0)
+					{
+						player.restoreEffects();
+					}
+					
 					player.broadcastUserInfo();
 				}
 				showHtmPremium(player);
@@ -1699,7 +1710,7 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 		}
 	}
 	
-	private class AutoPot implements Runnable
+	public static class AutoPot implements Runnable
 	{
 		public int _id;
 		private L2PcInstance _activeChar;
@@ -1715,7 +1726,7 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 		@Override
 		public void run()
 		{
-			if (_activeChar.isDead() || _activeChar.isInOlympiadMode())
+			if (_activeChar.isDead() || _activeChar.isAlikeDead() || _activeChar.isInOlympiadMode())
 			{
 				return;
 			}
@@ -1740,18 +1751,6 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 			
 			switch (_id)
 			{
-				case 728:
-				{
-					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(_id) != null) && _activeChar.getCurrentMp() < _pTime * _activeChar.getMaxMp())
-					{
-						MagicSkillUser msu = new MagicSkillUser(_activeChar, _activeChar, 2005, 1, 0, 100);
-						_activeChar.broadcastPacket(msu);
-						
-						Potions is = new Potions();
-						is.useItem(_activeChar, _activeChar.getInventory().getItemByItemId(_id));
-					}
-					break;
-				}
 				case 726:
 				{
 					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(_id) != null) && _activeChar.getCurrentMp() < _pTime * _activeChar.getMaxMp())
@@ -1764,23 +1763,11 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 					}
 					break;
 				}
-				case 1539:
+				case 728:
 				{
-					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(_id) != null) && _activeChar.getCurrentHp() < _pTime * _activeChar.getMaxHp())
+					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(_id) != null) && _activeChar.getCurrentMp() < _pTime * _activeChar.getMaxMp())
 					{
-						MagicSkillUser msu = new MagicSkillUser(_activeChar, _activeChar, 2037, 1, 0, 100);
-						_activeChar.broadcastPacket(msu);
-						
-						Potions is = new Potions();
-						is.useItem(_activeChar, _activeChar.getInventory().getItemByItemId(_id));
-					}
-					break;
-				}
-				case 1061:
-				{
-					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(_id) != null) && _activeChar.getCurrentHp() < _pTime * _activeChar.getMaxHp())
-					{
-						MagicSkillUser msu = new MagicSkillUser(_activeChar, _activeChar, 2032, 1, 0, 100);
+						MagicSkillUser msu = new MagicSkillUser(_activeChar, _activeChar, 2005, 1, 0, 100);
 						_activeChar.broadcastPacket(msu);
 						
 						Potions is = new Potions();
@@ -1800,23 +1787,47 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 					}
 					break;
 				}
-				case 5592:
+				case 1061:
 				{
-					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(5592) != null) && _activeChar.getCurrentCp() < _pTime * _activeChar.getMaxCp())
+					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(_id) != null) && _activeChar.getCurrentHp() < _pTime * _activeChar.getMaxHp())
 					{
-						MagicSkillUser msu = new MagicSkillUser(_activeChar, _activeChar, 2166, 2, 0, 100);
+						MagicSkillUser msu = new MagicSkillUser(_activeChar, _activeChar, 2032, 1, 0, 100);
 						_activeChar.broadcastPacket(msu);
 						
 						Potions is = new Potions();
-						is.useItem(_activeChar, _activeChar.getInventory().getItemByItemId(5592));
+						is.useItem(_activeChar, _activeChar.getInventory().getItemByItemId(_id));
+					}
+					break;
+				}
+				case 1539:
+				{
+					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(_id) != null) && _activeChar.getCurrentHp() < _pTime * _activeChar.getMaxHp())
+					{
+						MagicSkillUser msu = new MagicSkillUser(_activeChar, _activeChar, 2037, 1, 0, 100);
+						_activeChar.broadcastPacket(msu);
+						
+						Potions is = new Potions();
+						is.useItem(_activeChar, _activeChar.getInventory().getItemByItemId(_id));
 					}
 					break;
 				}
 				case 5591:
 				{
-					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(5592) != null) && _activeChar.getCurrentCp() < _pTime * _activeChar.getMaxCp())
+					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(5591) != null) && _activeChar.getCurrentCp() < _pTime * _activeChar.getMaxCp())
 					{
 						MagicSkillUser msu = new MagicSkillUser(_activeChar, _activeChar, 2166, 1, 0, 100);
+						_activeChar.broadcastPacket(msu);
+						
+						Potions is = new Potions();
+						is.useItem(_activeChar, _activeChar.getInventory().getItemByItemId(5591));
+					}
+					break;
+				}
+				case 5592:
+				{
+					if (!_activeChar.isInvul() && (_activeChar.getInventory().getItemByItemId(5592) != null) && _activeChar.getCurrentCp() < _pTime * _activeChar.getMaxCp())
+					{
+						MagicSkillUser msu = new MagicSkillUser(_activeChar, _activeChar, 2166, 2, 0, 100);
 						_activeChar.broadcastPacket(msu);
 						
 						Potions is = new Potions();
@@ -1857,6 +1868,8 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 				return;
 			}
 			
+			player.setPremiumExpire(System.currentTimeMillis() + premiumTime);
+			
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement stmt = con.prepareStatement("REPLACE INTO account_premium (account_name, premium_service, enddate) VALUES (?,?,?)");
 			
@@ -1865,7 +1878,6 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 			stmt.setLong(3, premiumTime == 0 ? 0 : System.currentTimeMillis() + premiumTime);
 			stmt.execute();
 			stmt.close();
-			stmt = null;
 		}
 		catch (Exception e)
 		{
@@ -1882,8 +1894,69 @@ public class Menu implements IVoicedCommandHandler, ICustomByPassHandler
 		}
 	}
 	
-	public int daysBetween(Date d1, Date d2)
+	public String getFormatTime(Date d1, Date d2)
 	{
-		return (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24));
+		String text = null;
+		int time = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60)); // change to hours
+		
+		if (time > 24) // days
+		{
+			time = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)); // days
+			text = "<font color=00FF00>" + time + "</font> days";
+		}
+		else if (time == 24) // day
+		{
+			time = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60 * 24)); // day
+			text = "<font color=00FF00>" + time + "</font> day";
+		}
+		else // less than day
+		{
+			time = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60)); // hours
+			if (time > 1) // hours
+			{
+				time = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60)); // hours
+				text = "<font color=00FF00>" + time + "</font> hours";
+			}
+			else if (time == 1) // hour
+			{
+				time = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60)); // hours
+				text = "<font color=00FF00>" + time + "</font> hour";
+			}
+			else // less than hour
+			{
+				time = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60)); // minutes
+				if (time > 1) // hours
+				{
+					time = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60)); // minutes
+					text = "<font color=00FF00>" + time + "</font> minutes";
+				}
+				else if (time == 1) // hour
+				{
+					time = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60 * 60)); // minute
+					text = "<font color=00FF00>" + time + "</font> minute";
+				}
+				else // less than minute
+				{
+					time = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60)); // seconds
+					if (time > 1) // hours
+					{
+						time = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60)); // seconds
+						text = "<font color=00FF00>" + time + "</font> seconds";
+					}
+					else if (time == 1) // hour
+					{
+						time = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60)); // second
+						text = "<font color=00FF00>" + time + "</font> second";
+					}
+					else // less than minute
+					{
+						time = (int) ((d2.getTime() - d1.getTime()) / (1000 * 60)); // seconds
+						text = "<font color=00FF00>" + time + "</font> seconds";
+					}
+				}
+			}
+		}
+		
+		return text;
 	}
 }

@@ -12,8 +12,9 @@ import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 
 import l2jorion.game.cache.HtmCache;
-import l2jorion.game.community.CommunityBoard;
+import l2jorion.game.community.CommunityBoardManager;
 import l2jorion.game.datatables.sql.CharNameTable;
+import l2jorion.game.handler.ICommunityBoardHandler;
 import l2jorion.game.model.BlockList;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
@@ -25,7 +26,7 @@ import l2jorion.util.CloseUtil;
 import l2jorion.util.StringUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
-public class MailBBSManager extends BaseBBSManager
+public class MailBBSManager extends BaseBBSManager implements ICommunityBoardHandler
 {
 	private static final String SELECT_CHAR_MAILS = "SELECT * FROM character_mail WHERE charId = ? ORDER BY letterId ASC";
 	private static final String INSERT_NEW_MAIL = "INSERT INTO character_mail (charId, letterId, senderId, location, recipientNames, subject, message, sentDate, unread) VALUES (?,?,?,?,?,?,?,?,?)";
@@ -81,7 +82,7 @@ public class MailBBSManager extends BaseBBSManager
 		boolean unread;
 	}
 	
-	protected MailBBSManager()
+	public MailBBSManager()
 	{
 		initId();
 	}
@@ -91,7 +92,7 @@ public class MailBBSManager extends BaseBBSManager
 	{
 		if (command.equals("_bbsmail") || command.equals("_maillist_0_1_0_"))
 		{
-			CommunityBoard.getInstance().addBypass(player, "Mail inbox", command);
+			CommunityBoardManager.getInstance().addBypass(player, "Mail inbox", command);
 			
 			showMailList(player, 1, MailType.INBOX);
 		}
@@ -108,7 +109,7 @@ public class MailBBSManager extends BaseBBSManager
 				final String sType = (st.hasMoreTokens()) ? st.nextToken() : "";
 				final String search = (st.hasMoreTokens()) ? st.nextToken() : "";
 				
-				CommunityBoard.getInstance().addBypass(player, "Mail "+action, command);
+				CommunityBoardManager.getInstance().addBypass(player, "Mail " + action, command);
 				
 				showMailList(player, page, Enum.valueOf(MailType.class, action.toUpperCase()), sType, search);
 			}
@@ -192,7 +193,9 @@ public class MailBBSManager extends BaseBBSManager
 				while (rs.next())
 				{
 					if (rs.getInt(1) > _lastid)
+					{
 						_lastid = rs.getInt(1);
+					}
 				}
 			}
 		}
@@ -314,9 +317,13 @@ public class MailBBSManager extends BaseBBSManager
 		final int maxpage = getPagesCount(countMails);
 		
 		if (page > maxpage)
+		{
 			page = maxpage;
+		}
 		if (page < 1)
+		{
 			page = 1;
+		}
 		
 		player.setMailPosition(page);
 		int index = 0, minIndex = 0, maxIndex = 0;
@@ -343,17 +350,23 @@ public class MailBBSManager extends BaseBBSManager
 				}
 				
 				if (index > maxIndex)
+				{
 					break;
+				}
 				
 				StringUtil.append(sb, "<table width=610><tr><td width=5></td><td width=150>", getPlayerName(mail.senderId), "</td><td width=300><a action=\"bypass _bbsmail;view;", mail.mailId, "\">");
 				
 				if (mail.unread)
+				{
 					sb.append("<font color=\"LEVEL\">");
+				}
 				
 				sb.append(abbreviate(mail.subject, 51));
 				
 				if (mail.unread)
+				{
 					sb.append("</font>");
+				}
 				
 				StringUtil.append(sb, "</a></td><td width=150>", mail.sentDateString, "</td><td width=5></td></tr></table><img src=\"L2UI.Squaregray\" width=610 height=1>");
 				index++;
@@ -376,9 +389,13 @@ public class MailBBSManager extends BaseBBSManager
 				for (i = 1; i <= (10 + page); i++)
 				{
 					if (i == page)
+					{
 						StringUtil.append(sb, "<td> ", i, " </td>");
+					}
 					else
+					{
 						StringUtil.append(sb, "<td><a action=\"bypass _bbsmail;", type, ";", i, fullSearch, "\"> ", i, " </a></td>");
+					}
 				}
 			}
 			else if (page > 11 && (maxpage - page) > 10)
@@ -386,7 +403,9 @@ public class MailBBSManager extends BaseBBSManager
 				for (i = (page - 10); i <= (page - 1); i++)
 				{
 					if (i == page)
+					{
 						continue;
+					}
 					
 					StringUtil.append(sb, "<td><a action=\"bypass _bbsmail;", type, ";", i, fullSearch, "\"> ", i, " </a></td>");
 				}
@@ -507,7 +526,9 @@ public class MailBBSManager extends BaseBBSManager
 		
 		// Edit subject, if none.
 		if (subject == null || subject.isEmpty())
+		{
 			subject = "(no subject)";
+		}
 		
 		// Edit message.
 		message = message.replaceAll("\n", "<br1>");
@@ -545,11 +566,9 @@ public class MailBBSManager extends BaseBBSManager
 				if (!player.isGM())
 				{
 					// Sender is a regular player, while recipient is a GM.
-					/*if (isGM(recipientId))
-					{
-						player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.CANNOT_MAIL_GM_S1).addString(recipientName));
-						continue;
-					}*/
+					/*
+					 * if (isGM(recipientId)) { player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.CANNOT_MAIL_GM_S1).addString(recipientName)); continue; }
+					 */
 					
 					// The recipient is on block mode.
 					if (isBlocked(player, recipientId))
@@ -648,15 +667,21 @@ public class MailBBSManager extends BaseBBSManager
 			for (Mail mail : getPlayerMails(objectId))
 			{
 				if (!mail.location.equals(location))
+				{
 					continue;
+				}
 				
 				if (byTitle && mail.subject.toLowerCase().contains(search.toLowerCase()))
+				{
 					count++;
+				}
 				else if (!byTitle)
 				{
 					String writer = getPlayerName(mail.senderId);
 					if (writer.toLowerCase().contains(search.toLowerCase()))
+					{
 						count++;
+					}
 				}
 			}
 		}
@@ -665,7 +690,9 @@ public class MailBBSManager extends BaseBBSManager
 			for (Mail mail : getPlayerMails(objectId))
 			{
 				if (mail.location.equals(location))
+				{
 					count++;
+				}
 			}
 		}
 		return count;
@@ -678,7 +705,9 @@ public class MailBBSManager extends BaseBBSManager
 			if (playerToTest.getObjectId() == objectId)
 			{
 				if (BlockList.isInBlockList(playerToTest, player))
+				{
 					return true;
+				}
 				
 				return false;
 			}
@@ -751,7 +780,7 @@ public class MailBBSManager extends BaseBBSManager
 		{
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement ps = con.prepareStatement(SET_MAIL_LOC);
-					
+			
 			ps.setString(1, location.toString().toLowerCase());
 			ps.setInt(2, mailId);
 			ps.execute();
@@ -840,5 +869,21 @@ public class MailBBSManager extends BaseBBSManager
 	private static class SingletonHolder
 	{
 		protected static final MailBBSManager INSTANCE = new MailBBSManager();
+	}
+	
+	@Override
+	public String[] getBypassBbsCommands()
+	{
+		return new String[]
+		{
+			"_bbsmail",
+			"_maillist_0_1_0_"
+		};
+	}
+	
+	@Override
+	public void handleCommand(String command, L2PcInstance player, String params)
+	{
+		parseCmd(command, player);
 	}
 }

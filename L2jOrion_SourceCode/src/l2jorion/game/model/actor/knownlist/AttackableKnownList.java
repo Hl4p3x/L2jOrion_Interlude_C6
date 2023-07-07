@@ -88,6 +88,11 @@ public class AttackableKnownList extends NpcKnownList
 		
 		int max = Math.max(300, Math.max(getActiveChar().getAggroRange(), getActiveChar().getFactionRange()));
 		
+		if (getActiveChar().hasLongerHelpRange())
+		{
+			max = 2000;
+		}
+		
 		return max;
 	}
 }

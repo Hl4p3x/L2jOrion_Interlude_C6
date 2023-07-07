@@ -1,5 +1,3 @@
-#Hunt of the Golden Ram Mercenary Force
-# Made by Polo - Have fun!..... fix & addition by t0rm3nt0r and LEX
 import sys
 from l2jorion import Config 
 from l2jorion.game.datatables import SkillTable
@@ -135,7 +133,9 @@ class Quest (JQuest) :
 
  #todo: Currently this quest is solo, it needs to be party
  def onKill(self,npc,player,isPet):
-   st = player.getQuestState(qn)
+   partyMember = self.getRandomPartyMemberState(player, STARTED)
+   if not partyMember: return
+   st = partyMember.getQuestState(qn)
    if st :
         if st.getState() == STARTED :
             npcId = npc.getNpcId()

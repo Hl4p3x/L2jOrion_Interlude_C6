@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ShowXMasSeal extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ShowXMasSeal extends PacketServer
 {
 	private static final String _S__F2_SHOWXMASSEAL = "[S] F2 ShowXMasSeal";
 	

@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Clan;
+import l2jorion.game.network.PacketServer;
 
-public class PledgeInfo extends L2GameServerPacket
+public class PledgeInfo extends PacketServer
 {
 	private static final String _S__9C_PLEDGEINFO = "[S] 9C PledgeInfo";
 	private final L2Clan _clan;

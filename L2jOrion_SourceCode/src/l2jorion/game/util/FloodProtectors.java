@@ -98,10 +98,6 @@ public final class FloodProtectors
 	 */
 	private final FloodProtectorAction _moveAction;
 	/**
-	 * Generic Action protector
-	 */
-	private final FloodProtectorAction _genericAction;
-	/**
 	 * Macro protector
 	 */
 	private final FloodProtectorAction _macro;
@@ -137,68 +133,40 @@ public final class FloodProtectors
 		_partyInvitation = new FloodProtectorAction(client, Config.FLOOD_PROTECTOR_PARTY_INVITATION);
 		_sayAction = new FloodProtectorAction(client, Config.FLOOD_PROTECTOR_SAY_ACTION);
 		_moveAction = new FloodProtectorAction(client, Config.FLOOD_PROTECTOR_MOVE_ACTION);
-		_genericAction = new FloodProtectorAction(client, Config.FLOOD_PROTECTOR_GENERIC_ACTION);
 		_macro = new FloodProtectorAction(client, Config.FLOOD_PROTECTOR_MACRO);
 		_potion = new FloodProtectorAction(client, Config.FLOOD_PROTECTOR_POTION);
 	}
 	
-	/**
-	 * Returns {@link #_useAugItem}.
-	 * @return {@link #_useAugItem}
-	 */
 	public FloodProtectorAction getUseAugItem()
 	{
 		return _useAugItem;
 	}
-	/**
-	 * Returns {@link #_useItem}.
-	 * @return {@link #_useItem}
-	 */
+	
 	public FloodProtectorAction getUseItem()
 	{
 		return _useItem;
 	}
 	
-	/**
-	 * Returns {@link #_rollDice}.
-	 * @return {@link #_rollDice}
-	 */
 	public FloodProtectorAction getRollDice()
 	{
 		return _rollDice;
 	}
 	
-	/**
-	 * Returns {@link #_firework}.
-	 * @return {@link #_firework}
-	 */
 	public FloodProtectorAction getFirework()
 	{
 		return _firework;
 	}
 	
-	/**
-	 * Returns {@link #_itemPetSummon}.
-	 * @return {@link #_itemPetSummon}
-	 */
 	public FloodProtectorAction getItemPetSummon()
 	{
 		return _itemPetSummon;
 	}
 	
-	/**
-	 * Returns {@link #_heroVoice}.
-	 * @return {@link #_heroVoice}
-	 */
 	public FloodProtectorAction getHeroVoice()
 	{
 		return _heroVoice;
 	}
 	
-	/**
-	 * Returns {@link #_globalChat}.
-	 * @return {@link #_globalChat}
-	 */
 	public FloodProtectorAction getGlobalChat()
 	{
 		return _globalChat;
@@ -209,28 +177,16 @@ public final class FloodProtectors
 		return _tradeChat;
 	}
 	
-	/**
-	 * Returns {@link #_subclass}.
-	 * @return {@link #_subclass}
-	 */
 	public FloodProtectorAction getSubclass()
 	{
 		return _subclass;
 	}
 	
-	/**
-	 * Returns {@link #_dropItem}.
-	 * @return {@link #_dropItem}
-	 */
 	public FloodProtectorAction getDropItem()
 	{
 		return _dropItem;
 	}
 	
-	/**
-	 * Returns {@link #_serverBypass}.
-	 * @return {@link #_serverBypass}
-	 */
 	public FloodProtectorAction getServerBypass()
 	{
 		return _serverBypass;
@@ -241,100 +197,51 @@ public final class FloodProtectors
 		return _multiSell;
 	}
 	
-	/**
-	 * Returns {@link #_transaction}.
-	 * @return {@link #_transaction}
-	 */
 	public FloodProtectorAction getTransaction()
 	{
 		return _transaction;
 	}
 	
-	/**
-	 * Returns {@link #_manufacture}.
-	 * @return {@link #_manufacture}
-	 */
 	public FloodProtectorAction getManufacture()
 	{
 		return _manufacture;
 	}
 	
-	/**
-	 * Returns {@link #_manor}.
-	 * @return {@link #_manor}
-	 */
 	public FloodProtectorAction getManor()
 	{
 		return _manor;
 	}
 	
-	/**
-	 * Returns {@link #_characterSelect}.
-	 * @return {@link #_characterSelect}
-	 */
 	public FloodProtectorAction getCharacterSelect()
 	{
 		return _characterSelect;
 	}
 	
-	/**
-	 * Returns {@link #_unknownPackets}.
-	 * @return {@link #_unknownPackets}
-	 */
 	public FloodProtectorAction getUnknownPackets()
 	{
 		return _unknownPackets;
 	}
 	
-	/**
-	 * Returns {@link #_partyInvitation}.
-	 * @return {@link #_partyInvitation}
-	 */
 	public FloodProtectorAction getPartyInvitation()
 	{
 		return _partyInvitation;
 	}
 	
-	/**
-	 * Returns {@link #_sayAction}.
-	 * @return {@link #_sayAction}
-	 */
 	public FloodProtectorAction getSayAction()
 	{
 		return _sayAction;
 	}
 	
-	/**
-	 * Returns {@link #_moveAction}.
-	 * @return {@link #_moveAction}
-	 */
 	public FloodProtectorAction getMoveAction()
 	{
 		return _moveAction;
 	}
 	
-	/**
-	 * Returns {@link #_genericAction}.
-	 * @return {@link #_genericAction}
-	 */
-	public FloodProtectorAction getGenericAction()
-	{
-		return _genericAction;
-	}
-	
-	/**
-	 * Returns {@link #_macro}.
-	 * @return {@link #_macro}
-	 */
 	public FloodProtectorAction getMacro()
 	{
 		return _macro;
 	}
 	
-	/**
-	 * Returns {@link #_potion}.
-	 * @return {@link #_potion}
-	 */
 	public FloodProtectorAction getUsePotion()
 	{
 		return _potion;

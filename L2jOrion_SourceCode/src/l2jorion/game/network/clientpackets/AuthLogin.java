@@ -18,9 +18,9 @@ package l2jorion.game.network.clientpackets;
 
 import org.strixplatform.StrixPlatform;
 
-import l2jguard.Protection;
 import l2jorion.Config;
 import l2jorion.game.network.L2GameClient;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ServerClose;
 import l2jorion.game.network.serverpackets.SystemMessage;
@@ -30,7 +30,7 @@ import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class AuthLogin extends L2GameClientPacket
+public final class AuthLogin extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(AuthLogin.class);
 	
@@ -39,7 +39,6 @@ public final class AuthLogin extends L2GameClientPacket
 	private int _playKey2;
 	private int _loginKey1;
 	private int _loginKey2;
-	private final byte[] _data = new byte[48];
 	
 	@Override
 	protected void readImpl()
@@ -54,18 +53,13 @@ public final class AuthLogin extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		final SessionKey key = new SessionKey(_loginKey1, _loginKey2, _playKey1, _playKey2);
+		// if (_loginName.isEmpty() /* || !getClient().isProtocolOk() */)
+		// {
+		// getClient().closeNow();
+		/// return;
+		// }
 		
-		if (Config.L2JGUARD_PROTECTION)
-		{
-			if (Protection.isProtectionOn())
-			{
-				if (!Protection.doAuthLogin(getClient(), _data, _loginName))
-				{
-					return;
-				}
-			}
-		}
+		final SessionKey key = new SessionKey(_loginKey1, _loginKey2, _playKey1, _playKey2);
 		
 		final L2GameClient client = getClient();
 		
@@ -89,11 +83,8 @@ public final class AuthLogin extends L2GameClientPacket
 			}
 		}
 		
-		// avoid potential exploits
 		if (client.getAccountName() == null)
 		{
-			// Preventing duplicate login in case client login server socket was
-			// disconnected or this packet was not sent yet
 			if (LoginServerThread.getInstance().addGameServerLogin(_loginName, client))
 			{
 				client.setAccountName(_loginName);

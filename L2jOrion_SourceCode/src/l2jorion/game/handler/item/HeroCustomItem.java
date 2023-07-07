@@ -94,9 +94,8 @@ public class HeroCustomItem implements IItemHandler
 			stmt.setLong(6, heroTime == 0 ? 0 : System.currentTimeMillis() + heroTime);
 			stmt.execute();
 			stmt.close();
-			stmt = null;
 		}
-		catch (final Exception e)
+		catch (Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
 			{
@@ -108,8 +107,6 @@ public class HeroCustomItem implements IItemHandler
 		finally
 		{
 			CloseUtil.close(con);
-			
-			con = null;
 		}
 	}
 	

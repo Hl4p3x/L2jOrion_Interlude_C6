@@ -27,17 +27,17 @@ import java.security.interfaces.RSAPrivateKey;
 import l2jorion.Config;
 import l2jorion.crypt.LoginCrypt;
 import l2jorion.crypt.ScrambledKeyPair;
+import l2jorion.log.Log;
+import l2jorion.logger.Logger;
+import l2jorion.logger.LoggerFactory;
 import l2jorion.login.network.serverpackets.L2LoginServerPacket;
 import l2jorion.login.network.serverpackets.LoginFail;
-import l2jorion.login.network.serverpackets.PlayFail;
 import l2jorion.login.network.serverpackets.LoginFail.LoginFailReason;
+import l2jorion.login.network.serverpackets.PlayFail;
 import l2jorion.login.network.serverpackets.PlayFail.PlayFailReason;
 import l2jorion.mmocore.MMOClient;
 import l2jorion.mmocore.MMOConnection;
 import l2jorion.mmocore.SendablePacket;
-import l2jorion.log.Log;
-import l2jorion.logger.Logger;
-import l2jorion.logger.LoggerFactory;
 import l2jorion.util.random.Rnd;
 
 public final class L2LoginClient extends MMOClient<MMOConnection<L2LoginClient>>
@@ -68,9 +68,6 @@ public final class L2LoginClient extends MMOClient<MMOConnection<L2LoginClient>>
 	private final String _ip;
 	private long _connectionStartTime;
 	
-	/**
-	 * @param con
-	 */
 	public L2LoginClient(final MMOConnection<L2LoginClient> con)
 	{
 		super(con);
@@ -290,7 +287,9 @@ public final class L2LoginClient extends MMOClient<MMOConnection<L2LoginClient>>
 		final InetAddress address = getConnection().getInetAddress();
 		
 		if (getState() == LoginClientState.AUTHED_LOGIN)
+		{
 			return "[" + getAccount() + " (" + (address == null ? "disconnected" : address.getHostAddress()) + ")]";
+		}
 		
 		return "[" + (address == null ? "disconnected" : address.getHostAddress()) + "]";
 	}

@@ -1,19 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- *
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package l2jorion.game.handler;
 
 import java.sql.Connection;
@@ -28,6 +12,7 @@ import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.Announcements;
+import l2jorion.game.model.olympiad.Olympiad;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.logger.Logger;
@@ -39,6 +24,7 @@ import l2jorion.util.database.L2DatabaseFactory;
 public class AutoAnnouncementHandler
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(AutoAnnouncementHandler.class);
+	
 	private static AutoAnnouncementHandler _instance;
 	private static final long DEFAULT_ANNOUNCEMENT_DELAY = 180000; // 3 mins by default
 	protected Map<Integer, AutoAnnouncementInstance> _registeredAnnouncements;
@@ -81,12 +67,10 @@ public class AutoAnnouncementHandler
 		catch (final Exception e)
 		{
 			e.printStackTrace();
-			// ignore
 		}
 		finally
 		{
 			CloseUtil.close(con);
-			
 		}
 	}
 	
@@ -162,11 +146,8 @@ public class AutoAnnouncementHandler
 			statement.setInt(1, nextId);
 			statement.setString(2, announcementTexts);
 			statement.setLong(3, announcementDelay);
-			
 			statement.executeUpdate();
-			
 			DatabaseUtils.close(statement);
-			statement = null;
 		}
 		catch (final Exception e)
 		{
@@ -180,8 +161,6 @@ public class AutoAnnouncementHandler
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
-			
 		}
 		return registerAnnouncement(nextId, announcementTexts, announcementDelay);
 	}
@@ -212,8 +191,6 @@ public class AutoAnnouncementHandler
 			
 			DatabaseUtils.close(statement);
 			rs.close();
-			statement = null;
-			rs = null;
 			
 			nextId++;
 		}
@@ -227,8 +204,6 @@ public class AutoAnnouncementHandler
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
-			
 		}
 		return nextId;
 	}
@@ -464,12 +439,6 @@ public class AutoAnnouncementHandler
 			}
 		}
 		
-		/**
-		 * Auto Announcement Runner <BR>
-		 * <BR>
-		 * Represents the auto announcement scheduled task for each announcement instance.
-		 * @author chief
-		 */
 		private class AutoAnnouncementRunner implements Runnable
 		{
 			protected int id;
@@ -486,7 +455,7 @@ public class AutoAnnouncementHandler
 				
 				String text;
 				
-				text = announcementInst.getDefaultTexts();
+				text = announcementInst.getDefaultTexts().replace("%olyInfo%", Olympiad.getInstance().getMillisToOlympiadEndInfo());
 				
 				if (text == null)
 				{

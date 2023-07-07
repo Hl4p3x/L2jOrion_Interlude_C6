@@ -22,9 +22,10 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.cache.CrestCache;
 import l2jorion.game.cache.CrestCache.CrestType;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ExPledgeCrestLarge;
 
-public final class RequestExPledgeCrestLarge extends L2GameClientPacket
+public final class RequestExPledgeCrestLarge extends PacketClient
 {
 	private int _crestId;
 	
@@ -38,8 +39,11 @@ public final class RequestExPledgeCrestLarge extends L2GameClientPacket
 	protected void runImpl()
 	{
 		byte[] data = CrestCache.getInstance().getCrest(CrestType.PLEDGE_LARGE, _crestId);
+		
 		if (data != null)
+		{
 			sendPacket(new ExPledgeCrestLarge(_crestId, data));
+		}
 	}
 	
 	@Override

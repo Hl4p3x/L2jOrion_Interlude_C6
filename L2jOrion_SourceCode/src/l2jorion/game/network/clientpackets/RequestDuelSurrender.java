@@ -20,12 +20,9 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.managers.DuelManager;
+import l2jorion.game.network.PacketClient;
 
-/**
- * Format:(ch) just a trigger
- * @author -Wooden-
- */
-public final class RequestDuelSurrender extends L2GameClientPacket
+public final class RequestDuelSurrender extends PacketClient
 {
 	@Override
 	protected void readImpl()

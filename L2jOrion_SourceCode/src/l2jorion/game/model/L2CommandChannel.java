@@ -25,16 +25,13 @@ import javolution.util.FastList;
 import l2jorion.game.model.actor.instance.L2GrandBossInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2RaidBossInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.game.network.serverpackets.ExCloseMPCC;
 import l2jorion.game.network.serverpackets.ExOpenMPCC;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * @author chris_00
- */
 public class L2CommandChannel
 {
 	private final List<L2Party> _partys;
@@ -150,7 +147,7 @@ public class L2CommandChannel
 	 * Broadcast packet to every channel member
 	 * @param gsp
 	 */
-	public void broadcastToChannelMembers(final L2GameServerPacket gsp)
+	public void broadcastToChannelMembers(final PacketServer gsp)
 	{
 		if (_partys != null && !_partys.isEmpty())
 		{

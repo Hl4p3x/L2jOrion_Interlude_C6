@@ -31,19 +31,8 @@ import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.skills.Stats;
 
-/**
- * This class ...
- * @version $Revision: 1.1.2.2.2.1 $ $Date: 2005/03/02 15:38:36 $
- */
-
 public class ManaHeal implements ISkillHandler
 {
-	// private static Logger LOG = LoggerFactory.getLogger(ManaHeal.class);
-	
-	/*
-	 * (non-Javadoc)
-	 * @see l2jorion.game.handler.IItemHandler#useItem(l2jorion.game.model.L2PcInstance, l2jorion.game.model.L2ItemInstance)
-	 */
 	private static final SkillType[] SKILL_IDS =
 	{
 		SkillType.MANAHEAL,
@@ -57,7 +46,9 @@ public class ManaHeal implements ISkillHandler
 		for (final L2Character target : (L2Character[]) targets)
 		{
 			if (target == null || target.isDead())
+			{
 				continue;
+			}
 			
 			double mp = skill.getPower();
 			if (skill.getSkillType() == SkillType.MANAHEAL_PERCENT)
@@ -69,10 +60,6 @@ public class ManaHeal implements ISkillHandler
 				mp = (skill.getSkillType() == SkillType.MANARECHARGE) ? target.calcStat(Stats.RECHARGE_MP_RATE, mp, null, null) : mp;
 			}
 			
-			// if ((target.getCurrentMp() + mp) >= target.getMaxMp())
-			// {
-			// mp = target.getMaxMp() - target.getCurrentMp();
-			// }
 			target.setLastHealAmount((int) mp);
 			target.setCurrentMp(mp + target.getCurrentMp());
 			final StatusUpdate sump = new StatusUpdate(target.getObjectId());
@@ -98,14 +85,20 @@ public class ManaHeal implements ISkillHandler
 		if (skill.isMagic() && skill.useSpiritShot())
 		{
 			if (actChar.checkBss())
+			{
 				actChar.removeBss();
+			}
 			if (actChar.checkSps())
+			{
 				actChar.removeSps();
+			}
 		}
 		else if (skill.useSoulShot())
 		{
 			if (actChar.checkSs())
+			{
 				actChar.removeSs();
+			}
 		}
 		
 	}

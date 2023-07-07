@@ -22,16 +22,13 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExConfirmVariationItem;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 
-/**
- * Format:(ch) d
- * @author -Wooden-
- */
-public final class RequestConfirmTargetItem extends L2GameClientPacket
+public final class RequestConfirmTargetItem extends PacketClient
 {
 	private int _itemObjId;
 	
@@ -47,12 +44,16 @@ public final class RequestConfirmTargetItem extends L2GameClientPacket
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		
 		if (!getClient().getFloodProtectors().getUseAugItem().tryPerformAction("use confirm target aug item"))
+		{
 			return;
-
+		}
+		
 		final L2ItemInstance item = (L2ItemInstance) L2World.getInstance().findObject(_itemObjId);
-
+		
 		if (item == null)
+		{
 			return;
+		}
 		if (activeChar.getLevel() < 46)
 		{
 			activeChar.sendMessage("You have to be level 46 in order to augment an item");
@@ -68,7 +69,6 @@ public final class RequestConfirmTargetItem extends L2GameClientPacket
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.ONCE_AN_ITEM_IS_AUGMENTED_IT_CANNOT_BE_AUGMENTED_AGAIN));
 			return;
 		}
-		// TODO: can do better? : currently: using isdestroyable() as a check for hero / cursed weapons
 		else if (itemGrade < L2Item.CRYSTAL_C || itemType != L2Item.TYPE2_WEAPON || !item.isDestroyable() || item.isShadowItem())
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.THIS_IS_NOT_A_SUITABLE_ITEM));

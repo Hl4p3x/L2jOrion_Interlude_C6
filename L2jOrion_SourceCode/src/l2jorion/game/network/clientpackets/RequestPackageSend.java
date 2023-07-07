@@ -19,9 +19,9 @@
  */
 package l2jorion.game.network.clientpackets;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.model.ItemContainer;
 import l2jorion.game.model.L2World;
@@ -30,6 +30,7 @@ import l2jorion.game.model.actor.instance.L2FolkInstance;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
@@ -41,28 +42,28 @@ import l2jorion.game.templates.L2EtcItemType;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestPackageSend extends L2GameClientPacket
+public final class RequestPackageSend extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestPackageSend.class);
-	private final List<Item> _items = new FastList<>();
+	private final List<Item> _items = new ArrayList<>();
 	private int _objectID;
-	private int _count;
+	private int _slot;
 	
 	@Override
 	protected void readImpl()
 	{
 		_objectID = readD();
-		_count = readD();
+		_slot = readD();
 		
-		if (_count < 0 || _count > 500)
+		if (_slot < 0 || _slot > 80)
 		{
-			_count = -1;
+			_slot = -1;
 			return;
 		}
 		
-		for (int i = 0; i < _count; i++)
+		for (int i = 0; i < _slot; i++)
 		{
-			final int id = readD(); // this is some id sent in PackageSendableList
+			final int id = readD();
 			final int count = readD();
 			_items.add(new Item(id, count));
 		}
@@ -71,7 +72,7 @@ public final class RequestPackageSend extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		if (_count == -1 || _items == null)
+		if (_slot == -1 || _items == null || _items.isEmpty() || !Config.ALLOW_FREIGHT)
 		{
 			return;
 		}
@@ -144,7 +145,7 @@ public final class RequestPackageSend extends L2GameClientPacket
 		}
 		
 		// Freight price from config or normal price per item slot (30)
-		final int fee = _count * Config.ALT_GAME_FREIGHT_PRICE;
+		final int fee = _slot * Config.ALT_GAME_FREIGHT_PRICE;
 		int currentAdena = player.getAdena();
 		int slots = 0;
 		

@@ -49,7 +49,6 @@ import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ConfirmDlg;
 import l2jorion.game.network.serverpackets.DoorInfo;
 import l2jorion.game.network.serverpackets.DoorStatusUpdate;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2DoorTemplate;
@@ -261,12 +260,6 @@ public class L2DoorInstance extends L2Character
 		return 1;
 	}
 	
-	@Override
-	public final String getLevels()
-	{
-		return "" + 1;
-	}
-	
 	public int getDoorId()
 	{
 		return _doorId;
@@ -388,14 +381,12 @@ public class L2DoorInstance extends L2Character
 		{
 			return true;
 		}
-		// if ((getFort() != null) && (getFort().getResidenceId() > 0) && getFort().getZone().isActive() && getIsShowHp())
-		// {
-		// return true;
-		// }
+		
 		if ((getClanHall() != null) && getClanHall().isSiegableHall() && ((SiegableHall) getClanHall()).getSiegeZone().isActive() && getIsShowHp())
 		{
 			return true;
 		}
+		
 		return false;
 	}
 	
@@ -506,7 +497,6 @@ public class L2DoorInstance extends L2Character
 		if (this != player.getTarget())
 		{
 			player.setTarget(this);
-			player.sendPacket(new MyTargetSelected(getObjectId(), 0));
 			player.sendPacket(new DoorInfo(this));
 			player.sendPacket(new DoorStatusUpdate(this));
 		}
@@ -576,7 +566,6 @@ public class L2DoorInstance extends L2Character
 		if (player.getAccessLevel().isGm())
 		{
 			player.setTarget(this);
-			player.sendPacket(new MyTargetSelected(getObjectId(), player.getLevel()));
 			
 			if (isAutoAttackable(player))
 			{
@@ -605,7 +594,6 @@ public class L2DoorInstance extends L2Character
 		else
 		{
 			player.setTarget(this);
-			player.sendPacket(new MyTargetSelected(getObjectId(), player.getLevel()));
 			
 			if (isAutoAttackable(player))
 			{
@@ -621,13 +609,12 @@ public class L2DoorInstance extends L2Character
 	public void broadcastStatusUpdate()
 	{
 		final Collection<L2PcInstance> knownPlayers = getKnownList().getKnownPlayers().values();
-		
 		if (knownPlayers == null || knownPlayers.isEmpty())
 		{
 			return;
 		}
 		
-		for (final L2PcInstance player : knownPlayers)
+		for (L2PcInstance player : knownPlayers)
 		{
 			sendInfo(player);
 		}
@@ -696,25 +683,16 @@ public class L2DoorInstance extends L2Character
 		return (getTemplate().getOpenType() & OPEN_BY_ITEM) == OPEN_BY_ITEM;
 	}
 	
-	/**
-	 * @return {@code true} if door is open-able by double-click.
-	 */
 	public final boolean isOpenableByClick()
 	{
 		return (getTemplate().getOpenType() & OPEN_BY_CLICK) == OPEN_BY_CLICK;
 	}
 	
-	/**
-	 * @return {@code true} if door is open-able by time.
-	 */
 	public final boolean isOpenableByTime()
 	{
 		return (getTemplate().getOpenType() & OPEN_BY_TIME) == OPEN_BY_TIME;
 	}
 	
-	/**
-	 * @return {@code true} if door is open-able by Field Cycle system.
-	 */
 	public final boolean isOpenableByCycle()
 	{
 		return (getTemplate().getOpenType() & OPEN_BY_CYCLE) == OPEN_BY_CYCLE;

@@ -6,9 +6,6 @@ import l2jorion.game.handler.vote.engine.VoteBase;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.util.random.Rnd;
 
-/**
- * @author Vilmis
- */
 public class Network extends VoteBase
 {
 	@Override

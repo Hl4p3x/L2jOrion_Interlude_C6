@@ -22,8 +22,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class MoveToLocationInVehicle extends L2GameServerPacket
+public class MoveToLocationInVehicle extends PacketServer
 {
 	private final int _charObjId;
 	private final int _boatId;

@@ -22,8 +22,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2Skill;
+import l2jorion.game.network.PacketServer;
 
-public class PledgeSkillList extends L2GameServerPacket
+public class PledgeSkillList extends PacketServer
 {
 	private static final String _S__FE_39_PLEDGESKILLLIST = "[S] FE:39 PledgeSkillList";
 	

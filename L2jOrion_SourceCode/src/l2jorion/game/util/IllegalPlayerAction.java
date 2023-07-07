@@ -22,18 +22,15 @@
  * this program. If not, see <http://www.gnu.org/licenses/>.
  */
 package l2jorion.game.util;
+
 import l2jorion.Config;
 import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.log.Log;
 
-/**
- * This class ...
- * @version $Revision: 1.2 $ $Date: 2004/06/27 08:12:59 $
- */
 public final class IllegalPlayerAction implements Runnable
 {
-	//private static Logger _logAudit = Logger.getLogger("audit");
+	// private static Logger _logAudit = Logger.getLogger("audit");
 	private final String _message;
 	private final int _punishment;
 	private final L2PcInstance _actor;
@@ -69,14 +66,14 @@ public final class IllegalPlayerAction implements Runnable
 	@Override
 	public void run()
 	{
-		//final LogRecord record = new LogRecord(Level.INFO, "AUDIT:" + _message);
-		//record.setLoggerName("audit");
-		//record.setParameters(new Object[]
-		//{
-		//	_actor,
-		//	_punishment
-		//});
-		//_logAudit.warn("AUDIT:" + _actor + "" + _message + "" + _punishment);
+		// final LogRecord record = new LogRecord(Level.INFO, "AUDIT:" + _message);
+		// record.setLoggerName("audit");
+		// record.setParameters(new Object[]
+		// {
+		// _actor,
+		// _punishment
+		// });
+		// _logAudit.warn("AUDIT:" + _actor + "" + _message + "" + _punishment);
 		String text = "AUDIT:" + _actor + "" + _message + "" + _punishment;
 		Log.add(text, "Audit");
 		

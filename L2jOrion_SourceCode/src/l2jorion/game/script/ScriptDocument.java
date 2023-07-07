@@ -84,9 +84,6 @@ public class ScriptDocument
 		return _document;
 	}
 	
-	/**
-	 * @return Returns the _name.
-	 */
 	public String getName()
 	{
 		return _name;

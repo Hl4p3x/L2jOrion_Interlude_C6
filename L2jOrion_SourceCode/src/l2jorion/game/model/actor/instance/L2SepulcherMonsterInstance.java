@@ -27,9 +27,6 @@ import l2jorion.game.network.serverpackets.CreatureSay;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.thread.ThreadPoolManager;
 
-/**
- * @author sandman
- */
 public class L2SepulcherMonsterInstance extends L2MonsterInstance
 {
 	public int mysteriousBoxId = 0;
@@ -57,7 +54,7 @@ public class L2SepulcherMonsterInstance extends L2MonsterInstance
 	public void onSpawn()
 	{
 		super.onSpawn();
-		// setShowSummonAnimation(false);
+		
 		switch (getNpcId())
 		{
 			case 18150:
@@ -73,6 +70,7 @@ public class L2SepulcherMonsterInstance extends L2MonsterInstance
 					_victimSpawnKeyBoxTask.cancel(true);
 				}
 				_victimSpawnKeyBoxTask = ThreadPoolManager.getInstance().scheduleEffect(new VictimSpawnKeyBox(this), 300000);
+				
 				if (_victimShout != null)
 				{
 					_victimShout.cancel(true);
@@ -184,15 +182,18 @@ public class L2SepulcherMonsterInstance extends L2MonsterInstance
 					_victimSpawnKeyBoxTask.cancel(true);
 					_victimSpawnKeyBoxTask = null;
 				}
+				
 				if (_victimShout != null)
 				{
 					_victimShout.cancel(true);
 					_victimShout = null;
 				}
+				
 				if (_onDeadEventTask != null)
 				{
 					_onDeadEventTask.cancel(true);
 				}
+				
 				_onDeadEventTask = ThreadPoolManager.getInstance().scheduleEffect(new OnDeadEvent(this), 3500);
 				break;
 			
@@ -208,7 +209,8 @@ public class L2SepulcherMonsterInstance extends L2MonsterInstance
 				{
 					if (_onDeadEventTask != null)
 					{
-						_onDeadEventTask.cancel(true);
+						_onDeadEventTask.cancel(false);
+						_onDeadEventTask = null;
 					}
 					_onDeadEventTask = ThreadPoolManager.getInstance().scheduleEffect(new OnDeadEvent(this), 3500);
 				}
@@ -269,6 +271,7 @@ public class L2SepulcherMonsterInstance extends L2MonsterInstance
 			_victimSpawnKeyBoxTask.cancel(true);
 			_victimSpawnKeyBoxTask = null;
 		}
+		
 		if (_onDeadEventTask != null)
 		{
 			_onDeadEventTask.cancel(true);

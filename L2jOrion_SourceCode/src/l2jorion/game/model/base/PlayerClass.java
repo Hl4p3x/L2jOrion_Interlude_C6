@@ -49,11 +49,6 @@ import java.util.Set;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * This class ...
- * @author programmos, L2jOrion dev
- * @version $Revision: 1.2.1 $ $Date: 2009/04/13 02:01:21 $
- */
 public enum PlayerClass
 {
 	HumanFighter(Human, Fighter, First),

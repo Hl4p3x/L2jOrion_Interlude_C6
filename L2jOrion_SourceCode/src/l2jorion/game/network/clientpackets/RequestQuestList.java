@@ -20,14 +20,14 @@
  */
 package l2jorion.game.network.clientpackets;
 
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.QuestList;
 
-public final class RequestQuestList extends L2GameClientPacket
+public final class RequestQuestList extends PacketClient
 {
 	@Override
 	protected void readImpl()
 	{
-		// trigger
 	}
 	
 	@Override

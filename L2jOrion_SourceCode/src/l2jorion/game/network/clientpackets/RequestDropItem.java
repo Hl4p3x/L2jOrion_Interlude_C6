@@ -25,6 +25,7 @@ import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.managers.CursedWeaponsManager;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
@@ -38,7 +39,7 @@ import l2jorion.log.Log;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestDropItem extends L2GameClientPacket
+public final class RequestDropItem extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestDropItem.class);
 	
@@ -66,19 +67,13 @@ public final class RequestDropItem extends L2GameClientPacket
 		{
 			return;
 		}
-		if (activeChar.isSubmitingPin())
-		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
+		
 		if (activeChar.isGM() && activeChar.getAccessLevel().getLevel() > 2)
-		{ // just head gm and admin can drop items on the ground
-			sendPacket(SystemMessage.sendString("You have not right to discard anything from inventory"));
+		{
+			sendPacket(SystemMessage.sendString("You have not right to discard anything from inventory."));
 			return;
 		}
 		
-		// Fix against safe enchant exploit
 		if (activeChar.getActiveEnchantItem() != null)
 		{
 			sendPacket(SystemMessage.sendString("You can't discard items during enchant."));

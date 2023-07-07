@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExOrcMove extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExOrcMove extends PacketServer
 {
 	private static final String _S__FE_44_EXORCMOVE = "[S] FE:44 ExOrcMove";
 	

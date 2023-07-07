@@ -21,24 +21,31 @@ package l2jorion.game.model.actor.instance;
 import java.util.StringTokenizer;
 
 import l2jorion.Config;
+import l2jorion.game.ai.CtrlIntention;
+import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.datatables.sql.TeleportLocationTable;
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.GrandBossManager;
 import l2jorion.game.managers.SiegeManager;
 import l2jorion.game.managers.TownManager;
 import l2jorion.game.model.L2Object;
+import l2jorion.game.model.L2Party;
 import l2jorion.game.model.L2TeleportLocation;
 import l2jorion.game.model.base.ClassId;
 import l2jorion.game.model.olympiad.OlympiadManager;
+import l2jorion.game.model.zone.ZoneId;
 import l2jorion.game.model.zone.type.L2BossZone;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ExShowScreenMessage;
+import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
+import l2jorion.game.network.serverpackets.SetupGauge;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.powerpack.PowerPackConfig;
 import l2jorion.game.taskmanager.RandomZoneTaskManager;
 import l2jorion.game.templates.L2NpcTemplate;
+import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
@@ -46,23 +53,30 @@ public final class L2TeleporterInstance extends L2FolkInstance
 {
 	protected static Logger LOG = LoggerFactory.getLogger(L2TeleporterInstance.class);
 	
-	/** The Constant COND_ALL_FALSE. */
 	private static final int COND_ALL_FALSE = 0;
-	
-	/** The Constant COND_BUSY_BECAUSE_OF_SIEGE. */
 	private static final int COND_BUSY_BECAUSE_OF_SIEGE = 1;
-	
-	/** The Constant COND_OWNER. */
 	private static final int COND_OWNER = 2;
-	
-	/** The Constant COND_REGULAR. */
 	private static final int COND_REGULAR = 3;
 	
-	/**
-	 * Instantiates a new l2 teleporter instance.
-	 * @param objectId the object id
-	 * @param template the template
-	 */
+	private class EscapeFinalizer implements Runnable
+	{
+		L2PcInstance _player;
+		L2TeleportLocation _tp;
+		
+		public EscapeFinalizer(L2PcInstance player, L2TeleportLocation loc)
+		{
+			_player = player;
+			_tp = loc;
+		}
+		
+		@Override
+		public void run()
+		{
+			_player.enableAllSkills();
+			_player.teleToLocation(_tp.getLocX(), _tp.getLocY(), _tp.getLocZ(), true);
+		}
+	}
+	
 	public L2TeleporterInstance(int objectId, L2NpcTemplate template)
 	{
 		super(objectId, template);
@@ -72,6 +86,7 @@ public final class L2TeleporterInstance extends L2FolkInstance
 	public void onBypassFeedback(L2PcInstance player, String command)
 	{
 		L2Object target = player.getTarget();
+		
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 		
 		if (OlympiadManager.getInstance().isRegisteredInComp(player))
@@ -92,7 +107,7 @@ public final class L2TeleporterInstance extends L2FolkInstance
 		
 		if (actualCommand.equalsIgnoreCase("goto"))
 		{
-			int npcId = getTemplate().npcId;
+			int npcId = getTemplate().getNpcId();
 			
 			switch (npcId)
 			{
@@ -165,14 +180,19 @@ public final class L2TeleporterInstance extends L2FolkInstance
 		}
 		else if (actualCommand.equalsIgnoreCase("pvp"))
 		{
+			if (!Config.ALLOW_RANDOM_PVP_ZONE)
+			{
+				player.sendMessage("This feature is not available now.");
+				return;
+			}
+			
 			if (Config.PROHIBIT_HEALER_CLASS && (player.getClassId() == ClassId.cardinal || player.getClassId() == ClassId.evaSaint || player.getClassId() == ClassId.shillienSaint))
 			{
 				player.sendMessage("You can't enter to zone with Healer Class!");
 				player.sendPacket(new ExShowScreenMessage("You can't enter to zone with Healer Class!", 3000, 0x02, false));
 				return;
 			}
-			
-			player.teleToLocation(RandomZoneTaskManager.getInstance().getCurrentZone().getLoc(), 25);
+			player.teleToLocation(RandomZoneTaskManager.getInstance().getCurrentZone().getLoc(), 50, true);
 		}
 		super.onBypassFeedback(player, command);
 	}
@@ -182,7 +202,7 @@ public final class L2TeleporterInstance extends L2FolkInstance
 	{
 		String pom = "";
 		
-		if (npcId == PowerPackConfig.GLOBALGK_NPC)
+		if (npcId == PowerPackConfig.GLOBALGK_NPC_ID)
 		{
 			if (val == 0)
 			{
@@ -193,7 +213,7 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				pom = "gk" + "-" + val;
 			}
 			
-			if (!PowerPackConfig.GLOBALGK_ENABDLED)
+			if (!PowerPackConfig.GLOBALGK_ENABLED)
 			{
 				return "data/html/disabled.htm";
 			}
@@ -248,18 +268,12 @@ public final class L2TeleporterInstance extends L2FolkInstance
 		player.sendPacket(html);
 	}
 	
-	/**
-	 * Do teleport.
-	 * @param player the player
-	 * @param val the val
-	 */
 	private void doTeleport(L2PcInstance player, int val)
 	{
 		L2TeleportLocation list = TeleportLocationTable.getInstance().getTemplate(val);
 		
 		if (list != null && player != null)
 		{
-			// you cannot teleport to village that is in siege
 			if (!SiegeManager.getInstance().is_teleport_to_siege_allowed() && SiegeManager.getInstance().getSiege(list.getLocX(), list.getLocY(), list.getLocZ()) != null && !player.isNoble())
 			{
 				player.sendPacket(new SystemMessage(SystemMessageId.NO_PORT_THAT_IS_IN_SIGE));
@@ -275,7 +289,7 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				player.sendMessage("Don't run from PvP! You will be able to use the teleporter only after your flag is gone.");
 				return;
 			}
-			else if (!Config.ALT_GAME_KARMA_PLAYER_CAN_USE_GK && player.getKarma() > 0) // karma
+			else if (!Config.ALT_GAME_KARMA_PLAYER_CAN_USE_GK && player.getKarma() > 0) // Karma
 			{
 				SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 				sm.addString("Go away, you're not welcome here.");
@@ -302,9 +316,8 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				player.sendMessage("You can't use teleport when you are sitting.");
 				return;
 			}
-			else if (list.getTeleId() == 9982 && list.getTeleId() == 9983 && list.getTeleId() == 9984 && getNpcId() == 30483 && player.getLevel() >= Config.CRUMA_TOWER_LEVEL_RESTRICT)
+			else if ((list.getTeleId() == 21 || list.getTeleId() == 9982 || list.getTeleId() == 9983 || list.getTeleId() == 9984) && getNpcId() == 30483 && player.getLevel() >= Config.CRUMA_TOWER_LEVEL_RESTRICT)
 			{
-				// Chars level XX can't enter in Cruma Tower. Retail: level 56 and above
 				int maxlvl = Config.CRUMA_TOWER_LEVEL_RESTRICT;
 				
 				String filename = "data/html/teleporter/30483-biglvl.htm";
@@ -323,6 +336,57 @@ public final class L2TeleporterInstance extends L2FolkInstance
 			}
 			else if (!list.getIsForNoble() && ((Config.ALT_GAME_FREE_TELEPORT || player.getLevel() <= Config.FREE_TELEPORT_UNTIL) || player.reduceAdena("Teleport", list.getPrice(), this, true)))
 			{
+				if (Config.L2LIMIT_CUSTOM)
+				{
+					if (player.isInParty() && player.getParty().isLeader(player))
+					{
+						L2Party party = player.getParty();
+						int unstuckTimer = 10000;
+						
+						if (player.getPremiumService() == 0 && !player.isInsideZone(ZoneId.ZONE_PEACE))
+						{
+							player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), true);
+							return;
+						}
+						
+						for (L2PcInstance member : party.getPartyMembers())
+						{
+							if (member == null)
+							{
+								continue;
+							}
+							
+							if (!(member.isInsideZone(ZoneId.ZONE_PEACE)))
+							{
+								member.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
+								
+								member.setTarget(member);
+								member.broadcastPacket(new MagicSkillUser(member, 1050, 1, unstuckTimer, 0));
+								member.sendPacket(new SetupGauge(0, unstuckTimer));
+								member.setTarget(null);
+								
+								member.setSkillCast(ThreadPoolManager.getInstance().scheduleEffect(new EscapeFinalizer(member, list), unstuckTimer));
+								member.setSkillCastEndTime(10 + GameTimeController.getInstance().getGameTicks() + unstuckTimer / GameTimeController.MILLIS_IN_TICK);
+							}
+							else
+							{
+								member.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), true);
+							}
+							
+							if (party.isLeader(member))
+							{
+								player.sendMessage("Your party members are teleporting follow you.");
+							}
+							else
+							{
+								member.sendMessage("Your party leader is teleporting you.");
+							}
+						}
+						
+						return;
+					}
+				}
+				
 				player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), true);
 			}
 			else if (list.getIsForNoble() && (Config.ALT_GAME_FREE_TELEPORT || player.destroyItemByItemId("Noble Teleport", 6651, list.getPrice(), this, true)))
@@ -337,11 +401,6 @@ public final class L2TeleporterInstance extends L2FolkInstance
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
-	/**
-	 * Validate condition.
-	 * @param player the player
-	 * @return the int
-	 */
 	private int validateCondition(L2PcInstance player)
 	{
 		if (CastleManager.getInstance().getCastleIndex(this) < 0)

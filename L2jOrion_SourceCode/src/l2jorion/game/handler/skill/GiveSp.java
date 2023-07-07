@@ -23,10 +23,6 @@ import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2Skill.SkillType;
 
-/**
- * @author Forsaiken
- */
-
 public class GiveSp implements ISkillHandler
 {
 	private static final SkillType[] SKILL_IDS =

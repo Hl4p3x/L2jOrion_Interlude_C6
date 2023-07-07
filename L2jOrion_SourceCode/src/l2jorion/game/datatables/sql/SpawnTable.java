@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.datatables.sql;
 
 import java.sql.Connection;
@@ -145,7 +125,7 @@ public class SpawnTable
 			CloseUtil.close(con);
 		}
 		
-		LOG.info("SpawnTable: Spawning completed, total number of NPCs in the world: " + spawntable.size());
+		// LOG.info("SpawnTable: Spawning completed, total number of NPCs in the world: " + spawntable.size());
 		
 		// -------------------------------Custom Spawnlist----------------------------//
 		if (Config.CUSTOM_SPAWNLIST_TABLE)
@@ -219,7 +199,7 @@ public class SpawnTable
 				CloseUtil.close(con);
 			}
 			
-			LOG.info("CustomSpawnTable: Spawning completed, total number of NPCs in the world: " + customSpawnCount);
+			LOG.info("SpawnTable: Spawning completed, total number of NPCs in the world: " + customSpawnCount);
 		}
 	}
 	
@@ -234,33 +214,36 @@ public class SpawnTable
 		spawn.setId(_highestId);
 		spawntable.put(_highestId, spawn);
 		
-		if (storeInDb)
+		if (!(Config.ALT_DEV_NO_SPAWNS))
 		{
-			Connection con = null;
-			
-			try
+			if (storeInDb)
 			{
-				con = L2DatabaseFactory.getInstance().getConnection();
-				final PreparedStatement statement = con.prepareStatement("INSERT INTO " + (spawn.isCustom() ? "custom_spawnlist" : "spawnlist") + "(id,count,npc_templateid,locx,locy,locz,heading,respawn_delay,loc_id) values(?,?,?,?,?,?,?,?,?)");
-				statement.setInt(1, spawn.getId());
-				statement.setInt(2, spawn.getAmount());
-				statement.setInt(3, spawn.getNpcid());
-				statement.setInt(4, spawn.getLocx());
-				statement.setInt(5, spawn.getLocy());
-				statement.setInt(6, spawn.getLocz());
-				statement.setInt(7, spawn.getHeading());
-				statement.setInt(8, spawn.getRespawnDelay() / 1000);
-				statement.setInt(9, spawn.getLocation());
-				statement.execute();
-				DatabaseUtils.close(statement);
-			}
-			catch (final Exception e)
-			{
-				LOG.error("SpawnTable: Could not store spawn in the DB ", e);
-			}
-			finally
-			{
-				CloseUtil.close(con);
+				Connection con = null;
+				
+				try
+				{
+					con = L2DatabaseFactory.getInstance().getConnection();
+					PreparedStatement statement = con.prepareStatement("INSERT INTO " + (spawn.isCustom() ? "custom_spawnlist" : "spawnlist") + "(id,count,npc_templateid,locx,locy,locz,heading,respawn_delay,loc_id) values(?,?,?,?,?,?,?,?,?)");
+					statement.setInt(1, spawn.getId());
+					statement.setInt(2, spawn.getAmount());
+					statement.setInt(3, spawn.getNpcid());
+					statement.setInt(4, spawn.getLocx());
+					statement.setInt(5, spawn.getLocy());
+					statement.setInt(6, spawn.getLocz());
+					statement.setInt(7, spawn.getHeading());
+					statement.setInt(8, spawn.getRespawnDelay() / 1000);
+					statement.setInt(9, spawn.getLocation());
+					statement.execute();
+					DatabaseUtils.close(statement);
+				}
+				catch (final Exception e)
+				{
+					LOG.error("SpawnTable: Could not store spawn in the DB ", e);
+				}
+				finally
+				{
+					CloseUtil.close(con);
+				}
 			}
 		}
 	}
@@ -295,19 +278,11 @@ public class SpawnTable
 		}
 	}
 	
-	// just wrapper
 	public void reloadAll()
 	{
 		fillSpawnTable();
 	}
 	
-	/**
-	 * Get all the spawn of a NPC<BR>
-	 * <BR>
-	 * @param activeChar
-	 * @param npcId : ID of the NPC to find.
-	 * @param teleportIndex
-	 */
 	public void findNPCInstances(final L2PcInstance activeChar, final int npcId, final int teleportIndex)
 	{
 		int index = 0;

@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2ItemInstance;
+import l2jorion.game.network.PacketServer;
 
-public class SpawnItem extends L2GameServerPacket
+public class SpawnItem extends PacketServer
 {
 	private static final String _S__15_SPAWNITEM = "[S] 15 SpawnItem";
 	private final int _objectId;

@@ -22,13 +22,10 @@ package l2jorion.game.network.clientpackets;
 
 import javolution.util.FastList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ExSendManorList;
 
-/**
- * Format: ch c (id) 0xD0 h (subid) 0x08
- * @author l3x
- */
-public class RequestManorList extends L2GameClientPacket
+public class RequestManorList extends PacketClient
 {
 	@Override
 	protected void readImpl()
@@ -40,7 +37,9 @@ public class RequestManorList extends L2GameClientPacket
 	{
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
+		{
 			return;
+		}
 		final FastList<String> manorsName = new FastList<>();
 		manorsName.add("gludio");
 		manorsName.add("dion");

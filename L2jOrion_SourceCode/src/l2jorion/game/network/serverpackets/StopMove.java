@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
+import l2jorion.game.network.PacketServer;
 
-public class StopMove extends L2GameServerPacket
+public class StopMove extends PacketServer
 {
 	private static final String _S__59_STOPMOVE = "[S] 47 StopMove";
 	

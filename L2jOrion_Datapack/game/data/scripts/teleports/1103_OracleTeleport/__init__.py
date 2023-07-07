@@ -1,12 +1,11 @@
-# Originally created by Ham Wong on 2007.03.07 #
 import sys
-
 from l2jorion.game.model.actor.instance import L2PcInstance
 from l2jorion.game.model.quest          import State
 from l2jorion.game.model.quest          import QuestState
 from l2jorion.game.model.quest.jython   import QuestJython as JQuest
+
 qn = "1103_OracleTeleport"
-#print "1103. Oracle Teleport"
+
 TOWN_DAWN = [31078,31079,31080,31081,31083,31084,31082,31692,31694,31997,31168]
 TOWN_DUSK = [31085,31086,31087,31088,31090,31091,31089,31693,31695,31998,31169]
 TEMPLE_PRIEST = [31127,31128,31129,31130,31131,31137,31138,31139,31140,31141]

@@ -33,8 +33,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public final class SelectorThread<T extends MMOClient<?>> extends Thread
 {
-	//private static final Logger LOG = LoggerFactory.getLogger(GameServer.class);
-	
 	private static final ByteOrder BYTE_ORDER = ByteOrder.LITTLE_ENDIAN;
 	
 	private static final int HEADER_SIZE = 2;
@@ -126,12 +124,12 @@ public final class SelectorThread<T extends MMOClient<?>> extends Thread
 		return _bufferPool.remove();
 	}
 	
-	final void recycleBuffer(ByteBuffer buf)
+	final void recycleBuffer(ByteBuffer buff)
 	{
 		if (_bufferPool.size() < HELPER_BUFFER_COUNT)
 		{
-			buf.clear();
-			_bufferPool.add(buf);
+			buff.clear();
+			_bufferPool.add(buff);
 		}
 	}
 	

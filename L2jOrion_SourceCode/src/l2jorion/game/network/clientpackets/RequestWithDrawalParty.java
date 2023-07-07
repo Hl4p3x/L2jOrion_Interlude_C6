@@ -24,12 +24,12 @@ import l2jorion.game.model.L2Party;
 import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.network.serverpackets.ActionFailed;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ExClosePartyRoom;
 import l2jorion.game.network.serverpackets.ExPartyRoomMember;
 import l2jorion.game.network.serverpackets.PartyMatchDetail;
 
-public final class RequestWithDrawalParty extends L2GameClientPacket
+public final class RequestWithDrawalParty extends PacketClient
 {
 	@Override
 	protected void readImpl()
@@ -42,19 +42,18 @@ public final class RequestWithDrawalParty extends L2GameClientPacket
 	{
 		final L2PcInstance player = getClient().getActiveChar();
 		if (player == null)
-			return;
-		if (player.isSubmitingPin())
 		{
-			player.sendMessage("Unable to do any action while PIN is not submitted");
-			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		final L2Party party = player.getParty();
 		
 		if (party != null)
 		{
 			if (party.isInDimensionalRift() && !party.getDimensionalRift().getRevivedAtWaitingRoom().contains(player))
+			{
 				player.sendMessage("You can't exit party when you are in Dimensional Rift.");
+			}
 			else
 			{
 				party.removePartyMember(player);

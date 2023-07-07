@@ -82,7 +82,7 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable
 		_hall.setSiege(this);
 		
 		_siegeTask = ThreadPoolManager.getInstance().scheduleGeneral(new PrepareOwner(), _hall.getNextSiegeTime() - System.currentTimeMillis() - 3600000);
-		LOG.info("{} siege scheduled for {}.", _hall.getName(), getSiegeDate().getTime());
+		LOG.info("{} siege scheduled for {}", _hall.getName(), getSiegeDate().getTime());
 		loadAttackers();
 	}
 	
@@ -94,7 +94,7 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement ps = con.prepareStatement(SQL_LOAD_ATTACKERS);
 			
-			ps.setInt(1, _hall.getId());
+			ps.setInt(1, _hall.getClanHallId());
 			try (ResultSet rset = ps.executeQuery())
 			{
 				while (rset.next())
@@ -123,7 +123,7 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable
 			con = L2DatabaseFactory.getInstance().getConnection();
 			PreparedStatement ps = con.prepareStatement("DELETE FROM clanhall_siege_attackers WHERE clanhall_id = ?");
 			
-			ps.setInt(1, _hall.getId());
+			ps.setInt(1, _hall.getClanHallId());
 			ps.execute();
 			
 			if (_attackers.size() > 0)
@@ -132,7 +132,7 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable
 				{
 					for (L2SiegeClan clan : _attackers.values())
 					{
-						insert.setInt(1, _hall.getId());
+						insert.setInt(1, _hall.getClanHallId());
 						insert.setInt(2, clan.getClanId());
 						insert.execute();
 						insert.clearParameters();
@@ -162,7 +162,7 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable
 				con = L2DatabaseFactory.getInstance().getConnection();
 				PreparedStatement ps = con.prepareStatement(SQL_LOAD_GUARDS);
 				
-				ps.setInt(1, _hall.getId());
+				ps.setInt(1, _hall.getClanHallId());
 				try (ResultSet rset = ps.executeQuery())
 				{
 					while (rset.next())
@@ -318,7 +318,7 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable
 	@Override
 	public void startSiege()
 	{
-		if ((_attackers.size() < 1) && (_hall.getId() != 21)) // Fortress of resistance don't have attacker list
+		if ((_attackers.size() < 1) && (_hall.getClanHallId() != 21)) // Fortress of resistance don't have attacker list
 		{
 			onSiegeEnds();
 			_attackers.clear();
@@ -375,7 +375,7 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable
 		if (_missionAccomplished && (winner != null))
 		{
 			_hall.setOwner(winner);
-			winner.setHasHideout(_hall.getId());
+			winner.setHasHideout(_hall.getClanHallId());
 			finalMsg = SystemMessage.getSystemMessage(SystemMessageId.CLAN_S1_VICTORIOUS_OVER_S2_S_SIEGE);
 			finalMsg.addString(winner.getName());
 			finalMsg.addString(_hall.getName());
@@ -436,7 +436,7 @@ public abstract class ClanHallSiegeEngine extends Quest implements Siegable
 	{
 		cancelSiegeTask();
 		_siegeTask = ThreadPoolManager.getInstance().scheduleGeneral(new PrepareOwner(), _hall.getNextSiegeTime() - 3600000);
-		LOG.info("{} siege scheduled for {}.", _hall.getName(), _hall.getSiegeDate().getTime());
+		LOG.info("{} siege scheduled for {}", _hall.getName(), _hall.getSiegeDate().getTime());
 	}
 	
 	public void cancelSiegeTask()

@@ -24,8 +24,9 @@ import javolution.util.FastList;
 import l2jorion.game.model.PartyMatchRoom;
 import l2jorion.game.model.PartyMatchRoomList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class PartyMatchList extends L2GameServerPacket
+public class PartyMatchList extends PacketServer
 {
 	private final L2PcInstance _cha;
 	private final int _loc;

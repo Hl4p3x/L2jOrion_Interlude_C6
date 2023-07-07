@@ -24,11 +24,12 @@ import l2jorion.game.model.L2Party;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExAskJoinMPCC;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestExAskJoinMPCC extends L2GameClientPacket
+public final class RequestExAskJoinMPCC extends PacketClient
 {
 	private String _name;
 	

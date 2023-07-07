@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <list>
 <skill id="4100" levels="12" name="NPC Prominence">
   <table name="#mpConsume">13 20 27 35 45 55 65 69 73 75 77 78</table>
@@ -1122,6 +1122,8 @@
   <set name="isDebuff" val="true"/>
   <set name="isMagic" val="true"/>
   <set name="operateType" val="OP_ACTIVE"/>
+  <set name="castRange" val="-1"/>
+  <set name="effectRange" val="-1"/>
   <for>
     <effect count="1" name="Paralyze" time="30" val="0"/>
   </for>
@@ -1354,15 +1356,14 @@
   <set name="magicLvl" val="#magicLvl"/>
   <set name="lvlDepend" val="1"/>
   <set name="mpConsume" val="#mpConsume"/>
-  <set name="power" val="25"/>
-  <set name="target" val="TARGET_ONE"/>
+  <set name="power" val="80"/>
+  <set name="target" val="TARGET_AURA"/>
   <set name="reuseDelay" val="300000"/>
   <set name="hitTime" val="1500"/>
   <set name="skillType" val="CANCEL"/>
+  <set name="skillRadius" val="200"/>
   <set name="isMagic" val="true"/>
   <set name="operateType" val="OP_ACTIVE"/>
-  <set name="castRange" val="-1"/>
-  <set name="effectRange" val="-1"/>
   <set name="negateSkillTypes" val="BUFF"/>
   <set name="negatePower" val="5"/>
   <for>

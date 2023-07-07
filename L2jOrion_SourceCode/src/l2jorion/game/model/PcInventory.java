@@ -25,6 +25,8 @@ import java.sql.ResultSet;
 import java.util.List;
 
 import javolution.util.FastList;
+import l2jorion.Config;
+import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.model.TradeList.TradeItem;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2ItemInstance.ItemLocation;
@@ -482,6 +484,23 @@ public class PcInventory extends Inventory
 	{
 		final L2ItemInstance item = super.addItem(process, itemId, count, actor, reference);
 		
+		if (Config.L2LIMIT_CUSTOM)
+		{
+			if (item.getItemId() == 5964)
+			{
+				if (actor.getInventory().getItemByItemId(5964).getCount() == 1)
+				{
+					if (actor.getKnownSkill(8000) == null)
+					{
+						actor.addSkill(SkillTable.getInstance().getInfo(8000, 1), true);
+						actor.sendSkillList();
+					}
+					item.setMana(item.getMana());
+					item.decreaseMana(false);
+				}
+			}
+		}
+		
 		if (item != null && item.getItemId() == ADENA_ID && !item.equals(_adena))
 		{
 			_adena = item;
@@ -859,10 +878,12 @@ public class PcInventory extends Inventory
 	
 	public boolean validateCapacity(final L2Item item)
 	{
-		
 		int slots = 0;
 		
-		if (!(item.isStackable() && getItemByItemId(item.getItemId()) != null) && item.getItemType() != L2EtcItemType.HERB)
+		if (item != null && //
+			!(item.isStackable()//
+				&& getItemByItemId(item.getItemId()) != null) //
+			&& item.getItemType() != L2EtcItemType.HERB)
 		{
 			slots++;
 		}
@@ -912,5 +933,13 @@ public class PcInventory extends Inventory
 		}
 		
 		return count;
+	}
+	
+	public void addItemById(final String process, final int itemId, final int count, final L2PcInstance actor, final L2Object reference)
+	{
+		if (count > 0)
+		{
+			addItem(process, itemId, count, actor, reference);
+		}
 	}
 }

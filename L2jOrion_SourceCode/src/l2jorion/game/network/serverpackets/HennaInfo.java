@@ -25,8 +25,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2HennaInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public final class HennaInfo extends L2GameServerPacket
+public final class HennaInfo extends PacketServer
 {
 	private static final String _S__E4_HennaInfo = "[S] E4 HennaInfo";
 	

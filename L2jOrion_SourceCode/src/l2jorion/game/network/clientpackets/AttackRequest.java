@@ -23,13 +23,15 @@ import l2jorion.game.model.actor.instance.L2SummonInstance;
 import l2jorion.game.model.entity.event.CTF;
 import l2jorion.game.model.entity.event.DM;
 import l2jorion.game.model.entity.event.TvT;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ActionFailed;
 
-public final class AttackRequest extends L2GameClientPacket
+public final class AttackRequest extends PacketClient
 {
 	private int _objectId;
 	@SuppressWarnings("unused")
 	private int _originX, _originY, _originZ;
+	
 	@SuppressWarnings("unused")
 	private int _attackId;
 	
@@ -40,7 +42,7 @@ public final class AttackRequest extends L2GameClientPacket
 		_originX = readD();
 		_originY = readD();
 		_originZ = readD();
-		_attackId = readC(); // 0 for simple click - 1 for shift-click
+		_attackId = readC(); // 0 for ctrl click - 1 for shift-click
 	}
 	
 	@Override
@@ -52,14 +54,6 @@ public final class AttackRequest extends L2GameClientPacket
 			return;
 		}
 		
-		if (System.currentTimeMillis() - activeChar.getLastAttackPacket() < 500)
-		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-		activeChar.setLastAttackPacket();
-		
-		// avoid using expensive operations if not needed
 		final L2Object target;
 		
 		if (activeChar.getTargetId() == _objectId)
@@ -73,13 +67,6 @@ public final class AttackRequest extends L2GameClientPacket
 		
 		if (target == null)
 		{
-			return;
-		}
-		
-		// Like L2OFF
-		if (activeChar.isAttackingNow() && activeChar.isMoving())
-		{
-			// If target is not attackable, send a Server->Client packet ActionFailed
 			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
@@ -124,7 +111,6 @@ public final class AttackRequest extends L2GameClientPacket
 			}
 		}
 		
-		// No attacks to same team in Event
 		if (CTF.is_started())
 		{
 			if (target instanceof L2PcInstance)

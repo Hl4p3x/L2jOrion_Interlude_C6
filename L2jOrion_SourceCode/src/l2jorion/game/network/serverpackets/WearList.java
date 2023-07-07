@@ -25,9 +25,10 @@ import java.util.List;
 import l2jorion.Config;
 import l2jorion.game.model.L2TradeList;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.templates.L2Item;
 
-public class WearList extends L2GameServerPacket
+public class WearList extends PacketServer
 {
 	private static final String _S__EF_WEARLIST = "[S] EF WearList";
 	

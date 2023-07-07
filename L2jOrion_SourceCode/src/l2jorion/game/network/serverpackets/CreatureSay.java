@@ -24,9 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 
-public class CreatureSay extends L2GameServerPacket
+public class CreatureSay extends PacketServer
 {
 	private static final String _S__4A_CREATURESAY = "[S] 4A CreatureSay";
 	

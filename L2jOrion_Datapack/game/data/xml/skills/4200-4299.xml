@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+<?xml version="1.0" encoding="utf-8"?>
 <list>
 <skill id="4200" levels="12" name="Decrease Atk. Spd.">
   <table name="#pAtkSpd">0.83 0.8 0.8 0.77 0.77 0.77 0.77 0.77 0.77 0.77 0.77 0.77</table>
@@ -701,8 +701,8 @@
   <set name="skillType" val="BUFF"/>
   <set name="operateType" val="OP_PASSIVE"/>
   <set name="bestowTriggered" val="true"/>
-  <set name="triggeredId" val="4227"/>
-  <set name="triggeredLevel" val="1"/>
+  <!--set name="triggeredId" val="4227"/>
+  <set name="triggeredLevel" val="1"/-->
   <set name="castRange" val="-1"/>
   <set name="effectRange" val="-1"/>
   <for>
@@ -986,7 +986,6 @@
   </for>
 </skill>
 <skill id="4258" levels="1" name="Anti Strider Slow">
-  <!-- Needs Core Support: Only can be used in an user who is riding a strider -->
   <set name="castRange" val="1000"/>
   <set name="effectRange" val="2000"/>
   <set name="hitTime" val="500"/>
@@ -1286,6 +1285,9 @@
   <set name="target" val="TARGET_SELF"/>
   <set name="skillType" val="BUFF"/>
   <set name="operateType" val="OP_PASSIVE"/>
+  <for>
+	<mul order="0x30" stat="darkVuln" val="1.2"/>
+  </for>
 </skill>
 <skill id="4279" levels="5" name="Fire Attack Weak Point">
   <table name="#fireVuln">1.1 1.15 1.2 1.3 1.5</table>

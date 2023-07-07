@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Character;
+import l2jorion.game.network.PacketServer;
 
-public class MagicSkillUser extends L2GameServerPacket
+public class MagicSkillUser extends PacketServer
 {
 	private static final String _S__5A_MAGICSKILLUSER = "[S] 5A MagicSkillUser";
 	

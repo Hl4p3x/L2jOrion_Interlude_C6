@@ -20,15 +20,13 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import l2jorion.Config;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PetInstance;
-import l2jorion.logger.Logger;
-import l2jorion.logger.LoggerFactory;
+import l2jorion.game.network.PacketServer;
 
-public class PetItemList extends L2GameServerPacket
+public class PetItemList extends PacketServer
 {
-	private static Logger LOG = LoggerFactory.getLogger(PetItemList.class);
+	// private static Logger LOG = LoggerFactory.getLogger(PetItemList.class);
 	
 	private static final String _S__cb_PETITEMLIST = "[S] b2  PetItemList";
 	
@@ -37,14 +35,6 @@ public class PetItemList extends L2GameServerPacket
 	public PetItemList(final L2PetInstance character)
 	{
 		_activeChar = character;
-		if (Config.DEBUG)
-		{
-			final L2ItemInstance[] items = _activeChar.getInventory().getItems();
-			for (final L2ItemInstance temp : items)
-			{
-				LOG.debug("item:" + temp.getItem().getName() + " type1:" + temp.getItem().getType1() + " type2:" + temp.getItem().getType2());
-			}
-		}
 	}
 	
 	@Override

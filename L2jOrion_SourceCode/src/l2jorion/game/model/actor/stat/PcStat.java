@@ -109,9 +109,9 @@ public class PcStat extends PlayableStat
 			return false;
 		}
 		
+		// It should work only for sin eater
 		// if this player has a pet that takes from the owner's Exp, give the pet Exp now
-		
-		if (activeChar.getPet() instanceof L2PetInstance)
+		if (activeChar.getPet() instanceof L2PetInstance && ((L2PetInstance) activeChar.getPet()).sinEater())
 		{
 			L2PetInstance pet = (L2PetInstance) activeChar.getPet();
 			ratioTakenByPlayer = pet.getPetData().getOwnerExpTaken() / 100f;
@@ -185,15 +185,15 @@ public class PcStat extends PlayableStat
 				ClassLevel lvlnow = PlayerClass.values()[getActiveChar().getClassId().getId()].getLevel();
 				if (getLevel() >= 20 && lvlnow == ClassLevel.First)
 				{
-					L2ClassMasterInstance.getInstance().onTable(getActiveChar());
+					L2ClassMasterInstance.getInstance().mainTable(getActiveChar());
 				}
 				else if (getLevel() >= 40 && lvlnow == ClassLevel.Second)
 				{
-					L2ClassMasterInstance.getInstance().onTable(getActiveChar());
+					L2ClassMasterInstance.getInstance().mainTable(getActiveChar());
 				}
 				else if (getLevel() >= 76 && lvlnow == ClassLevel.Third)
 				{
-					L2ClassMasterInstance.getInstance().onTable(getActiveChar());
+					L2ClassMasterInstance.getInstance().mainTable(getActiveChar());
 				}
 			}
 		}
@@ -327,26 +327,20 @@ public class PcStat extends PlayableStat
 	@Override
 	public final int getLevel()
 	{
-		try
+		final L2PcInstance player = getActiveChar();
+		
+		if (player.isSubClassActive())
 		{
-			final L2PcInstance player = getActiveChar();
+			int class_index = player.getClassIndex();
 			
-			if (player.isSubClassActive())
+			SubClass player_subclass = null;
+			if ((player_subclass = player.getSubClasses().get(class_index)) != null)
 			{
-				int class_index = player.getClassIndex();
-				
-				SubClass player_subclass = null;
-				if ((player_subclass = player.getSubClasses().get(class_index)) != null)
-				{
-					return player_subclass.getLevel();
-				}
+				return player_subclass.getLevel();
 			}
-			return super.getLevel();
 		}
-		catch (NullPointerException e)
-		{
-			return -1;
-		}
+		
+		return super.getLevel();
 	}
 	
 	@Override

@@ -52,9 +52,6 @@ public class AdminPForge implements IAdminCommandHandler
 				st.nextToken();
 				String format = st.nextToken();
 				showPage2(activeChar, format);
-				
-				st = null;
-				format = null;
 			}
 			catch (final Exception ex)
 			{
@@ -160,10 +157,6 @@ public class AdminPForge implements IAdminCommandHandler
 					activeChar.sendPacket(sp);
 				}
 				showPage3(activeChar, format, command);
-				
-				format = null;
-				st = null;
-				sp = null;
 			}
 			catch (final Exception ex)
 			{
@@ -200,9 +193,6 @@ public class AdminPForge implements IAdminCommandHandler
 		
 		adminReply.replace("%send%", replyMSG.toString());
 		activeChar.sendPacket(adminReply);
-		
-		replyMSG = null;
-		adminReply = null;
 	}
 	
 	private void showPage3(final L2PcInstance activeChar, final String format, final String command)
@@ -220,5 +210,4 @@ public class AdminPForge implements IAdminCommandHandler
 	{
 		return ADMIN_COMMANDS;
 	}
-	
 }

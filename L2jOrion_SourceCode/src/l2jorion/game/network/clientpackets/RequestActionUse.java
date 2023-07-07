@@ -25,8 +25,10 @@ import java.util.List;
 import java.util.Map;
 
 import l2jorion.Config;
+import l2jorion.game.ai.CtrlEvent;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.ai.L2SummonAI;
+import l2jorion.game.ai.NextAction;
 import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.managers.CastleManager;
@@ -44,16 +46,19 @@ import l2jorion.game.model.actor.instance.L2SiegeSummonInstance;
 import l2jorion.game.model.actor.instance.L2StaticObjectInstance;
 import l2jorion.game.model.actor.instance.L2SummonInstance;
 import l2jorion.game.model.zone.ZoneId;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ChairSit;
+import l2jorion.game.network.serverpackets.PrivateStoreManageListBuy;
+import l2jorion.game.network.serverpackets.PrivateStoreManageListSell;
 import l2jorion.game.network.serverpackets.RecipeShopManageList;
 import l2jorion.game.network.serverpackets.Ride;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestActionUse extends L2GameClientPacket
+public final class RequestActionUse extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestActionUse.class);
 	
@@ -131,38 +136,18 @@ public final class RequestActionUse extends L2GameClientPacket
 		final L2Summon pet = activeChar.getPet();
 		final L2Object target = activeChar.getTarget();
 		
-		if (Config.DEBUG)
-		{
-			LOG.info("Requested Action ID: " + String.valueOf(_actionId));
-		}
-		
 		switch (_actionId)
 		{
 			case 0:
-				if (activeChar.getMountType() != 0)
+				if (activeChar.isSitting() || !activeChar.isMoving() || activeChar.isFakeDeath())
 				{
-					break;
-				}
-				
-				if (target != null && !activeChar.isSitting() && target instanceof L2StaticObjectInstance && ((L2StaticObjectInstance) target).getType() == 1 && CastleManager.getInstance().getCastle(target) != null
-					&& activeChar.isInsideRadius(target, L2StaticObjectInstance.INTERACTION_DISTANCE, false, false))
-				{
-					final ChairSit cs = new ChairSit(activeChar, ((L2StaticObjectInstance) target).getStaticObjectId());
-					activeChar.sendPacket(cs);
-					activeChar.sitDown();
-					activeChar.broadcastPacket(cs);
-					break;
-				}
-				
-				if (activeChar.isSitting() || activeChar.isFakeDeath())
-				{
-					activeChar.standUp();
+					useSit(activeChar, target);
 				}
 				else
 				{
-					activeChar.sitDown();
+					final NextAction nextAction = new NextAction(CtrlEvent.EVT_ARRIVED, CtrlIntention.AI_INTENTION_MOVE_TO, () -> useSit(activeChar, target));
+					activeChar.getAI().setNextAction(nextAction);
 				}
-				
 				break;
 			case 1:
 				if (activeChar.isRunning())
@@ -241,6 +226,8 @@ public final class RequestActionUse extends L2GameClientPacket
 				if (pet != null && !pet.isMovementDisabled() && !activeChar.isBetrayed())
 				{
 					pet.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, null);
+					
+					((L2SummonAI) pet.getAI()).notifyFollowStatusChange(); // after stop must go back to owner
 				}
 				
 				break;
@@ -566,16 +553,16 @@ public final class RequestActionUse extends L2GameClientPacket
 			case 1001:
 				break;
 			case 1003: // Wind Hatchling/Strider - Wild Stun
-				useSkill(4710); // TODO use correct skill lvl based on pet lvl
+				useSkill(4710);
 				break;
 			case 1004: // Wind Hatchling/Strider - Wild Defense
-				useSkill(4711, activeChar); // TODO use correct skill lvl based on pet lvl
+				useSkill(4711, activeChar);
 				break;
 			case 1005: // Star Hatchling/Strider - Bright Burst
-				useSkill(4712); // TODO use correct skill lvl based on pet lvl
+				useSkill(4712);
 				break;
 			case 1006: // Star Hatchling/Strider - Bright Heal
-				useSkill(4713, activeChar); // TODO use correct skill lvl based on pet lvl
+				useSkill(4713, activeChar);
 				break;
 			case 1007: // Cat Queen - Blessing of Queen
 				useSkill(4699, activeChar);
@@ -646,14 +633,164 @@ public final class RequestActionUse extends L2GameClientPacket
 					useSkill(5111);
 				}
 				break;
+			case 2000:
+				if (activeChar.isSittingTaskLaunched())
+				{
+					sendPacket(ActionFailed.STATIC_PACKET);
+					return;
+				}
+				
+				if (!Config.LIST_ALLOWED_CLASSES.contains(activeChar.getClassId().getId()))
+				{
+					activeChar.sendMessage("This class can not sell buffs.");
+					activeChar.sendPacket(ActionFailed.STATIC_PACKET);
+					return;
+				}
+				
+				if (activeChar.getPrivateStoreType() != L2PcInstance.STORE_PRIVATE_NONE)
+				{
+					activeChar.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_NONE);
+					
+					if (activeChar.isSitting())
+					{
+						activeChar.standUp();
+					}
+					
+				}
+				activeChar.sendPacket(new PrivateStoreManageListSell(activeChar, true, 57));
+				break;
+			case 2001:
+				if (activeChar.isSittingTaskLaunched())
+				{
+					sendPacket(ActionFailed.STATIC_PACKET);
+					return;
+				}
+				
+				if (!Config.LIST_ALLOWED_CLASSES.contains(activeChar.getClassId().getId()))
+				{
+					activeChar.sendMessage("This class can not sell buffs.");
+					activeChar.sendPacket(ActionFailed.STATIC_PACKET);
+					return;
+				}
+				
+				if (activeChar.getPrivateStoreType() != L2PcInstance.STORE_PRIVATE_NONE)
+				{
+					activeChar.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_NONE);
+					
+					if (activeChar.isSitting())
+					{
+						activeChar.standUp();
+					}
+					
+				}
+				activeChar.sendPacket(new PrivateStoreManageListSell(activeChar, true, 5575));
+				break;
+			case 2002:
+				if (activeChar.isSittingTaskLaunched())
+				{
+					sendPacket(ActionFailed.STATIC_PACKET);
+					return;
+				}
+				
+				if (!Config.LIST_ALLOWED_CLASSES.contains(activeChar.getClassId().getId()))
+				{
+					activeChar.sendMessage("This class can not sell buffs.");
+					activeChar.sendPacket(ActionFailed.STATIC_PACKET);
+					return;
+				}
+				
+				if (activeChar.getPrivateStoreType() != L2PcInstance.STORE_PRIVATE_NONE)
+				{
+					activeChar.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_NONE);
+					
+					if (activeChar.isSitting())
+					{
+						activeChar.standUp();
+					}
+					
+				}
+				activeChar.sendPacket(new PrivateStoreManageListSell(activeChar, true, 4037));
+				break;
+			case 2003:
+				if (activeChar.isSittingTaskLaunched())
+				{
+					sendPacket(ActionFailed.STATIC_PACKET);
+					return;
+				}
+				
+				if (activeChar.getPrivateStoreType() != L2PcInstance.STORE_PRIVATE_NONE)
+				{
+					activeChar.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_NONE);
+					
+					if (activeChar.isSitting())
+					{
+						activeChar.standUp();
+					}
+					
+				}
+				activeChar.sendPacket(new PrivateStoreManageListSell(activeChar, 5575));
+				break;
+			case 2004:
+				if (activeChar.isSittingTaskLaunched())
+				{
+					sendPacket(ActionFailed.STATIC_PACKET);
+					return;
+				}
+				
+				if (activeChar.getPrivateStoreType() != L2PcInstance.STORE_PRIVATE_NONE)
+				{
+					activeChar.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_NONE);
+					
+					if (activeChar.isSitting())
+					{
+						activeChar.standUp();
+					}
+					
+				}
+				activeChar.sendPacket(new PrivateStoreManageListSell(activeChar, 4037));
+				break;
+			case 2005:
+				if (activeChar.isSittingTaskLaunched())
+				{
+					sendPacket(ActionFailed.STATIC_PACKET);
+					return;
+				}
+				
+				if (activeChar.getPrivateStoreType() != L2PcInstance.STORE_PRIVATE_NONE)
+				{
+					activeChar.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_NONE);
+					
+					if (activeChar.isSitting())
+					{
+						activeChar.standUp();
+					}
+				}
+				activeChar.sendPacket(new PrivateStoreManageListBuy(activeChar, 5575));
+				break;
+			case 2006:
+				if (activeChar.isSittingTaskLaunched())
+				{
+					sendPacket(ActionFailed.STATIC_PACKET);
+					return;
+				}
+				
+				if (activeChar.getPrivateStoreType() != L2PcInstance.STORE_PRIVATE_NONE)
+				{
+					activeChar.setPrivateStoreType(L2PcInstance.STORE_PRIVATE_NONE);
+					
+					if (activeChar.isSitting())
+					{
+						activeChar.standUp();
+					}
+				}
+				activeChar.sendPacket(new PrivateStoreManageListBuy(activeChar, 4037));
+				break;
 			default:
 				LOG.warn(activeChar.getName() + ": unhandled action type " + _actionId);
+				break;
 		}
 	}
 	
-	/*
-	 * Cast a skill for active pet/servitor. Target is specified as a parameter but can be overwrited or ignored depending on skill type.
-	 */
 	private void useSkill(final int skillId, final L2Object target)
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
@@ -684,10 +821,6 @@ public final class RequestActionUse extends L2GameClientPacket
 			
 			if (skill == null)
 			{
-				if (Config.DEBUG)
-				{
-					LOG.warn("Skill " + skillId + " missing from npcskills.sql for a summon id " + activeSummon.getNpcId());
-				}
 				return;
 			}
 			
@@ -707,9 +840,6 @@ public final class RequestActionUse extends L2GameClientPacket
 		}
 	}
 	
-	/*
-	 * Cast a skill for active pet/servitor. Target is retrieved from owner' target, then validated by overloaded method useSkill(int, L2Character).
-	 */
 	private void useSkill(final int skillId)
 	{
 		final L2PcInstance activeChar = getClient().getActiveChar();
@@ -719,6 +849,34 @@ public final class RequestActionUse extends L2GameClientPacket
 		}
 		
 		useSkill(skillId, activeChar.getTarget());
+	}
+	
+	protected boolean useSit(L2PcInstance activeChar, L2Object target)
+	{
+		if (activeChar.getMountType() != 0)
+		{
+			return false;
+		}
+		
+		if (!activeChar.isSitting() && target instanceof L2StaticObjectInstance && ((L2StaticObjectInstance) target).getType() == 1 && CastleManager.getInstance().getCastle(target) != null && activeChar.isInsideRadius(target, L2StaticObjectInstance.INTERACTION_DISTANCE, false, false))
+		{
+			final ChairSit cs = new ChairSit(activeChar, ((L2StaticObjectInstance) target).getStaticObjectId());
+			activeChar.sendPacket(cs);
+			activeChar.sitDown();
+			activeChar.broadcastPacket(cs);
+			return true;
+		}
+		
+		if (activeChar.isSitting() || activeChar.isFakeDeath())
+		{
+			activeChar.standUp();
+		}
+		else
+		{
+			activeChar.sitDown();
+		}
+		
+		return true;
 	}
 	
 	@Override

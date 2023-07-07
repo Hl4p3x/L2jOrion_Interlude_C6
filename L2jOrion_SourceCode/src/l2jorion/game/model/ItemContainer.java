@@ -32,6 +32,8 @@ import l2jorion.game.datatables.sql.ItemTable;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2ItemInstance.ItemLocation;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.SystemMessageId;
+import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
@@ -256,8 +258,6 @@ public abstract class ItemContainer
 		
 		refreshWeight();
 		
-		olditem = null;
-		
 		return item;
 	}
 	
@@ -378,16 +378,6 @@ public abstract class ItemContainer
 		return item;
 	}
 	
-	/**
-	 * Transfers item to another inventory
-	 * @param process : String Identifier of process triggering this action
-	 * @param objectId
-	 * @param count : int Quantity of items to be transfered
-	 * @param target
-	 * @param actor : L2PcInstance Player requesting the item transfer
-	 * @param reference : L2Object Object referencing current action like NPC selling item or previous item in transformation
-	 * @return L2ItemInstance corresponding to the new item or the updated item in inventory
-	 */
 	public L2ItemInstance transferItem(String process, int objectId, int count, ItemContainer target, L2PcInstance actor, L2Object reference)
 	{
 		if (target == null)
@@ -409,6 +399,19 @@ public abstract class ItemContainer
 			if (getItemByObjectId(objectId) != sourceitem)
 			{
 				return null;
+			}
+			
+			if (process.contains("WarehouseDeposit") && targetitem != null)
+			{
+				long number1 = Long.valueOf(targetitem.getCount());
+				long number2 = Long.valueOf(count);
+				
+				if ((number1 + number2) >= Long.valueOf(Integer.MAX_VALUE))
+				{
+					actor.sendPacket(new SystemMessage(SystemMessageId.YOU_HAVE_EXCEEDED_QUANTITY_THAT_CAN_BE_INPUTTED));
+					actor.sendMessage("You have reached the limit of an item: " + targetitem.getItemName() + " in the warehouse.");
+					return null;
+				}
 			}
 			
 			// Check if requested quantity is available
@@ -477,7 +480,6 @@ public abstract class ItemContainer
 	{
 		synchronized (item)
 		{
-			// check if item is present in this container
 			if (!_items.contains(item))
 			{
 				return null;
@@ -656,6 +658,22 @@ public abstract class ItemContainer
 		return count;
 	}
 	
+	public int getAA()
+	{
+		int count = 0;
+		
+		for (L2ItemInstance item : _items)
+		{
+			if (item.getItemId() == 5575)
+			{
+				count = item.getCount();
+				return count;
+			}
+		}
+		
+		return count;
+	}
+	
 	/**
 	 * Adds item to inventory for further adjustments.
 	 * @param item : L2ItemInstance to be added from inventory
@@ -794,9 +812,6 @@ public abstract class ItemContainer
 			inv.close();
 			statement.close();
 			
-			inv = null;
-			statement = null;
-			item = null;
 		}
 		catch (final SQLException e)
 		{

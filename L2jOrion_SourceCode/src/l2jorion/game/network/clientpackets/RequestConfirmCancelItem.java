@@ -23,12 +23,13 @@ import l2jorion.Config;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExConfirmCancelItem;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2Item;
 
-public final class RequestConfirmCancelItem extends L2GameClientPacket
+public final class RequestConfirmCancelItem extends PacketClient
 {
 	private int _itemId;
 	

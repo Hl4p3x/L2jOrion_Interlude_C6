@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class CharDeleteFail extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class CharDeleteFail extends PacketServer
 {
 	private static final String _S__34_CHARDELETEFAIL = "[S] 24 CharDeleteFail";
 	

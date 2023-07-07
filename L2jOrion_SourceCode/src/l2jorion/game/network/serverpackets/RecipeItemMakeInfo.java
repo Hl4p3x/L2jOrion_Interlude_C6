@@ -24,10 +24,11 @@ import l2jorion.Config;
 import l2jorion.game.datatables.csv.RecipeTable;
 import l2jorion.game.model.L2RecipeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class RecipeItemMakeInfo extends L2GameServerPacket
+public class RecipeItemMakeInfo extends PacketServer
 {
 	private static final String _S__D7_RECIPEITEMMAKEINFO = "[S] D7 RecipeItemMakeInfo";
 	

@@ -1,14 +1,11 @@
-#
-# Created by DraX on 2005.08.08 modified by Ariakas on 2005.09.19
-#
-
 import sys
 
 from l2jorion.game.model.quest        import State
 from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
+
 qn = "30565_kakai_occupation_change"
-#print "30565. Kakai occupation change"
+
 KAKAI_LORD_OF_FLAME = 30565
 
 class Quest (JQuest) :

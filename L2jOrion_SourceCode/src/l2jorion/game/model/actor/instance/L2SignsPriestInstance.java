@@ -26,7 +26,9 @@ import javolution.text.TextBuilder;
 import l2jorion.Config;
 import l2jorion.game.cache.HtmCache;
 import l2jorion.game.datatables.sql.ClanTable;
+import l2jorion.game.datatables.sql.TeleportLocationTable;
 import l2jorion.game.model.L2Clan;
+import l2jorion.game.model.L2TeleportLocation;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
@@ -163,7 +165,6 @@ public class L2SignsPriestInstance extends L2FolkInstance
 									return;
 								}
 							}
-							// TODO
 							if (!getPlayerAllyHasCastle(player))
 							{
 								if (cabal == SevenSigns.CABAL_DAWN)
@@ -406,12 +407,10 @@ public class L2SignsPriestInstance extends L2FolkInstance
 						
 						player.addAncientAdena("SevenSigns", ancientAdenaReward, this, true);
 						
-						// Send inventory update packet
 						iu = new InventoryUpdate();
 						iu.addModifiedItem(player.getInventory().getAncientAdenaInstance());
 						sendPacket(iu);
 						
-						// Update current load as well
 						su = new StatusUpdate(player.getObjectId());
 						su.addAttribute(StatusUpdate.CUR_LOAD, player.getCurrentLoad());
 						sendPacket(su);
@@ -424,32 +423,32 @@ public class L2SignsPriestInstance extends L2FolkInstance
 					{
 						String portInfo = command.substring(14).trim();
 						
-						StringTokenizer st = new StringTokenizer(portInfo);
-						final int x = Integer.parseInt(st.nextToken());
-						final int y = Integer.parseInt(st.nextToken());
-						final int z = Integer.parseInt(st.nextToken());
-						final int ancientAdenaCost = Integer.parseInt(st.nextToken());
+						int locId = 0;
 						
-						if (ancientAdenaCost > 0)
+						try
 						{
-							if (!player.reduceAncientAdena("SevenSigns", ancientAdenaCost, this, true))
-							{
-								break;
-							}
+							locId = Integer.parseInt(portInfo);
+						}
+						catch (NumberFormatException e)
+						{
+							LOG.error("{}: Wrong format (case 11) portInfo:{}", getClass().getSimpleName(), portInfo);
 						}
 						
-						portInfo = null;
-						st = null;
-						player.teleToLocation(x, y, z, true);
+						L2TeleportLocation portPoint = TeleportLocationTable.getInstance().getTemplate(locId);
+						
+						if (player.reduceAncientAdena("SevenSigns", portPoint.getPrice(), this, true))
+						{
+							player.teleToLocation(portPoint.getLocX(), portPoint.getLocY(), portPoint.getLocZ(), true);
+						}
 					}
-					catch (final Exception e)
+					catch (Exception e)
 					{
 						if (Config.ENABLE_ALL_EXCEPTIONS)
 						{
 							e.printStackTrace();
 						}
 						
-						LOG.warn("SevenSigns: Error occurred while teleporting player: " + e);
+						LOG.error("{}: Error occurred while teleporting player:{}", getClass().getSimpleName(), e);
 					}
 					break;
 				case 17: // Exchange Seal Stones for Ancient Adena (Type Choice) - SevenSigns 17 x
@@ -635,8 +634,6 @@ public class L2SignsPriestInstance extends L2FolkInstance
 					NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 					html.setHtml(contentBuffer.toString());
 					player.sendPacket(html);
-					contentBuffer = null;
-					html = null;
 					break;
 				default:
 					// 1 = Purchase Record Intro

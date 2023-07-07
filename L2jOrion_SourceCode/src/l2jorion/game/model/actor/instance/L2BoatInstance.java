@@ -85,12 +85,6 @@ public class L2BoatInstance extends L2Vehicle
 	}
 	
 	@Override
-	public final String getLevels()
-	{
-		return "" + 0;
-	}
-	
-	@Override
 	public void sendInfo(L2PcInstance activeChar)
 	{
 		activeChar.sendPacket(new VehicleInfo(this));

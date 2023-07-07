@@ -27,7 +27,6 @@ package l2jorion.logger.impl;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
-import l2jorion.logger.Logger;
 import l2jorion.logger.Marker;
 import l2jorion.logger.event.EventConstants;
 import l2jorion.logger.event.LoggingEvent;
@@ -36,11 +35,6 @@ import l2jorion.logger.helpers.MarkerIgnoringBase;
 import l2jorion.logger.helpers.MessageFormatter;
 import l2jorion.logger.spi.LocationAwareLogger;
 
-/**
- * A wrapper over {@link java.util.logging.Logger java.util.logging.Logger} in conformity with the {@link Logger} interface. Note that the logging levels mentioned in this class refer to those defined in the java.util.logging package.
- * @author Ceki G&uuml;lc&uuml;
- * @author Peter Royal
- */
 public final class JDK14LoggerAdapter extends MarkerIgnoringBase implements LocationAwareLogger
 {
 	

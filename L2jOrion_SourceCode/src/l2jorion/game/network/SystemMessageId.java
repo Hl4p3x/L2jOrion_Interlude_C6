@@ -11818,7 +11818,7 @@ public final class SystemMessageId
 	public static final SystemMessageId MISSED_TARGET2;
 	public static final SystemMessageId CRITICAL_HIT2;
 	public static final SystemMessageId CRITICAL_HIT_MAGIC2;
-	public static final SystemMessageId PREMIUM_MESSAGE;
+	// public static final SystemMessageId PREMIUM_MESSAGE;
 	public static final SystemMessageId S1_HUNTED_PLAYER_S2_IN_S3;
 	public static final SystemMessageId S1_ASSASSINATED_PLAYER_S2_IN_S3;
 	
@@ -13799,9 +13799,9 @@ public final class SystemMessageId
 		MISSED_TARGET2 = new SystemMessageId(2156);
 		CRITICAL_HIT2 = new SystemMessageId(2157);
 		CRITICAL_HIT_MAGIC2 = new SystemMessageId(2158);
-		PREMIUM_MESSAGE = new SystemMessageId(2159);
-		S1_HUNTED_PLAYER_S2_IN_S3 = new SystemMessageId(2160);
-		S1_ASSASSINATED_PLAYER_S2_IN_S3 = new SystemMessageId(2161);
+		// PREMIUM_MESSAGE = new SystemMessageId(2159);
+		S1_HUNTED_PLAYER_S2_IN_S3 = new SystemMessageId(2159);
+		S1_ASSASSINATED_PLAYER_S2_IN_S3 = new SystemMessageId(2160);
 		
 		SUBSCRIPTION_MSG = new SystemMessageId(2162);
 		

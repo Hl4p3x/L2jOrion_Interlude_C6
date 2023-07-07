@@ -23,15 +23,15 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.util.Util;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class RequestSocialAction extends L2GameClientPacket
+public class RequestSocialAction extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestSocialAction.class);
 	private int _actionId;
@@ -51,12 +51,6 @@ public class RequestSocialAction extends L2GameClientPacket
 			return;
 		}
 		
-		if (activeChar.isSubmitingPin())
-		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
 		// You cannot do anything else while fishing
 		if (activeChar.isFishing())
 		{
@@ -69,7 +63,7 @@ public class RequestSocialAction extends L2GameClientPacket
 		// check if its the actionId is allowed
 		if (_actionId < 2 || _actionId > 13)
 		{
-			Util.handleIllegalPlayerAction(activeChar, "Warning!! Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " requested an internal Social Action.", Config.DEFAULT_PUNISH);
+			Util.handleIllegalPlayerAction(activeChar, "Warning! Character " + activeChar.getName() + " of account " + activeChar.getAccountName() + " requested an internal Social Action.", Config.DEFAULT_PUNISH);
 			return;
 		}
 		
@@ -84,7 +78,6 @@ public class RequestSocialAction extends L2GameClientPacket
 			activeChar.broadcastPacket(atk);
 		}
 	}
-	
 	
 	@Override
 	public String getType()

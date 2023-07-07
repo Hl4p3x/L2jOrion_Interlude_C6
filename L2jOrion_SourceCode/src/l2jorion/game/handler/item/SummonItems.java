@@ -150,6 +150,8 @@ public class SummonItems implements IItemHandler
 			return;
 		}
 		
+		SystemMessage sm = SystemMessage.getSystemMessage(SystemMessageId.USE_S1);
+		
 		switch (sitem.getType())
 		{
 			case 0: // static summons (like christmas tree)
@@ -186,6 +188,8 @@ public class SummonItems implements IItemHandler
 				activeChar.useMagic(skill, true, true);
 				activeChar.sendPacket(new SystemMessage(SystemMessageId.SUMMON_A_PET));
 				ThreadPoolManager.getInstance().scheduleGeneral(new PetSummonFinalizer(activeChar, npcTemplate, item), 4800);
+				sm.addItemName(item.getItemId());
+				activeChar.sendPacket(sm);
 				break;
 			case 2: // wyvern
 				if (!activeChar.disarmWeapons())
@@ -198,6 +202,8 @@ public class SummonItems implements IItemHandler
 				activeChar.broadcastPacket(mount);
 				activeChar.setMountType(mount.getMountType());
 				activeChar.setMountObjectID(item.getObjectId());
+				sm.addItemName(item.getItemId());
+				activeChar.sendPacket(sm);
 		}
 	}
 	

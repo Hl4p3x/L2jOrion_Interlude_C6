@@ -28,9 +28,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import javolution.text.TextBuilder;
 import l2jorion.Config;
+import l2jorion.bots.FakePlayer;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.datatables.csv.MapRegionTable;
 import l2jorion.game.datatables.sql.ClanTable;
@@ -56,6 +58,7 @@ import l2jorion.game.network.serverpackets.PartySmallWindowDeleteAll;
 import l2jorion.game.network.serverpackets.PledgeShowMemberListAll;
 import l2jorion.game.network.serverpackets.PledgeShowMemberListUpdate;
 import l2jorion.game.network.serverpackets.SetSummonRemainTime;
+import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.util.Util;
@@ -64,7 +67,15 @@ import l2jorion.logger.LoggerFactory;
 
 public class AdminEditChar implements IAdminCommandHandler
 {
+	private boolean showByLvl = false;
+	private boolean showByName = false;
+	
+	private boolean showBots = false;
+	private boolean showPlayers = false;
+	private boolean showOffliners = false;
+	
 	protected static final Logger LOG = LoggerFactory.getLogger(AdminEditChar.class);
+	
 	private final SimpleDateFormat fmt = new SimpleDateFormat("HH:mm:ss");
 	
 	private static String[] ADMIN_COMMANDS =
@@ -78,6 +89,8 @@ public class AdminEditChar implements IAdminCommandHandler
 		"admin_character_list", // same as character_info, kept for compatibility purposes
 		"admin_character_info", // given a player name, displays an information window
 		"admin_show_characters",
+		"admin_show_characters_opion",
+		"admin_show_bots",
 		"admin_find_character",
 		"admin_find_dualbox",
 		"admin_find_ip", // find all the player connections from a given IPv4 number
@@ -124,6 +137,8 @@ public class AdminEditChar implements IAdminCommandHandler
 		admin_character_list, // same as character_info, kept for compatibility purposes
 		admin_character_info, // given a player name, displays an information window
 		admin_show_characters,
+		admin_show_characters_opion,
+		admin_show_bots,
 		admin_find_character,
 		admin_find_dualbox,
 		admin_find_ip, // find all the player connections from a given IPv4 number
@@ -328,13 +343,111 @@ public class AdminEditChar implements IAdminCommandHandler
 				if (target != null)
 				{
 					showCharacterInfo(activeChar, target);
-					val = null;
 					return true;
 				}
+				
 				activeChar.sendPacket(new SystemMessage(SystemMessageId.CHARACTER_DOES_NOT_EXIST));
-				val = null;
 				return false;
-			} // given a player name:{} displays an information window
+			}
+			// XXX admin_show_characters_opion
+			case admin_show_characters_opion:
+			{
+				String option = "";
+				
+				if (st.hasMoreTokens())
+				{
+					option = st.nextToken();
+					
+					switch (Integer.parseInt(option))
+					{
+						case 0: // by online time
+						{
+							setShowByLvl(false);
+							setShowByName(false);
+						}
+							break;
+						case 1: // by level
+						{
+							if (isShowByLvl())
+							{
+								setShowByLvl(false);
+							}
+							else
+							{
+								setShowByName(false);
+								setShowByLvl(true);
+							}
+						}
+							break;
+						case 2: // by name
+						{
+							if (isShowByName())
+							{
+								setShowByName(false);
+							}
+							else
+							{
+								setShowByLvl(false);
+								setShowByName(true);
+							}
+						}
+							break;
+						case 3: // show bots
+						{
+							if (isShowBots())
+							{
+								setShowBots(false);
+							}
+							else
+							{
+								setShowOffliners(false);
+								setShowPlayers(false);
+								setShowBots(true);
+							}
+						}
+							break;
+						case 4: // show offliners
+						{
+							if (isShowOffliners())
+							{
+								setShowOffliners(false);
+							}
+							else
+							{
+								setShowBots(false);
+								setShowPlayers(false);
+								setShowOffliners(true);
+							}
+						}
+							break;
+						case 5: // show only online players
+						{
+							if (isShowPlayers())
+							{
+								setShowPlayers(false);
+							}
+							else
+							{
+								setShowBots(false);
+								setShowOffliners(false);
+								setShowPlayers(true);
+							}
+						}
+							break;
+					}
+					
+					try
+					{
+						listCharacters(activeChar, 0);
+						return true;
+					}
+					catch (final NumberFormatException e)
+					{
+						return false;
+					}
+				}
+				return false;
+			}
 			case admin_show_characters:
 			{
 				String val = "";
@@ -347,19 +460,41 @@ public class AdminEditChar implements IAdminCommandHandler
 					{
 						final int page = Integer.parseInt(val);
 						listCharacters(activeChar, page);
-						val = null;
 						return true;
 					}
 					catch (final NumberFormatException e)
 					{
 						activeChar.sendMessage("Usage: //show_characters <page_number>");
-						val = null;
 						listCharacters(activeChar, 0);
 						return false;
 					}
 				}
-				activeChar.sendMessage("Usage: //show_characters <page_number>");
 				listCharacters(activeChar, 0);
+				return false;
+			}
+			case admin_show_bots:
+			{
+				String val = "";
+				
+				if (st.hasMoreTokens())
+				{
+					val = st.nextToken();
+					
+					try
+					{
+						final int page = Integer.parseInt(val);
+						listBots(activeChar, page);
+						return true;
+					}
+					catch (final NumberFormatException e)
+					{
+						activeChar.sendMessage("Usage: //show_bots <page_number>");
+						listBots(activeChar, 0);
+						return false;
+					}
+				}
+				activeChar.sendMessage("Usage: //show_bots <page_number>");
+				listBots(activeChar, 0);
 				return false;
 			}
 			case admin_find_character:
@@ -389,7 +524,6 @@ public class AdminEditChar implements IAdminCommandHandler
 				}
 				
 				findCharacter(activeChar, val);
-				val = null;
 				return true;
 			}
 			case admin_find_dualbox:
@@ -534,17 +668,11 @@ public class AdminEditChar implements IAdminCommandHandler
 					listCharacters(activeChar, 0);
 					return false;
 				}
-				target = null;
-				
 				player.setRecomHave(player.getRecomHave() + value);
 				SystemMessage sm = new SystemMessage(SystemMessageId.GM_S1);
 				sm.addString("You have been recommended by a GM");
 				player.sendPacket(sm);
 				player.broadcastUserInfo();
-				player = null;
-				sm = null;
-				val = null;
-				
 				return true;
 			}
 			case admin_setclass:
@@ -672,9 +800,6 @@ public class AdminEditChar implements IAdminCommandHandler
 					return false;
 				}
 				
-				target = null;
-				st = null;
-				
 				if (player != null)
 				{
 					player.setTitle(val);
@@ -689,14 +814,11 @@ public class AdminEditChar implements IAdminCommandHandler
 					npc.setTitle(val);
 					npc.updateAbnormalEffect();
 				}
-				
-				val = null;
-				
 				return true;
 			}
 			case admin_setsex:
 			{
-				final L2Object target = activeChar.getTarget();
+				L2Object target = activeChar.getTarget();
 				L2PcInstance player = null;
 				
 				if (target instanceof L2PcInstance)
@@ -705,16 +827,17 @@ public class AdminEditChar implements IAdminCommandHandler
 				}
 				else
 				{
-					activeChar.sendMessage("Select player before command");
-					return false;
+					player = activeChar;
 				}
+				
 				player.getAppearance().setSex(player.getAppearance().getSex() ? false : true);
 				L2PcInstance.setSexDB(player, 1);
-				player.sendMessage("Your gender has been changed by a GM");
-				player.decayMe();
-				player.spawnMe(player.getX(), player.getY(), player.getZ());
-				player.broadcastUserInfo();
 				
+				player.sendMessage("Your gender has been changed to " + (player.getAppearance().getSex() ? "female" : "male") + " by a GM/Admin.");
+				player.decayMe();
+				player.spawnMe();
+				player.broadcastUserInfo();
+				player.broadcastPacket(new SocialAction(player.getObjectId(), 15));
 				return true;
 			}
 			case admin_setcolor:
@@ -1042,7 +1165,6 @@ public class AdminEditChar implements IAdminCommandHandler
 				showCharacterInfo(activeChar, null);
 				break;
 			}
-			// TODO ALIVE
 			case admin_alive:
 			{
 				// phantomPlayers.getInstance().startWalk((L2PcInstance) activeChar.getTarget());
@@ -1050,7 +1172,6 @@ public class AdminEditChar implements IAdminCommandHandler
 				
 				break;
 			}
-			// TODO SEND MESSAGE
 			case admin_send_message:
 			{
 				String val = "";
@@ -1194,20 +1315,6 @@ public class AdminEditChar implements IAdminCommandHandler
 				showCharacterInfo(activeChar, null);
 				break;
 			}
-			case admin_rndWalk_start:
-			{
-				((L2PcInstance) activeChar.getTarget()).setIsPhantomRndWalk(true);
-				((L2PcInstance) activeChar.getTarget()).startPhantomAI();
-				showCharacterInfo(activeChar, null);
-				break;
-			}
-			case admin_rndWalk_stop:
-			{
-				((L2PcInstance) activeChar.getTarget()).setIsPhantomRndWalk(false);
-				((L2Character) activeChar.getTarget()).getAI().setIntention(AI_INTENTION_IDLE);
-				((L2PcInstance) activeChar.getTarget()).stopPhantomAI();
-				break;
-			}
 			case admin_phantom_come:
 			{
 				((L2PcInstance) activeChar.getTarget()).getAI().moveTo(activeChar.getX(), activeChar.getY(), activeChar.getZ());
@@ -1218,8 +1325,6 @@ public class AdminEditChar implements IAdminCommandHandler
 			}
 			case admin_phantom_stop:
 			{
-				// ((L2Character) activeChar.getTarget()).stopMove(null);
-				// ((L2Character) activeChar.getTarget()).getAI().stopFollow();
 				((L2Character) activeChar.getTarget()).getAI().setIntention(AI_INTENTION_IDLE);
 				showCharacterInfo(activeChar, null);
 				break;
@@ -1367,99 +1472,120 @@ public class AdminEditChar implements IAdminCommandHandler
 		return false;
 	}
 	
+	// XXX Show characters
 	private void listCharacters(final L2PcInstance activeChar, int page)
+	{// Page limit
+		int pageLimit = 10;
+		// List
+		Collection<L2PcInstance> onlineList = L2World.getInstance().getAllPlayers().values();
+		List<L2PcInstance> list = null;
+		
+		if (isShowByLvl())
+		{
+			list = onlineList.stream().sorted(Comparator.comparingLong(player -> ((L2PcInstance) player).getExp()).reversed()).filter(player -> player != null
+				&& ((isShowBots() ? player.isBot() : (isShowPlayers() ? !player.isBot() && !player.isInOfflineMode() : (isShowOffliners() ? player.isInOfflineMode() : player.isPlayer()))))).collect(Collectors.toList());
+		}
+		else if (isShowByName())
+		{
+			list = onlineList.stream().sorted(Comparator.comparing(player -> player.getName())).filter(player -> player != null
+				&& ((isShowBots() ? player.isBot() : (isShowPlayers() ? !player.isBot() && !player.isInOfflineMode() : (isShowOffliners() ? player.isInOfflineMode() : player.isPlayer()))))).collect(Collectors.toList());
+		}
+		else
+		{
+			list = onlineList.stream().sorted(Comparator.comparingLong(player -> player.getOnlineTime())).filter(player -> player != null
+				&& ((isShowBots() ? player.isBot() : (isShowPlayers() ? !player.isBot() && !player.isInOfflineMode() : (isShowOffliners() ? player.isInOfflineMode() : player.isPlayer()))))).collect(Collectors.toList());
+		}
+		
+		int online = list.size();
+		
+		// Calculate page number
+		final int max = getMaxPageNumber(list.size(), pageLimit);
+		page = page > max ? max : page < 1 ? 1 : page;
+		// Cut list up to page number
+		list = list.subList((page - 1) * pageLimit, Math.min(page * pageLimit, list.size()));
+		
+		NpcHtmlMessage htm = new NpcHtmlMessage(1);
+		htm.setFile("data/html/admin/charlist.htm");
+		TextBuilder replyMSG = new TextBuilder();
+		
+		int count = 0;
+		
+		if (page > 1)
+		{
+			count = (pageLimit * page - pageLimit);
+		}
+		
+		for (L2PcInstance player : list)
+		{
+			count++;
+			
+			replyMSG.append("<table width=300><tr><td width=35>" + count + ".</td>"//
+				+ "<td width=120><a action=\"bypass -h admin_character_info " + player.getName() + "\">" + player.getName() + "</a></td>"//
+				+ "<td width=110>" + player.getTemplate().className + "</td><td width=40>" + player.getLevel() + "</td></tr></table>");
+			replyMSG.append("<img src=\"L2UI.Squaregray\" width=\"300\" height=\"1\">");
+		}
+		
+		replyMSG.append("<table width=300><tr>");
+		replyMSG.append("<td align=left width=100>" + (page > 1 ? "<button value=\"Prev\" action=\"bypass -h admin_show_characters " + (page - 1) + "\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" : "") + "</td>");
+		replyMSG.append("<td align=center width=100>Page: " + page + " / " + max + "</td>");
+		replyMSG.append("<td align=right width=100>" + (page < max ? "<button value=\"Next\" action=\"bypass -h admin_show_characters " + (page + 1) + "\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" : "") + "</td>");
+		replyMSG.append("</tr></table>");
+		
+		htm.replace("%total%", online);
+		htm.replace("%default%", (isShowByName() || isShowByLvl()) ? "<a action=\"bypass -h admin_show_characters_opion 0\">#</a>" : "#");
+		htm.replace("%name%", isShowByName() ? "Name" : "<a action=\"bypass -h admin_show_characters_opion 2\">Name</a>");
+		htm.replace("%level%", isShowByLvl() ? "Level" : "<a action=\"bypass -h admin_show_characters_opion 1\">Level</a>");
+		htm.replace("%bots%", isShowBots() ? "<button value=\"\" action=\"bypass -h admin_show_characters_opion 3\" width=15 height=15 back=\"L2UI.CheckB﻿ox_checked\" fore=\"L2UI.CheckBox_checked\">" : "<button value=\"\" action=\"bypass -h admin_show_characters_opion 3\" width=15 height=15 back=\"L2UI.CheckBox\" fore=\"L2UI.CheckBox\">");
+		htm.replace("%offliners%", isShowOffliners() ? "<button value=\"\" action=\"bypass -h admin_show_characters_opion 4\" width=15 height=15 back=\"L2UI.CheckB﻿ox_checked\" fore=\"L2UI.CheckBox_checked\">" : "<button value=\"\" action=\"bypass -h admin_show_characters_opion 4\" width=15 height=15 back=\"L2UI.CheckBox\" fore=\"L2UI.CheckBox\">");
+		htm.replace("%onliners%", isShowPlayers() ? "<button value=\"\" action=\"bypass -h admin_show_characters_opion 5\" width=15 height=15 back=\"L2UI.CheckB﻿ox_checked\" fore=\"L2UI.CheckBox_checked\">" : "<button value=\"\" action=\"bypass -h admin_show_characters_opion 5\" width=15 height=15 back=\"L2UI.CheckBox\" fore=\"L2UI.CheckBox\">");
+		htm.replace("%players%", replyMSG.toString());
+		activeChar.sendPacket(htm);
+	}
+	
+	public static int getMaxPageNumber(int objectsSize, int pageSize)
 	{
-		final Collection<L2PcInstance> allPlayers_with_offlines = L2World.getInstance().getAllPlayers().values();
+		return objectsSize / pageSize + (objectsSize % pageSize == 0 ? 0 : 1);
+	}
+	
+	private void listBots(final L2PcInstance activeChar, int page)
+	{
+		// Page limit
+		int pageLimit = 8;
+		// List
+		List<L2PcInstance> list = L2World.getInstance().getAllPlayers().values().stream().sorted(Comparator.comparingLong(player -> player.getOnlineTime())).filter(player -> player != null).collect(Collectors.toList());
+		// Calculate page number
+		final int max = getMaxPageNumber(list.size(), pageLimit);
+		page = page > max ? max : page < 1 ? 1 : page;
+		// Cut list up to page number
+		list = list.subList((page - 1) * pageLimit, Math.min(page * pageLimit, list.size()));
 		
-		List<L2PcInstance> online_players_list = new ArrayList<>();
-		
-		for (final L2PcInstance actual_player : allPlayers_with_offlines)
-		{
-			if (actual_player != null && actual_player.isOnline() == 1 && !actual_player.isInOfflineMode())
-			{
-				online_players_list.add(actual_player);
-			}
-			else if (actual_player == null)
-			{
-				LOG.warn("listCharacters: found player null into L2World Instance..");
-			}
-			else if (actual_player.isOnline() == 0 && Config.DEBUG)
-			{
-				LOG.warn("listCharacters: player " + actual_player.getName() + " not online into L2World Instance..");
-			}
-			else if (actual_player.isInOfflineMode() && Config.DEBUG)
-			{
-				LOG.warn("listCharacters: player " + actual_player.getName() + " offline into L2World Instance..");
-			}
-		}
-		
-		L2PcInstance[] players = online_players_list.toArray(new L2PcInstance[online_players_list.size()]);
-		online_players_list = null;
-		
-		final int MaxCharactersPerPage = 30;
-		int MaxPages = players.length / MaxCharactersPerPage;
-		
-		if (players.length > MaxCharactersPerPage * MaxPages)
-		{
-			MaxPages++;
-		}
-		
-		// Check if number of users changed
-		if (page > MaxPages)
-		{
-			page = MaxPages;
-		}
-		
-		final int CharactersStart = MaxCharactersPerPage * page;
-		int CharactersEnd = players.length;
-		
-		if (CharactersEnd - CharactersStart > MaxCharactersPerPage)
-		{
-			CharactersEnd = CharactersStart + MaxCharactersPerPage;
-		}
-		
-		NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
-		adminReply.setFile("data/html/admin/charlist.htm");
+		NpcHtmlMessage htm = new NpcHtmlMessage(1);
+		htm.setFile("data/html/admin/charlist.htm");
 		TextBuilder replyMSG = new TextBuilder();
 		
 		replyMSG.append("<table width=300>");
 		replyMSG.append("<tr>");
-		for (int x = 0; x < MaxPages; x++)
-		{
-			int pagenr = x + 1;
-			
-			if (pagenr == 12 || pagenr == 24 || pagenr == 36)
-			{
-				replyMSG.append("</tr></table><table width=300><tr>");
-			}
-			
-			replyMSG.append("<td width=15><center><a action=\"bypass -h admin_show_characters " + x + "\">[" + pagenr + "]</a></center></td>");
-			
-		}
-		replyMSG.append("</tr>");
-		replyMSG.append("</table>");
-		adminReply.replace("%pages%", replyMSG.toString());
 		
-		replyMSG.clear();
-		
-		int count = CharactersStart;
-		for (int i = CharactersStart; i < CharactersEnd; i++)
+		int count = 0;
+		for (L2PcInstance player : list)
 		{
 			count++;
 			
-			replyMSG.append("<tr><td width=120>" + count + ". <a action=\"bypass -h admin_character_info " + players[i].getName() + "\">" + players[i].getName() + "</a></td><td width=110>" + players[i].getTemplate().className + "</td><td width=40>" + players[i].getLevel() + "</td></tr>");
-			
+			replyMSG.append("<tr><td width=120>" + count + ". <a action=\"bypass -h admin_character_info " + player.getName() + "\">" + player.getName() + "</a></td><td width=110>" + player.getTemplate().className + "</td><td width=40>" + player.getLevel() + "</td></tr>");
 		}
 		
-		adminReply.replace("%players%", replyMSG.toString());
-		activeChar.sendPacket(adminReply);
+		replyMSG.append("</table>");
+		
+		replyMSG.append("<table width=300><tr>");
+		replyMSG.append("<td align=left width=100>" + (page > 1 ? "<button value=\"Prev\" action=\"bypass -h admin_show_characters " + (page - 1) + "\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" : "") + "</td>");
+		replyMSG.append("<td align=center width=100>Page: " + page + " / " + max + "</td>");
+		replyMSG.append("<td align=right width=100>" + (page < max ? "<button value=\"Next\" action=\"bypass -h admin_show_characters " + (page + 1) + "\" width=65 height=19 back=L2UI_ch3.smallbutton2_over fore=L2UI_ch3.smallbutton2>" : "") + "</td>");
+		replyMSG.append("</tr></table>");
+		
+		htm.replace("%players%", replyMSG.toString());
+		activeChar.sendPacket(htm);
 	}
 	
-	/**
-	 * @param activeChar
-	 * @param player
-	 * @param filename
-	 */
 	public static void gatherCharacterInfo(final L2PcInstance activeChar, final L2PcInstance player, final String filename)
 	{
 		String ip = "Disconnected";
@@ -1534,7 +1660,31 @@ public class AdminEditChar implements IAdminCommandHandler
 		adminReply.replace("%access%", String.valueOf(player.getAccessLevel().getLevel()));
 		adminReply.replace("%account%", String.valueOf(player.getAccountName()));
 		adminReply.replace("%ip%", ip);
+		
+		String type = "-";
+		if (activeChar.getTarget() instanceof FakePlayer)
+		{
+			switch (((FakePlayer) activeChar.getTarget()).getBotMode())
+			{
+				case 1:
+					type = "Newbie";
+					break;
+				case 2:
+					type = "Walker";
+					break;
+				case 3:
+					type = "PvP";
+					break;
+				case 4:
+					type = "Farmer";
+				case 5:
+					type = "Farmer Peace";
+					break;
+			}
+		}
+		adminReply.replace("%bot%", String.valueOf(type));
 		adminReply.replace("%heading%", String.valueOf(player.getHeading()));
+		adminReply.replace("%target%", player.getTarget() == null ? "-" : player.getTarget().getName());
 		activeChar.sendPacket(adminReply);
 	}
 	
@@ -1680,28 +1830,31 @@ public class AdminEditChar implements IAdminCommandHandler
 		player = null;
 	}
 	
+	// XXX findCharacter
 	private void findCharacter(final L2PcInstance activeChar, final String CharacterToFind)
 	{
 		int CharactersFound = 0;
-		
+		int count = 0;
 		String name;
 		Collection<L2PcInstance> allPlayers = L2World.getInstance().getAllPlayers().values();
 		L2PcInstance[] players = allPlayers.toArray(new L2PcInstance[allPlayers.size()]);
-		
-		allPlayers = null;
 		
 		NpcHtmlMessage adminReply = new NpcHtmlMessage(5);
 		adminReply.setFile("data/html/admin/charfind.htm");
 		TextBuilder replyMSG = new TextBuilder();
 		
 		for (final L2PcInstance player : players)
-		{ // Add player info into new Table row
+		{
 			name = player.getName();
 			
 			if (name.toLowerCase().contains(CharacterToFind.toLowerCase()))
 			{
+				count++;
 				CharactersFound = CharactersFound + 1;
-				replyMSG.append("<tr><td width=80><a action=\"bypass -h admin_character_list " + name + "\">" + name + "</a></td><td width=110>" + player.getTemplate().className + "</td><td width=40>" + player.getLevel() + "</td></tr>");
+				replyMSG.append("<table width=300><tr><td width=35>" + count + ".</td>"//
+					+ "<td width=120><a action=\"bypass -h admin_character_info " + player.getName() + "\">" + player.getName() + "</a></td>"//
+					+ "<td width=110>" + player.getTemplate().className + "</td><td width=40>" + player.getLevel() + "</td></tr></table>");
+				replyMSG.append("<img src=\"L2UI.Squaregray\" width=\"300\" height=\"1\">");
 			}
 			
 			if (CharactersFound > 20)
@@ -1709,9 +1862,6 @@ public class AdminEditChar implements IAdminCommandHandler
 				break;
 			}
 		}
-		
-		name = null;
-		players = null;
 		
 		adminReply.replace("%results%", replyMSG.toString());
 		replyMSG.clear();
@@ -1935,8 +2085,6 @@ public class AdminEditChar implements IAdminCommandHandler
 			{
 				return;
 			}
-			
-			target = null;
 		}
 		else
 		{
@@ -1944,6 +2092,56 @@ public class AdminEditChar implements IAdminCommandHandler
 		}
 		
 		gatherCharacterInfo(activeChar, player, "charinfo.htm");
+	}
+	
+	private void setShowByLvl(boolean option)
+	{
+		showByLvl = option;
+	}
+	
+	private boolean isShowByLvl()
+	{
+		return showByLvl;
+	}
+	
+	private void setShowByName(boolean option)
+	{
+		showByName = option;
+	}
+	
+	private boolean isShowByName()
+	{
+		return showByName;
+	}
+	
+	private void setShowBots(boolean option)
+	{
+		showBots = option;
+	}
+	
+	private boolean isShowBots()
+	{
+		return showBots;
+	}
+	
+	private void setShowPlayers(boolean option)
+	{
+		showPlayers = option;
+	}
+	
+	private boolean isShowPlayers()
+	{
+		return showPlayers;
+	}
+	
+	private void setShowOffliners(boolean option)
+	{
+		showOffliners = option;
+	}
+	
+	private boolean isShowOffliners()
+	{
+		return showOffliners;
 	}
 	
 	@Override

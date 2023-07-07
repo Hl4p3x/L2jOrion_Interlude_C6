@@ -191,10 +191,6 @@ public class Auction
 		{
 		}
 		
-		/*
-		 * (non-Javadoc)
-		 * @see java.lang.Runnable#run()
-		 */
 		@Override
 		public void run()
 		{
@@ -205,7 +201,9 @@ public class Auction
 			catch (final Throwable t)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					t.printStackTrace();
+				}
 			}
 		}
 	}
@@ -390,7 +388,9 @@ public class Auction
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Exception: saveAuctionDate(): " + e.getMessage(), e);
 		}
@@ -408,6 +408,15 @@ public class Auction
 	 */
 	public synchronized void setBid(final L2PcInstance bidder, final int bid)
 	{
+		if (Config.L2LIMIT_CUSTOM)
+		{
+			if (bidder.getClan().getLevel() < 6)
+			{
+				bidder.sendMessage("You can't bid, your clan's level is too low. Required level: 6");
+				return;
+			}
+		}
+		
 		int requiredAdena = bid;
 		
 		if (getHighestBidderName().equals(bidder.getClan().getLeaderName()))
@@ -425,7 +434,9 @@ public class Auction
 			}
 		}
 		if ((bid < getStartingBid()) || (bid <= getHighestBidderMaxBid()))
+		{
 			bidder.sendMessage("Bid Price must be higher");
+		}
 	}
 	
 	/**
@@ -559,7 +570,9 @@ public class Auction
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Exception: Auction.deleteFromDB(): " + e.getMessage(), e);
 		}
@@ -571,7 +584,9 @@ public class Auction
 		for (final Bidder b : _bidders.values())
 		{
 			if (ClanTable.getInstance().getClanByName(b.getClanName()).getHasHideout() == 0)
+			{
 				returnItem(b.getClanName(), b.getBid(), true); // 10 % tax
+			}
 			else
 			{
 				if (L2World.getInstance().getPlayer(b.getName()) != null)
@@ -604,7 +619,9 @@ public class Auction
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Exception: Auction.deleteFromDB(): " + e.getMessage(), e);
 		}
@@ -684,7 +701,9 @@ public class Auction
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Exception: Auction.cancelBid(String bidder): " + e.getMessage(), e);
 		}
@@ -741,7 +760,9 @@ public class Auction
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Exception: Auction.load(): " + e.getMessage(), e);
 		}

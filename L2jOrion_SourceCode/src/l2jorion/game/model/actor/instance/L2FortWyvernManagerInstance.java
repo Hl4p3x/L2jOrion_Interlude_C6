@@ -25,12 +25,9 @@ import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToPawn;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 import l2jorion.game.network.serverpackets.Ride;
+import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.game.util.Broadcast;
-
-/**
- * @author Scoria, Qwerty
- */
+import l2jorion.util.random.Rnd;
 
 public class L2FortWyvernManagerInstance extends L2NpcInstance
 {
@@ -97,7 +94,9 @@ public class L2FortWyvernManagerInstance extends L2NpcInstance
 			if (player.getInventory().getItemByItemId(1460) != null && player.getInventory().getItemByItemId(1460).getCount() >= 10)
 			{
 				if (!player.disarmWeapons())
+				{
 					return;
+				}
 				
 				if (player.isMounted())
 				{
@@ -142,32 +141,35 @@ public class L2FortWyvernManagerInstance extends L2NpcInstance
 	public void onAction(final L2PcInstance player)
 	{
 		if (!canTarget(player))
+		{
 			return;
+		}
 		
-		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
 		{
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
 		}
 		else
 		{
-			// Calculate the distance between the L2PcInstance and the L2NpcInstance
 			if (!canInteract(player))
 			{
-				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 			}
 			else
 			{
-				// Like L2OFF player must rotate to the Npc
-				MoveToPawn sp = new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE);
-				player.sendPacket(sp);
-				Broadcast.toKnownPlayers(player, sp);
+				if (player.isMoving())
+				{
+					player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+				}
+				
+				player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
+				
+				broadcastPacket(new SocialAction(getObjectId(), Rnd.get(8)));
 				
 				showMessageWindow(player);
 			}
 		}
+		
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
@@ -202,9 +204,13 @@ public class L2FortWyvernManagerInstance extends L2NpcInstance
 			if (player.getClan() != null)
 			{
 				if (getFort().getSiege().getIsInProgress())
+				{
 					return COND_BUSY_BECAUSE_OF_SIEGE; // Busy because of siege
+				}
 				else if (getFort().getOwnerId() == player.getClanId() && player.isClanLeader())
+				{
 					return COND_OWNER; // Owner
+				}
 			}
 		}
 		return COND_ALL_FALSE;

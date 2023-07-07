@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<!-- Admin command for location: //loc4 -->
+	<!-- zoneId starts from 1 and increases by +1 -->
+	<bot zoneId="1" type="peace">
+		<node X="149600" Y="-112439" Z="-2065"/>
+	</bot>
+	<bot zoneId="2">
+		<node X="149720" Y="-111706" Z="-2199"/>
+	</bot>
+</list>

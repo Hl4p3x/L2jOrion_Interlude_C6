@@ -41,6 +41,7 @@ public class AuctionManager
 	
 	private static final String[] ITEM_INIT_DATA =
 	{
+		"(22, 0, 'NPC', 'NPC Clan', 'ClanHall', 22, 0, 'Moonstone Hall', 1, 20000000, 0, 1164841200000)",
 		"(23, 0, 'NPC', 'NPC Clan', 'ClanHall', 23, 0, 'Onyx Hall', 1, 20000000, 0, 1164841200000)",
 		"(24, 0, 'NPC', 'NPC Clan', 'ClanHall', 24, 0, 'Topaz Hall', 1, 20000000, 0, 1164841200000)",
 		"(25, 0, 'NPC', 'NPC Clan', 'ClanHall', 25, 0, 'Ruby Hall', 1, 20000000, 0, 1164841200000)",
@@ -81,6 +82,7 @@ public class AuctionManager
 	};
 	private static final Integer[] ItemInitDataId =
 	{
+		22,
 		23,
 		24,
 		25,
@@ -127,7 +129,7 @@ public class AuctionManager
 	
 	public AuctionManager()
 	{
-		//LOG.info("Initializing AuctionManager");
+		LOG.info("Initializing AuctionManager");
 		_auctions.clear();
 		load();
 	}
@@ -165,7 +167,6 @@ public class AuctionManager
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	
@@ -173,7 +174,9 @@ public class AuctionManager
 	{
 		final int index = getAuctionIndex(auctionId);
 		if (index >= 0)
+		{
 			return getAuctions().get(index);
+		}
 		
 		return null;
 	}
@@ -186,10 +189,11 @@ public class AuctionManager
 		{
 			auction = getAuctions().get(i);
 			if (auction != null && auction.getId() == auctionId)
+			{
 				return i;
+			}
 		}
 		
-		auction = null;
 		return -1;
 	}
 	
@@ -198,20 +202,18 @@ public class AuctionManager
 		return _auctions;
 	}
 	
-	/**
-	 * Init Clan NPC aution
-	 * @param id
-	 */
 	public void initNPC(final int id)
 	{
 		Connection con = null;
 		int i = 0;
 		
 		for (i = 0; i < ItemInitDataId.length; i++)
+		{
 			if (ItemInitDataId[i] == id)
 			{
 				break;
 			}
+		}
 		
 		if (i >= ItemInitDataId.length)
 		{
@@ -225,21 +227,21 @@ public class AuctionManager
 			statement = con.prepareStatement("INSERT INTO `auction` VALUES " + ITEM_INIT_DATA[i]);
 			statement.execute();
 			DatabaseUtils.close(statement);
-			statement = null;
 			
 			_auctions.add(new Auction(id));
 		}
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.error("Exception: Auction.initNPC(): " + e.getMessage(), e);
 		}
 		finally
 		{
 			CloseUtil.close(con);
-			con = null;
 		}
 	}
 	

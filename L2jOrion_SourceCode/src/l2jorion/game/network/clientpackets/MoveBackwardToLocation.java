@@ -19,17 +19,18 @@ package l2jorion.game.network.clientpackets;
 import java.nio.BufferUnderflowException;
 
 import l2jorion.Config;
+import l2jorion.bots.FakePlayer;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.model.Location;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
-import l2jorion.game.network.serverpackets.EnchantResult;
 import l2jorion.game.network.serverpackets.StopMove;
 import l2jorion.game.util.IllegalPlayerAction;
 import l2jorion.game.util.Util;
 
-public class MoveBackwardToLocation extends L2GameClientPacket
+public class MoveBackwardToLocation extends PacketClient
 {
 	private int _targetX;
 	private int _targetY;
@@ -47,6 +48,7 @@ public class MoveBackwardToLocation extends L2GameClientPacket
 		_targetX = readD();
 		_targetY = readD();
 		_targetZ = readD();
+		
 		_originX = readD();
 		_originY = readD();
 		_originZ = readD();
@@ -75,8 +77,6 @@ public class MoveBackwardToLocation extends L2GameClientPacket
 			return;
 		}
 		
-		// activeChar.setClickedArrowButton(false);
-		
 		if (activeChar.isSitting())
 		{
 			getClient().sendPacket(ActionFailed.STATIC_PACKET);
@@ -89,19 +89,12 @@ public class MoveBackwardToLocation extends L2GameClientPacket
 			return;
 		}
 		
-		if (activeChar.getActiveEnchantItem() != null)
-		{
-			activeChar.sendPacket(new EnchantResult(0));
-			activeChar.setActiveEnchantItem(null);
-		}
-		
 		if (_targetX == _originX && _targetY == _originY && _targetZ == _originZ)
 		{
 			activeChar.sendPacket(new StopMove(activeChar));
 			return;
 		}
 		
-		// Correcting targetZ from floor level to head level
 		_targetZ += activeChar.getTemplate().getCollisionHeight();
 		
 		if (activeChar.getTeleMode() > 0)
@@ -118,12 +111,19 @@ public class MoveBackwardToLocation extends L2GameClientPacket
 		
 		if (_moveMovement == 0)
 		{
-			// activeChar.setClickedArrowButton(true);
 			if (!Config.ALLOW_USE_CURSOR_FOR_WALK)
 			{
 				activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 				return;
 			}
+		}
+		
+		if (activeChar.isControllingFakePlayer())
+		{
+			FakePlayer fakePlayer = activeChar.getPlayerUnderControl();
+			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
+			fakePlayer.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new Location(_targetX, _targetY, _targetZ));
+			return;
 		}
 		
 		double dx = _targetX - activeChar.getX();
@@ -135,15 +135,17 @@ public class MoveBackwardToLocation extends L2GameClientPacket
 			return;
 		}
 		
-		// This is to avoid exploit with Hit + Fast movement
-		if ((activeChar.isMoving() && activeChar.isAttackingNow()))
+		activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new Location(_targetX, _targetY, _targetZ, 0));
+		if (activeChar.getTeleport())
 		{
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
+			activeChar.setLastFallingPosition(_targetX, _targetY, _targetZ);
 		}
 		
-		activeChar.getAI().setIntention(CtrlIntention.AI_INTENTION_MOVE_TO, new Location(_targetX, _targetY, _targetZ, 0));
-		
+		// Remove queued skill on movement
+		if (activeChar.getQueuedSkill() != null)
+		{
+			activeChar.setQueuedSkill(null, false, false);
+		}
 	}
 	
 	@Override

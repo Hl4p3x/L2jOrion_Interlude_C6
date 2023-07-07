@@ -22,10 +22,11 @@ import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.siege.Fort;
+import l2jorion.game.network.PacketServer;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class FortressSiegeInfo extends L2GameServerPacket
+public class FortressSiegeInfo extends PacketServer
 {
 	private static final String _S__C9_SIEGEINFO = "[S] c9 SiegeInfo";
 	

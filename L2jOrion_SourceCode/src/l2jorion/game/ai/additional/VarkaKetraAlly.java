@@ -128,11 +128,17 @@ public class VarkaKetraAlly extends Quest implements Runnable
 				final int varkasBadgeCaptainCount = varkasBadgeCaptain == null ? 0 : varkasBadgeCaptain.getCount();
 				
 				if (varkasBadgeSoldierCount > 0)
+				{
 					player.getInventory().destroyItemByItemId("ketrasBadgeSoldier", 7216, varkasBadgeSoldierCount, player, player.getTarget());
+				}
 				if (varkasBadgeOfficerCount > 0)
+				{
 					player.getInventory().destroyItemByItemId("ketrasBadgeOfficer", 7217, varkasBadgeOfficerCount, player, player.getTarget());
+				}
 				if (varkasBadgeCaptainCount > 0)
+				{
 					player.getInventory().destroyItemByItemId("ketrasBadgeCaptain", 7218, varkasBadgeCaptainCount, player, player.getTarget());
+				}
 				
 				final PcInventory inventory = player.getInventory();
 				L2ItemInstance item;
@@ -209,11 +215,17 @@ public class VarkaKetraAlly extends Quest implements Runnable
 				final int varkasBadgeCaptainCount = varkasBadgeCaptain == null ? 0 : varkasBadgeCaptain.getCount();
 				
 				if (varkasBadgeSoldierCount > 0)
+				{
 					player.getInventory().destroyItemByItemId("ketrasBadgeSoldier", 7216, varkasBadgeSoldierCount, player, player.getTarget());
+				}
 				if (varkasBadgeOfficerCount > 0)
+				{
 					player.getInventory().destroyItemByItemId("ketrasBadgeOfficer", 7217, varkasBadgeOfficerCount, player, player.getTarget());
+				}
 				if (varkasBadgeCaptainCount > 0)
+				{
 					player.getInventory().destroyItemByItemId("ketrasBadgeCaptain", 7218, varkasBadgeCaptainCount, player, player.getTarget());
+				}
 				
 				final PcInventory inventory = player.getInventory();
 				L2ItemInstance item;

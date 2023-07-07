@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExDuelAskStart extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExDuelAskStart extends PacketServer
 {
 	private static final String _S__FE_4B_EXDUELASKSTART = "[S] FE:4B ExDuelAskStart";
 	

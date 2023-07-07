@@ -6,8 +6,9 @@ import java.util.Map;
 
 import l2jorion.game.model.TimeStamp;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class SkillCoolTime extends L2GameServerPacket
+public class SkillCoolTime extends PacketServer
 {
 	private final List<TimeStamp> _skillReuseTimeStamps = new ArrayList<>();
 	

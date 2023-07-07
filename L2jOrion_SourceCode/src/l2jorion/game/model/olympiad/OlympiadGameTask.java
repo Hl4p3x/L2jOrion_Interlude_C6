@@ -423,6 +423,15 @@ public final class OlympiadGameTask implements Runnable
 	{
 		try
 		{
+			_game.removals(); // added after battle
+		}
+		catch (Exception e)
+		{
+			LOG.log(Level.WARNING, e.getMessage(), e);
+		}
+		
+		try
+		{
 			_game.playersStatusBack();
 		}
 		catch (Exception e)

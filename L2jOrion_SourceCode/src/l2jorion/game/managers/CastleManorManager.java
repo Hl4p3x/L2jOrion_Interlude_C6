@@ -22,9 +22,9 @@ package l2jorion.game.managers;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Calendar;
 
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.ClanWarehouse;
@@ -205,10 +205,10 @@ public class CastleManorManager
 			con = L2DatabaseFactory.getInstance().getConnection();
 			for (final Castle castle : CastleManager.getInstance().getCastles())
 			{
-				final FastList<SeedProduction> production = new FastList<>();
-				final FastList<SeedProduction> productionNext = new FastList<>();
-				final FastList<CropProcure> procure = new FastList<>();
-				final FastList<CropProcure> procureNext = new FastList<>();
+				final ArrayList<SeedProduction> production = new ArrayList<>();
+				final ArrayList<SeedProduction> productionNext = new ArrayList<>();
+				final ArrayList<CropProcure> procure = new ArrayList<>();
+				final ArrayList<CropProcure> procureNext = new ArrayList<>();
 				
 				// restore seed production info
 				statement = con.prepareStatement(CASTLE_MANOR_LOAD_PRODUCTION);
@@ -384,8 +384,8 @@ public class CastleManorManager
 			}
 			else
 			{
-				final FastList<SeedProduction> production = new FastList<>();
-				final FastList<CropProcure> procure = new FastList<>();
+				final ArrayList<SeedProduction> production = new ArrayList<>();
+				final ArrayList<CropProcure> procure = new ArrayList<>();
 				for (final SeedProduction s : c.getSeedProduction(PERIOD_CURRENT))
 				{
 					s.setCanProduce(s.getStartProduce());
@@ -465,10 +465,10 @@ public class CastleManorManager
 		}
 	}
 	
-	private FastList<SeedProduction> getNewSeedsList(final int castleId)
+	private ArrayList<SeedProduction> getNewSeedsList(final int castleId)
 	{
-		final FastList<SeedProduction> seeds = new FastList<>();
-		final FastList<Integer> seedsIds = L2Manor.getInstance().getSeedsForCastle(castleId);
+		final ArrayList<SeedProduction> seeds = new ArrayList<>();
+		final ArrayList<Integer> seedsIds = L2Manor.getInstance().getSeedsForCastle(castleId);
 		for (final int sd : seedsIds)
 		{
 			seeds.add(new SeedProduction(sd));
@@ -476,10 +476,10 @@ public class CastleManorManager
 		return seeds;
 	}
 	
-	private FastList<CropProcure> getNewCropsList(final int castleId)
+	private ArrayList<CropProcure> getNewCropsList(final int castleId)
 	{
-		final FastList<CropProcure> crops = new FastList<>();
-		final FastList<Integer> cropsIds = L2Manor.getInstance().getCropsForCastle(castleId);
+		final ArrayList<CropProcure> crops = new ArrayList<>();
+		final ArrayList<Integer> cropsIds = L2Manor.getInstance().getCropsForCastle(castleId);
 		for (final int cr : cropsIds)
 		{
 			crops.add(new CropProcure(cr));

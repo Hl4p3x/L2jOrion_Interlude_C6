@@ -1,4 +1,3 @@
-# Created by DrLecter
 import sys
 
 from l2jorion.game.model.quest        import State
@@ -6,8 +5,6 @@ from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
 
 qn = "4000_ShadowWeapons"
-
-#print "4000. Shadow Weapons"
 
 #NPCs that would need to figure out what to show when asked about coupons exchange
 NPC = [ 30026,30037,30066,30070,30109,30115,30120,30174,30175,30176,30187,30191, \

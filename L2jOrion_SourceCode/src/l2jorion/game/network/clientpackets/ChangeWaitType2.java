@@ -20,10 +20,11 @@ import l2jorion.game.managers.CastleManager;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2StaticObjectInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.ChairSit;
 
-public final class ChangeWaitType2 extends L2GameClientPacket
+public final class ChangeWaitType2 extends PacketClient
 {
 	private boolean _typeStand;
 	

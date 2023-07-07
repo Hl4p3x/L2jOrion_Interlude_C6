@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Macro;
+import l2jorion.game.network.PacketServer;
 
-public class SendMacroList extends L2GameServerPacket
+public class SendMacroList extends PacketServer
 {
 	private static final String _S__E7_SENDMACROLIST = "[S] E7 SendMacroList";
 	

@@ -28,19 +28,13 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 
 public class PetStatus extends SummonStatus
 {
-	// =========================================================
-	// Data Field
 	private int _currentFed = 0; // Current Fed of the L2PetInstance
 	
-	// =========================================================
-	// Constructor
 	public PetStatus(final L2PetInstance activeChar)
 	{
 		super(activeChar);
 	}
 	
-	// =========================================================
-	// Method - Public
 	@Override
 	public final void reduceHp(final double value, final L2Character attacker)
 	{
@@ -51,7 +45,9 @@ public class PetStatus extends SummonStatus
 	public final void reduceHp(final double value, final L2Character attacker, final boolean awake)
 	{
 		if (getActiveChar().isDead())
+		{
 			return;
+		}
 		
 		super.reduceHp(value, attacker, awake);
 		
@@ -72,16 +68,9 @@ public class PetStatus extends SummonStatus
 			getActiveChar().getOwner().sendPacket(sm);
 			
 			getActiveChar().getAI().notifyEvent(CtrlEvent.EVT_ATTACKED, attacker);
-			
-			sm = null;
 		}
 	}
 	
-	// =========================================================
-	// Method - Private
-	
-	// =========================================================
-	// Property - Public
 	@Override
 	public L2PetInstance getActiveChar()
 	{

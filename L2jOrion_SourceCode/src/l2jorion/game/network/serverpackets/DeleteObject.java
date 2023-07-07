@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Object;
+import l2jorion.game.network.PacketServer;
 
-public final class DeleteObject extends L2GameServerPacket
+public final class DeleteObject extends PacketServer
 {
 	private static final String _S__1E_DELETEOBJECT = "[S] 12 DeleteObject";
 	

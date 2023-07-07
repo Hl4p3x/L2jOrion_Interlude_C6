@@ -16,17 +16,16 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import l2jguard.Protection;
-import l2jorion.Config;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.L2GameClient.GameClientState;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.CharSelected;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public class CharacterSelected extends L2GameClientPacket
+public class CharacterSelected extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(CharacterSelected.class);
 	
@@ -61,12 +60,6 @@ public class CharacterSelected extends L2GameClientPacket
 				// should always be null but if not then this is repeated packet and nothing should be done here
 				if (getClient().getActiveChar() == null)
 				{
-					// The L2PcInstance must be created here, so that it can be attached to the L2GameClient
-					if (Config.DEBUG)
-					{
-						LOG.debug("DEBUG " + getType() + ": selected slot:" + _charSlot);
-					}
-					
 					// Load up character from disk
 					final L2PcInstance cha = getClient().loadCharFromDisk(_charSlot);
 					
@@ -87,15 +80,6 @@ public class CharacterSelected extends L2GameClientPacket
 					
 					cha.setClient(getClient());
 					getClient().setActiveChar(cha);
-					
-					if (Config.L2JGUARD_PROTECTION)
-					{
-						if (!Protection.checkPlayerWithHWID(getClient(), cha.getObjectId(), cha.getName()))
-						{
-							return;
-						}
-					}
-					
 					getClient().setState(GameClientState.ENTERING);
 					sendPacket(new CharSelected(cha, getClient().getSessionId().playOkID1));
 				}

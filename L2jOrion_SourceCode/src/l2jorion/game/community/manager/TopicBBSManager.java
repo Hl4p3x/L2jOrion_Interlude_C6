@@ -9,21 +9,18 @@ import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 
-import l2jorion.game.community.CommunityBoard;
+import l2jorion.game.community.CommunityBoardManager;
 import l2jorion.game.community.bb.Forum;
 import l2jorion.game.community.bb.Post;
 import l2jorion.game.community.bb.Topic;
+import l2jorion.game.handler.ICommunityBoardHandler;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.util.StringUtil;
 
-public class TopicBBSManager extends BaseBBSManager
+public class TopicBBSManager extends BaseBBSManager implements ICommunityBoardHandler
 {
 	private final List<Topic> _topics = new ArrayList<>();
 	private final Map<Forum, Integer> _maxId = new ConcurrentHashMap<>();
-	
-	protected TopicBBSManager()
-	{
-	}
 	
 	@Override
 	public void parseWrite(String ar1, String ar2, String ar3, String ar4, String ar5, L2PcInstance player)
@@ -65,7 +62,9 @@ public class TopicBBSManager extends BaseBBSManager
 			
 			final Post post = PostBBSManager.getInstance().getPostByTopic(topic);
 			if (post != null)
+			{
 				post.deleteMe(topic);
+			}
 			
 			topic.deleteMe(forum);
 			parseCmd("_bbsmemo", player);
@@ -84,7 +83,7 @@ public class TopicBBSManager extends BaseBBSManager
 			final Forum forum = player.getMemo();
 			if (forum != null)
 			{
-				CommunityBoard.getInstance().addBypass(player, "Memo", command);
+				CommunityBoardManager.getInstance().addBypass(player, "Memo", command);
 				
 				showTopics(forum, player, 1, forum.getId(), "");
 			}
@@ -137,7 +136,9 @@ public class TopicBBSManager extends BaseBBSManager
 			
 			final Post post = PostBBSManager.getInstance().getPostByTopic(topic);
 			if (post != null)
+			{
 				post.deleteMe(topic);
+			}
 			
 			topic.deleteMe(forum);
 			parseCmd("_bbsmemo", player);
@@ -193,7 +194,9 @@ public class TopicBBSManager extends BaseBBSManager
 	
 	private static void showMemoNewTopics(Forum forum, L2PcInstance player)
 	{
-		final String html = "<html><body><br><br><table border=0 width=627><tr><td width=600 align=left><a action=\"bypass _bbshome\">Home</a>&nbsp;>&nbsp;<a action=\"bypass _bbsmemo\">Memo</a></td></tr></table><br><img src=\"L2UI.squaregray\" width=627 height=1><br><center><table fixwidth=627 border=0 cellspacing=0 cellpadding=0><tr><td align=center FIXWIDTH=60 height=29>&$413;</td><td FIXWIDTH=540><edit var = \"Title\" width=540 height=13></td><td><img src=\"l2ui.mini_logo\" width=5 height=1></td></tr></table><table fixwidth=627 border=0 cellspacing=0 cellpadding=0><tr><td><img src=\"l2ui.mini_logo\" width=5 height=10></td></tr><tr><td><img src=\"l2ui.mini_logo\" width=5 height=1></td><td align=center FIXWIDTH=60 height=29 valign=top>&$427;</td><td align=center FIXWIDTH=540><MultiEdit var =\"Content\" width=535 height=313></td><td><img src=\"l2ui.mini_logo\" width=5 height=1></td></tr><tr><td><img src=\"l2ui.mini_logo\" width=5 height=10></td></tr></table><table fixwidth=627 border=0 cellspacing=0 cellpadding=0><tr><td><img src=\"l2ui.mini_logo\" width=5 height=10></td></tr><tr><td><img src=\"l2ui.mini_logo\" width=5 height=1></td><td align=center FIXWIDTH=60 height=29>&nbsp;</td><td align=center FIXWIDTH=70><button value=\"&$140;\" action=\"Write Topic crea " + forum.getId() + " Title Content Title\" back=\"l2ui_ch3.smallbutton2_down\" width=65 height=20 fore=\"l2ui_ch3.smallbutton2\" ></td><td align=center FIXWIDTH=70><button value = \"&$141;\" action=\"bypass _bbsmemo\" back=\"l2ui_ch3.smallbutton2_down\" width=65 height=20 fore=\"l2ui_ch3.smallbutton2\"> </td><td align=center FIXWIDTH=400>&nbsp;</td><td><img src=\"l2ui.mini_logo\" width=5 height=1></td></tr></table></center></body></html>";
+		final String html = "<html><body><br><br><table border=0 width=627><tr><td width=600 align=left><a action=\"bypass _bbshome\">Home</a>&nbsp;>&nbsp;<a action=\"bypass _bbsmemo\">Memo</a></td></tr></table><br><img src=\"L2UI.squaregray\" width=627 height=1><br><center><table fixwidth=627 border=0 cellspacing=0 cellpadding=0><tr><td align=center FIXWIDTH=60 height=29>&$413;</td><td FIXWIDTH=540><edit var = \"Title\" width=540 height=13></td><td><img src=\"l2ui.mini_logo\" width=5 height=1></td></tr></table><table fixwidth=627 border=0 cellspacing=0 cellpadding=0><tr><td><img src=\"l2ui.mini_logo\" width=5 height=10></td></tr><tr><td><img src=\"l2ui.mini_logo\" width=5 height=1></td><td align=center FIXWIDTH=60 height=29 valign=top>&$427;</td><td align=center FIXWIDTH=540><MultiEdit var =\"Content\" width=535 height=313></td><td><img src=\"l2ui.mini_logo\" width=5 height=1></td></tr><tr><td><img src=\"l2ui.mini_logo\" width=5 height=10></td></tr></table><table fixwidth=627 border=0 cellspacing=0 cellpadding=0><tr><td><img src=\"l2ui.mini_logo\" width=5 height=10></td></tr><tr><td><img src=\"l2ui.mini_logo\" width=5 height=1></td><td align=center FIXWIDTH=60 height=29>&nbsp;</td><td align=center FIXWIDTH=70><button value=\"&$140;\" action=\"Write Topic crea "
+			+ forum.getId()
+			+ " Title Content Title\" back=\"l2ui_ch3.smallbutton2_down\" width=65 height=20 fore=\"l2ui_ch3.smallbutton2\" ></td><td align=center FIXWIDTH=70><button value = \"&$141;\" action=\"bypass _bbsmemo\" back=\"l2ui_ch3.smallbutton2_down\" width=65 height=20 fore=\"l2ui_ch3.smallbutton2\"> </td><td align=center FIXWIDTH=400>&nbsp;</td><td><img src=\"l2ui.mini_logo\" width=5 height=1></td></tr></table></center></body></html>";
 		send1001(html, player);
 		send1002(player);
 	}
@@ -216,7 +219,6 @@ public class TopicBBSManager extends BaseBBSManager
 		}
 	}
 	
-	// TODO showMemoTopics
 	private void showMemoTopics(Forum forum, L2PcInstance player, int index, String search)
 	{
 		forum.vload();
@@ -309,7 +311,7 @@ public class TopicBBSManager extends BaseBBSManager
 		}
 		
 		StringUtil.append(sb, "</tr></table></td><td align=right><button value=\"&$421;\" action=\"bypass _bbstopics;crea;", forum.getId(), "\" back=\"l2ui_ch3.smallbutton2_down\" width=65 height=20 fore=\"l2ui_ch3.smallbutton2\" ></td></tr><tr><td><img src=\"l2ui.mini_logo\" width=5 height=10></td></tr><tr><td></td>"
-				+ "<td align=center><table border=0><tr><td></td><td><edit var=\"search\" width=130 height=11 length=\"10\"></td><td><button value=\"&$420;\" action=\"bypass _bbstopics;read;", forum.getId(), ";", index,"; $search\" back=\"l2ui_ch3.smallbutton2_down\" width=65 height=20 fore=\"l2ui_ch3.smallbutton2\"></td></tr></table></td></tr></table><br><br><br></center></body></html>");
+			+ "<td align=center><table border=0><tr><td></td><td><edit var=\"search\" width=130 height=11 length=\"10\"></td><td><button value=\"&$420;\" action=\"bypass _bbstopics;read;", forum.getId(), ";", index, "; $search\" back=\"l2ui_ch3.smallbutton2_down\" width=65 height=20 fore=\"l2ui_ch3.smallbutton2\"></td></tr></table></td></tr></table><br><br><br></center></body></html>");
 		separateAndSend(sb.toString(), player);
 	}
 	
@@ -321,5 +323,22 @@ public class TopicBBSManager extends BaseBBSManager
 	private static class SingletonHolder
 	{
 		protected static final TopicBBSManager INSTANCE = new TopicBBSManager();
+	}
+	
+	@Override
+	public String[] getBypassBbsCommands()
+	{
+		return new String[]
+		{
+			"crea",
+			"_bbsmemo",
+			"del"
+		};
+	}
+	
+	@Override
+	public void handleCommand(String command, L2PcInstance player, String params)
+	{
+		parseCmd(command, player);
 	}
 }

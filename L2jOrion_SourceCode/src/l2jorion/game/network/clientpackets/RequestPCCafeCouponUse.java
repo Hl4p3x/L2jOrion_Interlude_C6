@@ -20,16 +20,14 @@
  */
 package l2jorion.game.network.clientpackets;
 
+import l2jorion.game.network.PacketClient;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-/**
- * Format: (ch) S
- * @author -Wooden-
- */
-public final class RequestPCCafeCouponUse extends L2GameClientPacket
+public final class RequestPCCafeCouponUse extends PacketClient
 {
 	private final Logger LOG = LoggerFactory.getLogger(RequestPCCafeCouponUse.class);
+	
 	private String _str;
 	
 	@Override
@@ -41,7 +39,6 @@ public final class RequestPCCafeCouponUse extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		// TODO
 		LOG.info("C5: RequestPCCafeCouponUse: S: " + _str);
 	}
 	

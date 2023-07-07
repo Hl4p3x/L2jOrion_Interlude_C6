@@ -23,8 +23,9 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.quest.Quest;
 import l2jorion.game.model.quest.QuestState;
+import l2jorion.game.network.PacketServer;
 
-public class GMViewQuestList extends L2GameServerPacket
+public class GMViewQuestList extends PacketServer
 {
 	private static final String _S__AC_GMVIEWQUESTLIST = "[S] ac GMViewQuestList";
 	

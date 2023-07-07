@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class SetSummonRemainTime extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class SetSummonRemainTime extends PacketServer
 {
 	private static final String _S__D1_SET_SUMMON_REMAIN_TIME = "[S] d1 SetSummonRemainTime";
 	

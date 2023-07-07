@@ -16,11 +16,11 @@ package l2jorion.game.model;
 
 public class L2ItemMarketModel
 {
+	private int id;
 	private int ownerId;
 	private int enchLvl;
 	private int itemId;
 	private int itemGrade;
-	private int itemObjId;
 	private int priceItem;
 	private int price;
 	private int count;
@@ -33,132 +33,164 @@ public class L2ItemMarketModel
 	private int augmentationSkill;
 	private int augmentationSkillLevel;
 	private String augmentationBonus = null;
-
-	public void setOwnerId(int ownerId) {
+	
+	public void setId(int id)
+	{
+		this.id = id;
+	}
+	
+	public void setOwnerId(int ownerId)
+	{
 		this.ownerId = ownerId;
 	}
-
-	public void setOwnerName(String ownerName) {
+	
+	public void setOwnerName(String ownerName)
+	{
 		this.ownerName = ownerName;
 	}
-
-	public void setItemId(int itemId) {
+	
+	public void setItemId(int itemId)
+	{
 		this.itemId = itemId;
 	}
 	
-	public void setItemObjId(int itemObjId) {
-		this.itemObjId = itemObjId;
-	}
-	
-	public void setItemName(String itemName) {
+	public void setItemName(String itemName)
+	{
 		this.itemName = itemName;
 	}
 	
-	public void setEnchLvl(int enchLvl) {
+	public void setEnchLvl(int enchLvl)
+	{
 		this.enchLvl = enchLvl;
 	}
 	
-	public void setItemGrade(int itemGrade) {
+	public void setItemGrade(int itemGrade)
+	{
 		this.itemGrade = itemGrade;
 	}
 	
-	public void setItemType(String itemType) {
+	public void setItemType(String itemType)
+	{
 		this.itemType = itemType;
 	}
 	
-	public void setL2Type(String l2Type) {
+	public void setL2Type(String l2Type)
+	{
 		this.l2Type = l2Type;
 	}
 	
-	public void setPriceItem(int priceItem) {
+	public void setPriceItem(int priceItem)
+	{
 		this.priceItem = priceItem;
 	}
 	
-	public void setPrice(int price) {
+	public void setPrice(int price)
+	{
 		this.price = price;
 	}
 	
-	public void setCount(int count) {
+	public void setCount(int count)
+	{
 		this.count = count;
 	}
 	
-	public void setAugmentationId(int augmentationId) {
+	public void setAugmentationId(int augmentationId)
+	{
 		this.augmentationId = augmentationId;
 	}
 	
-	public void setAugmentationSkill(int augmentationSkill) {
+	public void setAugmentationSkill(int augmentationSkill)
+	{
 		this.augmentationSkill = augmentationSkill;
 	}
 	
-	public void setAugmentationSkillLevel(int augmentationSkillLevel) {
+	public void setAugmentationSkillLevel(int augmentationSkillLevel)
+	{
 		this.augmentationSkillLevel = augmentationSkillLevel;
 	}
 	
-	public void setAugmentationBonus(String augmentationBonus) {
+	public void setAugmentationBonus(String augmentationBonus)
+	{
 		this.augmentationBonus = augmentationBonus;
 	}
 	
-	public int getOwnerId() {
+	public int getId()
+	{
+		return id;
+	}
+	
+	public int getOwnerId()
+	{
 		return ownerId;
 	}
 	
-	public String getOwnerName() {
+	public String getOwnerName()
+	{
 		return ownerName;
 	}
 	
-	public int getItemId() {
+	public int getItemId()
+	{
 		return itemId;
 	}
 	
-	public int getItemObjId() {
-		return itemObjId;
-	}
-	
-	public String getItemName() {
+	public String getItemName()
+	{
 		return itemName;
 	}
 	
-	public int getEnchLvl() {
+	public int getEnchLvl()
+	{
 		return enchLvl;
 	}
 	
-	public int getItemGrade() {
+	public int getItemGrade()
+	{
 		return itemGrade;
 	}
 	
-	public String getItemType() {
+	public String getItemType()
+	{
 		return itemType;
 	}
 	
-	public String getL2Type() {
+	public String getL2Type()
+	{
 		return l2Type;
 	}
 	
-	public int getPriceItem() {
+	public int getPriceItem()
+	{
 		return priceItem;
 	}
 	
-	public int getPrice() {
+	public int getPrice()
+	{
 		return price;
 	}
 	
-	public int getCount() {
+	public int getCount()
+	{
 		return count;
 	}
 	
-	public int getAugmentationId() {
+	public int getAugmentationId()
+	{
 		return augmentationId;
 	}
 	
-	public int getAugmentationSkill() {
+	public int getAugmentationSkill()
+	{
 		return augmentationSkill;
 	}
 	
-	public int getAugmentationSkillLevel() {
+	public int getAugmentationSkillLevel()
+	{
 		return augmentationSkillLevel;
 	}
 	
-	public String getAugmentationBonus() {
+	public String getAugmentationBonus()
+	{
 		return augmentationBonus;
 	}
 }

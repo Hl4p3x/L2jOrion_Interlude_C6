@@ -19,8 +19,9 @@ package l2jorion.game.network.serverpackets;
 import java.util.Vector;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class ConfirmDlg extends L2GameServerPacket
+public class ConfirmDlg extends PacketServer
 {
 	private static final String _S__ED_CONFIRMDLG = "[S] ed ConfirmDlg";
 	
@@ -164,6 +165,7 @@ public class ConfirmDlg extends L2GameServerPacket
 			{
 				writeD(_time);
 			}
+			
 			if (_requesterId != 0)
 			{
 				writeD(_requesterId);

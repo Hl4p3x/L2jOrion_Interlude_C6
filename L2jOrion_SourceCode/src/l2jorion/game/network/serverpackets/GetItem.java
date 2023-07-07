@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2ItemInstance;
+import l2jorion.game.network.PacketServer;
 
-public class GetItem extends L2GameServerPacket
+public class GetItem extends PacketServer
 {
 	private static final String _S__17_GETITEM = "[S] 0d GetItem";
 	

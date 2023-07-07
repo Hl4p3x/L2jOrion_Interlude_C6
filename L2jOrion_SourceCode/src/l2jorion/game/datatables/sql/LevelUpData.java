@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.datatables.sql;
 
 import java.sql.Connection;
@@ -36,6 +16,8 @@ import l2jorion.util.database.L2DatabaseFactory;
 
 public class LevelUpData
 {
+	private final static Logger LOG = LoggerFactory.getLogger(LevelUpData.class);
+	
 	private static final String SELECT_ALL = "SELECT classid, defaulthpbase, defaulthpadd, defaulthpmod, defaultcpbase, defaultcpadd, defaultcpmod, defaultmpbase, defaultmpadd, defaultmpmod, class_lvl FROM lvlupgain";
 	private static final String CLASS_LVL = "class_lvl";
 	private static final String MP_MOD = "defaultmpmod";
@@ -48,8 +30,6 @@ public class LevelUpData
 	private static final String CP_ADD = "defaultcpadd";
 	private static final String CP_BASE = "defaultcpbase";
 	private static final String CLASS_ID = "classid";
-	
-	private final static Logger LOG = LoggerFactory.getLogger(LevelUpData.class);
 	
 	private static LevelUpData _instance;
 	
@@ -109,10 +89,6 @@ public class LevelUpData
 		}
 	}
 	
-	/**
-	 * @param classId
-	 * @return
-	 */
 	public L2LvlupData getTemplate(final int classId)
 	{
 		return lvlTable.get(classId);

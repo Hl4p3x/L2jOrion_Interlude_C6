@@ -1,8 +1,3 @@
-# Created by DrLecter, based on DraX' scripts,
-# this script is part of the L2J Official Datapack Project
-# Visit us at http://www.l2jdp.com/
-# See readme-dp.txt and gpl.txt for license and distribution details
-# Let us know if you did not receive a copy of such files.
 import sys
 
 from l2jorion.game.model.quest        import State
@@ -10,7 +5,7 @@ from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
 
 qn = "dark_elven_change_1"
-#print "Dark elven change 1"
+
 #Quest items
 GAZE_OF_ABYSS     = 1244
 IRON_HEART        = 1252

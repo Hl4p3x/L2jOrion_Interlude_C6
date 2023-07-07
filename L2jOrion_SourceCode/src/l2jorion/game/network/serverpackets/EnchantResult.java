@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class EnchantResult extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class EnchantResult extends PacketServer
 {
 	private static final String _S__81_ENCHANTRESULT = "[S] 81 EnchantResult";
 	

@@ -23,8 +23,9 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.L2ManufactureItem;
 import l2jorion.game.model.L2ManufactureList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class RecipeShopSellList extends L2GameServerPacket
+public class RecipeShopSellList extends PacketServer
 {
 	private static final String _S__D9_RecipeShopSellList = "[S] d9 RecipeShopSellList";
 	

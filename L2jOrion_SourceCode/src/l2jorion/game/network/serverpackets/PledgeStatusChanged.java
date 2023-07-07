@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2Clan;
+import l2jorion.game.network.PacketServer;
 
-public class PledgeStatusChanged extends L2GameServerPacket
+public class PledgeStatusChanged extends PacketServer
 {
 	private static final String _S__CD_PLEDGESTATUS_CHANGED = "[S] CD PledgeStatusChanged";
 	

@@ -21,9 +21,10 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.RecipeShopItemInfo;
 
-public final class RequestRecipeShopMakeInfo extends L2GameClientPacket
+public final class RequestRecipeShopMakeInfo extends PacketClient
 {
 	private int _playerObjectId;
 	private int _recipeId;

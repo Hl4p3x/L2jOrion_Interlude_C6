@@ -1,4 +1,3 @@
-#Made by Emperorc
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState
@@ -24,6 +23,17 @@ def giveReward(st,npc):
                 if cond == 1:
                     if st.getPlayer().getAllianceWithVarkaKetra() == -3 and st.getQuestItemsCount(Varka_Alliance_Three) :
                         st.giveItems(Hekaton_Head,1)
+                        st.set("cond","2")
+
+def giveRewardForParty(st,npc):
+    if st.getState() == STARTED :
+        npcId = npc.getNpcId()
+        cond = st.getInt("cond")
+        if npcId == Hekaton :
+            if st.getPlayer().isAlliedWithVarka() :
+                if cond == 1:
+                    if st.getPlayer().getAllianceWithVarkaKetra() == -3 and st.getQuestItemsCount(Varka_Alliance_Three) :
+                        st.giveItems(Hekaton_Head,1,npc)
                         st.set("cond","2")
 
 class Quest (JQuest) :
@@ -71,8 +81,6 @@ class Quest (JQuest) :
                       htmltext = "31377-06.htm"
               else :
                   htmltext = "31377-05.htm"
-          #else:
-              #htmltext="<html><body>This quest has already been completed</body></html>"
     return htmltext
 
  def onKill(self,npc,player,isPet):

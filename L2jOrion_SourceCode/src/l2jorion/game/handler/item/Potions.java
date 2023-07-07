@@ -209,7 +209,12 @@ public class Potions implements IItemHandler
 		// primavel potions
 		8786,
 		8787,
-		10010
+		10010,
+		10014,
+		27551,
+		27552,
+		27553,
+		27554
 	};
 	
 	@Override
@@ -361,7 +366,6 @@ public class Potions implements IItemHandler
 				case 6036: // Greater Magic Haste Potion, xml: 2169
 					usePotion(activeChar, 2169, 2);
 					break;
-				
 				// ELIXIR
 				case 8622:
 				case 8623:
@@ -458,7 +462,6 @@ public class Potions implements IItemHandler
 				case 6655: // Amulet Slay Valakas
 					usePotion(activeChar, 2232, 1);
 					break;
-				
 				// HERBS
 				case 8600: // Herb of Life
 					usePotion(activeChar, 2278, 1);
@@ -597,6 +600,21 @@ public class Potions implements IItemHandler
 					break;
 				case 10010: // unique buff
 					usePotion(activeChar, 9900, 1);
+					break;
+				case 10014: // unique buff
+					usePotion(activeChar, 9901, 1);
+					break;
+				case 27551:
+					usePotion(activeChar, 7551, 1);
+					break;
+				case 27552:
+					usePotion(activeChar, 7552, 1);
+					break;
+				case 27553:
+					usePotion(activeChar, 7553, 1);
+					break;
+				case 27554:
+					usePotion(activeChar, 7554, 1);
 					break;
 				default:
 			}
@@ -849,7 +867,6 @@ public class Potions implements IItemHandler
 	
 	enum PotionsSkills
 	{
-		
 		mana_drug(726, 2003, 1),
 		mana_potion(728, 2005, 1),
 		red_potion(65, 2001, 1),
@@ -951,7 +968,12 @@ public class Potions implements IItemHandler
 		Fishing_Potion(8202, 2275, 1),
 		Primeval_Potion(8786, 2305, 1),
 		Primeval_Potion1(8787, 2305, 1),
-		unique_buff(10010, 9900, 1);
+		unique_buff(10010, 9900, 1),
+		unique_buff2(10014, 9901, 1),
+		Pot_Rheumatism(27551, 7551, 1),
+		Pot_Cholera(27552, 7552, 1),
+		Pot_flu(27553, 7553, 1),
+		Pot_Malaria(27554, 7554, 1);
 		
 		public Integer potion_id;
 		public FastMap<Integer, Integer> skills = new FastMap<>();

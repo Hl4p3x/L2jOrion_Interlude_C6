@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class Snoop extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class Snoop extends PacketServer
 {
 	private static final String _S__D5_SNOOP = "[S] D5 Snoop";
 	

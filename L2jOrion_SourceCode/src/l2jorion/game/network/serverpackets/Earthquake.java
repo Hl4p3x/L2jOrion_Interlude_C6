@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class Earthquake extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class Earthquake extends PacketServer
 {
 	private static final String _S__C4_EARTHQUAKE = "[S] C4 Earthquake";
 	

@@ -7,6 +7,7 @@ from l2jorion.game.model.quest.jython import QuestJython as JQuest
 qn = "634_InSearchofDimensionalFragments"
 
 DIMENSION_FRAGMENT_ID = 7079
+CHANCE = 10
 
 class Quest (JQuest) :
 
@@ -40,29 +41,14 @@ class Quest (JQuest) :
    return htmltext
 
  def onKill(self,npc,player,isPet):
-      st = player.getQuestState(qn)
-      numItems = int((npc.getLevel() * 0.15 +1.6)*Config.RATE_DROP_QUEST)
+      numItems = int((npc.getLevel() * 0.15 + 1.6) * Config.RATE_DROP_QUEST)
+      partyMember = self.getRandomPartyMemberState(player, STARTED)
+      if not partyMember: return
+      st = partyMember.getQuestState(qn)
       if st and (st.getState() == STARTED):
-          if st.getRandom(100)>=10 :
-              numItems = 0
-          if numItems > 0 :    
+          if st.getRandom(100)<=CHANCE :
               st.giveItems(DIMENSION_FRAGMENT_ID,numItems)
               st.playSound("ItemSound.quest_itemget")
-      party = player.getParty()
-      if party :
-          PartyQuestMembers = []
-          for partyPlayer in party.getPartyMembers().toArray() :
-              questState = partyPlayer.getQuestState(qn)
-              if questState  and (questState .getState() == STARTED):
-                  PartyQuestMembers.append(partyPlayer)
-          if len(PartyQuestMembers) > 0 :
-              for partyPlayer in PartyQuestMembers:
-                 questState = partyPlayer.getQuestState(qn)
-                 if questState.getRandom(100) >= 10:
-                     numItems = 0
-                 if numItems > 0 :    
-                     questState.giveItems(DIMENSION_FRAGMENT_ID,numItems)
-                     questState.playSound("ItemSound.quest_itemget")
       return
 	
 

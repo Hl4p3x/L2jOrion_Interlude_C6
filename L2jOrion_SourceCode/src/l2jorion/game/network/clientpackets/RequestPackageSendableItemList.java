@@ -21,13 +21,10 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.PackageSendableList;
 
-/**
- * Format: (c)d d: char object id (?)
- * @author -Wooden-
- */
-public final class RequestPackageSendableItemList extends L2GameClientPacket
+public final class RequestPackageSendableItemList extends PacketClient
 {
 	private int _objectID;
 	
@@ -40,14 +37,17 @@ public final class RequestPackageSendableItemList extends L2GameClientPacket
 	@Override
 	public void runImpl()
 	{
-		
 		final L2PcInstance player = getClient().getActiveChar();
 		
 		if (player == null)
+		{
 			return;
+		}
 		
 		if (player.getObjectId() == _objectID)
+		{
 			return;
+		}
 		
 		if (!getClient().getFloodProtectors().getTransaction().tryPerformAction("deposit"))
 		{
@@ -55,9 +55,7 @@ public final class RequestPackageSendableItemList extends L2GameClientPacket
 			return;
 		}
 		
-		
 		final L2ItemInstance[] items = getClient().getActiveChar().getInventory().getAvailableItemsForPackage(true);
-		// build list...
 		sendPacket(new PackageSendableList(items, _objectID));
 	}
 	

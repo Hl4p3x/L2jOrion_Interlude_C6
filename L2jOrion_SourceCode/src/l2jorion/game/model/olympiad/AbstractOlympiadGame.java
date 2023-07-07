@@ -22,11 +22,11 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2TamedBeastInstance;
 import l2jorion.game.model.zone.type.L2OlympiadStadiumZone;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ExAutoSoulShot;
 import l2jorion.game.network.serverpackets.ExOlympiadMode;
 import l2jorion.game.network.serverpackets.InventoryUpdate;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
 public abstract class AbstractOlympiadGame
@@ -224,6 +224,16 @@ public abstract class AbstractOlympiadGame
 				}
 			}
 			
+			if (Config.ALLOW_DRESS_ME_SYSTEM && !Config.ALLOW_DRESS_ME_IN_OLY)
+			{
+				player.setArmorSkinOption(0);
+				player.setWeaponSkinOption(0);
+				player.setHairSkinOption(0);
+				player.setFaceSkinOption(0);
+				
+				player.broadcastUserInfo();
+			}
+			
 			// Remove Clan Skills
 			if (player.getClan() != null)
 			{
@@ -291,15 +301,12 @@ public abstract class AbstractOlympiadGame
 				player.getActiveWeaponInstance().setChargedSpiritshot(L2ItemInstance.CHARGED_NONE);
 			}
 			
-			// Skill recharge is a Gracia Final feature, but we have it configurable ;)
+			// Skill recharge
 			if (Config.ALT_OLY_RECHARGE_SKILLS)
 			{
 				for (L2Skill skill : player.getAllSkills())
 				{
-					if (skill.getId() != 1324)
-					{
-						player.enableSkill(skill);
-					}
+					player.enableSkill(skill);
 				}
 				
 				player.updateEffectIcons();
@@ -499,7 +506,7 @@ public abstract class AbstractOlympiadGame
 	
 	public abstract void broadcastOlympiadInfo(L2OlympiadStadiumZone stadium);
 	
-	protected abstract void broadcastPacket(L2GameServerPacket packet);
+	protected abstract void broadcastPacket(PacketServer packet);
 	
 	protected abstract boolean checkDefaulted();
 	

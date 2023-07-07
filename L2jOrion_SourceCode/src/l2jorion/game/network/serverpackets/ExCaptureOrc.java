@@ -19,7 +19,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ExCaptureOrc extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExCaptureOrc extends PacketServer
 {
 	private static final String _S__FE_44_EXCAPTUREORC = "[S] FE:44 ExCaptureOrc";
 	

@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ShowTownMap extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ShowTownMap extends PacketServer
 {
 	private static final String _S__DE_ShowTownMap = "[S] DE ShowTownMap";
 	

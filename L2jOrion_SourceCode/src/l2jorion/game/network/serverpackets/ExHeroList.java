@@ -24,9 +24,10 @@ import java.util.Collection;
 
 import l2jorion.game.model.entity.Hero;
 import l2jorion.game.model.olympiad.Olympiad;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.templates.StatsSet;
 
-public class ExHeroList extends L2GameServerPacket
+public class ExHeroList extends PacketServer
 {
 	private static final String _S__FE_23_EXHEROLIST = "[S] FE:23 ExHeroList";
 	

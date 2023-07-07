@@ -17,8 +17,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.controllers.GameTimeController;
+import l2jorion.game.network.PacketServer;
 
-public class ClientSetTime extends L2GameServerPacket
+public class ClientSetTime extends PacketServer
 {
 	private static final String _S__EC_CLIENTSETTIME = "[S] f2 ClientSetTime";
 	

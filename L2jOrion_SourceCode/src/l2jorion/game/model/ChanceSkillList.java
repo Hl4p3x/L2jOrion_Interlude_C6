@@ -19,13 +19,8 @@ package l2jorion.game.model;
 import javolution.util.FastMap;
 import l2jorion.game.handler.ISkillHandler;
 import l2jorion.game.handler.SkillHandler;
-import l2jorion.game.network.serverpackets.MagicSkillLaunched;
-import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.skills.Formulas;
 
-/**
- * @author kombat
- */
 public class ChanceSkillList extends FastMap<L2Skill, ChanceCondition>
 {
 	private static final long serialVersionUID = -3523525435531L;
@@ -49,7 +44,7 @@ public class ChanceSkillList extends FastMap<L2Skill, ChanceCondition>
 		_owner = owner;
 	}
 	
-	public void onHit(final L2Character target, final boolean ownerWasHit, final boolean wasCrit)
+	public void onHit(L2Character target, boolean ownerWasHit, boolean wasCrit)
 	{
 		int event;
 		if (ownerWasHit)
@@ -100,8 +95,6 @@ public class ChanceSkillList extends FastMap<L2Skill, ChanceCondition>
 	
 	public static boolean canTriggerByCast(final L2Character caster, final L2Character target, final L2Skill trigger)
 	{
-		// crafting does not trigger any chance skills
-		// possibly should be unhardcoded
 		switch (trigger.getSkillType())
 		{
 			case COMMON_CRAFT:
@@ -110,14 +103,20 @@ public class ChanceSkillList extends FastMap<L2Skill, ChanceCondition>
 		}
 		
 		if (trigger.isToggle() || trigger.isPotion() || !trigger.isMagic())
+		{
 			return false; // No buffing with toggle skills or potions
-			
+		}
+		
 		if (trigger.getId() == 1320)
+		{
 			return false; // No buffing with Common
-			
+		}
+		
 		if (trigger.isOffensive() && !Formulas.calcMagicSuccess(caster, target, trigger))
+		{
 			return false; // Low grade skills won't trigger for high level targets
-			
+		}
+		
 		return true;
 	}
 	
@@ -138,18 +137,20 @@ public class ChanceSkillList extends FastMap<L2Skill, ChanceCondition>
 		{
 			if (skill.getWeaponDependancy(_owner, true))
 			{
-				if (skill.triggerAnotherSkill()) // should we use this skill or this skill is just referring to another one ...
+				if (skill.triggerAnotherSkill()) // should we use this skill or this skill is just referring to another one
 				{
 					skill = _owner._skills.get(skill.getTriggeredId());
 					if (skill == null)
+					{
 						return;
+					}
 				}
 				
 				final ISkillHandler handler = SkillHandler.getInstance().getSkillHandler(skill.getSkillType());
 				final L2Object[] targets = skill.getTargetList(_owner, false, target);
 				
-				_owner.broadcastPacket(new MagicSkillLaunched(_owner, skill.getDisplayId(), skill.getLevel(), targets));
-				_owner.broadcastPacket(new MagicSkillUser(_owner, (L2Character) targets[0], skill.getDisplayId(), skill.getLevel(), 0, 0));
+				// _owner.broadcastPacket(new MagicSkillLaunched(_owner, skill.getDisplayId(), skill.getLevel(), targets));
+				// _owner.broadcastPacket(new MagicSkillUser(_owner, (L2Character) targets[0], skill.getDisplayId(), skill.getLevel(), 0, 0));
 				
 				// Launch the magic skill and calculate its effects
 				if (handler != null)
@@ -164,7 +165,6 @@ public class ChanceSkillList extends FastMap<L2Skill, ChanceCondition>
 		}
 		catch (final Exception e)
 		{
-			// null
 		}
 	}
 }

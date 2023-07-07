@@ -19,14 +19,16 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import javolution.util.FastList;
+import java.util.ArrayList;
+
 import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.CastleManorManager;
 import l2jorion.game.managers.CastleManorManager.CropProcure;
 import l2jorion.game.model.L2Manor;
 import l2jorion.game.model.entity.siege.Castle;
+import l2jorion.game.network.PacketServer;
 
-public class ExShowCropSetting extends L2GameServerPacket
+public class ExShowCropSetting extends PacketServer
 {
 	private static final String _S__FE_20_EXSHOWCROPSETTING = "[S] FE:20 ExShowCropSetting";
 	
@@ -43,7 +45,7 @@ public class ExShowCropSetting extends L2GameServerPacket
 	{
 		_manorId = manorId;
 		final Castle c = CastleManager.getInstance().getCastleById(_manorId);
-		final FastList<Integer> crops = L2Manor.getInstance().getCropsForCastle(_manorId);
+		final ArrayList<Integer> crops = L2Manor.getInstance().getCropsForCastle(_manorId);
 		_count = crops.size();
 		_cropData = new int[_count * 14];
 		int i = 0;

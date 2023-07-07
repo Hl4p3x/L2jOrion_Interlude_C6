@@ -26,6 +26,7 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.skills.Env;
 import l2jorion.game.skills.Stats;
 import l2jorion.game.templates.L2Item;
+import l2jorion.game.templates.L2Weapon;
 import l2jorion.game.templates.L2WeaponType;
 
 public class FuncEnchant extends Func
@@ -74,6 +75,21 @@ public class FuncEnchant extends Func
 				{
 					overenchant = 0;
 					enchant = Config.ALT_OLY_ENCHANT_LIMIT;
+				}
+			}
+			
+			// boots item by olympiad enchant limit
+			if (Config.L2LIMIT_CUSTOM)
+			{
+				if (player.isHero())
+				{
+					L2Weapon currentWeapon = player.getActiveWeaponItem();
+					if (currentWeapon != null && currentWeapon.isHeroItem())
+					{
+						overenchant = 0;
+						enchant = 6;
+					}
+					
 				}
 			}
 		}

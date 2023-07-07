@@ -1,23 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.datatables.sql;
 
 import java.sql.Connection;
@@ -30,6 +10,7 @@ import java.util.regex.PatternSyntaxException;
 
 import javolution.util.FastMap;
 import l2jorion.Config;
+import l2jorion.bots.FakePlayer;
 import l2jorion.game.enums.AchType;
 import l2jorion.game.idfactory.IdFactory;
 import l2jorion.game.managers.FortManager;
@@ -62,6 +43,7 @@ public class ClanTable
 	private static ClanTable _instance;
 	
 	private final Map<Integer, L2Clan> _clans;
+	private final Map<Integer, L2Clan> _botClans;
 	
 	public static ClanTable getInstance()
 	{
@@ -82,6 +64,16 @@ public class ClanTable
 	public L2Clan[] getClans()
 	{
 		return _clans.values().toArray(new L2Clan[_clans.size()]);
+	}
+	
+	public L2Clan[] getBotClans()
+	{
+		if (_botClans.isEmpty())
+		{
+			return null;
+		}
+		
+		return _botClans.values().toArray(new L2Clan[_botClans.size()]);
 	}
 	
 	public int getClansCount()
@@ -126,6 +118,7 @@ public class ClanTable
 	private ClanTable()
 	{
 		_clans = new FastMap<>();
+		_botClans = new FastMap<>();
 		L2Clan clan;
 		Connection con = null;
 		try
@@ -134,7 +127,6 @@ public class ClanTable
 			final PreparedStatement statement = con.prepareStatement("SELECT clan_id FROM clan_data");
 			final ResultSet result = statement.executeQuery();
 			
-			// Count the clans
 			int clanCount = 0;
 			
 			while (result.next())
@@ -171,10 +163,6 @@ public class ClanTable
 		restorewars();
 	}
 	
-	/**
-	 * @param clanId
-	 * @return
-	 */
 	public L2Clan getClan(final int clanId)
 	{
 		
@@ -194,7 +182,36 @@ public class ClanTable
 		return null;
 	}
 	
+	public L2Clan renameClan(final L2PcInstance player, final String clanName)
+	{
+		if (player == null)
+		{
+			return null;
+		}
+		
+		if (!isValidClanName(player, clanName))
+		{
+			return null;
+		}
+		
+		final L2Clan clan = player.getClan();
+		clan.setName(clanName);
+		clan.store();
+		
+		player.sendPacket(new PledgeShowInfoUpdate(clan));
+		player.sendPacket(new PledgeShowMemberListAll(clan, player));
+		player.sendPacket(new UserInfo(player));
+		player.sendPacket(new PledgeShowMemberListUpdate(player));
+		
+		return clan;
+	}
+	
 	public L2Clan createClan(final L2PcInstance player, final String clanName)
+	{
+		return createClan(player, clanName, true);
+	}
+	
+	public L2Clan createClan(final L2PcInstance player, final String clanName, boolean store)
 	{
 		if (null == player)
 		{
@@ -229,13 +246,22 @@ public class ClanTable
 		
 		clan.setLeader(leader);
 		leader.setPlayerInstance(player);
-		clan.store();
+		
+		if (store)
+		{
+			clan.store();
+		}
 		
 		player.setClan(clan);
 		player.setPledgeClass(leader.calculatePledgeClass(player));
 		player.setClanPrivileges(L2Clan.CP_ALL);
 		
 		_clans.put(Integer.valueOf(clan.getClanId()), clan);
+		
+		if (player instanceof FakePlayer)
+		{
+			_botClans.put(Integer.valueOf(clan.getClanId()), clan);
+		}
 		
 		player.sendPacket(new PledgeShowInfoUpdate(clan));
 		player.sendPacket(new PledgeShowMemberListAll(clan, player));
@@ -274,7 +300,7 @@ public class ClanTable
 		{
 			pattern = Pattern.compile(Config.CLAN_NAME_TEMPLATE);
 		}
-		catch (final PatternSyntaxException e) // case of illegal pattern
+		catch (final PatternSyntaxException e)
 		{
 			LOG.warn("ERROR: Clan name pattern of config is wrong!");
 			pattern = Pattern.compile(".*");
@@ -318,7 +344,6 @@ public class ClanTable
 				
 			}
 			
-			// remove clan leader skills
 			leader.addClanLeaderSkills(false);
 		}
 		
@@ -531,12 +556,6 @@ public class ClanTable
 			statement.setInt(1, clanId1);
 			statement.setInt(2, clanId2);
 			statement.execute();
-			
-			// statement = con.prepareStatement("DELETE FROM clan_wars WHERE clan1=? AND clan2=?");
-			// statement.setInt(1,clanId2);
-			// statement.setInt(2,clanId1);
-			// statement.execute();
-			
 			DatabaseUtils.close(statement);
 		}
 		catch (final Exception e)

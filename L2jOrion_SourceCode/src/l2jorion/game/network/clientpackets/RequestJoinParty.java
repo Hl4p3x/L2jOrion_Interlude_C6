@@ -26,14 +26,14 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.entity.event.CTF;
 import l2jorion.game.model.entity.event.DM;
 import l2jorion.game.model.entity.event.TvT;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.AskJoinParty;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestJoinParty extends L2GameClientPacket
+public final class RequestJoinParty extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestJoinParty.class.getName());
 	
@@ -63,13 +63,6 @@ public final class RequestJoinParty extends L2GameClientPacket
 			return;
 		}
 		
-		if (requestor.isSubmitingPin())
-		{
-			requestor.sendMessage("Unable to do any action while PIN is not submitted");
-			requestor.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-		
 		final L2PcInstance target = L2World.getInstance().getPlayer(_name);
 		if (target == null)
 		{
@@ -83,7 +76,8 @@ public final class RequestJoinParty extends L2GameClientPacket
 			return;
 		}
 		
-		if ((requestor._inEventTvT && !target._inEventTvT && (TvT.is_started() || TvT.is_teleport())) || (!requestor._inEventTvT && target._inEventTvT && (TvT.is_started() || TvT.is_teleport())) || (requestor._inEventCTF && !target._inEventCTF && (CTF.is_started() || CTF.is_teleport())) || (!requestor._inEventCTF && target._inEventCTF && (CTF.is_started() || CTF.is_teleport())))
+		if ((requestor._inEventTvT && !target._inEventTvT && (TvT.is_started() || TvT.is_teleport())) || (!requestor._inEventTvT && target._inEventTvT && (TvT.is_started() || TvT.is_teleport())) || (requestor._inEventCTF && !target._inEventCTF && (CTF.is_started() || CTF.is_teleport()))
+			|| (!requestor._inEventCTF && target._inEventCTF && (CTF.is_started() || CTF.is_teleport())))
 		{
 			requestor.sendMessage("You can't invite that player in party: you or your target are in Event");
 			return;
@@ -94,13 +88,6 @@ public final class RequestJoinParty extends L2GameClientPacket
 			SystemMessage msg = new SystemMessage(SystemMessageId.S1_IS_ALREADY_IN_PARTY);
 			msg.addString(target.getName());
 			requestor.sendPacket(msg);
-			return;
-		}
-		
-		if (target.isSubmitingPin())
-		{
-			requestor.sendMessage("Unable to do any action while PIN is not submitted by the target.");
-			requestor.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 		
@@ -131,7 +118,7 @@ public final class RequestJoinParty extends L2GameClientPacket
 		
 		if (BlockList.isBlocked(target, requestor))
 		{
-			//requestor.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.S1_HAS_ADDED_YOU_TO_IGNORE_LIST).addString(target));
+			// requestor.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.S1_HAS_ADDED_YOU_TO_IGNORE_LIST).addString(target));
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_HAS_ADDED_YOU_TO_IGNORE_LIST);
 			sm.addString(target.getName());
 			requestor.sendPacket(sm);

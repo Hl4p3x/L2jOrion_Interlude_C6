@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class ChooseInventoryItem extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ChooseInventoryItem extends PacketServer
 {
 	private static final String _S__6F_CHOOSEINVENTORYITEM = "[S] 6f ChooseInventoryItem";
 	

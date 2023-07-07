@@ -22,17 +22,8 @@ import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.actor.instance.L2CommanderInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 
-/**
- * @author programmos
- */
-
 public class CommanderKnownList extends AttackableKnownList
 {
-	// =========================================================
-	// Data Field
-	
-	// =========================================================
-	// Constructor
 	public CommanderKnownList(final L2CommanderInstance activeChar)
 	{
 		super(activeChar);
@@ -42,7 +33,9 @@ public class CommanderKnownList extends AttackableKnownList
 	public boolean addKnownObject(L2Object object)
 	{
 		if (!super.addKnownObject(object))
+		{
 			return false;
+		}
 		
 		if (getActiveChar().getHomeX() == 0)
 		{
@@ -72,18 +65,11 @@ public class CommanderKnownList extends AttackableKnownList
 					getActiveChar().getAI().setIntention(CtrlIntention.AI_INTENTION_ACTIVE, null);// (L2Character)object);
 				}
 			}
-			
-			player = null;
 		}
 		
 		return true;
 	}
 	
-	// =========================================================
-	// Method - Private
-	
-	// =========================================================
-	// Property - Public
 	@Override
 	public final L2CommanderInstance getActiveChar()
 	{

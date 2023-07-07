@@ -21,16 +21,15 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestDismissAlly extends L2GameClientPacket
+public final class RequestDismissAlly extends PacketClient
 {
 	@Override
 	protected void readImpl()
 	{
-		// trigger packet
 	}
 	
 	@Override
@@ -39,13 +38,10 @@ public final class RequestDismissAlly extends L2GameClientPacket
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		
 		if (activeChar == null)
-			return;
-		if (activeChar.isSubmitingPin())
 		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		if (!activeChar.isClanLeader())
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.FEATURE_ONLY_FOR_ALLIANCE_LEADER));

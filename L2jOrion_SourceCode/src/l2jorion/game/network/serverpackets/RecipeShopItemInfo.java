@@ -22,8 +22,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class RecipeShopItemInfo extends L2GameServerPacket
+public class RecipeShopItemInfo extends PacketServer
 {
 	
 	private static final String _S__DA_RecipeShopItemInfo = "[S] da RecipeShopItemInfo";

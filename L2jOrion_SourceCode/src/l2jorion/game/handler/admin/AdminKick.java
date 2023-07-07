@@ -65,12 +65,6 @@ public class AdminKick implements IAdminCommandHandler
 					plyr.deleteMe();
 					activeChar.sendMessage("You kicked Offline Player " + plyr.getName() + " from the game.");
 				}
-				
-				if (plyr != null && plyr.isPhantom())
-				{
-					plyr.deleteMe();
-					activeChar.sendMessage("You kicked Phantom Player " + plyr.getName() + " from the game.");
-				}
 			}
 		}
 		
@@ -85,11 +79,6 @@ public class AdminKick implements IAdminCommandHandler
 					counter++;
 					player.sendPacket(new LeaveWorld());
 					player.logout(true);
-					if (player.isPhantom())
-					{
-						player.setOnlineStatus(false);
-						player.deleteMe();
-					}
 				}
 			}
 			activeChar.sendMessage("Kicked " + counter + " players");

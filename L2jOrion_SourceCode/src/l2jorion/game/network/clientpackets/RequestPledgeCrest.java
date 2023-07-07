@@ -16,9 +16,13 @@
  */
 package l2jorion.game.network.clientpackets;
 
+import l2jorion.game.cache.CrestCache;
+import l2jorion.game.cache.CrestCache.CrestType;
+import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.PledgeCrest;
 
-public final class RequestPledgeCrest extends L2GameClientPacket
+public final class RequestPledgeCrest extends PacketClient
 {
 	private int _crestId;
 	
@@ -31,7 +35,23 @@ public final class RequestPledgeCrest extends L2GameClientPacket
 	@Override
 	protected void runImpl()
 	{
-		sendPacket(new PledgeCrest(_crestId));
+		L2PcInstance activeChar = getClient().getActiveChar();
+		if (activeChar == null)
+		{
+			return;
+		}
+		
+		if (_crestId == 0)
+		{
+			return;
+		}
+		
+		byte[] data = CrestCache.getInstance().getCrest(CrestType.PLEDGE, _crestId);
+		if (data != null)
+		{
+			PledgeCrest pc = new PledgeCrest(_crestId, data);
+			sendPacket(pc);
+		}
 	}
 	
 	@Override

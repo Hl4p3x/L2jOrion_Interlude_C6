@@ -34,28 +34,15 @@ import l2jorion.Config;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.clientpackets.Say2;
 import l2jorion.game.network.serverpackets.CharInfo;
 import l2jorion.game.network.serverpackets.CreatureSay;
-import l2jorion.game.network.serverpackets.L2GameServerPacket;
 import l2jorion.game.network.serverpackets.RelationChanged;
 
 public final class Broadcast
 {
-	public static void toPlayersTargettingMyself(L2Character character, L2GameServerPacket packet)
-	{
-		for (L2PcInstance player : character.getKnownList().getKnownPlayers().values())
-		{
-			if (player == null || player.getTarget() != character)
-			{
-				continue;
-			}
-			
-			player.sendPacket(packet);
-		}
-	}
-	
-	public static void toKnownPlayers(L2Character character, L2GameServerPacket packet)
+	public static void toKnownPlayers(L2Character character, PacketServer packet)
 	{
 		for (L2PcInstance player : character.getKnownList().getKnownPlayers().values())
 		{
@@ -92,7 +79,7 @@ public final class Broadcast
 		}
 	}
 	
-	public static void toKnownPlayersInRadius(L2Character character, L2GameServerPacket packet, int radius)
+	public static void toKnownPlayersInRadius(L2Character character, PacketServer packet, int radius)
 	{
 		if (radius < 0)
 		{
@@ -123,7 +110,7 @@ public final class Broadcast
 		toAllOnlinePlayers(new CreatureSay(0, isCritical ? Say2.CRITICAL_ANNOUNCE : Say2.ANNOUNCEMENT, "", text));
 	}
 	
-	public static void toAllOnlinePlayers(L2GameServerPacket mov)
+	public static void toAllOnlinePlayers(PacketServer mov)
 	{
 		for (final L2PcInstance onlinePlayer : L2World.getInstance().getAllPlayers().values())
 		{

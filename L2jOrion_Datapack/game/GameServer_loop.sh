@@ -9,7 +9,7 @@ do
 		[ -f log/item.log ] && mv log/item.log "log/`date +[%Y-%m-%d]_[%H:%M:%S]`-item.log"
 		[ -f console.log ] && mv console.log "log/`date +[%Y-%m-%d]_[%H:%M:%S]`_console.log"
 		
-       java -Djava.util.logging.manager=l2jorion.util.L2LogManager -Xms2g -Xmx2g -cp ../libs/*:l2jorion-core.jar l2jorion.game.GameServer > console.log 2>&1
+       java -Djava.util.logging.manager=l2jorion.util.L2LogManager -Xms1g -Xmx2g -cp ../libs/*:l2jorion-core.jar l2jorion.game.GameServer > console.log 2>&1
 	   err=$?
         sleep 10
 done

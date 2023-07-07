@@ -1,6 +1,3 @@
-# Made by Ethernaly ethernaly@email.it
-# cleanup by DrLecter for the Official L2J Datapack Project.
-# Visit http://forum.l2jdp.com for more details.
 import sys
 from l2jorion import Config
 from l2jorion.game.model.quest import State

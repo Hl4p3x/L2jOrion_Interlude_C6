@@ -21,8 +21,9 @@
 package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.actor.instance.L2ItemInstance;
+import l2jorion.game.network.PacketServer;
 
-public class PackageSendableList extends L2GameServerPacket
+public class PackageSendableList extends PacketServer
 {
 	private static final String _S__C3_PACKAGESENDABLELIST = "[S] C3 PackageSendableList";
 	

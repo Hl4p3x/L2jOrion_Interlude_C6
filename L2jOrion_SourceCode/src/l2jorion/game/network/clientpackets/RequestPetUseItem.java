@@ -19,21 +19,22 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import l2jorion.Config;
 import l2jorion.game.datatables.sql.L2PetDataTable;
 import l2jorion.game.handler.IItemHandler;
 import l2jorion.game.handler.ItemHandler;
 import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PetInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
+import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.PetInfo;
 import l2jorion.game.network.serverpackets.PetItemList;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestPetUseItem extends L2GameClientPacket
+public final class RequestPetUseItem extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestPetUseItem.class);
 	private int _objectId;
@@ -50,23 +51,33 @@ public final class RequestPetUseItem extends L2GameClientPacket
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		if (!getClient().getFloodProtectors().getUseItem().tryPerformAction("pet use item"))
+		{
 			return;
+		}
 		
 		final L2PetInstance pet = (L2PetInstance) activeChar.getPet();
 		
 		if (pet == null)
+		{
 			return;
+		}
 		
 		final L2ItemInstance item = pet.getInventory().getItemByObjectId(_objectId);
 		
 		if (item == null)
+		{
 			return;
+		}
 		
 		if (item.isWear())
+		{
 			return;
+		}
 		
 		final int itemId = item.getItemId();
 		
@@ -75,38 +86,32 @@ public final class RequestPetUseItem extends L2GameClientPacket
 			SystemMessage sm = new SystemMessage(SystemMessageId.S1_CANNOT_BE_USED);
 			sm.addItemName(item.getItemId());
 			activeChar.sendPacket(sm);
-			sm = null;
 			return;
-		}
-		
-		if (Config.DEBUG)
-		{
-			LOG.debug(activeChar.getObjectId() + ": pet use item " + _objectId);
 		}
 		
 		// check if the item matches the pet
 		if (item.isEquipable())
 		{
 			if (L2PetDataTable.isWolf(pet.getNpcId()) && // wolf
-			item.getItem().isForWolf())
+				item.getItem().isForWolf())
 			{
 				useItem(pet, item, activeChar);
 				return;
 			}
 			else if (L2PetDataTable.isHatchling(pet.getNpcId()) && // hatchlings
-			item.getItem().isForHatchling())
+				item.getItem().isForHatchling())
 			{
 				useItem(pet, item, activeChar);
 				return;
 			}
 			else if (L2PetDataTable.isStrider(pet.getNpcId()) && // striders
-			item.getItem().isForStrider())
+				item.getItem().isForStrider())
 			{
 				useItem(pet, item, activeChar);
 				return;
 			}
 			else if (L2PetDataTable.isBaby(pet.getNpcId()) && // baby pets (buffalo, cougar, kookaboora)
-			item.getItem().isForBabyPet())
+				item.getItem().isForBabyPet())
 			{
 				useItem(pet, item, activeChar);
 				return;
@@ -180,17 +185,13 @@ public final class RequestPetUseItem extends L2GameClientPacket
 				pet.getInventory().equipItem(item);
 			}
 			
-			final PetItemList pil = new PetItemList(pet);
-			activeChar.sendPacket(pil);
+			activeChar.sendPacket(new PetItemList(pet));
 			
-			final PetInfo pi = new PetInfo(pet);
-			activeChar.sendPacket(pi);
-			// The PetInfo packet wipes the PartySpelled (list of active spells' icons). Re-add them
+			activeChar.sendPacket(new PetInfo(pet));
 			pet.updateEffectIcons(true);
 		}
 		else
 		{
-			// LOG.finest("item not equipable id:"+ item.getItemId());
 			final IItemHandler handler = ItemHandler.getInstance().getItemHandler(item.getItemId());
 			
 			if (handler == null)
@@ -204,23 +205,19 @@ public final class RequestPetUseItem extends L2GameClientPacket
 		}
 	}
 	
-	/**
-	 * When fed by owner double click on food from pet inventory. <BR>
-	 * <BR>
-	 * <FONT COLOR=#FF0000><B> <U>Caution</U> : 1 food = 100 points of currentFed</B></FONT><BR>
-	 * <BR>
-	 * @param player
-	 * @param pet
-	 * @param item
-	 */
 	private void feed(final L2PcInstance player, final L2PetInstance pet, final L2ItemInstance item)
 	{
-		// if pet has food in inventory
 		if (pet.destroyItem("Feed", item.getObjectId(), 1, pet, false))
 		{
 			pet.setCurrentFed(pet.getCurrentFed() + 100);
+			
+			pet.checkFed();
+			
+			pet.broadcastPacket(new MagicSkillUser(pet, pet, 2048, 1, 0, 0));
 		}
 		
+		player.sendPacket(new PetInfo(pet));
+		pet.updateEffectIcons(true);
 		pet.broadcastStatusUpdate();
 	}
 	

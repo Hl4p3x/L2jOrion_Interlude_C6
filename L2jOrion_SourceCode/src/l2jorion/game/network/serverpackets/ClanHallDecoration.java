@@ -21,8 +21,9 @@ package l2jorion.game.network.serverpackets;
 
 import l2jorion.game.model.entity.ClanHall;
 import l2jorion.game.model.entity.ClanHall.ClanHallFunction;
+import l2jorion.game.network.PacketServer;
 
-public class ClanHallDecoration extends L2GameServerPacket
+public class ClanHallDecoration extends PacketServer
 {
 	private static final String _S__F7_AGITDECOINFO = "[S] F7 AgitDecoInfo";
 	
@@ -38,7 +39,7 @@ public class ClanHallDecoration extends L2GameServerPacket
 	protected final void writeImpl()
 	{
 		writeC(0xf7);
-		writeD(_clanHall.getId()); // clanhall id
+		writeD(_clanHall.getClanHallId()); // clanhall id
 		// FUNC_RESTORE_HP
 		_function = _clanHall.getFunction(ClanHall.FUNC_RESTORE_HP);
 		if (_function == null || _function.getLvl() == 0)

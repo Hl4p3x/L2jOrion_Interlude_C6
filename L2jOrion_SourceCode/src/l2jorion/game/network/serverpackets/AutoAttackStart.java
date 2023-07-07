@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class AutoAttackStart extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class AutoAttackStart extends PacketServer
 {
 	private static final String _S__3B_AUTOATTACKSTART = "[S] 2B AutoAttackStart";
 	

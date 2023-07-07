@@ -32,14 +32,14 @@ public class L2RBManager
 	{
 		if (!player.isInParty() || !player.getParty().isLeader(player))
 		{
-			player.sendMessage("You are not a party leader");
+			player.sendMessage("You are not a party leader.");
 			return;
 		}
 		
 		final int unstuckTimer = (Config.UNSTUCK_INTERVAL * 1000);
 		player.setTarget(player);
 		player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-		player.disableAllSkills();
+		
 		final MagicSkillUser msk = new MagicSkillUser(player, 361, 1, unstuckTimer, 0);
 		player.broadcastPacket(msk);
 		final SetupGauge sg = new SetupGauge(0, unstuckTimer);
@@ -67,7 +67,7 @@ public class L2RBManager
 				return;
 			}
 			_player.setIsIn7sDungeon(false);
-			_player.enableAllSkills();
+			
 			final int chance = Rnd.get(22);
 			if (_player.getParty().isLeader(_player))
 			{
@@ -180,13 +180,13 @@ public class L2RBManager
 	{
 		if (!player.isInParty() || !player.getParty().isLeader(player))
 		{
-			player.sendMessage("You are not a party leader");
+			player.sendMessage("You are not a party leader.");
 			return;
 		}
 		final int unstuckTimer = (Config.UNSTUCK_INTERVAL * 1000);
 		player.setTarget(player);
 		player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-		player.disableAllSkills();
+		
 		final MagicSkillUser msk = new MagicSkillUser(player, 361, 1, unstuckTimer, 0);
 		player.broadcastPacket(msk);
 		final SetupGauge sg = new SetupGauge(0, unstuckTimer);
@@ -216,7 +216,7 @@ public class L2RBManager
 			}
 			
 			_player.setIsIn7sDungeon(false);
-			_player.enableAllSkills();
+			
 			final int chance = Rnd.get(10);
 			if (_player.getParty().isLeader(_player))
 			{
@@ -281,13 +281,13 @@ public class L2RBManager
 	{
 		if (!player.isInParty() || !player.getParty().isLeader(player))
 		{
-			player.sendMessage("You are not a party leader");
+			player.sendMessage("You are not a party leader.");
 			return;
 		}
 		final int unstuckTimer = (Config.UNSTUCK_INTERVAL * 1000);
 		player.setTarget(player);
 		player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-		player.disableAllSkills();
+		
 		final MagicSkillUser msk = new MagicSkillUser(player, 361, 1, unstuckTimer, 0);
 		player.broadcastPacket(msk);
 		final SetupGauge sg = new SetupGauge(0, unstuckTimer);
@@ -316,7 +316,7 @@ public class L2RBManager
 			}
 			
 			_player.setIsIn7sDungeon(false);
-			_player.enableAllSkills();
+			
 			final int chance = Rnd.get(15);
 			if (_player.getParty().isLeader(_player))
 			{
@@ -401,13 +401,13 @@ public class L2RBManager
 	{
 		if (!player.isInParty() || !player.getParty().isLeader(player))
 		{
-			player.sendMessage("You are not a party leader");
+			player.sendMessage("You are not a party leader.");
 			return;
 		}
 		final int unstuckTimer = (Config.UNSTUCK_INTERVAL * 1000);
 		player.setTarget(player);
 		player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-		player.disableAllSkills();
+		
 		final MagicSkillUser msk = new MagicSkillUser(player, 361, 1, unstuckTimer, 0);
 		player.broadcastPacket(msk);
 		final SetupGauge sg = new SetupGauge(0, unstuckTimer);
@@ -436,7 +436,6 @@ public class L2RBManager
 			}
 			
 			_player.setIsIn7sDungeon(false);
-			_player.enableAllSkills();
 			
 			final int chance = Rnd.get(13);
 			if (_player.getParty().isLeader(_player))
@@ -514,13 +513,13 @@ public class L2RBManager
 	{
 		if (!player.isInParty() || !player.getParty().isLeader(player))
 		{
-			player.sendMessage("You are not a party leader");
+			player.sendMessage("You are not a party leader.");
 			return;
 		}
 		final int unstuckTimer = (Config.UNSTUCK_INTERVAL * 1000);
 		player.setTarget(player);
 		player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-		player.disableAllSkills();
+		
 		final MagicSkillUser msk = new MagicSkillUser(player, 361, 1, unstuckTimer, 0);
 		player.broadcastPacket(msk);
 		final SetupGauge sg = new SetupGauge(0, unstuckTimer);
@@ -549,7 +548,6 @@ public class L2RBManager
 			}
 			
 			_player.setIsIn7sDungeon(false);
-			_player.enableAllSkills();
 			
 			final int chance = Rnd.get(8);
 			if (_player.getParty().isLeader(_player))
@@ -607,13 +605,13 @@ public class L2RBManager
 	{
 		if (!player.isInParty() || !player.getParty().isLeader(player))
 		{
-			player.sendMessage("You are not a party leader");
+			player.sendMessage("You are not a party leader.");
 			return;
 		}
 		final int unstuckTimer = (Config.UNSTUCK_INTERVAL * 1000);
 		player.setTarget(player);
 		player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-		player.disableAllSkills();
+		
 		final MagicSkillUser msk = new MagicSkillUser(player, 361, 1, unstuckTimer, 0);
 		player.broadcastPacket(msk);
 		final SetupGauge sg = new SetupGauge(0, unstuckTimer);
@@ -642,7 +640,7 @@ public class L2RBManager
 			}
 			
 			_player.setIsIn7sDungeon(false);
-			_player.enableAllSkills();
+			
 			final int chance = Rnd.get(14);
 			if (_player.getParty().isLeader(_player))
 			{
@@ -723,13 +721,13 @@ public class L2RBManager
 	{
 		if (!player.isInParty() || !player.getParty().isLeader(player))
 		{
-			player.sendMessage("You are not a party leader");
+			player.sendMessage("You are not a party leader.");
 			return;
 		}
 		final int unstuckTimer = (Config.UNSTUCK_INTERVAL * 1000);
 		player.setTarget(player);
 		player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE);
-		player.disableAllSkills();
+		
 		final MagicSkillUser msk = new MagicSkillUser(player, 361, 1, unstuckTimer, 0);
 		player.broadcastPacket(msk);
 		final SetupGauge sg = new SetupGauge(0, unstuckTimer);
@@ -757,7 +755,7 @@ public class L2RBManager
 				return;
 			}
 			_player.setIsIn7sDungeon(false);
-			_player.enableAllSkills();
+			
 			final int chance = Rnd.get(7);
 			if (_player.getParty().isLeader(_player))
 			{

@@ -23,8 +23,9 @@ package l2jorion.game.network.serverpackets;
 import java.util.List;
 
 import javolution.util.FastList;
+import l2jorion.game.network.PacketServer;
 
-public class ExEnchantSkillList extends L2GameServerPacket
+public class ExEnchantSkillList extends PacketServer
 {
 	private static final String _S__FE_17_EXENCHANTSKILLLIST = "[S] FE:17 ExEnchantSkillList";
 	

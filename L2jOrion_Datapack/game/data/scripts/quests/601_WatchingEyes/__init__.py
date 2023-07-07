@@ -26,7 +26,7 @@ class Quest (JQuest) :
    cond = st.getInt("cond")
    htmltext = event
    if event == "31683-1.htm" :
-      if st.getPlayer().getLevel() < 71 : 
+      if st.getPlayer().getLevel() < 71 or st.getPlayer().getLevel() > 78 : 
          htmltext = "31683-0a.htm"
          st.exitQuest(1)
       else :

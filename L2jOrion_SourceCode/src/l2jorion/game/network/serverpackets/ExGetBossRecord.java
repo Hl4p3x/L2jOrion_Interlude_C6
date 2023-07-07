@@ -22,7 +22,9 @@ package l2jorion.game.network.serverpackets;
 
 import java.util.Map;
 
-public class ExGetBossRecord extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExGetBossRecord extends PacketServer
 {
 	private static final String _S__FE_33_EXGETBOSSRECORD = "[S] FE:33 ExGetBossRecord";
 

@@ -147,6 +147,7 @@ public final class L2NpcTemplate extends L2CharTemplate
 	public L2NpcTemplate(final StatsSet set, final boolean custom)
 	{
 		super(set);
+		
 		npcId = set.getInteger("npcId");
 		idTemplate = set.getInteger("idTemplate");
 		type = set.getString("type");
@@ -391,11 +392,6 @@ public final class L2NpcTemplate extends L2CharTemplate
 		_categories.clear();
 	}
 	
-	/**
-	 * Return the list of all Minions that must be spawn with the L2NpcInstance using this L2NpcTemplate.<BR>
-	 * <BR>
-	 * @return
-	 */
 	public List<L2MinionData> getMinionData()
 	{
 		return _minions;
@@ -563,17 +559,21 @@ public final class L2NpcTemplate extends L2CharTemplate
 		return race;
 	}
 	
-	/**
-	 * @return the level
-	 */
+	public int getRewardExp()
+	{
+		return rewardExp;
+	}
+	
+	public int getRewardSp()
+	{
+		return rewardSp;
+	}
+	
 	public byte getLevel()
 	{
 		return level;
 	}
 	
-	/**
-	 * @return the name
-	 */
 	public String getName()
 	{
 		return name;

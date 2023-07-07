@@ -24,10 +24,11 @@ import l2jorion.game.managers.CastleManager;
 import l2jorion.game.managers.FortManager;
 import l2jorion.game.model.entity.siege.Castle;
 import l2jorion.game.model.entity.siege.Fort;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.FortSiegeAttackerList;
 import l2jorion.game.network.serverpackets.SiegeAttackerList;
 
-public final class RequestSiegeAttackerList extends L2GameClientPacket
+public final class RequestSiegeAttackerList extends PacketClient
 {
 	private int _castleId;
 	

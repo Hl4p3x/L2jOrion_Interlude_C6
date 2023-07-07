@@ -22,9 +22,6 @@ package l2jorion.login.network.loginserverpackets;
 
 import l2jorion.login.network.serverpackets.ServerBasePacket;
 
-/**
- * @author -Wooden-
- */
 public class PlayerAuthResponse extends ServerBasePacket
 {
 	public PlayerAuthResponse(final String account, final boolean response)

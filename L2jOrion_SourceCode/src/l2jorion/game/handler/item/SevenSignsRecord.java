@@ -27,10 +27,6 @@ import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.network.serverpackets.SSQStatus;
 
-/**
- * Item Handler for Seven Signs Record
- * @author Tempy
- */
 public class SevenSignsRecord implements IItemHandler
 {
 	private static final int[] ITEM_IDS =
@@ -52,13 +48,12 @@ public class SevenSignsRecord implements IItemHandler
 			activeChar = ((L2PetInstance) playable).getOwner();
 		}
 		else
+		{
 			return;
+		}
 		
 		SSQStatus ssqs = new SSQStatus(activeChar, 1);
 		activeChar.sendPacket(ssqs);
-		
-		ssqs = null;
-		activeChar = null;
 	}
 	
 	@Override

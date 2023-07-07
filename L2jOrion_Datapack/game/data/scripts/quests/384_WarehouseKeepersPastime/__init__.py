@@ -1,4 +1,3 @@
-# Made by Emperorc
 import sys
 from l2jorion.util.random import Rnd
 from l2jorion.game.model.quest import State
@@ -241,7 +240,9 @@ class Quest (JQuest) :
    return htmltext
 
  def onKill(self,npc,player,isPet) :
-     st = player.getQuestState(qn)
+     partyMember = self.getRandomPartyMemberState(player, STARTED)
+     if not partyMember: return
+     st = partyMember.getQuestState(qn)
      if not st : return
      npcId = npc.getNpcId()
      if npcId in Droplist.keys() :

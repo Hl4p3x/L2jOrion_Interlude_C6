@@ -31,9 +31,7 @@ import l2jorion.game.model.actor.knownlist.SiegeGuardKnownList;
 import l2jorion.game.model.entity.siege.hallsiege.SiegableHall;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.SocialAction;
-import l2jorion.game.network.serverpackets.StatusUpdate;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.util.random.Rnd;
 
@@ -129,13 +127,6 @@ public class L2SiegeGuardInstance extends L2Attackable
 		if (this != player.getTarget())
 		{
 			player.setTarget(this);
-			
-			MyTargetSelected my = new MyTargetSelected(getObjectId(), player.getLevel() - getLevel());
-			player.sendPacket(my);
-			StatusUpdate su = new StatusUpdate(getObjectId());
-			su.addAttribute(StatusUpdate.CUR_HP, (int) getStatus().getCurrentHp());
-			su.addAttribute(StatusUpdate.MAX_HP, getMaxHp());
-			player.sendPacket(su);
 		}
 		else
 		{
@@ -151,6 +142,11 @@ public class L2SiegeGuardInstance extends L2Attackable
 				}
 				else
 				{
+					if (player.isMoving())
+					{
+						player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+					}
+					
 					player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
 					
 					broadcastPacket(new SocialAction(getObjectId(), Rnd.nextInt(8)));
@@ -158,9 +154,8 @@ public class L2SiegeGuardInstance extends L2Attackable
 					showChatWindow(player, 0);
 				}
 			}
-			
-			player.sendPacket(ActionFailed.STATIC_PACKET);
 		}
+		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
 	@Override

@@ -28,9 +28,6 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.extender.BaseExtender;
 import l2jorion.game.powerpack.PowerPackConfig;
 
-/**
- * @author L2jOrion
- */
 public class EngraveExtender extends BaseExtender
 {
 	private final L2ItemInstance _item;
@@ -38,7 +35,9 @@ public class EngraveExtender extends BaseExtender
 	public static boolean canCreateFor(final L2Object object)
 	{
 		if (EngraveManager.getInstance().isEngraved(object.getObjectId()))
+		{
 			return true;
+		}
 		return false;
 	}
 	

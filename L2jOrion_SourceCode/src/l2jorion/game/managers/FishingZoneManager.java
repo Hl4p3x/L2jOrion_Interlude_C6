@@ -27,8 +27,8 @@ import l2jorion.logger.LoggerFactory;
 
 public class FishingZoneManager
 {
-	// =========================================================
 	private static FishingZoneManager _instance;
+	
 	private static final Logger LOG = LoggerFactory.getLogger(FishingZoneManager.class);
 	
 	public static final FishingZoneManager getInstance()
@@ -41,21 +41,12 @@ public class FishingZoneManager
 		return _instance;
 	}
 	
-	// =========================================================
-	
-	// =========================================================
-	// Data Field
 	private FastList<L2FishingZone> _fishingZones;
 	private FastList<L2WaterZone> _waterZones;
 	
-	// =========================================================
-	// Constructor
 	public FishingZoneManager()
 	{
 	}
-	
-	// =========================================================
-	// Property - Public
 	
 	public void addFishingZone(final L2FishingZone fishingZone)
 	{
@@ -77,23 +68,27 @@ public class FishingZoneManager
 		_waterZones.add(waterZone);
 	}
 	
-	/*
-	 * isInsideFishingZone() - This function was modified to check the coordinates without caring for Z. This allows for the player to fish off bridges, into the water, or from other similar high places. One should be able to cast the line from up into the water, not only fishing whith one's feet
-	 * wet. :) TODO: Consider in the future, limiting the maximum height one can be above water, if we start getting "orbital fishing" players... xD
-	 */
 	public final L2FishingZone isInsideFishingZone(final int x, final int y)
 	{
 		for (final L2FishingZone temp : _fishingZones)
+		{
 			if (temp.isInsideZone(x, y, temp.getWaterZ()))
+			{
 				return temp;
+			}
+		}
 		return null;
 	}
 	
 	public final L2WaterZone isInsideWaterZone(final int x, final int y)
 	{
 		for (final L2WaterZone temp : _waterZones)
+		{
 			if (temp.isInsideZone(x, y, temp.getWaterZ()))
+			{
 				return temp;
+			}
+		}
 		return null;
 	}
 }

@@ -35,19 +35,19 @@ public class L2HqZone extends L2ZoneType
 	{
 		if ("castleId".equals(name))
 		{
-			// TODO
+			
 		}
 		else if ("fortId".equals(name))
 		{
-			// TODO
+			
 		}
 		else if ("clanHallId".equals(name))
 		{
-			// TODO
+			
 		}
 		else if ("territoryId".equals(name))
 		{
-			// TODO
+			
 		}
 		else
 		{

@@ -16,10 +16,6 @@ package l2jorion.game.model;
 
 import l2jorion.game.templates.L2NpcTemplate.AIType;
 
-/**
- * Model used for NPC AI related attributes.
- * @author ShanSoft from L2JTW.
- */
 public class L2NpcAIData
 {
 	private int _primaryAttack;
@@ -31,21 +27,14 @@ public class L2NpcAIData
 	private int _soulshotChance;
 	private int _spiritshotChance;
 	private int _isChaos;
-	private String _clan = null;
-	private int _clanRange;
-	private String _enemyClan = null;
-	private int _enemyRange;
 	private int _longRangeSkill;
 	private int _shortRangeSkill;
 	private int _longRangeChance;
 	private int _shortRangeChance;
 	private int _switchRangeChance;
+	private int _hasLongerHelpRange;
 	private AIType _aiType = AIType.FIGHTER;
-	private int _aggroRange;
 	
-	// --------------------------------------------------------------------------------------------------------------
-	// Setting....
-	// --------------------------------------------------------------------------------------------------------------
 	public void setPrimaryAttack(int primaryattack)
 	{
 		_primaryAttack = primaryattack;
@@ -116,30 +105,9 @@ public class L2NpcAIData
 		_isChaos = ischaos;
 	}
 	
-	public void setClan(String clan)
+	public void setLongerHelprange(int value)
 	{
-		if ((clan != null) && !clan.equals("") && !clan.equalsIgnoreCase("null"))
-		{
-			_clan = clan.intern();
-		}
-	}
-	
-	public void setClanRange(int clanRange)
-	{
-		_clanRange = clanRange;
-	}
-	
-	public void setEnemyClan(String enemyClan)
-	{
-		if ((enemyClan != null) && !enemyClan.equals("") && !enemyClan.equalsIgnoreCase("null"))
-		{
-			_enemyClan = enemyClan.intern();
-		}
-	}
-	
-	public void setEnemyRange(int enemyRange)
-	{
-		_enemyRange = enemyRange;
+		_hasLongerHelpRange = value;
 	}
 	
 	public void setAi(String ai)
@@ -168,11 +136,6 @@ public class L2NpcAIData
 		{
 			_aiType = AIType.FIGHTER;
 		}
-	}
-	
-	public void setAggro(int val)
-	{
-		_aggroRange = val;
 	}
 	
 	public int getPrimaryAttack()
@@ -245,33 +208,13 @@ public class L2NpcAIData
 		return _isChaos;
 	}
 	
-	public String getClan()
+	public int getLongerHelpRange()
 	{
-		return _clan;
-	}
-	
-	public int getClanRange()
-	{
-		return _clanRange;
-	}
-	
-	public String getEnemyClan()
-	{
-		return _enemyClan;
-	}
-	
-	public int getEnemyRange()
-	{
-		return _enemyRange;
+		return _hasLongerHelpRange;
 	}
 	
 	public AIType getAiType()
 	{
 		return _aiType;
-	}
-	
-	public int getAggroRange()
-	{
-		return _aggroRange;
 	}
 }

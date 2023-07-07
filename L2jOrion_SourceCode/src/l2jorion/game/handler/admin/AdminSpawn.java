@@ -27,11 +27,15 @@ import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.datatables.sql.SpawnTable;
 import l2jorion.game.datatables.sql.TeleportLocationTable;
+import l2jorion.game.datatables.xml.FenceData;
 import l2jorion.game.handler.IAdminCommandHandler;
+import l2jorion.game.idfactory.IdFactory;
 import l2jorion.game.managers.DayNightSpawnManager;
 import l2jorion.game.managers.RaidBossSpawnManager;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2World;
+import l2jorion.game.model.L2WorldRegion;
+import l2jorion.game.model.actor.instance.L2FenceInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.spawn.L2Spawn;
@@ -60,7 +64,10 @@ public class AdminSpawn implements IAdminCommandHandler
 		"admin_teleport_reload",
 		"admin_night",
 		"admin_day",
-		"admin_sendHome"
+		"admin_sendHome",
+		"admin_spawnfence",
+		"admin_deletefence",
+		"admin_listfence"
 	};
 	
 	public static Logger LOG = LoggerFactory.getLogger(AdminSpawn.class.getName());
@@ -68,7 +75,97 @@ public class AdminSpawn implements IAdminCommandHandler
 	@Override
 	public boolean useAdminCommand(String command, L2PcInstance activeChar)
 	{
-		if (command.equals("admin_show_spawns"))
+		if (command.startsWith("admin_spawnfence"))
+		{
+			StringTokenizer st = new StringTokenizer(command, " ");
+			try
+			{
+				st.nextToken();
+				
+				int type = Integer.parseInt(st.nextToken());
+				int width = Integer.parseInt(st.nextToken());
+				int length = Integer.parseInt(st.nextToken());
+				
+				int height = 1;
+				
+				if (st.hasMoreTokens())
+				{
+					height = Math.min(Integer.parseInt(st.nextToken()), 3);
+				}
+				
+				for (int i = 0; i < height; i++)
+				{
+					L2FenceInstance fence = new L2FenceInstance(IdFactory.getInstance().getNextId(), type, width, length, activeChar.getX(), activeChar.getY());
+					
+					fence.spawnMe(activeChar.getX(), activeChar.getY(), activeChar.getZ());
+					
+					activeChar.sendMessage("Created: Fence Wall (Object Id: " + fence.getObjectId() + ")");
+					
+					FenceData.addFence(fence);
+				}
+			}
+			catch (Exception e)
+			{
+				activeChar.sendMessage("Usage: //spawnfence <type> <width> <length> [<height>]");
+			}
+		}
+		else if (command.startsWith("admin_deletefence"))
+		{
+			StringTokenizer st = new StringTokenizer(command, " ");
+			st.nextToken();
+			try
+			{
+				L2Object fence = null;
+				if (activeChar.getTarget() instanceof L2FenceInstance)
+				{
+					fence = activeChar.getTarget();
+				}
+				else if (st.hasMoreTokens())
+				{
+					L2Object object = L2World.getInstance().findObject(Integer.parseInt(st.nextToken()));
+					
+					if (object instanceof L2FenceInstance)
+					{
+						fence = object;
+					}
+				}
+				
+				if (fence != null)
+				{
+					L2WorldRegion region = fence.getWorldRegion();
+					fence.decayMe();
+					if (region != null)
+					{
+						region.removeVisibleObject(fence);
+					}
+					fence.getKnownList().removeAllKnownObjects();
+					L2World.getInstance().removeObject(fence);
+					
+					activeChar.sendMessage("Deleted: Fence Wall (Object Id: " + fence.getObjectId() + ")");
+					if (fence instanceof L2FenceInstance)
+					{
+						FenceData.removeFence((L2FenceInstance) fence);
+					}
+					if (st.hasMoreTokens())
+					{
+						listFences(activeChar);
+					}
+				}
+				else
+				{
+					throw new RuntimeException();
+				}
+			}
+			catch (Exception e)
+			{
+				activeChar.sendMessage("No fence targeted with shift+click or //deletefence <fence_objectId>");
+			}
+		}
+		else if (command.startsWith("admin_listfence"))
+		{
+			listFences(activeChar);
+		}
+		else if (command.equals("admin_show_spawns"))
 		{
 			AdminHelpPage.showHelpPage(activeChar, "spawns.htm");
 		}
@@ -260,6 +357,7 @@ public class AdminSpawn implements IAdminCommandHandler
 		{
 			target = activeChar;
 		}
+		
 		if (target != activeChar && activeChar.getAccessLevel().isGm())
 		{
 			target = activeChar;
@@ -281,7 +379,7 @@ public class AdminSpawn implements IAdminCommandHandler
 		
 		if (template1 == null)
 		{
-			activeChar.sendMessage("Attention, wrong NPC ID/Name");
+			activeChar.sendMessage("Wrong NPC Id or Name.");
 			return;
 		}
 		
@@ -292,6 +390,7 @@ public class AdminSpawn implements IAdminCommandHandler
 			{
 				spawn.setCustom(true);
 			}
+			
 			spawn.setLocx(target.getX());
 			spawn.setLocy(target.getY());
 			spawn.setLocz(target.getZ());
@@ -316,7 +415,7 @@ public class AdminSpawn implements IAdminCommandHandler
 				spawn.stopRespawn();
 			}
 			
-			activeChar.sendMessage("Created " + template1.name + " on " + target.getObjectId());
+			activeChar.sendMessage("Created: " + template1.name + " (Object Id: " + target.getObjectId() + ")");
 		}
 		catch (Exception e)
 		{
@@ -327,6 +426,22 @@ public class AdminSpawn implements IAdminCommandHandler
 			
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.TARGET_CANT_FOUND));
 		}
+	}
+	
+	private static void listFences(L2PcInstance activeChar)
+	{
+		TextBuilder tb = new TextBuilder();
+		
+		tb.append("<html><body>Total Fences: " + FenceData.getAllFences().size() + "<br><br>");
+		for (L2FenceInstance fence : FenceData.getAllFences())
+		{
+			tb.append("<a action=\"bypass -h admin_deletefence " + fence.getObjectId() + " 1\">Fence: " + fence.getObjectId() + " [" + fence.getX() + " " + fence.getY() + " " + fence.getZ() + "]</a><br>");
+		}
+		tb.append("</body></html>");
+		
+		NpcHtmlMessage html = new NpcHtmlMessage(0);
+		html.setHtml(tb.toString());
+		activeChar.sendPacket(html);
 	}
 	
 	private void showMonsters(L2PcInstance activeChar, int level, int from)
@@ -355,7 +470,6 @@ public class AdminSpawn implements IAdminCommandHandler
 			}
 			
 			tb.append(txt);
-			txt = null;
 		}
 		
 		// End
@@ -369,11 +483,6 @@ public class AdminSpawn implements IAdminCommandHandler
 		}
 		
 		activeChar.sendPacket(new NpcHtmlMessage(5, tb.toString()));
-		
-		end1 = null;
-		end2 = null;
-		mobs = null;
-		tb = null;
 	}
 	
 	private void showNpcs(L2PcInstance activeChar, String starting, int from)
@@ -413,10 +522,5 @@ public class AdminSpawn implements IAdminCommandHandler
 		}
 		
 		activeChar.sendPacket(new NpcHtmlMessage(5, tb.toString()));
-		
-		tb = null;
-		mobs = null;
-		end1 = null;
-		end2 = null;
 	}
 }

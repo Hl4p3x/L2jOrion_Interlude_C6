@@ -16,7 +16,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class TutorialCloseHtml extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class TutorialCloseHtml extends PacketServer
 {
 	private static final String _S__A3_TUTORIALCLOSEHTML = "[S] a3 TutorialCloseHtml";
 	

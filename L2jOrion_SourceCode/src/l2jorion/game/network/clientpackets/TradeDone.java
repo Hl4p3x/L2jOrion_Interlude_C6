@@ -23,11 +23,12 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.TradeList;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class TradeDone extends L2GameClientPacket
+public final class TradeDone extends PacketClient
 {
 	private int _response;
 	
@@ -46,13 +47,6 @@ public final class TradeDone extends L2GameClientPacket
 			return;
 		}
 		
-		if (player.isSubmitingPin())
-		{
-			player.sendMessage("Unable to do any action while PIN is not submitted");
-			player.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-		
 		if (!getClient().getFloodProtectors().getTransaction().tryPerformAction("trade"))
 		{
 			player.sendMessage("You're trading too fast.");
@@ -62,7 +56,6 @@ public final class TradeDone extends L2GameClientPacket
 		final TradeList trade = player.getActiveTradeList();
 		if (trade == null)
 		{
-			// LOG.warn("player.getTradeList == null in " + getType() + " for player " + player.getName());
 			return;
 		}
 		

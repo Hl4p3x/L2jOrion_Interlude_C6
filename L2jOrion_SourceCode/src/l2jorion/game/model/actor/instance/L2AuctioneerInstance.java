@@ -37,13 +37,12 @@ import l2jorion.game.model.entity.Auction;
 import l2jorion.game.model.entity.Auction.Bidder;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
-import l2jorion.game.network.serverpackets.ValidateLocation;
+import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.game.util.Broadcast;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
+import l2jorion.util.random.Rnd;
 
 public final class L2AuctioneerInstance extends L2FolkInstance
 {
@@ -69,39 +68,31 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 		
 		player.setLastFolkNPC(this);
 		
-		// Check if the L2PcInstance already target the L2NpcInstance
 		if (this != player.getTarget())
 		{
-			// Set the target of the L2PcInstance player
 			player.setTarget(this);
-			
-			// Send a Server->Client packet MyTargetSelected to the L2PcInstance player
-			MyTargetSelected my = new MyTargetSelected(getObjectId(), 0);
-			player.sendPacket(my);
-			my = null;
-			
-			// Send a Server->Client packet ValidateLocation to correct the L2NpcInstance position and heading on the client
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
-			// Calculate the distance between the L2PcInstance and the L2NpcInstance
 			if (!canInteract(player))
 			{
-				// Notify the L2PcInstance AI with AI_INTENTION_INTERACT
 				player.getAI().setIntention(CtrlIntention.AI_INTENTION_INTERACT, this);
 			}
 			else
 			{
-				// Like L2OFF player must rotate to the Npc
-				MoveToPawn sp = new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE);
-				player.sendPacket(sp);
-				Broadcast.toKnownPlayers(player, sp);
+				if (player.isMoving())
+				{
+					player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+				}
+				
+				player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
+				
+				broadcastPacket(new SocialAction(getObjectId(), Rnd.get(8)));
 				
 				showMessageWindow(player);
 			}
 		}
-		// Send a Server->Client ActionFailed to the L2PcInstance in order to avoid that the client wait another packet
+		
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}
 	
@@ -111,14 +102,12 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 		final int condition = validateCondition(player);
 		if (condition == COND_ALL_FALSE)
 		{
-			// TODO: html
 			player.sendMessage("Wrong conditions.");
 			return;
 		}
 		
 		if (condition == COND_BUSY_BECAUSE_OF_SIEGE)
 		{
-			// TODO: html
 			player.sendMessage("Busy because of siege.");
 			return;
 		}
@@ -171,11 +160,6 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 						html.replace("%AGIT_LINK_BACK%", "bypass -h npc_" + getObjectId() + "_sale2");
 						html.replace("%objectId%", String.valueOf(getObjectId()));
 						player.sendPacket(html);
-						
-						html = null;
-						format = null;
-						a = null;
-						filename = null;
 					}
 					catch (final Exception e)
 					{
@@ -463,17 +447,12 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 					auctionId = Integer.parseInt(val);
 				}
 				
-				if (Config.DEBUG)
-				{
-					player.sendMessage("cmd bidlist: auction test started");
-				}
-				
 				String biders = "";
 				Map<Integer, Bidder> bidders = AuctionManager.getInstance().getAuction(auctionId).getBidders();
 				
 				for (final Bidder b : bidders.values())
 				{
-					biders += "<tr>" + "<td>" + b.getClanName() + "</td><td>" + b.getName() + "</td><td>" + b.getTimeBid().get(Calendar.YEAR) + "/" + (b.getTimeBid().get(Calendar.MONTH) + 1) + "/" + b.getTimeBid().get(Calendar.DATE) + "</td><td>" + b.getBid() + "</td>" + "</tr>";
+					biders += "<tr>" + "<td>" + b.getClanName() + "</td><td>" + b.getName() + "</td><td>" + b.getTimeBid().get(Calendar.YEAR) + "/" + (b.getTimeBid().get(Calendar.MONTH) + 1) + "/" + b.getTimeBid().get(Calendar.DATE) + "</td></tr>";
 				}
 				String filename = "data/html/auction/AgitBidderList.htm";
 				
@@ -485,10 +464,6 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 				html.replace("%objectId%", String.valueOf(getObjectId()));
 				player.sendPacket(html);
 				
-				biders = null;
-				bidders = null;
-				filename = null;
-				html = null;
 				return;
 			}
 			else if (actualCommand.equalsIgnoreCase("selectedItems"))
@@ -732,7 +707,6 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 				html.replace("%LOCATION%", getPictureName(player));
 				html.replace("%AGIT_LINK_BACK%", "bypass -h npc_" + getObjectId() + "_start");
 				player.sendPacket(html);
-				html = null;
 				return;
 			}
 			else if (actualCommand.equalsIgnoreCase("start"))
@@ -740,8 +714,6 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 				showMessageWindow(player);
 				return;
 			}
-			actualCommand = null;
-			st = null;
 		}
 		super.onBypassFeedback(player, command);
 	}
@@ -792,25 +764,25 @@ public final class L2AuctioneerInstance extends L2FolkInstance
 		
 		switch (nearestTownId)
 		{
-			case 5:
-				nearestTown = "GLUDIO";
-				break;
-			case 6:
+			case 911:
 				nearestTown = "GLUDIN";
 				break;
-			case 7:
+			case 912:
+				nearestTown = "GLUDIO";
+				break;
+			case 916:
 				nearestTown = "DION";
 				break;
-			case 8:
+			case 918:
 				nearestTown = "GIRAN";
 				break;
-			case 14:
+			case 1537:
 				nearestTown = "RUNE";
 				break;
-			case 15:
+			case 1538:
 				nearestTown = "GODARD";
 				break;
-			case 16:
+			case 1714:
 				nearestTown = "SCHUTTGART";
 				break;
 			default:

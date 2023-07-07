@@ -26,10 +26,11 @@ import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.idfactory.IdFactory;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestSetAllyCrest extends L2GameClientPacket
+public final class RequestSetAllyCrest extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestSetAllyCrest.class);
 	private int _length;

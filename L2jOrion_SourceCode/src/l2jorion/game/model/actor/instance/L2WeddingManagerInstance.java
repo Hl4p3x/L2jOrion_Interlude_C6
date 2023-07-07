@@ -31,11 +31,10 @@ import l2jorion.game.model.entity.Wedding;
 import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.network.serverpackets.MoveToPawn;
-import l2jorion.game.network.serverpackets.MyTargetSelected;
 import l2jorion.game.network.serverpackets.NpcHtmlMessage;
-import l2jorion.game.network.serverpackets.ValidateLocation;
+import l2jorion.game.network.serverpackets.SocialAction;
 import l2jorion.game.templates.L2NpcTemplate;
-import l2jorion.game.util.Broadcast;
+import l2jorion.util.random.Rnd;
 
 public class L2WeddingManagerInstance extends L2NpcInstance
 {
@@ -55,8 +54,6 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 		if (this != player.getTarget())
 		{
 			player.setTarget(this);
-			player.sendPacket(new MyTargetSelected(getObjectId(), 0));
-			player.sendPacket(new ValidateLocation(this));
 		}
 		else
 		{
@@ -66,9 +63,14 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 			}
 			else
 			{
-				MoveToPawn sp = new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE);
-				player.sendPacket(sp);
-				Broadcast.toKnownPlayers(player, sp);
+				if (player.isMoving())
+				{
+					player.getAI().setIntention(CtrlIntention.AI_INTENTION_IDLE, this);
+				}
+				
+				player.broadcastPacket(new MoveToPawn(player, this, L2NpcInstance.INTERACTION_DISTANCE));
+				
+				broadcastPacket(new SocialAction(getObjectId(), Rnd.get(8)));
 				
 				showMessageWindow(player);
 			}
@@ -134,20 +136,20 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 			int type;
 			if (player.getAppearance().getSex() && ptarget.getAppearance().getSex())
 			{
-				// player.getAppearance().setNameColor(Config.L2JMOD_WEDDING_NAME_COLOR_LESBO);
-				// ptarget.getAppearance().setNameColor(Config.L2JMOD_WEDDING_NAME_COLOR_LESBO);
+				player.getAppearance().setNameColor(Config.L2JMOD_WEDDING_NAME_COLOR_LESBO);
+				ptarget.getAppearance().setNameColor(Config.L2JMOD_WEDDING_NAME_COLOR_LESBO);
 				type = 1;
 			}
 			else if (!player.getAppearance().getSex() && !ptarget.getAppearance().getSex())
 			{
-				// player.getAppearance().setNameColor(Config.L2JMOD_WEDDING_NAME_COLOR_GEY);
-				// ptarget.getAppearance().setNameColor(Config.L2JMOD_WEDDING_NAME_COLOR_GEY);
+				player.getAppearance().setNameColor(Config.L2JMOD_WEDDING_NAME_COLOR_GEY);
+				ptarget.getAppearance().setNameColor(Config.L2JMOD_WEDDING_NAME_COLOR_GEY);
 				type = 2;
 			}
 			else
 			{
-				// player.getAppearance().setNameColor(Config.L2JMOD_WEDDING_NAME_COLOR_NORMAL);
-				// ptarget.getAppearance().setNameColor(Config.L2JMOD_WEDDING_NAME_COLOR_NORMAL);
+				player.getAppearance().setNameColor(Config.L2JMOD_WEDDING_NAME_COLOR_NORMAL);
+				ptarget.getAppearance().setNameColor(Config.L2JMOD_WEDDING_NAME_COLOR_NORMAL);
 				type = 0;
 			}
 			
@@ -247,11 +249,7 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 					{
 						player.setIsWearingFormalWear(false);
 					}
-					strItem = null;
-					frmWear = null;
 				}
-				inv3 = null;
-				item3 = null;
 			}
 			
 			if (Config.L2JMOD_WEDDING_FORMALWEAR && !player.isWearingFormalWear())
@@ -294,11 +292,7 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 					{
 						player.setIsWearingFormalWear(false);
 					}
-					frmWear = null;
-					strItem = null;
 				}
-				inv3 = null;
-				item3 = null;
 			}
 			
 			if (Config.L2JMOD_WEDDING_FORMALWEAR && !player.isWearingFormalWear())
@@ -325,18 +319,9 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 				return;
 			}
 		}
-		ptarget = null;
 		sendHtmlMessage(player, filename, replace);
-		filename = null;
-		replace = null;
 	}
 	
-	/**
-	 * Send html message.
-	 * @param player the player
-	 * @param filename the filename
-	 * @param replace the replace
-	 */
 	private void sendHtmlMessage(L2PcInstance player, String filename, String replace)
 	{
 		NpcHtmlMessage html = new NpcHtmlMessage(1);
@@ -345,6 +330,5 @@ public class L2WeddingManagerInstance extends L2NpcInstance
 		html.replace("%replace%", replace);
 		html.replace("%npcname%", getName());
 		player.sendPacket(html);
-		html = null;
 	}
 }

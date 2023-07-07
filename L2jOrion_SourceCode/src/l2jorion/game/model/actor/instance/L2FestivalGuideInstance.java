@@ -35,10 +35,6 @@ import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.game.templates.StatsSet;
 
-/**
- * Festival of Darkness Guide (Seven Signs).
- * @author Tempy
- */
 public final class L2FestivalGuideInstance extends L2FolkInstance
 {
 	/** The _festival type. */
@@ -214,8 +210,6 @@ public final class L2FestivalGuideInstance extends L2FolkInstance
 						return;
 					}
 					
-					// TODO: Check if the player has delevelled by comparing their skill levels.
-					
 					/*
 					 * Check to see if the player has already signed up, if they are then update the participant list providing all the required criteria has been met.
 					 */
@@ -246,7 +240,9 @@ public final class L2FestivalGuideInstance extends L2FolkInstance
 					}
 					
 					if (!player.destroyItemByItemId("SevenSigns", stoneType, stonesNeeded, this, true))
+					{
 						return;
+					}
 					
 					SevenSignsFestival.getInstance().setParticipants(_festivalOracle, _festivalType, playerParty);
 					SevenSignsFestival.getInstance().addAccumulatedBonus(_festivalType, stoneType, stonesNeeded);
@@ -279,7 +275,9 @@ public final class L2FestivalGuideInstance extends L2FolkInstance
 					
 					// Check if there are any past participants.
 					if (prevParticipants == null)
+					{
 						return;
+					}
 					
 					// Check if this player was among the past set of participants for this festival.
 					if (!prevParticipants.contains(player))
@@ -393,10 +391,14 @@ public final class L2FestivalGuideInstance extends L2FolkInstance
 					break;
 				case 8: // Increase the Festival Challenge
 					if (playerParty == null)
+					{
 						return;
+					}
 					
 					if (!SevenSignsFestival.getInstance().isFestivalInProgress())
+					{
 						return;
+					}
 					
 					if (!playerParty.isLeader(player))
 					{
@@ -415,7 +417,9 @@ public final class L2FestivalGuideInstance extends L2FolkInstance
 					break;
 				case 9: // Leave the Festival
 					if (playerParty == null)
+					{
 						return;
+					}
 					
 					/**
 					 * If the player is the party leader, remove all participants from the festival (i.e. set the party to null, when updating the participant list) otherwise just remove this player from the "arena", and also remove them from the party.

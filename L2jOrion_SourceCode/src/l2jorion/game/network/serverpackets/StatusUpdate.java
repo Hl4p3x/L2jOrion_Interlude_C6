@@ -20,12 +20,12 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import java.util.Vector;
+import java.util.ArrayList;
 
 import l2jorion.game.model.L2Object;
-import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class StatusUpdate extends L2GameServerPacket
+public class StatusUpdate extends PacketServer
 {
 	private static final String _S__1A_STATUSUPDATE = "[S] 0e StatusUpdate";
 	
@@ -62,9 +62,7 @@ public class StatusUpdate extends L2GameServerPacket
 	public static final int CUR_CP = 0x21;
 	public static final int MAX_CP = 0x22;
 	
-	private L2PcInstance _actor;
-	
-	private Vector<Attribute> _attributes;
+	private final ArrayList<Attribute> _attributes = new ArrayList<>();
 	public int _objectId;
 	
 	class Attribute
@@ -89,18 +87,12 @@ public class StatusUpdate extends L2GameServerPacket
 		return !_attributes.isEmpty();
 	}
 	
-	public StatusUpdate(final L2PcInstance actor)
-	{
-		_actor = actor;
-	}
-	
 	public StatusUpdate(final int objectId)
 	{
-		_attributes = new Vector<>();
 		_objectId = objectId;
 	}
 	
-	public void addAttribute(final int id, final int level)
+	public void addAttribute(int id, int level)
 	{
 		_attributes.add(new Attribute(id, level));
 	}
@@ -110,85 +102,14 @@ public class StatusUpdate extends L2GameServerPacket
 	{
 		writeC(0x0e);
 		
-		if (_actor != null)
-		{
-			writeD(_actor.getObjectId());
-			writeD(28); // all the attributes
-			
-			writeD(LEVEL);
-			writeD(_actor.getLevel());
-			writeD(EXP);
-			writeD((int) _actor.getExp());
-			writeD(STR);
-			writeD(_actor.getSTR());
-			writeD(DEX);
-			writeD(_actor.getDEX());
-			writeD(CON);
-			writeD(_actor.getCON());
-			writeD(INT);
-			writeD(_actor.getINT());
-			writeD(WIT);
-			writeD(_actor.getWIT());
-			writeD(MEN);
-			writeD(_actor.getMEN());
-			
-			writeD(CUR_HP);
-			writeD((int) _actor.getCurrentHp());
-			writeD(MAX_HP);
-			writeD(_actor.getMaxHp());
-			writeD(CUR_MP);
-			writeD((int) _actor.getCurrentMp());
-			writeD(MAX_MP);
-			writeD(_actor.getMaxMp());
-			writeD(SP);
-			writeD(_actor.getSp());
-			writeD(CUR_LOAD);
-			writeD(_actor.getCurrentLoad());
-			writeD(MAX_LOAD);
-			writeD(_actor.getMaxLoad());
-			
-			writeD(P_ATK);
-			writeD(_actor.getPAtk(null));
-			writeD(ATK_SPD);
-			writeD(_actor.getPAtkSpd());
-			writeD(P_DEF);
-			writeD(_actor.getPDef(null));
-			writeD(EVASION);
-			writeD(_actor.getEvasionRate(null));
-			writeD(ACCURACY);
-			writeD(_actor.getAccuracy());
-			writeD(CRITICAL);
-			writeD(_actor.getCriticalHit(null, null));
-			writeD(M_ATK);
-			writeD(_actor.getMAtk(null, null));
-			
-			writeD(CAST_SPD);
-			writeD(_actor.getMAtkSpd());
-			writeD(M_DEF);
-			writeD(_actor.getMDef(null, null));
-			writeD(PVP_FLAG);
-			writeD(_actor.getPvpFlag());
-			writeD(KARMA);
-			writeD(_actor.getKarma());
-			writeD(CUR_CP);
-			writeD((int) _actor.getCurrentCp());
-			writeD(MAX_CP);
-			writeD(_actor.getMaxCp());
-		}
-		else
-		{
-			writeD(_objectId);
-			writeD(_attributes.size());
-			
-			for (int i = 0; i < _attributes.size(); i++)
-			{
-				final Attribute temp = _attributes.get(i);
-				
-				writeD(temp.id);
-				writeD(temp.value);
-			}
-		}
+		writeD(_objectId);
+		writeD(_attributes.size());
 		
+		for (Attribute temp : _attributes)
+		{
+			writeD(temp.id);
+			writeD(temp.value);
+		}
 	}
 	
 	@Override

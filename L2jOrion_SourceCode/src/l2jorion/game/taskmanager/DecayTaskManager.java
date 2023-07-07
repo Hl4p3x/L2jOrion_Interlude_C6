@@ -26,6 +26,7 @@ import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.model.L2Attackable;
 import l2jorion.game.model.L2Character;
+import l2jorion.game.model.actor.instance.L2GourdInstance;
 import l2jorion.game.model.actor.instance.L2RaidBossInstance;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.logger.Logger;
@@ -83,7 +84,6 @@ public class DecayTaskManager
 	{
 		protected DecayScheduler()
 		{
-			// Do nothing
 		}
 		
 		@Override
@@ -113,6 +113,11 @@ public class DecayTaskManager
 						
 						if (current - _decayTasks.get(actor) > delay)
 						{
+							if (actor instanceof L2GourdInstance)
+							{
+								((L2GourdInstance) actor).setOwner(null);
+							}
+							
 							actor.onDecay();
 							_decayTasks.remove(actor);
 						}
@@ -126,7 +131,6 @@ public class DecayTaskManager
 					e.printStackTrace();
 				}
 				
-				// TODO: Find out the reason for exception. Unless caught here, mob decay would stop.
 				LOG.warn(e.toString());
 			}
 		}

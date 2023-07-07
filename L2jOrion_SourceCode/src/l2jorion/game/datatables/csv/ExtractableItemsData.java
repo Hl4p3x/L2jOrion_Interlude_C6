@@ -1,21 +1,3 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.datatables.csv;
 
 import java.io.File;
@@ -34,7 +16,7 @@ import l2jorion.logger.LoggerFactory;
 public class ExtractableItemsData
 {
 	protected static final Logger LOG = LoggerFactory.getLogger(ExtractableItemsData.class);
-	// Map<itemid, L2ExtractableItem>
+	
 	private Map<Integer, L2ExtractableItem> _items;
 	
 	private static ExtractableItemsData _instance = null;
@@ -146,8 +128,10 @@ public class ExtractableItemsData
 		}
 		catch (Exception e)
 		{
-			// if(Config.ENABLE_ALL_EXCEPTIONS)
-			e.printStackTrace();
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
+				e.printStackTrace();
+			}
 			
 			LOG.error("Extractable items data: Can not find './data/extractable_items.csv'");
 			

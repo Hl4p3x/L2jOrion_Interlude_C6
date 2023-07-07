@@ -21,12 +21,12 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.model.BlockList;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.AskJoinFriend;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestFriendInvite extends L2GameClientPacket
+public final class RequestFriendInvite extends PacketClient
 {
 	private String _name;
 	
@@ -42,28 +42,20 @@ public final class RequestFriendInvite extends L2GameClientPacket
 		SystemMessage sm;
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		if (activeChar == null)
-			return;
-		if (activeChar.isSubmitingPin())
 		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
+		
 		final L2PcInstance friend = L2World.getInstance().getPlayer(_name);
 		
 		// can't use friend invite for locating invisible characters
-		if (friend == null || friend.isOnline()==0 || friend.getAppearance().getInvisible())
+		if (friend == null || friend.isOnline() == 0 || friend.getAppearance().getInvisible())
 		{
 			// Target is not found in the game.
 			activeChar.sendPacket(SystemMessageId.THE_USER_YOU_REQUESTED_IS_NOT_IN_GAME);
 			return;
 		}
-		if (friend.isSubmitingPin())
-		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted by the target.");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
+		
 		if (friend == activeChar)
 		{
 			// You cannot add yourself to your own friend list.

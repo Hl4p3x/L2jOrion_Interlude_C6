@@ -22,12 +22,10 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * @author -Wooden- D0 0F 00 5A 00 77 00 65 00 72 00 67 00 00 00
- */
-public final class RequestExOustFromMPCC extends L2GameClientPacket
+public final class RequestExOustFromMPCC extends PacketClient
 {
 	private String _name;
 	

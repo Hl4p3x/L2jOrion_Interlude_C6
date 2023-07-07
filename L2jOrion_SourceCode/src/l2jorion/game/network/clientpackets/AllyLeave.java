@@ -19,10 +19,11 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.Config;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class AllyLeave extends L2GameClientPacket
+public final class AllyLeave extends PacketClient
 {
 	@Override
 	protected void readImpl()

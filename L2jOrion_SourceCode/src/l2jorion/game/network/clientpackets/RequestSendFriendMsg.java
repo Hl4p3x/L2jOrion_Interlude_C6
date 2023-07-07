@@ -25,12 +25,12 @@ import java.util.logging.Logger;
 import l2jorion.Config;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.ActionFailed;
 import l2jorion.game.network.serverpackets.FriendRecvMsg;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-public final class RequestSendFriendMsg extends L2GameClientPacket
+public final class RequestSendFriendMsg extends PacketClient
 {
 	private static Logger _logChat = Logger.getLogger("chat");
 	
@@ -52,25 +52,10 @@ public final class RequestSendFriendMsg extends L2GameClientPacket
 		{
 			return;
 		}
-		
-		if (activeChar.isSubmitingPin())
-		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
-		
 		L2PcInstance targetPlayer = L2World.getInstance().getPlayer(_reciever);
 		if (targetPlayer == null)
 		{
 			activeChar.sendPacket(new SystemMessage(SystemMessageId.TARGET_IS_NOT_FOUND_IN_THE_GAME));
-			return;
-		}
-		
-		if (targetPlayer.isSubmitingPin())
-		{
-			activeChar.sendMessage("Unable to do any action while PIN is not submitted by the target.");
-			activeChar.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
 		

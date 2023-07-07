@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import l2jorion.game.cache.HtmCache;
-import l2jorion.game.community.CommunityBoard;
+import l2jorion.game.community.CommunityBoardManager;
 import l2jorion.game.datatables.sql.CharNameTable;
+import l2jorion.game.handler.ICommunityBoardHandler;
 import l2jorion.game.model.BlockList;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
@@ -19,7 +20,7 @@ import l2jorion.util.CloseUtil;
 import l2jorion.util.StringUtil;
 import l2jorion.util.database.L2DatabaseFactory;
 
-public class FriendsBBSManager extends BaseBBSManager
+public class FriendsBBSManager extends BaseBBSManager implements ICommunityBoardHandler
 {
 	private static final String FRIENDLIST_DELETE_BUTTON = "<br>\n<table><tr><td width=10></td><td>Are you sure you want to delete all friends from your Friends List?</td><td width=20></td><td><button value=\"OK\" action=\"bypass _friend;delall\" back=\"l2ui_ch3.smallbutton2_down\" width=65 height=20 fore=\"l2ui_ch3.smallbutton2\"></td></tr></table>";
 	private static final String BLOCKLIST_DELETE_BUTTON = "<br>\n<table><tr><td width=10></td><td>Are you sure you want to delete all players from your Block List?</td><td width=20></td><td><button value=\"OK\" action=\"bypass _block;delall\" back=\"l2ui_ch3.smallbutton2_down\" width=65 height=20 fore=\"l2ui_ch3.smallbutton2\"></td></tr></table>";
@@ -27,22 +28,18 @@ public class FriendsBBSManager extends BaseBBSManager
 	private static final String DELETE_ALL_FRIENDS = "DELETE FROM character_friends WHERE char_id = ? OR friend_id = ?";
 	private static final String DELETE_FRIEND = "DELETE FROM character_friends WHERE (char_id = ? AND friend_id = ?) OR (char_id = ? AND friend_id = ?)";
 	
-	protected FriendsBBSManager()
-	{
-	}
-	
 	@Override
 	public void parseCmd(String command, L2PcInstance player)
 	{
 		if (command.startsWith("_friendlist"))
 		{
-			CommunityBoard.getInstance().addBypass(player, "Friends List", command);
+			CommunityBoardManager.getInstance().addBypass(player, "Friends List", command);
 			
 			showFriendsList(player, false);
 		}
 		else if (command.startsWith("_blocklist"))
 		{
-			CommunityBoard.getInstance().addBypass(player, "Block List", command);
+			CommunityBoardManager.getInstance().addBypass(player, "Block List", command);
 			
 			showBlockList(player, false);
 		}
@@ -105,7 +102,9 @@ public class FriendsBBSManager extends BaseBBSManager
 				player.sendPacket(new FriendList(player));
 			}
 			else if (action.equals("delconfirm"))
+			{
 				showFriendsList(player, true);
+			}
 			else if (action.equals("del"))
 			{
 				Connection con = null;
@@ -155,7 +154,9 @@ public class FriendsBBSManager extends BaseBBSManager
 			else if (action.equals("mail"))
 			{
 				if (!player.getSelectedFriendList().isEmpty())
+				{
 					showMailWrite(player);
+				}
 			}
 		}
 		else if (command.startsWith("_block"))
@@ -180,24 +181,32 @@ public class FriendsBBSManager extends BaseBBSManager
 				list.addAll(player.getBlockList().getBlockList());
 				
 				for (Integer blockId : list)
+				{
 					BlockList.removeFromBlockList(player, blockId);
+				}
 				
 				player.getSelectedBlocksList().clear();
 				showBlockList(player, false);
 			}
 			else if (action.equals("delconfirm"))
+			{
 				showBlockList(player, true);
+			}
 			else if (action.equals("del"))
 			{
 				for (Integer blockId : player.getSelectedBlocksList())
+				{
 					BlockList.removeFromBlockList(player, blockId);
+				}
 				
 				player.getSelectedBlocksList().clear();
 				showBlockList(player, false);
 			}
 		}
 		else
+		{
 			super.parseCmd(command, player);
+		}
 	}
 	
 	@Override
@@ -209,7 +218,9 @@ public class FriendsBBSManager extends BaseBBSManager
 			showFriendsList(player, false);
 		}
 		else
+		{
 			super.parseWrite(ar1, ar2, ar3, ar4, ar5, player);
+		}
 	}
 	
 	@Override
@@ -222,7 +233,9 @@ public class FriendsBBSManager extends BaseBBSManager
 	{
 		String content = HtmCache.getInstance().getHtm(CB_PATH + "friend/friend-list.htm");
 		if (content == null)
+		{
 			return;
+		}
 		
 		// Retrieve player's friendlist and selected
 		final List<Integer> list = player.getFriendList();
@@ -234,11 +247,15 @@ public class FriendsBBSManager extends BaseBBSManager
 		for (Integer id : list)
 		{
 			if (selectedList.contains(id))
+			{
 				continue;
+			}
 			
 			final String friendName = CharNameTable.getInstance().getNameById(id);
 			if (friendName == null)
+			{
 				continue;
+			}
 			
 			final L2PcInstance friend = L2World.getInstance().getPlayer(id);
 			StringUtil.append(sb, "<a action=\"bypass _friend;select;", id, "\">[Select]</a>&nbsp;", friendName, " ", ((friend != null && friend.isOnline() == 1) ? "(on)" : "(off)"), "<br1>");
@@ -253,7 +270,9 @@ public class FriendsBBSManager extends BaseBBSManager
 		{
 			final String friendName = CharNameTable.getInstance().getNameById(id);
 			if (friendName == null)
+			{
 				continue;
+			}
 			
 			final L2PcInstance friend = L2World.getInstance().getPlayer(id);
 			StringUtil.append(sb, "<a action=\"bypass _friend;deselect;", id, "\">[Deselect]</a>&nbsp;", friendName, " ", ((friend != null && friend.isOnline() == 1) ? "(on)" : "(off)"), "<br1>");
@@ -270,7 +289,9 @@ public class FriendsBBSManager extends BaseBBSManager
 	{
 		String content = HtmCache.getInstance().getHtm(CB_PATH + "friend/friend-blocklist.htm");
 		if (content == null)
+		{
 			return;
+		}
 		
 		// Retrieve player's blocklist and selected
 		final List<Integer> list = player.getBlockList().getBlockList();
@@ -282,11 +303,15 @@ public class FriendsBBSManager extends BaseBBSManager
 		for (Integer id : list)
 		{
 			if (selectedList.contains(id))
+			{
 				continue;
+			}
 			
 			final String blockName = CharNameTable.getInstance().getNameById(id);
 			if (blockName == null)
+			{
 				continue;
+			}
 			
 			final L2PcInstance block = L2World.getInstance().getPlayer(id);
 			StringUtil.append(sb, "<a action=\"bypass _block;select;", id, "\">[Select]</a>&nbsp;", blockName, " ", ((block != null && block.isOnline() == 1) ? "(on)" : "(off)"), "<br1>");
@@ -301,7 +326,9 @@ public class FriendsBBSManager extends BaseBBSManager
 		{
 			final String blockName = CharNameTable.getInstance().getNameById(id);
 			if (blockName == null)
+			{
 				continue;
+			}
 			
 			final L2PcInstance block = L2World.getInstance().getPlayer(id);
 			StringUtil.append(sb, "<a action=\"bypass _block;deselect;", id, "\">[Deselect]</a>&nbsp;", blockName, " ", ((block != null && block.isOnline() == 1) ? "(on)" : "(off)"), "<br1>");
@@ -318,17 +345,23 @@ public class FriendsBBSManager extends BaseBBSManager
 	{
 		String content = HtmCache.getInstance().getHtm(CB_PATH + "friend/friend-mail.htm");
 		if (content == null)
+		{
 			return;
+		}
 		
 		final StringBuilder sb = new StringBuilder();
 		for (int id : player.getSelectedFriendList())
 		{
 			String friendName = CharNameTable.getInstance().getNameById(id);
 			if (friendName == null)
+			{
 				continue;
+			}
 			
 			if (sb.length() > 0)
+			{
 				sb.append(";");
+			}
 			
 			sb.append(friendName);
 		}
@@ -346,5 +379,23 @@ public class FriendsBBSManager extends BaseBBSManager
 	private static class SingletonHolder
 	{
 		protected static final FriendsBBSManager INSTANCE = new FriendsBBSManager();
+	}
+	
+	@Override
+	public String[] getBypassBbsCommands()
+	{
+		return new String[]
+		{
+			"_friendlist",
+			"_blocklist",
+			"_friend",
+			"_block"
+		};
+	}
+	
+	@Override
+	public void handleCommand(String command, L2PcInstance player, String params)
+	{
+		parseCmd(command, player);
 	}
 }

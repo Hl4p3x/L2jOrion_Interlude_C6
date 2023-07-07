@@ -1,14 +1,11 @@
-#
-# Created by DraX on 2005.08.08
-#
-
 import sys
 
 from l2jorion.game.model.quest        import State
 from l2jorion.game.model.quest        import QuestState
 from l2jorion.game.model.quest.jython import QuestJython as JQuest
+
 qn = "30154_asterios_occupation_change"
-#print "30154. Asterios occupation change"
+
 HIERARCH_ASTERIOS = 30154
 
 class Quest (JQuest) :

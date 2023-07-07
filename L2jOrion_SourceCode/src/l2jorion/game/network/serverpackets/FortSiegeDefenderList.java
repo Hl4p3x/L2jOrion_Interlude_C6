@@ -20,37 +20,12 @@ import l2jorion.game.datatables.sql.ClanTable;
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.L2SiegeClan;
 import l2jorion.game.model.entity.siege.Fort;
+import l2jorion.game.network.PacketServer;
 
-/**
- * Populates the Siege Defender List in the SiegeInfo Window<BR>
- * <BR>
- * packet type id 0xcb<BR>
- * format: cddddddd + dSSdddSSd<BR>
- * <BR>
- * c = 0xcb<BR>
- * d = FortID<BR>
- * d = unknow (0x00)<BR>
- * d = unknow (0x01)<BR>
- * d = unknow (0x00)<BR>
- * d = Number of Defending Clans?<BR>
- * d = Number of Defending Clans<BR>
- * { //repeats<BR>
- * d = ClanID<BR>
- * S = ClanName<BR>
- * S = ClanLeaderName<BR>
- * d = ClanCrestID<BR>
- * d = signed time (seconds)<BR>
- * d = Type -> Owner = 0x01 || Waiting = 0x02 || Accepted = 0x03<BR>
- * d = AllyID<BR>
- * S = AllyName<BR>
- * S = AllyLeaderName<BR>
- * d = AllyCrestID<BR>
- * @author programmos
- */
-public final class FortSiegeDefenderList extends L2GameServerPacket
+public final class FortSiegeDefenderList extends PacketServer
 {
 	private static final String _S__CA_SiegeDefenderList = "[S] cb SiegeDefenderList";
-	// private static Logger LOG = LoggerFactory.getLogger(SiegeDefenderList.class);
+	
 	private final Fort _fort;
 	
 	public FortSiegeDefenderList(final Fort fort)

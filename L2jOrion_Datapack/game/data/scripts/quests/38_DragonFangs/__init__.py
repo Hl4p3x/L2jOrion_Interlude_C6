@@ -1,7 +1,3 @@
-# Fix by Cromir for Kilah
-# cleanup by DrLecter for the Official L2J Datapack Project.
-# Visit http://forum.l2jdp.com for more details.
-
 import sys
 from l2jorion.game.model.quest import State
 from l2jorion.game.model.quest import QuestState

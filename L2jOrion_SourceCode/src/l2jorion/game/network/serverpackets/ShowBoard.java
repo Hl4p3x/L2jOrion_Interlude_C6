@@ -1,33 +1,13 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- */
 package l2jorion.game.network.serverpackets;
 
 import java.util.List;
 
-import l2jorion.util.StringUtil;
+import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketServer;
 
-public class ShowBoard extends L2GameServerPacket
+public class ShowBoard extends PacketServer
 {
 	private static final String _S__6E_SHOWBOARD = "[S] 6e ShowBoard";
-
-	public static final ShowBoard STATIC_SHOWBOARD_102 = new ShowBoard(null, "102");
-	public static final ShowBoard STATIC_SHOWBOARD_103 = new ShowBoard(null, "103");
 	
 	private final static String TOP = "bypass _bbshome";
 	private final static String FAV = "bypass _bbsgetfav";
@@ -38,27 +18,35 @@ public class ShowBoard extends L2GameServerPacket
 	private final static String FRIENDS = "bypass _friendlist_0_";
 	private final static String ADDFAV = "bypass bbs_add_fav";
 	
-	private final StringBuilder _htmlCode;
+	private final String _htmlCode;
+	private String _id;
+	private List<String> _arg;
 	private boolean _showBoard = true;
 	
-	public ShowBoard(String htmlCode, String id, boolean showBoard)
+	public ShowBoard(String htmlCode, String id, L2PcInstance player)
 	{
-		_htmlCode = StringUtil.startAppend(500, id, "\u0008", htmlCode);
-		_showBoard = showBoard;
-	}
-	
-	public ShowBoard(String htmlCode, String id)
-	{
-		_htmlCode = StringUtil.startAppend(500, id, "\u0008", htmlCode);
+		_id = id;
+		
+		if (htmlCode != null)
+		{
+			if (id.equalsIgnoreCase("101"))
+			{
+				player.cleanBypasses(true);
+			}
+			
+			_htmlCode = player.encodeBypasses(htmlCode, true);
+		}
+		else
+		{
+			_htmlCode = null;
+		}
 	}
 	
 	public ShowBoard(List<String> arg)
 	{
-		_htmlCode = StringUtil.startAppend(500, "1002\u0008");
-		for (String str : arg)
-		{
-			StringUtil.append(_htmlCode, str, " \u0008");
-		}
+		_id = "1002";
+		_htmlCode = null;
+		_arg = arg;
 	}
 	
 	@Override
@@ -74,7 +62,23 @@ public class ShowBoard extends L2GameServerPacket
 		writeS(MAIL);
 		writeS(FRIENDS);
 		writeS(ADDFAV);
-		writeS(_htmlCode.toString());
+		String str = _id + "\u0008";
+		
+		if (!_id.equals("1002"))
+		{
+			if (_htmlCode != null)
+			{
+				str += _htmlCode;
+			}
+		}
+		else
+		{
+			for (String arg : _arg)
+			{
+				str += arg + " \u0008";
+			}
+		}
+		writeS(str);
 	}
 	
 	@Override

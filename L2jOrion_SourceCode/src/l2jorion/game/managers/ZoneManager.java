@@ -36,10 +36,13 @@ import org.w3c.dom.Node;
 
 import javolution.util.FastList;
 import l2jorion.Config;
+import l2jorion.game.datatables.sql.NpcTable;
+import l2jorion.game.datatables.sql.SpawnTable;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2Object;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.L2WorldRegion;
+import l2jorion.game.model.spawn.L2Spawn;
 import l2jorion.game.model.zone.AbstractZoneSettings;
 import l2jorion.game.model.zone.L2ZoneForm;
 import l2jorion.game.model.zone.L2ZoneRespawn;
@@ -51,10 +54,12 @@ import l2jorion.game.model.zone.type.L2ArenaZone;
 import l2jorion.game.model.zone.type.L2OlympiadStadiumZone;
 import l2jorion.game.model.zone.type.L2RespawnZone;
 import l2jorion.game.model.zone.type.L2WaterZone;
+import l2jorion.game.templates.L2NpcTemplate;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.util.CloseUtil;
 import l2jorion.util.database.L2DatabaseFactory;
+import l2jorion.util.random.Rnd;
 import l2jorion.util.xml.IXmlReader;
 
 public class ZoneManager implements IXmlReader
@@ -333,7 +338,7 @@ public class ZoneManager implements IXmlReader
 										e.printStackTrace();
 									}
 									
-									LOG.warn("ZoneData: Failed to load zone coordinates: " + e);
+									LOG.warn(getClass().getSimpleName() + ": Failed to load zone coordinates: " + e);
 								}
 							}
 							else
@@ -348,7 +353,7 @@ public class ZoneManager implements IXmlReader
 									}
 									else
 									{
-										LOG.warn("{}: ZoneData: Missing cuboid vertex in sql data for zone: {} in file {}!", getClass().getSimpleName(), zoneId, f.getName());
+										LOG.warn("{}: Missing cuboid vertex in sql data for zone: {} in file {}!", getClass().getSimpleName(), zoneId, f.getName());
 										continue;
 									}
 								}
@@ -359,6 +364,7 @@ public class ZoneManager implements IXmlReader
 									{
 										final int[] aX = new int[coords.length];
 										final int[] aY = new int[coords.length];
+										
 										for (int i = 0; i < coords.length; i++)
 										{
 											aX[i] = coords[i][0];
@@ -368,36 +374,35 @@ public class ZoneManager implements IXmlReader
 									}
 									else
 									{
-										LOG.warn("{}: ZoneData: Bad data for zone: {} in file {}!", getClass().getSimpleName(), zoneId, f.getName());
+										LOG.warn("{}: Bad data for zone: {} in file {}!", getClass().getSimpleName(), zoneId, f.getName());
 										continue;
 									}
 								}
 								else if (zoneShape.equalsIgnoreCase("Cylinder"))
 								{
-									// A Cylinder zone requires a center point
-									// at x,y and a radius
 									attrs = d.getAttributes();
 									final int zoneRad = Integer.parseInt(attrs.getNamedItem("rad").getNodeValue());
+									
 									if ((coords.length == 1) && (zoneRad > 0))
 									{
 										zoneForm = new ZoneCylinder(coords[0][0], coords[0][1], minZ, maxZ, zoneRad);
 									}
 									else
 									{
-										LOG.warn("{}: ZoneData: Bad data for zone: {} in file {}!", getClass().getSimpleName(), zoneId, f.getName());
+										LOG.warn("{}: Bad data for zone: {} in file {}!", getClass().getSimpleName(), zoneId, f.getName());
 										continue;
 									}
 								}
 								else
 								{
-									LOG.warn("{}: ZoneData: Unknown shape: {}  for zone {} in file {}", getClass().getSimpleName(), zoneShape, zoneId, f.getName());
+									LOG.warn("{}: Unknown shape: {}  for zone {} in file {}", getClass().getSimpleName(), zoneShape, zoneId, f.getName());
 									continue;
 								}
 							}
 						}
 						catch (Exception e)
 						{
-							LOG.warn("{}: ZoneData: Failed to load zone {} coordinates!", getClass().getSimpleName(), zoneId, e);
+							LOG.warn("{}: Failed to load zone {} coordinates!", getClass().getSimpleName(), zoneId, e);
 						}
 						
 						// Create the zone
@@ -413,7 +418,7 @@ public class ZoneManager implements IXmlReader
 						}
 						catch (Exception e)
 						{
-							LOG.warn("{}: ZoneData: No such zone type: {} in file {}!", getClass().getSimpleName(), zoneType, f.getName());
+							LOG.warn("{}: No such zone type: {} in file {}!", getClass().getSimpleName(), zoneType, f.getName());
 							continue;
 						}
 						
@@ -436,6 +441,14 @@ public class ZoneManager implements IXmlReader
 								int spawnZ = Integer.parseInt(attrs.getNamedItem("Z").getNodeValue());
 								Node val = attrs.getNamedItem("type");
 								((L2ZoneRespawn) temp).parseLoc(spawnX, spawnY, spawnZ, val == null ? null : val.getNodeValue());
+							}
+							else if ("npc".equalsIgnoreCase(cd.getNodeName()))
+							{
+								attrs = cd.getAttributes();
+								String id = attrs.getNamedItem("id").getNodeValue();
+								String[] locAndRespTime = attrs.getNamedItem("loc").getNodeValue().split(";");
+								
+								spawnMonster(id, locAndRespTime[0], locAndRespTime[1]);
 							}
 							else if ("race".equalsIgnoreCase(cd.getNodeName()) && (temp instanceof L2RespawnZone))
 							{
@@ -486,7 +499,7 @@ public class ZoneManager implements IXmlReader
 				e.printStackTrace();
 			}
 			
-			LOG.error("Error while loading zones.", e);
+			LOG.error(getClass().getSimpleName() + ": Error while loading zones:", e);
 			
 		}
 		finally
@@ -512,7 +525,6 @@ public class ZoneManager implements IXmlReader
 		}
 	}
 	
-	@Deprecated
 	public Collection<L2ZoneType> getAllZones()
 	{
 		final List<L2ZoneType> zones = new ArrayList<>();
@@ -552,6 +564,7 @@ public class ZoneManager implements IXmlReader
 		{
 			return null;
 		}
+		
 		return getZone(object.getX(), object.getY(), object.getZ(), type);
 	}
 	
@@ -566,6 +579,7 @@ public class ZoneManager implements IXmlReader
 				return (T) zone;
 			}
 		}
+		
 		return null;
 	}
 	
@@ -675,6 +689,38 @@ public class ZoneManager implements IXmlReader
 	public static AbstractZoneSettings getSettings(String name)
 	{
 		return _settings.get(name);
+	}
+	
+	private void spawnMonster(String monsterId, String loc, String respawnTime)
+	{
+		int monsterTemplate = Integer.parseInt(monsterId);
+		L2NpcTemplate template = NpcTable.getInstance().getTemplate(monsterTemplate);
+		String[] spanwLoc = loc.split(",");
+		
+		try
+		{
+			L2Spawn spawn = new L2Spawn(template);
+			if (Config.SAVE_GMSPAWN_ON_CUSTOM)
+			{
+				spawn.setCustom(true);
+			}
+			spawn.setLocx(Integer.parseInt(spanwLoc[0]));
+			spawn.setLocy(Integer.parseInt(spanwLoc[1]));
+			spawn.setLocz(Integer.parseInt(spanwLoc[2]));
+			spawn.setAmount(1);
+			spawn.setHeading(Rnd.nextInt(61794));
+			spawn.setInstanceId(Config.PVP_ZONE_INSTANCE_ID);
+			spawn.setRespawnDelay(Integer.parseInt(respawnTime));
+			SpawnTable.getInstance().addNewSpawn(spawn, false);
+			spawn.init();
+		}
+		catch (Exception e)
+		{
+			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public static final ZoneManager getInstance()

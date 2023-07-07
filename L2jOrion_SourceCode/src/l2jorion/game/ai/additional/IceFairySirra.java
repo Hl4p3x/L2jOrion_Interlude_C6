@@ -1,19 +1,3 @@
-/*
- * L2jOrion Project - www.l2jorion.com 
- * 
- * This program is free software: you can redistribute it and/or modify it under
- * the terms of the GNU General Public License as published by the Free Software
- * Foundation, either version 3 of the License, or (at your option) any later
- * version.
- * 
- * This program is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
- * details.
- * 
- * You should have received a copy of the GNU General Public License along with
- * this program. If not, see <http://www.gnu.org/licenses/>.
- */
 package l2jorion.game.ai.additional;
 
 import java.util.concurrent.ScheduledFuture;
@@ -21,6 +5,7 @@ import java.util.concurrent.TimeUnit;
 
 import javolution.util.FastList;
 import l2jorion.Config;
+import l2jorion.game.ai.additional.invidual.Antharas;
 import l2jorion.game.cache.HtmCache;
 import l2jorion.game.datatables.csv.DoorTable;
 import l2jorion.game.datatables.sql.NpcTable;
@@ -75,7 +60,6 @@ public class IceFairySirra extends Quest implements Runnable
 			addEventId(mob, Quest.QuestEventType.ON_KILL);
 			addEventId(mob, Quest.QuestEventType.QUEST_START);
 			addEventId(mob, Quest.QuestEventType.QUEST_TALK);
-			//addEventId(mob, Quest.QuestEventType.NPC_FIRST_TALK);
 		}
 		
 		String bossData = loadGlobalQuestVar("IceFairySirra");
@@ -87,31 +71,6 @@ public class IceFairySirra extends Quest implements Runnable
 		
 		init();
 	}
-	
-	/*public String onFirstTalk(final L2NpcInstance npc, final L2PcInstance player)
-	{
-		if (player.getQuestState("IceFairySirra") == null)
-		{
-			_a.sys("newQuestState");
-			newQuestState(player);
-		}
-		
-		player.setLastQuestNpcObject(npc.getObjectId());
-		
-		String filename = "";
-		if (npc.isBusy())
-		{
-			filename = getHtmlPath(4);
-		}
-		else
-		{
-			filename = getHtmlPath(0);
-		}
-		
-		sendHtml(npc, player, filename);
-		
-		return null;
-	}*/
 	
 	@Override
 	public String onTalk(L2NpcInstance npc, L2PcInstance player)
@@ -136,27 +95,27 @@ public class IceFairySirra extends Quest implements Runnable
 			
 			if (remainingTime <= 0)
 			{
-					if (player.isInParty() && player.getParty().getPartyLeaderOID() == player.getObjectId())
+				if (player.isInParty() && player.getParty().getPartyLeaderOID() == player.getObjectId())
+				{
+					if (checkItems(player))
 					{
-						if (checkItems(player))
-						{
-							startQuestTimer("start", 1000, null, player);
-							_player = player;
-							destroyItems(player);
-							player.getInventory().addItem("Scroll", 8379, 3, player, null);
-							npc.setBusy(true);
-							screenMessage(player, "Steward: Please wait a moment.", 1000);
-							filename = getHtmlPath(5);
-						}
-						else
-						{
-							filename = getHtmlPath(2);
-						}
+						startQuestTimer("start", 1000, null, player);
+						_player = player;
+						destroyItems(player);
+						player.getInventory().addItem("Scroll", 8379, 3, player, null);
+						npc.setBusy(true);
+						screenMessage(player, "Steward: Please wait a moment.", 1000);
+						filename = getHtmlPath(5);
 					}
 					else
 					{
-						filename = getHtmlPath(1);
+						filename = getHtmlPath(2);
 					}
+				}
+				else
+				{
+					filename = getHtmlPath(1);
+				}
 			}
 			else
 			{
@@ -179,11 +138,11 @@ public class IceFairySirra extends Quest implements Runnable
 			
 			int respawnMinDelay = 86400000 * (int) Config.RAID_MIN_RESPAWN_MULTIPLIER;
 			int respawnMaxDelay = 90000000 * (int) Config.RAID_MAX_RESPAWN_MULTIPLIER;
-			long respawn_delay = Rnd.get(respawnMinDelay,respawnMaxDelay);
+			long respawn_delay = Rnd.get(respawnMinDelay, respawnMaxDelay);
 			
 			long time = System.currentTimeMillis() + respawn_delay;
 			
-			saveGlobalQuestVar("IceFairySirra", ""+time);
+			saveGlobalQuestVar("IceFairySirra", "" + time);
 		}
 		return super.onKill(npc, killer, isPet);
 	}
@@ -278,7 +237,9 @@ public class IceFairySirra extends Quest implements Runnable
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.error("IceFairySirraManager: Failed deleting mob.", e);
 			}
@@ -319,7 +280,9 @@ public class IceFairySirra extends Quest implements Runnable
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.error("IceFairySirraManager: Failed closing door", e);
 			}
@@ -345,7 +308,9 @@ public class IceFairySirra extends Quest implements Runnable
 			catch (final Exception e)
 			{
 				if (Config.ENABLE_ALL_EXCEPTIONS)
+				{
 					e.printStackTrace();
+				}
 				
 				LOG.error("IceFairySirraManager: Failed closing door", e);
 			}
@@ -490,7 +455,9 @@ public class IceFairySirra extends Quest implements Runnable
 		catch (final Exception e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.warn("IceFairySirraManager: Spawns could not be initialized: " + e);
 		}

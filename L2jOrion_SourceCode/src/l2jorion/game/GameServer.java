@@ -1,22 +1,3 @@
-/*
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA.
- *
- * http://www.gnu.org/copyleft/gpl.html
- * www.l2jorion.com
- */
 package l2jorion.game;
 
 import java.io.File;
@@ -30,36 +11,47 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.logging.LogManager;
 
-import OrionGuard.ProtectionMain;
-import l2jguard.Protection;
 import l2jorion.Config;
 import l2jorion.ConfigLoader;
 import l2jorion.ServerType;
-import l2jorion.game.ai.additional.Antharas;
-import l2jorion.game.ai.additional.Baium;
-import l2jorion.game.ai.additional.Barakiel;
-import l2jorion.game.ai.additional.Benom;
-import l2jorion.game.ai.additional.Core;
+import l2jorion.bots.FakePlayerManager;
+import l2jorion.bots.xml.botClanList;
+import l2jorion.bots.xml.botEquipment;
+import l2jorion.bots.xml.botFarm;
+import l2jorion.bots.xml.botRandomWalk;
 import l2jorion.game.ai.additional.FairyTrees;
-import l2jorion.game.ai.additional.Frintezza;
 import l2jorion.game.ai.additional.Frozen;
-import l2jorion.game.ai.additional.Golkonda;
-import l2jorion.game.ai.additional.Gordon;
-import l2jorion.game.ai.additional.Hallate;
 import l2jorion.game.ai.additional.IceFairySirra;
 import l2jorion.game.ai.additional.InterludeTutorial;
-import l2jorion.game.ai.additional.Kernon;
 import l2jorion.game.ai.additional.Monastery;
-import l2jorion.game.ai.additional.Orfen;
-import l2jorion.game.ai.additional.QueenAnt;
 import l2jorion.game.ai.additional.SummonMinions;
 import l2jorion.game.ai.additional.Transform;
-import l2jorion.game.ai.additional.Valakas;
-import l2jorion.game.ai.additional.VanHalter;
 import l2jorion.game.ai.additional.VarkaKetraAlly;
-import l2jorion.game.ai.additional.Zaken;
 import l2jorion.game.ai.additional.ZombieGatekeepers;
-import l2jorion.game.ai.phantom.phantomPlayers;
+import l2jorion.game.ai.additional.events.SquashEvent;
+import l2jorion.game.ai.additional.group.AbandonedCamp;
+import l2jorion.game.ai.additional.group.Orcbarracks;
+import l2jorion.game.ai.additional.group.PlainsOfDion;
+import l2jorion.game.ai.additional.group.RetreatOnAttack;
+import l2jorion.game.ai.additional.group.SwampOfScreams;
+import l2jorion.game.ai.additional.group.TimakOrcOverlord;
+import l2jorion.game.ai.additional.group.TimakOrcTroopLeader;
+import l2jorion.game.ai.additional.invidual.Antharas;
+import l2jorion.game.ai.additional.invidual.Baium;
+import l2jorion.game.ai.additional.invidual.Barakiel;
+import l2jorion.game.ai.additional.invidual.Benom;
+import l2jorion.game.ai.additional.invidual.Core;
+import l2jorion.game.ai.additional.invidual.CustomBossForNoble;
+import l2jorion.game.ai.additional.invidual.Frintezza;
+import l2jorion.game.ai.additional.invidual.Golkonda;
+import l2jorion.game.ai.additional.invidual.Gordon;
+import l2jorion.game.ai.additional.invidual.Hallate;
+import l2jorion.game.ai.additional.invidual.Kernon;
+import l2jorion.game.ai.additional.invidual.Orfen;
+import l2jorion.game.ai.additional.invidual.QueenAnt;
+import l2jorion.game.ai.additional.invidual.Valakas;
+import l2jorion.game.ai.additional.invidual.VanHalter;
+import l2jorion.game.ai.additional.invidual.Zaken;
 import l2jorion.game.boat.routes.BoatGiranTalking;
 import l2jorion.game.boat.routes.BoatGludinRune;
 import l2jorion.game.boat.routes.BoatInnadrilTour;
@@ -67,6 +59,7 @@ import l2jorion.game.boat.routes.BoatRunePrimeval;
 import l2jorion.game.boat.routes.BoatTalkingGludin;
 import l2jorion.game.cache.CrestCache;
 import l2jorion.game.cache.HtmCache;
+import l2jorion.game.community.CommunityBoardManager;
 import l2jorion.game.community.manager.ForumsBBSManager;
 import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.controllers.RecipeController;
@@ -75,6 +68,7 @@ import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.datatables.HeroSkillTable;
 import l2jorion.game.datatables.NobleSkillTable;
 import l2jorion.game.datatables.OfflineTradeTable;
+import l2jorion.game.datatables.OfflineTradeTableWithBuffer;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.datatables.csv.DoorTable;
 import l2jorion.game.datatables.csv.ExtractableItemsData;
@@ -101,8 +95,9 @@ import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.datatables.sql.SkillSpellbookTable;
 import l2jorion.game.datatables.sql.SkillTreeTable;
 import l2jorion.game.datatables.sql.TeleportLocationTable;
-import l2jorion.game.datatables.xml.AugmentScrollData;
 import l2jorion.game.datatables.xml.AugmentationData;
+import l2jorion.game.datatables.xml.AugmentationScrollData;
+import l2jorion.game.datatables.xml.DressMeData;
 import l2jorion.game.datatables.xml.ExperienceData;
 import l2jorion.game.geo.GeoData;
 import l2jorion.game.geo.pathfinding.PathFinding;
@@ -113,6 +108,7 @@ import l2jorion.game.handler.ItemHandler;
 import l2jorion.game.handler.SkillHandler;
 import l2jorion.game.handler.UserCommandHandler;
 import l2jorion.game.handler.VoicedCommandHandler;
+import l2jorion.game.handler.custom.CustomBypassHandler;
 import l2jorion.game.idfactory.IdFactory;
 import l2jorion.game.managers.AchievementManager;
 import l2jorion.game.managers.AuctionManager;
@@ -148,9 +144,11 @@ import l2jorion.game.model.entity.Announcements;
 import l2jorion.game.model.entity.Hero;
 import l2jorion.game.model.entity.MonsterRace;
 import l2jorion.game.model.entity.event.manager.EventManager;
+import l2jorion.game.model.entity.event.tournament.Arena1x1;
 import l2jorion.game.model.entity.event.tournament.Arena2x2;
 import l2jorion.game.model.entity.event.tournament.Arena4x4;
 import l2jorion.game.model.entity.event.tournament.Arena9x9;
+import l2jorion.game.model.entity.event.tournament.Tournament;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.model.entity.sevensigns.SevenSignsFestival;
 import l2jorion.game.model.entity.siege.hallsiege.halls.BanditStrongHold;
@@ -173,6 +171,8 @@ import l2jorion.game.scripting.L2ScriptEngineManager;
 import l2jorion.game.taskmanager.KnownListUpdateTaskManager;
 import l2jorion.game.taskmanager.RandomZoneTaskManager;
 import l2jorion.game.taskmanager.TaskManager;
+import l2jorion.game.taskmanager.tasks.DonateGiver;
+import l2jorion.game.taskmanager.tasks.DonateGiverTaskManager;
 import l2jorion.game.taskmanager.tasks.TaskItemDonate;
 import l2jorion.game.templates.L2Item;
 import l2jorion.game.thread.LoginServerThread;
@@ -193,6 +193,7 @@ import l2jorion.util.database.L2DatabaseFactory;
 public class GameServer
 {
 	private static final Logger LOG = LoggerFactory.getLogger(GameServer.class);
+	
 	private static final String LOG_FOLDER = "log";
 	
 	private final SelectorThread<L2GameClient> _selectorThread;
@@ -223,10 +224,15 @@ public class GameServer
 		
 		L2ScriptEngineManager.getInstance();
 		
-		if (Config.L2JGUARD_PROTECTION)
+		if (PSystem.check())
 		{
-			Util.printSection("L2JGuard");
-			Protection.Init();
+			return;
+		}
+		
+		if (Config.ORION_PROTECTION)
+		{
+			// Util.printSection("OrionGuard");
+			// ProtectionMain.Init();
 		}
 		
 		L2DatabaseFactory.getInstance();
@@ -286,6 +292,9 @@ public class GameServer
 			ForumsBBSManager.getInstance().initRoot();
 		}
 		
+		// Util.printSection("Images");
+		// ImagesCache.getInstance();
+		
 		Util.printSection("Skills");
 		if (!SkillTable.getInstance().isInitialized())
 		{
@@ -304,6 +313,7 @@ public class GameServer
 			LOG.info("Could not find the extraced files. Please check your data.");
 			throw new Exception("Could not initialize the item table");
 		}
+		
 		ArmorSetsTable.getInstance();
 		if (Config.CUSTOM_ARMORSETS_TABLE)
 		{
@@ -319,7 +329,13 @@ public class GameServer
 		TradeController.getInstance();
 		L2Multisell.getInstance();
 		
-		AugmentScrollData.getInstance();
+		AugmentationScrollData.getInstance();
+		
+		if (Config.ALLOW_DRESS_ME_SYSTEM)
+		{
+			Util.printSection("Dress Me / Skins");
+			DressMeData.getInstance();
+		}
 		
 		Util.printSection("Npcs");
 		NpcWalkerRoutesTable.getInstance().load();
@@ -374,20 +390,30 @@ public class GameServer
 		ZoneManager.getInstance();
 		CastleManager.getInstance();
 		SiegeManager.getInstance();
+		
 		FortManager.getInstance();
 		FortSiegeManager.getInstance();
+		
 		CrownManager.getInstance();
 		
 		if (!Config.ALT_DEV_NO_RB)
 		{
 			RaidBossSpawnManager.getInstance().load();
-			GrandBossManager.getInstance().init();
-			GrandBossManager.getInstance().initZones();
 			RaidBossPointsManager.init();
 		}
 		else
 		{
-			LOG.info("Bosses: disabled");
+			LOG.info("Raid Bosses: disabled");
+		}
+		
+		if (!Config.ALT_DEV_NO_GRAND_BOSS)
+		{
+			GrandBossManager.getInstance().init();
+			GrandBossManager.getInstance().initZones();
+		}
+		else
+		{
+			LOG.info("Grand Bosses: disabled");
 		}
 		
 		DayNightSpawnManager.getInstance().notifyChangeMode();
@@ -467,6 +493,7 @@ public class GameServer
 		AdminCommandHandler.getInstance();
 		UserCommandHandler.getInstance();
 		VoicedCommandHandler.getInstance();
+		CommunityBoardManager.getInstance();
 		
 		LOG.info("AutoChatHandler: Loaded " + AutoChatHandler.getInstance().size() + " handlers");
 		LOG.info("AutoSpawnHandler: Loaded " + AutoSpawn.getInstance().size() + " handlers");
@@ -477,34 +504,66 @@ public class GameServer
 		// Donate Items
 		TaskItemDonate.getInstance();
 		
+		if (Config.EMIRHAN_DONATE_TASK)
+		{
+			DonateGiverTaskManager.getInstance();
+		}
+		
+		if (Config.L2LIMIT_CUSTOM)
+		{
+			DonateGiver.getInstance();
+		}
+		
 		if (!Config.ALT_DEV_NO_AI)
 		{
-			ThreadPoolManager.getInstance().scheduleAi(new Antharas(-1, "antharas", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new Baium(-1, "baium", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new Core(-1, "core", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new QueenAnt(-1, "queen_ant", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new VanHalter(-1, "vanhalter", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new Gordon(-1, "Gordon", "ai"), 0);
+			if (!Config.ALT_DEV_NO_RB)
+			{
+				ThreadPoolManager.getInstance().scheduleAi(new Gordon(-1, "Gordon", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new IceFairySirra(-1, "IceFairySirra", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new Golkonda(-1, "Golkonda", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new Hallate(-1, "Hallate", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new Kernon(-1, "Kernon", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new Barakiel(-1, "Barakiel", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new Benom(-1, "Benom", "ai"), 0);
+			}
+			
+			if (!Config.ALT_DEV_NO_GRAND_BOSS)
+			{
+				ThreadPoolManager.getInstance().scheduleAi(new Antharas(-1, "antharas", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new Baium(-1, "baium", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new Core(-1, "core", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new QueenAnt(-1, "queen_ant", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new VanHalter(-1, "vanhalter", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new Orfen(-1, "Orfen", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new Zaken(-1, "Zaken", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new Frintezza(-1, "Frintezza", "ai"), 0);
+				ThreadPoolManager.getInstance().scheduleAi(new Valakas(-1, "valakas", "ai"), 0);
+			}
+			
 			ThreadPoolManager.getInstance().scheduleAi(new Monastery(-1, "monastery", "ai"), 0);
 			ThreadPoolManager.getInstance().scheduleAi(new Transform(-1, "transform", "ai"), 0);
 			ThreadPoolManager.getInstance().scheduleAi(new FairyTrees(-1, "FairyTrees", "ai"), 0);
 			ThreadPoolManager.getInstance().scheduleAi(new SummonMinions(-1, "SummonMinions", "ai"), 0);
 			ThreadPoolManager.getInstance().scheduleAi(new ZombieGatekeepers(-1, "ZombieGatekeepers", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new IceFairySirra(-1, "IceFairySirra", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new Golkonda(-1, "Golkonda", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new Hallate(-1, "Hallate", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new Kernon(-1, "Kernon", "ai"), 0);
 			ThreadPoolManager.getInstance().scheduleAi(new VarkaKetraAlly(-1, "Varka Ketra Ally", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new Barakiel(-1, "Barakiel", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new Orfen(-1, "Orfen", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new Zaken(-1, "Zaken", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new Frintezza(-1, "Frintezza", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new Valakas(-1, "valakas", "ai"), 0);
-			ThreadPoolManager.getInstance().scheduleAi(new Benom(-1, "Benom", "ai"), 0);
 			ThreadPoolManager.getInstance().scheduleAi(new InterludeTutorial(-1, "Tutorial", "ai"), 0);
 			ThreadPoolManager.getInstance().scheduleAi(new Frozen(-1, "Frozen", "ai"), 0);
 			
-			LOG.info("GameServer: Additional scripts loaded");
+			ThreadPoolManager.getInstance().scheduleAi(new SwampOfScreams(-1, "SwampOfScreams", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new PlainsOfDion(-1, "PlainsOfDion", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new AbandonedCamp(-1, "AbandonedCamp", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new Orcbarracks(-1, "Orcbarracks", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new RetreatOnAttack(-1, "RetreatOnAttack", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new CustomBossForNoble(-1, "CustomBossForNoble", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new TimakOrcOverlord(-1, "TimakOrcOverlord", "ai"), 0);
+			ThreadPoolManager.getInstance().scheduleAi(new TimakOrcTroopLeader(-1, "TimakOrcTroopLeader", "ai"), 0);
+			
+			if (!Config.L2UNLIMITED_CUSTOM)
+			{
+				ThreadPoolManager.getInstance().scheduleAi(new SquashEvent(-1, "SquashEvent", "event"), 0);
+			}
+			
+			LOG.info("Scripts: Additional scripts loaded");
 		}
 		
 		if (!Config.ALT_DEV_NO_SCRIPT)
@@ -518,8 +577,6 @@ public class GameServer
 			{
 				LOG.error("{}: Failed loading scripts.cfg.", getClass().getSimpleName());
 			}
-			
-			FaenorScriptEngine.getInstance();
 			
 			if (!Config.ALT_DEV_NO_QUESTS)
 			{
@@ -554,8 +611,6 @@ public class GameServer
 			PowerPack.getInstance();
 		}
 		
-		EventManager.getInstance().startEventRegistration();
-		
 		if (EventManager.TVT_EVENT_ENABLED || EventManager.CTF_EVENT_ENABLED || EventManager.DM_EVENT_ENABLED)
 		{
 			if (EventManager.TVT_EVENT_ENABLED)
@@ -572,28 +627,47 @@ public class GameServer
 			}
 		}
 		
-		// TournamentSpawner.getInstance();
-		if (Config.ARENA_EVENT_ENABLED_2X2)
+		if (Config.ARENA_EVENT_ENABLED_1X1 || Config.ARENA_EVENT_ENABLED_2X2 || Config.ARENA_EVENT_ENABLED_4X4 || Config.ARENA_EVENT_ENABLED_9X9)
 		{
-			ThreadPoolManager.getInstance().scheduleGeneral(Arena2x2.getInstance(), 0);
+			CustomBypassHandler.getInstance().registerCustomBypassHandler(Tournament.getNewInstance());
+			VoicedCommandHandler.getInstance().registerVoicedCommandHandler(Tournament.getNewInstance());
+			
+			if (Config.ARENA_EVENT_ENABLED_1X1)
+			{
+				ThreadPoolManager.getInstance().scheduleGeneral(Arena1x1.getInstance(), 0);
+			}
+			
+			if (Config.ARENA_EVENT_ENABLED_2X2)
+			{
+				ThreadPoolManager.getInstance().scheduleGeneral(Arena2x2.getInstance(), 0);
+			}
+			
+			if (Config.ARENA_EVENT_ENABLED_4X4)
+			{
+				ThreadPoolManager.getInstance().scheduleGeneral(Arena4x4.getInstance(), 0);
+			}
+			
+			if (Config.ARENA_EVENT_ENABLED_9X9)
+			{
+				ThreadPoolManager.getInstance().scheduleGeneral(Arena9x9.getInstance(), 0);
+			}
 		}
 		
-		if (Config.ARENA_EVENT_ENABLED_4X4)
-		{
-			ThreadPoolManager.getInstance().scheduleGeneral(Arena4x4.getInstance(), 0);
-		}
-		
-		if (Config.ARENA_EVENT_ENABLED_9X9)
-		{
-			ThreadPoolManager.getInstance().scheduleGeneral(Arena9x9.getInstance(), 0);
-		}
+		EventManager.getInstance().startEventRegistration();
 		
 		Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());
 		
 		Util.printSection("Offline trade");
 		if ((Config.OFFLINE_TRADE_ENABLE || Config.OFFLINE_CRAFT_ENABLE) && Config.RESTORE_OFFLINERS)
 		{
-			OfflineTradeTable.restoreOfflineTraders();
+			if (!Config.RON_CUSTOM)
+			{
+				OfflineTradeTable.restoreOfflineTraders();
+			}
+			else
+			{
+				OfflineTradeTableWithBuffer.restoreOfflineTraders();
+			}
 		}
 		
 		Util.printSection("System");
@@ -601,18 +675,14 @@ public class GameServer
 		LOG.info("CPU: " + Util.getAvailableProcessors());
 		LOG.info("Memory: " + Memory.getUsedMemory() + "/" + Memory.getTotalMemory() + " MB");
 		
-		if (Config.ALLOW_PHANTOM_PLAYERS)
-		{
-			Util.printSection("Phantom system");
-			phantomPlayers.init();
-		}
-		
 		KnownListUpdateTaskManager.getInstance();
 		
 		if (Config.ALLOW_RANDOM_PVP_ZONE)
 		{
 			RandomZoneTaskManager.getInstance();
 		}
+		
+		// AutoImageSenderManager.startSendingImages();
 		
 		if (Config.DEADLOCK_DETECTOR)
 		{
@@ -632,6 +702,17 @@ public class GameServer
 		LOG.info("Loaded in: " + (System.currentTimeMillis() - serverLoadStart) / 1000 + " seconds");
 		
 		LoginServerThread.getInstance().start();
+		
+		if (Config.BOTS_SYSTEM)
+		{
+			Util.printSection("Bot Engine");
+			CrestCache.getInstance().CrestCacheForBots();
+			botClanList.getInstance();
+			botEquipment.getInstance();
+			botRandomWalk.getInstance();
+			botFarm.getInstance();
+			FakePlayerManager.INSTANCE.initialise();
+		}
 		
 		final SelectorConfig sc = new SelectorConfig();
 		sc.MAX_READ_PER_PASS = Config.MMO_MAX_READ_PER_PASS;

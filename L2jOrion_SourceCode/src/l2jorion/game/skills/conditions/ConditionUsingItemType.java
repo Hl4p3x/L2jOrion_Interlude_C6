@@ -45,6 +45,7 @@ public final class ConditionUsingItemType extends Condition
 		{
 			return false;
 		}
+		
 		final Inventory inv = ((L2PcInstance) env.player).getInventory();
 		
 		// If ConditionUsingItemType is one between Light, Heavy or Magic
@@ -82,6 +83,7 @@ public final class ConditionUsingItemType extends Condition
 			// return true if legs armor matches too
 			return (_mask & legMask) != 0;
 		}
+		
 		return (_mask & inv.getWearedMask()) != 0;
 	}
 }

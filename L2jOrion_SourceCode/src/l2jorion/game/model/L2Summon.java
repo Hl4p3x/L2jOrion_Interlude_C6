@@ -285,11 +285,9 @@ public abstract class L2Summon extends L2PlayableInstance
 			}
 		}
 		
-		if (getOwner() != null && target instanceof L2PcInstance && ((L2PcInstance) target).getSiegeState() == 0 && (!getOwner().checkAntiFarm((L2PcInstance) target)))
-		{
-			sendPacket(ActionFailed.STATIC_PACKET);
-			return;
-		}
+		/*
+		 * if (getOwner() != null && target instanceof L2PcInstance && ((L2PcInstance) target).getSiegeState() == 0 && (!getOwner().checkAntiFarm((L2PcInstance) target))) { sendPacket(ActionFailed.STATIC_PACKET); return; }
+		 */
 		
 		super.doAttack(target);
 	}
@@ -385,7 +383,6 @@ public abstract class L2Summon extends L2PlayableInstance
 		if (getOwner() != null && isVisible())
 		{
 			getOwner().sendPacket(new PetStatusUpdate(this));
-			
 		}
 	}
 	
@@ -393,8 +390,6 @@ public abstract class L2Summon extends L2PlayableInstance
 	{
 		getAI().stopFollow();
 		owner.sendPacket(new PetDelete(getObjectId(), 2));
-		
-		// FIXME: I think it should really drop items to ground and only owner can take for a while
 		giveAllToOwner();
 		decayMe();
 		getKnownList().removeAllKnownObjects();
@@ -495,17 +490,14 @@ public abstract class L2Summon extends L2PlayableInstance
 	
 	public void doPickupItem(final L2Object object)
 	{
-		// TODO: Implement?
 	}
 	
 	public void giveAllToOwner()
 	{
-		// TODO: Implement?
 	}
 	
 	public void store()
 	{
-		// TODO: Implement?
 	}
 	
 	@Override
@@ -532,10 +524,6 @@ public abstract class L2Summon extends L2PlayableInstance
 		return null;
 	}
 	
-	/**
-	 * Return the L2Party object of its L2PcInstance owner or null.<BR>
-	 * <BR>
-	 */
 	@Override
 	public L2Party getParty()
 	{
@@ -547,10 +535,6 @@ public abstract class L2Summon extends L2PlayableInstance
 		return _owner.getParty();
 	}
 	
-	/**
-	 * Return True if the L2Character has a Party in progress.<BR>
-	 * <BR>
-	 */
 	@Override
 	public boolean isInParty()
 	{
@@ -562,24 +546,6 @@ public abstract class L2Summon extends L2PlayableInstance
 		return _owner.getParty() != null;
 	}
 	
-	/**
-	 * Check if the active L2Skill can be casted.<BR>
-	 * <BR>
-	 * <B><U> Actions</U> :</B><BR>
-	 * <BR>
-	 * <li>Check if the target is correct</li>
-	 * <li>Check if the target is in the skill cast range</li>
-	 * <li>Check if the summon owns enough HP and MP to cast the skill</li>
-	 * <li>Check if all skills are enabled and this skill is enabled</li><BR>
-	 * <BR>
-	 * <li>Check if the skill is active</li><BR>
-	 * <BR>
-	 * <li>Notify the AI with AI_INTENTION_CAST and target</li><BR>
-	 * <BR>
-	 * @param skill The L2Skill to use
-	 * @param forceUse used to force ATTACK on players
-	 * @param dontMove used to prevent movement, if not in range
-	 */
 	public void useMagic(L2Skill skill, boolean forceUse, boolean dontMove)
 	{
 		if (skill == null || isDead())

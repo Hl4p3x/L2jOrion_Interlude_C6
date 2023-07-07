@@ -20,7 +20,9 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class AskJoinAlly extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class AskJoinAlly extends PacketServer
 {
 	private static final String _S__A8_ASKJOINALLY_0XA8 = "[S] a8 AskJoinAlly 0xa8";
 	

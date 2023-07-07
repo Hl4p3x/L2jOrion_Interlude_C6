@@ -258,7 +258,8 @@ abstract class DocumentBase
 	protected void attachEffect(final Node n, final Object template, final Condition attachCond)
 	{
 		final NamedNodeMap attrs = n.getAttributes();
-		final String name = attrs.getNamedItem("name").getNodeValue();
+		final String name = getValue(attrs.getNamedItem("name").getNodeValue().intern(), template);
+		
 		int time, count = 1;
 		int showIcon = 0;
 		
@@ -1002,7 +1003,6 @@ abstract class DocumentBase
 	
 	protected String getValue(final String value, final Object template)
 	{
-		// is it a table?
 		if (value.charAt(0) == '#')
 		{
 			if (template instanceof L2Skill)

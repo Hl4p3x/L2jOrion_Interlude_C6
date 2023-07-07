@@ -48,7 +48,7 @@ public class BlowFishKeygen
 		}
 	}
 	
-	// block instantiation
+	// Block instantiation
 	private BlowFishKeygen()
 	{
 	}

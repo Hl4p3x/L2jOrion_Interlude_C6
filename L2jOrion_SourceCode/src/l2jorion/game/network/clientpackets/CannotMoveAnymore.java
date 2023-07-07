@@ -19,8 +19,9 @@ package l2jorion.game.network.clientpackets;
 import l2jorion.game.ai.CtrlEvent;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.Location;
+import l2jorion.game.network.PacketClient;
 
-public final class CannotMoveAnymore extends L2GameClientPacket
+public final class CannotMoveAnymore extends PacketClient
 {
 	private int _x, _y, _z, _heading;
 	

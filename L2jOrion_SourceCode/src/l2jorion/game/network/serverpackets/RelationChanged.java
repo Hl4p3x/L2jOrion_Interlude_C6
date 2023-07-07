@@ -22,8 +22,9 @@ package l2jorion.game.network.serverpackets;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.model.actor.instance.L2SummonInstance;
+import l2jorion.game.network.PacketServer;
 
-public class RelationChanged extends L2GameServerPacket
+public class RelationChanged extends PacketServer
 {
 	private static final String _S__CE_RELATIONCHANGED = "[S] CE RelationChanged";
 	

@@ -26,8 +26,10 @@ public class BruteProtector
 		/*
 		 * I am not quite sure because we can have a number of NATed clients with single IP if (currentAttemptTime - lastAttemptTime <= 2) // Time between last login attempt and current less or equal than 2 seconds return false;
 		 */
-		if (_clients.get(ip).size() < Config.BRUT_LOGON_ATTEMPTS) // Performing checks only after BRUT_LOGON_ATTEMPTS logon attempts
+		if (_clients.get(ip).size() < Config.BRUT_LOGON_ATTEMPTS)
+		{
 			return true;
+		}
 		
 		// Calculating average time difference between attempts
 		int lastTime = 0;

@@ -22,13 +22,11 @@ package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.model.L2Clan;
 import l2jorion.game.model.actor.instance.L2PcInstance;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.SystemMessage;
 
-/**
- * sample 5F 01 00 00 00 format cdd
- */
-public final class RequestAnswerJoinAlly extends L2GameClientPacket
+public final class RequestAnswerJoinAlly extends PacketClient
 {
 	private int _response;
 	
@@ -44,12 +42,16 @@ public final class RequestAnswerJoinAlly extends L2GameClientPacket
 		final L2PcInstance activeChar = getClient().getActiveChar();
 		
 		if (activeChar == null)
+		{
 			return;
+		}
 		
 		final L2PcInstance requestor = activeChar.getRequest().getPartner();
 		
 		if (requestor == null)
+		{
 			return;
+		}
 		
 		if (_response == 0)
 		{
@@ -59,13 +61,14 @@ public final class RequestAnswerJoinAlly extends L2GameClientPacket
 		else
 		{
 			if (!(requestor.getRequest().getRequestPacket() instanceof RequestJoinAlly))
+			{
 				return; // hax
-				
+			}
+			
 			final L2Clan clan = requestor.getClan();
 			// we must double check this cause of hack
 			if (clan.checkAllyJoinCondition(requestor, activeChar))
 			{
-				// TODO: Need correct message id
 				requestor.sendPacket(new SystemMessage(SystemMessageId.YOU_HAVE_SUCCEEDED_INVITING_FRIEND));
 				activeChar.sendPacket(new SystemMessage(SystemMessageId.YOU_ACCEPTED_ALLIANCE));
 				activeChar.getClan().setAllyId(clan.getAllyId());

@@ -19,23 +19,15 @@
  */
 package l2jorion.game.network.serverpackets;
 
-/**
- * Format: ch d.
- * @author KenM
- */
-public class ExRedSky extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class ExRedSky extends PacketServer
 {
-	/** The Constant _S__FE_40_EXREDSKYPACKET. */
 	private static final String _S__FE_40_EXREDSKYPACKET = "[S] FE:40 ExRedSkyPacket";
 	
-	/** The _duration. */
 	private final int _duration;
 	
-	/**
-	 * Instantiates a new ex red sky.
-	 * @param duration the duration
-	 */
-	public ExRedSky(final int duration)
+	public ExRedSky(int duration)
 	{
 		_duration = duration;
 	}
@@ -48,10 +40,6 @@ public class ExRedSky extends L2GameServerPacket
 		writeD(_duration);
 	}
 	
-	/**
-	 * Gets the type.
-	 * @return the type
-	 */
 	@Override
 	public String getType()
 	{

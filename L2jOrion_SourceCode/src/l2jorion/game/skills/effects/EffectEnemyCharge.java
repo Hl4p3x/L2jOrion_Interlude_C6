@@ -66,7 +66,6 @@ public class EffectEnemyCharge extends L2Effect
 		double sin;
 		
 		// approximation for moving closer when z coordinates are different
-		// TODO: handle Z axis movement better
 		offset -= Math.abs(dz);
 		if (offset < 5)
 		{

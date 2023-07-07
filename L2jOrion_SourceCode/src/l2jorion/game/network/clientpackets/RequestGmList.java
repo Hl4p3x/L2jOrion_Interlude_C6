@@ -21,8 +21,9 @@
 package l2jorion.game.network.clientpackets;
 
 import l2jorion.game.datatables.GmListTable;
+import l2jorion.game.network.PacketClient;
 
-public final class RequestGmList extends L2GameClientPacket
+public final class RequestGmList extends PacketClient
 {
 	@Override
 	protected void readImpl()

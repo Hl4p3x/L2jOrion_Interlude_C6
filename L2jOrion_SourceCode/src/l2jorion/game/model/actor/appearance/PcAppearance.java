@@ -25,6 +25,7 @@ import l2jorion.game.model.actor.instance.L2PcInstance;
 public class PcAppearance
 {
 	private L2PcInstance _owner;
+	
 	private byte _face;
 	private byte _hairColor;
 	private byte _hairStyle;
@@ -37,7 +38,7 @@ public class PcAppearance
 	/** The hexadecimal Color of players title (white is 0xFFFF77) */
 	private int _titleColor = 0xFFFF77;
 	
-	public PcAppearance(final byte Face, final byte HColor, final byte HStyle, final boolean Sex)
+	public PcAppearance(byte Face, byte HColor, byte HStyle, boolean Sex)
 	{
 		_face = Face;
 		_hairColor = HColor;
@@ -59,7 +60,7 @@ public class PcAppearance
 		return _visibleName;
 	}
 	
-	public final void setFace(final int value)
+	public final void setFace(int value)
 	{
 		_face = (byte) value;
 	}
@@ -69,10 +70,7 @@ public class PcAppearance
 		return _hairColor;
 	}
 	
-	/**
-	 * @param value
-	 */
-	public final void setHairColor(final int value)
+	public final void setHairColor(int value)
 	{
 		_hairColor = (byte) value;
 	}
@@ -82,10 +80,7 @@ public class PcAppearance
 		return _hairStyle;
 	}
 	
-	/**
-	 * @param value
-	 */
-	public final void setHairStyle(final int value)
+	public final void setHairStyle(int value)
 	{
 		_hairStyle = (byte) value;
 	}
@@ -95,10 +90,7 @@ public class PcAppearance
 		return _sex;
 	}
 	
-	/**
-	 * @param isfemale
-	 */
-	public final void setSex(final boolean isfemale)
+	public final void setSex(boolean isfemale)
 	{
 		_sex = isfemale;
 	}
@@ -138,19 +130,16 @@ public class PcAppearance
 		return _titleColor;
 	}
 	
-	public void setTitleColor(final int titleColor)
+	public void setTitleColor(int titleColor)
 	{
 		_titleColor = titleColor;
 	}
 	
-	public void setTitleColor(final int red, final int green, final int blue)
+	public void setTitleColor(int red, int green, int blue)
 	{
 		_titleColor = (red & 0xFF) + ((green & 0xFF) << 8) + ((blue & 0xFF) << 16);
 	}
 	
-	/**
-	 * @return Returns the owner.
-	 */
 	public L2PcInstance getOwner()
 	{
 		return _owner;

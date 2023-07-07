@@ -25,13 +25,14 @@ import l2jorion.game.managers.QuestManager;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.quest.Quest;
 import l2jorion.game.model.quest.QuestState;
+import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.serverpackets.QuestList;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
-public final class RequestQuestAbort extends L2GameClientPacket
+public final class RequestQuestAbort extends PacketClient
 {
 	private static Logger LOG = LoggerFactory.getLogger(RequestQuestAbort.class);
 	

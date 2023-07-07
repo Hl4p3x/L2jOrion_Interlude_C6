@@ -276,4 +276,30 @@ public class Util
 		t.printStackTrace(new PrintWriter(sw));
 		return sw.toString();
 	}
+	
+	private static final char[] ALLOWED_CHARS =
+	{
+		'1',
+		'2',
+		'3',
+		'4',
+		'5',
+		'6',
+		'7',
+		'8',
+		'9',
+		'0'
+	};
+	
+	public static boolean isInteger(char c)
+	{
+		for (char possibility : ALLOWED_CHARS)
+		{
+			if (possibility == c)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }

@@ -34,48 +34,49 @@ import l2jorion.logger.ILoggerFactory;
 import l2jorion.logger.Logger;
 import l2jorion.logger.event.SubstituteLoggingEvent;
 
-/**
- * SubstituteLoggerFactory manages instances of {@link SubstituteLogger}.
- *
- * @author Ceki G&uuml;lc&uuml;
- * @author Chetan Mehrotra
- */
-public class SubstituteLoggerFactory implements ILoggerFactory {
-
-    boolean postInitialization = false;
-    
-    final Map<String, SubstituteLogger> loggers = new HashMap<>();
-
-    final LinkedBlockingQueue<SubstituteLoggingEvent> eventQueue = new LinkedBlockingQueue<>();
-
-    @Override
-	synchronized public  Logger getLogger(String name) {
-        SubstituteLogger logger = loggers.get(name);
-        if (logger == null) {
-            logger = new SubstituteLogger(name, eventQueue, postInitialization);
-            loggers.put(name, logger);
-        }
-        return logger;
-    }
-
-    public List<String> getLoggerNames() {
-        return new ArrayList<>(loggers.keySet());
-    }
-
-    public List<SubstituteLogger> getLoggers() {
-        return new ArrayList<>(loggers.values());
-    }
-
-    public LinkedBlockingQueue<SubstituteLoggingEvent> getEventQueue() {
-        return eventQueue;
-    }
-
-    public void postInitialization() {
-    	postInitialization = true;
-    }
-    
-    public void clear() {
-        loggers.clear();
-        eventQueue.clear();
-    }
+public class SubstituteLoggerFactory implements ILoggerFactory
+{
+	boolean postInitialization = false;
+	
+	final Map<String, SubstituteLogger> loggers = new HashMap<>();
+	
+	final LinkedBlockingQueue<SubstituteLoggingEvent> eventQueue = new LinkedBlockingQueue<>();
+	
+	@Override
+	synchronized public Logger getLogger(String name)
+	{
+		SubstituteLogger logger = loggers.get(name);
+		if (logger == null)
+		{
+			logger = new SubstituteLogger(name, eventQueue, postInitialization);
+			loggers.put(name, logger);
+		}
+		return logger;
+	}
+	
+	public List<String> getLoggerNames()
+	{
+		return new ArrayList<>(loggers.keySet());
+	}
+	
+	public List<SubstituteLogger> getLoggers()
+	{
+		return new ArrayList<>(loggers.values());
+	}
+	
+	public LinkedBlockingQueue<SubstituteLoggingEvent> getEventQueue()
+	{
+		return eventQueue;
+	}
+	
+	public void postInitialization()
+	{
+		postInitialization = true;
+	}
+	
+	public void clear()
+	{
+		loggers.clear();
+		eventQueue.clear();
+	}
 }

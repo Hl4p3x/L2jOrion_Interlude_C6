@@ -20,9 +20,12 @@
  */
 package l2jorion.game.network.serverpackets;
 
-public class SetupGauge extends L2GameServerPacket
+import l2jorion.game.network.PacketServer;
+
+public class SetupGauge extends PacketServer
 {
 	private static final String _S__85_SETUPGAUGE = "[S] 6d SetupGauge";
+	
 	public static final int BLUE = 0;
 	public static final int RED = 1;
 	public static final int CYAN = 2;
