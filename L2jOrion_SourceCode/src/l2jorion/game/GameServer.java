@@ -224,17 +224,6 @@ public class GameServer
 		
 		L2ScriptEngineManager.getInstance();
 		
-		if (PSystem.check())
-		{
-			return;
-		}
-		
-		if (Config.ORION_PROTECTION)
-		{
-			// Util.printSection("OrionGuard");
-			// ProtectionMain.Init();
-		}
-		
 		L2DatabaseFactory.getInstance();
 		
 		gameServer = new GameServer();
