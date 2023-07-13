@@ -1,12 +1,11 @@
 package l2jorion.game.datatables;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import javolution.util.FastList;
 
 public class CrownTable
 {
-	private static List<Integer> _crownList = new FastList<>();
+	private static List<Integer> _crownList = new ArrayList<>();
 	
 	public static List<Integer> getCrownList()
 	{

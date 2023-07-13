@@ -20,69 +20,33 @@
  */
 package l2jorion.util.database;
 
-import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.logging.Logger;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
+import org.mariadb.jdbc.MariaDbPoolDataSource;
 
 import l2jorion.Config;
 import l2jorion.game.thread.ThreadPoolManager;
-import l2jorion.logger.Logger;
-import l2jorion.logger.LoggerFactory;
 
 public class L2DatabaseFactory
 {
-	private final Logger LOG = LoggerFactory.getLogger(L2DatabaseFactory.class);
+	private static final Logger LOG = Logger.getLogger(L2DatabaseFactory.class.getName());
 	
 	private static L2DatabaseFactory _instance;
-	private final ComboPooledDataSource _source;
+	private static final MariaDbPoolDataSource dataSource = new MariaDbPoolDataSource(Config.DATABASE_URL + "&user=" + Config.DATABASE_LOGIN + "&password=" + Config.DATABASE_PASSWORD + "&maxPoolSize=" + Config.DATABASE_MAX_CONNECTIONS);
 	
-	public L2DatabaseFactory()
+	public static void init()
 	{
-		if (Config.DATABASE_MAX_CONNECTIONS < 2)
-		{
-			Config.DATABASE_MAX_CONNECTIONS = 2;
-			LOG.warn("A minimum of " + Config.DATABASE_MAX_CONNECTIONS + " db connections are required.");
-		}
-		
-		_source = new ComboPooledDataSource();
-		_source.setAutoCommitOnClose(true);
-		
-		_source.setInitialPoolSize(10);
-		_source.setMinPoolSize(10);
-		_source.setMaxPoolSize(Math.max(10, Config.DATABASE_MAX_CONNECTIONS));
-		_source.setNumHelperThreads(10);
-		_source.setAcquireRetryAttempts(0);
-		_source.setAcquireRetryDelay(500);
-		_source.setCheckoutTimeout(0);
-		_source.setAcquireIncrement(5);
-		_source.setTestConnectionOnCheckin(false);
-		_source.setIdleConnectionTestPeriod(3600);
-		_source.setMaxIdleTime(Config.DATABASE_MAX_IDLE_TIME);
-		_source.setMaxStatementsPerConnection(100);
-		_source.setBreakAfterAcquireFailure(false);
-		
+		// Test if connection is valid.
 		try
 		{
-			_source.setDriverClass(Config.DATABASE_DRIVER);
+			dataSource.getConnection().close();
+			LOG.info("Database: Initialized.");
 		}
-		catch (PropertyVetoException e)
+		catch (Exception e)
 		{
-			LOG.error("There has been a problem setting the driver class.", e);
-		}
-		
-		_source.setJdbcUrl(Config.DATABASE_URL);
-		_source.setUser(Config.DATABASE_LOGIN);
-		_source.setPassword(Config.DATABASE_PASSWORD);
-		
-		try
-		{
-			_source.getConnection().close();
-		}
-		catch (SQLException e)
-		{
-			LOG.warn("There has been a problem closing the test connection!", e);
+			LOG.info("Database: Problem on initialize. " + e);
 		}
 	}
 	
@@ -90,14 +54,15 @@ public class L2DatabaseFactory
 	{
 		try
 		{
-			_source.close();
+			dataSource.close();
 		}
-		catch (final Exception e)
+		catch (Exception e)
 		{
-			LOG.error("", e);
+			LOG.severe("Error while closing the database connection pool." + e);
 		}
 	}
 	
+	// TODO Drop that shit
 	public final String safetyString(final String... whatToCheck)
 	{
 		final char braceLeft;
@@ -147,11 +112,11 @@ public class L2DatabaseFactory
 		{
 			try
 			{
-				con = _source.getConnection();
+				con = dataSource.getConnection();
 			}
 			catch (final SQLException e)
 			{
-				LOG.error("L2DatabaseFactory: Connection failed, trying again...", e);
+				LOG.severe("L2DatabaseFactory: Connection failed, trying again..." + e);
 			}
 		}
 		return con;
@@ -164,7 +129,7 @@ public class L2DatabaseFactory
 		{
 			try
 			{
-				con = _source.getConnection();
+				con = dataSource.getConnection();
 				if (checkclose && Config.DATABASE_CONNECTION_TIMEOUT > 0)
 				{
 					ThreadPoolManager.getInstance().scheduleGeneral(new ConnectionCloser(con, new RuntimeException()), Config.DATABASE_CONNECTION_TIMEOUT);
@@ -172,7 +137,7 @@ public class L2DatabaseFactory
 			}
 			catch (final SQLException e)
 			{
-				LOG.error("L2DatabaseFactory: Connection failed, trying again...", e);
+				LOG.severe("L2DatabaseFactory: Connection failed, trying again..." + e);
 			}
 		}
 		return con;
