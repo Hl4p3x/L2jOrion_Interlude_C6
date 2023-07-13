@@ -2,12 +2,12 @@ package l2jorion.game.ai.additional.invidual;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.datatables.SkillTable;
@@ -1102,15 +1102,31 @@ public class Frintezza extends Quest implements Runnable
 	
 	private static L2BossZone _Zone;
 	
-	@SuppressWarnings("unused")
-	private L2GrandBossInstance frintezza, weakScarlet, strongScarlet, activeScarlet;
+	private L2GrandBossInstance frintezza;
+	private L2GrandBossInstance weakScarlet;
+	private L2GrandBossInstance strongScarlet;
+	private L2GrandBossInstance activeScarlet;
 	
-	private L2MonsterInstance demon1, demon2, demon3, demon4, portrait1, portrait2, portrait3, portrait4;
-	private L2NpcInstance _frintezzaDummy, _overheadDummy, _portraitDummy1, _portraitDummy3, _scarletDummy;
-	private List<L2PcInstance> _playersInside = new FastList<>();
-	private List<L2NpcInstance> _Room1Mobs = new FastList<>();
-	private List<L2NpcInstance> _Room2Mobs = new FastList<>();
-	private List<L2Attackable> Minions = new FastList<>();
+	private L2MonsterInstance demon1;
+	private L2MonsterInstance demon2;
+	private L2MonsterInstance demon3;
+	private L2MonsterInstance demon4;
+	
+	private L2MonsterInstance portrait1;
+	private L2MonsterInstance portrait2;
+	private L2MonsterInstance portrait3;
+	private L2MonsterInstance portrait4;
+	
+	private L2NpcInstance _frintezzaDummy;
+	private L2NpcInstance _overheadDummy;
+	private L2NpcInstance _portraitDummy1;
+	private L2NpcInstance _portraitDummy3;
+	private L2NpcInstance _scarletDummy;
+	
+	private List<L2PcInstance> _playersInside = new ArrayList<>();
+	private static List<L2NpcInstance> _Room1Mobs = new ArrayList<>();
+	private static List<L2NpcInstance> _Room2Mobs = new ArrayList<>();
+	private static List<L2Attackable> Minions = new ArrayList<>();
 	
 	// Boss: Frintezza
 	public Frintezza(int id, String name, String descr)
@@ -1168,11 +1184,6 @@ public class Frintezza extends Quest implements Runnable
 		{
 			GrandBossManager.getInstance().setBossStatus(FRINTEZZA, DORMANT);
 		}
-		
-		// temp fix for messed door cords
-		/*
-		 * for (int i = 0; i < 8; i++) { DoorTable.getInstance().getDoor(25150051 + i).setRange(0, 0, 0, 0, 0, 0); }
-		 */
 	}
 	
 	@Override

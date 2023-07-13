@@ -1,7 +1,10 @@
 package l2jorion.game.ai.additional;
 
-import javolution.util.FastMap;
-import javolution.util.FastSet;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.model.L2Attackable;
 import l2jorion.game.model.L2Skill;
@@ -14,7 +17,7 @@ import l2jorion.util.random.Rnd;
 public class Frozen extends Quest implements Runnable
 {
 	private static int HasSpawned;
-	private static FastSet<Integer> TrackingSet = new FastSet<>();
+	private static Set<Integer> TrackingSet = new HashSet<>();
 	
 	static final int[] mobs =
 	{
@@ -22,7 +25,7 @@ public class Frozen extends Quest implements Runnable
 		22088
 	};
 	
-	private static final FastMap<Integer, Integer[]> MINIONS = new FastMap<>();
+	private static final Map<Integer, Integer[]> MINIONS = new ConcurrentHashMap<>();
 	
 	static
 	{

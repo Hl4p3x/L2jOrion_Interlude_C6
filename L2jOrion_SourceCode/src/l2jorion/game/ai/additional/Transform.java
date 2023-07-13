@@ -1,8 +1,9 @@
 package l2jorion.game.ai.additional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
-import javolution.util.FastSet;
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.model.L2Attackable;
@@ -16,8 +17,8 @@ import l2jorion.util.random.Rnd;
 
 public class Transform extends Quest implements Runnable
 {
-	private static int HasSpawned;
-	private static FastSet<Integer> TrackingSet = new FastSet<>(); // Used to track instances of npcs
+	private static int _hasNpcSpawned;
+	private static Set<Integer> _myTrackingSet = new HashSet<>(); // Used to track instances of npcs
 	private final ArrayList<Transformer> _mobs = new ArrayList<>();
 	
 	private static class Transformer
@@ -72,7 +73,7 @@ public class Transform extends Quest implements Runnable
 		"This time at the last! The end!"
 	};
 	
-	public Transform(final int questId, final String name, final String descr)
+	public Transform(int questId, String name, String descr)
 	{
 		super(questId, name, descr);
 		_mobs.add(new Transformer(21261, 21262, 1, 5, 1)); // 1st mutation Ol Mahum Transcender
@@ -147,13 +148,13 @@ public class Transform extends Quest implements Runnable
 		{
 			if (npc.getNpcId() == monsterPoly.getNpcId())
 			{
-				if (!TrackingSet.contains(npcObjId)) // this allows to handle multiple instances of npc
+				if (!_myTrackingSet.contains(npcObjId)) // this allows to handle multiple instances of npc
 				{
-					TrackingSet.add(npcObjId);
-					HasSpawned = npcObjId;
+					_myTrackingSet.add(npcObjId);
+					_hasNpcSpawned = npcObjId;
 				}
 				
-				if (HasSpawned == npcObjId)
+				if (_hasNpcSpawned == npcObjId)
 				{
 					if (Rnd.get(100) <= monsterPoly.getChance() * Config.RATE_DROP_QUEST)
 					{
@@ -164,18 +165,18 @@ public class Transform extends Quest implements Runnable
 						
 						if (monsterPoly.getChance() > 0)
 						{
-							HasSpawned = 0;
+							_hasNpcSpawned = 0;
 							npc.onDecay();
 							
 							L2Attackable newNpc = (L2Attackable) addSpawn(monsterPoly.getIdPoly(), npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), false, 0);
+							L2Character originalAttacker = isPet ? attacker.getPet() : attacker;
 							
 							if (monsterPoly.getEffect() > 0)
 							{
 								ThreadPoolManager.getInstance().executeTask(new NPCSpawnTask(newNpc, 4000, 800000));
 							}
 							
-							L2Character originalAttacker = isPet ? attacker.getPet() : attacker;
-							
+							// For Champions
 							if (npc.isChampion())
 							{
 								npc.setChampion(false);
@@ -186,6 +187,12 @@ public class Transform extends Quest implements Runnable
 							newNpc.addDamageHate(originalAttacker, 0, 999);
 							newNpc.getAI().setIntention(CtrlIntention.AI_INTENTION_ATTACK, originalAttacker);
 							
+							// NPC Spawn Effect L2OFF
+							final NPCSpawnTask spawnEffectTask = new NPCSpawnTask(newNpc, 4000, 800000);
+							final Thread effectThread = new Thread(spawnEffectTask);
+							effectThread.start();
+							
+							// Like L2OFF auto target new mob (like an aggression)
 							originalAttacker.setTargetTrasformedNpc(newNpc);
 						}
 					}
@@ -196,9 +203,9 @@ public class Transform extends Quest implements Runnable
 	}
 	
 	@Override
-	public String onKill(final L2NpcInstance npc, final L2PcInstance killer, final boolean isPet)
+	public String onKill(L2NpcInstance npc, L2PcInstance killer, boolean isPet)
 	{
-		for (final Transformer monster : _mobs)
+		for (Transformer monster : _mobs)
 		{
 			if (npc.getNpcId() == monster.getNpcId())
 			{

@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.datatables.SkillTable;
@@ -512,7 +511,7 @@ public class Baium extends Quest implements Runnable
 	{
 		int npcId = npc.getNpcId();
 		
-		FastList<L2Character> result = new FastList<>();
+		List<L2Character> result = new ArrayList<>();
 		Collection<L2Object> objs = npc.getKnownList().getKnownObjects().values();
 		for (L2Object obj : objs)
 		{
@@ -568,7 +567,7 @@ public class Baium extends Quest implements Runnable
 	
 	private L2Character getRandomTargetArchangel(L2NpcInstance npc)
 	{
-		FastList<L2Character> result = new FastList<>();
+		List<L2Character> result = new ArrayList<>();
 		Collection<L2Object> objs = npc.getKnownList().getKnownObjects().values();
 		for (L2Object obj : objs)
 		{

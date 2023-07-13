@@ -1,7 +1,10 @@
 package l2jorion.game.ai.additional;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.model.L2Attackable;
 import l2jorion.game.model.L2Character;
@@ -12,17 +15,17 @@ import l2jorion.game.model.quest.Quest;
 
 public class ZombieGatekeepers extends Quest implements Runnable
 {
-	public ZombieGatekeepers(final int questId, final String name, final String descr)
+	private final Map<Integer, List<L2Character>> _attackersList = new ConcurrentHashMap<>();
+	
+	public ZombieGatekeepers(int questId, String name, String descr)
 	{
 		super(questId, name, descr);
 		super.addAttackId(22136);
 		super.addAggroRangeEnterId(22136);
 	}
 	
-	private final FastMap<Integer, FastList<L2Character>> _attackersList = new FastMap<>();
-	
 	@Override
-	public String onAttack(final L2NpcInstance npc, final L2PcInstance attacker, final int damage, final boolean isPet)
+	public String onAttack(L2NpcInstance npc, L2PcInstance attacker, int damage, boolean isPet)
 	{
 		final int npcObjId = npc.getObjectId();
 		
@@ -30,7 +33,7 @@ public class ZombieGatekeepers extends Quest implements Runnable
 		
 		if (_attackersList.get(npcObjId) == null)
 		{
-			final FastList<L2Character> player = new FastList<>();
+			final List<L2Character> player = new ArrayList<>();
 			player.add(target);
 			_attackersList.put(npcObjId, player);
 		}
@@ -43,7 +46,7 @@ public class ZombieGatekeepers extends Quest implements Runnable
 	}
 	
 	@Override
-	public String onAggroRangeEnter(final L2NpcInstance npc, final L2PcInstance player, final boolean isPet)
+	public String onAggroRangeEnter(L2NpcInstance npc, L2PcInstance player, boolean isPet)
 	{
 		final int npcObjId = npc.getObjectId();
 		

@@ -1,9 +1,9 @@
 package l2jorion.game.ai.additional;
 
+import java.util.ArrayList;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.ai.additional.invidual.Antharas;
 import l2jorion.game.cache.HtmCache;
@@ -40,7 +40,7 @@ public class IceFairySirra extends Quest implements Runnable
 	private static L2PcInstance _player = null;
 	protected ScheduledFuture<?> _checkZoneTask = null;
 	
-	protected FastList<L2NpcInstance> _allMobs = new FastList<>();
+	protected ArrayList<L2NpcInstance> _allMobs = new ArrayList<>();
 	
 	public IceFairySirra(final int id, final String name, final String descr)
 	{
@@ -279,12 +279,7 @@ public class IceFairySirra extends Quest implements Runnable
 			}
 			catch (final Exception e)
 			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					e.printStackTrace();
-				}
-				
-				LOG.error("IceFairySirraManager: Failed closing door", e);
+				LOG.warn("IceFairySirraManager: Failed closing door", e);
 			}
 		}
 	}
@@ -307,12 +302,7 @@ public class IceFairySirra extends Quest implements Runnable
 			}
 			catch (final Exception e)
 			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					e.printStackTrace();
-				}
-				
-				LOG.error("IceFairySirraManager: Failed closing door", e);
+				LOG.warn("IceFairySirraManager: Failed closing door", e);
 			}
 		}
 	}

@@ -1,11 +1,12 @@
 package l2jorion.game.ai.additional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.model.L2Attackable;
@@ -17,9 +18,8 @@ import l2jorion.util.random.Rnd;
 public class SummonMinions extends Quest implements Runnable
 {
 	private static int HasSpawned;
-	private static FastSet<Integer> TrackingSet = new FastSet<>(); // Used to track instances of npcs
-	
-	private final FastMap<Integer, FastList<L2PcInstance>> _attackersList = new FastMap<Integer, FastList<L2PcInstance>>().shared();
+	private static Set<Integer> _myTrackingSet = new CopyOnWriteArraySet<>(); // Used to track instances of npcs
+	private final Map<Integer, List<L2PcInstance>> _attackersList = new ConcurrentHashMap<>();
 	
 	private static final Map<Integer, Integer[]> MINIONS = new ConcurrentHashMap<>();
 	
@@ -124,9 +124,9 @@ public class SummonMinions extends Quest implements Runnable
 		
 		if (MINIONS.containsKey(npcId))
 		{
-			if (!TrackingSet.contains(npcObjId)) // this allows to handle multiple instances of npc
+			if (!_myTrackingSet.contains(npcObjId)) // this allows to handle multiple instances of npc
 			{
-				TrackingSet.add(npcObjId);
+				_myTrackingSet.add(npcObjId);
 				HasSpawned = npcObjId;
 			}
 			
@@ -162,7 +162,7 @@ public class SummonMinions extends Quest implements Runnable
 						{
 							if (_attackersList.get(npcObjId) == null)
 							{
-								final FastList<L2PcInstance> player = new FastList<>();
+								final List<L2PcInstance> player = new ArrayList<>();
 								player.add(member);
 								_attackersList.put(npcObjId, player);
 							}
@@ -176,7 +176,7 @@ public class SummonMinions extends Quest implements Runnable
 					{
 						if (_attackersList.get(npcObjId) == null)
 						{
-							final FastList<L2PcInstance> player = new FastList<>();
+							final List<L2PcInstance> player = new ArrayList<>();
 							player.add(attacker);
 							_attackersList.put(npcObjId, player);
 						}
@@ -229,7 +229,7 @@ public class SummonMinions extends Quest implements Runnable
 		final int npcObjId = npc.getObjectId();
 		if (MINIONS.containsKey(npcId))
 		{
-			TrackingSet.remove(npcObjId);
+			_myTrackingSet.remove(npcObjId);
 		}
 		return super.onKill(npc, killer, isPet);
 	}

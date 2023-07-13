@@ -1,12 +1,12 @@
 package l2jorion.game.controllers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.datatables.csv.RecipeTable;
 import l2jorion.game.enums.AchType;
@@ -321,10 +321,6 @@ public class RecipeController
 				return;
 			}
 			
-			/*
-			 * if (_player.isOnline() == 0 || _target.isOnline() == 0) { LOG.warn("player or target is not online, aborting " + _target + _player); abort(); return; }
-			 */
-			
 			if (Config.ALT_GAME_CREATION && _activeMakers.get(_player) == null)
 			{
 				if (_target != _player)
@@ -547,14 +543,12 @@ public class RecipeController
 		
 		private List<TempItem> listItems(final boolean remove)
 		{
-			L2RecipeInstance[] recipes = _recipeList.getRecipes();
-			Inventory inv = _target.getInventory();
-			final List<TempItem> materials = new FastList<>();
-			
-			for (final L2RecipeInstance recipe : recipes)
+			final L2RecipeInstance[] recipes = _recipeList.getRecipes();
+			final Inventory inv = _target.getInventory();
+			final List<TempItem> materials = new ArrayList<>();
+			for (L2RecipeInstance recipe : recipes)
 			{
 				final int quantity = _recipeList.isConsumable() ? (int) (recipe.getQuantity() * Config.RATE_CONSUMABLE_COST) : recipe.getQuantity();
-				
 				if (quantity > 0)
 				{
 					final L2ItemInstance item = inv.getItemByItemId(recipe.getItemId());
@@ -568,14 +562,10 @@ public class RecipeController
 					}
 					
 					// make new temporary object, just for counting puroses
-					
 					TempItem temp = new TempItem(item, quantity);
 					materials.add(temp);
-					temp = null;
 				}
 			}
-			
-			recipes = null;
 			
 			if (remove)
 			{
@@ -584,8 +574,6 @@ public class RecipeController
 					inv.destroyItemByItemId("Manufacture", tmp.getItemId(), tmp.getQuantity(), _target, _player);
 				}
 			}
-			inv = null;
-			
 			return materials;
 		}
 		
@@ -651,7 +639,6 @@ public class RecipeController
 		{
 			final int itemId = _recipeList.getItemId();
 			final int itemCount = _recipeList.getCount();
-			
 			final L2ItemInstance createdItem = _target.getInventory().addItem("Manufacture", itemId, itemCount, _target, _player);
 			
 			// inform customer of earned item
@@ -716,7 +703,6 @@ public class RecipeController
 	private L2RecipeList getValidRecipeList(final L2PcInstance player, final int id)
 	{
 		final L2RecipeList recipeList = RecipeTable.getInstance().getRecipeList(id - 1);
-		
 		if (recipeList == null || recipeList.getRecipes().length == 0)
 		{
 			player.sendMessage("No recipe for: " + id);

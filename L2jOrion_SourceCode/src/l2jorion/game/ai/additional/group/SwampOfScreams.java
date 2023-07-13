@@ -1,9 +1,10 @@
 package l2jorion.game.ai.additional.group;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import javolution.util.FastSet;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.model.L2Attackable;
 import l2jorion.game.model.Location;
@@ -17,7 +18,7 @@ import l2jorion.util.random.Rnd;
 public class SwampOfScreams extends Quest implements Runnable
 {
 	private static int _attacked;
-	private static FastSet<Integer> _tracking = new FastSet<>();
+	private static Set<Integer> _tracking = new HashSet<>();
 	
 	private static final int commander = 21512;
 	private static final int commander2 = 21517;

@@ -1,9 +1,11 @@
 package l2jorion.game.ai.additional;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import javolution.util.FastList;
-import javolution.util.FastSet;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.model.L2Attackable;
@@ -24,7 +26,7 @@ import l2jorion.util.random.Rnd;
 public class Monastery extends Quest implements Runnable
 {
 	private static int HasSpawned;
-	private static FastSet<Integer> myTrackingSet = new FastSet<>(); // Used to track instances of npcs
+	private static Set<Integer> myTrackingSet = new HashSet<>(); // Used to track instances of npcs
 	public static final int[] mobs1 =
 	{
 		22124,
@@ -103,8 +105,8 @@ public class Monastery extends Quest implements Runnable
 	{
 		if (Util.contains(mobs1, npc.getNpcId()))
 		{
-			FastList<L2PlayableInstance> result = new FastList<>();
-			Collection<L2Object> objs = npc.getKnownList().getKnownObjects().values();
+			final List<L2PlayableInstance> result = new ArrayList<>();
+			final Collection<L2Object> objs = npc.getKnownList().getKnownObjects().values();
 			for (L2Object obj : objs)
 			{
 				if (obj instanceof L2PcInstance || obj instanceof L2PetInstance)
@@ -121,8 +123,7 @@ public class Monastery extends Quest implements Runnable
 				Object[] characters = result.toArray();
 				for (Object obj : characters)
 				{
-					L2PlayableInstance target = (L2PlayableInstance) (obj instanceof L2PcInstance ? obj : ((L2Summon) obj).getOwner());
-					
+					final L2PlayableInstance target = (L2PlayableInstance) (obj instanceof L2PcInstance ? obj : ((L2Summon) obj).getOwner());
 					if (target.getActiveWeaponInstance() == null || (target instanceof L2PcInstance && ((L2PcInstance) target).isSilentMoving()) || (target instanceof L2Summon && ((L2Summon) target).getOwner().isSilentMoving()))
 					{
 						continue;

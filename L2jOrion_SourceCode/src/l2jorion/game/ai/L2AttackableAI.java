@@ -5,10 +5,11 @@ import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_ATTACK;
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_IDLE;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
 
-import javolution.util.FastSet;
 import l2jorion.Config;
 import l2jorion.game.controllers.GameTimeController;
 import l2jorion.game.datatables.sql.NpcTable;
@@ -49,7 +50,7 @@ import l2jorion.util.random.Rnd;
 public class L2AttackableAI extends L2CharacterAI implements Runnable
 {
 	private static int _attacked;
-	private static FastSet<Integer> _tracking = new FastSet<>();
+	private static Set<Integer> _tracking = new HashSet<>();
 	
 	private static final int RANDOM_WALK_RATE = 30;
 	private static final int MAX_ATTACK_TIMEOUT = 1500;

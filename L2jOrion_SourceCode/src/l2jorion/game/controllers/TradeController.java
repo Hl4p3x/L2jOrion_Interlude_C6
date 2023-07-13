@@ -7,12 +7,12 @@ import java.io.LineNumberReader;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.ItemTable;
 import l2jorion.game.model.L2TradeList;
@@ -73,8 +73,8 @@ public class TradeController
 	
 	private TradeController()
 	{
-		_lists = new FastMap<>();
-		_listsTaskItem = new FastMap<>();
+		_lists = new HashMap<>();
+		_listsTaskItem = new HashMap<>();
 		final File buylistData = new File(Config.DATAPACK_ROOT, "data/buylists.csv");
 		
 		if (buylistData.exists())
@@ -572,7 +572,7 @@ public class TradeController
 						statement2 = null;
 						
 					}
-					catch (final Exception e)
+					catch (Exception e)
 					{
 						LOG.warn("TradeController: Could not restore Timer for Item count.");
 						e.printStackTrace();
@@ -634,8 +634,7 @@ public class TradeController
 	
 	public List<L2TradeList> getBuyListByNpcId(final int npcId)
 	{
-		final List<L2TradeList> lists = new FastList<>();
-		
+		final List<L2TradeList> lists = new ArrayList<>();
 		for (final L2TradeList list : _lists.values())
 		{
 			if (list.getNpcId().startsWith("gm"))
@@ -675,8 +674,7 @@ public class TradeController
 	
 	public List<L2TradeList> getBuyListById(String npcId)
 	{
-		final List<L2TradeList> lists = new FastList<>();
-		
+		final List<L2TradeList> lists = new ArrayList<>();
 		for (final L2TradeList list : _lists.values())
 		{
 			if (list.getNpcId().startsWith("gm"))
@@ -714,11 +712,6 @@ public class TradeController
 		return lists;
 	}
 	
-	/*
-	 * public List<L2TradeList> getBuyListByCode() { final List<L2TradeList> access = new FastList<>(); for (final L2TradeList list : _lists.values()) { if (list.getNpcId().startsWith("gm")) { return null; } if (list.getNpcId().startsWith("shop")) { access.add(list); } } for (final L2TradeList list
-	 * : _listsTaskItem.values()) { if (list.getNpcId().startsWith("gm")) { return null; } if (list.getNpcId().startsWith("shop")) { access.add(list); } } return access; }
-	 */
-	
 	protected void restoreCount(final int time)
 	{
 		if (_listsTaskItem == null)
@@ -734,51 +727,33 @@ public class TradeController
 	
 	protected void dataTimerSave(final int time)
 	{
-		Connection con = null;
-		final long timerSave = System.currentTimeMillis() + (long) time * 60 * 60 * 1000;
-		try
+		final long timerSave = System.currentTimeMillis() + (time * 60 * 60 * 1000);
+		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
 		{
-			con = L2DatabaseFactory.getInstance().getConnection();
-			PreparedStatement statement = con.prepareStatement("UPDATE merchant_buylists SET savetimer =? WHERE time =?");
+			final PreparedStatement statement = con.prepareStatement("UPDATE merchant_buylists SET savetimer =? WHERE time =?");
 			statement.setLong(1, timerSave);
 			statement.setInt(2, time);
 			statement.executeUpdate();
-			DatabaseUtils.close(statement);
-			statement = null;
+			statement.close();
 		}
 		catch (final Exception e)
 		{
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				e.printStackTrace();
-			}
-			
-			LOG.error("TradeController: Could not update Timer save in Buylist");
-		}
-		finally
-		{
-			CloseUtil.close(con);
-			con = null;
+			LOG.warn("TradeController: Could not update Timer save in Buylist");
 		}
 	}
 	
 	public void dataCountStore()
 	{
-		Connection con = null;
-		PreparedStatement statement;
-		
 		int listId;
-		
 		if (_listsTaskItem == null)
 		{
 			return;
 		}
 		
-		try
+		PreparedStatement statement;
+		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
 		{
-			con = L2DatabaseFactory.getInstance().getConnection();
-			
-			for (final L2TradeList list : _listsTaskItem.values())
+			for (L2TradeList list : _listsTaskItem.values())
 			{
 				if (list == null)
 				{
@@ -796,24 +771,14 @@ public class TradeController
 						statement.setInt(2, Item.getItemId());
 						statement.setInt(3, listId);
 						statement.executeUpdate();
-						DatabaseUtils.close(statement);
-						statement = null;
+						statement.close();
 					}
 				}
 			}
 		}
 		catch (final Exception e)
 		{
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				e.printStackTrace();
-			}
-			LOG.error("TradeController: Could not store Count Item");
-		}
-		finally
-		{
-			CloseUtil.close(con);
-			con = null;
+			LOG.warn("TradeController: Could not store Count Item");
 		}
 	}
 	

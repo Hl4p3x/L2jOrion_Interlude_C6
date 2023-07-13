@@ -2,12 +2,13 @@ package l2jorion.game.ai.additional.invidual;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.datatables.SkillTable;
@@ -1061,7 +1062,7 @@ public class Valakas extends Quest implements Runnable
 	
 	public L2Character getRandomTarget(L2NpcInstance npc)
 	{
-		FastList<L2Character> result = new FastList<>();
+		final List<L2Character> result = new ArrayList<>();
 		Collection<L2Object> objs = npc.getKnownList().getKnownObjects().values();
 		{
 			for (L2Object obj : objs)
@@ -1075,12 +1076,8 @@ public class Valakas extends Quest implements Runnable
 				}
 			}
 		}
-		if (!result.isEmpty() && result.size() != 0)
-		{
-			Object[] characters = result.toArray();
-			return (L2Character) characters[Rnd.get(characters.length)];
-		}
-		return null;
+		
+		return (result.isEmpty()) ? null : result.get(Rnd.get(result.size()));
 	}
 	
 	@Override

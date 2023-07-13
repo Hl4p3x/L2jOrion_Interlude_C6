@@ -1,9 +1,10 @@
 package l2jorion.game.ai.additional.group;
 
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import javolution.util.FastSet;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.model.actor.instance.L2MinionInstance;
 import l2jorion.game.model.actor.instance.L2MonsterInstance;
@@ -15,7 +16,7 @@ import l2jorion.util.random.Rnd;
 public final class TimakOrcTroopLeader extends Quest implements Runnable
 {
 	private static int _attacked;
-	private static FastSet<Integer> _tracking = new FastSet<>();
+	private static Set<Integer> _tracking = new HashSet<>();
 	
 	private static final Map<Integer, Integer[]> MINIONS = new ConcurrentHashMap<>();
 	

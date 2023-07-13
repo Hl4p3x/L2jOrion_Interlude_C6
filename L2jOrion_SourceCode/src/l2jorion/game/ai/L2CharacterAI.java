@@ -10,9 +10,9 @@ import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_MOVE_TO;
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_PICK_UP;
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_REST;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javolution.util.FastList;
 import l2jorion.bots.FakePlayer;
 import l2jorion.game.geo.GeoData;
 import l2jorion.game.model.L2Attackable;
@@ -731,16 +731,16 @@ public class L2CharacterAI extends AbstractAI
 		public int lastBuffTick = 0;
 		public int lastDebuffTick = 0;
 		
-		public List<L2Skill> generalSkills = new FastList<>();
-		public List<L2Skill> buffSkills = new FastList<>();
-		public List<L2Skill> debuffSkills = new FastList<>();
-		public List<L2Skill> cancelSkills = new FastList<>();
-		public List<L2Skill> healSkills = new FastList<>();
-		public List<L2Skill> generalDisablers = new FastList<>();
-		public List<L2Skill> sleepSkills = new FastList<>();
-		public List<L2Skill> rootSkills = new FastList<>();
-		public List<L2Skill> muteSkills = new FastList<>();
-		public List<L2Skill> resurrectSkills = new FastList<>();
+		public List<L2Skill> generalSkills = new ArrayList<>();
+		public List<L2Skill> buffSkills = new ArrayList<>();
+		public List<L2Skill> debuffSkills = new ArrayList<>();
+		public List<L2Skill> cancelSkills = new ArrayList<>();
+		public List<L2Skill> healSkills = new ArrayList<>();
+		public List<L2Skill> generalDisablers = new ArrayList<>();
+		public List<L2Skill> sleepSkills = new ArrayList<>();
+		public List<L2Skill> rootSkills = new ArrayList<>();
+		public List<L2Skill> muteSkills = new ArrayList<>();
+		public List<L2Skill> resurrectSkills = new ArrayList<>();
 		
 		public boolean hasHealOrResurrect = false;
 		public boolean hasLongRangeSkills = false;

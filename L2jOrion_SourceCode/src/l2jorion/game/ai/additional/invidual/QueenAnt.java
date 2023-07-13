@@ -2,12 +2,12 @@ package l2jorion.game.ai.additional.invidual;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.datatables.SkillTable;
@@ -40,8 +40,8 @@ public class QueenAnt extends Quest implements Runnable
 	private L2MonsterInstance _larva = null;
 	private L2MonsterInstance _queen = null;
 	
-	private final List<L2MonsterInstance> _Minions = new FastList<>();
-	private final List<L2MonsterInstance> _Nurses = new FastList<>();
+	private final List<L2MonsterInstance> _Minions = new ArrayList<>();
+	private final List<L2MonsterInstance> _Nurses = new ArrayList<>();
 	
 	protected long _respawnEnd;
 	private final SimpleDateFormat date = new SimpleDateFormat("H:mm:ss yyyy/MM/dd");

@@ -6,8 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.managers.GrandBossManager;
 import l2jorion.game.model.L2Attackable;
@@ -36,7 +36,7 @@ public class Core extends Quest implements Runnable
 	protected long _respawnEnd;
 	private final SimpleDateFormat date = new SimpleDateFormat("H:mm:ss yyyy/MM/dd");
 	
-	List<L2Attackable> Minions = new FastList<>();
+	List<L2Attackable> _minions = new CopyOnWriteArrayList<>();
 	
 	public Core(int id, String name, String descr)
 	{
@@ -141,19 +141,19 @@ public class Core extends Quest implements Runnable
 		}
 		else if (event.equalsIgnoreCase("spawn_minion") && status == ALIVE)
 		{
-			Minions.add((L2Attackable) addSpawn(npc.getNpcId(), npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), false, 0));
+			_minions.add((L2Attackable) addSpawn(npc.getNpcId(), npc.getX(), npc.getY(), npc.getZ(), npc.getHeading(), false, 0));
 		}
 		else if (event.equalsIgnoreCase("despawn_minions"))
 		{
-			for (int i = 0; i < Minions.size(); i++)
+			for (int i = 0; i < _minions.size(); i++)
 			{
-				L2Attackable mob = Minions.get(i);
+				L2Attackable mob = _minions.get(i);
 				if (mob != null)
 				{
 					mob.decayMe();
 				}
 			}
-			Minions.clear();
+			_minions.clear();
 		}
 		return super.onAdvEvent(event, npc, player);
 	}
@@ -245,9 +245,9 @@ public class Core extends Quest implements Runnable
 			
 			Integer status = GrandBossManager.getInstance().getBossStatus(CORE);
 			
-			if (status == ALIVE && Minions.contains(npc))
+			if (status == ALIVE && _minions.contains(npc))
 			{
-				Minions.remove(npc);
+				_minions.remove(npc);
 				startQuestTimer("spawn_minion", Config.CORE_RESP_MINION * 1000, npc, null);
 			}
 		}
@@ -279,19 +279,19 @@ public class Core extends Quest implements Runnable
 		for (int i = 0; i < 10; i++)
 		{
 			int x = 16800 + i * 200;
-			Minions.add((L2Attackable) addSpawn(DEATH_KNIGHT, x, 110000, npc.getZ(), 280 + Rnd.get(40), false, 0));
+			_minions.add((L2Attackable) addSpawn(DEATH_KNIGHT, x, 110000, npc.getZ(), 280 + Rnd.get(40), false, 0));
 		}
 		
 		for (int i = 0; i < 4; i++)
 		{
 			int x2 = 16800 + i * 600;
-			Minions.add((L2Attackable) addSpawn(DOOM_WRAITH, x2, 109300, npc.getZ(), 280 + Rnd.get(40), false, 0));
+			_minions.add((L2Attackable) addSpawn(DOOM_WRAITH, x2, 109300, npc.getZ(), 280 + Rnd.get(40), false, 0));
 		}
 		
 		for (int i = 0; i < 4; i++)
 		{
 			int x = 16800 + i * 450;
-			Minions.add((L2Attackable) addSpawn(SUSCEPTOR, x, 110300, npc.getZ(), 280 + Rnd.get(40), false, 0));
+			_minions.add((L2Attackable) addSpawn(SUSCEPTOR, x, 110300, npc.getZ(), 280 + Rnd.get(40), false, 0));
 		}
 	}
 	
