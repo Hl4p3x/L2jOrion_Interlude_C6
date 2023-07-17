@@ -4663,9 +4663,7 @@ public final class Config
 	
 	public static void loadBanFile()
 	{
-		
 		File conf_file = new File(ConfigLoader.BANNED_IP);
-		
 		if (conf_file.exists() && conf_file.isFile())
 		{
 			FileInputStream fis = null;
@@ -4753,28 +4751,6 @@ public final class Config
 		else
 		{
 			LOG.warn("IP Bans file (" + conf_file.getName() + ") is missing or is a directory, skipped.");
-		}
-	}
-	
-	public static int FORUM_USER_ID;
-	
-	public static void loadUserConfig()
-	{
-		final String USER = ConfigLoader.USER_CONFIG_FILE;
-		
-		try
-		{
-			Properties UserSettings = new Properties();
-			InputStream is = new FileInputStream(new File(USER));
-			UserSettings.load(is);
-			is.close();
-			
-			FORUM_USER_ID = Integer.parseInt(UserSettings.getProperty("ForumUserID", "0"));
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			throw new Error("Failed to Load " + USER + " File.");
 		}
 	}
 	
@@ -4868,7 +4844,6 @@ public final class Config
 		{
 			loadHexed();
 			
-			loadUserConfig();
 			loadSellBuffConfig();
 			loadDressMeConfig();
 			

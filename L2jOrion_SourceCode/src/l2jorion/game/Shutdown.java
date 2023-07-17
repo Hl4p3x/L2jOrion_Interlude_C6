@@ -1,5 +1,6 @@
 package l2jorion.game;
 
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import l2jorion.Config;
@@ -14,16 +15,14 @@ import l2jorion.game.managers.GrandBossManager;
 import l2jorion.game.managers.ItemsOnGroundManager;
 import l2jorion.game.managers.QuestManager;
 import l2jorion.game.managers.RaidBossSpawnManager;
-import l2jorion.game.model.L2Effect;
-import l2jorion.game.model.L2Summon;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
-import l2jorion.game.model.actor.instance.L2PetInstance;
 import l2jorion.game.model.entity.Hero;
 import l2jorion.game.model.entity.sevensigns.SevenSigns;
 import l2jorion.game.model.entity.sevensigns.SevenSignsFestival;
 import l2jorion.game.model.olympiad.Olympiad;
 import l2jorion.game.model.spawn.AutoSpawn;
+import l2jorion.game.network.L2GameClient;
 import l2jorion.game.network.SystemMessageId;
 import l2jorion.game.network.gameserverpackets.ServerStatus;
 import l2jorion.game.network.serverpackets.ServerClose;
@@ -124,10 +123,6 @@ public class Shutdown extends Thread
 			catch (Throwable t)
 			{
 				LOG.warn("Error saving offline shops:");
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					t.printStackTrace();
-				}
 			}
 			
 			try
@@ -147,10 +142,7 @@ public class Shutdown extends Thread
 			}
 			catch (Throwable t)
 			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					t.printStackTrace();
-				}
+				
 			}
 			
 			try
@@ -160,10 +152,7 @@ public class Shutdown extends Thread
 			}
 			catch (Throwable t)
 			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					t.printStackTrace();
-				}
+				
 			}
 			
 			try
@@ -173,10 +162,7 @@ public class Shutdown extends Thread
 			}
 			catch (Throwable t)
 			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					t.printStackTrace();
-				}
+				
 			}
 			
 			try
@@ -186,10 +172,7 @@ public class Shutdown extends Thread
 			}
 			catch (Throwable t)
 			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					t.printStackTrace();
-				}
+				
 			}
 			
 			tc.restartCounter();
@@ -201,10 +184,7 @@ public class Shutdown extends Thread
 			}
 			catch (Throwable t)
 			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					t.printStackTrace();
-				}
+				
 			}
 			
 			try
@@ -214,10 +194,7 @@ public class Shutdown extends Thread
 			}
 			catch (Throwable t)
 			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					t.printStackTrace();
-				}
+				
 			}
 			
 			System.runFinalization();
@@ -430,10 +407,6 @@ public class Shutdown extends Thread
 		catch (Throwable t)
 		{
 			LOG.error("Error in saveAllPlayers:");
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				t.printStackTrace();
-			}
 		}
 		
 		// Seven Signs data is now saved along with Festival data.
@@ -505,6 +478,8 @@ public class Shutdown extends Thread
 	
 	private void saveAllPlayers()
 	{
+		LOG.info("Saving all players data...");
+		
 		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
 		{
 			if (player == null)
@@ -514,61 +489,36 @@ public class Shutdown extends Thread
 			
 			try
 			{
-				player.store();
+				// Unsummon pets
 				if (player.getPet() != null)
 				{
-					final L2Summon summon = player.getPet();
-					for (final L2Effect e : summon.getAllEffects())
-					{
-						if (e != null)
-						{
-							e.exit(true);
-						}
-					}
-					
-					if (summon instanceof L2PetInstance)
-					{
-						summon.unSummon(player);
-					}
+					player.getPet().unSummon(player);
 				}
+				
+				// Save player status
+				player.store();
 			}
 			catch (Throwable t)
 			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					t.printStackTrace();
-				}
+				
 			}
 		}
 	}
 	
 	private void disconnectAllCharacters()
 	{
-		for (L2PcInstance player : L2World.getInstance().getAllPlayers().values())
+		final Collection<L2PcInstance> pls = L2World.getInstance().getAllPlayers().values();
+		for (L2PcInstance player : pls)
 		{
-			if (player == null)
+			final L2GameClient client = player.getClient();
+			if (client != null)
 			{
-				continue;
+				player.store();
+				client.close(ServerClose.STATIC_PACKET);
+				client.setActiveChar(null);
+				player.setClient(null);
 			}
-			
-			try
-			{
-				if ((player.getClient() != null) && !player.getClient().isDetached())
-				{
-					// player.getClient().sendPacket(ServerClose.STATIC_PACKET);
-					// player.getClient().close(0);
-					// player.getClient().setActiveChar(null);
-					// player.setClient(null);
-					
-					player.getClient().close(ServerClose.STATIC_PACKET);
-					player.getClient().setActiveChar(null);
-					player.setClient(null);
-				}
-			}
-			catch (Exception e)
-			{
-				LOG.warn("Failed logour char {}", player, e);
-			}
+			player.deleteMe();
 		}
 	}
 	
@@ -576,14 +526,7 @@ public class Shutdown extends Thread
 	{
 		LOG.warn("IP: {} issued shutdown command. {} in {} seconds!", IP, MODE_TEXT[_shutdownMode], seconds);
 		
-		if (restart)
-		{
-			_shutdownMode = GM_RESTART;
-		}
-		else
-		{
-			_shutdownMode = GM_SHUTDOWN;
-		}
+		_shutdownMode = restart ? GM_RESTART : GM_SHUTDOWN;
 		
 		if (_shutdownMode > 0)
 		{

@@ -1,7 +1,4 @@
 /*
- * $Header: /cvsroot/l2j/L2_Gameserver/java/net/sf/l2j/gameserver/model/L2StaticObjectInstance.java,v 1.3.2.2.2.2 2005/02/04 13:05:27 maximas Exp $
- *
- *
  * L2jOrion Project - www.l2jorion.com 
  * 
  * This program is free software; you can redistribute it and/or modify

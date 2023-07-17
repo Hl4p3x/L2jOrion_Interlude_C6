@@ -30,7 +30,6 @@
  */
 package l2jorion.game.util;
 
-import l2jorion.Config;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2World;
 import l2jorion.game.model.actor.instance.L2PcInstance;
@@ -71,10 +70,7 @@ public final class Broadcast
 			}
 			catch (Exception e)
 			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					e.printStackTrace();
-				}
+				
 			}
 		}
 	}

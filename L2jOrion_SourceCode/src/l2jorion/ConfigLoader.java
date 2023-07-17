@@ -63,7 +63,6 @@ public class ConfigLoader
 	public static final String LOG_CONF_FILE = "./config/other/logger.ini";
 	public static final String BANNED_IP = "./config/other/banned_ip.cfg";
 	public static final String SERVER_NAME_FILE = "./config/other/servername.xml";
-	public static final String USER_CONFIG_FILE = "./config/user.ini";
 	public static final String SELLBUFF_CONFIG_FILE = "./config/custom/sellbuffs.ini";
 	public static final String DRESSME_CONFIG_FILE = "./config/custom/dressme.ini";
 }
