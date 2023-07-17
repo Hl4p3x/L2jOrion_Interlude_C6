@@ -1,0 +1,2138 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<list xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="xsd/ExtractableItems.xsd">
+	<item id="7629"> <!-- Looted Goods - White Cargo box -->
+		<extract id="6688" quantity="1" chance="9" /> <!-- Forgotten Blade Edge -->
+		<extract id="6689" quantity="1" chance="9" /> <!-- Basalt Battlehammer Head -->
+		<extract id="6690" quantity="1" chance="9" /> <!-- Imperial Staff Head -->
+		<extract id="6691" quantity="1" chance="9" /> <!-- Angel Slayer Blade -->
+		<extract id="6693" quantity="1" chance="9" /> <!-- Dragon Hunter Axe Blade -->
+		<extract id="6694" quantity="1" chance="9" /> <!-- Saint Spear Blade -->
+		<extract id="6695" quantity="1" chance="9" /> <!-- Demon Splinter Blade -->
+		<extract id="6696" quantity="1" chance="9" /> <!-- Heavens Divider Edge -->
+		<extract id="6697" quantity="1" chance="9" /> <!-- Arcana Mace Head -->
+		<extract id="7579" quantity="1" chance="9" /> <!-- Draconic Bow Shaft -->
+		<extract id="57" quantity="330000" chance="10" /> <!-- Adena -->
+	</item>
+	<item id="7630"> <!-- Looted Goods - Blue Cargo box -->
+		<extract id="6703" quantity="1" chance="8.5" /> <!-- Sealed Imperial Crusader Gauntlets Design -->
+		<extract id="6704" quantity="1" chance="8.5" /> <!-- Sealed Imperial Crusader Boots Design -->
+		<extract id="6705" quantity="1" chance="8.5" /> <!-- Sealed Imperial Crusader Shield Part -->
+		<extract id="6706" quantity="1" chance="8.5" /> <!-- Sealed Imperial Crusader Helmet Pattern -->
+		<extract id="6708" quantity="1" chance="8.5" /> <!-- Sealed Draconic Leather Gloves Fabric -->
+		<extract id="6709" quantity="1" chance="8.5" /> <!-- Sealed Draconic Leather Boots Design -->
+		<extract id="6710" quantity="1" chance="8.5" /> <!-- Sealed Draconic Leather Helmet Pattern -->
+		<extract id="6712" quantity="1" chance="8.5" /> <!-- Sealed Major Arcana Gloves fabric -->
+		<extract id="6713" quantity="1" chance="8.5" /> <!-- Sealed Major Arcana Boots Design -->
+		<extract id="6714" quantity="1" chance="8.5" /> <!-- Sealed Major Arcana Circlet Pattern -->
+		<extract id="57" quantity="292000" chance="15" /> <!-- Adena -->
+	</item>
+	<item id="7631"> <!-- Looted Goods - Yellow Cargo box -->
+		<extract id="6701" quantity="1" chance="20" /> <!-- Sealed Imperial Crusader Breastplate Part -->
+		<extract id="6702" quantity="1" chance="20" /> <!-- Sealed Imperial Crusader Gaiters Pattern -->
+		<extract id="6707" quantity="1" chance="20" /> <!-- Sealed Draconic Leather Armor Part -->
+		<extract id="6711" quantity="1" chance="20" /> <!-- Sealed Major Arcana Robe Part -->
+		<extract id="57" quantity="930000" chance="20" /> <!-- Adena -->
+	</item>
+	<item id="7632"> <!-- Looted Goods - Red Filing Cabinet -->
+		<extract id="6857" quantity="1" chance="8.5" /> <!-- Recipe: Sealed Imperial Crusader Gauntlets (60%) -->
+		<extract id="6859" quantity="1" chance="8.5" /> <!-- Recipe: Sealed Imperial Crusader Boots (60%) -->
+		<extract id="6861" quantity="1" chance="8.5" /> <!-- Recipe: Sealed Imperial Crusader Shield (60%) -->
+		<extract id="6863" quantity="1" chance="8.5" /> <!-- Recipe: Sealed Imperial Crusader Helmet (60%) -->
+		<extract id="6867" quantity="1" chance="8.5" /> <!-- Recipe: Sealed Draconic Leather Gloves (60%) -->
+		<extract id="6869" quantity="1" chance="8.5" /> <!-- Recipe: Sealed Draconic Leather Boots (60%) -->
+		<extract id="6871" quantity="1" chance="8.5" /> <!-- Recipe: Sealed Draconic Leather Helmet (60%) -->
+		<extract id="6875" quantity="1" chance="8.5" /> <!-- Recipe: Sealed Major Arcana Gloves (60%) -->
+		<extract id="6877" quantity="1" chance="8.5" /> <!-- Recipe: Sealed Major Arcana Boots (60%) -->
+		<extract id="6879" quantity="1" chance="8.5" /> <!-- Recipe: Sealed Major Arcana Circlet (60%) -->
+		<extract id="57" quantity="340000" chance="15" /> <!-- Adena -->
+	</item>
+	<item id="7633"> <!-- Looted Goods - Purple Filing Cabinet -->
+		<extract id="6853" quantity="1" chance="20" /> <!-- Recipe: Sealed Imperial Crusader Breastplate (60%) -->
+		<extract id="6855" quantity="1" chance="20" /> <!-- Recipe: Sealed Imperial Crusader Gaiters (60%) -->
+		<extract id="6865" quantity="1" chance="20" /> <!-- Recipe: Sealed Draconic Leather Armor (60%) -->
+		<extract id="6873" quantity="1" chance="20" /> <!-- Recipe: Sealed Major Arcana Robe (60%) -->
+		<extract id="57" quantity="850000" chance="20" /> <!-- Adena -->
+	</item>
+	<item id="7634"> <!-- Looted Goods - Brown Pouch -->
+		<extract id="1874" quantity="20" chance="10" /> <!-- Oriharukon Ore -->
+		<extract id="1875" quantity="20" chance="10" /> <!-- Stone of Purity -->
+		<extract id="1876" quantity="20" chance="16" /> <!-- Mithril Ore -->
+		<extract id="1877" quantity="20" chance="11" /> <!-- Adamantite Nugget -->
+		<extract id="1879" quantity="20" chance="10" /> <!-- Cokes -->
+		<extract id="1880" quantity="20" chance="5" /> <!-- Steel -->
+		<extract id="1881" quantity="20" chance="10" /> <!-- Coarse Bone Powder -->
+		<extract id="1882" quantity="20" chance="18" /> <!-- Leather -->
+		<extract id="57" quantity="150000" chance="10" /> <!-- Adena -->
+	</item>
+	<item id="7635"> <!-- Looted Goods - Gray Pouch -->
+		<extract id="4039" quantity="4" chance="20" /> <!-- Mold Glue -->
+		<extract id="4040" quantity="4" chance="10" /> <!-- Mold Lubricant -->
+		<extract id="4041" quantity="4" chance="10" /> <!-- Mold Hardener -->
+		<extract id="4042" quantity="4" chance="10" /> <!-- Enria -->
+		<extract id="4043" quantity="4" chance="20" /> <!-- Asofe -->
+		<extract id="4044" quantity="4" chance="20" /> <!-- Thons -->
+		<extract id="57" quantity="160000" chance="10" /> <!-- Adena -->
+	</item>
+	<item id="8534"> <!-- Adventurer's Box: C-Grade Accessory (Low Grade) -->
+		<extract id="853" quantity="1" chance="17" /> <!-- Earring of Protection -->
+		<extract id="916" quantity="1" chance="17" /> <!-- Necklace of Protection -->
+		<extract id="884" quantity="1" chance="17" /> <!-- Ring of Protection -->
+		<extract id="-1" quantity="0" chance="49" /> <!-- Nothing -->
+	</item>
+	<item id="8535"> <!-- Adventurer's Box: C-Grade Accessory (Medium Grade) -->
+		<extract id="854" quantity="1" chance="17" /> <!-- Earring of Binding -->
+		<extract id="917" quantity="1" chance="17" /> <!-- Necklace of Mermaid -->
+		<extract id="885" quantity="1" chance="17" /> <!-- Ring of Ages -->
+		<extract id="-1" quantity="0" chance="49" /> <!-- Nothing -->
+	</item>
+	<item id="8536"> <!-- Adventurer's Box: C-Grade Accessory (High Grade) -->
+		<extract id="855" quantity="1" chance="17" /> <!-- Nassen's Earring -->
+		<extract id="119" quantity="1" chance="17" /> <!-- Necklace of Binding -->
+		<extract id="886" quantity="1" chance="17" /> <!-- Ring of Binding -->
+		<extract id="-1" quantity="0" chance="49" /> <!-- Nothing -->
+	</item>
+	<item id="8537"> <!-- Adventurer's Box: B-Grade Accessory (Low Grade) -->
+		<extract id="856" quantity="1" chance="17" /> <!-- Adamantite Earring -->
+		<extract id="918" quantity="1" chance="17" /> <!-- Adamantite Necklace -->
+		<extract id="887" quantity="1" chance="17" /> <!-- Adamantite Ring -->
+		<extract id="-1" quantity="0" chance="49" /> <!-- Nothing -->
+	</item>
+	<item id="8538"> <!-- Adventurer's Box: B-Grade Accessory (High Grade) -->
+		<extract id="864" quantity="1" chance="17" /> <!-- Earring of Black Ore -->
+		<extract id="926" quantity="1" chance="17" /> <!-- Necklace of Black Ore -->
+		<extract id="895" quantity="1" chance="17" /> <!-- Ring of Black Ore -->
+		<extract id="-1" quantity="0" chance="49" /> <!-- Nothing -->
+	</item>
+	<item id="8539"> <!-- Adventurer's Box: Hair Accessory -->
+		<extract id="8177" quantity="1" chance="30" /> <!-- Raid Challenger's Circlet -->
+		<extract id="8178" quantity="1" chance="20" /> <!-- Raid Adventurer's Circlet -->
+		<extract id="8179" quantity="1" chance="10" /> <!-- Raid Master's Circlet -->
+		<extract id="-1" quantity="0" chance="40" /> <!-- Nothing -->
+	</item>
+	<item id="8540"> <!-- Adventurer's Box: Cradle of Creation -->
+		<extract id="8175" quantity="1" chance="33" /> <!-- Cradle of Creation -->
+		<extract id="-1" quantity="0" chance="67" /> <!-- Nothing -->
+	</item>
+	<item id="5916"> <!-- Spellbook Page -->
+		<extract id="5917" quantity="1" chance="10" /> <!-- Kranvel's Spellbook: Chapter of Fire -->
+		<extract id="5918" quantity="1" chance="10" /> <!-- Kranvel's Spellbook: Chapter of Water -->
+		<extract id="5919" quantity="1" chance="10" /> <!-- Kranvel's Spellbook: Chapter of Wind -->
+		<extract id="5920" quantity="1" chance="10" /> <!-- Kranvel's Spellbook: Chapter of Earth -->
+		<extract id="736" quantity="1" chance="60" /> <!-- Scroll of Escape -->
+	</item>
+	<item id="5944"> <!-- Ancient Parchment -->
+		<extract id="5922" quantity="1" chance="3" /> <!-- Blueprint: Giants Golem 1 -->
+		<extract id="5923" quantity="1" chance="3" /> <!-- Blueprint: Giants Golem 2 -->
+		<extract id="5924" quantity="1" chance="3" /> <!-- Blueprint: Giants Golem 3 -->
+		<extract id="5925" quantity="1" chance="3" /> <!-- Blueprint: Giants Golem 4 -->
+		<extract id="5926" quantity="1" chance="3" /> <!-- Blueprint: Giants Golem 5 -->
+		<extract id="5927" quantity="1" chance="3" /> <!-- Book: Basics of Giants Magic, Chapter 1 -->
+		<extract id="5928" quantity="1" chance="3" /> <!-- Book: Basics of Giants Magic, Chapter 2 -->
+		<extract id="5929" quantity="1" chance="3" /> <!-- Book: Basics of Giants Magic, Chapter 3 -->
+		<extract id="5930" quantity="1" chance="3" /> <!-- Book: Basics of Giants Magic, Chapter 4 -->
+		<extract id="5931" quantity="1" chance="3" /> <!-- Book: Basics of Giants Magic, Chapter 5 -->
+		<extract id="5932" quantity="1" chance="3" /> <!-- Handbook: Giants Architecture, Chapter 1 -->
+		<extract id="5933" quantity="1" chance="3" /> <!-- Handbook: Giants Architecture, Chapter 2 -->
+		<extract id="5934" quantity="1" chance="3" /> <!-- Handbook: Giants Architecture, Chapter 3 -->
+		<extract id="5935" quantity="1" chance="3" /> <!-- Handbook: Giants Architecture, Chapter 4 -->
+		<extract id="5936" quantity="1" chance="3" /> <!-- Handbook: Giants Architecture, Chapter 5 -->
+		<extract id="5937" quantity="1" chance="3" /> <!-- Book: Giants Medical Science, Chapter 1 -->
+		<extract id="5938" quantity="1" chance="3" /> <!-- Book: Giants Medical Science, Chapter 2 -->
+		<extract id="5939" quantity="1" chance="3" /> <!-- Book: Giants Medical Science, Chapter 3 -->
+		<extract id="5940" quantity="1" chance="3" /> <!-- Book: Giants Medical Science, Chapter 4 -->
+		<extract id="5941" quantity="1" chance="3" /> <!-- Book: Giants Medical Science, Chapter 5 -->
+		<extract id="5942" quantity="1" chance="20" /> <!-- Giant's Love Letter -->
+		<extract id="5943" quantity="1" chance="20" /> <!-- Giants' Doodle -->
+	</item>
+	<item id="5955"> <!-- Ancient Titan Book -->
+		<extract id="5942" quantity="1" chance="25" /> <!-- Giant's Love Letter -->
+		<extract id="5943" quantity="1" chance="25" /> <!-- Giants' Doodle -->
+		<extract id="5945" quantity="1" chance="5" /> <!-- Book: Giants Science & Technology, Chapter 1 -->
+		<extract id="5946" quantity="1" chance="5" /> <!-- Book: Giants Science & Technology, Chapter 2 -->
+		<extract id="5947" quantity="1" chance="5" /> <!-- Book: Giants Science & Technology, Chapter 3 -->
+		<extract id="5948" quantity="1" chance="5" /> <!-- Book: Giants Science & Technology, Chapter 4 -->
+		<extract id="5949" quantity="1" chance="5" /> <!-- Book: Giants Science & Technology, Chapter 5 -->
+		<extract id="5950" quantity="1" chance="5" /> <!-- Almanac: Titan Culture, Chapter 1 -->
+		<extract id="5951" quantity="1" chance="5" /> <!-- Almanac: Titan Culture, Chapter 2 -->
+		<extract id="5952" quantity="1" chance="5" /> <!-- Almanac: Titan Culture, Chapter 3 -->
+		<extract id="5953" quantity="1" chance="5" /> <!-- Almanac: Titan Culture, Chapter 4 -->
+		<extract id="5954" quantity="1" chance="5" /> <!-- Almanac: Titan Culture, Chapter 5 -->
+	</item>
+	<item id="6007"> <!-- Reagent Pouch -->
+		<extract id="6019" quantity="2" chance="30" /> <!-- Quicksilver -->
+		<extract id="6013" quantity="2" chance="30" /> <!-- Moonstone Shard -->
+		<extract id="6014" quantity="1" chance="20" /> <!-- Rotten Bone Piece -->
+		<extract id="6016" quantity="1" chance="20" /> <!-- Infernium Ore -->
+	</item>
+	<item id="6008"> <!-- Reagent Pouch -->
+		<extract id="6017" quantity="2" chance="10" /> <!-- Blood Root -->
+		<extract id="6020" quantity="2" chance="20" /> <!-- Sulfur -->
+		<extract id="6014" quantity="1" chance="35" /> <!-- Rotten Bone Piece -->
+		<extract id="6016" quantity="1" chance="35" /> <!-- Infernium Ore -->
+	</item>
+	<item id="6009"> <!-- Reagent Pouch -->
+		<extract id="6012" quantity="1" chance="20" /> <!-- Lava Stone -->
+		<extract id="6018" quantity="2" chance="20" /> <!-- Volcanic Ash -->
+		<extract id="6019" quantity="2" chance="20" /> <!-- Quicksilver -->
+		<extract id="6013" quantity="1" chance="40" /> <!-- Moonstone Shard -->
+	</item>
+	<item id="6010"> <!-- Reagent Box -->
+		<extract id="6017" quantity="2" chance="20" /> <!-- Blood Root -->
+		<extract id="6020" quantity="2" chance="20" /> <!-- Sulfur -->
+		<extract id="6016" quantity="1" chance="35" /> <!-- Infernium Ore -->
+		<extract id="6015" quantity="2" chance="25" /> <!-- Demon's Blood -->
+	</item>
+	<item id="5966"> <!-- Ancient Red Papyrus -->
+		<extract id="5978" quantity="1" chance="2" /> <!-- Revelation of the Seals: Chapter of Descent -->
+		<extract id="5983" quantity="1" chance="2" /> <!-- Ancient Epic, Chapter 5 -->
+		<extract id="5988" quantity="1" chance="2" /> <!-- Imperial Genealogy 5 -->
+		<extract id="5994" quantity="1" chance="2" /> <!-- Blueprint: Tower of Insolence, 6th Floor -->
+		<extract id="5995" quantity="1" chance="2" /> <!-- Blueprint: Tower of Insolence, 7th Floor -->
+		<extract id="5975" quantity="1" chance="8" /> <!-- Revelation of the Seals: Chapter of Vengeance -->
+		<extract id="5976" quantity="1" chance="8" /> <!-- Revelation of the Seals: Chapter of Awakening -->
+		<extract id="5977" quantity="1" chance="8" /> <!-- Revelation of the Seals: Chapter of Calamity -->
+		<extract id="5981" quantity="1" chance="8" /> <!-- Ancient Epic, Chapter 3 -->
+		<extract id="5982" quantity="1" chance="8" /> <!-- Ancient Epic, Chapter 4 -->
+		<extract id="5973" quantity="1" chance="11" /> <!-- Revelation of the Seals: Chapter of Gnosis -->
+		<extract id="5974" quantity="1" chance="11" /> <!-- Revelation of the Seals: Chapter of Strife -->
+		<extract id="5980" quantity="1" chance="11" /> <!-- Ancient Epic, Chapter 2 -->
+		<extract id="5985" quantity="1" chance="11" /> <!-- Imperial Genealogy 2 -->
+		<extract id="5972" quantity="1" chance="2" /> <!-- Revelation of the Seals: Chapter of Avarice -->
+		<extract id="5979" quantity="1" chance="2" /> <!-- Ancient Epic, Chapter 1 -->
+		<extract id="5984" quantity="1" chance="2" /> <!-- Imperial Genealogy 1 -->
+	</item>
+	<item id="5967"> <!-- Ancient Blue Papyrus -->
+		<extract id="5978" quantity="1" chance="4" /> <!-- Revelation of the Seals: Chapter of Descent -->
+		<extract id="5983" quantity="1" chance="4" /> <!-- Ancient Epic, Chapter 5 -->
+		<extract id="5988" quantity="1" chance="4" /> <!-- Imperial Genealogy 5 -->
+		<extract id="5994" quantity="1" chance="4" /> <!-- Blueprint: Tower of Insolence, 6th Floor -->
+		<extract id="5995" quantity="1" chance="4" /> <!-- Blueprint: Tower of Insolence, 7th Floor -->
+		<extract id="5975" quantity="1" chance="4" /> <!-- Revelation of the Seals: Chapter of Vengeance -->
+		<extract id="5976" quantity="1" chance="4" /> <!-- Revelation of the Seals: Chapter of Awakening -->
+		<extract id="5977" quantity="1" chance="4" /> <!-- Revelation of the Seals: Chapter of Calamity -->
+		<extract id="5981" quantity="1" chance="4" /> <!-- Ancient Epic, Chapter 3 -->
+		<extract id="5982" quantity="1" chance="4" /> <!-- Ancient Epic, Chapter 4 -->
+		<extract id="5973" quantity="1" chance="10" /> <!-- Revelation of the Seals: Chapter of Gnosis -->
+		<extract id="5974" quantity="1" chance="10" /> <!-- Revelation of the Seals: Chapter of Strife -->
+		<extract id="5980" quantity="1" chance="10" /> <!-- Ancient Epic, Chapter 2 -->
+		<extract id="5985" quantity="1" chance="10" /> <!-- Imperial Genealogy 2 -->
+		<extract id="5972" quantity="1" chance="7" /> <!-- Revelation of the Seals: Chapter of Avarice -->
+		<extract id="5979" quantity="1" chance="7" /> <!-- Ancient Epic, Chapter 1 -->
+		<extract id="5984" quantity="1" chance="6" /> <!-- Imperial Genealogy 1 -->
+	</item>
+	<item id="5968"> <!-- Ancient Black Papyrus -->
+		<extract id="6001" quantity="1" chance="2" /> <!-- Blueprint: Tower of Insolence, 13th Floor -->
+		<extract id="5970" quantity="1" chance="2" /> <!-- Ancient Chain Letter -->
+		<extract id="5971" quantity="1" chance="2" /> <!-- Ancient Joke Book -->
+		<extract id="4408" quantity="1" chance="2" /> <!-- Musical Score - Theme of Love -->
+		<extract id="4409" quantity="1" chance="2" /> <!-- Musical Score - Theme of Battle -->
+		<extract id="5986" quantity="1" chance="2" /> <!-- Imperial Genealogy 3 -->
+		<extract id="5987" quantity="1" chance="2" /> <!-- Imperial Genealogy 4 -->
+		<extract id="5993" quantity="1" chance="2" /> <!-- Blueprint: Tower of Insolence, 5th Floor -->
+		<extract id="5999" quantity="1" chance="2" /> <!-- Blueprint: Tower of Insolence, 11th Floor -->
+		<extract id="6000" quantity="1" chance="2" /> <!-- Blueprint: Tower of Insolence, 12th Floor -->
+		<extract id="5991" quantity="1" chance="10" /> <!-- Blueprint: Tower of Insolence, 3rd Floor -->
+		<extract id="5992" quantity="1" chance="10" /> <!-- Blueprint: Tower of Insolence, 4th Floor -->
+		<extract id="5997" quantity="1" chance="10" /> <!-- Blueprint: Tower of Insolence, 9th Floor -->
+		<extract id="5998" quantity="1" chance="10" /> <!-- Blueprint: Tower of Insolence, 10th Floor -->
+		<extract id="5989" quantity="1" chance="14" /> <!-- Blueprint: Tower of Insolence, 1st Floor -->
+		<extract id="5990" quantity="1" chance="13" /> <!-- Blueprint: Tower of Insolence, 2nd Floor -->
+		<extract id="5996" quantity="1" chance="13" /> <!-- Blueprint: Tower of Insolence, 8th Floor -->
+	</item>
+	<item id="5969"> <!-- Ancient White Papyrus -->
+		<extract id="6001" quantity="1" chance="3" /> <!-- Blueprint: Tower of Insolence, 13th Floor -->
+		<extract id="5970" quantity="1" chance="3" /> <!-- Ancient Chain Letter -->
+		<extract id="5971" quantity="1" chance="3" /> <!-- Ancient Joke Book -->
+		<extract id="4408" quantity="1" chance="3" /> <!-- Musical Score - Theme of Love -->
+		<extract id="4409" quantity="1" chance="3" /> <!-- Musical Score - Theme of Battle -->
+		<extract id="5986" quantity="1" chance="2" /> <!-- Imperial Genealogy 3 -->
+		<extract id="5987" quantity="1" chance="2" /> <!-- Imperial Genealogy 4 -->
+		<extract id="5993" quantity="1" chance="2" /> <!-- Blueprint: Tower of Insolence, 5th Floor -->
+		<extract id="5999" quantity="1" chance="2" /> <!-- Blueprint: Tower of Insolence, 11th Floor -->
+		<extract id="6000" quantity="1" chance="2" /> <!-- Blueprint: Tower of Insolence, 12th Floor -->
+		<extract id="5991" quantity="1" chance="3" /> <!-- Blueprint: Tower of Insolence, 3rd Floor -->
+		<extract id="5992" quantity="1" chance="3" /> <!-- Blueprint: Tower of Insolence, 4th Floor -->
+		<extract id="5997" quantity="1" chance="3" /> <!-- Blueprint: Tower of Insolence, 9th Floor -->
+		<extract id="5998" quantity="1" chance="3" /> <!-- Blueprint: Tower of Insolence, 10th Floor -->
+		<extract id="5989" quantity="1" chance="21" /> <!-- Blueprint: Tower of Insolence, 1st Floor -->
+		<extract id="5990" quantity="1" chance="21" /> <!-- Blueprint: Tower of Insolence, 2nd Floor -->
+		<extract id="5996" quantity="1" chance="21" /> <!-- Blueprint: Tower of Insolence, 8th Floor -->
+	</item>
+	<item id="7725"> <!-- Loot - Gray Pouch -->
+		<extract id="6035" quantity="1" chance="7" /> <!-- Magic Haste Potion -->
+		<extract id="1060" quantity="1" chance="39" /> <!-- Lesser Healing Potion -->
+		<extract id="735" quantity="1" chance="7" /> <!-- Potion of Alacrity -->
+		<extract id="1540" quantity="1" chance="3" /> <!-- Quick Healing Potion -->
+		<extract id="1061" quantity="1" chance="12" /> <!-- Healing Potion -->
+		<extract id="1539" quantity="1" chance="32" /> <!-- Greater Healing Potion -->
+	</item>
+	<item id="7637"> <!-- Booty - Brown Pouch -->
+		<extract id="4039" quantity="4" chance="20" /> <!-- Mold Glue -->
+		<extract id="4041" quantity="1" chance="10" /> <!-- Mold Hardener -->
+		<extract id="4043" quantity="4" chance="20" /> <!-- Asofe -->
+		<extract id="4044" quantity="4" chance="20" /> <!-- Thons -->
+		<extract id="4042" quantity="2" chance="15" /> <!-- Enria -->
+		<extract id="4040" quantity="2" chance="15" /> <!-- Mold Lubricant -->
+	</item>
+	<item id="7636"> <!-- Booty - Yellow Pouch -->
+		<extract id="1875" quantity="3" chance="10" /> <!-- Stone of Purity -->
+		<extract id="1882" quantity="3" chance="20" /> <!-- Leather -->
+		<extract id="1880" quantity="4" chance="10" /> <!-- Steel -->
+		<extract id="1874" quantity="1" chance="10" /> <!-- Oriharukon Ore -->
+		<extract id="1877" quantity="3" chance="10" /> <!-- Adamantite Nugget -->
+		<extract id="1881" quantity="1" chance="12" /> <!-- Coarse Bone Powder -->
+		<extract id="1879" quantity="3" chance="12" /> <!-- Cokes -->
+		<extract id="1876" quantity="6" chance="16" /> <!-- Mithril Ore -->
+	</item>
+	<item id="5134"> <!-- Compressed Package of Soulshots: No Grade -->
+		<extract id="1835" quantity="300" chance="100" /> <!-- Soulshot: No Grade -->
+	</item>
+	<item id="5135"> <!-- Compressed Package of Soulshots: D-grade -->
+		<extract id="1463" quantity="300" chance="100" /> <!-- Soulshot: D-grade -->
+	</item>
+	<item id="5136"> <!-- Compressed Package of Soulshots: C-grade -->
+		<extract id="1464" quantity="300" chance="100" /> <!-- Soulshot: C-grade -->
+	</item>
+	<item id="5137"> <!-- Compressed Package of Soulshots: B-grade -->
+		<extract id="1465" quantity="300" chance="100" /> <!-- Soulshot: B-grade -->
+	</item>
+	<item id="5138"> <!-- Compressed Package of Soulshots: A-grade -->
+		<extract id="1466" quantity="300" chance="100" /> <!-- Soulshot: A-grade -->
+	</item>
+	<item id="5139"> <!-- Compressed Package of Soulshots: S-grade -->
+		<extract id="1467" quantity="300" chance="100" /> <!-- Soulshot: S-grade -->
+	</item>
+	<item id="5140"> <!-- Compressed Package of Spiritshots: No Grade -->
+		<extract id="2509" quantity="300" chance="100" /> <!-- Spiritshot: No Grade -->
+	</item>
+	<item id="5141"> <!-- Compressed Package of Spiritshots: D-grade -->
+		<extract id="2510" quantity="300" chance="100" /> <!-- Spiritshot: D-grade -->
+	</item>
+	<item id="5142"> <!-- Compressed Package of Spiritshots: C-grade -->
+		<extract id="2511" quantity="300" chance="100" /> <!-- Spiritshot: C-grade -->
+	</item>
+	<item id="5143"> <!-- Compressed Package of Spiritshots: B-grade -->
+		<extract id="2512" quantity="300" chance="100" /> <!-- Spiritshot: B-grade -->
+	</item>
+	<item id="5144"> <!-- Compressed Package of Spiritshots: A-grade -->
+		<extract id="2513" quantity="300" chance="100" /> <!-- Spiritshot: A-grade -->
+	</item>
+	<item id="5145"> <!-- Compressed Package of Spiritshots: S-grade -->
+		<extract id="2514" quantity="300" chance="100" /> <!-- Spiritshot: S-grade -->
+	</item>
+	<item id="5146"> <!-- Compressed Package of Blessed Spiritshots: No Grade -->
+		<extract id="3947" quantity="300" chance="100" /> <!-- Blessed Spiritshot: No Grade -->
+	</item>
+	<item id="5147"> <!-- Compressed Package of Blessed Spiritshots: D-grade -->
+		<extract id="3948" quantity="300" chance="100" /> <!-- Blessed Spiritshot: D-Grade -->
+	</item>
+	<item id="5148"> <!-- Compressed Package of Blessed Spiritshots: C-grade -->
+		<extract id="3949" quantity="300" chance="100" /> <!-- Blessed Spiritshot: C-Grade -->
+	</item>
+	<item id="5149"> <!-- Compressed Package of Blessed Spiritshots: B-grade -->
+		<extract id="3950" quantity="300" chance="100" /> <!-- Blessed Spiritshot: B-Grade -->
+	</item>
+	<item id="5150"> <!-- Compressed Package of Blessed Spiritshots: A-grade -->
+		<extract id="3951" quantity="300" chance="100" /> <!-- Blessed Spiritshot: A-Grade -->
+	</item>
+	<item id="5151"> <!-- Compressed Package of Blessed Spiritshots: S-grade -->
+		<extract id="3952" quantity="300" chance="100" /> <!-- Blessed Spiritshot: S Grade -->
+	</item>
+	<item id="5250"> <!-- Greater Compressed Package of Soulshots: No-grade -->
+		<extract id="1835" quantity="1000" chance="100" /> <!-- Soulshot: No Grade -->
+	</item>
+	<item id="5251"> <!-- Greater Compressed Package of Soulshots: D-grade -->
+		<extract id="1463" quantity="1000" chance="100" /> <!-- Soulshot: D-grade -->
+	</item>
+	<item id="5252"> <!-- Greater Compressed Package of Soulshots: C-grade -->
+		<extract id="1464" quantity="1000" chance="100" /> <!-- Soulshot: C-grade -->
+	</item>
+	<item id="5253"> <!-- Greater Compressed Package of Soulshots: B-grade -->
+		<extract id="1465" quantity="1000" chance="100" /> <!-- Soulshot: B-grade -->
+	</item>
+	<item id="5254"> <!-- Greater Compressed Package of Soulshots: A-grade -->
+		<extract id="1466" quantity="1000" chance="100" /> <!-- Soulshot: A-grade -->
+	</item>
+	<item id="5255"> <!-- Greater Compressed Package of Soulshots: S-grade -->
+		<extract id="1467" quantity="1000" chance="100" /> <!-- Soulshot: S-grade -->
+	</item>
+	<item id="5256"> <!-- Greater Compressed Package of Spiritshots: No-grade -->
+		<extract id="2509" quantity="1000" chance="100" /> <!-- Spiritshot: No Grade -->
+	</item>
+	<item id="5257"> <!-- Greater Compressed Package of Spiritshots: D-grade -->
+		<extract id="2510" quantity="1000" chance="100" /> <!-- Spiritshot: D-grade -->
+	</item>
+	<item id="5258"> <!-- Greater Compressed Package of Spiritshots: C-grade -->
+		<extract id="2511" quantity="1000" chance="100" /> <!-- Spiritshot: C-grade -->
+	</item>
+	<item id="5259"> <!-- Greater Compressed Package of Spiritshots: B-grade -->
+		<extract id="2512" quantity="1000" chance="100" /> <!-- Spiritshot: B-grade -->
+	</item>
+	<item id="5260"> <!-- Greater Compressed Package of Spiritshots: A-grade -->
+		<extract id="2513" quantity="1000" chance="100" /> <!-- Spiritshot: A-grade -->
+	</item>
+	<item id="5261"> <!-- Greater Compressed Package of Spiritshots: S-grade -->
+		<extract id="2514" quantity="1000" chance="100" /> <!-- Spiritshot: S-grade -->
+	</item>
+	<item id="5262"> <!-- Greater Compressed Package of Blessed Spiritshots: No-grade -->
+		<extract id="3947" quantity="1000" chance="100" /> <!-- Blessed Spiritshot: No Grade -->
+	</item>
+	<item id="5263"> <!-- Greater Compressed Package of Blessed Spiritshots: D-grade -->
+		<extract id="3948" quantity="1000" chance="100" /> <!-- Blessed Spiritshot: D-Grade -->
+	</item>
+	<item id="5264"> <!-- Greater Compressed Package of Blessed Spiritshots: C-grade -->
+		<extract id="3949" quantity="1000" chance="100" /> <!-- Blessed Spiritshot: C-Grade -->
+	</item>
+	<item id="5265"> <!-- Greater Compressed Package of Blessed Spiritshots: B-grade -->
+		<extract id="3950" quantity="1000" chance="100" /> <!-- Blessed Spiritshot: B-Grade -->
+	</item>
+	<item id="5266"> <!-- Greater Compressed Package of Blessed Spiritshots: A-grade -->
+		<extract id="3951" quantity="1000" chance="100" /> <!-- Blessed Spiritshot: A-Grade -->
+	</item>
+	<item id="5267"> <!-- Greater Compressed Package of Blessed Spiritshots: S-grade -->
+		<extract id="3952" quantity="1000" chance="100" /> <!-- Blessed Spiritshot: S Grade -->
+	</item>
+	<item id="6411"> <!-- Small Nimble Green Fish -->
+		<extract id="6908" quantity="6" chance="31" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="1" chance="18" /> <!-- Fish Gem -->
+		<extract id="-1" quantity="0" chance="51" /> <!-- Nothing -->
+	</item>
+	<item id="6412"> <!-- Small Ugly Green Fish -->
+		<extract id="6908" quantity="6" chance="29" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="2" chance="22" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="49" /> <!-- Nothing -->
+	</item>
+	<item id="6413"> <!-- Small Pudgy Green Fish -->
+		<extract id="6908" quantity="6" chance="35" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="1" chance="33" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="32" /> <!-- Nothing -->
+	</item>
+	<item id="6414"> <!-- Nimble Green Fish -->
+		<extract id="6908" quantity="6" chance="33" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="1" chance="23" /> <!-- Fish Gem -->
+		<extract id="-1" quantity="0" chance="44" /> <!-- Nothing -->
+	</item>
+	<item id="6415"> <!-- Ugly Green Fish -->
+		<extract id="6908" quantity="8" chance="31" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="2" chance="31" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="38" /> <!-- Nothing -->
+	</item>
+	<item id="6416"> <!-- Pudgy Green Fish -->
+		<extract id="6908" quantity="6" chance="45" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="1" chance="32" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="23" /> <!-- Nothing -->
+	</item>
+	<item id="6417"> <!-- Large Nimble Green Fish -->
+		<extract id="6908" quantity="12" chance="16" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="1" chance="18" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="8" chance="26" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="40" /> <!-- Nothing -->
+	</item>
+	<item id="6418"> <!-- Large Ugly Green Fish -->
+		<extract id="6908" quantity="8" chance="42" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="2" chance="38" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="20" /> <!-- Nothing -->
+	</item>
+	<item id="6419"> <!-- Large Pudgy Green Fish -->
+		<extract id="6908" quantity="12" chance="27" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="1" chance="45" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="28" /> <!-- Nothing -->
+	</item>
+	<item id="6420"> <!-- Small Jade Nimble Fish -->
+		<extract id="6908" quantity="12" chance="21" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="1" chance="25" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="8" chance="35" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="19" /> <!-- Nothing -->
+	</item>
+	<item id="6421"> <!-- Small Jade Ugly Fish -->
+		<extract id="6908" quantity="8" chance="47" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="2" chance="47" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="6" /> <!-- Nothing -->
+	</item>
+	<item id="6422"> <!-- Small Jade Fat Fish -->
+		<extract id="6908" quantity="12" chance="33" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="1" chance="55" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="12" /> <!-- Nothing -->
+	</item>
+	<item id="6423"> <!-- Jade Nimble Fish -->
+		<extract id="6908" quantity="12" chance="28" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="1" chance="33" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="16" chance="23" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="16" /> <!-- Nothing -->
+	</item>
+	<item id="6424"> <!-- Jade Ugly Fish -->
+		<extract id="6908" quantity="16" chance="38" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="4" chance="36" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="26" /> <!-- Nothing -->
+	</item>
+	<item id="6425"> <!-- Jade Fat Fish -->
+		<extract id="6908" quantity="12" chance="46" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="2" chance="35" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="19" /> <!-- Nothing -->
+	</item>
+	<item id="6426"> <!-- Big Jade Nimble Fish -->
+		<extract id="6908" quantity="12" chance="33" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="2" chance="22" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="16" chance="26" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="19" /> <!-- Nothing -->
+	</item>
+	<item id="6427"> <!-- Big Jade Ugly Fish -->
+		<extract id="6908" quantity="16" chance="41" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="4" chance="38" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="21" /> <!-- Nothing -->
+	</item>
+	<item id="6428"> <!-- Big Jade Fat Fish -->
+		<extract id="6908" quantity="12" chance="47" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="2" chance="38" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="15" /> <!-- Nothing -->
+	</item>
+	<item id="6429"> <!-- Small Blue Nimble Fish -->
+		<extract id="6908" quantity="12" chance="33" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="2" chance="23" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="16" chance="27" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="17" /> <!-- Nothing -->
+	</item>
+	<item id="6430"> <!-- Small Blue Ugly Fish -->
+		<extract id="6908" quantity="16" chance="41" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="4" chance="38" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="21" /> <!-- Nothing -->
+	</item>
+	<item id="6431"> <!-- Small Blue Fat Fish -->
+		<extract id="6908" quantity="12" chance="48" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="2" chance="39" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="13" /> <!-- Nothing -->
+	</item>
+	<item id="6432"> <!-- Blue Nimble Fish -->
+		<extract id="6904" quantity="1" chance="2" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="14" chance="19" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="17" /> <!-- Greater Fish Oil -->
+		<extract id="6913" quantity="1" chance="26" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="16" chance="18" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="18" /> <!-- Nothing -->
+	</item>
+	<item id="6433"> <!-- Blue Ugly Fish -->
+		<extract id="6904" quantity="1" chance="2" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="10" chance="25" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="21" /> <!-- Greater Fish Oil -->
+		<extract id="6911" quantity="4" chance="17" /> <!-- Fish Scale -->
+		<extract id="6921" quantity="4" chance="17" /> <!-- Recipe: Premium Fish Oil(100%) -->
+		<extract id="-1" quantity="0" chance="18" /> <!-- Nothing -->
+	</item>
+	<item id="6434"> <!-- Blue Fat Fish -->
+		<extract id="6904" quantity="1" chance="4" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="16" chance="26" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="19" /> <!-- Greater Fish Oil -->
+		<extract id="6915" quantity="4" chance="21" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="30" /> <!-- Nothing -->
+	</item>
+	<item id="6435"> <!-- Big Blue Nimble Fish -->
+		<extract id="6904" quantity="1" chance="2" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="14" chance="21" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="18" /> <!-- Greater Fish Oil -->
+		<extract id="6913" quantity="2" chance="14" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="16" chance="20" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="25" /> <!-- Nothing -->
+	</item>
+	<item id="6436"> <!-- Big Blue Ugly Fish -->
+		<extract id="6904" quantity="1" chance="2" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="10" chance="24" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="22" /> <!-- Greater Fish Oil -->
+		<extract id="6911" quantity="4" chance="17" /> <!-- Fish Scale -->
+		<extract id="6921" quantity="4" chance="17" /> <!-- Recipe: Premium Fish Oil(100%) -->
+		<extract id="-1" quantity="0" chance="18" /> <!-- Nothing -->
+	</item>
+	<item id="6437"> <!-- Big Blue Fat Fish -->
+		<extract id="6904" quantity="1" chance="3" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="16" chance="26" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="20" /> <!-- Greater Fish Oil -->
+		<extract id="6915" quantity="4" chance="21" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="30" /> <!-- Nothing -->
+	</item>
+	<item id="6438"> <!-- Small Yellow Nimble Fish -->
+		<extract id="6904" quantity="1" chance="2" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="14" chance="19" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="18" /> <!-- Greater Fish Oil -->
+		<extract id="6913" quantity="2" chance="12" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="16" chance="16" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="33" /> <!-- Nothing -->
+	</item>
+	<item id="6439"> <!-- Small Yellow Ugly Fish -->
+		<extract id="6904" quantity="1" chance="2" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="20" chance="12" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="20" /> <!-- Greater Fish Oil -->
+		<extract id="6911" quantity="4" chance="16" /> <!-- Fish Scale -->
+		<extract id="6921" quantity="4" chance="17" /> <!-- Recipe: Premium Fish Oil(100%) -->
+		<extract id="-1" quantity="0" chance="33" /> <!-- Nothing -->
+	</item>
+	<item id="6440"> <!-- Small Yellow Fat Fish -->
+		<extract id="6904" quantity="1" chance="3" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="16" chance="25" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="19" /> <!-- Greater Fish Oil -->
+		<extract id="6915" quantity="4" chance="20" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="33" /> <!-- Nothing -->
+	</item>
+	<item id="6441"> <!-- Yellow Nimble Fish -->
+		<extract id="6904" quantity="1" chance="2" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="14" chance="19" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="18" /> <!-- Greater Fish Oil -->
+		<extract id="6913" quantity="2" chance="14" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="16" chance="18" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="29" /> <!-- Nothing -->
+	</item>
+	<item id="6442"> <!-- Yellow Ugly Fish -->
+		<extract id="6904" quantity="1" chance="3" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="20" chance="13" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="12" /> <!-- Greater Fish Oil -->
+		<extract id="6911" quantity="4" chance="18" /> <!-- Fish Scale -->
+		<extract id="6921" quantity="4" chance="19" /> <!-- Recipe: Premium Fish Oil(100%) -->
+		<extract id="-1" quantity="0" chance="35" /> <!-- Nothing -->
+	</item>
+	<item id="6443"> <!-- Yellow Fat Fish -->
+		<extract id="6904" quantity="1" chance="3" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="16" chance="25" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="19" /> <!-- Greater Fish Oil -->
+		<extract id="6915" quantity="4" chance="20" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="33" /> <!-- Nothing -->
+	</item>
+	<item id="6444"> <!-- Big Yellow Nimble Fish -->
+		<extract id="6904" quantity="1" chance="2" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="14" chance="21" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="20" /> <!-- Greater Fish Oil -->
+		<extract id="6913" quantity="2" chance="14" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="16" chance="19" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="24" /> <!-- Nothing -->
+	</item>
+	<item id="6445"> <!-- Big Yellow Ugly Fish -->
+		<extract id="6904" quantity="1" chance="3" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="20" chance="14" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="12" /> <!-- Greater Fish Oil -->
+		<extract id="6911" quantity="4" chance="19" /> <!-- Fish Scale -->
+		<extract id="6921" quantity="4" chance="21" /> <!-- Recipe: Premium Fish Oil(100%) -->
+		<extract id="-1" quantity="0" chance="31" /> <!-- Nothing -->
+	</item>
+	<item id="6446"> <!-- Big Yellow Fat Fish -->
+		<extract id="6904" quantity="1" chance="4" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="16" chance="26" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="19" /> <!-- Greater Fish Oil -->
+		<extract id="6915" quantity="4" chance="21" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="30" /> <!-- Nothing -->
+	</item>
+	<item id="6447"> <!-- Small Orange Nimble Fish -->
+		<extract id="6904" quantity="1" chance="3" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="28" chance="11" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="20" /> <!-- Greater Fish Oil -->
+		<extract id="6913" quantity="2" chance="16" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="16" chance="20" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="30" /> <!-- Nothing -->
+	</item>
+	<item id="6448"> <!-- Small Orange Ugly Fish -->
+		<extract id="6904" quantity="1" chance="3" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="20" chance="16" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="13" /> <!-- Greater Fish Oil -->
+		<extract id="6911" quantity="8" chance="11" /> <!-- Fish Scale -->
+		<extract id="6921" quantity="8" chance="11" /> <!-- Recipe: Premium Fish Oil(100%) -->
+		<extract id="-1" quantity="0" chance="46" /> <!-- Nothing -->
+	</item>
+	<item id="6449"> <!-- Small Orange Fat Fish -->
+		<extract id="6904" quantity="1" chance="4" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="32" chance="14" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="4" chance="20" /> <!-- Greater Fish Oil -->
+		<extract id="6915" quantity="4" chance="23" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="39" /> <!-- Nothing -->
+	</item>
+	<item id="6450"> <!-- Orange Nimble Fish -->
+		<extract id="6910" quantity="1" chance="24" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="2" chance="14" /> <!-- Shiny Fish Gem -->
+		<extract id="7698" quantity="1" chance="5" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="57" /> <!-- Nothing -->
+	</item>
+	<item id="6451"> <!-- Orange Ugly Fish -->
+		<extract id="6910" quantity="1" chance="28" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="18" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="7" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="47" /> <!-- Nothing -->
+	</item>
+	<item id="6452"> <!-- Orange Fat Fish -->
+		<extract id="6910" quantity="1" chance="26" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="4" chance="25" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="7" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="42" /> <!-- Nothing -->
+	</item>
+	<item id="6453"> <!-- Big Orange Nimble Fish -->
+		<extract id="6910" quantity="1" chance="30" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="2" chance="17" /> <!-- Shiny Fish Scale -->
+		<extract id="7698" quantity="1" chance="6" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="47" /> <!-- Nothing -->
+	</item>
+	<item id="6454"> <!-- Big Orange Ugly Fish -->
+		<extract id="6910" quantity="2" chance="15" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="21" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="7" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="57" /> <!-- Nothing -->
+	</item>
+	<item id="6455"> <!-- Big Orange Fat Fish -->
+		<extract id="6910" quantity="1" chance="31" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="4" chance="26" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="7" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="36" /> <!-- Nothing -->
+	</item>
+	<item id="6456"> <!-- Small Purple Nimble Fish -->
+		<extract id="6910" quantity="2" chance="20" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="2" chance="18" /> <!-- Shiny Fish Gem -->
+		<extract id="7698" quantity="1" chance="7" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="55" /> <!-- Nothing -->
+	</item>
+	<item id="6457"> <!-- Small Purple Ugly Fish -->
+		<extract id="6910" quantity="2" chance="16" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="22" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="8" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="54" /> <!-- Nothing -->
+	</item>
+	<item id="6458"> <!-- Small Purple Fat Fish -->
+		<extract id="6910" quantity="1" chance="31" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="4" chance="28" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="8" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="33" /> <!-- Nothing -->
+	</item>
+	<item id="6459"> <!-- Purple Nimble Fish -->
+		<extract id="6910" quantity="2" chance="22" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="2" chance="22" /> <!-- Shiny Fish Gem -->
+		<extract id="7698" quantity="1" chance="8" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="48" /> <!-- Nothing -->
+	</item>
+	<item id="6460"> <!-- Purple Ugly Fish -->
+		<extract id="6910" quantity="2" chance="17" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="26" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="9" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="48" /> <!-- Nothing -->
+	</item>
+	<item id="6461"> <!-- Purple Fat Fish -->
+		<extract id="6910" quantity="2" chance="20" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="4" chance="37" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="10" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="33" /> <!-- Nothing -->
+	</item>
+	<item id="6462"> <!-- Big Purple Nimble Fish -->
+		<extract id="6907" quantity="1" chance="6" /> <!-- Monocle Piece -->
+		<extract id="6910" quantity="2" chance="19" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="2" chance="17" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="6" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="6" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="46" /> <!-- Nothing -->
+	</item>
+	<item id="6463"> <!-- Big Purple Ugly Fish -->
+		<extract id="6905" quantity="1" chance="8" /> <!-- Hair Pin Piece -->
+		<extract id="6910" quantity="2" chance="16" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="24" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="8" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="44" /> <!-- Nothing -->
+	</item>
+	<item id="6464"> <!-- Big Purple Fat Fish -->
+		<extract id="6906" quantity="1" chance="8" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="6910" quantity="2" chance="18" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="8" chance="16" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="9" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="49" /> <!-- Nothing -->
+	</item>
+	<item id="6465"> <!-- Small Red Nimble Fish -->
+		<extract id="6907" quantity="1" chance="7" /> <!-- Monocle Piece -->
+		<extract id="6910" quantity="2" chance="20" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="2" chance="17" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="7" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="8" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="41" /> <!-- Nothing -->
+	</item>
+	<item id="6466"> <!-- Small Red Ugly Fish -->
+		<extract id="6905" quantity="1" chance="9" /> <!-- Hair Pin Piece -->
+		<extract id="6910" quantity="2" chance="18" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="27" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="7" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="39" /> <!-- Nothing -->
+	</item>
+	<item id="6467"> <!-- Small Red Fat Fish -->
+		<extract id="6906" quantity="1" chance="10" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="6910" quantity="2" chance="18" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="8" chance="18" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="9" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="45" /> <!-- Nothing -->
+	</item>
+	<item id="6468"> <!-- Red Nimble Fish -->
+		<extract id="6907" quantity="1" chance="8" /> <!-- Monocle Piece -->
+		<extract id="6910" quantity="2" chance="18" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="2" chance="18" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="6" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="7" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="43" /> <!-- Nothing -->
+	</item>
+	<item id="6469"> <!-- Red Ugly Fish -->
+		<extract id="6905" quantity="1" chance="9" /> <!-- Hair Pin Piece -->
+		<extract id="6910" quantity="2" chance="17" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="26" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="8" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="40" /> <!-- Nothing -->
+	</item>
+	<item id="6470"> <!-- Red Fat Fish -->
+		<extract id="6906" quantity="1" chance="10" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="6910" quantity="2" chance="23" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="8" chance="19" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="11" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="37" /> <!-- Nothing -->
+	</item>
+	<item id="6471"> <!-- Big Red Nimble Fish -->
+		<extract id="6907" quantity="1" chance="8" /> <!-- Monocle Piece -->
+		<extract id="6910" quantity="4" chance="10" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="2" chance="20" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="8" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="8" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="46" /> <!-- Nothing -->
+	</item>
+	<item id="6472"> <!-- Big Red Ugly Fish -->
+		<extract id="6905" quantity="1" chance="10" /> <!-- Hair Pin Piece -->
+		<extract id="6910" quantity="2" chance="21" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="23" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="10" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="36" /> <!-- Nothing -->
+	</item>
+	<item id="6473"> <!-- Big Red Fat Fish -->
+		<extract id="6906" quantity="1" chance="10" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="6910" quantity="2" chance="23" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="8" chance="19" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="11" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="37" /> <!-- Nothing -->
+	</item>
+	<item id="6474"> <!-- Small White Nimble Fish -->
+		<extract id="6907" quantity="1" chance="9" /> <!-- Monocle Piece -->
+		<extract id="6910" quantity="4" chance="13" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="4" chance="11" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="9" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="9" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="49" /> <!-- Nothing -->
+	</item>
+	<item id="6475"> <!-- Small White Ugly Fish -->
+		<extract id="6905" quantity="1" chance="11" /> <!-- Hair Pin Piece -->
+		<extract id="6910" quantity="2" chance="23" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="27" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="11" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="28" /> <!-- Nothing -->
+	</item>
+	<item id="6476"> <!-- Small White Fat Fish -->
+		<extract id="6906" quantity="1" chance="12" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="6910" quantity="2" chance="25" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="8" chance="16" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="11" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="36" /> <!-- Nothing -->
+	</item>
+	<item id="6477"> <!-- White Nimble Fish -->
+		<extract id="6907" quantity="1" chance="9" /> <!-- Monocle Piece -->
+		<extract id="6910" quantity="4" chance="13" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="4" chance="12" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="8" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="10" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="48" /> <!-- Nothing -->
+	</item>
+	<item id="6478"> <!-- White Ugly Fish -->
+		<extract id="6905" quantity="1" chance="12" /> <!-- Hair Pin Piece -->
+		<extract id="6910" quantity="2" chance="24" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="16" chance="14" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="12" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="38" /> <!-- Nothing -->
+	</item>
+	<item id="6479"> <!-- White Fat Fish -->
+		<extract id="6906" quantity="1" chance="11" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="6910" quantity="2" chance="26" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="8" chance="20" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="11" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="32" /> <!-- Nothing -->
+	</item>
+	<item id="6480"> <!-- Big White Nimble Fish -->
+		<extract id="6907" quantity="1" chance="11" /> <!-- Monocle Piece -->
+		<extract id="6910" quantity="4" chance="13" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="4" chance="12" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="12" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="11" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="41" /> <!-- Nothing -->
+	</item>
+	<item id="6481"> <!-- Big White Ugly Fish -->
+		<extract id="6905" quantity="0" chance="14" /> <!-- Hair Pin Piece -->
+		<extract id="6910" quantity="2" chance="26" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="16" chance="15" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="15" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="30" /> <!-- Nothing -->
+	</item>
+	<item id="6482"> <!-- Big White Fat Fish -->
+		<extract id="6906" quantity="1" chance="14" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="6910" quantity="2" chance="28" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="8" chance="20" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="12" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="26" /> <!-- Nothing -->
+	</item>
+	<item id="6483"> <!-- Small Black Nimble Fish -->
+		<extract id="6907" quantity="1" chance="12" /> <!-- Monocle Piece -->
+		<extract id="6910" quantity="4" chance="16" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="4" chance="15" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="13" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="14" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="30" /> <!-- Nothing -->
+	</item>
+	<item id="6484"> <!-- Small Black Ugly Fish -->
+		<extract id="6905" quantity="1" chance="18" /> <!-- Hair Pin Piece -->
+		<extract id="6910" quantity="4" chance="15" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="16" chance="16" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="16" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="35" /> <!-- Nothing -->
+	</item>
+	<item id="6485"> <!-- Small Black Fat Fish -->
+		<extract id="6906" quantity="1" chance="16" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="6910" quantity="4" chance="15" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="8" chance="26" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="17" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="26" /> <!-- Nothing -->
+	</item>
+	<item id="6486"> <!-- Black Nimble Fish -->
+		<extract id="6907" quantity="1" chance="12" /> <!-- Monocle Piece -->
+		<extract id="6910" quantity="4" chance="15" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="4" chance="20" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="15" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="12" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="26" /> <!-- Nothing -->
+	</item>
+	<item id="6487"> <!-- Black Ugly Fish -->
+		<extract id="6905" quantity="1" chance="14" /> <!-- Hair Pin Piece -->
+		<extract id="6910" quantity="4" chance="20" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="16" chance="23" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="2" chance="12" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="31" /> <!-- Nothing -->
+	</item>
+	<item id="6488"> <!-- Black Fat Fish -->
+		<extract id="6906" quantity="1" chance="18" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="6910" quantity="4" chance="15" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="8" chance="25" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="16" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="26" /> <!-- Nothing -->
+	</item>
+	<item id="6489"> <!-- Big Black Nimble Fish -->
+		<extract id="6907" quantity="1" chance="15" /> <!-- Monocle Piece -->
+		<extract id="6910" quantity="4" chance="17" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="4" chance="16" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="19" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="10" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="23" /> <!-- Nothing -->
+	</item>
+	<item id="6490"> <!-- Big Black Ugly Fish -->
+		<extract id="6905" quantity="1" chance="22" /> <!-- Hair Pin Piece -->
+		<extract id="6910" quantity="4" chance="21" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="16" chance="19" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="2" chance="16" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="22" /> <!-- Nothing -->
+	</item>
+	<item id="6491"> <!-- Big Black Fat Fish -->
+		<extract id="6906" quantity="1" chance="21" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="6910" quantity="4" chance="18" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="8" chance="31" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="2" chance="9" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="21" /> <!-- Nothing -->
+	</item>
+	<item id="6492"> <!-- Small Green Treasure Chest -->
+		<extract id="6908" quantity="12" chance="32" /> <!-- Fish Oil -->
+		<extract id="7609" quantity="8" chance="51" /> <!-- Proof of Catching a Fish -->
+		<extract id="-1" quantity="0" chance="17" /> <!-- Nothing -->
+	</item>
+	<item id="6493"> <!-- Green Treasure Chest -->
+		<extract id="6908" quantity="12" chance="47" /> <!-- Fish Oil -->
+		<extract id="7609" quantity="16" chance="33" /> <!-- Proof of Catching a Fish -->
+		<extract id="-1" quantity="0" chance="20" /> <!-- Nothing -->
+	</item>
+	<item id="6494"> <!-- Big Green Treasure Chest -->
+		<extract id="6908" quantity="24" chance="28" /> <!-- Fish Oil -->
+		<extract id="7609" quantity="26" chance="28" /> <!-- Proof of Catching a Fish -->
+		<extract id="-1" quantity="0" chance="44" /> <!-- Nothing -->
+	</item>
+	<item id="6495"> <!-- Small Jade Treasure Chest -->
+		<extract id="6908" quantity="24" chance="39" /> <!-- Fish Oil -->
+		<extract id="7609" quantity="26" chance="35" /> <!-- Proof of Catching a Fish -->
+		<extract id="-1" quantity="0" chance="26" /> <!-- Nothing -->
+	</item>
+	<item id="6496"> <!-- Jade Treasure Chest -->
+		<extract id="6908" quantity="24" chance="44" /> <!-- Fish Oil -->
+		<extract id="7609" quantity="26" chance="41" /> <!-- Proof of Catching a Fish -->
+		<extract id="-1" quantity="0" chance="15" /> <!-- Nothing -->
+	</item>
+	<item id="6497"> <!-- Big Jade Treasure Chest -->
+		<extract id="6908" quantity="24" chance="46" /> <!-- Fish Oil -->
+		<extract id="7609" quantity="26" chance="43" /> <!-- Proof of Catching a Fish -->
+		<extract id="-1" quantity="0" chance="11" /> <!-- Nothing -->
+	</item>
+	<item id="6498"> <!-- Small Blue Treasure Chest -->
+		<extract id="6908" quantity="24" chance="47" /> <!-- Fish Oil -->
+		<extract id="7609" quantity="26" chance="42" /> <!-- Proof of Catching a Fish -->
+		<extract id="-1" quantity="0" chance="11" /> <!-- Nothing -->
+	</item>
+	<item id="6499"> <!-- Blue Treasure Chest -->
+		<extract id="6904" quantity="1" chance="7" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="28" chance="26" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="8" chance="23" /> <!-- Greater Fish Oil -->
+		<extract id="7609" quantity="30" chance="25" /> <!-- Proof of Catching a Fish -->
+		<extract id="-1" quantity="0" chance="19" /> <!-- Nothing -->
+	</item>
+	<item id="6500"> <!-- Big Blue Treasure Chest -->
+		<extract id="6904" quantity="1" chance="7" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="28" chance="25" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="8" chance="24" /> <!-- Greater Fish Oil -->
+		<extract id="7609" quantity="30" chance="25" /> <!-- Proof of Catching a Fish -->
+		<extract id="-1" quantity="0" chance="19" /> <!-- Nothing -->
+	</item>
+	<item id="6501"> <!-- Small Yellow Treasure Chest -->
+		<extract id="6904" quantity="1" chance="5" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="28" chance="24" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="8" chance="22" /> <!-- Greater Fish Oil -->
+		<extract id="7609" quantity="30" chance="22" /> <!-- Proof of Catching a Fish -->
+		<extract id="-1" quantity="0" chance="27" /> <!-- Nothing -->
+	</item>
+	<item id="6502"> <!-- Yellow Treasure Chest -->
+		<extract id="6904" quantity="1" chance="7" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="28" chance="29" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="8" chance="23" /> <!-- Greater Fish Oil -->
+		<extract id="7609" quantity="30" chance="20" /> <!-- Proof of Catching a Fish -->
+		<extract id="-1" quantity="0" chance="21" /> <!-- Nothing -->
+	</item>
+	<item id="6503"> <!-- Big Yellow Treasure Chest -->
+		<extract id="6904" quantity="1" chance="7" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="56" chance="13" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="14" chance="12" /> <!-- Greater Fish Oil -->
+		<extract id="7609" quantity="30" chance="27" /> <!-- Proof of Catching a Fish -->
+		<extract id="-1" quantity="0" chance="41" /> <!-- Nothing -->
+	</item>
+	<item id="6504"> <!-- Small Orange Treasure Chest -->
+		<extract id="6904" quantity="1" chance="8" /> <!-- Party Mask Fabric -->
+		<extract id="6908" quantity="56" chance="15" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="14" chance="12" /> <!-- Greater Fish Oil -->
+		<extract id="7609" quantity="60" chance="13" /> <!-- Proof of Catching a Fish -->
+		<extract id="-1" quantity="0" chance="52" /> <!-- Nothing -->
+	</item>
+	<item id="6505"> <!-- Orange Treasure Chest -->
+		<extract id="6910" quantity="3" chance="58" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="42" /> <!-- Nothing -->
+	</item>
+	<item id="6506"> <!-- Big Orange Treasure Chest -->
+		<extract id="6910" quantity="3" chance="62" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="38" /> <!-- Nothing -->
+	</item>
+	<item id="6507"> <!-- Small Purple Treasure Chest -->
+		<extract id="6910" quantity="3" chance="62" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="38" /> <!-- Nothing -->
+	</item>
+	<item id="6508"> <!-- Purple Treasure Chest -->
+		<extract id="6910" quantity="3" chance="77" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="23" /> <!-- Nothing -->
+	</item>
+	<item id="6509"> <!-- Big Purple Treasure Chest -->
+		<extract id="6910" quantity="3" chance="82" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="18" /> <!-- Nothing -->
+	</item>
+	<item id="6510"> <!-- Small Red Treasure Chest -->
+		<extract id="6910" quantity="3" chance="90" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="10" /> <!-- Nothing -->
+	</item>
+	<item id="6511"> <!-- Red Treasure Chest -->
+		<extract id="6910" quantity="3" chance="91" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="9" /> <!-- Nothing -->
+	</item>
+	<item id="6512"> <!-- Big Red Treasure Chest -->
+		<extract id="6910" quantity="6" chance="61" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="39" /> <!-- Nothing -->
+	</item>
+	<item id="6513"> <!-- Small White Treasure Chest -->
+		<extract id="6910" quantity="6" chance="64" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="36" /> <!-- Nothing -->
+	</item>
+	<item id="6514"> <!-- White Treasure Chest -->
+		<extract id="6910" quantity="6" chance="69" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="31" /> <!-- Nothing -->
+	</item>
+	<item id="6515"> <!-- Big White Treasure Chest -->
+		<extract id="6910" quantity="6" chance="74" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="26" /> <!-- Nothing -->
+	</item>
+	<item id="6516"> <!-- Small Black Treasure Chest -->
+		<extract id="6910" quantity="1" chance="81" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="19" /> <!-- Nothing -->
+	</item>
+	<item id="6517"> <!-- Black Treasure Chest -->
+		<extract id="6910" quantity="6" chance="91" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="9" /> <!-- Nothing -->
+	</item>
+	<item id="6518"> <!-- Big Black Treasure Chest -->
+		<extract id="6910" quantity="6" chance="99" /> <!-- Premium Fish Oil -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="7726"> <!-- Small Nimble Green Fish - For Beginners -->
+		<extract id="6908" quantity="3" chance="44" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="1" chance="7" /> <!-- Fish Gem -->
+		<extract id="-1" quantity="0" chance="49" /> <!-- Nothing -->
+	</item>
+	<item id="7727"> <!-- Small Ugly Green Fish - For Beginners -->
+		<extract id="6908" quantity="4" chance="32" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="1" chance="17" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="51" /> <!-- Nothing -->
+	</item>
+	<item id="7728"> <!-- Small Pudgy Green Fish - For Beginners -->
+		<extract id="6908" quantity="4" chance="33" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="1" chance="13" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="54" /> <!-- Nothing -->
+	</item>
+	<item id="7729"> <!-- Nimble Green Fish - For Beginners -->
+		<extract id="6908" quantity="4" chance="36" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="1" chance="9" /> <!-- Fish Gem -->
+		<extract id="-1" quantity="0" chance="55" /> <!-- Nothing -->
+	</item>
+	<item id="7730"> <!-- Ugly Green Fish - For Beginners -->
+		<extract id="6908" quantity="4" chance="40" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="1" chance="26" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="34" /> <!-- Nothing -->
+	</item>
+	<item id="7731"> <!-- Pudgy Green Fish - For Beginners -->
+		<extract id="6908" quantity="4" chance="49" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="1" chance="20" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="31" /> <!-- Nothing -->
+	</item>
+	<item id="7732"> <!-- Large Nimble Green Fish - For Beginners -->
+		<extract id="6908" quantity="4" chance="33" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="1" chance="9" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="4" chance="17" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="41" /> <!-- Nothing -->
+	</item>
+	<item id="7733"> <!-- Large Ugly Green Fish - For Beginners -->
+		<extract id="6908" quantity="4" chance="58" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="2" chance="18" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="24" /> <!-- Nothing -->
+	</item>
+	<item id="7734"> <!-- Large Pudgy Green Fish - For Beginners -->
+		<extract id="6908" quantity="6" chance="29" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="1" chance="15" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="56" /> <!-- Nothing -->
+	</item>
+	<item id="7735"> <!-- Small Jade Nimble Fish - For Beginners -->
+		<extract id="6908" quantity="6" chance="37" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="1" chance="7" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="4" chance="28" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="28" /> <!-- Nothing -->
+	</item>
+	<item id="7736"> <!-- Small Jade Ugly Fish - For Beginners -->
+		<extract id="6908" quantity="6" chance="49" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="2" chance="17" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="34" /> <!-- Nothing -->
+	</item>
+	<item id="7737"> <!-- Small Jade Fat Fish - For Beginners -->
+		<extract id="6908" quantity="6" chance="47" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="1" chance="28" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="25" /> <!-- Nothing -->
+	</item>
+	<item id="7738"> <!-- Jade Nimble Fish - For Beginners -->
+		<extract id="6908" quantity="6" chance="45" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="1" chance="11" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="8" chance="15" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="29" /> <!-- Nothing -->
+	</item>
+	<item id="7739"> <!-- Jade Ugly Fish - For Beginners -->
+		<extract id="6908" quantity="6" chance="46" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="2" chance="20" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="34" /> <!-- Nothing -->
+	</item>
+	<item id="7740"> <!-- Jade Fat Fish - For Beginners -->
+		<extract id="6908" quantity="6" chance="45" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="1" chance="26" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="29" /> <!-- Nothing -->
+	</item>
+	<item id="7741"> <!-- Large Jade Nimble Fish - For Beginners -->
+		<extract id="6908" quantity="6" chance="47" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="1" chance="6" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="8" chance="13" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="34" /> <!-- Nothing -->
+	</item>
+	<item id="7742"> <!-- Large Jade Ugly Fish - For Beginners -->
+		<extract id="6908" quantity="6" chance="41" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="2" chance="18" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="41" /> <!-- Nothing -->
+	</item>
+	<item id="7743"> <!-- Large Jade Fat Fish - For Beginners -->
+		<extract id="6908" quantity="6" chance="45" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="1" chance="28" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="27" /> <!-- Nothing -->
+	</item>
+	<item id="7744"> <!-- Small Blue Nimble Fish - For Beginners -->
+		<extract id="6908" quantity="6" chance="31" /> <!-- Fish Oil -->
+		<extract id="6913" quantity="1" chance="13" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="8" chance="13" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="43" /> <!-- Nothing -->
+	</item>
+	<item id="7745"> <!-- Small Blue Ugly Fish - For Beginners -->
+		<extract id="6908" quantity="6" chance="41" /> <!-- Fish Oil -->
+		<extract id="6911" quantity="2" chance="20" /> <!-- Fish Scale -->
+		<extract id="-1" quantity="0" chance="39" /> <!-- Nothing -->
+	</item>
+	<item id="7746"> <!-- Small Blue Fat Fish - For Beginners -->
+		<extract id="6908" quantity="6" chance="42" /> <!-- Fish Oil -->
+		<extract id="6915" quantity="1" chance="40" /> <!-- Thin Fish Bone -->
+		<extract id="-1" quantity="0" chance="18" /> <!-- Nothing -->
+	</item>
+	<item id="7747"> <!-- Blue Nimble Fish - For Beginners -->
+		<extract id="6908" quantity="8" chance="13" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="17" /> <!-- Greater Fish Oil -->
+		<extract id="6913" quantity="1" chance="8" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="8" chance="11" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="6904" quantity="1" chance="1" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="50" /> <!-- Nothing -->
+	</item>
+	<item id="7748"> <!-- Blue Ugly Fish - For Beginners -->
+		<extract id="6908" quantity="8" chance="19" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="17" /> <!-- Greater Fish Oil -->
+		<extract id="6911" quantity="2" chance="10" /> <!-- Fish Scale -->
+		<extract id="6920" quantity="1" chance="17" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="6904" quantity="1" chance="1" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="36" /> <!-- Nothing -->
+	</item>
+	<item id="7749"> <!-- Blue Fat Fish - For Beginners -->
+		<extract id="6908" quantity="8" chance="20" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="18" /> <!-- Greater Fish Oil -->
+		<extract id="6915" quantity="1" chance="20" /> <!-- Thin Fish Bone -->
+		<extract id="6904" quantity="1" chance="2" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="40" /> <!-- Nothing -->
+	</item>
+	<item id="7750"> <!-- Large Blue Nimble Fish - For Beginners -->
+		<extract id="6908" quantity="8" chance="16" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="15" /> <!-- Greater Fish Oil -->
+		<extract id="6913" quantity="1" chance="11" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="8" chance="14" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="6904" quantity="1" chance="1" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="43" /> <!-- Nothing -->
+	</item>
+	<item id="7751"> <!-- Large Blue Ugly Fish - For Beginners -->
+		<extract id="6908" quantity="8" chance="17" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="15" /> <!-- Greater Fish Oil -->
+		<extract id="6911" quantity="2" chance="9" /> <!-- Fish Scale -->
+		<extract id="6920" quantity="2" chance="11" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="6904" quantity="1" chance="1" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="47" /> <!-- Nothing -->
+	</item>
+	<item id="7752"> <!-- Large Blue Fat Fish - For Beginners -->
+		<extract id="6908" quantity="8" chance="20" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="13" /> <!-- Greater Fish Oil -->
+		<extract id="6915" quantity="1" chance="17" /> <!-- Thin Fish Bone -->
+		<extract id="6904" quantity="1" chance="3" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="47" /> <!-- Nothing -->
+	</item>
+	<item id="7753"> <!-- Small Yellow Nimble Fish - For Beginners -->
+		<extract id="6908" quantity="8" chance="15" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="18" /> <!-- Greater Fish Oil -->
+		<extract id="6913" quantity="1" chance="8" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="8" chance="11" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="6904" quantity="1" chance="3" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="45" /> <!-- Nothing -->
+	</item>
+	<item id="7754"> <!-- Small Yellow Ugly Fish - For Beginners -->
+		<extract id="6908" quantity="8" chance="28" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="16" /> <!-- Greater Fish Oil -->
+		<extract id="6911" quantity="2" chance="12" /> <!-- Fish Scale -->
+		<extract id="6921" quantity="2" chance="8" /> <!-- Recipe: Premium Fish Oil(100%) -->
+		<extract id="6904" quantity="1" chance="1" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="35" /> <!-- Nothing -->
+	</item>
+	<item id="7755"> <!-- Small Yellow Fat Fish - For Beginners -->
+		<extract id="6908" quantity="8" chance="21" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="19" /> <!-- Greater Fish Oil -->
+		<extract id="6915" quantity="1" chance="19" /> <!-- Thin Fish Bone -->
+		<extract id="6904" quantity="1" chance="1" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="40" /> <!-- Nothing -->
+	</item>
+	<item id="7756"> <!-- Yellow Nimble Fish - For Beginners -->
+		<extract id="6908" quantity="12" chance="15" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="18" /> <!-- Greater Fish Oil -->
+		<extract id="6913" quantity="1" chance="14" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="8" chance="14" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="6904" quantity="1" chance="1" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="38" /> <!-- Nothing -->
+	</item>
+	<item id="7757"> <!-- Yellow Ugly Fish - For Beginners -->
+		<extract id="6908" quantity="16" chance="8" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="16" chance="8" /> <!-- Greater Fish Oil -->
+		<extract id="6911" quantity="2" chance="19" /> <!-- Fish Scale -->
+		<extract id="6921" quantity="2" chance="20" /> <!-- Recipe: Premium Fish Oil(100%) -->
+		<extract id="6904" quantity="1" chance="1" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="44" /> <!-- Nothing -->
+	</item>
+	<item id="7758"> <!-- Yellow Fat Fish - For Beginners -->
+		<extract id="6908" quantity="8" chance="21" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="21" /> <!-- Greater Fish Oil -->
+		<extract id="6915" quantity="2" chance="17" /> <!-- Thin Fish Bone -->
+		<extract id="6904" quantity="1" chance="1" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="40" /> <!-- Nothing -->
+	</item>
+	<item id="7759"> <!-- Large Yellow Nimble Fish - For Beginners -->
+		<extract id="6908" quantity="8" chance="22" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="19" /> <!-- Greater Fish Oil -->
+		<extract id="6913" quantity="1" chance="10" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="8" chance="18" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="-1" quantity="0" chance="31" /> <!-- Nothing -->
+	</item>
+	<item id="7760"> <!-- Large Yellow Ugly Fish - For Beginners -->
+		<extract id="6908" quantity="16" chance="16" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="14" /> <!-- Greater Fish Oil -->
+		<extract id="6911" quantity="2" chance="16" /> <!-- Fish Scale -->
+		<extract id="6921" quantity="2" chance="14" /> <!-- Recipe: Premium Fish Oil(100%) -->
+		<extract id="6904" quantity="1" chance="2" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="38" /> <!-- Nothing -->
+	</item>
+	<item id="7761"> <!-- Large Yellow Fat Fish - For Beginners -->
+		<extract id="6908" quantity="8" chance="28" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="20" /> <!-- Greater Fish Oil -->
+		<extract id="6915" quantity="2" chance="13" /> <!-- Thin Fish Bone -->
+		<extract id="6904" quantity="1" chance="1" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="38" /> <!-- Nothing -->
+	</item>
+	<item id="7762"> <!-- Small Orange Nimble Fish - For Beginners -->
+		<extract id="6908" quantity="14" chance="16" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="21" /> <!-- Greater Fish Oil -->
+		<extract id="6913" quantity="1" chance="11" /> <!-- Fish Gem -->
+		<extract id="6920" quantity="8" chance="17" /> <!-- Recipe: Greater Fish Oil (100%) -->
+		<extract id="6904" quantity="1" chance="2" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="33" /> <!-- Nothing -->
+	</item>
+	<item id="7763"> <!-- Small Orange Ugly Fish - For Beginners -->
+		<extract id="6908" quantity="16" chance="14" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="15" /> <!-- Greater Fish Oil -->
+		<extract id="6911" quantity="2" chance="19" /> <!-- Fish Scale -->
+		<extract id="6921" quantity="4" chance="8" /> <!-- Recipe: Premium Fish Oil(100%) -->
+		<extract id="6904" quantity="1" chance="1" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="33" /> <!-- Nothing -->
+	</item>
+	<item id="7764"> <!-- Small Orange Fat Fish - For Beginners -->
+		<extract id="6908" quantity="16" chance="14" /> <!-- Fish Oil -->
+		<extract id="6909" quantity="2" chance="19" /> <!-- Greater Fish Oil -->
+		<extract id="6915" quantity="2" chance="17" /> <!-- Thin Fish Bone -->
+		<extract id="6904" quantity="1" chance="3" /> <!-- Party Mask Fabric -->
+		<extract id="-1" quantity="0" chance="47" /> <!-- Nothing -->
+	</item>
+	<item id="7765"> <!-- Orange Nimble Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="15" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="1" chance="9" /> <!-- Shiny Fish Gem -->
+		<extract id="7698" quantity="1" chance="2" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="74" /> <!-- Nothing -->
+	</item>
+	<item id="7766"> <!-- Orange Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="17" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="1" chance="17" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="1" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="65" /> <!-- Nothing -->
+	</item>
+	<item id="7767"> <!-- Orange Fat Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="20" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="2" chance="17" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="3" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="60" /> <!-- Nothing -->
+	</item>
+	<item id="7768"> <!-- Large Orange Nimble Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="21" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="1" chance="13" /> <!-- Shiny Fish Gem -->
+		<extract id="7698" quantity="1" chance="1" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="65" /> <!-- Nothing -->
+	</item>
+	<item id="7769"> <!-- Large Orange Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="24" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="1" chance="20" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="3" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="53" /> <!-- Nothing -->
+	</item>
+	<item id="7770"> <!-- Large Orange Fat Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="33" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="2" chance="12" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="1" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="54" /> <!-- Nothing -->
+	</item>
+	<item id="7771"> <!-- Small Purple Nimble Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="25" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="1" chance="13" /> <!-- Shiny Fish Gem -->
+		<extract id="7698" quantity="1" chance="5" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="57" /> <!-- Nothing -->
+	</item>
+	<item id="7772"> <!-- Small Purple Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="21" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="2" chance="27" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="2" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="50" /> <!-- Nothing -->
+	</item>
+	<item id="7773"> <!-- Small Purple Fat Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="24" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="2" chance="18" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="5" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="53" /> <!-- Nothing -->
+	</item>
+	<item id="7774"> <!-- Purple Nimble Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="20" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="1" chance="15" /> <!-- Shiny Fish Gem -->
+		<extract id="7698" quantity="1" chance="3" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="62" /> <!-- Nothing -->
+	</item>
+	<item id="7775"> <!-- Purple Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="22" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="4" chance="16" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="5" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="57" /> <!-- Nothing -->
+	</item>
+	<item id="7776"> <!-- Purple Fat Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="17" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="2" chance="19" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="4" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="60" /> <!-- Nothing -->
+	</item>
+	<item id="7777"> <!-- Large Purple Nimble Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="14" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="1" chance="6" /> <!-- Shiny Fish Gem -->
+		<extract id="7698" quantity="1" chance="2" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="7685" quantity="1" chance="2" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="6907" quantity="1" chance="10" /> <!-- Monocle Piece -->
+		<extract id="-1" quantity="0" chance="66" /> <!-- Nothing -->
+	</item>
+	<item id="7778"> <!-- Large Purple Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="19" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="4" chance="12" /> <!-- Shiny Fish Scale -->
+		<extract id="6905" quantity="1" chance="7" /> <!-- Hair Pin Piece -->
+		<extract id="-1" quantity="0" chance="62" /> <!-- Nothing -->
+	</item>
+	<item id="7779"> <!-- Large Purple Fat Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="20" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="2" chance="13" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="2" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="6906" quantity="1" chance="2" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="-1" quantity="0" chance="63" /> <!-- Nothing -->
+	</item>
+	<item id="7780"> <!-- Small Red Nimble Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="16" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="1" chance="27" /> <!-- Shiny Fish Gem -->
+		<extract id="7698" quantity="1" chance="4" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="7685" quantity="1" chance="4" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="6907" quantity="1" chance="1" /> <!-- Monocle Piece -->
+		<extract id="-1" quantity="0" chance="48" /> <!-- Nothing -->
+	</item>
+	<item id="7781"> <!-- Small Red Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="28" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="4" chance="16" /> <!-- Shiny Fish Scale -->
+		<extract id="6905" quantity="1" chance="5" /> <!-- Hair Pin Piece -->
+		<extract id="7686" quantity="1" chance="5" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="46" /> <!-- Nothing -->
+	</item>
+	<item id="7782"> <!-- Small Red Fat Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="30" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="2" chance="22" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="6" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="6906" quantity="1" chance="6" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="-1" quantity="0" chance="36" /> <!-- Nothing -->
+	</item>
+	<item id="7783"> <!-- Red Nimble Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="36" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="1" chance="11" /> <!-- Shiny Fish Gem -->
+		<extract id="6907" quantity="1" chance="7" /> <!-- Monocle Piece -->
+		<extract id="7685" quantity="1" chance="1" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="-1" quantity="0" chance="45" /> <!-- Nothing -->
+	</item>
+	<item id="7784"> <!-- Red Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="39" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="4" chance="25" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="4" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="6905" quantity="1" chance="1" /> <!-- Hair Pin Piece -->
+		<extract id="-1" quantity="0" chance="31" /> <!-- Nothing -->
+	</item>
+	<item id="7785"> <!-- Red Fat Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="39" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="2" chance="14" /> <!-- Thick Fish Bone -->
+		<extract id="6906" quantity="1" chance="8" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="7697" quantity="1" chance="4" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="35" /> <!-- Nothing -->
+	</item>
+	<item id="7786"> <!-- Large Red Nimble Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="20" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="1" chance="14" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="2" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="6907" quantity="1" chance="2" /> <!-- Monocle Piece -->
+		<extract id="7698" quantity="1" chance="2" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="60" /> <!-- Nothing -->
+	</item>
+	<item id="7787"> <!-- Large Red Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="30" /> <!-- Premium Fish Oil -->
+		<extract id="6905" quantity="1" chance="5" /> <!-- Hair Pin Piece -->
+		<extract id="6912" quantity="8" chance="1" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="1" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="63" /> <!-- Nothing -->
+	</item>
+	<item id="7788"> <!-- Large Red Fat Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="37" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="4" chance="12" /> <!-- Thick Fish Bone -->
+		<extract id="6906" quantity="1" chance="4" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="7697" quantity="1" chance="4" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="43" /> <!-- Nothing -->
+	</item>
+	<item id="7789"> <!-- Small White Nimble Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="17" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="2" chance="12" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="6" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="4" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="6907" quantity="1" chance="3" /> <!-- Monocle Piece -->
+		<extract id="-1" quantity="0" chance="58" /> <!-- Nothing -->
+	</item>
+	<item id="7790"> <!-- Small White Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="23" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="15" /> <!-- Shiny Fish Scale -->
+		<extract id="6905" quantity="1" chance="9" /> <!-- Hair Pin Piece -->
+		<extract id="7686" quantity="1" chance="7" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="46" /> <!-- Nothing -->
+	</item>
+	<item id="7791"> <!-- Small White Fat Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="29" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="4" chance="20" /> <!-- Thick Fish Bone -->
+		<extract id="6906" quantity="1" chance="8" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="7697" quantity="1" chance="2" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="41" /> <!-- Nothing -->
+	</item>
+	<item id="7792"> <!-- White Nimble Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="11" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="2" chance="22" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="5" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="6907" quantity="1" chance="5" /> <!-- Monocle Piece -->
+		<extract id="7698" quantity="1" chance="3" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="54" /> <!-- Nothing -->
+	</item>
+	<item id="7793"> <!-- White Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="27" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="10" /> <!-- Shiny Fish Scale -->
+		<extract id="6905" quantity="1" chance="5" /> <!-- Hair Pin Piece -->
+		<extract id="7686" quantity="1" chance="3" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="-1" quantity="0" chance="55" /> <!-- Nothing -->
+	</item>
+	<item id="7794"> <!-- White Fat Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="36" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="4" chance="24" /> <!-- Thick Fish Bone -->
+		<extract id="6906" quantity="1" chance="10" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="7697" quantity="1" chance="3" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="27" /> <!-- Nothing -->
+	</item>
+	<item id="7795"> <!-- Large White Nimble Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="34" /> <!-- Premium Fish Oil -->
+		<extract id="6914" quantity="2" chance="25" /> <!-- Shiny Fish Gem -->
+		<extract id="6907" quantity="1" chance="4" /> <!-- Monocle Piece -->
+		<extract id="-1" quantity="0" chance="37" /> <!-- Nothing -->
+	</item>
+	<item id="7796"> <!-- Large White Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="11" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="23" /> <!-- Shiny Fish Scale -->
+		<extract id="7686" quantity="1" chance="14" /> <!-- Maiden's Hairpin Piece -->
+		<extract id="6905" quantity="1" chance="5" /> <!-- Hair Pin Piece -->
+		<extract id="-1" quantity="0" chance="47" /> <!-- Nothing -->
+	</item>
+	<item id="7797"> <!-- Large White Fat Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="31" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="4" chance="22" /> <!-- Thick Fish Bone -->
+		<extract id="7697" quantity="1" chance="6" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="6906" quantity="1" chance="4" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="-1" quantity="0" chance="37" /> <!-- Nothing -->
+	</item>
+	<item id="7798"> <!-- Small Black Nimble Fish: For Beginners -->
+		<extract id="6910" quantity="1" chance="16" /> <!-- Premium Fish Oil -->
+		<extract id="6907" quantity="1" chance="12" /> <!-- Monocle Piece -->
+		<extract id="6914" quantity="2" chance="8" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="4" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="4" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="56" /> <!-- Nothing -->
+	</item>
+	<item id="7799"> <!-- Small Black Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="15" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="15" /> <!-- Shiny Fish Scale -->
+		<extract id="6905" quantity="1" chance="7" /> <!-- Hair Pin Piece -->
+		<extract id="-1" quantity="0" chance="63" /> <!-- Nothing -->
+	</item>
+	<item id="7800"> <!-- Small Black Fat Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="6" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="4" chance="17" /> <!-- Thick Fish Bone -->
+		<extract id="6906" quantity="1" chance="13" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="7697" quantity="1" chance="10" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="54" /> <!-- Nothing -->
+	</item>
+	<item id="7801"> <!-- Black Nimble Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="16" /> <!-- Premium Fish Oil -->
+		<extract id="6907" quantity="1" chance="12" /> <!-- Monocle Piece -->
+		<extract id="6914" quantity="2" chance="8" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="4" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="4" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="56" /> <!-- Nothing -->
+	</item>
+	<item id="7802"> <!-- Black Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="15" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="15" /> <!-- Shiny Fish Scale -->
+		<extract id="6905" quantity="1" chance="7" /> <!-- Hair Pin Piece -->
+		<extract id="-1" quantity="0" chance="63" /> <!-- Nothing -->
+	</item>
+	<item id="7803"> <!-- Black Fat Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="6" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="4" chance="17" /> <!-- Thick Fish Bone -->
+		<extract id="6906" quantity="1" chance="13" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="7697" quantity="1" chance="10" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="54" /> <!-- Nothing -->
+	</item>
+	<item id="7804"> <!-- Large Black Nimble Fish - For Beginners -->
+		<extract id="6910" quantity="1" chance="16" /> <!-- Premium Fish Oil -->
+		<extract id="6907" quantity="1" chance="12" /> <!-- Monocle Piece -->
+		<extract id="6914" quantity="2" chance="8" /> <!-- Shiny Fish Gem -->
+		<extract id="7685" quantity="1" chance="4" /> <!-- Outlaw's Eyepatch Strap -->
+		<extract id="7698" quantity="1" chance="4" /> <!-- Piece of Daisy Hairpin -->
+		<extract id="-1" quantity="0" chance="56" /> <!-- Nothing -->
+	</item>
+	<item id="7805"> <!-- Large Black Ugly Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="15" /> <!-- Premium Fish Oil -->
+		<extract id="6912" quantity="8" chance="15" /> <!-- Shiny Fish Scale -->
+		<extract id="6905" quantity="1" chance="7" /> <!-- Hair Pin Piece -->
+		<extract id="-1" quantity="0" chance="63" /> <!-- Nothing -->
+	</item>
+	<item id="7806"> <!-- Large Black Fat Fish - For Beginners -->
+		<extract id="6910" quantity="2" chance="6" /> <!-- Premium Fish Oil -->
+		<extract id="6916" quantity="4" chance="17" /> <!-- Thick Fish Bone -->
+		<extract id="6906" quantity="1" chance="13" /> <!-- Pirate's Eye Patch Material -->
+		<extract id="7697" quantity="1" chance="10" /> <!-- Piece of Forget-me-not Hairpin -->
+		<extract id="-1" quantity="0" chance="54" /> <!-- Nothing -->
+	</item>
+	<item id="8403"> <!-- Small Nimble Green Fish - Upper Grade -->
+		<extract id="6911" quantity="2" chance="30" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="21" /> <!-- Fish Gem -->
+		<extract id="8353" quantity="2" chance="47" /> <!-- Green Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8404"> <!-- Small Ugly Green Fish - Upper Grade -->
+		<extract id="6911" quantity="2" chance="31" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="20" /> <!-- Fish Gem -->
+		<extract id="8353" quantity="2" chance="47" /> <!-- Green Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8405"> <!-- Small Pudgy Green Fish - Upper Grade -->
+		<extract id="6911" quantity="2" chance="30" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="20" /> <!-- Fish Gem -->
+		<extract id="8353" quantity="2" chance="48" /> <!-- Green Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8406"> <!-- Nimble Green Fish - Upper Grade -->
+		<extract id="6911" quantity="2" chance="30" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="20" /> <!-- Fish Gem -->
+		<extract id="8353" quantity="2" chance="48" /> <!-- Green Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8407"> <!-- Ugly Green Fish - Upper Grade -->
+		<extract id="6911" quantity="2" chance="43" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="24" /> <!-- Fish Gem -->
+		<extract id="8353" quantity="4" chance="31" /> <!-- Green Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8408"> <!-- Pudgy Green Fish - Upper Grade -->
+		<extract id="6911" quantity="2" chance="45" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="24" /> <!-- Fish Gem -->
+		<extract id="8353" quantity="4" chance="29" /> <!-- Green Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8409"> <!-- Large Nimble Green Fish - Upper Grade -->
+		<extract id="6911" quantity="2" chance="40" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="26" /> <!-- Fish Gem -->
+		<extract id="8353" quantity="4" chance="32" /> <!-- Green Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8410"> <!-- Large Ugly Green Fish - Upper Grade -->
+		<extract id="6911" quantity="2" chance="41" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="26" /> <!-- Fish Gem -->
+		<extract id="8353" quantity="4" chance="32" /> <!-- Green Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8411"> <!-- Large Pudgy Green Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="25" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="29" /> <!-- Fish Gem -->
+		<extract id="8353" quantity="4" chance="45" /> <!-- Green Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8412"> <!-- Small Jade Nimble Fish - Upper Grade -->
+		<extract id="6911" quantity="2" chance="44" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="31" /> <!-- Fish Gem -->
+		<extract id="8359" quantity="4" chance="23" /> <!-- Jade Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8413"> <!-- Small Jade Ugly Fish - Upper Grade -->
+		<extract id="6911" quantity="2" chance="38" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="31" /> <!-- Fish Gem -->
+		<extract id="8359" quantity="4" chance="30" /> <!-- Jade Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8414"> <!-- Small Jade Fat Fish - Upper Grade -->
+		<extract id="6911" quantity="2" chance="39" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="26" /> <!-- Fish Gem -->
+		<extract id="8359" quantity="4" chance="33" /> <!-- Jade Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8415"> <!-- Jade Nimble Fish - Upper Grade -->
+		<extract id="6911" quantity="2" chance="41" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="26" /> <!-- Fish Gem -->
+		<extract id="8359" quantity="4" chance="31" /> <!-- Jade Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8416"> <!-- Jade Ugly Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="27" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="39" /> <!-- Fish Gem -->
+		<extract id="8359" quantity="4" chance="32" /> <!-- Jade Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8417"> <!-- Jade Fat Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="25" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="39" /> <!-- Fish Gem -->
+		<extract id="8359" quantity="4" chance="34" /> <!-- Jade Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8418"> <!-- Large Jade Nimble Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="24" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="37" /> <!-- Fish Gem -->
+		<extract id="8359" quantity="4" chance="38" /> <!-- Jade Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8419"> <!-- Large Jade Ugly Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="29" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="33" /> <!-- Fish Gem -->
+		<extract id="8359" quantity="4" chance="37" /> <!-- Jade Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8420"> <!-- Large Jade Fat Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="20" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="35" /> <!-- Fish Gem -->
+		<extract id="8359" quantity="4" chance="44" /> <!-- Jade Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8421"> <!-- Small Blue Nimble Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="32" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="41" /> <!-- Fish Gem -->
+		<extract id="8355" quantity="4" chance="25" /> <!-- Blue Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8422"> <!-- Small Blue Ugly Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="22" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="45" /> <!-- Fish Gem -->
+		<extract id="8355" quantity="4" chance="32" /> <!-- Blue Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8423"> <!-- Small Blue Fat Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="40" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="35" /> <!-- Fish Gem -->
+		<extract id="8355" quantity="4" chance="23" /> <!-- Blue Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8424"> <!-- Blue Nimble Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="31" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="35" /> <!-- Fish Gem -->
+		<extract id="8355" quantity="4" chance="32" /> <!-- Blue Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8425"> <!-- Blue Ugly Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="35" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="38" /> <!-- Fish Gem -->
+		<extract id="8355" quantity="4" chance="25" /> <!-- Blue Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8426"> <!-- Blue Fat Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="34" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="42" /> <!-- Fish Gem -->
+		<extract id="8355" quantity="4" chance="22" /> <!-- Blue Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8427"> <!-- Large Blue Nimble Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="29" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="37" /> <!-- Fish Gem -->
+		<extract id="8355" quantity="4" chance="33" /> <!-- Blue Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8428"> <!-- Large Blue Ugly Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="24" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="45" /> <!-- Fish Gem -->
+		<extract id="8355" quantity="4" chance="29" /> <!-- Blue Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8429"> <!-- Large Blue Fat Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="33" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="45" /> <!-- Fish Gem -->
+		<extract id="8355" quantity="4" chance="21" /> <!-- Blue Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8430"> <!-- Small Yellow Nimble Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="39" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="35" /> <!-- Fish Gem -->
+		<extract id="8354" quantity="2" chance="25" /> <!-- Yellow Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8431"> <!-- Small Yellow Ugly Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="35" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="36" /> <!-- Fish Gem -->
+		<extract id="8354" quantity="2" chance="28" /> <!-- Yellow Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8432"> <!-- Small Yellow Fat Fish - Upper Grade -->
+		<extract id="6911" quantity="4" chance="37" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="1" chance="33" /> <!-- Fish Gem -->
+		<extract id="8354" quantity="2" chance="28" /> <!-- Yellow Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8433"> <!-- Yellow Nimble Fish - Upper Grade -->
+		<extract id="6911" quantity="8" chance="25" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="2" chance="25" /> <!-- Fish Gem -->
+		<extract id="8354" quantity="2" chance="45" /> <!-- Yellow Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="5" /> <!-- Nothing -->
+	</item>
+	<item id="8434"> <!-- Yellow Ugly Fish - Upper Grade -->
+		<extract id="6911" quantity="8" chance="29" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="2" chance="28" /> <!-- Fish Gem -->
+		<extract id="8354" quantity="2" chance="42" /> <!-- Yellow Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8435"> <!-- Yellow Fat Fish - Upper Grade -->
+		<extract id="6911" quantity="8" chance="31" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="2" chance="25" /> <!-- Fish Gem -->
+		<extract id="8354" quantity="2" chance="43" /> <!-- Yellow Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8436"> <!-- Large Yellow Nimble Fish - Upper Grade -->
+		<extract id="6911" quantity="8" chance="32" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="2" chance="24" /> <!-- Fish Gem -->
+		<extract id="8354" quantity="2" chance="42" /> <!-- Yellow Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8437"> <!-- Large Yellow Ugly Fish - Upper Grade -->
+		<extract id="6911" quantity="8" chance="26" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="2" chance="29" /> <!-- Fish Gem -->
+		<extract id="8354" quantity="2" chance="43" /> <!-- Yellow Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8438"> <!-- Large Yellow Fat Fish - Upper Grade -->
+		<extract id="6911" quantity="8" chance="25" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="2" chance="31" /> <!-- Fish Gem -->
+		<extract id="8354" quantity="2" chance="43" /> <!-- Yellow Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8439"> <!-- Small Orange Nimble Fish - Upper Grade -->
+		<extract id="6911" quantity="8" chance="30" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="2" chance="38" /> <!-- Fish Gem -->
+		<extract id="8357" quantity="2" chance="30" /> <!-- Orange Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8440"> <!-- Small Orange Ugly Fish - Upper Grade -->
+		<extract id="6911" quantity="8" chance="29" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="2" chance="41" /> <!-- Fish Gem -->
+		<extract id="8357" quantity="2" chance="29" /> <!-- Orange Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8441"> <!-- Small Orange Fat Fish - Upper Grade -->
+		<extract id="6911" quantity="8" chance="28" /> <!-- Fish Scale -->
+		<extract id="6913" quantity="2" chance="39" /> <!-- Fish Gem -->
+		<extract id="8357" quantity="2" chance="32" /> <!-- Orange Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8442"> <!-- Orange Nimble Fish - Upper Grade -->
+		<extract id="6912" quantity="4" chance="37" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="1" chance="36" /> <!-- Shiny Fish Gem -->
+		<extract id="8357" quantity="4" chance="26" /> <!-- Orange Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8443"> <!-- Orange Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="4" chance="35" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="1" chance="29" /> <!-- Shiny Fish Gem -->
+		<extract id="8357" quantity="4" chance="29" /> <!-- Orange Colored Fish Scale -->
+		<extract id="8377" quantity="1" chance="5" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8444"> <!-- Orange Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="4" chance="28" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="1" chance="32" /> <!-- Shiny Fish Gem -->
+		<extract id="8357" quantity="4" chance="30" /> <!-- Orange Colored Fish Scale -->
+		<extract id="8378" quantity="1" chance="8" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8445"> <!-- Large Orange Nimble Fish - Upper Grade -->
+		<extract id="6912" quantity="4" chance="33" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="1" chance="40" /> <!-- Shiny Fish Gem -->
+		<extract id="8357" quantity="4" chance="25" /> <!-- Orange Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8446"> <!-- Large Orange Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="4" chance="35" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="1" chance="31" /> <!-- Shiny Fish Gem -->
+		<extract id="8357" quantity="4" chance="27" /> <!-- Orange Colored Fish Scale -->
+		<extract id="8377" quantity="1" chance="6" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8447"> <!-- Large Orange Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="4" chance="27" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="1" chance="28" /> <!-- Shiny Fish Gem -->
+		<extract id="8357" quantity="4" chance="32" /> <!-- Orange Colored Fish Scale -->
+		<extract id="8378" quantity="1" chance="10" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="3" /> <!-- Nothing -->
+	</item>
+	<item id="8448"> <!-- Small Purple Nimble Fish - Upper Grade -->
+		<extract id="6912" quantity="8" chance="21" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="1" chance="40" /> <!-- Shiny Fish Gem -->
+		<extract id="8358" quantity="2" chance="37" /> <!-- Purple Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8449"> <!-- Small Purple Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="8" chance="20" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="1" chance="34" /> <!-- Shiny Fish Gem -->
+		<extract id="8358" quantity="2" chance="36" /> <!-- Purple Colored Fish Scale -->
+		<extract id="8377" quantity="1" chance="9" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8450"> <!-- Small Purple Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="8" chance="20" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="1" chance="31" /> <!-- Shiny Fish Gem -->
+		<extract id="8358" quantity="2" chance="39" /> <!-- Purple Colored Fish Scale -->
+		<extract id="8378" quantity="1" chance="8" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8451"> <!-- Purple Nimble Fish - Upper Grade -->
+		<extract id="6912" quantity="8" chance="28" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="1" chance="36" /> <!-- Shiny Fish Gem -->
+		<extract id="8358" quantity="2" chance="34" /> <!-- Purple Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8452"> <!-- Purple Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="8" chance="25" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="1" chance="28" /> <!-- Shiny Fish Gem -->
+		<extract id="8358" quantity="2" chance="38" /> <!-- Purple Colored Fish Scale -->
+		<extract id="8377" quantity="1" chance="8" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8453"> <!-- Purple Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="8" chance="39" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="1" chance="26" /> <!-- Shiny Fish Gem -->
+		<extract id="8358" quantity="4" chance="23" /> <!-- Purple Colored Fish Scale -->
+		<extract id="8378" quantity="1" chance="10" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8454"> <!-- Large Purple Nimble Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="34" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="30" /> <!-- Shiny Fish Gem -->
+		<extract id="8358" quantity="4" chance="34" /> <!-- Purple Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8455"> <!-- Large Purple Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="8" chance="32" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="26" /> <!-- Shiny Fish Gem -->
+		<extract id="8358" quantity="4" chance="28" /> <!-- Purple Colored Fish Scale -->
+		<extract id="8377" quantity="1" chance="12" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8456"> <!-- Large Purple Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="8" chance="35" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="24" /> <!-- Shiny Fish Gem -->
+		<extract id="8358" quantity="4" chance="27" /> <!-- Purple Colored Fish Scale -->
+		<extract id="8378" quantity="1" chance="11" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="3" /> <!-- Nothing -->
+	</item>
+	<item id="8457"> <!-- Small Red Nimble Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="33" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="35" /> <!-- Shiny Fish Gem -->
+		<extract id="8352" quantity="4" chance="31" /> <!-- Red Colored Fish Scale -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8458"> <!-- Small Red Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="29" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="30" /> <!-- Shiny Fish Gem -->
+		<extract id="8352" quantity="4" chance="27" /> <!-- Red Colored Fish Scale -->
+		<extract id="8377" quantity="1" chance="12" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8459"> <!-- Small Red Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="28" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="27" /> <!-- Shiny Fish Gem -->
+		<extract id="8352" quantity="4" chance="31" /> <!-- Red Colored Fish Scale -->
+		<extract id="8378" quantity="1" chance="12" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8460"> <!-- Red Nimble Fish - Upper Grade -->
+		<extract id="6912" quantity="8" chance="41" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="27" /> <!-- Shiny Fish Gem -->
+		<extract id="8352" quantity="4" chance="26" /> <!-- Red Colored Fish Scale -->
+		<extract id="8373" quantity="1" chance="4" /> <!-- Party Hat Fabric -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8461"> <!-- Red Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="8" chance="35" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="27" /> <!-- Shiny Fish Gem -->
+		<extract id="8352" quantity="4" chance="22" /> <!-- Red Colored Fish Scale -->
+		<extract id="8374" quantity="1" chance="2" /> <!-- Feathered Hat Fabric -->
+		<extract id="8377" quantity="1" chance="12" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8462"> <!-- Red Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="8" chance="32" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="25" /> <!-- Shiny Fish Gem -->
+		<extract id="8352" quantity="4" chance="25" /> <!-- Red Colored Fish Scale -->
+		<extract id="8375" quantity="1" chance="4" /> <!-- Artisan's Goggles Fabric -->
+		<extract id="8378" quantity="1" chance="11" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="3" /> <!-- Nothing -->
+	</item>
+	<item id="8463"> <!-- Large Red Nimble Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="29" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="36" /> <!-- Shiny Fish Gem -->
+		<extract id="8352" quantity="4" chance="30" /> <!-- Red Colored Fish Scale -->
+		<extract id="8373" quantity="1" chance="3" /> <!-- Party Hat Fabric -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8464"> <!-- Large Red Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="25" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="29" /> <!-- Shiny Fish Gem -->
+		<extract id="8352" quantity="4" chance="29" /> <!-- Red Colored Fish Scale -->
+		<extract id="8374" quantity="1" chance="2" /> <!-- Feathered Hat Fabric -->
+		<extract id="8377" quantity="1" chance="12" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="3" /> <!-- Nothing -->
+	</item>
+	<item id="8465"> <!-- Large Red Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="26" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="30" /> <!-- Shiny Fish Gem -->
+		<extract id="8352" quantity="4" chance="25" /> <!-- Red Colored Fish Scale -->
+		<extract id="8375" quantity="1" chance="2" /> <!-- Artisan's Goggles Fabric -->
+		<extract id="8378" quantity="1" chance="15" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8466"> <!-- Small White Nimble Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="28" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="38" /> <!-- Shiny Fish Gem -->
+		<extract id="8356" quantity="4" chance="29" /> <!-- White Colored Fish Scale -->
+		<extract id="8373" quantity="1" chance="3" /> <!-- Party Hat Fabric -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8467"> <!-- Small White Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="24" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="29" /> <!-- Shiny Fish Gem -->
+		<extract id="8356" quantity="4" chance="24" /> <!-- White Colored Fish Scale -->
+		<extract id="8374" quantity="1" chance="4" /> <!-- Feathered Hat Fabric -->
+		<extract id="8377" quantity="1" chance="16" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="3" /> <!-- Nothing -->
+	</item>
+	<item id="8468"> <!-- Small White Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="29" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="32" /> <!-- Shiny Fish Gem -->
+		<extract id="8356" quantity="4" chance="26" /> <!-- White Colored Fish Scale -->
+		<extract id="8375" quantity="1" chance="3" /> <!-- Artisan's Goggles Fabric -->
+		<extract id="8378" quantity="1" chance="9" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8469"> <!-- White Nimble Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="30" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="35" /> <!-- Shiny Fish Gem -->
+		<extract id="8356" quantity="4" chance="27" /> <!-- White Colored Fish Scale -->
+		<extract id="8373" quantity="1" chance="5" /> <!-- Party Hat Fabric -->
+		<extract id="-1" quantity="0" chance="3" /> <!-- Nothing -->
+	</item>
+	<item id="8470"> <!-- White Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="27" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="29" /> <!-- Shiny Fish Gem -->
+		<extract id="8356" quantity="4" chance="22" /> <!-- White Colored Fish Scale -->
+		<extract id="8374" quantity="1" chance="3" /> <!-- Feathered Hat Fabric -->
+		<extract id="8377" quantity="1" chance="17" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8471"> <!-- White Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="27" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="30" /> <!-- Shiny Fish Gem -->
+		<extract id="8356" quantity="4" chance="23" /> <!-- White Colored Fish Scale -->
+		<extract id="8375" quantity="1" chance="4" /> <!-- Artisan's Goggles Fabric -->
+		<extract id="8378" quantity="1" chance="15" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="1" /> <!-- Nothing -->
+	</item>
+	<item id="8472"> <!-- High Grade - Large White Nimble Fish -->
+		<extract id="6912" quantity="9" chance="33" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="37" /> <!-- Shiny Fish Gem -->
+		<extract id="8356" quantity="4" chance="26" /> <!-- White Colored Fish Scale -->
+		<extract id="8373" quantity="1" chance="2" /> <!-- Party Hat Fabric -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8473"> <!-- Large White Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="29" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="29" /> <!-- Shiny Fish Gem -->
+		<extract id="8356" quantity="4" chance="20" /> <!-- White Colored Fish Scale -->
+		<extract id="8374" quantity="1" chance="3" /> <!-- Feathered Hat Fabric -->
+		<extract id="8377" quantity="1" chance="16" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="3" /> <!-- Nothing -->
+	</item>
+	<item id="8474"> <!-- Large White Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="25" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="29" /> <!-- Shiny Fish Gem -->
+		<extract id="8356" quantity="4" chance="27" /> <!-- White Colored Fish Scale -->
+		<extract id="8375" quantity="1" chance="3" /> <!-- Artisan's Goggles Fabric -->
+		<extract id="8378" quantity="1" chance="14" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8475"> <!-- Small Black Nimble Fish: Upper Grade -->
+		<extract id="6912" quantity="9" chance="31" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="2" chance="38" /> <!-- Shiny Fish Gem -->
+		<extract id="8351" quantity="4" chance="25" /> <!-- Black Colored Fish Scale -->
+		<extract id="8373" quantity="1" chance="4" /> <!-- Party Hat Fabric -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8476"> <!-- Small Black Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="30" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="4" chance="22" /> <!-- Shiny Fish Gem -->
+		<extract id="8351" quantity="4" chance="25" /> <!-- Black Colored Fish Scale -->
+		<extract id="8374" quantity="1" chance="5" /> <!-- Feathered Hat Fabric -->
+		<extract id="8377" quantity="1" chance="16" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8477"> <!-- Small Black Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="9" chance="33" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="4" chance="17" /> <!-- Shiny Fish Gem -->
+		<extract id="8351" quantity="4" chance="26" /> <!-- Black Colored Fish Scale -->
+		<extract id="8375" quantity="1" chance="4" /> <!-- Artisan's Goggles Fabric -->
+		<extract id="8378" quantity="1" chance="17" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="3" /> <!-- Nothing -->
+	</item>
+	<item id="8478"> <!-- Black Nimble Fish - Upper Grade -->
+		<extract id="6912" quantity="18" chance="27" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="4" chance="24" /> <!-- Shiny Fish Gem -->
+		<extract id="8351" quantity="4" chance="42" /> <!-- Black Colored Fish Scale -->
+		<extract id="8373" quantity="1" chance="5" /> <!-- Party Hat Fabric -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8479"> <!-- Black Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="18" chance="15" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="4" chance="23" /> <!-- Shiny Fish Gem -->
+		<extract id="8351" quantity="4" chance="29" /> <!-- Black Colored Fish Scale -->
+		<extract id="8374" quantity="1" chance="6" /> <!-- Feathered Hat Fabric -->
+		<extract id="8377" quantity="1" chance="25" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8480"> <!-- Black Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="18" chance="19" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="4" chance="22" /> <!-- Shiny Fish Gem -->
+		<extract id="8351" quantity="4" chance="31" /> <!-- Black Colored Fish Scale -->
+		<extract id="8375" quantity="1" chance="5" /> <!-- Artisan's Goggles Fabric -->
+		<extract id="8378" quantity="1" chance="21" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8481"> <!-- Large Black Nimble Fish - Upper Grade -->
+		<extract id="6912" quantity="18" chance="31" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="4" chance="24" /> <!-- Shiny Fish Gem -->
+		<extract id="8351" quantity="4" chance="38" /> <!-- Black Colored Fish Scale -->
+		<extract id="8373" quantity="1" chance="5" /> <!-- Party Hat Fabric -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+	<item id="8482"> <!-- Large Black Ugly Fish - Upper Grade -->
+		<extract id="6912" quantity="18" chance="14" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="4" chance="24" /> <!-- Shiny Fish Gem -->
+		<extract id="8351" quantity="4" chance="40" /> <!-- Black Colored Fish Scale -->
+		<extract id="8374" quantity="1" chance="4" /> <!-- Feathered Hat Fabric -->
+		<extract id="8377" quantity="1" chance="15" /> <!-- Little Angel Wings Piece -->
+		<extract id="-1" quantity="0" chance="3" /> <!-- Nothing -->
+	</item>
+	<item id="8483"> <!-- Large Black Fat Fish - Upper Grade -->
+		<extract id="6912" quantity="18" chance="30" /> <!-- Shiny Fish Scale -->
+		<extract id="6914" quantity="4" chance="22" /> <!-- Shiny Fish Gem -->
+		<extract id="8351" quantity="7" chance="17" /> <!-- Black Colored Fish Scale -->
+		<extract id="8375" quantity="1" chance="5" /> <!-- Artisan's Goggles Fabric -->
+		<extract id="8378" quantity="1" chance="24" /> <!-- Fairy Antennae Piece -->
+		<extract id="-1" quantity="0" chance="2" /> <!-- Nothing -->
+	</item>
+</list>

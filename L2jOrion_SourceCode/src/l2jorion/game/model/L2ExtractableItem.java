@@ -26,7 +26,7 @@ public class L2ExtractableItem
 	private final int _itemId;
 	private final List<L2ExtractableProductItem> _products;
 	
-	public L2ExtractableItem(final int itemid, final List<L2ExtractableProductItem> products)
+	public L2ExtractableItem(int itemid, List<L2ExtractableProductItem> products)
 	{
 		_itemId = itemid;
 		_products = products;

@@ -14,8 +14,6 @@
  */
 package l2jorion.game.datatables.xml;
 
-import java.util.logging.Logger;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -26,8 +24,6 @@ import l2jorion.util.xml.IXmlReader;
 
 public class StaticObjectData implements IXmlReader
 {
-	private static Logger _log = Logger.getLogger(StaticObjectData.class.getName());
-	
 	L2StaticObjectInstance _objects = null;
 	
 	protected StaticObjectData()
@@ -39,7 +35,7 @@ public class StaticObjectData implements IXmlReader
 	public void load()
 	{
 		parseDatapackFile("data/xml/staticobjects.xml");
-		_log.info(StaticObjectData.class.getSimpleName() + ": Loaded.");
+		LOG.info(StaticObjectData.class.getSimpleName() + ": Loaded.");
 	}
 	
 	@Override

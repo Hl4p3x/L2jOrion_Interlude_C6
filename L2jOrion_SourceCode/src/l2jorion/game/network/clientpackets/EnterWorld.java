@@ -31,7 +31,6 @@ import l2jorion.game.datatables.GmListTable;
 import l2jorion.game.datatables.SkillTable;
 import l2jorion.game.datatables.csv.MapRegionTable;
 import l2jorion.game.datatables.sql.AdminCommandAccessRights;
-import l2jorion.game.handler.custom.CustomWorldHandler;
 import l2jorion.game.handler.voice.Menu;
 import l2jorion.game.handler.voice.Vote;
 import l2jorion.game.managers.CastleManager;
@@ -54,6 +53,7 @@ import l2jorion.game.model.base.PlayerClass;
 import l2jorion.game.model.entity.Announcements;
 import l2jorion.game.model.entity.ClanHall;
 import l2jorion.game.model.entity.Hero;
+import l2jorion.game.model.entity.Rebirth;
 import l2jorion.game.model.entity.Wedding;
 import l2jorion.game.model.entity.event.CTF;
 import l2jorion.game.model.entity.event.DM;
@@ -347,9 +347,9 @@ public class EnterWorld extends PacketClient
 			activeChar.sendMessage("You have been teleported to the nearest town due to you being in siege zone.");
 		}
 		
-		if (Config.REBIRTH_ENABLE)
+		if (Config.REBIRTH_ENABLE && !activeChar.isSubClassActive())
 		{
-			CustomWorldHandler.getInstance().enterWorld(activeChar);
+			Rebirth.getInstance().grantRebirthSkills(activeChar);
 		}
 		
 		if (TvT._savePlayers.contains(activeChar.getName()))

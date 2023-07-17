@@ -39,7 +39,6 @@ public class CustomBypassHandler
 	{
 		_handlers = new FastMap<>();
 		
-		registerCustomBypassHandler(new ExtractableByPassHandler());
 		registerCustomBypassHandler(new DressMe());
 	}
 	

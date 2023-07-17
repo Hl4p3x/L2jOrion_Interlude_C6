@@ -23,9 +23,9 @@ public class L2ExtractableProductItem
 {
 	private final int _id;
 	private final int _ammount;
-	private final int _chance;
+	private final float _chance;
 	
-	public L2ExtractableProductItem(final int id, final int ammount, final int chance)
+	public L2ExtractableProductItem(int id, int ammount, float chance)
 	{
 		_id = id;
 		_ammount = ammount;
@@ -42,7 +42,7 @@ public class L2ExtractableProductItem
 		return _ammount;
 	}
 	
-	public int getChance()
+	public float getChance()
 	{
 		return _chance;
 	}
