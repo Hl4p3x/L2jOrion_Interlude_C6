@@ -62,7 +62,7 @@ public class GameServerRegister
 		final LineNumberReader _in = new LineNumberReader(new InputStreamReader(System.in));
 		try
 		{
-			GameServerTable.load();
+			GameServerTable.getInstance().load();
 		}
 		catch (final Exception e)
 		{
@@ -147,7 +147,9 @@ public class GameServerRegister
 				catch (final NumberFormatException nfe)
 				{
 					if (Config.ENABLE_ALL_EXCEPTIONS)
+					{
 						nfe.printStackTrace();
+					}
 					
 					LOG.info("Please, type a number or 'help'");
 				}
@@ -169,7 +171,9 @@ public class GameServerRegister
 		catch (final SQLException e)
 		{
 			if (Config.ENABLE_ALL_EXCEPTIONS)
+			{
 				e.printStackTrace();
+			}
 			
 			LOG.info("SQL error while cleaning registered servers: " + e);
 		}

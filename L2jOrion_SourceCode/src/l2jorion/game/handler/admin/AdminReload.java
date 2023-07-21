@@ -27,10 +27,10 @@ import l2jorion.Config;
 import l2jorion.game.cache.HtmCache;
 import l2jorion.game.controllers.TradeController;
 import l2jorion.game.datatables.SkillTable;
-import l2jorion.game.datatables.csv.NpcWalkerRoutesTable;
 import l2jorion.game.datatables.sql.ItemTable;
 import l2jorion.game.datatables.sql.NpcTable;
 import l2jorion.game.datatables.sql.TeleportLocationTable;
+import l2jorion.game.datatables.xml.NpcWalkerRoutesData;
 import l2jorion.game.handler.IAdminCommandHandler;
 import l2jorion.game.managers.AchievementManager;
 import l2jorion.game.managers.AuctionManager;
@@ -117,7 +117,7 @@ public class AdminReload implements IAdminCommandHandler
 				}
 				else if (type.startsWith("npcwalkers"))
 				{
-					NpcWalkerRoutesTable.getInstance().load();
+					NpcWalkerRoutesData.getInstance().load();
 					sendReloadPage(activeChar);
 					activeChar.sendMessage("All NPC walker routes have been reloaded");
 				}

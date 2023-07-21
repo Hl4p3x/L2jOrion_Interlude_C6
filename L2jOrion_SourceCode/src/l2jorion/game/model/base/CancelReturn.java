@@ -14,9 +14,9 @@
  */
 package l2jorion.game.model.base;
 
-import org.strixplatform.logging.Log;
+import java.util.Map;
+import java.util.logging.Logger;
 
-import javolution.util.FastMap;
 import l2jorion.game.model.L2Effect;
 import l2jorion.game.model.L2Skill;
 import l2jorion.game.model.actor.instance.L2PcInstance;
@@ -24,18 +24,19 @@ import l2jorion.game.skills.Env;
 import l2jorion.game.skills.effects.EffectTemplate;
 
 /**
- * @author Vilmis
+ * @author Vilmismeme (:D) .|.
  */
-
 public final class CancelReturn implements Runnable
 {
-	private L2PcInstance _player = null;
-	private FastMap<L2Skill, int[]> _buffs = null;
+	protected static final Logger LOGGER = Logger.getLogger(CancelReturn.class.getName());
 	
-	public CancelReturn(L2PcInstance _player, FastMap<L2Skill, int[]> _buffs)
+	private L2PcInstance _player;
+	private Map<L2Skill, int[]> _buffs;
+	
+	public CancelReturn(L2PcInstance player, Map<L2Skill, int[]> buffs)
 	{
-		this._player = _player;
-		this._buffs = _buffs;
+		player = _player;
+		buffs = _buffs;
 	}
 	
 	@Override
@@ -70,7 +71,7 @@ public final class CancelReturn implements Runnable
 					}
 					catch (NullPointerException er)
 					{
-						Log.info("Error on buff return: " + e.getSkill().getName() + " (" + e.getSkill().getId() + ") " + er);
+						LOGGER.info("Error on buff return: " + e.getSkill().getName() + " (" + e.getSkill().getId() + ") " + er);
 					}
 				}
 			}

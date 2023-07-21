@@ -13,7 +13,7 @@ public class WarehouseCacheManager
 	protected final Map<L2PcInstance, Long> _cachedWh;
 	protected final long _cacheTime;
 	
-	private WarehouseCacheManager()
+	public WarehouseCacheManager()
 	{
 		_cacheTime = Config.WAREHOUSE_CACHE_TIME * 60000L;
 		_cachedWh = new ConcurrentHashMap<>();

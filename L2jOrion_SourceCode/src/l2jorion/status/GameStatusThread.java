@@ -1224,7 +1224,11 @@ public class GameStatusThread extends Thread
 		return sb.toString();
 	}
 	
-	@SuppressWarnings("serial")
+	@SuppressWarnings(
+	{
+		"serial",
+		"deprecation"
+	})
 	public void debugAll()
 	{
 		Calendar cal = Calendar.getInstance();
@@ -1420,6 +1424,7 @@ public class GameStatusThread extends Thread
 		return mbean.findMonitorDeadlockedThreads();
 	}
 	
+	@SuppressWarnings("deprecation")
 	private Thread findMatchingThread(ThreadInfo inf)
 	{
 		for (Thread thread : Thread.getAllStackTraces().keySet())

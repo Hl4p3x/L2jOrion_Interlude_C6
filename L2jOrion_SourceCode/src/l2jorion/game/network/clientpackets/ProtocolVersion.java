@@ -16,63 +16,24 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import java.nio.BufferUnderflowException;
-
-import org.strixplatform.StrixPlatform;
-import org.strixplatform.managers.ClientGameSessionManager;
-import org.strixplatform.managers.ClientProtocolDataManager;
-import org.strixplatform.utils.StrixClientData;
-
 import l2jorion.Config;
 import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.PacketServer;
 import l2jorion.game.network.serverpackets.KeyPacket;
 import l2jorion.game.network.serverpackets.SendStatus;
-import l2jorion.log.Log;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 
 public final class ProtocolVersion extends PacketClient
 {
-	private static Logger LOG = LoggerFactory.getLogger(ProtocolVersion.class);
+	static Logger LOG = LoggerFactory.getLogger(ProtocolVersion.class);
 	
 	private int _version;
-	
-	private byte[] data;
-	private int dataChecksum;
 	
 	@Override
 	protected void readImpl()
 	{
-		try
-		{
-			_version = readD();
-		}
-		catch (BufferUnderflowException e)
-		{
-		}
-		
-		if (Config.STRIX_PROTECTION)
-		{
-			if (StrixPlatform.getInstance().isPlatformEnabled())
-			{
-				try
-				{
-					if (_buf.remaining() >= StrixPlatform.getInstance().getProtocolVersionDataSize())
-					{
-						data = new byte[StrixPlatform.getInstance().getClientDataSize()];
-						readB(data);
-						dataChecksum = readD();
-					}
-				}
-				catch (final Exception e)
-				{
-					getClient().close(new KeyPacket(null, 0));
-					LOG.error("Client [IP=" + toString() + "] used unprotected client. Disconnect...");
-					return;
-				}
-			}
-		}
+		_version = readH(); // readD(); ?
 	}
 	
 	@Override
@@ -88,44 +49,13 @@ public final class ProtocolVersion extends PacketClient
 		}
 		else if (_version < Config.MIN_PROTOCOL_REVISION || _version > Config.MAX_PROTOCOL_REVISION)
 		{
-			String text = "Client: " + getClient().toString() + " -> Protocol Revision: " + _version + " is invalid. Minimum is " + Config.MIN_PROTOCOL_REVISION + " and Maximum is " + Config.MAX_PROTOCOL_REVISION + " are supported. Closing connection.";
-			Log.add(text, "Wrong_protocol_version");
-			
+			LOG.info("Client: " + getClient() + " -> Protocol Revision: " + _version + " is invalid. Minimum is " + Config.MIN_PROTOCOL_REVISION + " and Maximum is " + Config.MAX_PROTOCOL_REVISION + " are supported. Closing connection.");
+			LOG.warn("Wrong Protocol Version " + _version);
 			getClient().setProtocolOk(false);
 			getClient().sendPacket(new KeyPacket(null, 0));
 		}
 		else
 		{
-			if (Config.STRIX_PROTECTION)
-			{
-				if (data == null)
-				{
-					getClient().close((PacketServer) null);
-					LOG.error("Client [IP=" + getClient().toString() + "] used unprotected client. Disconnect...");
-					return;
-				}
-				
-				final StrixClientData clientData = ClientProtocolDataManager.getInstance().getDecodedData(data, dataChecksum);
-				if (clientData != null)
-				{
-					if (!ClientGameSessionManager.getInstance().checkServerResponse(clientData))
-					{
-						getClient().close(new KeyPacket(null, clientData, 1));
-						return;
-					}
-					
-					getClient().setStrixClientData(clientData);
-					getClient().setRevision(_version);
-					getClient().setProtocolOk(true);
-					sendPacket(new KeyPacket(getClient().enableCrypt(), 1));
-					return;
-				}
-				
-				LOG.error("Decode client data failed. See Strix-Platform log file. Disconnected client " + getClient().toString());
-				getClient().close((PacketServer) null);
-				return;
-			}
-			
 			getClient().setRevision(_version);
 			getClient().setProtocolOk(true);
 			getClient().sendPacket(new KeyPacket(getClient().enableCrypt(), 1));

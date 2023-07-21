@@ -20,11 +20,11 @@
  */
 package l2jorion.game.templates;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
 import l2jorion.game.model.L2DropCategory;
 import l2jorion.game.model.L2DropData;
 import l2jorion.game.model.L2MinionData;
@@ -65,25 +65,25 @@ public final class L2NpcTemplate extends L2CharTemplate
 	private final boolean _custom;
 	
 	// Skills AI
-	private final FastList<L2Skill> _buffSkills = new FastList<>();
-	private final FastList<L2Skill> _negativeSkills = new FastList<>();
-	private final FastList<L2Skill> _debuffSkills = new FastList<>();
-	private final FastList<L2Skill> _atkSkills = new FastList<>();
-	private final FastList<L2Skill> _rootSkills = new FastList<>();
-	private final FastList<L2Skill> _stunSkills = new FastList<>();
-	private final FastList<L2Skill> _sleepSkills = new FastList<>();
-	private final FastList<L2Skill> _paralyzeSkills = new FastList<>();
-	private final FastList<L2Skill> _fossilSkills = new FastList<>();
-	private final FastList<L2Skill> _immobilizeSkills = new FastList<>();
-	private final FastList<L2Skill> _healSkills = new FastList<>();
-	private final FastList<L2Skill> _dotSkills = new FastList<>();
-	private final FastList<L2Skill> _cotSkills = new FastList<>();
-	private final FastList<L2Skill> _universalSkills = new FastList<>();
-	private final FastList<L2Skill> _manaSkills = new FastList<>();
-	private final FastList<L2Skill> _longRangeSkills = new FastList<>();
-	private final FastList<L2Skill> _shortRangeSkills = new FastList<>();
-	private final FastList<L2Skill> _generalSkills = new FastList<>();
-	private final FastList<L2Skill> _suicideSkills = new FastList<>();
+	private final List<L2Skill> _buffSkills = new ArrayList<>();
+	private final List<L2Skill> _negativeSkills = new ArrayList<>();
+	private final List<L2Skill> _debuffSkills = new ArrayList<>();
+	private final List<L2Skill> _atkSkills = new ArrayList<>();
+	private final List<L2Skill> _rootSkills = new ArrayList<>();
+	private final List<L2Skill> _stunSkills = new ArrayList<>();
+	private final List<L2Skill> _sleepSkills = new ArrayList<>();
+	private final List<L2Skill> _paralyzeSkills = new ArrayList<>();
+	private final List<L2Skill> _fossilSkills = new ArrayList<>();
+	private final List<L2Skill> _immobilizeSkills = new ArrayList<>();
+	private final List<L2Skill> _healSkills = new ArrayList<>();
+	private final List<L2Skill> _dotSkills = new ArrayList<>();
+	private final List<L2Skill> _cotSkills = new ArrayList<>();
+	private final List<L2Skill> _universalSkills = new ArrayList<>();
+	private final List<L2Skill> _manaSkills = new ArrayList<>();
+	private final List<L2Skill> _longRangeSkills = new ArrayList<>();
+	private final List<L2Skill> _shortRangeSkills = new ArrayList<>();
+	private final List<L2Skill> _generalSkills = new ArrayList<>();
+	private final List<L2Skill> _suicideSkills = new ArrayList<>();
 	
 	private L2NpcAIData _AIdataStatic = new L2NpcAIData();
 	
@@ -134,15 +134,17 @@ public final class L2NpcTemplate extends L2CharTemplate
 	
 	private final StatsSet _npcStatsSet;
 	
-	private final FastList<L2DropCategory> _categories = new FastList<>();
+	/** The table containing all Item that can be dropped by Npc using this NpcTemplate */
+	private final List<L2DropCategory> _categories = new ArrayList<>();
 	
-	private final List<L2MinionData> _minions = new FastList<>(0);
+	/** The table containing all Minions that must be spawn with the Npc using this NpcTemplate */
+	private final List<L2MinionData> _minions = new ArrayList<>(0);
 	
-	private final List<ClassId> _teachInfo = new FastList<>();
-	private final Map<Integer, L2Skill> _skills = new FastMap<>();
-	private final Map<Stats, Double> _vulnerabilities = new FastMap<>();
-	
-	private final Map<Quest.QuestEventType, Quest[]> _questEvents = new FastMap<>();
+	private final List<ClassId> _teachInfo = new ArrayList<>();
+	private final Map<Integer, L2Skill> _skills = new HashMap<>();
+	private final Map<Stats, Double> _vulnerabilities = new HashMap<>();
+	// contains a list of quests for each event type (questStart, questAttack, questKill, etc)
+	private final Map<Quest.QuestEventType, Quest[]> _questEvents = new HashMap<>();
 	
 	public L2NpcTemplate(final StatsSet set, final boolean custom)
 	{
@@ -357,7 +359,7 @@ public final class L2NpcTemplate extends L2CharTemplate
 	 * <BR>
 	 * @return
 	 */
-	public FastList<L2DropCategory> getDropData()
+	public List<L2DropCategory> getDropData()
 	{
 		return _categories;
 	}
@@ -370,8 +372,8 @@ public final class L2NpcTemplate extends L2CharTemplate
 	 */
 	public List<L2DropData> getAllDropData()
 	{
-		final List<L2DropData> lst = new FastList<>();
-		for (final L2DropCategory tmp : _categories)
+		final List<L2DropData> lst = new ArrayList<>();
+		for (L2DropCategory tmp : _categories)
 		{
 			lst.addAll(tmp.getAllDrops());
 		}
@@ -386,8 +388,8 @@ public final class L2NpcTemplate extends L2CharTemplate
 	{
 		while (_categories.size() > 0)
 		{
-			_categories.getFirst().clearAllDrops();
-			_categories.removeFirst();
+			_categories.get(0).clearAllDrops();
+			_categories.remove(0);
 		}
 		_categories.clear();
 	}
@@ -739,52 +741,52 @@ public final class L2NpcTemplate extends L2CharTemplate
 		_suicideSkills.add(skill);
 	}
 	
-	public FastList<L2Skill> getUniversalSkills()
+	public List<L2Skill> getUniversalSkills()
 	{
 		return _universalSkills;
 	}
 	
-	public FastList<L2Skill> getSuicideSkills()
+	public List<L2Skill> getSuicideSkills()
 	{
 		return _suicideSkills;
 	}
 	
-	public FastList<L2Skill> getNegativeSkills()
+	public List<L2Skill> getNegativeSkills()
 	{
 		return _negativeSkills;
 	}
 	
-	public FastList<L2Skill> getImmobilizeSkills()
+	public List<L2Skill> getImmobilizeSkills()
 	{
 		return _immobilizeSkills;
 	}
 	
-	public FastList<L2Skill> getGeneralSkills()
+	public List<L2Skill> getGeneralSkills()
 	{
 		return _generalSkills;
 	}
 	
-	public FastList<L2Skill> getHealSkills()
+	public List<L2Skill> getHealSkills()
 	{
 		return _healSkills;
 	}
 	
-	public FastList<L2Skill> getCostOverTimeSkills()
+	public List<L2Skill> getCostOverTimeSkills()
 	{
 		return _cotSkills;
 	}
 	
-	public FastList<L2Skill> getDebuffSkills()
+	public List<L2Skill> getDebuffSkills()
 	{
 		return _debuffSkills;
 	}
 	
-	public FastList<L2Skill> getBuffSkills()
+	public List<L2Skill> getBuffSkills()
 	{
 		return _buffSkills;
 	}
 	
-	public FastList<L2Skill> getAtkSkills()
+	public List<L2Skill> getAtkSkills()
 	{
 		return _atkSkills;
 	}
@@ -792,7 +794,7 @@ public final class L2NpcTemplate extends L2CharTemplate
 	/**
 	 * @return the long range skills.
 	 */
-	public FastList<L2Skill> getLongRangeSkills()
+	public List<L2Skill> getLongRangeSkills()
 	{
 		return _longRangeSkills;
 	}
@@ -800,7 +802,7 @@ public final class L2NpcTemplate extends L2CharTemplate
 	/**
 	 * @return the short range skills.
 	 */
-	public FastList<L2Skill> getShortRangeSkills()
+	public List<L2Skill> getShortRangeSkills()
 	{
 		return _shortRangeSkills;
 	}

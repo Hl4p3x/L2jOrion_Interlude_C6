@@ -20,10 +20,6 @@
  */
 package l2jorion.game.network.serverpackets;
 
-import org.strixplatform.StrixPlatform;
-import org.strixplatform.utils.StrixClientData;
-
-import l2jorion.Config;
 import l2jorion.game.network.PacketServer;
 
 public final class KeyPacket extends PacketServer
@@ -31,13 +27,11 @@ public final class KeyPacket extends PacketServer
 	private static final String _S__01_KEYPACKET = "[S] 01 KeyPacket";
 	
 	private byte[] _key;
-	private final StrixClientData _clientData;
 	private int _result;
 	
-	public KeyPacket(final byte[] key, int result)
+	public KeyPacket(byte[] key, int result)
 	{
 		_key = key;
-		_clientData = null;
 		_result = result;
 		
 		if (_key == null)
@@ -47,31 +41,10 @@ public final class KeyPacket extends PacketServer
 		}
 	}
 	
-	public KeyPacket(final byte[] key, final StrixClientData clientData, int result)
-	{
-		_key = key;
-		_clientData = clientData;
-		_result = result;
-		if (_key == null)
-		{
-			// just to fix null
-			_key = new byte[260];
-		}
-	}
-	
 	@Override
 	public void writeImpl()
 	{
 		writeC(0x00);
-		
-		if (Config.STRIX_PROTECTION)
-		{
-			if (StrixPlatform.getInstance().isBackNotificationEnabled() && _clientData != null)
-			{
-				writeC(_clientData.getServerResponse().ordinal());
-			}
-		}
-		
 		writeC(_result);
 		writeB(_key);
 		writeD(0x01);

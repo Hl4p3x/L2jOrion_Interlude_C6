@@ -35,7 +35,6 @@ public class ObjectPosition
 	private int _heading = 0;
 	private Location _worldPosition;
 	private L2WorldRegion _worldRegion;
-	private Boolean _changingRegion = false;
 	
 	public ObjectPosition(L2Object activeObject)
 	{
@@ -239,25 +238,17 @@ public class ObjectPosition
 	 * Gets the world region.
 	 * @return the world region
 	 */
-	public final L2WorldRegion getWorldRegion()
+	public synchronized L2WorldRegion getWorldRegion()
 	{
-		synchronized (_changingRegion)
-		{
-			_changingRegion = false;
-			return _worldRegion;
-		}
+		return _worldRegion;
 	}
 	
 	/**
 	 * Sets the world region.
 	 * @param value the new world region
 	 */
-	public final void setWorldRegion(L2WorldRegion value)
+	public synchronized void setWorldRegion(L2WorldRegion value)
 	{
-		synchronized (_changingRegion)
-		{
-			_changingRegion = true;
-			_worldRegion = value;
-		}
+		_worldRegion = value;
 	}
 }

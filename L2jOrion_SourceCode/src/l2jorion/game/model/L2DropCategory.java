@@ -20,14 +20,14 @@
 package l2jorion.game.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.util.random.Rnd;
 
 public class L2DropCategory
 {
-	private final FastList<L2DropData> _drops;
+	private final List<L2DropData> _drops;
 	private int _categoryChance; // a sum of chances for calculating if an item will be dropped from this category
 	private int _categoryBalancedChance; // sum for balancing drop selection inside categories in high rate servers
 	private final int _categoryType;
@@ -35,7 +35,7 @@ public class L2DropCategory
 	public L2DropCategory(final int categoryType)
 	{
 		_categoryType = categoryType;
-		_drops = new FastList<>(0);
+		_drops = new ArrayList<>(0);
 		_categoryChance = 0;
 		_categoryBalancedChance = 0;
 	}
@@ -52,7 +52,7 @@ public class L2DropCategory
 		}
 	}
 	
-	public FastList<L2DropData> getAllDrops()
+	public List<L2DropData> getAllDrops()
 	{
 		return _drops;
 	}
@@ -76,7 +76,6 @@ public class L2DropCategory
 		{
 			return _categoryChance;
 		}
-		
 		return L2DropData.MAX_CHANCE;
 	}
 	
@@ -86,7 +85,6 @@ public class L2DropCategory
 		{
 			return _categoryBalancedChance;
 		}
-		
 		return L2DropData.MAX_CHANCE;
 	}
 	
@@ -102,9 +100,9 @@ public class L2DropCategory
 	 */
 	public synchronized L2DropData dropSeedAllowedDropsOnly()
 	{
-		ArrayList<L2DropData> drops = new ArrayList<>();
+		final List<L2DropData> drops = new ArrayList<>();
 		int subCatChance = 0;
-		for (final L2DropData drop : getAllDrops())
+		for (L2DropData drop : getAllDrops())
 		{
 			if (drop.getItemId() == 57 || drop.getItemId() == 6360 || drop.getItemId() == 6361 || drop.getItemId() == 6362)
 			{
@@ -116,17 +114,15 @@ public class L2DropCategory
 		// among the results choose one.
 		final int randomIndex = Rnd.get(subCatChance);
 		int sum = 0;
-		for (final L2DropData drop : drops)
+		for (L2DropData drop : drops)
 		{
 			sum += drop.getChance();
-			
 			if (sum > randomIndex) // drop this item and exit the function
 			{
 				drops.clear();
 				return drop;
 			}
 		}
-		
 		// since it is still within category, only drop one of the acceptable drops from the results.
 		return null;
 	}
@@ -145,17 +141,14 @@ public class L2DropCategory
 	{
 		final int randomIndex = Rnd.get(getCategoryBalancedChance());
 		int sum = 0;
-		
-		for (final L2DropData drop : getAllDrops())
+		for (L2DropData drop : getAllDrops())
 		{
 			sum += Math.min((drop.getChance() * (raid ? Config.ITEMS_RAID : Config.RATE_DROP_ITEMS)), L2DropData.MAX_CHANCE);
-			
 			if (sum >= randomIndex)
 			{
 				return drop;
 			}
 		}
-		
 		return null;
 	}
 }

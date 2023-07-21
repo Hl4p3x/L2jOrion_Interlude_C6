@@ -1,43 +1,37 @@
 package l2jorion;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringTokenizer;
-
-import javolution.util.FastMap;
 
 public class ClassMasterSettings
 {
-	private final FastMap<Integer, FastMap<Integer, Integer>> _claimItems;
-	private final FastMap<Integer, FastMap<Integer, Integer>> _rewardItems;
-	private final FastMap<Integer, Boolean> _allowedClassChange;
+	private final Map<Integer, Map<Integer, Integer>> _claimItems;
+	private final Map<Integer, Map<Integer, Integer>> _rewardItems;
+	private final Map<Integer, Boolean> _allowedClassChange;
 	
-	public ClassMasterSettings(final String _configLine)
+	public ClassMasterSettings(String _configLine)
 	{
-		_claimItems = new FastMap<>();
-		_rewardItems = new FastMap<>();
-		_allowedClassChange = new FastMap<>();
-		
+		_claimItems = new HashMap<>();
+		_rewardItems = new HashMap<>();
+		_allowedClassChange = new HashMap<>();
 		if (_configLine != null)
 		{
 			parseConfigLine(_configLine.trim());
 		}
 	}
 	
-	private void parseConfigLine(final String _configLine)
+	private void parseConfigLine(String _configLine)
 	{
 		final StringTokenizer st = new StringTokenizer(_configLine, ";");
-		
 		while (st.hasMoreTokens())
 		{
 			final int job = Integer.parseInt(st.nextToken());
-			
 			_allowedClassChange.put(job, true);
-			
-			FastMap<Integer, Integer> _items = new FastMap<>();
-			
+			Map<Integer, Integer> _items = new HashMap<>();
 			if (st.hasMoreTokens())
 			{
 				final StringTokenizer st2 = new StringTokenizer(st.nextToken(), "[],");
-				
 				while (st2.hasMoreTokens())
 				{
 					final StringTokenizer st3 = new StringTokenizer(st2.nextToken(), "()");
@@ -48,8 +42,7 @@ public class ClassMasterSettings
 			}
 			
 			_claimItems.put(job, _items);
-			_items = new FastMap<>();
-			
+			_items = new HashMap<>();
 			if (st.hasMoreTokens())
 			{
 				final StringTokenizer st2 = new StringTokenizer(st.nextToken(), "[],");
@@ -66,7 +59,7 @@ public class ClassMasterSettings
 		}
 	}
 	
-	public boolean isAllowed(final int job)
+	public boolean isAllowed(int job)
 	{
 		if (_allowedClassChange == null)
 		{
@@ -77,27 +70,24 @@ public class ClassMasterSettings
 		{
 			return _allowedClassChange.get(job);
 		}
-		
 		return false;
 	}
 	
-	public FastMap<Integer, Integer> getRewardItems(final int job)
+	public Map<Integer, Integer> getRewardItems(int job)
 	{
 		if (_rewardItems.containsKey(job))
 		{
 			return _rewardItems.get(job);
 		}
-		
 		return null;
 	}
 	
-	public FastMap<Integer, Integer> getRequireItems(final int job)
+	public Map<Integer, Integer> getRequireItems(int job)
 	{
 		if (_claimItems.containsKey(job))
 		{
 			return _claimItems.get(job);
 		}
-		
 		return null;
 	}
 }

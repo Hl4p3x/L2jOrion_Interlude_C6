@@ -23,6 +23,7 @@ import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_MOVE_TO;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,8 +33,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.StampedLock;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.bots.FakePlayer;
 import l2jorion.game.ai.CtrlEvent;
@@ -2791,7 +2790,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	
 	private int _AbnormalEffects;
 	private LinkedList<L2Effect> _effects = new LinkedList<>();
-	protected Map<String, List<L2Effect>> _stackedEffects = new FastMap<>();
+	protected Map<String, List<L2Effect>> _stackedEffects = new HashMap<>();
 	
 	public static final int ABNORMAL_EFFECT_BLEEDING = 0x000001;
 	public static final int ABNORMAL_EFFECT_POISON = 0x000002;
@@ -3972,7 +3971,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	protected Future<?> _skillCast;
 	protected Future<?> _potionCast;
 	
-	private List<QuestState> _NotifyQuestOfDeathList = new FastList<>();
+	private List<QuestState> _NotifyQuestOfDeathList = new ArrayList<>();
 	
 	public void addNotifyQuestOfDeath(QuestState qs)
 	{
@@ -3988,7 +3987,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	{
 		if (_NotifyQuestOfDeathList == null)
 		{
-			_NotifyQuestOfDeathList = new FastList<>();
+			_NotifyQuestOfDeathList = new ArrayList<>();
 		}
 		
 		return _NotifyQuestOfDeathList;
@@ -4073,8 +4072,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	
 	public final void removeStatFuncs(Func[] funcs)
 	{
-		FastList<Stats> modifiedStats = new FastList<>();
-		
+		final List<Stats> modifiedStats = new ArrayList<>();
 		for (Func f : funcs)
 		{
 			modifiedStats.add(f.stat);
@@ -4086,12 +4084,11 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	
 	public final void addStatFuncs(Func[] funcs, boolean update)
 	{
-		FastList<Stats> modifiedStats = new FastList<>();
+		final List<Stats> modifiedStats = new ArrayList<>();
 		
 		for (Func f : funcs)
 		{
 			modifiedStats.add(f.stat);
-			
 			addStatFunc(f);
 		}
 		
@@ -5783,7 +5780,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 				}
 			}
 			
-			if (_chanceSkills.size() == 0)
+			if (_chanceSkills.isEmpty())
 			{
 				_chanceSkills = null;
 			}
@@ -6195,7 +6192,7 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 			int _skipgeo = 0;
 			int _skippeace = 0;
 			
-			List<L2Character> targetList = new FastList<>(targets.length);
+			final List<L2Character> targetList = new ArrayList<>();
 			for (L2Object target : targets)
 			{
 				if (target instanceof L2Character)
@@ -6264,19 +6261,16 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 		// Ensure that a cast is in progress
 		// Check if player is using fake death.
 		// Potions can be used while faking death.
-		if (!skill.isPotion())
+		if (!skill.isPotion() && (!isCastingNow() || isAlikeDead()))
 		{
-			if (!isCastingNow() || isAlikeDead())
-			{
-				_skillCast = null;
-				enableAllSkills();
-				
-				getAI().notifyEvent(CtrlEvent.EVT_CANCEL);
-				
-				_castEndTime = 0;
-				_castInterruptTime = 0;
-				return;
-			}
+			_skillCast = null;
+			enableAllSkills();
+			
+			getAI().notifyEvent(CtrlEvent.EVT_CANCEL);
+			
+			_castEndTime = 0;
+			_castInterruptTime = 0;
+			return;
 		}
 		
 		// Get the display identifier of the skill

@@ -23,8 +23,6 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.StringTokenizer;
 
-import javolution.text.TypeFormat;
-import javolution.util.FastMap;
 import l2jorion.game.model.L2World;
 import l2jorion.game.util.FloodProtectorConfig;
 import l2jorion.logger.Logger;
@@ -3049,17 +3047,17 @@ public final class Config
 	}
 	
 	// Enchant map
-	public static FastMap<Integer, Integer> NORMAL_WEAPON_ENCHANT_LEVEL = new FastMap<>();
-	public static FastMap<Integer, Integer> BLESS_WEAPON_ENCHANT_LEVEL = new FastMap<>();
-	public static FastMap<Integer, Integer> CRYSTAL_WEAPON_ENCHANT_LEVEL = new FastMap<>();
+	public static Map<Integer, Integer> NORMAL_WEAPON_ENCHANT_LEVEL = new HashMap<>();
+	public static Map<Integer, Integer> BLESS_WEAPON_ENCHANT_LEVEL = new HashMap<>();
+	public static Map<Integer, Integer> CRYSTAL_WEAPON_ENCHANT_LEVEL = new HashMap<>();
 	
-	public static FastMap<Integer, Integer> NORMAL_ARMOR_ENCHANT_LEVEL = new FastMap<>();
-	public static FastMap<Integer, Integer> BLESS_ARMOR_ENCHANT_LEVEL = new FastMap<>();
-	public static FastMap<Integer, Integer> CRYSTAL_ARMOR_ENCHANT_LEVEL = new FastMap<>();
+	public static Map<Integer, Integer> NORMAL_ARMOR_ENCHANT_LEVEL = new HashMap<>();
+	public static Map<Integer, Integer> BLESS_ARMOR_ENCHANT_LEVEL = new HashMap<>();
+	public static Map<Integer, Integer> CRYSTAL_ARMOR_ENCHANT_LEVEL = new HashMap<>();
 	
-	public static FastMap<Integer, Integer> NORMAL_JEWELRY_ENCHANT_LEVEL = new FastMap<>();
-	public static FastMap<Integer, Integer> BLESS_JEWELRY_ENCHANT_LEVEL = new FastMap<>();
-	public static FastMap<Integer, Integer> CRYSTAL_JEWELRY_ENCHANT_LEVEL = new FastMap<>();
+	public static Map<Integer, Integer> NORMAL_JEWELRY_ENCHANT_LEVEL = new HashMap<>();
+	public static Map<Integer, Integer> BLESS_JEWELRY_ENCHANT_LEVEL = new HashMap<>();
+	public static Map<Integer, Integer> CRYSTAL_JEWELRY_ENCHANT_LEVEL = new HashMap<>();
 	
 	public static boolean NORMAL_ENCHANT_STAY_ON_BREAK;
 	public static boolean BLESSED_ENCHANT_STAY_ON_BREAK;
@@ -3753,13 +3751,13 @@ public final class Config
 			ENABLE_CLASS_DAMAGES_IN_OLY = Boolean.parseBoolean(PHYSICSSetting.getProperty("EnableClassDamagesSettingsInOly", "true"));
 			ENABLE_CLASS_DAMAGES_LOGGER = Boolean.parseBoolean(PHYSICSSetting.getProperty("EnableClassDamagesLogger", "true"));
 			
-			BLOW_ATTACK_FRONT = TypeFormat.parseInt(PHYSICSSetting.getProperty("BlowAttackFront", "50"));
-			BLOW_ATTACK_SIDE = TypeFormat.parseInt(PHYSICSSetting.getProperty("BlowAttackSide", "60"));
-			BLOW_ATTACK_BEHIND = TypeFormat.parseInt(PHYSICSSetting.getProperty("BlowAttackBehind", "70"));
+			BLOW_ATTACK_FRONT = Integer.parseInt(PHYSICSSetting.getProperty("BlowAttackFront", "50"));
+			BLOW_ATTACK_SIDE = Integer.parseInt(PHYSICSSetting.getProperty("BlowAttackSide", "60"));
+			BLOW_ATTACK_BEHIND = Integer.parseInt(PHYSICSSetting.getProperty("BlowAttackBehind", "70"));
 			
-			BACKSTAB_ATTACK_FRONT = TypeFormat.parseInt(PHYSICSSetting.getProperty("BackstabAttackFront", "0"));
-			BACKSTAB_ATTACK_SIDE = TypeFormat.parseInt(PHYSICSSetting.getProperty("BackstabAttackSide", "0"));
-			BACKSTAB_ATTACK_BEHIND = TypeFormat.parseInt(PHYSICSSetting.getProperty("BackstabAttackBehind", "70"));
+			BACKSTAB_ATTACK_FRONT = Integer.parseInt(PHYSICSSetting.getProperty("BackstabAttackFront", "0"));
+			BACKSTAB_ATTACK_SIDE = Integer.parseInt(PHYSICSSetting.getProperty("BackstabAttackSide", "0"));
+			BACKSTAB_ATTACK_BEHIND = Integer.parseInt(PHYSICSSetting.getProperty("BackstabAttackBehind", "70"));
 			
 			// Max patk speed and matk speed
 			MAX_PATK_SPEED = Integer.parseInt(PHYSICSSetting.getProperty("MaxPAtkSpeed", "1500"));
@@ -4239,11 +4237,6 @@ public final class Config
 		}
 		catch (Exception e)
 		{
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				e.printStackTrace();
-			}
-			
 			LOG.warn("Failed to load " + POWERPACK + " file");
 		}
 	}
@@ -4267,7 +4260,7 @@ public final class Config
 	{
 		final String EXTENDER_FILE = ConfigLoader.EXTENDER_FILE;
 		
-		EXTENDERS = new FastMap<>();
+		EXTENDERS = new HashMap<>();
 		File f = new File(EXTENDER_FILE);
 		if (f.exists())
 		{
@@ -4279,7 +4272,6 @@ public final class Config
 				while ((line = lineReader.readLine()) != null)
 				{
 					int iPos = line.indexOf("#");
-					
 					if (iPos != -1)
 					{
 						line = line.substring(0, iPos);
@@ -4300,18 +4292,12 @@ public final class Config
 						{
 							EXTENDERS.put(baseName, new ArrayList<String>());
 						}
-						
 						EXTENDERS.get(baseName).add(className);
 					}
 				}
 			}
 			catch (Exception e)
 			{
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					e.printStackTrace();
-				}
-				
 				LOG.warn("Failed to Load " + EXTENDER_FILE + " File.");
 			}
 			finally

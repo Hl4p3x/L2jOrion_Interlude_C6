@@ -20,20 +20,25 @@ package l2jorion.log.formatter;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.StringJoiner;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 
 import l2jorion.Config;
-import l2jorion.util.StringUtil;
 
 public class FileLogFormatter extends Formatter
 {
-	private static final String TAB = "\t";
-	private final SimpleDateFormat dateFmt = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss,SSS");
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss,SSS");
 	
 	@Override
 	public String format(LogRecord record)
 	{
-		return StringUtil.concat(dateFmt.format(new Date(record.getMillis())), TAB, record.getLevel().getName(), TAB, String.valueOf(record.getThreadID()), TAB, record.getLoggerName(), TAB, record.getMessage(), Config.EOL);
+		final StringJoiner sj = new StringJoiner("\t", "", Config.EOL);
+		sj.add(dateFormat.format(new Date(record.getMillis())));
+		sj.add(record.getLevel().getName());
+		sj.add(String.valueOf(record.getThreadID()));
+		sj.add(record.getLoggerName());
+		sj.add(record.getMessage());
+		return sj.toString();
 	}
 }

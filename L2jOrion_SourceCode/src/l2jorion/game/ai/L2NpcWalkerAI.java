@@ -3,7 +3,7 @@ package l2jorion.game.ai;
 import java.util.List;
 
 import l2jorion.Config;
-import l2jorion.game.datatables.csv.NpcWalkerRoutesTable;
+import l2jorion.game.datatables.xml.NpcWalkerRoutesData;
 import l2jorion.game.model.L2Character;
 import l2jorion.game.model.L2NpcWalkerNode;
 import l2jorion.game.model.Location;
@@ -33,7 +33,7 @@ public class L2NpcWalkerAI extends L2CharacterAI implements Runnable
 			return;
 		}
 		
-		_route = NpcWalkerRoutesTable.getInstance().getRouteForNpc(getActor().getNpcId());
+		_route = NpcWalkerRoutesData.getInstance().getRouteForNpc(getActor().getNpcId());
 		
 		ThreadPoolManager.getInstance().scheduleAiAtFixedRate(this, 1000, 1000);
 	}

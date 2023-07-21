@@ -1,6 +1,8 @@
 package l2jorion.game.ai.additional.group;
 
-import javolution.util.FastSet;
+import java.util.HashSet;
+import java.util.Set;
+
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.model.actor.instance.L2MonsterInstance;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
@@ -11,7 +13,7 @@ import l2jorion.util.random.Rnd;
 public final class PlainsOfDion extends Quest implements Runnable
 {
 	private static int _attacked;
-	private static FastSet<Integer> _tracking = new FastSet<>();
+	private static Set<Integer> _tracking = new HashSet<>();
 	
 	private static final int chance = 5; // 5%
 	private static final int range = 700;

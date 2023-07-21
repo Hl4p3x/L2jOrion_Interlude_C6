@@ -1,13 +1,14 @@
 package l2jorion.game.cache;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javolution.util.FastMap;
 import l2jorion.game.model.L2DropData;
 
 public class InfoCache
 {
-	private static final FastMap<Integer, List<L2DropData>> _droplistCache = new FastMap<>();
+	private static final Map<Integer, List<L2DropData>> _droplistCache = new ConcurrentHashMap<>();
 	
 	public static void addToDroplistCache(final int id, final List<L2DropData> list)
 	{

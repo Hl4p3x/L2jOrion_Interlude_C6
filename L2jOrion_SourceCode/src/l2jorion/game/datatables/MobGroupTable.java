@@ -1,40 +1,29 @@
 package l2jorion.game.datatables;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import javolution.util.FastMap;
 import l2jorion.game.model.MobGroup;
 import l2jorion.game.model.actor.instance.L2ControllableMobInstance;
 
 public class MobGroupTable
 {
-	private static MobGroupTable _instance;
-	private final Map<Integer, MobGroup> _groupMap;
-	
 	public static final int FOLLOW_RANGE = 300;
 	public static final int RANDOM_RANGE = 300;
 	
-	public MobGroupTable()
+	private final Map<Integer, MobGroup> _groupMap;
+	
+	protected MobGroupTable()
 	{
-		_groupMap = new FastMap<>();
+		_groupMap = new HashMap<>();
 	}
 	
-	public static MobGroupTable getInstance()
-	{
-		if (_instance == null)
-		{
-			_instance = new MobGroupTable();
-		}
-		
-		return _instance;
-	}
-	
-	public void addGroup(final int groupKey, final MobGroup group)
+	public void addGroup(int groupKey, MobGroup group)
 	{
 		_groupMap.put(groupKey, group);
 	}
 	
-	public MobGroup getGroup(final int groupKey)
+	public MobGroup getGroup(int groupKey)
 	{
 		return _groupMap.get(groupKey);
 	}
@@ -44,16 +33,15 @@ public class MobGroupTable
 		return _groupMap.size();
 	}
 	
-	public MobGroup getGroupForMob(final L2ControllableMobInstance mobInst)
+	public MobGroup getGroupForMob(L2ControllableMobInstance mobInst)
 	{
-		for (final MobGroup mobGroup : _groupMap.values())
+		for (MobGroup mobGroup : _groupMap.values())
 		{
 			if (mobGroup.isGroupMember(mobInst))
 			{
 				return mobGroup;
 			}
 		}
-		
 		return null;
 	}
 	
@@ -62,8 +50,18 @@ public class MobGroupTable
 		return _groupMap.values().toArray(new MobGroup[getGroupCount()]);
 	}
 	
-	public boolean removeGroup(final int groupKey)
+	public boolean removeGroup(int groupKey)
 	{
 		return _groupMap.remove(groupKey) != null;
+	}
+	
+	public static MobGroupTable getInstance()
+	{
+		return SingletonHolder.INSTANCE;
+	}
+	
+	private static class SingletonHolder
+	{
+		protected static final MobGroupTable INSTANCE = new MobGroupTable();
 	}
 }

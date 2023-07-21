@@ -88,6 +88,7 @@ public class Shutdown extends Thread
 		}
 	}
 	
+	@SuppressWarnings("removal")
 	@Override
 	public void run()
 	{

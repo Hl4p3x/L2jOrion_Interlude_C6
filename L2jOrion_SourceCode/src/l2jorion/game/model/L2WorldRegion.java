@@ -20,13 +20,13 @@
  */
 package l2jorion.game.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ScheduledFuture;
 
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.datatables.sql.SpawnTable;
 import l2jorion.game.model.actor.instance.L2NpcInstance;
@@ -44,7 +44,7 @@ public final class L2WorldRegion
 	
 	private final Map<Integer, L2PlayableInstance> _allPlayable = new ConcurrentHashMap<>();
 	private final Map<Integer, L2Object> _visibleObjects = new ConcurrentHashMap<>();
-	private FastList<L2WorldRegion> _surroundingRegions = new FastList<>();
+	private List<L2WorldRegion> _surroundingRegions = new ArrayList<>();
 	
 	private final int _tileX, _tileY;
 	private Boolean _active = false;
@@ -348,7 +348,7 @@ public final class L2WorldRegion
 		_surroundingRegions.add(region);
 	}
 	
-	public FastList<L2WorldRegion> getSurroundingRegions()
+	public List<L2WorldRegion> getSurroundingRegions()
 	{
 		return _surroundingRegions;
 	}

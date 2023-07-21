@@ -16,12 +16,15 @@
  */
 package l2jorion.game.model;
 
-import javolution.util.FastMap;
+import java.util.concurrent.ConcurrentHashMap;
+
 import l2jorion.game.handler.ISkillHandler;
 import l2jorion.game.handler.SkillHandler;
+import l2jorion.game.network.serverpackets.MagicSkillLaunched;
+import l2jorion.game.network.serverpackets.MagicSkillUser;
 import l2jorion.game.skills.Formulas;
 
-public class ChanceSkillList extends FastMap<L2Skill, ChanceCondition>
+public class ChanceSkillList extends ConcurrentHashMap<L2Skill, ChanceCondition>
 {
 	private static final long serialVersionUID = -3523525435531L;
 	
@@ -30,7 +33,6 @@ public class ChanceSkillList extends FastMap<L2Skill, ChanceCondition>
 	public ChanceSkillList(final L2Character owner)
 	{
 		super();
-		shared();
 		_owner = owner;
 	}
 	
@@ -93,7 +95,7 @@ public class ChanceSkillList extends FastMap<L2Skill, ChanceCondition>
 		onEvent(event, target);
 	}
 	
-	public static boolean canTriggerByCast(final L2Character caster, final L2Character target, final L2Skill trigger)
+	public static boolean canTriggerByCast(L2Character caster, L2Character target, L2Skill trigger)
 	{
 		switch (trigger.getSkillType())
 		{
@@ -120,9 +122,9 @@ public class ChanceSkillList extends FastMap<L2Skill, ChanceCondition>
 		return true;
 	}
 	
-	public void onEvent(final int event, final L2Character target)
+	public void onEvent(int event, L2Character target)
 	{
-		for (FastMap.Entry<L2Skill, ChanceCondition> e = head(), end = tail(); (e = e.getNext()) != end;)
+		for (Entry<L2Skill, ChanceCondition> e : entrySet())
 		{
 			if (e.getValue() != null && e.getValue().trigger(event))
 			{
@@ -131,35 +133,35 @@ public class ChanceSkillList extends FastMap<L2Skill, ChanceCondition>
 		}
 	}
 	
-	private void makeCast(L2Skill skill, final L2Character target)
+	private void makeCast(L2Skill skill, L2Character target)
 	{
 		try
 		{
 			if (skill.getWeaponDependancy(_owner, true))
 			{
-				if (skill.triggerAnotherSkill()) // should we use this skill or this skill is just referring to another one
+				L2Skill castedSkill = skill;
+				if (castedSkill.triggerAnotherSkill()) // should we use this skill or this skill is just referring to another one
 				{
-					skill = _owner._skills.get(skill.getTriggeredId());
-					if (skill == null)
+					castedSkill = _owner._skills.get(castedSkill.getTriggeredId());
+					if (castedSkill == null)
 					{
 						return;
 					}
 				}
 				
-				final ISkillHandler handler = SkillHandler.getInstance().getSkillHandler(skill.getSkillType());
-				final L2Object[] targets = skill.getTargetList(_owner, false, target);
-				
-				// _owner.broadcastPacket(new MagicSkillLaunched(_owner, skill.getDisplayId(), skill.getLevel(), targets));
-				// _owner.broadcastPacket(new MagicSkillUser(_owner, (L2Character) targets[0], skill.getDisplayId(), skill.getLevel(), 0, 0));
+				final ISkillHandler handler = SkillHandler.getInstance().getSkillHandler(castedSkill.getSkillType());
+				final L2Object[] targets = castedSkill.getTargetList(_owner, false, target);
+				_owner.broadcastPacket(new MagicSkillLaunched(_owner, castedSkill.getDisplayId(), castedSkill.getLevel(), targets));
+				_owner.broadcastPacket(new MagicSkillUser(_owner, (L2Character) targets[0], castedSkill.getDisplayId(), castedSkill.getLevel(), 0, 0));
 				
 				// Launch the magic skill and calculate its effects
 				if (handler != null)
 				{
-					handler.useSkill(_owner, skill, targets);
+					handler.useSkill(_owner, castedSkill, targets);
 				}
 				else
 				{
-					skill.useSkill(_owner, targets);
+					castedSkill.useSkill(_owner, targets);
 				}
 			}
 		}

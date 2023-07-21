@@ -270,9 +270,8 @@ public final class L2TeleporterInstance extends L2FolkInstance
 	
 	private void doTeleport(L2PcInstance player, int val)
 	{
-		L2TeleportLocation list = TeleportLocationTable.getInstance().getTemplate(val);
-		
-		if (list != null && player != null)
+		final L2TeleportLocation list = TeleportLocationTable.getInstance().getTemplate(val);
+		if (list != null)
 		{
 			if (!SiegeManager.getInstance().is_teleport_to_siege_allowed() && SiegeManager.getInstance().getSiege(list.getLocX(), list.getLocY(), list.getLocZ()) != null && !player.isNoble())
 			{
@@ -291,15 +290,15 @@ public final class L2TeleporterInstance extends L2FolkInstance
 			}
 			else if (!Config.ALT_GAME_KARMA_PLAYER_CAN_USE_GK && player.getKarma() > 0) // Karma
 			{
-				SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
+				final SystemMessage sm = new SystemMessage(SystemMessageId.S1_S2);
 				sm.addString("Go away, you're not welcome here.");
 				player.sendPacket(sm);
 				return;
 			}
 			else if (list.getIsForNoble() && !player.isNoble())
 			{
-				String filename = "data/html/teleporter/nobleteleporter-no.htm";
-				NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+				final String filename = "data/html/teleporter/nobleteleporter-no.htm";
+				final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 				html.setFile(filename);
 				html.replace("%objectId%", String.valueOf(getObjectId()));
 				html.replace("%npcname%", getName());
@@ -318,10 +317,10 @@ public final class L2TeleporterInstance extends L2FolkInstance
 			}
 			else if ((list.getTeleId() == 21 || list.getTeleId() == 9982 || list.getTeleId() == 9983 || list.getTeleId() == 9984) && getNpcId() == 30483 && player.getLevel() >= Config.CRUMA_TOWER_LEVEL_RESTRICT)
 			{
-				int maxlvl = Config.CRUMA_TOWER_LEVEL_RESTRICT;
-				
-				String filename = "data/html/teleporter/30483-biglvl.htm";
-				NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+				// Chars level XX can't enter in Cruma Tower. Retail: level 56 and above
+				final int maxlvl = Config.CRUMA_TOWER_LEVEL_RESTRICT;
+				final String filename = "data/html/teleporter/30483-biglvl.htm";
+				final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 				html.setFile(filename);
 				html.replace("%allowedmaxlvl%", "" + maxlvl + "");
 				player.sendPacket(html);
@@ -330,7 +329,7 @@ public final class L2TeleporterInstance extends L2FolkInstance
 			// Lilith and Anakim have BossZone, so players must be allowed to enter
 			else if (list.getTeleId() == 450)
 			{
-				L2BossZone _zone = GrandBossManager.getInstance().getZone(list.getLocX(), list.getLocY(), list.getLocZ());
+				final L2BossZone _zone = GrandBossManager.getInstance().getZone(list.getLocX(), list.getLocY(), list.getLocZ());
 				_zone.allowPlayerEntry(player, 300);
 				player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), true);
 			}
@@ -340,9 +339,8 @@ public final class L2TeleporterInstance extends L2FolkInstance
 				{
 					if (player.isInParty() && player.getParty().isLeader(player))
 					{
-						L2Party party = player.getParty();
+						final L2Party party = player.getParty();
 						int unstuckTimer = 10000;
-						
 						if (player.getPremiumService() == 0 && !player.isInsideZone(ZoneId.ZONE_PEACE))
 						{
 							player.teleToLocation(list.getLocX(), list.getLocY(), list.getLocZ(), true);

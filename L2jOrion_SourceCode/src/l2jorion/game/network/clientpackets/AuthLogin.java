@@ -16,24 +16,17 @@
  */
 package l2jorion.game.network.clientpackets;
 
-import org.strixplatform.StrixPlatform;
-
 import l2jorion.Config;
 import l2jorion.game.network.L2GameClient;
 import l2jorion.game.network.PacketClient;
 import l2jorion.game.network.SystemMessageId;
-import l2jorion.game.network.serverpackets.ServerClose;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.game.thread.LoginServerThread;
 import l2jorion.game.thread.LoginServerThread.SessionKey;
 import l2jorion.game.thread.ThreadPoolManager;
-import l2jorion.logger.Logger;
-import l2jorion.logger.LoggerFactory;
 
 public final class AuthLogin extends PacketClient
 {
-	private static Logger LOG = LoggerFactory.getLogger(AuthLogin.class);
-	
 	private String _loginName;
 	private int _playKey1;
 	private int _playKey2;
@@ -53,14 +46,7 @@ public final class AuthLogin extends PacketClient
 	@Override
 	protected void runImpl()
 	{
-		// if (_loginName.isEmpty() /* || !getClient().isProtocolOk() */)
-		// {
-		// getClient().closeNow();
-		/// return;
-		// }
-		
 		final SessionKey key = new SessionKey(_loginKey1, _loginKey2, _playKey1, _playKey2);
-		
 		final L2GameClient client = getClient();
 		
 		if (Config.USE_SUBSCRIPTION)
@@ -93,26 +79,6 @@ public final class AuthLogin extends PacketClient
 			else
 			{
 				client.closeNow();
-			}
-		}
-		
-		if (Config.STRIX_PROTECTION)
-		{
-			if (StrixPlatform.getInstance().isPlatformAntibrute())
-			{
-				if (getClient().getStrixClientData() != null)
-				{
-					getClient().getStrixClientData().setClientAccount(_loginName);
-					if (StrixPlatform.getInstance().isAuthLogEnabled())
-					{
-						LOG.info("Account: [" + _loginName + "] HWID: [" + getClient().getStrixClientData().getClientHWID() + "] SessionID: [" + getClient().getStrixClientData().getSessionId() + "] entered to Game Server");
-					}
-				}
-				else
-				{
-					getClient().close(ServerClose.STATIC_PACKET);
-					return;
-				}
 			}
 		}
 	}

@@ -1,0 +1,194 @@
+<?xml version='1.0' encoding='utf-8'?>
+<list xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="xsd/WalkerRoutes.xsd">
+	<route npcId="31361"> <!-- Kreed -->
+		<point x="22418" y="10249" z="-3648" delay="61" run="true" />
+		<point x="23423" y="11165" z="-3720" delay="1" run="true" />
+		<point x="20182" y="11101" z="-3720" delay="1" run="true" />
+		<point x="17327" y="13603" z="-3728" delay="1" run="true" />
+		<point x="17410" y="13038" z="-3736" delay="10" run="true" chat="The mass of darkness will start in a couple of days. Pay more attention to the guard!" />
+		<point x="20176" y="12902" z="-3712" delay="1" run="true" />
+		<point x="21669" y="13378" z="-3616" delay="1" run="true" />
+		<point x="20675" y="10401" z="-3712" delay="1" run="true" />
+	</route>
+	<route npcId="31360"> <!-- Alhena -->
+		<point x="10826" y="14777" z="-4240" delay="62" run="false" />
+		<point x="10966" y="14626" z="-4240" delay="1" run="false" />
+		<point x="11264" y="15838" z="-4584" delay="1" run="false" />
+		<point x="12100" y="16378" z="-4590" delay="2" run="false" />
+		<point x="15088" y="15664" z="-4376" delay="6" run="false" chat="Youre a hard worker Rayla!" />
+		<point x="15232" y="16279" z="-4383" delay="7" run="false" />
+		<point x="12217" y="16916" z="-4590" delay="1" run="false" />
+		<point x="11811" y="17553" z="-4580" delay="1" run="false" />
+		<point x="11275" y="17628" z="-4589" delay="1" run="false" />
+		<point x="10649" y="17284" z="-4584" delay="1" run="false" />
+		<point x="7691" y="18030" z="-4376" delay="6" run="false" chat="Youre a hard worker!" />
+		<point x="10593" y="16738" z="-4590" delay="2" run="false" />
+		<point x="11127" y="16044" z="-4589" delay="2" run="false" />
+	</route>
+	<route npcId="31362"> <!-- Tate -->
+		<point x="114847" y="-180066" z="-877" delay="30" run="false" chat="Mr. Lid Murdoc and Airy! How are you doing?" />
+		<point x="114834" y="-179685" z="-877" delay="2" run="false" />
+		<point x="116122" y="-179457" z="-1068" delay="1" run="false" />
+		<point x="116798" y="-180391" z="-1200" delay="2" run="false" />
+		<point x="116324" y="-181564" z="-1384" delay="2" run="false" />
+		<point x="115797" y="-181563" z="-1336" delay="1" run="false" />
+		<point x="116054" y="-181575" z="-1352" delay="1" run="false" chat="Care to go a round?" />
+		<point x="116506" y="-181478" z="-1384" delay="2" run="false" />
+		<point x="116634" y="-180029" z="-1160" delay="1" run="false" />
+		<point x="115347" y="-178623" z="-928" delay="1" run="false" />
+		<point x="115763" y="-177591" z="-888" delay="2" run="false" />
+		<point x="115801" y="-177342" z="-880" delay="1" run="false" chat="Have a nice day Mr. Garita and Mion!" />
+		<point x="115869" y="-177340" z="-880" delay="15" run="false" />
+		<point x="115788" y="-177482" z="-880" delay="3" run="false" />
+		<point x="115124" y="-179821" z="-885" delay="1" run="false" />
+		<point x="115103" y="-180065" z="-877" delay="1" run="false" />
+	</route>
+	<route npcId="31363"> <!-- Rogin -->
+		<point x="116731" y="-182477" z="-1512" delay="10" run="true" chat="Where is that fool hiding?" />
+		<point x="115870" y="-183280" z="-1472" delay="1" run="true" />
+		<point x="115746" y="-183428" z="-1472" delay="1" run="true" />
+		<point x="115870" y="-183280" z="-1472" delay="1" run="true" />
+		<point x="115999" y="-183246" z="-1480" delay="1" run="true" />
+		<point x="116094" y="-183113" z="-1480" delay="1" run="true" />
+		<point x="116584" y="-184294" z="-1568" delay="11" run="true" chat="Have you seen Torocco today?" />
+		<point x="116392" y="-184100" z="-1560" delay="1" run="true" />
+		<point x="117093" y="-182524" z="-1528" delay="1" run="true" />
+		<point x="117789" y="-182540" z="-1528" delay="11" run="true" chat="Have you seen Torocco?" />
+	</route>
+	<route npcId="31359"> <!-- Jaradine -->
+		<point x="45744" y="50561" z="-3065" delay="61" run="false" />
+		<point x="46444" y="49742" z="-3065" delay="2" run="false" />
+		<point x="46103" y="48798" z="-3065" delay="5" run="false" chat="How can we save the Mother Tree?" />
+		<point x="45403" y="48436" z="-3065" delay="5" run="false" chat="The Mother Tree is slowly dying" />
+		<point x="44444" y="49078" z="-3065" delay="1" run="false" />
+		<point x="44414" y="50025" z="-3065" delay="1" run="false" />
+		<point x="44957" y="50568" z="-3065" delay="1" run="false" />
+		<point x="44414" y="50025" z="-3065" delay="1" run="false" />
+		<point x="44444" y="49078" z="-3065" delay="1" run="false" />
+		<point x="45403" y="48436" z="-3065" delay="5" run="false" chat="The Mother Tree is slowly dying" />
+		<point x="46103" y="48798" z="-3065" delay="5" run="false" chat="How can we save the Mother Tree?" />
+		<point x="46444" y="49742" z="-3065" delay="2" run="false" />
+	</route>
+	<route npcId="31358"> <!-- Kasiel -->
+		<point x="47015" y="51278" z="-2992" delay="65" run="false" chat="Lady Mirabel may the peace of the lake be with you!" />
+		<point x="47437" y="50441" z="-2992" delay="1" run="false" />
+		<point x="47509" y="49038" z="-2992" delay="1" run="false" />
+		<point x="46725" y="47755" z="-2992" delay="1" run="false" />
+		<point x="45319" y="47339" z="-2992" delay="5" run="false" chat="The Mother Tree is always so gorgeous!" />
+		<point x="43998" y="47672" z="-2992" delay="1" run="false" />
+		<point x="43037" y="49310" z="-2992" delay="1" run="false" />
+		<point x="43310" y="50382" z="-2992" delay="1" run="false" />
+		<point x="43896" y="51060" z="-2992" delay="1" run="false" />
+		<point x="43312" y="50362" z="-2992" delay="1" run="false" />
+		<point x="43040" y="49311" z="-2992" delay="1" run="false" />
+		<point x="44018" y="47645" z="-2992" delay="1" run="false" />
+		<point x="45301" y="47340" z="-2992" delay="5" run="false" chat="The Mother Tree is always so gorgeous!" />
+		<point x="46693" y="47752" z="-2992" delay="1" run="false" />
+		<point x="47489" y="48976" z="-2992" delay="1" run="false" />
+		<point x="47441" y="50455" z="-2992" delay="1" run="false" />
+	</route>
+	<route npcId="31357"> <!-- Leandro -->
+		<point x="-86328" y="241120" z="-3734" delay="60" run="false" chat="Where did he go?" />
+		<point x="-86505" y="240727" z="-3704" delay="1" run="false" />
+		<point x="-86081" y="240402" z="-3712" delay="1" run="false" />
+		<point x="-86078" y="240853" z="-3720" delay="15" run="false" chat="Have you seen Windawood?" />
+		<point x="-85957" y="241389" z="-3728" delay="1" run="false" />
+		<point x="-83993" y="242766" z="-3728" delay="10" run="false" chat="Where has he gone?" />
+		<point x="-82952" y="244461" z="-3728" delay="1" run="false" />
+		<point x="-82370" y="244919" z="-3720" delay="1" run="false" />
+		<point x="-82129" y="245020" z="-3720" delay="1" run="false" />
+		<point x="-82198" y="245350" z="-3712" delay="1" run="false" />
+		<point x="-82554" y="245137" z="-3716" delay="1" run="false" />
+		<point x="-82198" y="245350" z="-3712" delay="1" run="false" />
+		<point x="-82129" y="245020" z="-3720" delay="1" run="false" />
+		<point x="-82370" y="244919" z="-3720" delay="1" run="false" />
+		<point x="-82952" y="244461" z="-3728" delay="1" run="false" />
+		<point x="-83993" y="242766" z="-3728" delay="10" run="false" chat="Where has he gone?" />
+		<point x="-85957" y="241389" z="-3728" delay="1" run="false" />
+		<point x="-86078" y="240853" z="-3720" delay="15" run="false" chat="Have you seen Windawood?" />
+		<point x="-86081" y="240402" z="-3712" delay="1" run="false" />
+		<point x="-86505" y="240727" z="-3704" delay="1" run="false" />
+	</route>
+	<route npcId="31356"> <!-- Remy -->
+		<point x="-81681" y="243384" z="-3712" delay="61" run="true" chat="A delivery for Mr. Lector? Very good!" />
+		<point x="-81915" y="243870" z="-3712" delay="1" run="true" />
+		<point x="-82084" y="243659" z="-3712" delay="1" run="true" />
+		<point x="-83148" y="243731" z="-3728" delay="1" run="true" />
+		<point x="-84497" y="243241" z="-3728" delay="6" run="true" chat="I need a break!" />
+		<point x="-85212" y="243184" z="-3728" delay="1" run="true" />
+		<point x="-86161" y="242898" z="-3728" delay="1" run="true" />
+		<point x="-86281" y="242963" z="-3720" delay="1" run="true" />
+		<point x="-86356" y="243201" z="-3720" delay="7" run="true" chat="Hello Mr. Lector! Long time no see Mr. Jackson!" />
+		<point x="-86491" y="242781" z="-3720" delay="1" run="true" />
+		<point x="-86497" y="242585" z="-3728" delay="1" run="true" />
+		<point x="-86114" y="241587" z="-3728" delay="1" run="true" />
+		<point x="-85184" y="240679" z="-3728" delay="1" run="true" />
+		<point x="-84099" y="241264" z="-3728" delay="6" run="true" chat="Lulu! Lulu!" />
+		<point x="-83709" y="241238" z="-3728" delay="1" run="true" chat="Lulu!" />
+		<point x="-83075" y="241150" z="-3728" delay="1" run="true" />
+		<point x="-82383" y="242926" z="-3720" delay="1" run="true" />
+	</route>
+	<route npcId="31364"> <!-- Rokar -->
+		<point x="-46506" y="-109402" z="-238" delay="10" run="false" />
+		<point x="-45752" y="-111652" z="-240" delay="1" run="false" />
+		<point x="-44028" y="-112688" z="-240" delay="1" run="false" />
+		<point x="-44049" y="-114536" z="-240" delay="1" run="false" />
+		<point x="-45540" y="-115415" z="-240" delay="1" run="false" />
+		<point x="-46526" y="-117731" z="-240" delay="1" run="false" />
+		<point x="-45540" y="-115415" z="-240" delay="1" run="false" />
+		<point x="-44049" y="-114536" z="-240" delay="1" run="false" />
+		<point x="-44028" y="-112688" z="-240" delay="1" run="false" />
+		<point x="-45752" y="-111652" z="-240" delay="1" run="false" />
+	</route>
+	<route npcId="31365"> <!-- Yakand -->
+		<point x="-48807" y="-113489" z="-241" delay="61" run="false" />
+		<point x="-48821" y="-113746" z="-232" delay="1" run="false" />
+		<point x="-48823" y="-113505" z="-232" delay="61" run="false" />
+		<point x="-47339" y="-113581" z="-232" delay="1" run="false" />
+		<point x="-45740" y="-113562" z="-240" delay="1" run="false" />
+		<point x="-44851" y="-112965" z="-240" delay="1" run="false" />
+		<point x="-44308" y="-113207" z="-240" delay="1" run="false" />
+		<point x="-44204" y="-113743" z="-240" delay="1" run="false" />
+		<point x="-44659" y="-114171" z="-240" delay="1" run="false" />
+		<point x="-45167" y="-114034" z="-224" delay="1" run="false" />
+		<point x="-45658" y="-113633" z="-240" delay="1" run="false" />
+		<point x="-47363" y="-113621" z="-224" delay="1" run="false" />
+		<point x="-48829" y="-113746" z="-232" delay="1" run="false" />
+		<point x="-47363" y="-113621" z="-224" delay="1" run="false" />
+		<point x="-45658" y="-113633" z="-240" delay="1" run="false" />
+		<point x="-45167" y="-114034" z="-224" delay="1" run="false" />
+		<point x="-44659" y="-114171" z="-240" delay="1" run="false" />
+		<point x="-44204" y="-113743" z="-240" delay="1" run="false" />
+		<point x="-44308" y="-113207" z="-240" delay="1" run="false" />
+		<point x="-44851" y="-112965" z="-240" delay="1" run="false" />
+		<point x="-45740" y="-113562" z="-240" delay="1" run="false" />
+	</route>
+	<route npcId="32072"> <!-- Edwin -->
+		<point x="84429" y="-144065" z="-1542" delay="10" run="false" />
+		<point x="84465" y="-142493" z="-1536" delay="1" run="false" />
+		<point x="85234" y="-140963" z="-1536" delay="1" run="false" />
+		<point x="87351" y="-140059" z="-1536" delay="5" run="false" />
+		<point x="89343" y="-140746" z="-1536" delay="1" run="false" />
+		<point x="90605" y="-143167" z="-1536" delay="1" run="false" />
+		<point x="90271" y="-143869" z="-1536" delay="10" run="false" />
+		<point x="90605" y="-143167" z="-1536" delay="1" run="false" />
+		<point x="89343" y="-140746" z="-1536" delay="1" run="false" />
+		<point x="87351" y="-140059" z="-1536" delay="5" run="false" />
+		<point x="85234" y="-140963" z="-1536" delay="1" run="false" />
+		<point x="84465" y="-142493" z="-1536" delay="1" run="false" />
+	</route>
+	<route npcId="32070"> <!-- Adolph -->
+		<point x="90271" y="-143869" z="-1547" delay="10" run="true" />
+		<point x="90605" y="-143167" z="-1536" delay="1" run="true" />
+		<point x="89343" y="-140746" z="-1536" delay="1" run="true" />
+		<point x="87351" y="-140059" z="-1536" delay="5" run="true" />
+		<point x="85234" y="-140963" z="-1536" delay="1" run="true" />
+		<point x="84465" y="-142493" z="-1536" delay="1" run="true" />
+		<point x="84434" y="-144061" z="-1528" delay="10" run="true" />
+		<point x="84465" y="-142493" z="-1536" delay="1" run="true" />
+		<point x="85234" y="-140963" z="-1536" delay="1" run="true" />
+		<point x="87351" y="-140059" z="-1536" delay="5" run="true" />
+		<point x="89343" y="-140746" z="-1536" delay="1" run="true" />
+		<point x="90605" y="-143167" z="-1536" delay="1" run="true" />
+	</route>
+</list>

@@ -20,9 +20,9 @@ package l2jorion.game.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import javolution.util.FastList;
-import javolution.util.FastMap;
 import l2jorion.Config;
 import l2jorion.bots.FakePlayer;
 import l2jorion.game.ai.CtrlEvent;
@@ -236,14 +236,14 @@ public class L2Attackable extends L2NpcInstance
 		}
 	}
 	
-	private FastMap<L2Character, AggroInfo> _aggroList = new FastMap<L2Character, AggroInfo>().shared();
+	private final Map<L2Character, AggroInfo> _aggroList = new ConcurrentHashMap<>();
 	
-	public final FastMap<L2Character, AggroInfo> getAggroListRP()
+	public final Map<L2Character, AggroInfo> getAggroListRP()
 	{
 		return _aggroList;
 	}
 	
-	public final FastMap<L2Character, AggroInfo> getAggroList()
+	public final Map<L2Character, AggroInfo> getAggroList()
 	{
 		return _aggroList;
 	}
@@ -276,7 +276,7 @@ public class L2Attackable extends L2NpcInstance
 	private long _commandChannelLastAttack = 0;
 	
 	private boolean _absorbed;
-	private FastMap<L2PcInstance, AbsorberInfo> _absorbersList = new FastMap<L2PcInstance, AbsorberInfo>().shared();
+	private final Map<L2PcInstance, AbsorberInfo> _absorbersList = new ConcurrentHashMap<>();
 	
 	private boolean _mustGiveExpSp;
 	
@@ -454,7 +454,7 @@ public class L2Attackable extends L2NpcInstance
 	protected void calculateRewards(L2Character lastAttacker)
 	{
 		// Creates an empty list of rewards
-		FastMap<L2Character, RewardInfo> rewards = new FastMap<L2Character, RewardInfo>().shared();
+		final Map<L2Character, RewardInfo> rewards = new ConcurrentHashMap<>();
 		
 		try
 		{
@@ -465,9 +465,7 @@ public class L2Attackable extends L2NpcInstance
 			
 			L2PcInstance maxDealer = null;
 			int maxDamage = 0;
-			
 			int damage;
-			
 			L2Character attacker, ddealer;
 			
 			// While Interacting over This Map Removing Object is Not Allowed
@@ -655,7 +653,7 @@ public class L2Attackable extends L2NpcInstance
 						partyLvl = 0;
 						
 						// Get all L2Character that can be rewarded in the party
-						List<L2PlayableInstance> rewardedMembers = new FastList<>();
+						final List<L2PlayableInstance> rewardedMembers = new ArrayList<>();
 						
 						// Go through all L2PcInstance in the party
 						List<L2PcInstance> groupMembers;
@@ -2571,9 +2569,7 @@ public class L2Attackable extends L2NpcInstance
 		// 2- Everything is correct, but it failed. Nothing happens. (57.5%)
 		// 3- Everything is correct, but it failed. The crystal scatters. A sound event is played. (10%)
 		// 4- Everything is correct, the crystal level up. A sound event is played. (32.5%)
-		
-		List<L2PcInstance> players = new FastList<>();
-		
+		List<L2PcInstance> players = new ArrayList<>();
 		if (absorbType == L2NpcTemplate.AbsorbCrystalType.FULL_PARTY && killer.isInParty())
 		{
 			players = killer.getParty().getPartyMembers();
@@ -3027,13 +3023,9 @@ public class L2Attackable extends L2NpcInstance
 			count += diff;
 		}
 		
-		FastList<RewardItem> harvested = new FastList<>();
-		
+		final List<RewardItem> harvested = new ArrayList<>();
 		harvested.add(new RewardItem(L2Manor.getInstance().getCropType(_seedType), count * Config.RATE_DROP_MANOR, 0));
-		
 		_harvestItems = harvested.toArray(new RewardItem[harvested.size()]);
-		
-		harvested = null;
 	}
 	
 	public void setSeeded(boolean seeded)

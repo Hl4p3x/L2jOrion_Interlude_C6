@@ -30,6 +30,7 @@ import l2jorion.game.model.actor.instance.L2ItemInstance;
 import l2jorion.game.model.actor.instance.L2PcInstance;
 import l2jorion.game.model.actor.instance.L2PlayableInstance;
 import l2jorion.game.network.SystemMessageId;
+import l2jorion.game.network.serverpackets.InventoryUpdate;
 import l2jorion.game.network.serverpackets.SystemMessage;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
@@ -92,7 +93,16 @@ public class ExtractableItems implements IItemHandler
 			
 			if (ItemTable.getInstance().createDummyItem(createItemId).isStackable())
 			{
-				activeChar.addItem("Extract", createItemId, createAmount, item, false);
+				final int existingCount = activeChar.getInventory().getInventoryItemCount(createItemId, -1);
+				final L2ItemInstance extractedItem = activeChar.getInventory().addItem("Extract", createItemId, createAmount, activeChar, item);
+				
+				// Send inventory update packet
+				if (existingCount > 0)
+				{
+					final InventoryUpdate playerIU = new InventoryUpdate();
+					playerIU.addModifiedItem(extractedItem);
+					activeChar.sendPacket(playerIU);
+				}
 			}
 			else
 			{

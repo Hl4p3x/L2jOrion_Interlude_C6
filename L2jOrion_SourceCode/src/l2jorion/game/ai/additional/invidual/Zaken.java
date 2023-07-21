@@ -1127,12 +1127,12 @@ public class Zaken extends Quest implements Runnable
 	@Override
 	public String onAggroRangeEnter(L2NpcInstance npc, L2PcInstance player, boolean isPet)
 	{
-		int npcId = npc.getNpcId();
+		final int npcId = npc.getNpcId();
 		if (npcId == ZAKEN)
 		{
 			if (_Zone.isInsideZone(npc) && player != null)
 			{
-				L2Character target = isPet ? player.getPet() : player;
+				final L2Character target = isPet ? player.getPet() : player;
 				((L2Attackable) npc).addDamageHate(target, 0, 200);
 			}
 			

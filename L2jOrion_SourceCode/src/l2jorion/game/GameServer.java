@@ -74,7 +74,6 @@ import l2jorion.game.datatables.csv.DoorTable;
 import l2jorion.game.datatables.csv.FishTable;
 import l2jorion.game.datatables.csv.HennaTable;
 import l2jorion.game.datatables.csv.MapRegionTable;
-import l2jorion.game.datatables.csv.NpcWalkerRoutesTable;
 import l2jorion.game.datatables.csv.PetItemsData;
 import l2jorion.game.datatables.csv.RecipeTable;
 import l2jorion.game.datatables.sql.AccessLevels;
@@ -98,6 +97,7 @@ import l2jorion.game.datatables.xml.AugmentationScrollData;
 import l2jorion.game.datatables.xml.DressMeData;
 import l2jorion.game.datatables.xml.ExperienceData;
 import l2jorion.game.datatables.xml.ExtractableItemsData;
+import l2jorion.game.datatables.xml.NpcWalkerRoutesData;
 import l2jorion.game.datatables.xml.StaticObjectData;
 import l2jorion.game.geo.GeoData;
 import l2jorion.game.geo.pathfinding.PathFinding;
@@ -327,7 +327,7 @@ public class GameServer
 		}
 		
 		Util.printSection("Npcs");
-		NpcWalkerRoutesTable.getInstance().load();
+		NpcWalkerRoutesData.getInstance().load();
 		if (!NpcTable.getInstance().isInitialized())
 		{
 			LOG.info("Could not find the extraced files. Please check your data.");

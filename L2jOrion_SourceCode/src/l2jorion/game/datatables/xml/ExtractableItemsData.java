@@ -1,5 +1,6 @@
 package l2jorion.game.datatables.xml;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,14 +13,10 @@ import org.w3c.dom.Node;
 import l2jorion.game.model.L2ExtractableItem;
 import l2jorion.game.model.L2ExtractableProductItem;
 import l2jorion.game.templates.StatsSet;
-import l2jorion.logger.Logger;
-import l2jorion.logger.LoggerFactory;
 import l2jorion.util.xml.IXmlReader;
 
 public class ExtractableItemsData implements IXmlReader
 {
-	protected static final Logger LOG = LoggerFactory.getLogger(ExtractableItemsData.class);
-	
 	private Map<Integer, L2ExtractableItem> _items = new HashMap<>();
 	
 	protected ExtractableItemsData()
@@ -35,7 +32,7 @@ public class ExtractableItemsData implements IXmlReader
 	}
 	
 	@Override
-	public void parseDocument(Document doc)
+	public void parseDocument(Document doc, File f)
 	{
 		try
 		{

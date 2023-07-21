@@ -33,9 +33,6 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import org.strixplatform.network.cipher.StrixGameCrypt;
-import org.strixplatform.utils.StrixClientData;
-
 import l2jorion.Config;
 import l2jorion.game.datatables.OfflineTradeTable;
 import l2jorion.game.datatables.OfflineTradeTableWithBuffer;
@@ -119,41 +116,22 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	
 	private long _last_received_packet_action_time = 0;
 	
-	public StrixGameCrypt gameCrypt = null;
-	private StrixClientData _clientData;
+	public GameCrypt gameCrypt = null;
 	
 	public L2GameClient(MMOConnection<L2GameClient> con)
 	{
 		super(con);
-		
 		_state = GameClientState.CONNECTED;
 		_connectionStartTime = System.currentTimeMillis();
-		
-		if (Config.STRIX_PROTECTION)
-		{
-			gameCrypt = new StrixGameCrypt();
-		}
-		else
-		{
-			_crypt = new GameCrypt();
-		}
-		
+		_crypt = new GameCrypt();
 		_stats = new ClientStats();
 		_packetQueue = new ArrayBlockingQueue<>(Config.CLIENT_PACKET_QUEUE_SIZE);
 	}
 	
 	public byte[] enableCrypt()
 	{
-		byte[] key = BlowFishKeygen.getRandomKey();
-		
-		if (Config.STRIX_PROTECTION)
-		{
-			gameCrypt.setKey(key);
-			return key;
-		}
-		
-		GameCrypt.setKey(key, _crypt);
-		
+		final byte[] key = BlowFishKeygen.getRandomKey();
+		gameCrypt.setKey(key);
 		return key;
 	}
 	
@@ -185,31 +163,14 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	public boolean decrypt(ByteBuffer buf, int size)
 	{
 		_closenow = false;
-		
-		if (Config.STRIX_PROTECTION)
-		{
-			gameCrypt.decrypt(buf.array(), buf.position(), size);
-		}
-		else
-		{
-			GameCrypt.decrypt(buf.array(), buf.position(), size, _crypt);
-		}
-		
+		GameCrypt.decrypt(buf.array(), buf.position(), size, _crypt);
 		return true;
 	}
 	
 	@Override
 	public boolean encrypt(final ByteBuffer buf, final int size)
 	{
-		if (Config.STRIX_PROTECTION)
-		{
-			gameCrypt.encrypt(buf.array(), buf.position(), size);
-		}
-		else
-		{
-			GameCrypt.encrypt(buf.array(), buf.position(), size, _crypt);
-		}
-		
+		GameCrypt.encrypt(buf.array(), buf.position(), size, _crypt);
 		buf.position(buf.position() + size);
 		return true;
 	}
@@ -1318,16 +1279,6 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 	public int getSubscription()
 	{
 		return _subsription;
-	}
-	
-	public void setStrixClientData(final StrixClientData clientData)
-	{
-		_clientData = clientData;
-	}
-	
-	public StrixClientData getStrixClientData()
-	{
-		return _clientData;
 	}
 	
 	public int getServerId()

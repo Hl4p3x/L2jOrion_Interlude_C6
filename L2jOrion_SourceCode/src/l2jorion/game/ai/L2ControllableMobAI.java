@@ -3,9 +3,9 @@ package l2jorion.game.ai;
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_ATTACK;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javolution.util.FastList;
 import l2jorion.game.datatables.MobGroupTable;
 import l2jorion.game.model.L2Attackable;
 import l2jorion.game.model.L2Character;
@@ -401,11 +401,15 @@ public class L2ControllableMobAI extends L2AttackableAI
 	{
 		int aggroRange = ((L2Attackable) _actor).getAggroRange();
 		L2Attackable npc = (L2Attackable) _actor;
-		int npcX, npcY, targetX, targetY;
-		double dy, dx;
-		double dblAggroRange = aggroRange * aggroRange;
+		int npcX;
+		int npcY;
+		int targetX;
+		int targetY;
+		double dy;
+		double dx;
+		final double dblAggroRange = aggroRange * aggroRange;
 		
-		List<L2Character> potentialTarget = new FastList<>();
+		List<L2Character> potentialTarget = new ArrayList<>();
 		
 		for (L2Object obj : npc.getKnownList().getKnownObjects().values())
 		{

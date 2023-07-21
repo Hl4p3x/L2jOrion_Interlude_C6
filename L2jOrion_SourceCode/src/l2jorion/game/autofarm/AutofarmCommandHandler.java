@@ -8,7 +8,6 @@ import l2jorion.game.network.serverpackets.NpcHtmlMessage;
 
 public class AutofarmCommandHandler implements ICustomByPassHandler, IVoicedCommandHandler
 {
-	
 	@Override
 	public String[] getVoicedCommandList()
 	{
@@ -30,11 +29,14 @@ public class AutofarmCommandHandler implements ICustomByPassHandler, IVoicedComm
 	@Override
 	public boolean useVoicedCommand(String command, L2PcInstance activeChar, String target)
 	{
-		switch (command)
+		if (activeChar == null)
 		{
-			case "farm":
-				showhtm(activeChar);
-				break;
+			return false;
+		}
+		
+		if (command.equalsIgnoreCase("farm"))
+		{
+			showhtm(activeChar);
 		}
 		
 		return false;

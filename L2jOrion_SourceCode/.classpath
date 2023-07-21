@@ -6,11 +6,10 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/javolution-5.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/jython.jar"/>
-	<classpathentry kind="lib" path="lib/strixplatform-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/mariadb-java-client-2.7.5.jar"/>
 	<classpathentry kind="lib" path="lib/commons-io-2.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/ecj-4.4.2.jar"/>
+	<classpathentry kind="lib" path="lib/javolution-5.5.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

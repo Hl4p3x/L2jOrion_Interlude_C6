@@ -86,12 +86,6 @@ public class L2LoginServer
 		catch (Exception e)
 		{
 			LOG.severe("FATAL: Failed initializing database. Reason: " + e.getMessage());
-			
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				e.printStackTrace();
-			}
-			
 			System.exit(1);
 		}
 		
@@ -102,38 +96,16 @@ public class L2LoginServer
 		catch (GeneralSecurityException e)
 		{
 			LOG.log(Level.SEVERE, "FATAL: Failed initializing LoginController. Reason: " + e.getMessage());
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				e.printStackTrace();
-			}
-			
 			System.exit(1);
 		}
 		
 		try
 		{
-			GameServerTable.load();
-		}
-		catch (GeneralSecurityException e)
-		{
-			LOG.log(Level.SEVERE, "FATAL: Failed to load GameServerTable. Reason: " + e.getMessage());
-			
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				e.printStackTrace();
-			}
-			
-			System.exit(1);
+			GameServerTable.getInstance().load();
 		}
 		catch (Exception e)
 		{
 			LOG.log(Level.SEVERE, "FATAL: Failed to load GameServerTable. Reason: " + e.getMessage());
-			
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				e.printStackTrace();
-			}
-			
 			System.exit(1);
 		}
 		
@@ -147,11 +119,6 @@ public class L2LoginServer
 			catch (UnknownHostException e1)
 			{
 				LOG.log(Level.SEVERE, "WARNING: The LoginServer bind address is invalid, using all avaliable IPs. Reason: " + e1.getMessage());
-				
-				if (Config.ENABLE_ALL_EXCEPTIONS)
-				{
-					e1.printStackTrace();
-				}
 			}
 		}
 		
@@ -184,12 +151,6 @@ public class L2LoginServer
 		catch (IOException e)
 		{
 			LOG.log(Level.SEVERE, "FATAL: Failed to open Selector. Reason: " + e.getMessage());
-			
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				e.printStackTrace();
-			}
-			
 			System.exit(1);
 		}
 		
@@ -203,12 +164,6 @@ public class L2LoginServer
 		catch (IOException e)
 		{
 			LOG.log(Level.SEVERE, "FATAL: Failed to start the Game Server Listener. Reason: " + e.getMessage());
-			
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				e.printStackTrace();
-			}
-			
 			System.exit(1);
 		}
 		
@@ -222,12 +177,6 @@ public class L2LoginServer
 		catch (IOException e)
 		{
 			LOG.log(Level.SEVERE, "FATAL: Failed to open server socket. Reason: " + e.getMessage());
-			
-			if (Config.ENABLE_ALL_EXCEPTIONS)
-			{
-				e.printStackTrace();
-			}
-			
 			System.exit(1);
 		}
 		

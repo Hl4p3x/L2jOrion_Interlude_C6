@@ -23,10 +23,9 @@ package l2jorion.game.model.actor.instance;
 import static l2jorion.game.ai.CtrlIntention.AI_INTENTION_ACTIVE;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
-import javolution.text.TextBuilder;
-import javolution.util.FastList;
 import l2jorion.Config;
 import l2jorion.game.ai.CtrlIntention;
 import l2jorion.game.cache.HtmCache;
@@ -294,9 +293,9 @@ public class L2NpcInstance extends L2Character
 		return _staticAIData.getShortRangeSkill() != 0;
 	}
 	
-	public FastList<L2Skill> getLongRangeSkill()
+	public List<L2Skill> getLongRangeSkill()
 	{
-		final FastList<L2Skill> skilldata = new FastList<>();
+		final List<L2Skill> skilldata = new ArrayList<>();
 		if ((_staticAIData == null) || (_staticAIData.getLongRangeSkill() == 0))
 		{
 			return skilldata;
@@ -353,9 +352,9 @@ public class L2NpcInstance extends L2Character
 		return skilldata;
 	}
 	
-	public FastList<L2Skill> getShortRangeSkill()
+	public List<L2Skill> getShortRangeSkill()
 	{
-		final FastList<L2Skill> skilldata = new FastList<>();
+		final List<L2Skill> skilldata = new ArrayList<>();
 		if ((_staticAIData == null) || (_staticAIData.getShortRangeSkill() == 0))
 		{
 			return skilldata;
@@ -1730,9 +1729,9 @@ public class L2NpcInstance extends L2Character
 		return "data/html/npcdefault.htm";
 	}
 	
-	private void showQuestChooseWindow(final L2PcInstance player, final Quest[] quests)
+	private void showQuestChooseWindow(L2PcInstance player, Quest[] quests)
 	{
-		final TextBuilder sb = new TextBuilder();
+		final StringBuilder sb = new StringBuilder();
 		sb.append("<html><body><title>Talk about:</title><br>");
 		
 		String state = "";
@@ -1861,8 +1860,7 @@ public class L2NpcInstance extends L2Character
 	
 	public void showQuestWindowGeneral(final L2PcInstance player)
 	{
-		final List<Quest> options = new FastList<>();
-		
+		final List<Quest> options = new ArrayList<>();
 		final QuestState[] awaits = player.getQuestsForTalk(getTemplate().npcId);
 		final Quest[] starts = getTemplate().getEventQuests(Quest.QuestEventType.QUEST_START);
 		
