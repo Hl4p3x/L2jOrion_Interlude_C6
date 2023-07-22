@@ -62,7 +62,7 @@ public class ExtractableItemsData implements IXmlReader
 							
 							production = set.getInteger("id");
 							amount = set.getInteger("quantity");
-							chance = set.getInteger("chance");
+							chance = set.getFloat("chance");
 							extractables.add(new L2ExtractableProductItem(production, amount, chance));
 							totalChance = 0;
 							for (L2ExtractableProductItem extractable : extractables)
