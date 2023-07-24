@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-<project name="Orion" default="dist-local" basedir=".">
-	
+<project name="Orion" default="dist-local" basedir=".">	
 	<scriptdef name="substring" language="javascript">
 		<attribute name="text" />
 		<attribute name="start" />
@@ -36,7 +35,7 @@
 		<mkdir dir="${build.dist.Quick_DB_Installer}" />
 	</target>
 
-	<target name="export" depends="version" description="Syncronizes build space contents with project.">
+	<target name="export" description="Syncronizes build space contents with project.">
 		<copy todir="${build.dist.game}/data">
 			<fileset dir="${basedir}/files/game/data">
 				<include name="**/*.*" />
@@ -63,31 +62,8 @@
 			</fileset>
 		</copy>
 	</target>
-	
-	<target name="version" description="Create Version file">
-			<tstamp>
-				<format property="stamp" pattern="yyyy-MM-dd HH:mm:ss" />
-			</tstamp>
-			
-			<exec dir="." executable="./svn/svnversion" outputproperty="revision" failifexecutionfails="false" />
-			<substring text="${revision}" start="4" end="7" property="rev" />
-			<echo>Revision: ${rev}        Build time: ${stamp}</echo>
-	</target>
-
 	<target name="dist-local" depends="prepare-local,prepare-final,export" description="Create distribution files and Zip one into 'build' folder.">
-
-		<delete file="./etc/buildnumber.h"/>
-		<buildnumber file="./etc/ant-build-number.n"/>
-		
-		<echo file="./etc/buildnumber.h">
-		Buil number :  ${build.number}
-		Build time  :  ${stamp}
-		Revision    :  ${rev}
-		</echo>
-		
-		<zip destfile="${build}/L2jOrion_Server_Files_(Changeset_${build.number}_Revision_${rev}).zip" basedir="${build.dist}" update="true" />
-		
+		<zip destfile="${build}/L2jOrion_Server_Files.zip" basedir="${build.dist}" update="true" />		
 		<delete dir="${build.dist}" />
 	</target>
-
 </project>

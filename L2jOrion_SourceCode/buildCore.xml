@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Orion" default="BUILD" basedir=".">
-	
 	<scriptdef name="substring" language="javascript">
 		<attribute name="text" />
 		<attribute name="start" />
@@ -31,18 +30,8 @@
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
-	
-	<target name="VERSION" description="Create Version file">
-		<tstamp>
-			<format property="stamp" pattern="yyyy-MM-dd HH:mm:ss" />
-		</tstamp>
 
-		<exec dir="." executable="./svn/svnversion" outputproperty="revision" failifexecutionfails="false" />
-		<substring text="${revision}" start="4" end="7" property="rev" />
-		<echo>Revision: ${rev}        Build time: ${stamp}</echo>
-	</target>
-	
-	<target name="BUILD" depends="VERSION"
+	<target name="BUILD"
 		description="Generate core jar into 'build-core' folder">
 		<property name="build" location="build" />
 		<property name="build.classes" location="${build}/classes" />
@@ -50,23 +39,18 @@
 		<delete file="${build}/l2jorion-core.jar" />
 		<mkdir dir="${build}" />
 		<mkdir dir="${build.classes}" />
-
 		<javac destdir="${build.classes}" includeantruntime="false"
 			optimize="on" debug="on" source="1.8" target="1.8" encoding="UTF-8"
 			nowarn="off">
 			<src path="${src}" />
 			<classpath refid="classpath" />
 		</javac>
-
 		<copy todir="${build.classes}/META-INF/services">
 			<fileset dir="${src}/META-INF/services" />
 		</copy>
-
 		<jar destfile="${build}/l2jorion-core.jar">
 			<fileset dir="${build.classes}" />
-		</jar>
-		
+		</jar>		
 		<delete dir="${build.classes}" />
 	</target>
-
 </project>
