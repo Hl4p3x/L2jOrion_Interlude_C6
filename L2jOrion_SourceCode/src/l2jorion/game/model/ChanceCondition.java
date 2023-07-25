@@ -82,7 +82,6 @@ public final class ChanceCondition
 	}
 	
 	private final TriggerType _triggerType;
-	
 	private final int _chance;
 	
 	private ChanceCondition(final TriggerType trigger, final int chance)
@@ -91,19 +90,18 @@ public final class ChanceCondition
 		_chance = chance;
 	}
 	
-	public static ChanceCondition parse(final StatsSet set)
+	public static ChanceCondition parse(StatsSet set)
 	{
 		try
 		{
 			final TriggerType trigger = set.getEnum("chanceType", TriggerType.class);
-			
 			final int chance = set.getInteger("activationChance", 0);
 			if (trigger != null && chance > 0)
 			{
 				return new ChanceCondition(trigger, chance);
 			}
 		}
-		catch (final Exception e)
+		catch (Exception e)
 		{
 			LOG.info("" + set.toString());
 			e.printStackTrace();
@@ -111,7 +109,7 @@ public final class ChanceCondition
 		return null;
 	}
 	
-	public boolean trigger(final int event)
+	public boolean trigger(int event)
 	{
 		return _triggerType.check(event) && Rnd.get(100) < _chance;
 	}

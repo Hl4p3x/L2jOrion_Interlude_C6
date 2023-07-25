@@ -28,6 +28,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -199,8 +200,8 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	private final StampedLock _attackLock = new StampedLock();
 	private volatile long _attackEndTime;
 	
-	protected final Map<Integer, L2Skill> _skills;
-	protected final Map<Integer, L2Skill> _triggeredSkills;
+	protected Map<Integer, L2Skill> _skills;
+	protected Map<Integer, L2Skill> _triggeredSkills;
 	
 	protected ChanceSkillList _chanceSkills;
 	
@@ -257,17 +258,16 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 		getKnownList();
 		
 		_template = template;
-		
-		_triggeredSkills = new ConcurrentHashMap<>();
-		_skills = new ConcurrentHashMap<>();
-		
-		if (this instanceof L2NpcInstance)
+		_triggeredSkills = new HashMap<>();
+		_skills = new HashMap<>();
+		if ((template != null) && (this instanceof L2NpcInstance))
 		{
 			_calculators = NPC_STD_CALCULATOR;
 			
-			for (L2Skill skill : template.getSkills().values())
+			_skills = ((L2NpcTemplate) template).getSkills();
+			for (Entry<Integer, L2Skill> skill : _skills.entrySet())
 			{
-				addSkill(skill);
+				addStatFuncs(skill.getValue().getStatFuncs(null, this), true);
 			}
 			
 			if (!Config.NPC_ATTACKABLE || !(this instanceof L2Attackable) && !(this instanceof L2ControlTowerInstance) && !(this instanceof L2SiegeFlagInstance) && !(this instanceof L2EffectPointInstance))
@@ -277,6 +277,9 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 		}
 		else
 		{
+			// Initialize the Map _skills to null
+			_skills = new ConcurrentHashMap<>();
+			
 			_calculators = new Calculator[Stats.NUM_STATS];
 			Formulas.getInstance().addFuncsToNewCharacter(this);
 			
@@ -296,13 +299,13 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 	
 	public void onDecay()
 	{
-		decayMe();
-		
 		L2WorldRegion reg = getWorldRegion();
 		if (reg != null)
 		{
 			reg.removeFromZones(this);
 		}
+		
+		decayMe(); // Decay after check
 	}
 	
 	@Override
@@ -5729,12 +5732,10 @@ public abstract class L2Character extends L2Object implements ISkillsHolder
 			
 			// Add Func objects of newSkill to the calculator set of the L2Character
 			addStatFuncs(newSkill.getStatFuncs(null, this), true);
-			
-			if (oldSkill != null && _chanceSkills != null)
+			if ((oldSkill != null) && (_chanceSkills != null))
 			{
 				removeChanceSkill(oldSkill.getId());
 			}
-			
 			if (newSkill.isChance() || newSkill.isPassive())
 			{
 				addChanceSkill(newSkill);
