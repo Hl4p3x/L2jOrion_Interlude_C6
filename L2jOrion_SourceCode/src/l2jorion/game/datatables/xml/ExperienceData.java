@@ -7,6 +7,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
+import l2jorion.Config;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
 import l2jorion.util.xml.IXmlReader;
@@ -17,9 +18,8 @@ public class ExperienceData implements IXmlReader
 	
 	private final Map<Integer, Long> _expTable = new HashMap<>();
 	
-	private static final byte PLAYER_MAXIMUM_LEVEL = 80;
-	public byte _maxPlayerLevel;
-	private byte _maxPetLevel;
+	private byte MAX_LEVEL;
+	private byte MAX_PET_LEVEL;
 	
 	protected ExperienceData()
 	{
@@ -32,8 +32,8 @@ public class ExperienceData implements IXmlReader
 		_expTable.clear();
 		parseDatapackFile("data/xml/experience.xml");
 		LOG.info(getClass().getSimpleName() + ": Loaded " + _expTable.size() + " levels");
-		LOG.info(getClass().getSimpleName() + ": Max player level is: " + (_maxPlayerLevel - 1));
-		LOG.info(getClass().getSimpleName() + ": Max pet level is: " + (_maxPetLevel - 1));
+		LOG.info(getClass().getSimpleName() + ": Max player level is: " + (MAX_LEVEL - 1));
+		LOG.info(getClass().getSimpleName() + ": Max pet level is: " + (MAX_PET_LEVEL - 1));
 	}
 	
 	@Override
@@ -41,15 +41,15 @@ public class ExperienceData implements IXmlReader
 	{
 		final Node table = doc.getFirstChild();
 		final NamedNodeMap tableAttr = table.getAttributes();
-		_maxPlayerLevel = (byte) (Byte.parseByte(tableAttr.getNamedItem("maxLevel").getNodeValue()) + 1);
-		_maxPetLevel = (byte) (Byte.parseByte(tableAttr.getNamedItem("maxPetLevel").getNodeValue()) + 1);
-		if (_maxPlayerLevel > PLAYER_MAXIMUM_LEVEL)
+		MAX_LEVEL = (byte) (Byte.parseByte(tableAttr.getNamedItem("maxLevel").getNodeValue()) + 1);
+		MAX_PET_LEVEL = (byte) (Byte.parseByte(tableAttr.getNamedItem("maxPetLevel").getNodeValue()) + 1);
+		if (MAX_LEVEL > Config.MAX_PLAYER_LEVEL)
 		{
-			_maxPlayerLevel = PLAYER_MAXIMUM_LEVEL;
+			MAX_LEVEL = Config.MAX_PLAYER_LEVEL;
 		}
-		if (_maxPetLevel > (_maxPlayerLevel + 1))
+		if (MAX_PET_LEVEL > (MAX_LEVEL + 1))
 		{
-			_maxPetLevel = (byte) (_maxPlayerLevel + 1); // Pet level should not exceed owner level.
+			MAX_PET_LEVEL = (byte) (MAX_LEVEL + 1); // Pet level should not exceed owner level.
 		}
 		
 		int maxLevel = 0;
@@ -59,7 +59,7 @@ public class ExperienceData implements IXmlReader
 			{
 				final NamedNodeMap attrs = n.getAttributes();
 				maxLevel = parseInteger(attrs, "level");
-				if (maxLevel > PLAYER_MAXIMUM_LEVEL)
+				if (maxLevel > Config.MAX_PLAYER_LEVEL)
 				{
 					break;
 				}
@@ -70,17 +70,21 @@ public class ExperienceData implements IXmlReader
 	
 	public long getExpForLevel(int level)
 	{
+		if (level > Config.MAX_PLAYER_LEVEL)
+		{
+			return _expTable.get((int) Config.MAX_PLAYER_LEVEL);
+		}
 		return _expTable.get(level);
 	}
 	
 	public byte getMaxLevel()
 	{
-		return _maxPlayerLevel;
+		return MAX_LEVEL;
 	}
 	
 	public byte getMaxPetLevel()
 	{
-		return _maxPetLevel;
+		return MAX_PET_LEVEL;
 	}
 	
 	public static ExperienceData getInstance()

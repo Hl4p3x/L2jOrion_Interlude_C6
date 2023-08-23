@@ -1,17 +1,17 @@
-<?xml version='1.0' encoding='utf-8'?>
-<list>
+<?xml version="1.0" encoding="UTF-8"?>
+<list xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="xsd/CursedWeapons.xsd">
 	<item id="8190" skillId="3603" name="Demonic Sword Zariche">
-		<dropRate val="50" /> <!-- 100000 for 100% -->
-		<duration val="300" /> <!-- in minutes -->
-		<durationLost val="3" /> <!-- in minutes -->
-		<disapearChance val="50" /> <!-- in % -->
-		<stageKills val="3" /> <!-- Integer -->
+		<dropRate val="1" /> <!-- 1000000 for 100% -->		
+		<duration val="4320" /> <!-- in minutes -->		
+		<durationLost val="1440" /> <!-- in minutes -->		
+		<disapearChance val="50" /> <!-- in % -->		
+		<stageKills val="10" /> <!-- Integer -->		
 	</item>
 	<item id="8689" skillId="3629" name="Blood Sword Akamanah">
-		<dropRate val="50" /> <!-- 100000 for 100% -->
-		<duration val="300" /> <!-- in minutes -->
-		<durationLost val="3" /> <!-- in minutes -->
-		<disapearChance val="50" /> <!-- in % -->
-		<stageKills val="3" /> <!-- Integer -->
+		<dropRate val="1" /> <!-- 1000000 for 100% -->		
+		<duration val="4320" /> <!-- in minutes -->		
+		<durationLost val="1440" /> <!-- in minutes -->		
+		<disapearChance val="50" /> <!-- in % -->		
+		<stageKills val="10" /> <!-- Integer -->		
 	</item>
 </list>

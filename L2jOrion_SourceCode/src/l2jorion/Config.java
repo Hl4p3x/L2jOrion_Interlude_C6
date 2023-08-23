@@ -2451,6 +2451,7 @@ public final class Config
 	public static String PM_TEXT1;
 	public static String PM_TEXT2;
 	public static boolean NEW_PLAYER_EFFECT;
+	public static byte MAX_PLAYER_LEVEL;
 	
 	public static void loadL2jOrionConfig()
 	{
@@ -2631,6 +2632,7 @@ public final class Config
 			PM_TEXT1 = L2jOrionSettings.getProperty("PMText1", "Have Fun and Nice Stay on");
 			PM_TEXT2 = L2jOrionSettings.getProperty("PMText2", "Vote for us every 24h");
 			NEW_PLAYER_EFFECT = Boolean.parseBoolean(L2jOrionSettings.getProperty("NewPlayerEffect", "False"));
+			MAX_PLAYER_LEVEL = Byte.parseByte(L2jOrionSettings.getProperty("MaxPlayerLevel", "81"));
 		}
 		catch (Exception e)
 		{
@@ -4533,6 +4535,7 @@ public final class Config
 	}
 	
 	private static final String HEXID_FILE = ConfigLoader.HEXID_FILE;
+	
 	public static int SERVER_ID;
 	public static byte[] HEX_ID;
 	

@@ -45,7 +45,6 @@ import l2jorion.game.templates.L2Item;
 import l2jorion.game.thread.ThreadPoolManager;
 import l2jorion.logger.Logger;
 import l2jorion.logger.LoggerFactory;
-import l2jorion.util.CloseUtil;
 import l2jorion.util.database.DatabaseUtils;
 import l2jorion.util.database.L2DatabaseFactory;
 import l2jorion.util.random.Rnd;
@@ -118,11 +117,8 @@ public class CursedWeapon
 			}
 			else
 			{
-				Connection con = null;
-				try
+				try (Connection con = L2DatabaseFactory.getInstance().getConnection())
 				{
-					con = L2DatabaseFactory.getInstance().getConnection();
-					
 					// Delete the item
 					PreparedStatement statement = con.prepareStatement("DELETE FROM items WHERE owner_id=? AND item_id=?");
 					statement.setInt(1, _playerId);
@@ -152,38 +148,31 @@ public class CursedWeapon
 				{
 					LOG.warn("Could not delete : " + e);
 				}
-				finally
-				{
-					CloseUtil.close(con);
-				}
 			}
 		}
-		else
+		// either this cursed weapon is in the inventory of someone who has another cursed weapon equipped,
+		// OR this cursed weapon is on the ground.
+		else if (_player != null && _player.getInventory().getItemByItemId(_itemId) != null)
 		{
-			// either this cursed weapon is in the inventory of someone who has another cursed weapon equipped,
-			// OR this cursed weapon is on the ground.
-			if (_player != null && _player.getInventory().getItemByItemId(_itemId) != null)
+			final L2ItemInstance rhand = _player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND);
+			if (rhand != null)
 			{
-				final L2ItemInstance rhand = _player.getInventory().getPaperdollItem(Inventory.PAPERDOLL_RHAND);
-				if (rhand != null)
-				{
-					_player.getInventory().unEquipItemInSlotAndRecord(rhand.getEquipSlot());
-				}
-				
-				// Destroy
-				_player.getInventory().destroyItemByItemId("", _itemId, 1, _player, null);
-				_player.store();
-				
-				// update inventory and userInfo
-				_player.sendPacket(new ItemList(_player, true));
-				_player.broadcastUserInfo();
+				_player.getInventory().unEquipItemInSlotAndRecord(rhand.getEquipSlot());
 			}
-			// is dropped on the ground
-			else if (_item != null)
-			{
-				_item.decayMe();
-				L2World.getInstance().removeObject(_item);
-			}
+			
+			// Destroy
+			_player.getInventory().destroyItemByItemId("", _itemId, 1, _player, null);
+			_player.store();
+			
+			// update inventory and userInfo
+			_player.sendPacket(new ItemList(_player, true));
+			_player.broadcastUserInfo();
+		}
+		// is dropped on the ground
+		else if (_item != null)
+		{
+			_item.decayMe();
+			L2World.getInstance().removeObject(_item);
 		}
 		
 		SystemMessage sm = new SystemMessage(SystemMessageId.S1_HAS_DISAPPEARED);
@@ -202,6 +191,7 @@ public class CursedWeapon
 		_playerPkKills = 0;
 		_item = null;
 		_nbKills = 0;
+		
 	}
 	
 	private void cancelTask()
@@ -242,7 +232,6 @@ public class CursedWeapon
 		
 		if (fromMonster)
 		{
-			
 			_item = attackable.DropItem(player, _itemId, 1);
 			_item.setDropTime(0); // Prevent item from being removed by ItemsAutoDestroy
 			
@@ -257,9 +246,6 @@ public class CursedWeapon
 			}
 			
 			sm.addZoneName(attackable.getX(), attackable.getY(), attackable.getZ()); // Region Name
-			
-			packet = null;
-			eq = null;
 			
 			// EndTime: if dropped from monster, the endTime is a new endTime
 			cancelTask();
@@ -326,12 +312,6 @@ public class CursedWeapon
 		_player.addSkill(skill, false);
 		skill = SkillTable.getInstance().getInfo(3631, 1);
 		_player.addSkill(skill, false);
-		
-		if (Config.DEBUG)
-		{
-			LOG.info("Player " + _player.getName() + " has been awarded with skill " + skill);
-		}
-		
 		_player.sendSkillList();
 	}
 	
@@ -367,7 +347,7 @@ public class CursedWeapon
 	public boolean checkDrop(final L2Attackable attackable, final L2PcInstance player)
 	{
 		
-		if (Rnd.get(100000) < _dropRate)
+		if (Rnd.get(1000000) < _dropRate)
 		{
 			// Drop the item
 			dropIt(attackable, player);
@@ -508,12 +488,8 @@ public class CursedWeapon
 	
 	public void saveData()
 	{
-		Connection con = null;
-		
-		try
+		try (Connection con = L2DatabaseFactory.getInstance().getConnection())
 		{
-			con = L2DatabaseFactory.getInstance().getConnection();
-			
 			// Delete previous datas
 			PreparedStatement statement = con.prepareStatement("DELETE FROM cursed_weapons WHERE itemId = ?");
 			statement.setInt(1, _itemId);
@@ -531,15 +507,11 @@ public class CursedWeapon
 				statement.executeUpdate();
 			}
 			
-			DatabaseUtils.close(statement);
+			statement.close();
 		}
 		catch (final SQLException e)
 		{
 			LOG.error("CursedWeapon: Failed to save data", e);
-		}
-		finally
-		{
-			CloseUtil.close(con);
 		}
 	}
 	
@@ -561,7 +533,6 @@ public class CursedWeapon
 	public void increaseKills()
 	{
 		_nbKills++;
-		
 		_player.setPkKills(_nbKills);
 		
 		if (Config.CURSED_WEAPON_REWARD && !(_player.getTarget() instanceof L2Summon))
@@ -761,12 +732,12 @@ public class CursedWeapon
 	
 	public Location getWorldPosition()
 	{
-		if (_isActivated && _player != null)
+		if (_isActivated && (_player != null))
 		{
 			return _player.getPosition().getWorldPosition();
 		}
 		
-		if (_isDropped && _item != null)
+		if (_isDropped && (_item != null))
 		{
 			return _item.getPosition().getWorldPosition();
 		}
